@@ -1,0 +1,42 @@
+:parseOnly
+
+:pe
+handle
+//│ ╔══[PARSE ERROR] Expected expression after 'handle' binding keyword; found end of input instead
+//│ ║  l.4: 	handle
+//│ ╙──     	      ^
+//│ Parsed:
+//│ 	Error()
+
+:pe
+handle h
+//│ ╔══[PARSE ERROR] Expected '=' keyword after 'handle' binding head; found end of input instead
+//│ ║  l.12: 	handle h
+//│ ╙──      	        ^
+//│ Parsed:
+//│ 	Error()
+
+:pe
+handle h = Eff
+//│ ╔══[PARSE ERROR] Expected 'with' keyword after 'handle' binding class name; found end of input instead
+//│ ║  l.20: 	handle h = Eff
+//│ ╙──      	              ^
+//│ Parsed:
+//│ 	Error()
+
+:pe
+handle h = Eff with
+  fun f(r) = r(0)
+  fun g(a, r) = r(1)
+//│ ╔══[PARSE ERROR] Expected 'in' keyword after type declaration block; found end of input instead
+//│ ║  l.29: 	  fun f(r) = r(0)
+//│ ╙──      	  ^
+//│ Parsed:
+//│ 	Error()
+
+handle h = Eff with
+  fun f(r) = r(0)
+in
+  foo(h)
+//│ Parsed:
+//│ 	Handle(Ident(h),Ident(Eff),Block(List(TermDef(Fun,App(Ident(f),Tup(List(Ident(r)))),Some(App(Ident(r),Tup(List(IntLit(0)))))))),Block(List(App(Ident(foo),Tup(List(Ident(h)))))))

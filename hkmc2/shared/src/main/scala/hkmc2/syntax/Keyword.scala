@@ -51,6 +51,7 @@ object Keyword:
   val `and` = Keyword("and", nextPrec, nextPrec)
   val `is` = Keyword("is", nextPrec, curPrec)
   val `let` = Keyword("let", nextPrec, curPrec)
+  val `handle` = Keyword("handle", nextPrec, curPrec)
   val `region` = Keyword("region", curPrec, curPrec)
   val `rec` = Keyword("rec", N, N)
   val `in` = Keyword("in", curPrec, curPrec)
