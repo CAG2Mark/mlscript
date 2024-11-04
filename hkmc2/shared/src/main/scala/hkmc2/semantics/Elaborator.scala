@@ -87,6 +87,16 @@ extends Importer:
           term(bod),
         ), Term.Assgn(lt, sym.ref(id))))
       case _ => ??? // TODO error
+    case Handle(id: Ident, cls: Ident, Block(sts), body) =>
+      val sym =
+        fieldOrVarSym(Handler, id)
+      val newCtx = ctx.copy(locals = ctx.locals + (id.name -> sym))
+      Term.Handle(sym, term(cls)(using newCtx), block(sts)._1, term(body)(using newCtx))
+    case h: Handle =>
+      raise(ErrorReport(
+        msg"Unsupported handle binding shape" ->
+          h.toLoc :: Nil))
+      Term.Error
     case Ident("true") => Term.Lit(Tree.BoolLit(true))
     case Ident("false") => Term.Lit(Tree.BoolLit(false))
     case id @ Ident("Alloc") => Term.Ref(allocSkolemSym)(id, 1)

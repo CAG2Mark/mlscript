@@ -78,6 +78,7 @@ enum Tree extends AutoLocated:
     case OpBlock(items) => items.flatMap:
       case (op, body) => op :: body :: Nil
     case LetLike(kw, lhs, rhs, body) => lhs :: Nil ++ rhs ++ body
+    case Handle(lhs, rhs, defs, body) => lhs :: rhs :: defs :: body :: Nil
     case TypeDef(k, head, extension, body) =>
       head :: extension.toList ::: body.toList
     case Modified(_, _, body) => Ls(body)
@@ -171,6 +172,7 @@ sealed abstract class Val(str: Str, desc: Str) extends ValLike(str, desc)
 case object ImmutVal extends Val("val", "value")
 case object MutVal extends Val("mut val", "mutable value")
 case object LetBind extends ValLike("let", "let binding")
+case object Handler extends TermDefKind("handler", "handler binding")
 case object ParamBind extends ValLike("", "parameter")
 case object Fun extends TermDefKind("fun", "function")
 sealed abstract class TypeDefKind(desc: Str) extends DeclKind(desc)
