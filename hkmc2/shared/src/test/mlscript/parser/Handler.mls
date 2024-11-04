@@ -1,42 +1,110 @@
-:parseOnly
+
 
 :pe
 handle
 //│ ╔══[PARSE ERROR] Expected expression after 'handle' binding keyword; found end of input instead
 //│ ║  l.4: 	handle
 //│ ╙──     	      ^
-//│ Parsed:
-//│ 	Error()
 
 :pe
 handle h
 //│ ╔══[PARSE ERROR] Expected '=' keyword after 'handle' binding head; found end of input instead
-//│ ║  l.12: 	handle h
+//│ ║  l.10: 	handle h
 //│ ╙──      	        ^
-//│ Parsed:
-//│ 	Error()
 
 :pe
 handle h = Eff
 //│ ╔══[PARSE ERROR] Expected 'with' keyword after 'handle' binding class name; found end of input instead
-//│ ║  l.20: 	handle h = Eff
+//│ ║  l.16: 	handle h = Eff
 //│ ╙──      	              ^
-//│ Parsed:
-//│ 	Error()
 
 :pe
 handle h = Eff with
   fun f(r) = r(0)
   fun g(a, r) = r(1)
 //│ ╔══[PARSE ERROR] Expected 'in' keyword after type declaration block; found end of input instead
-//│ ║  l.29: 	  fun f(r) = r(0)
+//│ ║  l.23: 	  fun f(r) = r(0)
 //│ ╙──      	  ^
-//│ Parsed:
-//│ 	Error()
 
-handle h = Eff with
+:parseOnly
+handle 1 = 1 with
   fun f(r) = r(0)
 in
   foo(h)
 //│ Parsed:
-//│ 	Handle(Ident(h),Ident(Eff),Block(List(TermDef(Fun,App(Ident(f),Tup(List(Ident(r)))),Some(App(Ident(r),Tup(List(IntLit(0)))))))),Block(List(App(Ident(foo),Tup(List(Ident(h)))))))
+//│ 	Handle(IntLit(1),IntLit(1),Block(List(TermDef(Fun,App(Ident(f),Tup(List(Ident(r)))),Some(App(Ident(r),Tup(List(IntLit(0)))))))),Block(List(App(Ident(foo),Tup(List(Ident(h)))))))
+
+:e
+handle 1 = 1 with
+  fun f(r) = r(0)
+in
+  foo(h)
+//│ ╔══[ERROR] Unsupported handle binding shape
+//│ ║  l.38: 	handle 1 = 1 with
+//│ ║        	       ^^^^^^^^^^
+//│ ║  l.39: 	  fun f(r) = r(0)
+//│ ║        	^^^^^^^^^^^^^^^^^
+//│ ║  l.40: 	in
+//│ ║        	^^
+//│ ║  l.41: 	  foo(h)
+//│ ╙──      	^^^^^^^^
+
+:elt
+class Eff
+fun foo(h) = 0
+handle h = Eff with
+  fun f(r) = r(0)
+in
+  foo(h)
+//│ Elaborated tree:
+//│ Blk:
+//│   stats = Ls of 
+//│     Plain:
+//│       kind = Cls
+//│       sym = class:Eff
+//│       tparams = Nil
+//│       body = ObjBody of Blk:
+//│         stats = Nil
+//│         res = Lit of UnitLit of true
+//│       companion = N
+//│     TermDefinition:
+//│       k = Fun
+//│       sym = globalThis:block#5.foo
+//│       params = S of Ls of 
+//│         Param:
+//│           flags = ()
+//│           sym = h@29
+//│           sign = N
+//│       sign = N
+//│       body = S of Lit of IntLit of 0
+//│       resSym = ‹result of globalThis:block#5.foo›@30
+//│   res = Handle:
+//│     lhs = globalThis:block#5.h
+//│     rhs = Ref of class:Eff
+//│     defs = Blk:
+//│       stats = Ls of 
+//│         TermDefinition:
+//│           k = Fun
+//│           sym = globalThis:block#5.f
+//│           params = S of Ls of 
+//│             Param:
+//│               flags = ()
+//│               sym = r@31
+//│               sign = N
+//│           sign = N
+//│           body = S of App:
+//│             lhs = Ref of r@31
+//│             rhs = Tup of Ls of 
+//│               Fld:
+//│                 flags = ()
+//│                 value = Lit of IntLit of 0
+//│                 asc = N
+//│           resSym = ‹result of globalThis:block#5.f›@33
+//│       res = Lit of UnitLit of true
+//│     body = App:
+//│       lhs = Ref of globalThis:block#5.foo
+//│       rhs = Tup of Ls of 
+//│         Fld:
+//│           flags = ()
+//│           value = Ref of globalThis:block#5.h
+//│           asc = N
