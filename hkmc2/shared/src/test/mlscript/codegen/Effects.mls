@@ -1,0 +1,20 @@
+:js
+
+// note: seems we can't use traits yet :|
+:fixme
+class Effect with
+  fun perform(arg): Str -> Str
+fun foo(e) = e.perform("hi")
+handle h = Effect with
+  fun perform(arg, k) = k(arg)
+in
+  foo(h)
+//│ ╔══[COMPILATION ERROR] Effect handlers are not enabled
+//│ ║  l.8: 	handle h = Effect with
+//│ ║       	           ^^^^^^^^^^^
+//│ ║  l.9: 	  fun perform(arg, k) = k(arg)
+//│ ║       	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//│ ║  l.10: 	in
+//│ ║        	^^
+//│ ║  l.11: 	  foo(h)
+//│ ╙──      	^^^^^^^^

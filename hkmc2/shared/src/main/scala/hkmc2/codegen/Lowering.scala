@@ -165,6 +165,14 @@ class Lowering(using TL, Raise, Elaborator.State):
       
     case st.Lam(params, body) =>
       k(Value.Lam(params, returnedTerm(body)))
+
+    case st.Handle(lhs, _, _, _) =>
+      raise(ErrorReport(
+        msg"Effect handlers are not enabled" ->
+        t.toLoc :: Nil,
+        source = Diagnostic.Source.Compilation))
+      Assign(lhs, Value.Lit(syntax.Tree.UnitLit(true)), k(Value.Lit(syntax.Tree.UnitLit(true))))
+      
     
     /* 
     case t @ st.If(Split.Let(sym, trm, tail)) =>
