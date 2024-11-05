@@ -253,13 +253,34 @@ extends Importer:
       raise(ErrorReport(msg"Illegal position for '${kw.name}' modifier." -> kwLoc :: Nil))
       term(body)
     case Jux(lhs, rhs) =>
-      rhs match
-      case ap @ App(f, tup @ Tup(args)) =>
-        val sym = FlowSymbol("‹app-res›", nextUid)
-        Term.App(term(f), Term.Tup(fld(lhs) :: args.map(fld))(tup))(ap, sym)
-      case _ =>
-        raise(ErrorReport(msg"Illegal juxtaposition right-hand side." -> rhs.toLoc :: Nil))
-        term(lhs)
+      def go(acc: Term, trees: Ls[Tree]): Term =
+        trees match
+        case Nil => acc
+        
+        // * FIXME this `f.name.head.isLetter` test is a big hack...
+        // * TODO would be better to keep the fixity of applications part of the Tree repr.
+        case (ap @ App(f: Ident, tup @ Tup(lhs :: args))) :: trees if !f.name.head.isLetter =>
+          val res = go(acc, lhs :: Nil)
+          val sym = FlowSymbol("‹app-res›", nextUid)
+          val fl = Fld(FldFlags.empty, res, N)
+          val app = Term.App(term(f), Term.Tup(
+            fl :: args.map(fld))(tup))(ap, sym)
+          go(app, trees)
+        case (ap @ App(f, tup @ Tup(args))) :: trees =>
+          val sym = FlowSymbol("‹app-res›", nextUid)
+          go(Term.App(term(f),
+              Term.Tup(Fld(FldFlags.empty, acc, N) :: args.map(fld))(tup)
+            )(ap, sym), trees)
+        case Block(sts) :: trees =>
+          go(acc, sts ::: trees)
+        case tree :: trees =>
+          raise(ErrorReport(msg"Illegal juxtaposition right-hand side." -> tree.toLoc :: Nil))
+          go(acc, trees)
+      
+      go(term(lhs), rhs :: Nil)
+    case Open(body) =>
+      raise(ErrorReport(msg"Illegal position for 'open' statement." -> tree.toLoc :: Nil))
+      Term.Error
     // case _ =>
     //   ???
   
@@ -270,13 +291,18 @@ extends Importer:
   
   def unit: Term.Lit = Term.Lit(UnitLit(true))
   
+  
+  
+  
   def block(_sts: Ls[Tree])(using c: Ctx): (Term.Blk, Ctx) = trace[(Term.Blk, Ctx)](
     pre = s"Elab block ${_sts.toString.truncate(30, "[...]")} ${ctx.outer}", r => s"~> ${r._1}"
   ):
+    
     val sts = _sts.map(_.desugared)
     val newMembers = mutable.Map.empty[Str, MemberSymbol[?]] // * Definitions with implementations
     val newSignatures = mutable.Map.empty[Str, MemberSymbol[?]] // * Definitions containing only signatures
     val newSignatureTrees = mutable.Map.empty[Str, Tree] // * Store trees of signatures, passing them to definition objects
+    
     @tailrec def preprocessStatement(statement: Tree): Unit = statement match
       case td: TermDef =>
         log(s"Found TermDef ${td.name}")
@@ -337,16 +363,49 @@ extends Importer:
         preprocessStatement(body)
       case tree =>
         log(s"Found something else $tree")
-    sts.foreach(preprocessStatement)      
+    end preprocessStatement
+    sts.foreach(preprocessStatement)
+    
     newSignatures.foreach:
       case (name, sym) =>
         if !newMembers.contains(name) then
           newMembers += name -> sym
+    
     @tailrec
     def go(sts: Ls[Tree], acc: Ls[Statement]): Ctxl[(Term.Blk, Ctx)] = sts match
       case Nil =>
         val res = unit
         (Term.Blk(acc.reverse, res), ctx)
+      case Open(bod) :: sts =>
+        bod match
+          case Jux(bse, Block(sts)) =>
+            S(bse -> sts)
+          // * There could be other shapes of open statements...
+          case _ =>
+            raise(ErrorReport(msg"Illegal 'open' statement shape." -> bod.toLoc :: Nil))
+            N
+        match
+        case N => go(sts, acc)
+        case S(base, importedTrees) =>
+          base match
+          case baseId: Ident =>
+            ctx.get(baseId.name) match
+            case S(baseSym) =>
+              val importedNames = importedTrees.flatMap:
+                case id: Ident =>
+                  val sym = ImportedSymbol(baseSym, id, nextUid)
+                  id.name -> sym :: Nil
+                case t =>
+                  raise(ErrorReport(msg"Illegal 'open' statement element." -> t.toLoc :: Nil))
+                  Nil
+              ctx.copy(locals = ctx.locals ++ importedNames).givenIn:
+                go(sts, acc)
+            case N =>
+              raise(ErrorReport(msg"Name not found: ${baseId.name}" -> baseId.toLoc :: Nil))
+              go(sts, acc)
+          case _ =>
+            raise(ErrorReport(msg"Illegal 'open' statement base." -> base.toLoc :: Nil))
+            go(sts, acc)
       case (m @ Modified(Keyword.`import`, absLoc, arg)) :: sts =>
         val (newCtx, newAcc) = arg match
           case Tree.StrLit(path) =>
@@ -360,7 +419,7 @@ extends Importer:
             (ctx, acc)
         newCtx.givenIn:
           go(sts, newAcc)
-      case (hd @ LetLike(`let`, Apps(id, tups), rhso, N)) :: sts if id.name.headOption.exists(_.isLower) =>
+      case (hd @ LetLike(`let`, Apps(id: Ident, tups), rhso, N)) :: sts if id.name.headOption.exists(_.isLower) =>
         val sym =
           fieldOrVarSym(LetBind, id)
         log(s"Processing `let` statement $id (${sym}) ${ctx.outer}")
@@ -404,15 +463,14 @@ extends Importer:
                 case S(t) => typeParams(t)
                 case N => (N, ctx)
               // Add parameters to context
-              val (ps, newCtx) = td.params match
-                case S(ts) => // Go through all parameter lists
-                  ts.foldLeft((Ls[Param](), newCtx1)):
-                    case ((ps, ctx), t) => params(t)(using ctx).mapFirst(ps ++ _)
-                  .mapFirst(some)
-                case N => (N, newCtx1)
+              val (pss, newCtx) = 
+                td.paramLists.foldLeft(Ls[ParamList](), newCtx1):
+                  case ((pss, ctx), ps) => 
+                    val (qs, newCtx) = params(ps)(using ctx)
+                    (pss :+ ParamList(ParamListFlags.empty, qs), newCtx)
               val b = rhs.map(term(_)(using newCtx))
               val r = FlowSymbol(s"‹result of ${sym}›", nextUid)
-              val tdf = TermDefinition(k, sym, ps,
+              val tdf = TermDefinition(k, sym, pss,
                 td.signature.orElse(newSignatureTrees.get(id.name)).map(term), b, r)
               sym.defn = S(tdf)
               tdf
@@ -460,6 +518,7 @@ extends Importer:
             processHead(derived)
           case Jux(lhs, rhs) =>
             processHead(rhs)
+          // case _ => ???
 
           // case _ => ???
         val (nme, _, _, _) = processHead(head) // ! FIXME dumb!!!! recomputation
@@ -502,11 +561,14 @@ extends Importer:
       case (st: Tree) :: sts =>
         val res = term(st) // TODO reject plain term statements? Currently, `(1, 2)` is allowed to elaborate (tho it should be rejected in type checking later)
         go(sts, res :: acc)
+    end go
+    
     c.copy(members = c.members ++ newMembers).givenIn:
       sts match
         case (_: TermDef | _: TypeDef) :: _ => go(sts, Nil)
         // case s :: Nil => (term(s), ctx)
         case _ => go(sts, Nil)
+  
   
   def fieldOrVarSym(k: TermDefKind, id: Ident)(using Ctx): LocalSymbol & NamedSymbol =
     if ctx.outer.isDefined then TermSymbol(k, ctx.outer, id)
@@ -567,8 +629,8 @@ extends Importer:
   def computeVariances(s: Statement): Unit =
     val trav = VarianceTraverser()
     def go(s: Statement): Unit = s match
-      case TermDefinition(k, sym, ps, sign, body, r) =>
-        ps.foreach(_.foreach(trav.traverseType(S(false))))
+      case TermDefinition(k, sym, pss, sign, body, r) =>
+        pss.foreach(ps => ps.params.foreach(trav.traverseType(S(false))))
         sign.foreach(trav.traverseType(S(true)))
         body match
           case S(b) =>

@@ -262,6 +262,10 @@ object ParseRule:
     Kw(`class`)(typeDeclBody(Cls)),
     Kw(`trait`)(typeDeclBody(Trt)),
     Kw(`module`)(typeDeclBody(Mod)),
+    Kw(`open`):
+      ParseRule("'open' keyword")(
+        exprOrBlk(ParseRule("'open' declaration")(End(()))){
+          case (body, _) => Open(body)}*),
     modified(`abstract`, Kw(`class`)(typeDeclBody(Cls))),
     modified(`mut`),
     modified(`virtual`),
@@ -281,10 +285,9 @@ object ParseRule:
   val prefixRulesAllowIndentedBlock: ParseRule[Tree] =
     ParseRule(prefixRules.name)(prefixRules.alts :+ 
         (Blk(
-          ParseRule("???????????????????????????????????????????"):
+          ParseRule("block"):
             End(())
-        ) { case (res, ()) => res })
-    : _*)
+        ) { case (res, ()) => res })*)
   
   /* 
   def funSign(k: TermDefKind): Alt[(S[Tree], Opt[Tree])] =
@@ -321,6 +324,7 @@ object ParseRule:
     genInfixRule(`or`, (rhs, _: Unit) => lhs => InfixApp(lhs, `or`, rhs)),
     genInfixRule(`is`, (rhs, _: Unit) => lhs => InfixApp(lhs, `is`, rhs)),
     genInfixRule(`then`, (rhs, _: Unit) => lhs => InfixApp(lhs, `then`, rhs)),
+    // genInfixRule(`else`, (rhs, _: Unit) => lhs => InfixApp(lhs, `else`, rhs)),
     genInfixRule(`:`, (rhs, _: Unit) => lhs => InfixApp(lhs, `:`, rhs)),
     genInfixRule(`extends`, (rhs, _: Unit) => lhs => InfixApp(lhs, `extends`, rhs)),
     genInfixRule(`restricts`, (rhs, _: Unit) => lhs => InfixApp(lhs, `restricts`, rhs)),
