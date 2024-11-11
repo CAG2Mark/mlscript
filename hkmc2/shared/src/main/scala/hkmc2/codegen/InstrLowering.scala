@@ -18,7 +18,7 @@ import Subst.subst
 class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
   override def term(t: st)(k: Result => Block)(using Subst): Block =
     t match
-      case st.Handle(lhs, rhs, defs, body) =>
+      case st.Handle(lhs, rhs, defs) =>
         tl.log(s"Lowering.term ${t.showDbg.truncate(30, "[...]")}")
         ???
       case _ => super.term(t)(k)
