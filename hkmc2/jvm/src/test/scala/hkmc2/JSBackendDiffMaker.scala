@@ -8,6 +8,7 @@ import utils.*
 
 abstract class JSBackendDiffMaker extends MLsDiffMaker:
   
+  val instrLowering = NullaryCommand("il")
   val debugLowering = NullaryCommand("dl")
   val js = NullaryCommand("js")
   val sjs = NullaryCommand("sjs")
@@ -39,7 +40,7 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
     super.processTerm(blk, inImport)
     if js.isSet then
       val low = ltl.givenIn:
-        codegen.Lowering()
+        if instrLowering.isSet then codegen.InstrLowering() else codegen.Lowering()
       val jsb = codegen.js.JSBuilder()
       import semantics.*
       import codegen.*

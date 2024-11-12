@@ -142,16 +142,11 @@ extends Importer:
       case _ => ??? // TODO error
     case Handle(id, cls, blk, S(bod)) =>
       term(Block(Handle(id, cls, blk, N) :: bod :: Nil))
-    case Handle(id: Ident, cls: Ident, Block(sts), N) =>
+    case Handle(id: Ident, cls: Ident, blk, N) =>
       raise(ErrorReport(
         msg"Expected a body for handle bindings in expression position" ->
           tree.toLoc :: Nil))
-          
-      val sym =
-        fieldOrVarSym(Handler, id)
-      val newCtx = ctx + (id.name -> sym)
-      Term.Handle(sym, term(cls)(using newCtx), ObjBody(block(sts)._1))
-      
+      block(Handle(id, cls, blk, N) :: Nil)._1
     case h: Handle =>
       raise(ErrorReport(
         msg"Unsupported handle binding shape" ->
@@ -428,9 +423,17 @@ extends Importer:
         go(sts, Term.Error :: acc)
       case (hd @ Handle(id: Ident, cls: Ident, Block(sts_), N)) :: sts =>
         val sym =
-          fieldOrVarSym(LetBind, id)
+          fieldOrVarSym(Handler, id)
         log(s"Processing `handle` statement $id (${sym}) ${ctx.outer}")
-        val newAcc = Term.Handle(sym, term(cls), ObjBody(block(sts_)._1)) :: acc
+        val newAcc = Term.Handle(sym, term(cls), block(sts_)._1.stats.map(stmt =>
+          stmt match
+          case TermDefinition(_, Fun, _, _, _, _, _) => stmt
+          case _ =>
+            raise(ErrorReport(
+              msg"Unsupported statement in handle block" -> stmt.toLoc :: Nil
+            ))
+            Term.Error
+        )) :: acc
         ctx + (id.name -> sym) givenIn:
           go(sts, newAcc)
       case (tree @ Handle(_, _, _, N)) :: sts =>

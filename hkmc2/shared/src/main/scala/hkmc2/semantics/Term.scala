@@ -35,7 +35,7 @@ enum Term extends Statement:
   case Deref(ref: Term)
   case Ret(result: Term)
   case Try(body: Term, finallyDo: Term)
-  case Handle(lhs: LocalSymbol, rhs: Term, defs: ObjBody)
+  case Handle(lhs: LocalSymbol, rhs: Term, defs: Ls[Statement])
   
   lazy val symbol: Opt[Symbol] = this match
     case Ref(sym) => S(sym)
@@ -112,7 +112,7 @@ sealed trait Statement extends AutoLocated:
       td.rhs.toList
     case Import(sym, pth) => Nil
     case Try(body, finallyDo) => body :: finallyDo :: Nil
-    case Handle(lhs, rhs, defs) => rhs :: defs._1 :: Nil
+    case Handle(lhs, rhs, defs) => rhs :: defs.flatMap(_.subTerms)
     case This(_) => Nil
     case Neg(e) => e :: Nil
   

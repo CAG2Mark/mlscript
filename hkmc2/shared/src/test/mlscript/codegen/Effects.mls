@@ -1,15 +1,224 @@
 :js
 
 // note: seems we can't use traits yet :|
-:fixme
-class Effect with
-  fun perform(arg): Str -> Str
+// using a field to store the effect handler instead
+:il
+:sjs
+class Effect[A](perform: Str -> Str)
 fun foo(e) = e.perform("hi")
 handle h = Effect with
   fun perform(arg, k) = k(arg)
 in
   foo(h)
-//│ ╔══[COMPILATION ERROR] Effect handlers are not enabled
-//│ ║  l.9: 	  fun perform(arg, k) = k(arg)
-//│ ╙──     	                        ^^^^^^
-//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'perform')
+  (() => h.perform("Hello"))()
+//│ JS:
+//│ let cur, nxt, tmp, tmp1;
+//│ function EffectSig$(handler1, handlerFun1, args1, cont1) { return new EffectSig$.class(handler1, handlerFun1, args1, cont1); };
+//│ EffectSig$.class = class EffectSig$ {
+//│   constructor(handler, handlerFun, args, cont) {
+//│     this.handler = handler;
+//│     this.handlerFun = handlerFun;
+//│     this.args = args;
+//│     this.cont = cont;
+//│     
+//│   }
+//│   toString() { return "EffectSig$(" + this.handler + ", " + this.handlerFun + ", " + this.args + ", " + this.cont + ")"; }
+//│ };
+//│ function Cont$(resume1, resumed1, next1, last1) { return new Cont$.class(resume1, resumed1, next1, last1); };
+//│ Cont$.class = class Cont$ {
+//│   constructor(resume, resumed, next, last) {
+//│     this.resume = resume;
+//│     this.resumed = resumed;
+//│     this.next = next;
+//│     this.last = last;
+//│     
+//│   }
+//│   toString() { return "Cont$(" + this.resume + ", " + this.resumed + ", " + this.next + ", " + this.last + ")"; }
+//│ };
+//│ this.Effect = function Effect(perform1) { return new Effect.class(perform1); };
+//│ this.Effect.class = class Effect {
+//│   constructor(perform) {
+//│     this.perform = perform;
+//│     
+//│   }
+//│   toString() { return "Effect(" + this.perform + ")"; }
+//│ };
+//│ function foo(e) {
+//│   let tmp2;
+//│   tmp2 = e.perform("hi");
+//│   if (tmp2 instanceof globalThis.EffectSig$.class) {
+//│     return tmp2
+//│   } else {
+//│     return tmp2
+//│   }
+//│ };
+//│ function perform(arg, k) {
+//│   let tmp2;
+//│   tmp2 = k(arg);
+//│   if (tmp2 instanceof globalThis.EffectSig$.class) {
+//│     return tmp2
+//│   } else {
+//│     return tmp2
+//│   }
+//│ };
+//│ handlerBody: while (true) {
+//│   this.h = new this.Effect((arg) => {
+//│     let cont;
+//│     cont = new globalThis.Cont$.class(() => {
+//│       return undefined
+//│     }, false, undefined, undefined);
+//│     cont.last = cont;
+//│     return new globalThis.EffectSig$.class(this.h, perform, [
+//│       arg
+//│     ], cont)
+//│   });
+//│   tmp = this.foo(this.h);
+//│   if (tmp instanceof globalThis.EffectSig$.class) {
+//│     cur = tmp;
+//│     break handlerBody
+//│   } else {
+//│     tmp1 = (() => {
+//│       let tmp2;
+//│       tmp2 = this.h.perform("Hello");
+//│       if (tmp2 instanceof globalThis.EffectSig$.class) {
+//│         return tmp2
+//│       } else {
+//│         return tmp2
+//│       }
+//│     })();
+//│     if (tmp1 instanceof globalThis.EffectSig$.class) {
+//│       cur = tmp1;
+//│       break handlerBody
+//│     } else {
+//│       cur = tmp1;
+//│     }
+//│   }
+//│   break;
+//│ }
+//│ nxt = undefined;
+//│ handler: while (true) {
+//│   if (cur instanceof globalThis.Cont$.class) {
+//│     cur.last.next = nxt;
+//│     if (cur instanceof globalThis.EffectSig$.class) {
+//│       if (cur.handler) {
+//│         nxt = cur.next;
+//│         cur = cur.handlerFun();
+//│         continue handler
+//│       }
+//│     }
+//│     throw new globalThis.Error("Unhandled effects")
+//│   } else {
+//│     if (nxt === undefined) {
+//│       break handler
+//│     } else {
+//│       cur = nxt.resume(cur);
+//│       nxt = undefined;
+//│     }
+//│     continue handler
+//│   }
+//│   break;
+//│ }
+//│ undefined
+
+:fixme
+while false
+  continue
+//│ ╔══[ERROR] Unrecognized term split (juxtaposition).
+//│ ║  l.125: 	  continue
+//│ ╙──       	  ^^^^^^^^
+//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Unexpected token 'break'
+
+:elt
+class A(x: Int)
+class B: A
+let x = new A(3)
+let y = x
+fun f() = 3
+f()
+if x == y then 4
+//│ Elaborated tree:
+//│ Blk:
+//│   stats = Ls of 
+//│     Parameterized:
+//│       owner = S of globalThis:block#2
+//│       kind = Cls
+//│       sym = class:A
+//│       tparams = Nil
+//│       params = Ls of 
+//│         Param:
+//│           flags = ()
+//│           sym = class:A.x
+//│           sign = S of Sel:
+//│             prefix = Ref of globalThis:import#Predef
+//│             nme = Ident of "Int"
+//│       body = ObjBody of Blk:
+//│         stats = Nil
+//│         res = Lit of UnitLit of true
+//│       companion = N
+//│     Plain:
+//│       owner = S of globalThis:block#2
+//│       kind = Cls
+//│       sym = class:B
+//│       tparams = Nil
+//│       body = ObjBody of Blk:
+//│         stats = Nil
+//│         res = Lit of UnitLit of true
+//│       companion = N
+//│     LetDecl of globalThis:block#2.x
+//│     DefineVar:
+//│       sym = globalThis:block#2.x
+//│       rhs = New:
+//│         cls = Sel:
+//│           prefix = Sel:
+//│             prefix = Ref of ThisSymbol of globalThis:block#2
+//│             nme = Ident of "A"
+//│           nme = Ident of "class"
+//│         args = Ls of 
+//│           Lit of IntLit of 3
+//│     LetDecl of globalThis:block#2.y
+//│     DefineVar:
+//│       sym = globalThis:block#2.y
+//│       rhs = Ref of globalThis:block#2.x
+//│     TermDefinition:
+//│       owner = S of globalThis:block#2
+//│       k = Fun
+//│       sym = member:f
+//│       params = Ls of 
+//│         ParamList:
+//│           flags = ParamListFlags of false
+//│           params = Nil
+//│       sign = N
+//│       body = S of Lit of IntLit of 3
+//│       resSym = ‹result of member:f›@58
+//│     App:
+//│       lhs = Sel:
+//│         prefix = Ref of ThisSymbol of globalThis:block#2
+//│         nme = Ident of "f"
+//│       rhs = Tup of Nil
+//│   res = IfLike:
+//│     kw = keyword 'if'
+//│     desugared = Let:
+//│       sym = $scrut@61
+//│       term = App:
+//│         lhs = Sel:
+//│           prefix = Ref of globalThis:import#Predef
+//│           nme = Ident of "=="
+//│         rhs = Tup of Ls of 
+//│           Fld:
+//│             flags = ()
+//│             value = Ref of globalThis:block#2.x
+//│             asc = N
+//│           Fld:
+//│             flags = ()
+//│             value = Ref of globalThis:block#2.y
+//│             asc = N
+//│       tail = Cons: \
+//│       head = Branch:
+//│         scrutinee = Ref of $scrut@61
+//│         pattern = LitPat of BoolLit of true
+//│         continuation = Else of Lit of IntLit of 4
+//│       tail = End
+//│ = 4
+//│ x = A { x: 3 }
+//│ y = A { x: 3 }
+
