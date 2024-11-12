@@ -18,7 +18,7 @@ import Keyword.{`let`, `set`}
 
 object Elaborator:
   
-  case class Ctx(outer: Opt[MemberSymbol[?]], parent: Opt[Ctx], env: Map[Str, Ctx.Elem]):
+  case class Ctx(outer: Opt[InnerSymbol], parent: Opt[Ctx], env: Map[Str, Ctx.Elem]):
     def +(local: Str -> Symbol): Ctx = copy(outer, env = env + local.mapSecond(Ctx.RefElem(_)))
     def ++(locals: IterableOnce[Str -> Symbol]): Ctx =
       copy(outer, env = env ++ locals.mapValues(Ctx.RefElem(_)))
@@ -32,10 +32,10 @@ object Elaborator:
           case N => sym: Ctx.Elem
         )
       )
-    def nest(outer: Opt[MemberSymbol[?]]): Ctx = Ctx(outer, Some(this), Map.empty)
+    def nest(outer: Opt[InnerSymbol]): Ctx = Ctx(outer, Some(this), Map.empty)
     def get(name: Str): Opt[Ctx.Elem] =
       env.get(name).orElse(parent.flatMap(_.get(name)))
-    def getOuter: Opt[MemberSymbol[?]] = outer.orElse(parent.flatMap(_.getOuter))
+    def getOuter: Opt[InnerSymbol] = outer.orElse(parent.flatMap(_.getOuter))
     lazy val allMembers: Map[Str, Symbol] =
       parent.fold(Map.empty)(_.allMembers) ++ env.flatMap:
         case (n, re: Ctx.RefElem) => (n, re.sym) :: Nil
@@ -54,12 +54,15 @@ object Elaborator:
       def symbol = S(sym)
     final case class SelElem(val base: Elem, val nme: Str, val symOpt: Opt[Symbol]) extends Elem:
       def ref(id: Tree.Ident): Term =
-        // * Note: due to symbolic ops, we may have `id.name =/= nme`
-        Term.Sel(base.ref(Ident(base.nme)), new Tree.Ident(nme).withLocOf(id))(symOpt)
+        // * Note: due to symbolic ops, we may have `id.name =/= nme`;
+        // * e.g., we can have `id.name = "|>"` and `nme = "pipe"`.
+        Term.Sel(base.ref(Ident(base.nme)),
+          new Tree.Ident(nme).withLocOf(id))(symOpt)
       def symbol = symOpt
     given Conversion[Symbol, Elem] = RefElem(_)
     val empty: Ctx = Ctx(N, N, Map.empty)
-    val globalThisSymbol = TermSymbol(ImmutVal, N, Ident("globalThis"))
+    // val globalThisSymbol = TermSymbol(ImmutVal, N, Ident("globalThis"))
+    val globalThisSymbol = TopLevelSymbol("globalThis")
     val seqSymbol = TermSymbol(ImmutVal, N, Ident(";"))
     def init(using State): Ctx = empty.copy(env = Map(
       "globalThis" -> globalThisSymbol,
@@ -154,8 +157,7 @@ extends Importer:
       Term.Error
     case id @ Ident("this") =>
       ctx.getOuter match
-      case S(sym) =>
-        Term.This(sym)
+      case S(sym) => sym.ref(id)
       case N =>
         raise(ErrorReport(msg"Cannot use 'this' outside of an object scope." -> tree.toLoc :: Nil))
         Term.Error
@@ -228,7 +230,7 @@ extends Importer:
       Term.App(term(lhs), term(rhs))(tree, sym)
     case Sel(pre, nme) =>
       val preTrm = term(pre)
-      val sym = resolveField(tree, preTrm.symbol, nme)
+      val sym = resolveField(nme, preTrm.symbol, nme)
       Term.Sel(preTrm, nme)(sym)
     case tree @ Tup(fields) =>
       Term.Tup(fields.map(fld(_)))(tree)
@@ -362,26 +364,37 @@ extends Importer:
       case Open(bod) :: sts =>
         bod match
           case Jux(bse, Block(sts)) =>
-            S(bse -> sts)
+            some(bse -> some(sts))
           // * There could be other shapes of open statements...
+          case bse: Ident =>
+            some(bse -> N)
           case _ =>
             raise(ErrorReport(msg"Illegal 'open' statement shape." -> bod.toLoc :: Nil))
             N
         match
         case N => go(sts, acc)
-        case S(base, importedTrees) =>
+        case S((base, importedTrees)) =>
           base match
           case baseId: Ident =>
             ctx.get(baseId.name) match
-            case S(baseSym) =>
-              val importedNames = importedTrees.flatMap:
-                case id: Ident =>
-                  val sym = resolveField(id, baseSym.symbol, id)
-                  val e = Ctx.SelElem(baseSym, id.name, sym)
-                  id.name -> e :: Nil
-                case t =>
-                  raise(ErrorReport(msg"Illegal 'open' statement element." -> t.toLoc :: Nil))
-                  Nil
+            case S(baseElem) =>
+              val importedNames = importedTrees match
+                case N => // "wilcard" open
+                  baseElem.symbol match
+                  case S(sym: BlockMemberSymbol) if sym.modTree.isDefined =>
+                    sym.modTree.get.definedSymbols.map:
+                      case (nme, sym) => nme -> Ctx.SelElem(baseElem, nme, S(sym))
+                  case _ =>
+                    raise(ErrorReport(msg"Wildcard 'open' not supported for this kind of symbol." -> baseId.toLoc :: Nil))
+                    Nil
+                case S(sts) => sts.flatMap:
+                  case id: Ident =>
+                    val sym = resolveField(id, baseElem.symbol, id)
+                    val e = Ctx.SelElem(baseElem, id.name, sym)
+                    id.name -> e :: Nil
+                  case t =>
+                    raise(ErrorReport(msg"Illegal 'open' statement element." -> t.toLoc :: Nil))
+                    Nil
               (ctx elem_++ importedNames).givenIn:
                 go(sts, acc)
             case N =>
@@ -394,7 +407,7 @@ extends Importer:
         val (newCtx, newAcc) = arg match
           case Tree.StrLit(path) =>
             val stmt = importPath(path)
-            (ctx + (stmt.sym.name -> stmt.sym),
+            (ctx + (stmt.sym.nme -> stmt.sym),
             stmt.withLocOf(m) :: acc)
           case _ =>
             raise(ErrorReport(
@@ -489,7 +502,8 @@ extends Importer:
           case L(d) =>
             raise(d)
             new Ident("<error>") // TODO improve
-        var newCtx = ctx.nest(S(td.symbol))
+        var newCtx = ctx.nest(S(td.symbol).collectFirst{
+          case s: InnerSymbol => s })
         val tps = td.typeParams match
           case S(ts) =>
             ts.tys.flatMap: targ =>
@@ -524,8 +538,9 @@ extends Importer:
             res
         val defn = k match
         case Als =>
-          val alsSym = td.symbol.asInstanceOf[TypeAliasSymbol] // TODO improve
-          newCtx.nest(S(alsSym)).givenIn:
+          val alsSym = td.symbol.asInstanceOf[TypeAliasSymbol] // TODO improve `asInstanceOf`
+          // newCtx.nest(S(alsSym)).givenIn:
+          newCtx.nest(N).givenIn:
             assert(ps.isEmpty)
             assert(body.isEmpty)
             val d =
@@ -534,7 +549,7 @@ extends Importer:
             alsSym.defn = S(d)
             d
         case Mod =>
-          val clsSym = td.symbol.asInstanceOf[ModuleSymbol] // TODO: improve
+          val clsSym = td.symbol.asInstanceOf[ModuleSymbol] // TODO: improve `asInstanceOf`
           val owner = ctx.outer
           newCtx.nest(S(clsSym)).givenIn:
             log(s"Processing type definition $nme")
@@ -548,7 +563,7 @@ extends Importer:
             clsSym.defn = S(cd)
             cd
         case Cls =>
-          val clsSym = td.symbol.asInstanceOf[MemberSymbol[ClassDef]] // TODO: improve
+          val clsSym = td.symbol.asInstanceOf[ClassSymbol] // TODO: improve `asInstanceOf`
           val owner = ctx.outer
           newCtx.nest(S(clsSym)).givenIn:
             log(s"Processing type definition $nme")
@@ -579,7 +594,7 @@ extends Importer:
         go(sts, res :: acc)
     end go
     
-    c.withMembers(members, c.outer.map(out => ThisSymbol(out))).givenIn:
+    c.withMembers(members, c.outer).givenIn:
       go(blk.desugStmts, Nil)
   
   

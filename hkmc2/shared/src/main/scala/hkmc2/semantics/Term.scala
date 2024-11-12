@@ -11,7 +11,6 @@ enum Term extends Statement:
   case Error
   case Lit(lit: Literal)
   case Ref(sym: Symbol)(val tree: Tree.Ident, val refNum: Int)
-  case This(sym: MemberSymbol[?])
   case App(lhs: Term, rhs: Term)(val tree: Tree.App, val resSym: FlowSymbol)
   case TyApp(lhs: Term, targs: Ls[Term])
   case Sel(prefix: Term, nme: Tree.Ident)(val sym: Opt[Symbol])
@@ -177,8 +176,8 @@ sealed trait Statement extends AutoLocated:
         case S(x) => " = " + x.showDbg
         case N => ""
       }"
-    case cls: ClassDef =>
-      s"class ${cls.sym.nme}${
+    case cls: ClassLikeDef =>
+      s"${cls.kind} ${cls.sym.nme}${
         cls.tparams.map(_.showDbg).mkStringOr(", ", "[", "]")}${
         cls.paramsOpt.fold("")(_.map(_.showDbg).mkString("(", ", ", ")"))} ${cls.body}"
     case Import(sym, file) => s"import ${sym} from ${file}"
@@ -188,7 +187,7 @@ final case class LetDecl(sym: LocalSymbol) extends Statement
 final case class DefineVar(sym: LocalSymbol, rhs: Term) extends Statement
 
 final case class TermDefinition(
-    owner: Opt[MemberSymbol[?]],
+    owner: Opt[InnerSymbol],
     k: TermDefKind,
     sym: BlockMemberSymbol,
     params: Ls[ParamList],
@@ -202,7 +201,7 @@ case class ObjBody(blk: Term.Blk):
   override def toString: String = blk.showDbg
 
 
-case class Import(sym: TermSymbol, file: Str) extends Statement
+case class Import(sym: MemberSymbol[?], file: Str) extends Statement
 
 
 sealed abstract class Declaration:
@@ -214,14 +213,15 @@ sealed trait Companion extends Definition
 
 
 sealed abstract class ClassLikeDef extends Definition:
-  val owner: Opt[MemberSymbol[?]]
+  val owner: Opt[InnerSymbol]
   val sym: MemberSymbol[? <: ClassLikeDef]
   val paramsOpt: Opt[Ls[Param]]
+  val tparams: Ls[TyParam]
   val kind: ClsLikeKind
   val body: ObjBody
 
 
-case class ModuleDef(owner: Opt[MemberSymbol[?]], sym: ModuleSymbol, tparams: Ls[TyParam], paramsOpt: Opt[Ls[Param]], body: ObjBody) extends ClassLikeDef with Companion:
+case class ModuleDef(owner: Opt[InnerSymbol], sym: ModuleSymbol, tparams: Ls[TyParam], paramsOpt: Opt[Ls[Param]], body: ObjBody) extends ClassLikeDef with Companion:
   self =>
   val kind: ClsLikeKind = Mod
 
@@ -235,7 +235,7 @@ sealed abstract class ClassDef extends ClassLikeDef:
   val companion: Opt[Companion]
 
 object ClassDef:
-  def apply(owner: Opt[MemberSymbol[?]], kind: ClsLikeKind, sym: MemberSymbol[?], tparams: Ls[TyParam], paramsOpt: Opt[Ls[Param]], body: ObjBody): ClassDef =
+  def apply(owner: Opt[InnerSymbol], kind: ClsLikeKind, sym: InnerSymbol, tparams: Ls[TyParam], paramsOpt: Opt[Ls[Param]], body: ObjBody): ClassDef =
     paramsOpt match
       case S(params) => Parameterized(owner, kind, sym.asInstanceOf// TODO: improve
         , tparams, params, body, N)
@@ -246,7 +246,7 @@ object ClassDef:
     S((cls.sym, cls.tparams, cls.paramsOpt, cls.body))
   
   case class Parameterized(
-      owner: Opt[MemberSymbol[?]],
+      owner: Opt[InnerSymbol],
       kind: ClsLikeKind, sym: ClassSymbol,
       tparams: Ls[TyParam], params: Ls[Param],
       body: ObjBody, companion: Opt[ModuleDef]
@@ -254,7 +254,7 @@ object ClassDef:
     val paramsOpt: Opt[Ls[Param]] = S(params)
   
   case class Plain(
-      owner: Opt[MemberSymbol[?]],
+      owner: Opt[InnerSymbol],
       kind: ClsLikeKind, sym: ClassSymbol,
       tparams: Ls[TyParam],
       body: ObjBody, companion: Opt[Companion]
