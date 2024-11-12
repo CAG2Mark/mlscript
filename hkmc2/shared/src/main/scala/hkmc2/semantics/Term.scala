@@ -112,7 +112,6 @@ sealed trait Statement extends AutoLocated:
     case Import(sym, pth) => Nil
     case Try(body, finallyDo) => body :: finallyDo :: Nil
     case Handle(lhs, rhs, defs) => rhs :: defs.flatMap(_.subTerms)
-    case This(_) => Nil
     case Neg(e) => e :: Nil
   
   protected def children: Ls[Located] = this match
