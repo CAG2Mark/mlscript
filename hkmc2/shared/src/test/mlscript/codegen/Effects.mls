@@ -12,7 +12,7 @@ in
   foo(h)
   (() => h.perform("Hello"))()
 //│ JS:
-//│ let cur, nxt, tmp, tmp1;
+//│ let cur, nxt, tmp, tmp1, tmp2;
 //│ function EffectSig$(handler1, handlerFun1, args1, cont1) { return new EffectSig$.class(handler1, handlerFun1, args1, cont1); };
 //│ EffectSig$.class = class EffectSig$ {
 //│   constructor(handler, handlerFun, args, cont) {
@@ -44,21 +44,21 @@ in
 //│   toString() { return "Effect(" + this.perform + ")"; }
 //│ };
 //│ function foo(e) {
-//│   let tmp2;
-//│   tmp2 = e.perform("hi");
-//│   if (tmp2 instanceof globalThis.EffectSig$.class) {
-//│     return tmp2
+//│   let tmp3;
+//│   tmp3 = e.perform("hi");
+//│   if (tmp3 instanceof globalThis.EffectSig$.class) {
+//│     return tmp3
 //│   } else {
-//│     return tmp2
+//│     return tmp3
 //│   }
 //│ };
 //│ function perform(arg, k) {
-//│   let tmp2;
-//│   tmp2 = k(arg);
-//│   if (tmp2 instanceof globalThis.EffectSig$.class) {
-//│     return tmp2
+//│   let tmp3;
+//│   tmp3 = k(arg);
+//│   if (tmp3 instanceof globalThis.EffectSig$.class) {
+//│     return tmp3
 //│   } else {
-//│     return tmp2
+//│     return tmp3
 //│   }
 //│ };
 //│ handlerBody: while (true) {
@@ -72,25 +72,25 @@ in
 //│       arg
 //│     ], cont)
 //│   });
-//│   tmp = this.foo(this.h);
-//│   if (tmp instanceof this.EffectSig$.class) {
-//│     cur = tmp;
+//│   tmp1 = this.foo(this.h);
+//│   if (tmp1 instanceof this.EffectSig$.class) {
+//│     cur = tmp1;
 //│     break handlerBody
 //│   } else {
-//│     tmp1 = (() => {
-//│       let tmp2;
-//│       tmp2 = this.h.perform("Hello");
-//│       if (tmp2 instanceof this.EffectSig$.class) {
-//│         return tmp2
+//│     tmp2 = (() => {
+//│       let tmp3;
+//│       tmp3 = this.h.perform("Hello");
+//│       if (tmp3 instanceof this.EffectSig$.class) {
+//│         return tmp3
 //│       } else {
-//│         return tmp2
+//│         return tmp3
 //│       }
 //│     })();
-//│     if (tmp1 instanceof this.EffectSig$.class) {
-//│       cur = tmp1;
+//│     if (tmp2 instanceof this.EffectSig$.class) {
+//│       cur = tmp2;
 //│       break handlerBody
 //│     } else {
-//│       cur = tmp1;
+//│       cur = tmp2;
 //│     }
 //│   }
 //│   break;
@@ -100,7 +100,8 @@ in
 //│   if (cur instanceof this.Cont$.class) {
 //│     cur.last.next = nxt;
 //│     if (cur instanceof this.EffectSig$.class) {
-//│       if (cur.handler) {
+//│       tmp = cur.handler === this.h;
+//│       if (tmp) {
 //│         nxt = cur.next;
 //│         cur = cur.handlerFun();
 //│         continue handler
@@ -124,7 +125,7 @@ in
 while false
   continue
 //│ ╔══[ERROR] Unrecognized term split (juxtaposition).
-//│ ║  l.125: 	  continue
+//│ ║  l.126: 	  continue
 //│ ╙──       	  ^^^^^^^^
 //│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Unexpected token 'break'
 

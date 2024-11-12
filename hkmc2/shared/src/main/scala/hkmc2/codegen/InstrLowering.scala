@@ -186,12 +186,11 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       ))(Nil)
       termHandlerFuns: handlerFuns =>
         subTerm(rhs): cls =>
-          val params = handlerFuns.map(hFun => Lam)
-          val discard = new TempSymbol(summon[Elaborator.State].nextUid, N)
           val cur = new TempSymbol(summon[Elaborator.State].nextUid, N, "cur")
           val nxt = new TempSymbol(summon[Elaborator.State].nextUid, N, "nxt")
           val lblBdy = new TempSymbol(summon[Elaborator.State].nextUid, N, "handlerBody")
           val lblH = new TempSymbol(summon[Elaborator.State].nextUid, N, "handler")
+          val tmp = new TempSymbol(summon[Elaborator.State].nextUid, N)
           /*
             // let's pretend effect signature is a continuation, the impl is wrong now
             // cur is either a value, a continuation
@@ -234,17 +233,20 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
                       Match(
                         Value.Ref(cur),
                         (Case.Cls(effectSigSym, effectSigTrm) ->
-                          Match(
-                            // FIXME: this should be equality with lhs
-                            Select(Value.Ref(cur), Tree.Ident("handler")),
-                            (Case.Lit(Tree.BoolLit(true)) ->
-                              Assign(nxt, Select(Value.Ref(cur), Tree.Ident("next")), Assign(cur, Call(
-                                Select(Value.Ref(cur), Tree.Ident("handlerFun")),
-                                Nil // TODO: argument is from handler itself!
-                              ), Break(lblH, true)))
-                            ) :: Nil,
-                            N,
-                            End()
+                          Assign(
+                            tmp,
+                            Call(Select(Value.Ref(Elaborator.Ctx.globalThisSymbol), Tree.Ident("===")), Select(Value.Ref(cur), Tree.Ident("handler")) :: Value.Ref(lhs) :: Nil),
+                            Match(
+                              Value.Ref(tmp),
+                              (Case.Lit(Tree.BoolLit(true)) ->
+                                Assign(nxt, Select(Value.Ref(cur), Tree.Ident("next")), Assign(cur, Call(
+                                  Select(Value.Ref(cur), Tree.Ident("handlerFun")),
+                                  Nil // TODO: argument is from handler itself!
+                                ), Break(lblH, true)))
+                              ) :: Nil,
+                              N,
+                              End()
+                            )
                           )
                         ) :: Nil,
                         N,
@@ -267,52 +269,6 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
               )
             )
           )
-            /*
-            Label(
-              lblBdy,
-              Assign(lhs, Instantiate(cls, handlerFuns), term(st.Blk(stats, res))(r => Assign(cur, r, End()))),
-              Label(
-                lblH,
-                Match(
-                  Value.Ref(cur),
-                  (Case.Cls(effectSigSym, effectSigTrm) -> Match(
-                    Select(Value.Ref(cur), Tree.Ident("handler")), // FIXME: should be equality with lhs
-                    (Case.Lit(Tree.BoolLit(true)) ->
-                      Assign(nxt, Select(Select(Value.Ref(cur), Tree.Ident("cont")), Tree.Ident("next")),
-                          Assign(cur,
-                            Call(
-                              Select(Value.Ref(cur), Tree.Ident("handlerFun")),
-                              Nil // FIXME: pass correct params from cur
-                            ),
-                            Match(
-                              Value.Ref(cur),
-                              (Case.Cls(effectSigSym, effectSigTrm) -> Match(
-                                Select(Value.Ref(cur), Tree.Ident("handler")), // FIXME: should be equality with lhs
-                                (Case.Lit(Tree.BoolLit(true)) ->
-                                  // FIXME: this is wrong, a loop is needed to get the real last, and last should be updated for amortized efficient lookup later.
-                                  AssignField(Select(Select(Value.Ref(cur), Tree.Ident("cont")), Tree.Ident("last")), Tree.Ident("next"), Value.Ref(nxt),
-                                    Break(lblH, true)
-                                  )
-                                ) :: Nil,
-                                End(),
-                                End()
-                              )) :: Nil,
-                              End(),
-                              End()
-                            )
-                          ),
-                          End()
-                        )
-                      )
-                    ) :: Nil,
-                    End(),
-                    End()
-                  )
-                ),
-                Some(k(Value.Ref(cur)))
-              )
-            )
-            */
     case st.App(f, args) =>
       tl.log(s"Lowering.term ${t.showDbg.truncate(30, "[...]")}")
       subtermSuper(t): res =>
