@@ -63,6 +63,89 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
   
   def handlerCtx(using HandlerCtx): HandlerCtx = summon[HandlerCtx]
 
+  // special function denoting state transitions, transitionFn should never appear in the real output
+  private def freshTmp() = new TempSymbol(summon[Elaborator.State].nextUid, N)
+  private val transitionSymbol = freshTmp()
+
+  // id: the id of the current state
+  // blk: the block of code within this state
+  class BlockState(id: Int, blk: Block)
+
+  case class StateTransition(to: Int)
+
+  // partition a function into a graph of states
+  // where states are separated by function calls
+  // returns (truncated input block, child block states)
+  // the truncated input blocks includes the delimiting function call
+  def partitionBlock(blk: Block): (Block, Ls[BlockState]) = 
+    class FreshId:
+      var id = 0
+      def apply() =
+        val tmp = id
+        id += 1
+        tmp
+
+    // for readability :)
+    class PartRet(val head: Block, val states: Ls[BlockState])
+
+    // Note: can construct StateTransition and pattern match on it as if it were a case class
+    object StateTransition:
+      def apply(uid: Int) = Return(Call(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(uid)))), false)
+      def unapply(blk: Block) = blk match
+        case Return(Call(Value.Ref(sym), List(Value.Lit(Tree.IntLit(uid)))), false) if sym == transitionSymbol =>
+          Some(uid)
+        case _ => None 
+    
+    def go(labelIds: Map[Symbol, Int], blk: Block)(using freshState: FreshId): PartRet = blk match
+      case Match(lam: Value.Lam, arms, dflt, rest) =>
+        ???
+      case Match(scrut, arms, dflt, rest) => 
+        val armsParts = arms.map((cse, blkk) => (cse, go(labelIds, blkk)))
+        val dfltParts = dflt.map(blkk => go(labelIds, blkk))
+        val restParts = go(labelIds, rest)
+
+        val states_ = restParts.states ::: armsParts.flatMap(_._2.states)
+        val states = dfltParts match
+          case None => states_
+          case Some(value) => value.states ::: states_
+
+        val newArms = armsParts.map((cse, partRet) => (cse, partRet.head))
+        
+        PartRet(
+          Match(scrut, newArms, dfltParts.map(_.head), restParts.head),
+          states
+        )
+        
+      case Return(c: Call, implct) =>
+        val t = freshTmp()
+        val nextState = freshState()
+        val blk = Assign(t, c, StateTransition(nextState))
+
+        val retBlk = Return(Value.Ref(t), false)
+
+        PartRet(blk, BlockState(nextState, retBlk) :: Nil)
+      case Label(label, body, rest) => ???
+      case Break(label, toBeginning) => ???
+      case Begin(sub, rest) => ???
+      case TryBlock(sub, finallyDo, rest) => ???
+      case Assign(lhs, rhs, rest) => ???
+      case AssignField(lhs, nme, rhs, rest) => ???
+      case Define(defn, rest) => ???
+      case _ => PartRet(blk, Nil)
+  
+    val ret = go(Map.empty, blk)(using FreshId())
+    (ret.head, ret.states)
+  
+
+  def createContClass(fun: FunDefn): ClsLikeDefn =
+    val clsSymbol = ClassSymbol(
+      Tree.TypeDef(syntax.Cls, Tree.Error(), N, N), 
+      Tree.Ident("Cont$" + fun.sym.nme)
+    )
+    val kind = syntax.Cls
+    
+    ???
+
   override def term(t: st)(k: Result => Block)(using Subst, HandlerCtx): Block =
     t match
     case st.Blk((td: TermDefinition) :: stats, res) =>
