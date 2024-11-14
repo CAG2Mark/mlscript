@@ -14,6 +14,7 @@ import semantics.*
 import semantics.Term.*
 
 import Subst.subst
+import scala.annotation.tailrec
 
 object InstrLowering:
   case class HandlerCtx(handlers: List[Path => Block], defaultHandler: Path => Block):
@@ -69,54 +70,119 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
 
   // id: the id of the current state
   // blk: the block of code within this state
-  class BlockState(id: Int, blk: Block)
+  class BlockState(id: BigInt, blk: Block)
 
-  case class StateTransition(to: Int)
+  /* 
+  Partition a function into a graph of states
+  where states are separated by function calls
+  the truncated blocks includes the delimiting function call
+  
+  for example:
+  let a = whatever
+  if a then
+    let x1 = foo()
+    x1 + 1
+  else
+    let x2 = bar()
+    x1 + 2
+  becomes
+  state 0:
+  let a = whatever
+  if a then
+    let x1 = foo()
+    <state transition into state 1>
+  else
+    let x2 = bar()
+    <state transition into state 2>
 
-  // partition a function into a graph of states
-  // where states are separated by function calls
-  // returns (truncated input block, child block states)
-  // the truncated input blocks includes the delimiting function call
-  def partitionBlock(blk: Block): (Block, Ls[BlockState]) = 
+  state 1:
+    x1 + 1
+
+  state 2:
+    x2 + 2
+  */
+  def partitionBlock(blk: Block): Ls[BlockState] = 
     class FreshId:
-      var id = 0
+      var id: BigInt = 0
       def apply() =
         val tmp = id
         id += 1
         tmp
 
     // for readability :)
-    class PartRet(val head: Block, val states: Ls[BlockState])
+    case class PartRet(head: Block, states: Ls[BlockState])
 
     // Note: can construct StateTransition and pattern match on it as if it were a case class
     object StateTransition:
-      def apply(uid: Int) = Return(Call(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(uid)))), false)
+      def apply(uid: BigInt) = Return(Call(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(uid)))), false)
       def unapply(blk: Block) = blk match
         case Return(Call(Value.Ref(sym), List(Value.Lit(Tree.IntLit(uid)))), false) if sym == transitionSymbol =>
-          Some(uid)
-        case _ => None 
+          S(uid)
+        case _ => N 
+
+    // used to analyze whether to touch labels, currently unused.
+    val labelCallCache: scala.collection.mutable.Map[Symbol, Bool] = scala.collection.mutable.Map()
+    def containsCallRec(blk: Block): Bool = containsCall(blk)
+    @tailrec
+    def containsCall(blk: Block): Bool = blk match
+      case Match(scrut, arms, dflt, rest) => arms.find((_, blk) => containsCallRec(blk)).isDefined || containsCall(rest)
+      case Return(c: Call, implct) => true
+      case Return(_, _) => false 
+      case Throw(c: Call) => true
+      case Throw(_) => false
+      case l @ Label(label, body, rest) => 
+        labelBodyHasCall(l) || containsCall(rest)
+      case Break(label, toBeginning) => false
+      case Begin(sub, rest) => containsCallRec(sub) || containsCall(rest)
+      case TryBlock(sub, finallyDo, rest) => containsCallRec(sub) || containsCallRec(finallyDo) || containsCall(rest)
+      case Assign(lhs, c: Call, rest) => true
+      case Assign(_, _, rest) => containsCall(rest)
+      case AssignField(lhs, nme, c: Call, rest) => true
+      case AssignField(_, _, _, rest) => containsCall(rest)
+      case Define(defn, rest) => containsCall(rest)
+      case End(msg) => false
     
-    def go(labelIds: Map[Symbol, Int], blk: Block)(using freshState: FreshId): PartRet = blk match
-      case Match(lam: Value.Lam, arms, dflt, rest) =>
-        ???
+    def labelBodyHasCall(blk: Label) =
+      val Label(label, body, rest) = blk
+      labelCallCache.get(label) match
+        case N =>
+          val res = containsCallRec(body)
+          labelCallCache.addOne(label -> res)
+          res
+        case S(value) =>
+          value
+
+    // returns (truncated input block, child block states)
+    // TODO: replace Call pattern with special EffectfulCall pattern when Anson adds that
+    // TODO: don't split within Labels when not needed, ideally keep it intact. Need careful analysis for this
+    // blk: The block to transform
+    // labelIds: maps label IDs to the state at the start of the label and the state after the label
+    // jumpTo: what state End should jump to, if at all 
+    // freshState: uid generator
+    def go(blk: Block)(implicit labelIds: Map[Symbol, (BigInt, BigInt)], afterEnd: Option[BigInt], freshState: FreshId): PartRet = blk match
       case Match(scrut, arms, dflt, rest) => 
-        val armsParts = arms.map((cse, blkk) => (cse, go(labelIds, blkk)))
-        val dfltParts = dflt.map(blkk => go(labelIds, blkk))
-        val restParts = go(labelIds, rest)
+        val restParts = go(rest)
+        // TODO: If restParts is a StateTransition, we can avoid creating a new state here
+        val restId = freshState()
+        
+        val armsParts = arms.map((cse, blkk) => (cse, go(blkk)(afterEnd = S(restId))))
+        val dfltParts = dflt.map(blkk => go(blkk)(afterEnd = S(restId)))
+        
 
         val states_ = restParts.states ::: armsParts.flatMap(_._2.states)
         val states = dfltParts match
-          case None => states_
-          case Some(value) => value.states ::: states_
+          case N => states_
+          case S(value) => value.states ::: states_
 
         val newArms = armsParts.map((cse, partRet) => (cse, partRet.head))
         
         PartRet(
-          Match(scrut, newArms, dfltParts.map(_.head), restParts.head),
-          states
+          Match(scrut, newArms, dfltParts.map(_.head), StateTransition(restId)),
+          BlockState(restId, restParts.head) :: states
         )
         
-      case Return(c: Call, implct) =>
+      case Return(c: Call, implct) => 
+        // note: this is a tail-call, this case should eventually become impossible when there is a tail call optimizer
         val t = freshTmp()
         val nextState = freshState()
         val blk = Assign(t, c, StateTransition(nextState))
@@ -124,17 +190,63 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
         val retBlk = Return(Value.Ref(t), false)
 
         PartRet(blk, BlockState(nextState, retBlk) :: Nil)
-      case Label(label, body, rest) => ???
-      case Break(label, toBeginning) => ???
-      case Begin(sub, rest) => ???
-      case TryBlock(sub, finallyDo, rest) => ???
-      case Assign(lhs, rhs, rest) => ???
-      case AssignField(lhs, nme, rhs, rest) => ???
-      case Define(defn, rest) => ???
-      case _ => PartRet(blk, Nil)
-  
-    val ret = go(Map.empty, blk)(using FreshId())
-    (ret.head, ret.states)
+      case l @ Label(label, body, rest) =>
+        val startId = freshState() // start of body
+        val endId = freshState() // start of rest
+
+        val PartRet(bodyNew, parts) = go(body)(using labelIds + (label -> (startId, endId)), S(endId))
+        val PartRet(restNew, restParts) = go(rest)
+        PartRet(
+          StateTransition(startId), 
+          BlockState(startId, bodyNew) :: BlockState(endId, restNew) :: parts ::: restParts
+        )
+
+      case Break(label, toBeginning) =>
+        val (start, end) = labelIds.get(label) match
+          case N => raise(ErrorReport(
+            msg"Could not find label '${label.nme}'" ->
+            label.toLoc :: Nil,
+            source = Diagnostic.Source.Compilation))
+            return PartRet(blk, Nil)
+          case S(value) => value
+        
+        if toBeginning then
+          PartRet(StateTransition(start), Nil)
+        else
+          PartRet(StateTransition(end), Nil)
+        
+      case Begin(sub, rest) => 
+        // TODO: Same comment as in Match
+        val restId = freshState()
+        val PartRet(subNew, subParts) = go(sub)(afterEnd = S(restId))
+        val PartRet(restNew, restParts) = go(rest)
+        
+        PartRet(subNew, BlockState(restId, restNew) :: subParts ::: restParts)
+      case Assign(lhs, rhs: Call, rest) => ??? // TODO: awaiting changes
+      case AssignField(lhs, nme, rhs: Call, rest) => ???
+      case Define(defn, rest) => 
+        val PartRet(head, parts) = go(rest)
+        PartRet(Define(defn, head), parts)
+      case End(_) => afterEnd match
+        case None => PartRet(blk, Nil)
+        case Some(value) => PartRet(StateTransition(value), Nil)
+      // identity cases
+      case Assign(lhs, rhs, rest) =>
+        val PartRet(head, parts) = go(rest)
+        PartRet(Assign(lhs, rhs, head), parts)
+      case AssignField(lhs, nme, rhs, rest) =>
+        val PartRet(head, parts) = go(rest)
+        PartRet(AssignField(lhs, nme, rhs, head), parts)
+      case Return(_, _) => PartRet(blk, Nil)
+      // ignored cases
+      case TryBlock(sub, finallyDo, rest) => ??? // ignore
+      case Throw(_) => ??? // ignore
+
+    val freshState = FreshId()
+    val headId = freshState()
+
+    val ret = go(blk)(using Map.empty, N, FreshId())
+    BlockState(headId, ret.head) :: ret.states
   
 
   def createContClass(fun: FunDefn): ClsLikeDefn =
