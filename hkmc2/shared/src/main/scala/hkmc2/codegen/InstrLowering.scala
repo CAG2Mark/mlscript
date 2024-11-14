@@ -69,7 +69,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
   private val transitionSymbol = freshTmp()
   private val separationSymbol = freshTmp("separator")
   class FreshId:
-    var id = 0
+    var id: BigInt = 0
     def apply() =
       val tmp = id
       id += 1
@@ -110,13 +110,6 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     x2 + 2
   */
   def partitionBlock(blk: Block): Ls[BlockState] = 
-    class FreshId:
-      var id: BigInt = 0
-      def apply() =
-        val tmp = id
-        id += 1
-        tmp
-
     // for readability :)
     case class PartRet(head: Block, states: Ls[BlockState])
 
@@ -167,11 +160,11 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     // labelIds: maps label IDs to the state at the start of the label and the state after the label
     // jumpTo: what state End should jump to, if at all 
     // freshState: uid generator
-    def go(blk: Block)(implicit labelIds: Map[Symbol, (BigInt, BigInt)], afterEnd: Option[BigInt], freshState: FreshId): PartRet = blk match
+    def go(blk: Block)(implicit labelIds: Map[Symbol, (BigInt, BigInt)], afterEnd: Option[BigInt]): PartRet = blk match
       case Match(scrut, arms, dflt, rest) => 
         val restParts = go(rest)
         // TODO: If restParts is a StateTransition, we can avoid creating a new state here
-        val restId = freshState()
+        val restId = freshId()
         
         val armsParts = arms.map((cse, blkk) => (cse, go(blkk)(afterEnd = S(restId))))
         val dfltParts = dflt.map(blkk => go(blkk)(afterEnd = S(restId)))
@@ -192,15 +185,15 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       case Return(c: Call, implct) => 
         // note: this is a tail-call, this case should eventually become impossible when there is a tail call optimizer
         val t = freshTmp()
-        val nextState = freshState()
+        val nextState = freshId()
         val blk = Assign(t, c, StateTransition(nextState))
 
         val retBlk = Return(Value.Ref(t), false)
 
         PartRet(blk, BlockState(nextState, retBlk) :: Nil)
       case l @ Label(label, body, rest) =>
-        val startId = freshState() // start of body
-        val endId = freshState() // start of rest
+        val startId = freshId() // start of body
+        val endId = freshId() // start of rest
 
         val PartRet(bodyNew, parts) = go(body)(using labelIds + (label -> (startId, endId)), S(endId))
         val PartRet(restNew, restParts) = go(rest)
@@ -225,7 +218,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
         
       case Begin(sub, rest) => 
         // TODO: Same comment as in Match
-        val restId = freshState()
+        val restId = freshId()
         val PartRet(subNew, subParts) = go(sub)(afterEnd = S(restId))
         val PartRet(restNew, restParts) = go(rest)
         
@@ -250,10 +243,9 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       case TryBlock(sub, finallyDo, rest) => ??? // ignore
       case Throw(_) => ??? // ignore
 
-    val freshState = FreshId()
-    val headId = freshState()
+    val headId = freshId()
 
-    val ret = go(blk)(using Map.empty, N, FreshId())
+    val ret = go(blk)(using Map.empty, N)
     BlockState(headId, ret.head) :: ret.states
   
 
