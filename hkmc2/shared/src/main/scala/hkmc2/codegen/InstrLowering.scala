@@ -228,7 +228,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       case Define(defn, rest) => 
         val PartRet(head, parts) = go(rest)
         PartRet(Define(defn, head), parts)
-      case End(_) => afterEnd match
+      case End(_) | Return(Value.Lit(Tree.UnitLit(true)), true) => afterEnd match
         case None => PartRet(blk, Nil)
         case Some(value) => PartRet(StateTransition(value), Nil)
       // identity cases
