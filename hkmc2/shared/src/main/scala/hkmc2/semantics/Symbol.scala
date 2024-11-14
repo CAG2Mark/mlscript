@@ -44,8 +44,8 @@ abstract class Symbol extends Located:
       mem.alsTree.map(_.symbol.asInstanceOf[TypeAliasSymbol])
     case _ => N
   
-  def asClsLike = asCls orElse asMod
-  def asTpe = asCls orElse asAls
+  def asClsLike: Opt[ClassSymbol | ModuleSymbol] = asCls orElse asMod
+  def asTpe: Opt[TypeSymbol] = asCls orElse asAls
   
   override def equals(x: Any): Bool = x match
     case that: Symbol => uid === that.uid
@@ -81,6 +81,10 @@ class TempSymbol(uid: Int, val trm: Opt[Term], dbgNme: Str = "tmp") extends Bloc
 class VarSymbol(val id: Ident, uid: Int) extends BlockLocalSymbol(id.name, uid) with NamedSymbol:
   val name: Str = id.name
   // override def toString: Str = s"$name@$uid"
+
+class BuiltinSymbol(val nme: Str, val binary: Bool, val unary: Bool, val nullary: Bool) extends Symbol:
+  def toLoc: Option[Loc] = N
+  override def toString: Str = s"builtin:$nme"
 
 
 /** This is the outside-facing symbol associated to a possibly-overloaded
@@ -158,7 +162,7 @@ class ModuleSymbol(val tree: Tree.TypeDef, val id: Tree.Ident)
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of module here
   override def toString: Str = s"module:${id.name}"
 
-class TypeAliasSymbol(val id: Tree.Ident) extends MemberSymbol:
+class TypeAliasSymbol(val id: Tree.Ident) extends MemberSymbol[TypeDef]:
   def nme = id.name
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of type alias here
   override def toString: Str = s"module:${id.name}"

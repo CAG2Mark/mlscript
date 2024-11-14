@@ -65,8 +65,16 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
   def handlerCtx(using HandlerCtx): HandlerCtx = summon[HandlerCtx]
 
   // special function denoting state transitions, transitionFn should never appear in the real output
-  private def freshTmp() = new TempSymbol(summon[Elaborator.State].nextUid, N)
+  private def freshTmp(dbgNme: Str = "tmp") = new TempSymbol(summon[Elaborator.State].nextUid, N, dbgNme)
   private val transitionSymbol = freshTmp()
+  private val separationSymbol = freshTmp("separator")
+  class FreshId:
+    var id = 0
+    def apply() =
+      val tmp = id
+      id += 1
+      tmp
+  private val freshId = FreshId()
 
   // id: the id of the current state
   // blk: the block of code within this state
@@ -270,6 +278,8 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       case _ => super.term(t)(k)
     case st.Blk(st.Handle(lhs, rhs, defs) :: stats, res) =>
       tl.log(s"Lowering.term ${t.showDbg.truncate(30, "[...]")}")
+      // TODO: save handler context and states for uid
+      val uid = freshId()
       // FIXME: Assumed defs are in the correct order, which is not checked currently
       val termHandlerFuns = (k: Ls[Value.Lam] => Block) => (defs.foldRight[Ls[Value.Lam] => Block](k)((a, acc) =>
         a match
@@ -316,11 +326,13 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
                   cur = handle(cur)
                   continue
                 }
-                do jumpToHandler with cur
+                nxt = undefined;
+                do jumpToHandler with appended cur
+                (there should be a resume entry that assign result to cur and resume the loop)
               } else if (nxt is undefined) {
                 break
               } else {
-                cur = resume nxt with cur;
+                cur = nxt.resume(cur);
                 nxt = undefined;
               }
               continue
@@ -347,7 +359,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
                         (Case.Cls(effectSigSym, effectSigTrm) ->
                           Assign(
                             tmp,
-                            Call(Select(Value.Ref(Elaborator.Ctx.globalThisSymbol), Tree.Ident("===")), Select(Value.Ref(cur), Tree.Ident("handler")) :: Value.Ref(lhs) :: Nil),
+                            Call(Value.Ref(BuiltinSymbol("===", true, false, false)), Select(Value.Ref(cur), Tree.Ident("handler")) :: Value.Ref(lhs) :: Nil),
                             Match(
                               Value.Ref(tmp),
                               (Case.Lit(Tree.BoolLit(true)) ->
@@ -362,7 +374,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
                           )
                         ) :: Nil,
                         N,
-                        handlerCtx.jumpToHandler(Value.Ref(cur))
+                        Assign(cur, Call(Value.Ref(separationSymbol), List(Value.Lit(Tree.IntLit(uid)))), End())
                       )
                     )
                   ) :: Nil,
@@ -383,21 +395,26 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
           )
     case st.App(f, args) =>
       tl.log(s"Lowering.term ${t.showDbg.truncate(30, "[...]")}")
-      subtermSuper(t): res =>
-        Match(
-          res,
-          (Case.Cls(effectSigSym, effectSigTrm), summon[HandlerCtx].jumpToHandler(res)) :: Nil,
-          Some(k(res)), // FIXME: This should chain with the current context's automata
-          End()
+      // TODO: save handler context and states for uid
+      val uid = freshId()
+      // TODO: we don't need termAsLocalSuper, just use another local
+      val res = freshTmp("res")
+      super.term(t): r =>
+        Assign(res, r,
+          Match(
+            Value.Ref(res),
+            (Case.Cls(effectSigSym, effectSigTrm) -> Assign(res, Call(Value.Ref(separationSymbol), List(Value.Lit(Tree.IntLit(uid)))), End())) :: Nil,
+            N,
+            k(Value.Ref(res))
+          )
         )
     case st.Lam(params, body) =>
       HandlerCtx.default.givenIn:
         k(Value.Lam(params, returnedTerm(body)))
     case _ => super.term(t)(k)
-  
-  private def subtermSuper(t: st)(k: Path => Block)(using Subst, HandlerCtx): Block =
-    super.term(t)(asSubTerm(_)(k))
-
   override def topLevel(t: st): Block =
-    super.topLevel(Blk(effectSigDef :: contDef :: t :: Nil, Term.Lit(Tree.UnitLit(true))))
+    // TODO: A hack to make it show some JS, should be removed later
+    Assign(separationSymbol, Value.Lit(Tree.UnitLit(true)),
+      super.topLevel(Blk(effectSigDef :: contDef :: t :: Nil, Term.Lit(Tree.UnitLit(true))))
+    )
     

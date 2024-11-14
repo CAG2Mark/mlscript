@@ -29,7 +29,7 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
   lazy val host =
     hostCreated = true
     given TL = replTL
-    val h = ReplHost()
+    val h = ReplHost(rootPath)
     h
   
   private var hostCreated = false
@@ -56,14 +56,14 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
       // val nestedScp = codegen.js.Scope(S(baseScp), curCtx.outer, collection.mutable.Map.empty) // * not needed
       
       val je = nestedScp.givenIn:
-        jsb.program(le, N)
+        jsb.program(le, N, wd)
       val jsStr = je.stripBreaks.mkString(100)
       if sjs.isSet then
         output(s"JS:")
         output(jsStr)
       def mkQuery(prefix: Str, jsStr: Str) =
         val queryStr = jsStr.replaceAll("\n", " ")
-        val (reply, stderr) = host.query(queryStr, expectRuntimeErrors.isUnset && fixme.isUnset && todo.isUnset)
+        val (reply, stderr) = host.query(queryStr, !expectRuntimeOrCodeGenErrors && fixme.isUnset && todo.isUnset)
         reply match
           case ReplHost.Result(content, stdout) =>
             if silent.isUnset then
