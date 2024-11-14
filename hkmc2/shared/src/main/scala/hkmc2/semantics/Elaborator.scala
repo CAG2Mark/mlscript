@@ -18,6 +18,24 @@ import Keyword.{`let`, `set`}
 
 object Elaborator:
   
+  val builtinOpsMap: Map[Str, BuiltinSymbol] =
+    val binOps: Ls[Str] = Ls(
+      ",",
+      "+", "-", "*", "/", "%",
+      "==", "!=", "<", "<=", ">", ">=",
+      "===",
+      "&&", "||")
+    val isUnary: Str => Bool = Set("-", "+", "!", "~").contains
+    val baseBuiltins = binOps.map: op =>
+        op -> BuiltinSymbol(op, binary = true, unary = isUnary(op), nullary = false)
+      .toMap
+    baseBuiltins
+      + (";" -> baseBuiltins(","))
+      + ("+." -> baseBuiltins("+"))
+      + ("-." -> baseBuiltins("-"))
+      + ("*." -> baseBuiltins("*"))
+  val reservedNames = builtinOpsMap.keySet + "NaN" + "Infinity"
+  
   case class Ctx(outer: Opt[InnerSymbol], parent: Opt[Ctx], env: Map[Str, Ctx.Elem]):
     def +(local: Str -> Symbol): Ctx = copy(outer, env = env + local.mapSecond(Ctx.RefElem(_)))
     def ++(locals: IterableOnce[Str -> Symbol]): Ctx =
@@ -122,6 +140,8 @@ extends Importer:
       block(sts)._1
     case lit: Literal =>
       Term.Lit(lit)
+    case d: Def =>
+      term(Block(d :: UnitLit(true) :: Nil))
     case LetLike(`let`, lhs, rhso, S(bod)) =>
       term(Block(LetLike(`let`, lhs, rhso, N) :: bod :: Nil))
     case LetLike(`let`, lhs, S(rhs), N) =>
@@ -166,8 +186,11 @@ extends Importer:
       ctx.get(name) match
       case S(sym) => sym.ref(id)
       case N =>
-        raise(ErrorReport(msg"Name not found: $name" -> tree.toLoc :: Nil))
-        Term.Error
+        builtinOpsMap.get(name) match
+        case S(bi) => bi.ref(id)
+        case N =>
+          raise(ErrorReport(msg"Name not found: $name" -> tree.toLoc :: Nil))
+          Term.Error
     case TyApp(lhs, targs) =>
       Term.TyApp(term(lhs), targs.map {
         case Modified(Keyword.`in`, inLoc, arg) => Term.WildcardTy(S(term(arg)), N)
@@ -330,7 +353,7 @@ extends Importer:
     block(new Tree.Block(sts))
   
   def block(blk: Tree.Block)(using c: Ctx): (Term.Blk, Ctx) = trace[(Term.Blk, Ctx)](
-    pre = s"Elab block ${blk.toString.truncate(100, "[...]")} ${ctx.outer}", r => s"~> ${r._1}"
+    pre = s"Elab block ${blk.desugStmts.toString.truncate(100, "[...]")} ${ctx.outer}", r => s"~> ${r._1}"
   ):
     
     val members = blk.definedSymbols.toMap
@@ -383,7 +406,7 @@ extends Importer:
                   baseElem.symbol match
                   case S(sym: BlockMemberSymbol) if sym.modTree.isDefined =>
                     sym.modTree.get.definedSymbols.map:
-                      case (nme, sym) => nme -> Ctx.SelElem(baseElem, nme, S(sym))
+                      case (nme, sym) => nme -> Ctx.SelElem(baseElem, sym.nme, S(sym))
                   case _ =>
                     raise(ErrorReport(msg"Wildcard 'open' not supported for this kind of symbol." -> baseId.toLoc :: Nil))
                     Nil
@@ -465,8 +488,11 @@ extends Importer:
             // TODO lookup in members? inherited/refined stuff?
             raise(ErrorReport(msg"Name not found: ${id.name}" -> id.toLoc :: Nil))
             go(sts, Term.Error :: acc)
+        case App(base, args) =>
+          go(Def(base, InfixApp(args, Keyword.`=>`, rhs)) :: sts, acc)
         case _ =>
-          raise(ErrorReport(msg"Wrong number of type arguments" -> lhs.toLoc :: Nil)) // TODO BE
+          raise(ErrorReport(msg"Unrecognized definitional assignment left-hand side: ${lhs.describe}"
+            -> lhs.toLoc :: Nil)) // TODO BE
           go(sts, Term.Error :: acc)
       case (td @ TermDef(k, nme, rhs)) :: sts =>
         log(s"Processing term definition $nme")
