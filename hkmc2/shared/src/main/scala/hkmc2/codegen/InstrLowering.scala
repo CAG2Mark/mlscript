@@ -68,7 +68,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
   private def freshTmp(dbgNme: Str = "tmp") = new TempSymbol(summon[Elaborator.State].nextUid, N, dbgNme)
   private val transitionSymbol = freshTmp()
   private val separationSymbol = freshTmp("separator")
-  class FreshId:
+  private class FreshId:
     var id: BigInt = 0
     def apply() =
       val tmp = id
