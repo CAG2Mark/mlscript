@@ -5,6 +5,7 @@
 :fixme
 :il
 :sjs
+:d
 class Effect[A](perform: Str -> Str)
 fun foo(e) = e.perform("hi")
 handle h = Effect with
@@ -12,30 +13,19 @@ handle h = Effect with
 in
   foo(h)
   (() => h.perform("Hello"))()
+//│ Elab: { Cls Effect[A@11](class:Effect.perform: globalThis:import#Prelude#666.Str‹member:Str› -> globalThis:import#Prelude#666.Str‹member:Str›) { }; fun member:foo(Param(‹›,e@12,None)) = e@12#666.perform("hi"); { handle globalThis:block#1.h = Sel(Ref(globalThis:block#1),Ident(Effect)) List(TermDefinition(Some(globalThis:block#1),Fun,member:perform,List(ParamList(‹›,List(Param(‹›,arg@15,None), Param(‹›,k@16,None)))),None,Some(App(Ref(k@16),Tup(List(Fld(‹›,Ref(arg@15),None))))),‹result of member:perform›@18)); { globalThis:block#1#666.foo‹member:foo›(globalThis:block#1.h#666); λ. globalThis:block#1.h#666.perform("Hello")() } } }
 //│ JS:
-//│ let separator, cur, nxt, tmp, res, res1;
+//│ let separator, cur, tmp, res, res1;
 //│ separator = undefined;
-//│ function EffectSig$(handler1, handlerFun1, args1, cont1) { return new EffectSig$.class(handler1, handlerFun1, args1, cont1); };
-//│ EffectSig$.class = class EffectSig$ {
-//│   constructor(handler, handlerFun, args, cont) {
-//│     this.handler = handler;
-//│     this.handlerFun = handlerFun;
-//│     this.args = args;
-//│     this.cont = cont;
-//│     
-//│   }
-//│   toString() { return "EffectSig$(" + this.handler + ", " + this.handlerFun + ", " + this.args + ", " + this.cont + ")"; }
-//│ };
-//│ function Cont$(resume1, resumed1, next1, last1) { return new Cont$.class(resume1, resumed1, next1, last1); };
+//│ function Cont$(resume1, resumed1, next1) { return new Cont$.class(resume1, resumed1, next1); };
 //│ Cont$.class = class Cont$ {
-//│   constructor(resume, resumed, next, last) {
+//│   constructor(resume, resumed, next) {
 //│     this.resume = resume;
 //│     this.resumed = resumed;
 //│     this.next = next;
-//│     this.last = last;
 //│     
 //│   }
-//│   toString() { return "Cont$(" + this.resume + ", " + this.resumed + ", " + this.next + ", " + this.last + ")"; }
+//│   toString() { return "Cont$(" + this.resume + ", " + this.resumed + ", " + this.next + ")"; }
 //│ };
 //│ this.Effect = function Effect(perform1) { return new Effect.class(perform1); };
 //│ this.Effect.class = class Effect {
@@ -48,163 +38,81 @@ in
 //│ function foo(e) {
 //│   let res2;
 //│   res2 = e.perform("hi");
-//│   if (res2 instanceof globalThis.EffectSig$.class) {
-//│     res2 = separator(0);
+//│   if (res2 instanceof globalThis.Cont$.class) {
+//│     return res2;
 //│   }
+//│   res2 = separator(0);
 //│   return res2;
 //│ }
 //│ function perform(arg, k) {
 //│   let res2;
 //│   res2 = k(arg);
-//│   if (res2 instanceof globalThis.EffectSig$.class) {
-//│     res2 = separator(2);
+//│   if (res2 instanceof globalThis.Cont$.class) {
+//│     return res2;
 //│   }
+//│   res2 = separator(2);
 //│   return res2;
 //│ }
-//│ handlerBody: while (true) {
+//│ lblBdy: while (true) {
 //│   this.h = new this.Effect((arg) => {
 //│     let cont;
-//│     cont = new this.Cont$.class(() => {
-//│       return undefined;
-//│     }, false, undefined, undefined);
+//│     cont = new this.Cont$.class((x) => {
+//│       return x;
+//│     }, false, undefined);
 //│     cont.last = cont;
-//│     return new this.EffectSig$.class(this.h, perform, [
+//│     cont.handler = this.h;
+//│     cont.handlerFun = perform;
+//│     cont.params = [
 //│       arg
-//│     ], cont);
+//│     ];
+//│     return cont;
 //│   });
 //│   res = this.foo(this.h);
-//│   if (res instanceof this.EffectSig$.class) {
-//│     res = separator(3);
+//│   if (res instanceof this.Cont$.class) {
+//│     cur = res;
+//│     break lblBdy;
 //│   }
+//│   res = separator(3);
 //│   res1 = (() => {
 //│     let res2;
 //│     res2 = this.h.perform("Hello");
-//│     if (res2 instanceof this.EffectSig$.class) {
-//│       res2 = separator(5);
+//│     if (res2 instanceof this.Cont$.class) {
+//│       return res2;
 //│     }
+//│     res2 = separator(5);
 //│     return res2;
 //│   })();
-//│   if (res1 instanceof this.EffectSig$.class) {
-//│     res1 = separator(4);
+//│   if (res1 instanceof this.Cont$.class) {
+//│     cur = res1;
+//│     break lblBdy;
 //│   }
+//│   res1 = separator(4);
 //│   cur = res1;
 //│   break;
 //│ }
-//│ nxt = undefined;
-//│ handler: while (true) {
+//│ cur = separator(1);
+//│ lblH: while (true) {
 //│   if (cur instanceof this.Cont$.class) {
-//│     cur.last.next = nxt;
-//│     if (cur instanceof this.EffectSig$.class) {
+//│     if (cur.handler === undefined) {
 //│       tmp = cur.handler === this.h;
-//│       if (tmp) {
-//│         nxt = cur.next;
-//│         cur = cur.handlerFun();
-//│         continue handler;
+//│       if (tmp === undefined) {
+//│         cur = cur.handlerFun.apply(null, cur.args);
+//│         continue lblH;
 //│       }
 //│     }
-//│     cur = separator(1);
-//│   } else {
-//│     if (nxt === undefined) {
-//│       break handler;
-//│     } else {
-//│       cur = nxt.resume(cur);
-//│       nxt = undefined;
-//│     }
-//│     continue handler;
 //│   }
 //│   break;
 //│ }
 //│ undefined
 //│ ═══[RUNTIME ERROR] TypeError: separator is not a function
 
-:elt
-class A(x: Int)
-class B: A
-let x = new A(3)
-let y = x
-fun f() = 3
-f()
-if x == y then 4
-//│ Elaborated tree:
-//│ Blk:
-//│   stats = Ls of 
-//│     Parameterized:
-//│       owner = S of globalThis:block#2
-//│       kind = Cls
-//│       sym = class:A
-//│       tparams = Nil
-//│       params = Ls of 
-//│         Param:
-//│           flags = ()
-//│           sym = class:A.x
-//│           sign = S of Sel:
-//│             prefix = Ref of globalThis:import#Prelude
-//│             nme = Ident of "Int"
-//│       body = ObjBody of Blk:
-//│         stats = Nil
-//│         res = Lit of UnitLit of true
-//│       companion = N
-//│     Plain:
-//│       owner = S of globalThis:block#2
-//│       kind = Cls
-//│       sym = class:B
-//│       tparams = Nil
-//│       body = ObjBody of Blk:
-//│         stats = Nil
-//│         res = Lit of UnitLit of true
-//│       companion = N
-//│     LetDecl of globalThis:block#2.x
-//│     DefineVar:
-//│       sym = globalThis:block#2.x
-//│       rhs = New:
-//│         cls = Sel:
-//│           prefix = Sel:
-//│             prefix = Ref of globalThis:block#2
-//│             nme = Ident of "A"
-//│           nme = Ident of "class"
-//│         args = Ls of 
-//│           Lit of IntLit of 3
-//│     LetDecl of globalThis:block#2.y
-//│     DefineVar:
-//│       sym = globalThis:block#2.y
-//│       rhs = Ref of globalThis:block#2.x
-//│     TermDefinition:
-//│       owner = S of globalThis:block#2
-//│       k = Fun
-//│       sym = member:f
-//│       params = Ls of 
-//│         ParamList:
-//│           flags = ParamListFlags of false
-//│           params = Nil
-//│       sign = N
-//│       body = S of Lit of IntLit of 3
-//│       resSym = ‹result of member:f›@41
-//│     App:
-//│       lhs = Sel:
-//│         prefix = Ref of globalThis:block#2
-//│         nme = Ident of "f"
-//│       rhs = Tup of Nil
-//│   res = IfLike:
-//│     kw = keyword 'if'
-//│     desugared = Let:
-//│       sym = $scrut@44
-//│       term = App:
-//│         lhs = Ref of builtin:==
-//│         rhs = Tup of Ls of 
-//│           Fld:
-//│             flags = ()
-//│             value = Ref of globalThis:block#2.x
-//│             asc = N
-//│           Fld:
-//│             flags = ()
-//│             value = Ref of globalThis:block#2.y
-//│             asc = N
-//│       tail = Cons: \
-//│       head = Branch:
-//│         scrutinee = Ref of $scrut@44
-//│         pattern = LitPat of BoolLit of true
-//│         continuation = Else of Lit of IntLit of 4
-//│       tail = End
-//│ = 4
-//│ x = A { x: 3 }
-//│ y = A { x: 3 }
+:sjs
+:fixme
+fun f() =
+  val x = 3
+  let y = 5 in
+    val x = 5
+    x + y
+//│ JS:
+//│ function f() { let y; const x = 3; y = 5; const x = 5; return x + y; } undefined
+//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Identifier 'x' has already been declared

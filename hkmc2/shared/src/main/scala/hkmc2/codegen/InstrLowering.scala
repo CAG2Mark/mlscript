@@ -17,21 +17,34 @@ import Subst.subst
 import scala.annotation.tailrec
 
 object InstrLowering:
-  case class HandlerCtx(handlers: List[Path => Block], defaultHandler: Path => Block):
+  private class HandlerCtx:
+    var handlers: List[Path => Block] = Nil
+    var toSave: List[Set[Local]] = Set.empty :: Nil
+    // The callee should pass the appended continuation as the handler has no way of knowing what should be saved
     def jumpToHandler(res: Path): Block =
       handlers match
-        case Nil => defaultHandler(res)
+        case Nil => Throw(
+          Instantiate(Select(Value.Ref(Elaborator.Ctx.globalThisSymbol), Tree.Ident("Error")),
+          Value.Lit(Tree.StrLit("Unhandled effects")) :: Nil)
+        )
         case h :: _ => h(res)
-  object HandlerCtx:
-    def empty: HandlerCtx = HandlerCtx(Nil, _ => Throw(
-      Instantiate(Select(Value.Ref(Elaborator.Ctx.globalThisSymbol), Tree.Ident("Error")),
-      Value.Lit(Tree.StrLit("Unhandled effects")) :: Nil)
-    ))
-    val default: HandlerCtx = HandlerCtx(Nil, Return(_, false))
+    def addVar(l: Local) =
+      toSave = toSave.head + l :: toSave.tail
+    def handleScoped(handler: Path => Block)(scope: => Block): (Set[Local], Block) =
+      handlers ::= handler
+      toSave ::= Set.empty
+      val result = scope
+      val locals = toSave.head
+      toSave = toSave.tail
+      handlers = handlers.tail
+      (locals, result)
+    def handleFun(scope: => Block): (Set[Local], Block) =
+      handleScoped(Return(_, false))(scope)
 import InstrLowering.*
 
 class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
 
+/*
   private val effectSigIdent: Tree.Ident = Tree.Ident("EffectSig$")
   private val effectSigTree: Tree.TypeDef = Tree.TypeDef(syntax.Cls, Tree.Error(), N, N)
   private val effectSigSym: ClassSymbol = ClassSymbol(effectSigTree, effectSigIdent)
@@ -43,9 +56,10 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     S(("handler" :: "handlerFun" :: "args" :: "cont" :: Nil).map(name =>
       Param(FldFlags.empty, TermSymbol(ParamBind, S(effectSigSym), Tree.Ident(name)), None)
     )),
-    ObjBody(st.Blk(Nil, Term.Lit(Tree.UnitLit(true)))))
+    ObjBody(st.Blk(Nil, st.Lit(Tree.UnitLit(true)))))
   private val effectSigTrm = Select(Select(Value.Ref(Elaborator.Ctx.globalThisSymbol), effectSigIdent), Tree.Ident("class"))
   effectSigSym.defn = S(effectSigDef)
+*/
   
   private val contIdent: Tree.Ident = Tree.Ident("Cont$")
   private val contTree: Tree.TypeDef = Tree.TypeDef(syntax.Cls, Tree.Error(), N, N)
@@ -55,17 +69,30 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     syntax.Cls,
     contSym,
     Nil,
-    S(("resume" :: "resumed" :: "next" :: "last" :: Nil).map(name =>
+    S(("resume" :: "resumed" :: "next" :: Nil).map(name =>
       Param(FldFlags.empty, TermSymbol(ParamBind, S(contSym), Tree.Ident(name)), None)
     )),
-    ObjBody(st.Blk(Nil, Term.Lit(Tree.UnitLit(true)))))
+    ObjBody(st.Blk(Nil, st.Lit(Tree.UnitLit(true)))))
   private val contTrm = Select(Select(Value.Ref(Elaborator.Ctx.globalThisSymbol), contIdent), Tree.Ident("class"))
   contSym.defn = S(contDef)
   
-  def handlerCtx(using HandlerCtx): HandlerCtx = summon[HandlerCtx]
+  private def instCont(resume: Path): Result =
+    Instantiate(contTrm, resume :: Value.Lit(Tree.BoolLit(false)) :: Value.Lit(Tree.UnitLit(true)) :: Nil)
+  
+  extension (k: Block => Block)
+    def assign(l: Local, r: Result): Block => Block = b => k(Assign(l, r, b))
+    def assignField(lhs: Path, nme: Tree.Ident, rhs: Result): Block => Block = b => k(AssignField(lhs, nme, rhs, b))
+    def break(l: Local): Block = k(Break(l, false))
+    def continue(l: Local): Block = k(Break(l, true))
+    def label(label: Local, body: Block): Block => Block = b => k(Label(label, body, b))
+    def ret(r: Result, implct: Bool): Block = k(Return(r, implct))
+    def rest(b: Block): Block = k(b)
+  private def blockBuilder: Block => Block = identity
+  
+  private val handlerCtx = HandlerCtx()
 
-  // special function denoting state transitions, transitionFn should never appear in the real output
   private def freshTmp(dbgNme: Str = "tmp") = new TempSymbol(summon[Elaborator.State].nextUid, N, dbgNme)
+  // special function denoting state transitions, transitionFn should never appear in the real output
   private val transitionSymbol = freshTmp()
   private val separationSymbol = freshTmp("separator")
   private class FreshId:
@@ -258,155 +285,134 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     
     ???
 
-  override def term(t: st)(k: Result => Block)(using Subst, HandlerCtx): Block =
+  // Create the symbol for the continuation
+  // This should only be called once because symbols contain a uid internally
+  def getContClassSymbol(sym: Opt[BlockMemberSymbol]): ClassSymbol =
+    ClassSymbol(
+      Tree.TypeDef(syntax.Cls, Tree.Error(), N, N),
+      Tree.Ident("Cont$" + summon[Elaborator.State].nextUid + "$" + sym.getOrElse(""))
+    )
+
+  def instrumentBlock(sym: ClassSymbol, blk: Block, locals: Set[Symbol]): Block =
+    // TODO: create a continuation class and return a transformed block to be used in a function or a lambda or a handler block
+    // TODO: figure out how to generate the symbol, it should be done in call site not inside callee
+    // TODO: symbol in locals should be transformed to be accessed and modified using the class itself
+    // TODO: figure out whether we need to wrap this in a class as the only function is the resume method
+    blk
+
+  override def term(t: st)(k: Result => Block)(using Subst): Block =
     t match
     case st.Blk((td: TermDefinition) :: stats, res) =>
       td match
       case TermDefinition(_, syntax.Fun, _, _, _, S(bod), _) =>
-        val bodTrm = HandlerCtx.default.givenIn:
-          returnedTerm(bod)
+        val contClassSymbol = getContClassSymbol(S(td.sym))
+        // TODO: add current symbol to handlerCtx
+        val (locals, bodRaw) = handlerCtx.handleFun { returnedTerm(bod) }
+        val bodTrm = instrumentBlock(contClassSymbol, bodRaw, locals)
         Define(FunDefn(td.sym, td.params, bodTrm),
           term(st.Blk(stats, res))(k))
       case _ => super.term(t)(k)
     case st.Blk(st.Handle(lhs, rhs, defs) :: stats, res) =>
       tl.log(s"Lowering.term ${t.showDbg.truncate(30, "[...]")}")
-      // TODO: save handler context and states for uid
       val uid = freshId()
       // FIXME: Assumed defs are in the correct order, which is not checked currently
-      val termHandlerFuns = (k: Ls[Value.Lam] => Block) => (defs.foldRight[Ls[Value.Lam] => Block](k)((a, acc) =>
-        a match
+      val termHandlerFuns = (k: Ls[Value.Lam] => Block) => (defs.foldRight[Ls[Value.Lam] => Block](k)((df, acc) =>
+        df match
         case TermDefinition(_, _, sym, params, _, _, _) =>
           val realParams = params.head.params.dropRight(1)
-          // st.Lam(Param(FldFlags.empty, sym, N) :: Nil, st.Ret(st.Ref()))
-          // val sym = VarSymbol(Tree.Ident("tmp"), 666)
-          // FIXME: This should generate x => x
-          val idFunc = Value.Lam(Nil, Return(Value.Lit(Tree.UnitLit(true)), false))
-          val dummyContSym = new TempSymbol(summon[Elaborator.State].nextUid, N, "cont")
-          val dummyCont = Instantiate(contTrm, idFunc :: Value.Lit(Tree.BoolLit(false)) :: Value.Lit(Tree.UnitLit(true)) :: Value.Lit(Tree.UnitLit(true)) :: Nil)
+          val idFuncX = VarSymbol(Tree.Ident("x"), -1)
+          val idFunc = Value.Lam(Param(FldFlags.empty, idFuncX, N) :: Nil, Return(Value.Ref(idFuncX), false))
+          val cont = freshTmp("cont")
           
           val mkHandler: Path => Value.Lam = (sym: Path) => Value.Lam(realParams,
-            Assign(dummyContSym, dummyCont,
-              AssignField(Value.Ref(dummyContSym), Tree.Ident("last"), Value.Ref(dummyContSym),
-                Return(
-                  Instantiate(effectSigTrm, Value.Ref(lhs) :: sym :: Value.Arr(realParams.map(p => Value.Ref(p.sym))) :: Value.Ref(dummyContSym) :: Nil),
-                  false
-                )
-              )
-            )
+            blockBuilder
+              .assign(cont, instCont(idFunc))
+              .assignField(Value.Ref(cont), Tree.Ident("last"), Value.Ref(cont))
+              .assignField(Value.Ref(cont), Tree.Ident("handler"), Value.Ref(lhs))
+              .assignField(Value.Ref(cont), Tree.Ident("handlerFun"), sym)
+              .assignField(Value.Ref(cont), Tree.Ident("params"), Value.Arr(realParams.map(p => Value.Ref(p.sym))))
+              .ret(Value.Ref(cont), false)
           )
-          // TODO: dummy Ref
-          (args: Ls[Value.Lam]) => subTerm(st.Blk(a :: Nil, st.Ref(sym)(Tree.Ident("dummy"), 0)))(r => acc(mkHandler(r) :: args))
+          // FIXME: do the dummy identifier do any harm?
+          // This automatically instrument df as desired
+          (args: Ls[Value.Lam]) => subTerm(st.Blk(df :: Nil, st.Ref(sym)(Tree.Ident("dummy"), -1)))(r => acc(mkHandler(r) :: args))
         case _ => _ => End("error") // only term definitions should appear
       ))(Nil)
       termHandlerFuns: handlerFuns =>
         subTerm(rhs): cls =>
-          val cur = new TempSymbol(summon[Elaborator.State].nextUid, N, "cur")
-          val nxt = new TempSymbol(summon[Elaborator.State].nextUid, N, "nxt")
-          val lblBdy = new TempSymbol(summon[Elaborator.State].nextUid, N, "handlerBody")
-          val lblH = new TempSymbol(summon[Elaborator.State].nextUid, N, "handler")
-          val tmp = new TempSymbol(summon[Elaborator.State].nextUid, N)
-          /*
-            // let's pretend effect signature is a continuation, the impl is wrong now
-            // cur is either a value, a continuation
-            // nxt is either undefined or a continuation
-            nxt = undefined;
-            while (true) {
-              if (cur is continuation) {
-                append nxt to cur (amortized cost, set last properly on searched elem)
-                if (cur is effect and handled by current handler) {
-                  nxt = cur.nxt
-                  cur = handle(cur)
-                  continue
-                }
-                nxt = undefined;
-                do jumpToHandler with appended cur
-                (there should be a resume entry that assign result to cur and resume the loop)
-              } else if (nxt is undefined) {
-                break
-              } else {
-                cur = nxt.resume(cur);
-                nxt = undefined;
-              }
-              continue
-            }
-          */
-          val bdy = handlerCtx.copy(handlers = (r =>
-            Assign(cur, r, Break(lblBdy, false)) // FIXME: this should append automata of the current handler block
-          ) :: handlerCtx.handlers).givenIn:
-            Assign(lhs, Instantiate(cls, handlerFuns), term(st.Blk(stats, res))(r => Assign(cur, r, End())))
-          Label(
-            lblBdy,
-            bdy,
-            Assign(nxt, Value.Lit(Tree.UnitLit(true)),
-              Label(
-                lblH,
+          val cur = freshTmp("cur")
+          val lblBdy = freshTmp("lblBdy")
+          val lblH = freshTmp("lblH")
+          val tmp = freshTmp()
+          
+          val contClassSymbol = getContClassSymbol(N)
+          // TODO: add to ctx
+          val (locals, bodRaw) = handlerCtx.handleScoped(r =>
+            Assign(cur, r, Break(lblBdy, false))
+          ) { Assign(lhs, Instantiate(cls, handlerFuns), term(st.Blk(stats, res))(r => Assign(cur, r, End()))) }
+          
+          val bod = instrumentBlock(contClassSymbol, bodRaw, locals)
+          
+          val equalToCurVal = Call(Value.Ref(BuiltinSymbol("===", true, false, false)), Select(Value.Ref(cur), Tree.Ident("handler")) :: Value.Ref(lhs) :: Nil)
+          
+          blockBuilder
+            .label(lblBdy, bod)
+            .assign(cur, Call(Value.Ref(separationSymbol), Value.Lit(Tree.IntLit(uid)) :: Nil)) // TODO: use new syntax
+            .label(lblH, Match(
+              Value.Ref(cur),
+              Case.Cls(contSym, contTrm) ->
                 Match(
-                  Value.Ref(cur),
-                  (Case.Cls(contSym, contTrm) ->
-                    // FIXME: this is wrong, a loop is needed to get the real last, and last should be updated for amortized efficient lookup later.
-                    // Easier to implement: write in js directly and use a function call here
-                    AssignField(Select(Value.Ref(cur), Tree.Ident("last")), Tree.Ident("next"), Value.Ref(nxt),
-                      Match(
-                        Value.Ref(cur),
-                        (Case.Cls(effectSigSym, effectSigTrm) ->
-                          Assign(
-                            tmp,
-                            Call(Value.Ref(BuiltinSymbol("===", true, false, false)), Select(Value.Ref(cur), Tree.Ident("handler")) :: Value.Ref(lhs) :: Nil),
-                            Match(
-                              Value.Ref(tmp),
-                              (Case.Lit(Tree.BoolLit(true)) ->
-                                Assign(nxt, Select(Value.Ref(cur), Tree.Ident("next")), Assign(cur, Call(
-                                  Select(Value.Ref(cur), Tree.Ident("handlerFun")),
-                                  Nil // TODO: argument is from handler itself!
-                                ), Break(lblH, true)))
-                              ) :: Nil,
-                              N,
-                              End()
-                            )
-                          )
-                        ) :: Nil,
-                        N,
-                        Assign(cur, Call(Value.Ref(separationSymbol), List(Value.Lit(Tree.IntLit(uid)))), End())
-                      )
-                    )
-                  ) :: Nil,
-                  // cur is not continuation
-                  S(Match(
-                    Value.Ref(nxt),
-                    (Case.Lit(Tree.UnitLit(true)) ->
-                      Break(lblH, false)
-                    ) :: Nil,
-                    S(Assign(cur, Call(Select(Value.Ref(nxt), Tree.Ident("resume")), Value.Ref(cur) :: Nil), Assign(nxt, Value.Lit(Tree.UnitLit(true)), End()))),
-                    Break(lblH, true),
-                  )),
+                  Select(Value.Ref(cur), Tree.Ident("handler")),
+                  Case.Lit(Tree.UnitLit(true)) -> blockBuilder // BAD! we should check equality to undefined, just being lazy (and wrong) for now
+                    .assign(tmp, equalToCurVal)
+                    .rest(Match(
+                      Value.Ref(tmp),
+                      Case.Lit(Tree.UnitLit(true)) -> blockBuilder
+                        // TODO: pass correct arguments
+                        // TODO: we need to access array elem
+                        // TODO: we can use methods for now
+                        // TODO: oops, we need resume afterall
+                        // resume should be returning the resumption of current until effect not of current handler is raised
+                        .assign(cur, Call(
+                          Select(Select(Value.Ref(cur), Tree.Ident("handlerFun")), Tree.Ident("apply")),
+                          Value.Lit(Tree.UnitLit(false)) :: Select(Value.Ref(cur), Tree.Ident("args")) :: Nil // We need to append resume to the arg list
+                        ))
+                        .continue(lblH) :: Nil, 
+                      N,
+                      End()
+                    )) :: Nil,
+                  N,
                   End()
-                ),
-                k(Value.Ref(cur))
-              )
-            )
-          )
+                ) :: Nil,
+              N,
+              End()
+            ))
+            .rest(k(Value.Ref(cur)))
     case st.App(f, args) =>
       tl.log(s"Lowering.term ${t.showDbg.truncate(30, "[...]")}")
-      // TODO: save handler context and states for uid
       val uid = freshId()
-      // TODO: we don't need termAsLocalSuper, just use another local
       val res = freshTmp("res")
       super.term(t): r =>
         Assign(res, r,
           Match(
             Value.Ref(res),
-            (Case.Cls(effectSigSym, effectSigTrm) -> Assign(res, Call(Value.Ref(separationSymbol), List(Value.Lit(Tree.IntLit(uid)))), End())) :: Nil,
+            // TODO: append continuation before jumpToHandler
+            // TODO: get the resumption symbol from handlerCtx
+            Case.Cls(contSym, contTrm) -> handlerCtx.jumpToHandler(Value.Ref(res)) :: Nil,
             N,
-            k(Value.Ref(res))
+            Assign(res, Call(Value.Ref(separationSymbol), List(Value.Lit(Tree.IntLit(uid)))), k(Value.Ref(res)))
           )
         )
     case st.Lam(params, body) =>
-      HandlerCtx.default.givenIn:
-        k(Value.Lam(params, returnedTerm(body)))
+      val contClassSymbol = getContClassSymbol(N)
+      // TODO: add symbol to ctx
+      val (locals, bodRaw) = handlerCtx.handleFun { returnedTerm(body) }
+      k(Value.Lam(params, instrumentBlock(contClassSymbol, bodRaw, locals)))
     case _ => super.term(t)(k)
+
   override def topLevel(t: st): Block =
     // TODO: A hack to make it show some JS, should be removed later
     Assign(separationSymbol, Value.Lit(Tree.UnitLit(true)),
-      super.topLevel(Blk(effectSigDef :: contDef :: t :: Nil, Term.Lit(Tree.UnitLit(true))))
+      super.topLevel(Blk(/*effectSigDef :: */contDef :: t :: Nil, st.Lit(Tree.UnitLit(true))))
     )
     

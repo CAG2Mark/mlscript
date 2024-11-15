@@ -13,8 +13,6 @@ import syntax.{Literal, Tree}
 import semantics.*
 import semantics.Term.*
 
-import InstrLowering.HandlerCtx
-
 
 abstract class Ret extends (Result => Block)
 object Ret extends Ret:
@@ -44,9 +42,9 @@ import Subst.subst
 
 class Lowering(using TL, Raise, Elaborator.State):
   
-  def returnedTerm(t: st)(using Subst, HandlerCtx): Block = term(t)(Ret)
+  def returnedTerm(t: st)(using Subst): Block = term(t)(Ret)
   
-  def term(t: st)(k: Result => Block)(using Subst, HandlerCtx): Block =
+  def term(t: st)(k: Result => Block)(using Subst): Block =
     tl.log(s"Lowering.term ${t.showDbg.truncate(100, "[...]")}")
     t match
     case st.Lit(lit) =>
@@ -303,23 +301,21 @@ class Lowering(using TL, Raise, Elaborator.State):
     // case _ =>
     //   subTerm(t)(k)
   
-  protected def asSubTerm(r: Result)(k: Path => Block)(using Subst): Block =
-    r match
+  def subTerm(t: st)(k: Path => Block)(using Subst): Block =
+    term(t):
       case v: Value => k(v)
       case p: Path => k(p)
       case r =>
         val l = new TempSymbol(summon[Elaborator.State].nextUid, N)
         Assign(l, r, k(l |> Value.Ref.apply))
   
-  def subTerm(t: st)(k: Path => Block)(using Subst, HandlerCtx): Block =
-    term(t)(asSubTerm(_)(k))
   
   // val resSym = new TermSymbol(N, Tree.Ident("$res"))
   // def topLevel(t: st): Block =
   //   subTerm(t)(r => codegen.Assign(resSym, r, codegen.End()))(using Subst.empty)
   
   def topLevel(t: st): Block =
-    term(t)(ImplctRet)(using Subst.empty, HandlerCtx.empty)
+    term(t)(ImplctRet)(using Subst.empty)
   
   def program(main: st): Program =
     def go(acc: Ls[Local -> Str], trm: st): Program =
