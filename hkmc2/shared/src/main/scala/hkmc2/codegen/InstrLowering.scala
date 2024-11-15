@@ -341,8 +341,8 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       termHandlerFuns: handlerFuns =>
         subTerm(rhs): cls =>
           val cur = freshTmp("cur")
-          val lblBdy = freshTmp("lblBdy")
-          val lblH = freshTmp("lblH")
+          val lblBdy = freshTmp("handlerBody")
+          val lblH = freshTmp("handler")
           val tmp = freshTmp()
           
           val contClassSymbol = getContClassSymbol(N)
