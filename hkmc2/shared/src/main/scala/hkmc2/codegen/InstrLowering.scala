@@ -295,9 +295,9 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
 
   def instrumentBlock(sym: ClassSymbol, blk: Block, locals: Set[Symbol]): Block =
     // TODO: create a continuation class and return a transformed block to be used in a function or a lambda or a handler block
-    // TODO: figure out how to generate the symbol, it should be done in call site not inside callee
-    // TODO: symbol in locals should be transformed to be accessed and modified using the class itself
-    // TODO: figure out whether we need to wrap this in a class as the only function is the resume method
+    // CHANGES:
+    // 1. symbol in locals should be transformed to be accessed and modified using the class itself in this function
+    // 2. calls to separation symbol should disappear and the block should read this.pc and jump to the correct symbol
     blk
 
   override def term(t: st)(k: Result => Block)(using Subst): Block =
@@ -381,7 +381,8 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
                       N,
                       End()
                     )) :: Nil,
-                  N,
+                  S(blockBuilder // TODO: append continuation
+                    .rest(handlerCtx.jumpToHandler(Value.Ref(cur)))),
                   End()
                 ) :: Nil,
               N,
