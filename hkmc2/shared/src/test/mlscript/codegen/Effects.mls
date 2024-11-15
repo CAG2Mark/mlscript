@@ -1,11 +1,10 @@
 :js
+:il
 
 // note: seems we can't use traits yet :|
 // using a field to store the effect handler instead
 :fixme
-:il
 :sjs
-:d
 class Effect[A](perform: Str -> Str)
 fun foo(e) = e.perform("hi")
 handle h = Effect with
@@ -13,7 +12,6 @@ handle h = Effect with
 in
   foo(h)
   (() => h.perform("Hello"))()
-//│ Elab: { Cls Effect[A@11](class:Effect.perform: globalThis:import#Prelude#666.Str‹member:Str› -> globalThis:import#Prelude#666.Str‹member:Str›) { }; fun member:foo(Param(‹›,e@12,None)) = e@12#666.perform("hi"); { handle globalThis:block#1.h = Sel(Ref(globalThis:block#1),Ident(Effect)) List(TermDefinition(Some(globalThis:block#1),Fun,member:perform,List(ParamList(‹›,List(Param(‹›,arg@15,None), Param(‹›,k@16,None)))),None,Some(App(Ref(k@16),Tup(List(Fld(‹›,Ref(arg@15),None))))),‹result of member:perform›@18)); { globalThis:block#1#666.foo‹member:foo›(globalThis:block#1.h#666); λ. globalThis:block#1.h#666.perform("Hello")() } } }
 //│ JS:
 //│ let separator, cur, tmp, res, res1;
 //│ separator = undefined;
@@ -93,9 +91,9 @@ in
 //│ cur = separator(1);
 //│ handler: while (true) {
 //│   if (cur instanceof this.Cont$.class) {
-//│     if (cur.handler === undefined) {
+//│     if (cur.handler) {
 //│       tmp = cur.handler === this.h;
-//│       if (tmp === undefined) {
+//│       if (tmp) {
 //│         cur = cur.handlerFun.apply(null, cur.args);
 //│         continue handler;
 //│       }
@@ -108,13 +106,144 @@ in
 //│ undefined
 //│ ═══[RUNTIME ERROR] TypeError: separator is not a function
 
-:sjs
 :fixme
+:sjs
+class Cell(getVal: () -> Int, setVal: Int -> ())
+let x = 0
+handle h = Cell with
+  fun getVal(k) = k(x)
+  fun setVal(value, k) =
+    x = value
+    k(())
+in
+  h.getVal()
+//│ JS:
+//│ let separator, cur, tmp, res;
+//│ separator = undefined;
+//│ function Cont$(resume1, resumed1, next1) { return new Cont$.class(resume1, resumed1, next1); };
+//│ Cont$.class = class Cont$ {
+//│   constructor(resume, resumed, next) {
+//│     this.resume = resume;
+//│     this.resumed = resumed;
+//│     this.next = next;
+//│     
+//│   }
+//│   toString() { return "Cont$(" + this.resume + ", " + this.resumed + ", " + this.next + ")"; }
+//│ };
+//│ this.Cell = function Cell(getVal1, setVal1) { return new Cell.class(getVal1, setVal1); };
+//│ this.Cell.class = class Cell {
+//│   constructor(getVal, setVal) {
+//│     this.getVal = getVal;
+//│     this.setVal = setVal;
+//│     
+//│   }
+//│   toString() { return "Cell(" + this.getVal + ", " + this.setVal + ")"; }
+//│ };
+//│ this.x = 0;
+//│ function setVal(value, k) {
+//│   let res1;
+//│   globalThis.x = value;
+//│   res1 = k(undefined);
+//│   if (res1 instanceof globalThis.Cont$.class) {
+//│     return res1;
+//│   }
+//│   res1 = separator(1);
+//│   return res1;
+//│ }
+//│ function getVal(k) {
+//│   let res1;
+//│   res1 = k(globalThis.x);
+//│   if (res1 instanceof globalThis.Cont$.class) {
+//│     return res1;
+//│   }
+//│   res1 = separator(2);
+//│   return res1;
+//│ }
+//│ handlerBody: while (true) {
+//│   this.h = new this.Cell(() => {
+//│     let cont;
+//│     cont = new this.Cont$.class((x) => {
+//│       return x;
+//│     }, false, undefined);
+//│     cont.last = cont;
+//│     cont.handler = this.h;
+//│     cont.handlerFun = getVal;
+//│     cont.params = [
+//│       
+//│     ];
+//│     return cont;
+//│   }, (value) => {
+//│     let cont;
+//│     cont = new this.Cont$.class((x) => {
+//│       return x;
+//│     }, false, undefined);
+//│     cont.last = cont;
+//│     cont.handler = this.h;
+//│     cont.handlerFun = setVal;
+//│     cont.params = [
+//│       value
+//│     ];
+//│     return cont;
+//│   });
+//│   res = this.h.getVal();
+//│   if (res instanceof this.Cont$.class) {
+//│     cur = res;
+//│     break handlerBody;
+//│   }
+//│   res = separator(3);
+//│   cur = res;
+//│   break;
+//│ }
+//│ cur = separator(0);
+//│ handler: while (true) {
+//│   if (cur instanceof this.Cont$.class) {
+//│     if (cur.handler) {
+//│       tmp = cur.handler === this.h;
+//│       if (tmp) {
+//│         cur = cur.handlerFun.apply(null, cur.args);
+//│         continue handler;
+//│       }
+//│     } else {
+//│       throw new this.Error("Unhandled effects");
+//│     }
+//│   }
+//│   break;
+//│ }
+//│ undefined
+//│ ═══[RUNTIME ERROR] TypeError: separator is not a function
+//│ x = 0
+
+:fixme
+:sjs
 fun f() =
   val x = 3
   let y = 5 in
     val x = 5
     x + y
 //│ JS:
-//│ function f() { let y; const x = 3; y = 5; const x = 5; return x + y; } undefined
+//│ let separator;
+//│ separator = undefined;
+//│ function Cont$(resume1, resumed1, next1) { return new Cont$.class(resume1, resumed1, next1); };
+//│ Cont$.class = class Cont$ {
+//│   constructor(resume, resumed, next) {
+//│     this.resume = resume;
+//│     this.resumed = resumed;
+//│     this.next = next;
+//│     
+//│   }
+//│   toString() { return "Cont$(" + this.resume + ", " + this.resumed + ", " + this.next + ")"; }
+//│ };
+//│ function f() {
+//│   let y, res;
+//│   const x = 3;
+//│   y = 5;
+//│   const x = 5;
+//│   res = x + y;
+//│   if (res instanceof globalThis.Cont$.class) {
+//│     return res;
+//│   }
+//│   res = separator(0);
+//│   return res;
+//│ }
+//│ undefined
 //│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Identifier 'x' has already been declared

@@ -316,7 +316,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       tl.log(s"Lowering.term ${t.showDbg.truncate(30, "[...]")}")
       val uid = freshId()
       // FIXME: Assumed defs are in the correct order, which is not checked currently
-      val termHandlerFuns = (k: Ls[Value.Lam] => Block) => (defs.foldRight[Ls[Value.Lam] => Block](k)((df, acc) =>
+      val termHandlerFuns = (k: Ls[Value.Lam] => Block) => (defs.reverse.foldRight[Ls[Value.Lam] => Block](k)((df, acc) =>
         df match
         case TermDefinition(_, _, sym, params, _, _, _) =>
           val realParams = params.head.params.dropRight(1)
@@ -363,11 +363,11 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
               Case.Cls(contSym, contTrm) ->
                 Match(
                   Select(Value.Ref(cur), Tree.Ident("handler")),
-                  Case.Lit(Tree.UnitLit(true)) -> blockBuilder // BAD! we should check equality to undefined, just being lazy (and wrong) for now
+                  Case.Lit(Tree.BoolLit(true)) -> blockBuilder // BAD! we should check equality to undefined, just being lazy (and wrong) for now
                     .assign(tmp, equalToCurVal)
                     .rest(Match(
                       Value.Ref(tmp),
-                      Case.Lit(Tree.UnitLit(true)) -> blockBuilder
+                      Case.Lit(Tree.BoolLit(true)) -> blockBuilder
                         // TODO: pass correct arguments
                         // TODO: we need to access array elem
                         // TODO: we can use methods for now
