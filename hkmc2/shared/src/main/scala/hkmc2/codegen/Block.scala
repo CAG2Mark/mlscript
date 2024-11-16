@@ -37,6 +37,22 @@ sealed abstract class Block extends Product with AutoLocated:
     case Define(defn, rst) => rst.definedVars
     case TryBlock(sub, fin, rst) => sub.definedVars ++ fin.definedVars ++ rst.definedVars
     case Label(lbl, bod, rst) => bod.definedVars ++ rst.definedVars
+
+  lazy val definedLocals: Set[Local] = this match
+    case _: Return | _: Throw => Set.empty
+    case Begin(sub, rst) => sub.definedVars ++ rst.definedVars
+    case Assign(l: TermSymbol, r, rst) => rst.definedVars
+    case Assign(l, r, rst) => rst.definedVars + l
+    case AssignField(l, n, r, rst) => rst.definedVars
+    case Match(scrut, arms, dflt, rst) =>
+      arms.flatMap(_._2.definedVars).toSet ++ dflt.toList.flatMap(_.definedVars) ++ rst.definedVars
+    case End(_) => Set.empty
+    case Break(_, _) => Set.empty
+    case Define(ValDefn(N, k, sym, rhs), rest) => rest.definedLocals + sym
+    case Define(defn, rst) => rst.definedVars
+    case TryBlock(sub, fin, rst) => sub.definedVars ++ fin.definedVars ++ rst.definedVars
+    case Label(lbl, bod, rst) => bod.definedVars ++ rst.definedVars
+  
   
   // TODO conserve if no changes
   def mapTail(f: BlockTail => BlockTail): Block = this match
@@ -46,6 +62,26 @@ sealed abstract class Block extends Product with AutoLocated:
     case Define(defn, rst) => Define(defn, rst.mapTail(f))
     case Match(scrut, arms, dflt, rst) =>
       Match(scrut, arms.map(_ -> _.mapTail(f)), dflt.map(_.mapTail(f)), rst.mapTail(f))
+
+  def mapLocals(f: Local => Local): Block = this match
+    case Match(scrut, arms, dflt, rest) => 
+      val newScrut = scrut match
+        case Value.Ref(l) => Value.Ref(f(l))
+        case _ => scrut
+      val newArms = arms.map((c, b) => (c, b.mapLocals(f)))
+      Match(newScrut, newArms, dflt.map(_.mapLocals(f)), rest.mapLocals(f))
+    case Return(res, implct) => Return(res.mapLocals(f), implct)
+    case Throw(exc) => Throw(exc.mapLocals(f))
+    case Label(label, body, rest) => Label(label, body.mapLocals(f), rest.mapLocals(f))
+    case Break(label, toBeginning) => this
+    case Begin(sub, rest) => Begin(sub.mapLocals(f), rest.mapLocals(f))
+    case TryBlock(sub, finallyDo, rest) => TryBlock(sub.mapLocals(f), finallyDo.mapLocals(f), rest.mapLocals(f))
+    case Assign(lhs, rhs, rest) => Assign(f(lhs), rhs.mapLocals(f), rest.mapLocals(f))
+    case AssignField(lhs, nme, rhs, rest) => AssignField(lhs.mapLocals(f), nme, rhs.mapLocals(f), rest.mapLocals(f))
+    case Define(defn, rest) => 
+      Define(defn.mapLocals(f), rest.mapLocals(f))
+    case End(msg) => this
+  
   
 end Block
 
@@ -81,6 +117,7 @@ case class Define(defn: Defn, rest: Block) extends Block with ProductWithTail
 
 sealed abstract class Defn:
   val sym: MemberSymbol[?]
+  def mapLocals(f: Local => Local): Defn
 
 // final case class TermDefn(
 //     k: syntax.TermDefKind,
@@ -95,7 +132,9 @@ final case class FunDefn(
     sym: BlockMemberSymbol,
     params: Ls[ParamList],
     body: Block,
-) extends Defn
+) extends Defn:
+  override def mapLocals(f: Local => Local): FunDefn =
+    FunDefn(sym, params, body.mapLocals(f))
 
 final case class ValDefn(
     owner: Opt[InnerSymbol],
@@ -103,7 +142,9 @@ final case class ValDefn(
     sym: BlockMemberSymbol,
     // params: Ls[ParamList],
     rhs: Path,
-) extends Defn
+) extends Defn:
+  override def mapLocals(f: Local => Local): ValDefn =
+    ValDefn(owner, k, sym, rhs.mapLocals(f))
 
 final case class ClsLikeDefn(
   // sym: ClassSymbol,
@@ -113,7 +154,9 @@ final case class ClsLikeDefn(
   methods: Ls[FunDefn],
   fields: Ls[TermSymbol],
   ctor: Block,
-) extends Defn
+) extends Defn:
+  override def mapLocals(f: Local => Local): ClsLikeDefn =
+    ClsLikeDefn(sym, k, methods.map(_.mapLocals(f)), fields, ctor.mapLocals(f))
 
 /* Represents either unreachable code (for functions that must return a result)
  * or the end of a non-returning function or a REPL block */
@@ -124,18 +167,23 @@ enum Case:
   case Cls(cls: ClassSymbol | ModuleSymbol, path: Path)
   case Tup(len: Int, inf: Bool)
 
-sealed abstract class Result
-
+sealed abstract class Result:
+  def mapLocals(f: Local => Local): Result
+  
 // type Local = LocalSymbol
 type Local = Symbol
 
-case class Call(fun: Path, args: Ls[Path]) extends Result
+case class Call(fun: Path, args: Ls[Path]) extends Result:
+  override def mapLocals(f: Local => Local) = Call(fun.mapLocals(f), args.map(_.mapLocals(f)))
 
-case class Instantiate(cls: Path, args: Ls[Path]) extends Result
+case class Instantiate(cls: Path, args: Ls[Path]) extends Result:
+  def mapLocals(f: Local => Local): Instantiate = Instantiate(cls, args.map(_.mapLocals(f)))
 
-abstract class Path extends Result
+abstract class Path extends Result:
+  override def mapLocals(f: Local => Local): Path
 
-case class Select(qual: Path, name: Tree.Ident) extends Path
+case class Select(qual: Path, name: Tree.Ident) extends Path:
+  override def mapLocals(f: Local => Local) = Select(qual.mapLocals(f), name)
 
 enum Value extends Path:
   case Ref(l: Local)
@@ -144,3 +192,9 @@ enum Value extends Path:
   case Lam(params: Ls[Param], body: Block)
   case Arr(elems: Ls[Path])
 
+  override def mapLocals(f: Local => Local): Value = this match
+    case Ref(l) => Ref(f(l))
+    case This(sym) => Ref(f(sym))
+    case Lit(lit) => this
+    case Lam(params, body) => Lam(params, body.mapLocals(f))
+    case Arr(elems) => Arr(elems.map(_.mapLocals(f)))

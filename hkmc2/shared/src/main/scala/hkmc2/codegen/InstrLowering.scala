@@ -16,6 +16,8 @@ import semantics.Term.*
 import Subst.subst
 import scala.annotation.tailrec
 
+import scala.collection.mutable.Map as MutMap
+
 object InstrLowering:
   private class HandlerCtx:
     var handlers: List[Path => Block] = Nil
@@ -43,6 +45,7 @@ object InstrLowering:
 import InstrLowering.*
 
 class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
+  
 
 /*
   private val effectSigIdent: Tree.Ident = Tree.Ident("EffectSig$")
@@ -93,10 +96,10 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
 
   private def freshTmp(dbgNme: Str = "tmp") = new TempSymbol(summon[Elaborator.State].nextUid, N, dbgNme)
   // special function denoting state transitions, transitionFn should never appear in the real output
-  private val transitionSymbol = freshTmp()
+  private val transitionSymbol = freshTmp("transition")
   private val separationSymbol = freshTmp("separator")
   private class FreshId:
-    var id: BigInt = 0
+    var id: Int = 0
     def apply() =
       val tmp = id
       id += 1
@@ -105,16 +108,32 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
 
   // id: the id of the current state
   // blk: the block of code within this state
-  class BlockState(id: BigInt, blk: Block, sym: Opt[Local])
+  // sym: the variable to which the resumed value should set
+  class BlockState(val id: BigInt, val blk: Block, val sym: Opt[Local])
 
+  // Note: can construct StateTransition and pattern match on it as if it were a case class
+  object StateTransition:
+    def apply(uid: BigInt) = Return(Call(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(uid)))), false)
+    def unapply(blk: Block) = blk match
+      case Return(Call(Value.Ref(`transitionSymbol`), List(Value.Lit(Tree.IntLit(uid)))), false) if uid >= 0 =>
+        S(uid)
+      case _ => N 
 
   object Separation:
     def apply(res: Local, uid: BigInt, rest: Block) =
       Assign(res, Call(Value.Ref(separationSymbol), List(Value.Lit(Tree.IntLit(uid)))), rest)
     def unapply(blk: Block) = blk match
-      case Assign(res, Call(Value.Ref(sym), List(Value.Lit(Tree.IntLit(uid)))), rest) if sym == separationSymbol => 
+      case Assign(res, Call(Value.Ref(`separationSymbol`), List(Value.Lit(Tree.IntLit(uid)))), rest) => 
         Some(res, uid, rest)
       case _ => None
+
+  object FnEnd:
+    def apply() = Return(Call(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(-1)))), false)
+    def unapply(blk: Block) = blk match
+      case Return(Call(Value.Ref(`transitionSymbol`), List(Value.Lit(Tree.IntLit(uid)))), false) if  uid == -1 =>
+        true
+      case _ => false 
+
 
   /* 
   Partition a function into a graph of states
@@ -148,14 +167,6 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
   def partitionBlock(blk: Block, labelIds: Map[Symbol, (BigInt, BigInt)] = Map.empty): Ls[BlockState] = 
     // for readability :)
     case class PartRet(head: Block, states: Ls[BlockState])
-
-    // Note: can construct StateTransition and pattern match on it as if it were a case class
-    object StateTransition:
-      def apply(uid: BigInt) = Return(Call(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(uid)))), false)
-      def unapply(blk: Block) = blk match
-        case Return(Call(Value.Ref(sym), List(Value.Lit(Tree.IntLit(uid)))), false) if sym == transitionSymbol =>
-          S(uid)
-        case _ => N 
 
     // used to analyze whether to touch labels, currently unused.
     val labelCallCache: scala.collection.mutable.Map[Symbol, Bool] = scala.collection.mutable.Map()
@@ -263,13 +274,11 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
         val PartRet(restNew, restParts) = go(rest)
         
         PartRet(subNew, BlockState(restId, restNew, N) :: subParts ::: restParts)
-      case Assign(lhs, rhs: Call, rest) => ??? // TODO: awaiting changes
-      case AssignField(lhs, nme, rhs: Call, rest) => ???
       case Define(defn, rest) => 
         val PartRet(head, parts) = go(rest)
         PartRet(Define(defn, head), parts)
       case End(_) | Return(Value.Lit(Tree.UnitLit(true)), true) => afterEnd match
-        case None => PartRet(blk, Nil)
+        case None => PartRet(FnEnd(), Nil)
         case Some(value) => PartRet(StateTransition(value), Nil)
       // identity cases
       case Assign(lhs, rhs, rest) =>
@@ -288,15 +297,110 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     val ret = go(blk)(using Map.empty, N)
     BlockState(headId, ret.head, N) :: ret.states
   
+  val localsMap: MutMap[Local, TermSymbol] = MutMap()
+  private val freshFieldId = FreshId()
+  // NOTE: Should only be used for function parameters or variables/values strictly defined in the function body!
+  // TODO: for class methods, map `this.whatever` to `this.this$.whatever` ($this is the current class)
+  def getContLocalSymbol(cls: ClassSymbol, sym: Local): TermSymbol =
+    localsMap.get(sym) match
+      case Some(value) => value
+      case None => 
+        val ret = TermSymbol(ParamBind, S(cls), Tree.Ident(s"${sym.nme}$$${freshFieldId}"))
+        localsMap.addOne(sym -> ret)
+        ret
 
-  def createContClass(fun: FunDefn): ClsLikeDefn =
-    val clsSymbol = ClassSymbol(
-      Tree.TypeDef(syntax.Cls, Tree.Error(), N, N), 
-      Tree.Ident("Cont$" + fun.sym.nme)
-    )
-    val kind = syntax.Cls
+  // TODO: support class methods
+  def createContClass(cls: ClassSymbol, body: Block): ClsLikeDefn =
+    val parts = partitionBlock(body)
+
+    val localsMap = body.definedLocals.map(l => l -> getContLocalSymbol(cls, l)).toMap
+    def mapSym(l: Local) = localsMap.getOrElse(l, l)
     
-    ???
+    val loopLbl = freshTmp("contLoop")
+
+    val pcSymbol = TermSymbol(ParamBind, S(cls), Tree.Ident(s"pc$$${freshFieldId}"))
+
+    // NOTE: Symbols already replaced
+    // TODO: set program counter when returning continuation
+    def transformPart(blk: Block): Block = blk match
+      case StateTransition(uid) =>
+        blockBuilder
+          .assign(pcSymbol, Value.Lit(Tree.IntLit(uid)))
+          .continue(loopLbl)
+      case FnEnd() =>
+        blockBuilder.break(loopLbl)
+      case Match(scrut, arms, dflt, rest) => 
+        val newArms = arms.map((c, b) => (c, transformPart(b)))
+        Match(scrut, newArms, dflt.map(transformPart), transformPart(rest))
+      case Return(res, implct) => blk
+      case Throw(exc) => blk
+      case Label(label, body, rest) => Label(label, transformPart(body), transformPart(rest))
+      case Break(label, toBeginning) => blk
+      case Begin(sub, rest) => Begin(transformPart(sub), transformPart(rest))
+      case TryBlock(sub, finallyDo, rest) => TryBlock(transformPart(sub), transformPart(finallyDo), transformPart(rest))
+      case Assign(lhs, rhs, rest) => Assign(lhs, rhs, transformPart(rest))
+      case AssignField(lhs, nme, rhs, rest) => AssignField(lhs, nme, rhs, transformPart(rest))
+      case Define(defn, rest) => Define(defn, transformPart(rest))
+      case End(msg) => blk
+    
+    // match block representing the function body
+    val mainMatchCases = parts.toList.map(b => (Case.Lit(Tree.IntLit(b.id)), transformPart(b.blk.mapLocals(mapSym))))
+    val mainMatchBlk = Match(
+      Value.Ref(pcSymbol),
+      mainMatchCases,
+      N,
+      End()
+    )
+
+    val lbl = blockBuilder.label(loopLbl, mainMatchBlk).rest(End())
+    
+    val resumedVal = VarSymbol(Tree.Ident("value$"), summon[Elaborator.State].nextUid)
+
+    def createAssignment(sym: Local) = Assign(sym, Value.Ref(resumedVal), End())
+    
+    val assignedResumedCases = for 
+      b   <- parts
+      sym <- b.sym
+    yield Case.Lit(Tree.IntLit(b.id)) -> createAssignment(localsMap(sym)) // NOTE: assume sym is in localsMap
+
+    // assigns the resumed value
+    val resumeBody = 
+      if assignedResumedCases.isEmpty then
+        lbl
+      else
+        Match(
+          Value.Ref(pcSymbol),
+          assignedResumedCases,
+          S(End()),
+          lbl
+        )
+    
+    val sym = BlockMemberSymbol("resume", List())
+    val resumeFnDef = FunDefn(
+      BlockMemberSymbol("resume", List()),
+      List(ParamList(ParamListFlags.empty, List(Param(FldFlags.empty, resumedVal, N)))),
+      resumeBody
+    )
+
+    // HACK: see JSBuilder:154
+    val clsDef = ClassDef(
+      None,
+      syntax.Cls,
+      cls,
+      List(),
+      S(List(Param(FldFlags.empty, resumedVal, N))),
+      ObjBody(st.Blk(Nil, st.Lit(Tree.UnitLit(true))))
+    )
+    sym.defn = S(clsDef)
+    
+    ClsLikeDefn(
+      cls,
+      syntax.Cls,
+      List(resumeFnDef),
+      List(),
+      End()
+    )
+    
 
   // Create the symbol for the continuation
   // This should only be called once because symbols contain a uid internally

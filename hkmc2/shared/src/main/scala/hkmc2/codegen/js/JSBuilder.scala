@@ -151,6 +151,10 @@ class JSBuilder extends CodeBuilder:
                 Return(Lam(ps, block), false)
             doc"function ${sym.nme}(${paramList}) { #{  # ${body(result)} #}  # }"
           case ClsLikeDefn(sym, syntax.Cls, mtds, flds, ctor) =>
+            // HACK: The params really should be obtained some other way. This essentially
+            // forces anyone who makes their own class in the IR to create a dummy non-IR ClassDef
+            // for the sake of getting a parameter list. It's especially problematic since
+            // `defn` is an optional field.
             val clsDefn = sym.defn.getOrElse(die)
             val clsParams = clsDefn.paramsOpt.getOrElse(Nil)
             val ctorParams = clsParams.map(p => p.sym -> scope.allocateName(p.sym))
