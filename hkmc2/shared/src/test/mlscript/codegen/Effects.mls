@@ -82,12 +82,16 @@ r
 //│       contLoop: while (true) {
 //│         if (this.pc$0 === 2) {
 //│           this.res$0 = e.perform("hi");
-//│           if (res2.isCont$) {
-//│             this.tmp$0 = new Cont$91$foo(1, undefined);
-//│             this.tmp$0.pc$0 = 1;
-//│             this.tmp$0.isCont$ = true;
-//│             this.res$0.next = this.tmp$0;
-//│             return this.res$0;
+//│           if (this.res$0) {
+//│             if (res2.isCont$) {
+//│               this.tmp$0 = new Cont$91$foo(1, undefined);
+//│               this.tmp$0.pc$0 = 1;
+//│               this.tmp$0.isCont$ = true;
+//│               this.res$0.next = this.tmp$0;
+//│               return this.res$0;
+//│             }
+//│             this.pc$0 = 4;
+//│             continue contLoop;
 //│           }
 //│           this.pc$0 = 3;
 //│           continue contLoop;
@@ -98,6 +102,11 @@ r
 //│           } else {
 //│             if (this.pc$0 === 1) {
 //│               return this.res$0;
+//│             } else {
+//│               if (this.pc$0 === 4) {
+//│                 this.pc$0 = 3;
+//│                 continue contLoop;
+//│               }
 //│             }
 //│           }
 //│         }
@@ -107,12 +116,14 @@ r
 //│     toString() { return "Cont$91$foo"; }
 //│   }
 //│   res2 = e.perform("hi");
-//│   if (res2.isCont$) {
-//│     tmp3 = new Cont$91$foo(1, undefined);
-//│     tmp3.pc$0 = 1;
-//│     tmp3.isCont$ = true;
-//│     res2.next = tmp3;
-//│     return res2;
+//│   if (res2) {
+//│     if (res2.isCont$) {
+//│       tmp3 = new Cont$91$foo(1, undefined);
+//│       tmp3.pc$0 = 1;
+//│       tmp3.isCont$ = true;
+//│       res2.next = tmp3;
+//│       return res2;
+//│     }
 //│   }
 //│   return res2;
 //│ }
@@ -123,49 +134,67 @@ r
 //│       
 //│     }
 //│     resume(value$) {
-//│       if (this.pc$0 === 5) {
+//│       if (this.pc$0 === 6) {
 //│         this.res$0 = value$;
 //│       } else {
-//│         if (this.pc$0 === 6) {
+//│         if (this.pc$0 === 7) {
 //│           this.res$0 = value$;
 //│         } else {
 //│         }
 //│       }
 //│       contLoop: while (true) {
-//│         if (this.pc$0 === 7) {
+//│         if (this.pc$0 === 8) {
 //│           this.res$0 = Predef.print(arg);
-//│           if (res2.isCont$) {
-//│             this.tmp$0 = new Cont$98$perform(5, undefined);
-//│             this.tmp$0.pc$0 = 5;
-//│             this.tmp$0.isCont$ = true;
-//│             this.res$0.next = this.tmp$0;
-//│             return this.res$0;
+//│           if (this.res$0) {
+//│             if (res2.isCont$) {
+//│               this.tmp$0 = new Cont$98$perform(6, undefined);
+//│               this.tmp$0.pc$0 = 6;
+//│               this.tmp$0.isCont$ = true;
+//│               this.res$0.next = this.tmp$0;
+//│               return this.res$0;
+//│             }
+//│             this.pc$0 = 12;
+//│             continue contLoop;
 //│           }
-//│           this.pc$0 = 9;
+//│           this.pc$0 = 11;
 //│           continue contLoop;
 //│         } else {
-//│           if (this.pc$0 === 9) {
-//│             this.pc$0 = 5;
+//│           if (this.pc$0 === 11) {
+//│             this.pc$0 = 6;
 //│             continue contLoop;
 //│           } else {
-//│             if (this.pc$0 === 5) {
+//│             if (this.pc$0 === 6) {
 //│               this.res$0 = k(arg);
-//│               if (res3.isCont$) {
-//│                 this.tmp$0 = new Cont$98$perform(6, undefined);
-//│                 this.tmp$0.pc$0 = 6;
-//│                 this.tmp$0.isCont$ = true;
-//│                 this.res$0.next = this.tmp$0;
-//│                 return this.res$0;
+//│               if (this.res$0) {
+//│                 if (res3.isCont$) {
+//│                   this.tmp$0 = new Cont$98$perform(7, undefined);
+//│                   this.tmp$0.pc$0 = 7;
+//│                   this.tmp$0.isCont$ = true;
+//│                   this.res$0.next = this.tmp$0;
+//│                   return this.res$0;
+//│                 }
+//│                 this.pc$0 = 10;
+//│                 continue contLoop;
 //│               }
-//│               this.pc$0 = 8;
+//│               this.pc$0 = 9;
 //│               continue contLoop;
 //│             } else {
-//│               if (this.pc$0 === 8) {
-//│                 this.pc$0 = 6;
+//│               if (this.pc$0 === 9) {
+//│                 this.pc$0 = 7;
 //│                 continue contLoop;
 //│               } else {
-//│                 if (this.pc$0 === 6) {
+//│                 if (this.pc$0 === 7) {
 //│                   return this.res$0;
+//│                 } else {
+//│                   if (this.pc$0 === 10) {
+//│                     this.pc$0 = 9;
+//│                     continue contLoop;
+//│                   } else {
+//│                     if (this.pc$0 === 12) {
+//│                       this.pc$0 = 11;
+//│                       continue contLoop;
+//│                     }
+//│                   }
 //│                 }
 //│               }
 //│             }
@@ -177,20 +206,24 @@ r
 //│     toString() { return "Cont$98$perform"; }
 //│   }
 //│   res2 = Predef.print(arg);
-//│   if (res2.isCont$) {
-//│     tmp3 = new Cont$98$perform(5, undefined);
-//│     tmp3.pc$0 = 5;
-//│     tmp3.isCont$ = true;
-//│     res2.next = tmp3;
-//│     return res2;
+//│   if (res2) {
+//│     if (res2.isCont$) {
+//│       tmp3 = new Cont$98$perform(6, undefined);
+//│       tmp3.pc$0 = 6;
+//│       tmp3.isCont$ = true;
+//│       res2.next = tmp3;
+//│       return res2;
+//│     }
 //│   }
 //│   res3 = k(arg);
-//│   if (res3.isCont$) {
-//│     tmp4 = new Cont$98$perform(6, undefined);
-//│     tmp4.pc$0 = 6;
-//│     tmp4.isCont$ = true;
-//│     res3.next = tmp4;
-//│     return res3;
+//│   if (res3) {
+//│     if (res3.isCont$) {
+//│       tmp4 = new Cont$98$perform(7, undefined);
+//│       tmp4.pc$0 = 7;
+//│       tmp4.isCont$ = true;
+//│       res3.next = tmp4;
+//│       return res3;
+//│     }
 //│   }
 //│   return res3;
 //│ }
@@ -200,16 +233,16 @@ r
 //│       
 //│     }
 //│     resume(value$) {
-//│       if (this.pc$0 === 10) {
+//│       if (this.pc$0 === 13) {
 //│         this.res$0 = value$;
 //│       } else {
-//│         if (this.pc$0 === 11) {
+//│         if (this.pc$0 === 14) {
 //│           this.res$0 = value$;
 //│         } else {
 //│         }
 //│       }
 //│       contLoop: while (true) {
-//│         if (this.pc$0 === 15) {
+//│         if (this.pc$0 === 19) {
 //│           this.h$0 = new globalThis.Effect((arg) => {
 //│             let cont;
 //│             cont = new globalThis.Cont$.class((x) => {
@@ -224,22 +257,26 @@ r
 //│             return cont;
 //│           });
 //│           this.res$0 = globalThis.foo(this.h$0);
-//│           if (res.isCont$) {
-//│             this.tmp$0 = new Cont$112$(10, undefined);
-//│             this.tmp$0.pc$0 = 10;
-//│             this.tmp$0.isCont$ = true;
-//│             this.res$0.next = this.tmp$0;
-//│             this.cur$0 = this.res$0;
-//│             return this.cur$0;
+//│           if (this.res$0) {
+//│             if (res.isCont$) {
+//│               this.tmp$0 = new Cont$112$(13, undefined);
+//│               this.tmp$0.pc$0 = 13;
+//│               this.tmp$0.isCont$ = true;
+//│               this.res$0.next = this.tmp$0;
+//│               this.cur$0 = this.res$0;
+//│               return this.cur$0;
+//│             }
+//│             this.pc$0 = 23;
+//│             continue contLoop;
 //│           }
-//│           this.pc$0 = 17;
+//│           this.pc$0 = 22;
 //│           continue contLoop;
 //│         } else {
-//│           if (this.pc$0 === 17) {
-//│             this.pc$0 = 10;
+//│           if (this.pc$0 === 22) {
+//│             this.pc$0 = 13;
 //│             continue contLoop;
 //│           } else {
-//│             if (this.pc$0 === 10) {
+//│             if (this.pc$0 === 13) {
 //│               this.res$0 = (() => {
 //│                 let res2, tmp3;
 //│                 class Cont$119$ {
@@ -247,29 +284,38 @@ r
 //│                     
 //│                   }
 //│                   resume(value$1) {
-//│                     if (this.pc$0 === 12) {
+//│                     if (this.pc$0 === 15) {
 //│                       this.res$0 = value$1;
 //│                     } else {
 //│                     }
 //│                     contLoop1: while (true) {
-//│                       if (this.pc$0 === 13) {
+//│                       if (this.pc$0 === 16) {
 //│                         this.res$0 = this$Cont$112$.h$0.perform("Hello");
-//│                         if (res2.isCont$) {
-//│                           this.tmp$0 = new Cont$119$(12, undefined);
-//│                           this.tmp$0.pc$0 = 12;
-//│                           this.tmp$0.isCont$ = true;
-//│                           this.res$0.next = this.tmp$0;
-//│                           return this.res$0;
+//│                         if (this.res$0) {
+//│                           if (res2.isCont$) {
+//│                             this.tmp$0 = new Cont$119$(15, undefined);
+//│                             this.tmp$0.pc$0 = 15;
+//│                             this.tmp$0.isCont$ = true;
+//│                             this.res$0.next = this.tmp$0;
+//│                             return this.res$0;
+//│                           }
+//│                           this.pc$0 = 18;
+//│                           continue contLoop1;
 //│                         }
-//│                         this.pc$0 = 14;
+//│                         this.pc$0 = 17;
 //│                         continue contLoop1;
 //│                       } else {
-//│                         if (this.pc$0 === 14) {
-//│                           this.pc$0 = 12;
+//│                         if (this.pc$0 === 17) {
+//│                           this.pc$0 = 15;
 //│                           continue contLoop1;
 //│                         } else {
-//│                           if (this.pc$0 === 12) {
+//│                           if (this.pc$0 === 15) {
 //│                             return this.res$0;
+//│                           } else {
+//│                             if (this.pc$0 === 18) {
+//│                               this.pc$0 = 17;
+//│                               continue contLoop1;
+//│                             }
 //│                           }
 //│                         }
 //│                       }
@@ -279,33 +325,49 @@ r
 //│                   toString() { return "Cont$119$"; }
 //│                 }
 //│                 res2 = this.h$0.perform("Hello");
-//│                 if (res2.isCont$) {
-//│                   tmp3 = new Cont$119$(12, undefined);
-//│                   tmp3.pc$0 = 12;
-//│                   tmp3.isCont$ = true;
-//│                   res2.next = tmp3;
-//│                   return res2;
+//│                 if (res2) {
+//│                   if (res2.isCont$) {
+//│                     tmp3 = new Cont$119$(15, undefined);
+//│                     tmp3.pc$0 = 15;
+//│                     tmp3.isCont$ = true;
+//│                     res2.next = tmp3;
+//│                     return res2;
+//│                   }
 //│                 }
 //│                 return res2;
 //│               })();
-//│               if (res1.isCont$) {
-//│                 this.tmp$0 = new Cont$112$(11, undefined);
-//│                 this.tmp$0.pc$0 = 11;
-//│                 this.tmp$0.isCont$ = true;
-//│                 this.res$0.next = this.tmp$0;
-//│                 this.cur$0 = this.res$0;
-//│                 return this.cur$0;
-//│               }
-//│               this.pc$0 = 16;
-//│               continue contLoop;
-//│             } else {
-//│               if (this.pc$0 === 16) {
-//│                 this.pc$0 = 11;
-//│                 continue contLoop;
-//│               } else {
-//│                 if (this.pc$0 === 11) {
+//│               if (this.res$0) {
+//│                 if (res1.isCont$) {
+//│                   this.tmp$0 = new Cont$112$(14, undefined);
+//│                   this.tmp$0.pc$0 = 14;
+//│                   this.tmp$0.isCont$ = true;
+//│                   this.res$0.next = this.tmp$0;
 //│                   this.cur$0 = this.res$0;
 //│                   return this.cur$0;
+//│                 }
+//│                 this.pc$0 = 21;
+//│                 continue contLoop;
+//│               }
+//│               this.pc$0 = 20;
+//│               continue contLoop;
+//│             } else {
+//│               if (this.pc$0 === 20) {
+//│                 this.pc$0 = 14;
+//│                 continue contLoop;
+//│               } else {
+//│                 if (this.pc$0 === 14) {
+//│                   this.cur$0 = this.res$0;
+//│                   return this.cur$0;
+//│                 } else {
+//│                   if (this.pc$0 === 21) {
+//│                     this.pc$0 = 20;
+//│                     continue contLoop;
+//│                   } else {
+//│                     if (this.pc$0 === 23) {
+//│                       this.pc$0 = 22;
+//│                       continue contLoop;
+//│                     }
+//│                   }
 //│                 }
 //│               }
 //│             }
@@ -330,13 +392,15 @@ r
 //│     return cont;
 //│   });
 //│   res = this.foo(h);
-//│   if (res.isCont$) {
-//│     tmp1 = new Cont$112$(10, undefined);
-//│     tmp1.pc$0 = 10;
-//│     tmp1.isCont$ = true;
-//│     res.next = tmp1;
-//│     cur = res;
-//│     break handlerBody;
+//│   if (res) {
+//│     if (res.isCont$) {
+//│       tmp1 = new Cont$112$(13, undefined);
+//│       tmp1.pc$0 = 13;
+//│       tmp1.isCont$ = true;
+//│       res.next = tmp1;
+//│       cur = res;
+//│       break handlerBody;
+//│     }
 //│   }
 //│   res1 = (() => {
 //│     let res2, tmp3;
@@ -345,29 +409,38 @@ r
 //│         
 //│       }
 //│       resume(value$) {
-//│         if (this.pc$0 === 12) {
+//│         if (this.pc$0 === 15) {
 //│           this.res$0 = value$;
 //│         } else {
 //│         }
 //│         contLoop: while (true) {
-//│           if (this.pc$0 === 13) {
+//│           if (this.pc$0 === 16) {
 //│             this.res$0 = h.perform("Hello");
-//│             if (res2.isCont$) {
-//│               this.tmp$0 = new Cont$119$(12, undefined);
-//│               this.tmp$0.pc$0 = 12;
-//│               this.tmp$0.isCont$ = true;
-//│               this.res$0.next = this.tmp$0;
-//│               return this.res$0;
+//│             if (this.res$0) {
+//│               if (res2.isCont$) {
+//│                 this.tmp$0 = new Cont$119$(15, undefined);
+//│                 this.tmp$0.pc$0 = 15;
+//│                 this.tmp$0.isCont$ = true;
+//│                 this.res$0.next = this.tmp$0;
+//│                 return this.res$0;
+//│               }
+//│               this.pc$0 = 18;
+//│               continue contLoop;
 //│             }
-//│             this.pc$0 = 14;
+//│             this.pc$0 = 17;
 //│             continue contLoop;
 //│           } else {
-//│             if (this.pc$0 === 14) {
-//│               this.pc$0 = 12;
+//│             if (this.pc$0 === 17) {
+//│               this.pc$0 = 15;
 //│               continue contLoop;
 //│             } else {
-//│               if (this.pc$0 === 12) {
+//│               if (this.pc$0 === 15) {
 //│                 return this.res$0;
+//│               } else {
+//│                 if (this.pc$0 === 18) {
+//│                   this.pc$0 = 17;
+//│                   continue contLoop;
+//│                 }
 //│               }
 //│             }
 //│           }
@@ -377,46 +450,52 @@ r
 //│       toString() { return "Cont$119$"; }
 //│     }
 //│     res2 = h.perform("Hello");
-//│     if (res2.isCont$) {
-//│       tmp3 = new Cont$119$(12, undefined);
-//│       tmp3.pc$0 = 12;
-//│       tmp3.isCont$ = true;
-//│       res2.next = tmp3;
-//│       return res2;
+//│     if (res2) {
+//│       if (res2.isCont$) {
+//│         tmp3 = new Cont$119$(15, undefined);
+//│         tmp3.pc$0 = 15;
+//│         tmp3.isCont$ = true;
+//│         res2.next = tmp3;
+//│         return res2;
+//│       }
 //│     }
 //│     return res2;
 //│   })();
-//│   if (res1.isCont$) {
-//│     tmp2 = new Cont$112$(11, undefined);
-//│     tmp2.pc$0 = 11;
-//│     tmp2.isCont$ = true;
-//│     res1.next = tmp2;
-//│     cur = res1;
-//│     break handlerBody;
+//│   if (res1) {
+//│     if (res1.isCont$) {
+//│       tmp2 = new Cont$112$(14, undefined);
+//│       tmp2.pc$0 = 14;
+//│       tmp2.isCont$ = true;
+//│       res1.next = tmp2;
+//│       cur = res1;
+//│       break handlerBody;
+//│     }
 //│   }
 //│   cur = res1;
 //│   break handlerBody;
 //│   break;
 //│ }
 //│ handler: while (true) {
-//│   if (cur.isCont$) {
-//│     if (cur.handler) {
-//│       tmp = cur.handler === h;
-//│       if (tmp) {
-//│         resume = resume$(cur);
-//│         tmp = cur.params.push(resume);
-//│         cur = cur.handlerFun.apply(null, cur.params);
-//│         continue handler;
+//│   if (cur) {
+//│     if (cur.isCont$) {
+//│       if (cur.handler) {
+//│         tmp = cur.handler === h;
+//│         if (tmp) {
+//│           resume = resume$(cur);
+//│           tmp = cur.params.push(resume);
+//│           cur = cur.handlerFun.apply(null, cur.params);
+//│           continue handler;
+//│         }
+//│       } else {
+//│         throw new this.Error("Unhandled effects");
 //│       }
-//│     } else {
-//│       throw new this.Error("Unhandled effects");
 //│     }
 //│   }
 //│   break;
 //│ }
 //│ this.r = cur;
 //│ undefined
-//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'isCont$')
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'perform')
 //│ r = 'k'
 
 :sjs
@@ -509,13 +588,17 @@ x
 //│             return cont;
 //│           });
 //│           this.res$0 = this.h$0.perform("t");
-//│           if (res.isCont$) {
-//│             this.tmp$0 = new Cont$149$(3, undefined);
-//│             this.tmp$0.pc$0 = 3;
-//│             this.tmp$0.isCont$ = true;
-//│             this.res$0.next = this.tmp$0;
-//│             this.cur$0 = this.res$0;
-//│             return this.cur$0;
+//│           if (this.res$0) {
+//│             if (res.isCont$) {
+//│               this.tmp$0 = new Cont$149$(3, undefined);
+//│               this.tmp$0.pc$0 = 3;
+//│               this.tmp$0.isCont$ = true;
+//│               this.res$0.next = this.tmp$0;
+//│               this.cur$0 = this.res$0;
+//│               return this.cur$0;
+//│             }
+//│             this.pc$0 = 6;
+//│             continue contLoop;
 //│           }
 //│           this.pc$0 = 5;
 //│           continue contLoop;
@@ -527,6 +610,11 @@ x
 //│             if (this.pc$0 === 3) {
 //│               this.cur$0 = this.res$0;
 //│               return this.cur$0;
+//│             } else {
+//│               if (this.pc$0 === 6) {
+//│                 this.pc$0 = 5;
+//│                 continue contLoop;
+//│               }
 //│             }
 //│           }
 //│         }
@@ -549,30 +637,34 @@ x
 //│     return cont;
 //│   });
 //│   res = h.perform("t");
-//│   if (res.isCont$) {
-//│     tmp1 = new Cont$149$(3, undefined);
-//│     tmp1.pc$0 = 3;
-//│     tmp1.isCont$ = true;
-//│     res.next = tmp1;
-//│     cur = res;
-//│     break handlerBody;
+//│   if (res) {
+//│     if (res.isCont$) {
+//│       tmp1 = new Cont$149$(3, undefined);
+//│       tmp1.pc$0 = 3;
+//│       tmp1.isCont$ = true;
+//│       res.next = tmp1;
+//│       cur = res;
+//│       break handlerBody;
+//│     }
 //│   }
 //│   cur = res;
 //│   break handlerBody;
 //│   break;
 //│ }
 //│ handler: while (true) {
-//│   if (cur.isCont$) {
-//│     if (cur.handler) {
-//│       tmp = cur.handler === h;
-//│       if (tmp) {
-//│         resume = resume$(cur);
-//│         tmp = cur.params.push(resume);
-//│         cur = cur.handlerFun.apply(null, cur.params);
-//│         continue handler;
+//│   if (cur) {
+//│     if (cur.isCont$) {
+//│       if (cur.handler) {
+//│         tmp = cur.handler === h;
+//│         if (tmp) {
+//│           resume = resume$(cur);
+//│           tmp = cur.params.push(resume);
+//│           cur = cur.handlerFun.apply(null, cur.params);
+//│           continue handler;
+//│         }
+//│       } else {
+//│         throw new this.Error("Unhandled effects");
 //│       }
-//│     } else {
-//│       throw new this.Error("Unhandled effects");
 //│     }
 //│   }
 //│   break;
@@ -652,12 +744,16 @@ print(m)
 //│         if (this.pc$0 === 3) {
 //│           globalThis.x = value;
 //│           this.res$0 = k(undefined);
-//│           if (res5.isCont$) {
-//│             this.tmp$0 = new Cont$175$setVal(2, undefined);
-//│             this.tmp$0.pc$0 = 2;
-//│             this.tmp$0.isCont$ = true;
-//│             this.res$0.next = this.tmp$0;
-//│             return this.res$0;
+//│           if (this.res$0) {
+//│             if (res5.isCont$) {
+//│               this.tmp$0 = new Cont$175$setVal(2, undefined);
+//│               this.tmp$0.pc$0 = 2;
+//│               this.tmp$0.isCont$ = true;
+//│               this.res$0.next = this.tmp$0;
+//│               return this.res$0;
+//│             }
+//│             this.pc$0 = 5;
+//│             continue contLoop;
 //│           }
 //│           this.pc$0 = 4;
 //│           continue contLoop;
@@ -668,6 +764,11 @@ print(m)
 //│           } else {
 //│             if (this.pc$0 === 2) {
 //│               return this.res$0;
+//│             } else {
+//│               if (this.pc$0 === 5) {
+//│                 this.pc$0 = 4;
+//│                 continue contLoop;
+//│               }
 //│             }
 //│           }
 //│         }
@@ -678,12 +779,14 @@ print(m)
 //│   }
 //│   globalThis.x = value;
 //│   res5 = k(undefined);
-//│   if (res5.isCont$) {
-//│     tmp4 = new Cont$175$setVal(2, undefined);
-//│     tmp4.pc$0 = 2;
-//│     tmp4.isCont$ = true;
-//│     res5.next = tmp4;
-//│     return res5;
+//│   if (res5) {
+//│     if (res5.isCont$) {
+//│       tmp4 = new Cont$175$setVal(2, undefined);
+//│       tmp4.pc$0 = 2;
+//│       tmp4.isCont$ = true;
+//│       res5.next = tmp4;
+//│       return res5;
+//│     }
 //│   }
 //│   return res5;
 //│ }
@@ -694,29 +797,38 @@ print(m)
 //│       
 //│     }
 //│     resume(value$) {
-//│       if (this.pc$0 === 5) {
+//│       if (this.pc$0 === 6) {
 //│         this.res$0 = value$;
 //│       } else {
 //│       }
 //│       contLoop: while (true) {
-//│         if (this.pc$0 === 6) {
+//│         if (this.pc$0 === 7) {
 //│           this.res$0 = k(globalThis.x);
-//│           if (res5.isCont$) {
-//│             this.tmp$0 = new Cont$181$getVal(5, undefined);
-//│             this.tmp$0.pc$0 = 5;
-//│             this.tmp$0.isCont$ = true;
-//│             this.res$0.next = this.tmp$0;
-//│             return this.res$0;
+//│           if (this.res$0) {
+//│             if (res5.isCont$) {
+//│               this.tmp$0 = new Cont$181$getVal(6, undefined);
+//│               this.tmp$0.pc$0 = 6;
+//│               this.tmp$0.isCont$ = true;
+//│               this.res$0.next = this.tmp$0;
+//│               return this.res$0;
+//│             }
+//│             this.pc$0 = 9;
+//│             continue contLoop;
 //│           }
-//│           this.pc$0 = 7;
+//│           this.pc$0 = 8;
 //│           continue contLoop;
 //│         } else {
-//│           if (this.pc$0 === 7) {
-//│             this.pc$0 = 5;
+//│           if (this.pc$0 === 8) {
+//│             this.pc$0 = 6;
 //│             continue contLoop;
 //│           } else {
-//│             if (this.pc$0 === 5) {
+//│             if (this.pc$0 === 6) {
 //│               return this.res$0;
+//│             } else {
+//│               if (this.pc$0 === 9) {
+//│                 this.pc$0 = 8;
+//│                 continue contLoop;
+//│               }
 //│             }
 //│           }
 //│         }
@@ -726,12 +838,14 @@ print(m)
 //│     toString() { return "Cont$181$getVal"; }
 //│   }
 //│   res5 = k(globalThis.x);
-//│   if (res5.isCont$) {
-//│     tmp4 = new Cont$181$getVal(5, undefined);
-//│     tmp4.pc$0 = 5;
-//│     tmp4.isCont$ = true;
-//│     res5.next = tmp4;
-//│     return res5;
+//│   if (res5) {
+//│     if (res5.isCont$) {
+//│       tmp4 = new Cont$181$getVal(6, undefined);
+//│       tmp4.pc$0 = 6;
+//│       tmp4.isCont$ = true;
+//│       res5.next = tmp4;
+//│       return res5;
+//│     }
 //│   }
 //│   return res5;
 //│ }
@@ -741,20 +855,20 @@ print(m)
 //│       
 //│     }
 //│     resume(value$) {
-//│       if (this.pc$0 === 8) {
+//│       if (this.pc$0 === 10) {
 //│         this.res$0 = value$;
 //│       } else {
-//│         if (this.pc$0 === 9) {
+//│         if (this.pc$0 === 11) {
 //│           this.res$0 = value$;
 //│         } else {
-//│           if (this.pc$0 === 10) {
+//│           if (this.pc$0 === 12) {
 //│             this.res$0 = value$;
 //│           } else {
 //│           }
 //│         }
 //│       }
 //│       contLoop: while (true) {
-//│         if (this.pc$0 === 11) {
+//│         if (this.pc$0 === 13) {
 //│           globalThis.h = new globalThis.Cell(() => {
 //│             let cont;
 //│             cont = new globalThis.Cont$.class((x) => {
@@ -781,60 +895,87 @@ print(m)
 //│             return cont;
 //│           });
 //│           this.res$0 = globalThis.h.getVal();
-//│           if (res.isCont$) {
-//│             this.tmp$0 = new Cont$192$(8, undefined);
-//│             this.tmp$0.pc$0 = 8;
-//│             this.tmp$0.isCont$ = true;
-//│             this.res$0.next = this.tmp$0;
-//│             this.cur$0 = this.res$0;
-//│             return this.cur$0;
+//│           if (this.res$0) {
+//│             if (res.isCont$) {
+//│               this.tmp$0 = new Cont$192$(10, undefined);
+//│               this.tmp$0.pc$0 = 10;
+//│               this.tmp$0.isCont$ = true;
+//│               this.res$0.next = this.tmp$0;
+//│               this.cur$0 = this.res$0;
+//│               return this.cur$0;
+//│             }
+//│             this.pc$0 = 19;
+//│             continue contLoop;
 //│           }
-//│           this.pc$0 = 14;
+//│           this.pc$0 = 18;
 //│           continue contLoop;
 //│         } else {
-//│           if (this.pc$0 === 14) {
-//│             this.pc$0 = 8;
+//│           if (this.pc$0 === 18) {
+//│             this.pc$0 = 10;
 //│             continue contLoop;
 //│           } else {
-//│             if (this.pc$0 === 8) {
+//│             if (this.pc$0 === 10) {
 //│               globalThis.k = this.res$0;
 //│               this.res$0 = globalThis.h.setVal(1);
-//│               if (res1.isCont$) {
-//│                 this.tmp$0 = new Cont$192$(9, undefined);
-//│                 this.tmp$0.pc$0 = 9;
-//│                 this.tmp$0.isCont$ = true;
-//│                 this.res$0.next = this.tmp$0;
-//│                 this.cur$0 = this.res$0;
-//│                 return this.cur$0;
+//│               if (this.res$0) {
+//│                 if (res1.isCont$) {
+//│                   this.tmp$0 = new Cont$192$(11, undefined);
+//│                   this.tmp$0.pc$0 = 11;
+//│                   this.tmp$0.isCont$ = true;
+//│                   this.res$0.next = this.tmp$0;
+//│                   this.cur$0 = this.res$0;
+//│                   return this.cur$0;
+//│                 }
+//│                 this.pc$0 = 17;
+//│                 continue contLoop;
 //│               }
-//│               this.pc$0 = 13;
+//│               this.pc$0 = 16;
 //│               continue contLoop;
 //│             } else {
-//│               if (this.pc$0 === 13) {
-//│                 this.pc$0 = 9;
+//│               if (this.pc$0 === 16) {
+//│                 this.pc$0 = 11;
 //│                 continue contLoop;
 //│               } else {
-//│                 if (this.pc$0 === 9) {
+//│                 if (this.pc$0 === 11) {
 //│                   this.res$0 = globalThis.h.getVal();
-//│                   if (res2.isCont$) {
-//│                     this.tmp$0 = new Cont$192$(10, undefined);
-//│                     this.tmp$0.pc$0 = 10;
-//│                     this.tmp$0.isCont$ = true;
-//│                     this.res$0.next = this.tmp$0;
-//│                     this.cur$0 = this.res$0;
-//│                     return this.cur$0;
+//│                   if (this.res$0) {
+//│                     if (res2.isCont$) {
+//│                       this.tmp$0 = new Cont$192$(12, undefined);
+//│                       this.tmp$0.pc$0 = 12;
+//│                       this.tmp$0.isCont$ = true;
+//│                       this.res$0.next = this.tmp$0;
+//│                       this.cur$0 = this.res$0;
+//│                       return this.cur$0;
+//│                     }
+//│                     this.pc$0 = 15;
+//│                     continue contLoop;
 //│                   }
-//│                   this.pc$0 = 12;
+//│                   this.pc$0 = 14;
 //│                   continue contLoop;
 //│                 } else {
-//│                   if (this.pc$0 === 12) {
-//│                     this.pc$0 = 10;
+//│                   if (this.pc$0 === 14) {
+//│                     this.pc$0 = 12;
 //│                     continue contLoop;
 //│                   } else {
-//│                     if (this.pc$0 === 10) {
+//│                     if (this.pc$0 === 12) {
 //│                       globalThis.m = this.res$0;
 //│                       this.cur$0 = undefined;
 //│                       return this.cur$0;
+//│                     } else {
+//│                       if (this.pc$0 === 15) {
+//│                         this.pc$0 = 14;
+//│                         continue contLoop;
+//│                       } else {
+//│                         if (this.pc$0 === 17) {
+//│                           this.pc$0 = 16;
+//│                           continue contLoop;
+//│                         } else {
+//│                           if (this.pc$0 === 19) {
+//│                             this.pc$0 = 18;
+//│                             continue contLoop;
+//│                           }
+//│                         }
+//│                       }
 //│                     }
 //│                   }
 //│                 }
@@ -873,32 +1014,38 @@ print(m)
 //│     return cont;
 //│   });
 //│   res = this.h.getVal();
-//│   if (res.isCont$) {
-//│     tmp1 = new Cont$192$(8, undefined);
-//│     tmp1.pc$0 = 8;
-//│     tmp1.isCont$ = true;
-//│     res.next = tmp1;
-//│     cur = res;
-//│     break handlerBody;
+//│   if (res) {
+//│     if (res.isCont$) {
+//│       tmp1 = new Cont$192$(10, undefined);
+//│       tmp1.pc$0 = 10;
+//│       tmp1.isCont$ = true;
+//│       res.next = tmp1;
+//│       cur = res;
+//│       break handlerBody;
+//│     }
 //│   }
 //│   this.k = res;
 //│   res1 = this.h.setVal(1);
-//│   if (res1.isCont$) {
-//│     tmp2 = new Cont$192$(9, undefined);
-//│     tmp2.pc$0 = 9;
-//│     tmp2.isCont$ = true;
-//│     res1.next = tmp2;
-//│     cur = res1;
-//│     break handlerBody;
+//│   if (res1) {
+//│     if (res1.isCont$) {
+//│       tmp2 = new Cont$192$(11, undefined);
+//│       tmp2.pc$0 = 11;
+//│       tmp2.isCont$ = true;
+//│       res1.next = tmp2;
+//│       cur = res1;
+//│       break handlerBody;
+//│     }
 //│   }
 //│   res2 = this.h.getVal();
-//│   if (res2.isCont$) {
-//│     tmp3 = new Cont$192$(10, undefined);
-//│     tmp3.pc$0 = 10;
-//│     tmp3.isCont$ = true;
-//│     res2.next = tmp3;
-//│     cur = res2;
-//│     break handlerBody;
+//│   if (res2) {
+//│     if (res2.isCont$) {
+//│       tmp3 = new Cont$192$(12, undefined);
+//│       tmp3.pc$0 = 12;
+//│       tmp3.isCont$ = true;
+//│       res2.next = tmp3;
+//│       cur = res2;
+//│       break handlerBody;
+//│     }
 //│   }
 //│   this.m = res2;
 //│   cur = undefined;
@@ -906,29 +1053,35 @@ print(m)
 //│   break;
 //│ }
 //│ handler: while (true) {
-//│   if (cur.isCont$) {
-//│     if (cur.handler) {
-//│       tmp = cur.handler === this.h;
-//│       if (tmp) {
-//│         resume = resume$(cur);
-//│         tmp = cur.params.push(resume);
-//│         cur = cur.handlerFun.apply(null, cur.params);
-//│         continue handler;
+//│   if (cur) {
+//│     if (cur.isCont$) {
+//│       if (cur.handler) {
+//│         tmp = cur.handler === this.h;
+//│         if (tmp) {
+//│           resume = resume$(cur);
+//│           tmp = cur.params.push(resume);
+//│           cur = cur.handlerFun.apply(null, cur.params);
+//│           continue handler;
+//│         }
+//│       } else {
+//│         throw new this.Error("Unhandled effects");
 //│       }
-//│     } else {
-//│       throw new this.Error("Unhandled effects");
 //│     }
 //│   }
 //│   break;
 //│ }
 //│ this.res = cur;
 //│ res3 = Predef.print(this.k);
-//│ if (res3.isCont$) {
-//│   throw new this.Error("Unhandled effects");
+//│ if (res3) {
+//│   if (res3.isCont$) {
+//│     throw new this.Error("Unhandled effects");
+//│   }
 //│ }
 //│ res4 = Predef.print(this.m);
-//│ if (res4.isCont$) {
-//│   throw new this.Error("Unhandled effects");
+//│ if (res4) {
+//│   if (res4.isCont$) {
+//│     throw new this.Error("Unhandled effects");
+//│   }
 //│ }
 //│ undefined
 //│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'isCont$')
@@ -936,21 +1089,122 @@ print(m)
 //│ x = 0
 
 :il
+:sjs
+:fixme
 class A(x) with
   fun debug() = print(x)
 let x = new A()
-//│ FAILURE: Unexpected exception
-//│ /!!!\ Uncaught error: hkmc2.InternalError: Not in scope: $separator@214
-//│ 	at: hkmc2.InternalError$.apply(Diagnostic.scala:39)
-//│ 	at: hkmc2.InternalError$.apply(Diagnostic.scala:43)
-//│ 	at: hkmc2.codegen.js.Scope.lookup_$bang$$anonfun$1(Scope.scala:86)
-//│ 	at: scala.Option.getOrElse(Option.scala:201)
-//│ 	at: hkmc2.codegen.js.Scope.lookup_$bang(Scope.scala:88)
-//│ 	at: hkmc2.codegen.js.JSBuilder.getVar(JSBuilder.scala:69)
-//│ 	at: hkmc2.codegen.js.JSBuilder.result(JSBuilder.scala:78)
-//│ 	at: hkmc2.codegen.js.JSBuilder.result(JSBuilder.scala:96)
-//│ 	at: hkmc2.codegen.js.JSBuilder.returningTerm(JSBuilder.scala:118)
-//│ 	at: hkmc2.codegen.js.JSBuilder.returningTerm(JSBuilder.scala:240)
+x.debug()
+//│ JS:
+//│ let tmp, res;
+//│ function resume$(cont) {
+//│   return (value) => {
+//│     let cont1, value1;
+//│     cont1 = cont;
+//│     value1 = value;
+//│     chainLoop: while (true) {
+//│       if (cont1) {
+//│         value1 = cont1.resume(value1);
+//│         cont1 = cont1.next;
+//│         continue chainLoop;
+//│       }
+//│       return value1;
+//│       break;
+//│     }
+//│   };
+//│ }
+//│ this.Cont$ = function Cont$(resume1, resumed1, next1, isCont$1) { return new Cont$.class(resume1, resumed1, next1, isCont$1); };
+//│ this.Cont$.class = class Cont$ {
+//│   constructor(resume, resumed, next, isCont$) {
+//│     this.resume = resume;
+//│     this.resumed = resumed;
+//│     this.next = next;
+//│     this.isCont$ = isCont$;
+//│     
+//│   }
+//│   toString() { return "Cont$(" + this.resume + ", " + this.resumed + ", " + this.next + ", " + this.isCont$ + ")"; }
+//│ };
+//│ this.A = function A(x1) { return new A.class(x1); };
+//│ this.A.class = class A {
+//│   constructor(x) {
+//│     this.x = x;
+//│     
+//│   }
+//│   debug() {
+//│     let res1, tmp1;
+//│     
+//│     const this$A = this;
+//│     class Cont$219$debug {
+//│       constructor() {
+//│         
+//│       }
+//│       resume(value$) {
+//│         if (this.pc$0 === 1) {
+//│           this.res$0 = value$;
+//│         } else {
+//│         }
+//│         contLoop: while (true) {
+//│           if (this.pc$0 === 2) {
+//│             this.res$0 = Predef.print(this$A.x);
+//│             if (this.res$0) {
+//│               if (res1.isCont$) {
+//│                 this.tmp$0 = new Cont$219$debug(1, undefined);
+//│                 this.tmp$0.pc$0 = 1;
+//│                 this.tmp$0.isCont$ = true;
+//│                 this.res$0.next = this.tmp$0;
+//│                 return this.res$0;
+//│               }
+//│               this.pc$0 = 4;
+//│               continue contLoop;
+//│             }
+//│             this.pc$0 = 3;
+//│             continue contLoop;
+//│           } else {
+//│             if (this.pc$0 === 3) {
+//│               this.pc$0 = 1;
+//│               continue contLoop;
+//│             } else {
+//│               if (this.pc$0 === 1) {
+//│                 return this.res$0;
+//│               } else {
+//│                 if (this.pc$0 === 4) {
+//│                   this.pc$0 = 3;
+//│                   continue contLoop;
+//│                 }
+//│               }
+//│             }
+//│           }
+//│           break;
+//│         }
+//│       }
+//│       toString() { return "Cont$219$debug"; }
+//│     }
+//│     res1 = Predef.print(this.x);
+//│     if (res1) {
+//│       if (res1.isCont$) {
+//│         tmp1 = new Cont$219$debug(1, undefined);
+//│         tmp1.pc$0 = 1;
+//│         tmp1.isCont$ = true;
+//│         res1.next = tmp1;
+//│         return res1;
+//│       }
+//│     }
+//│     return res1;
+//│   }
+//│   toString() { return "A(" + this.x + ")"; }
+//│ };
+//│ tmp = new this.A.class();
+//│ this.x = tmp;
+//│ res = this.x.debug();
+//│ if (res) {
+//│   if (res.isCont$) {
+//│     throw new this.Error("Unhandled effects");
+//│   }
+//│ }
+//│ undefined
+//│ > undefined
+//│ x = A { x: undefined }
+//│ FAILURE: Unexpected lack of error to fix
 
 :fixme
 :sjs
@@ -990,7 +1244,7 @@ fun f() =
 //│ };
 //│ function f() {
 //│   let y;
-//│   class Cont$233$f {
+//│   class Cont$240$f {
 //│     constructor() {
 //│       
 //│     }
@@ -1012,7 +1266,7 @@ fun f() =
 //│         break;
 //│       }
 //│     }
-//│     toString() { return "Cont$233$f"; }
+//│     toString() { return "Cont$240$f"; }
 //│   }
 //│   const x = 3;
 //│   y = 5;
@@ -1059,7 +1313,7 @@ fun f() =
 //│ };
 //│ function f() {
 //│   let x, y, z, res, tmp;
-//│   class Cont$249$f {
+//│   class Cont$256$f {
 //│     constructor() {
 //│       
 //│     }
@@ -1072,12 +1326,16 @@ fun f() =
 //│         if (this.pc$0 === 2) {
 //│           this.x$0 = 2;
 //│           this.res$0 = globalThis.f();
-//│           if (res.isCont$) {
-//│             this.tmp$0 = new Cont$249$f(1, undefined);
-//│             this.tmp$0.pc$0 = 1;
-//│             this.tmp$0.isCont$ = true;
-//│             this.res$0.next = this.tmp$0;
-//│             return this.res$0;
+//│           if (this.res$0) {
+//│             if (res.isCont$) {
+//│               this.tmp$0 = new Cont$256$f(1, undefined);
+//│               this.tmp$0.pc$0 = 1;
+//│               this.tmp$0.isCont$ = true;
+//│               this.res$0.next = this.tmp$0;
+//│               return this.res$0;
+//│             }
+//│             this.pc$0 = 4;
+//│             continue contLoop;
 //│           }
 //│           this.pc$0 = 3;
 //│           continue contLoop;
@@ -1090,22 +1348,29 @@ fun f() =
 //│               this.y$0 = this.res$0;
 //│               this.z$0 = 3;
 //│               return 2;
+//│             } else {
+//│               if (this.pc$0 === 4) {
+//│                 this.pc$0 = 3;
+//│                 continue contLoop;
+//│               }
 //│             }
 //│           }
 //│         }
 //│         break;
 //│       }
 //│     }
-//│     toString() { return "Cont$249$f"; }
+//│     toString() { return "Cont$256$f"; }
 //│   }
 //│   x = 2;
 //│   res = globalThis.f();
-//│   if (res.isCont$) {
-//│     tmp = new Cont$249$f(1, undefined);
-//│     tmp.pc$0 = 1;
-//│     tmp.isCont$ = true;
-//│     res.next = tmp;
-//│     return res;
+//│   if (res) {
+//│     if (res.isCont$) {
+//│       tmp = new Cont$256$f(1, undefined);
+//│       tmp.pc$0 = 1;
+//│       tmp.isCont$ = true;
+//│       res.next = tmp;
+//│       return res;
+//│     }
 //│   }
 //│   y = res;
 //│   z = 3;
@@ -1152,7 +1417,7 @@ result
 //│ };
 //│ function fact(factvalue) {
 //│   let scrut, res1, tmp, tmp1;
-//│   class Cont$269$fact {
+//│   class Cont$276$fact {
 //│     constructor() {
 //│       
 //│     }
@@ -1168,12 +1433,16 @@ result
 //│           if (this.scrut$0) {
 //│             this.tmp$0 = factvalue - 1;
 //│             this.res$0 = globalThis.fact(this.tmp$0);
-//│             if (res1.isCont$) {
-//│               this.tmp$0 = new Cont$269$fact(1, undefined);
-//│               this.tmp$0.pc$0 = 1;
-//│               this.tmp$0.isCont$ = true;
-//│               this.res$0.next = this.tmp$0;
-//│               return this.res$0;
+//│             if (this.res$0) {
+//│               if (res1.isCont$) {
+//│                 this.tmp$0 = new Cont$276$fact(1, undefined);
+//│                 this.tmp$0.pc$0 = 1;
+//│                 this.tmp$0.isCont$ = true;
+//│                 this.res$0.next = this.tmp$0;
+//│                 return this.res$0;
+//│               }
+//│               this.pc$0 = 6;
+//│               continue contLoop;
 //│             }
 //│             this.pc$0 = 5;
 //│             continue contLoop;
@@ -1197,6 +1466,11 @@ result
 //│               } else {
 //│                 if (this.pc$0 === 4) {
 //│                   return tmp2;
+//│                 } else {
+//│                   if (this.pc$0 === 6) {
+//│                     this.pc$0 = 5;
+//│                     continue contLoop;
+//│                   }
 //│                 }
 //│               }
 //│             }
@@ -1205,18 +1479,20 @@ result
 //│         break;
 //│       }
 //│     }
-//│     toString() { return "Cont$269$fact"; }
+//│     toString() { return "Cont$276$fact"; }
 //│   }
 //│   scrut = factvalue != 0;
 //│   if (scrut) {
 //│     tmp1 = factvalue - 1;
 //│     res1 = globalThis.fact(tmp1);
-//│     if (res1.isCont$) {
-//│       tmp = new Cont$269$fact(1, undefined);
-//│       tmp.pc$0 = 1;
-//│       tmp.isCont$ = true;
-//│       res1.next = tmp;
-//│       return res1;
+//│     if (res1) {
+//│       if (res1.isCont$) {
+//│         tmp = new Cont$276$fact(1, undefined);
+//│         tmp.pc$0 = 1;
+//│         tmp.isCont$ = true;
+//│         res1.next = tmp;
+//│         return res1;
+//│       }
 //│     }
 //│     return factvalue * res1;
 //│   } else {
@@ -1224,8 +1500,10 @@ result
 //│   }
 //│ }
 //│ res = this.fact(5);
-//│ if (res.isCont$) {
-//│   throw new this.Error("Unhandled effects");
+//│ if (res) {
+//│   if (res.isCont$) {
+//│     throw new this.Error("Unhandled effects");
+//│   }
 //│ }
 //│ this.result = res;
 //│ undefined

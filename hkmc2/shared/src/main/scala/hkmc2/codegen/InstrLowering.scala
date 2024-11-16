@@ -453,14 +453,11 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       Tree.Ident("Cont$" + summon[Elaborator.State].nextUid + "$" + sym.map((sym: BlockMemberSymbol) => sym.nme).getOrElse(""))
     )
 
-  var addContClasses: Block => Block = identity
-
   def removeSeparation(blk: Block): Block = blk match
     case Separation(_, _, blk) => removeSeparation(blk)
     case _ => blk.mapChildBlocks(removeSeparation)
   
   def instrumentBlock(sym: ClassSymbol, body: Block, locals: Set[Symbol], preTransform: Opt[Block => Block]): Block =
-    val old = addContClasses
     val curClass = preTransform match
       case N => createContClass(sym, body, Nil)
       case S(transform) => createContClass(sym, transform(body), Nil)
@@ -469,14 +466,35 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
 
   override def term(t: st)(k: Result => Block)(using Subst): Block =
     t match
-    case st.Blk((td: TermDefinition) :: stats, res) =>
-      td match
-      case TermDefinition(_, syntax.Fun, _, _, _, S(bod), _) =>
+    case st.Blk((d: Declaration) :: stats, res) =>
+      d match
+      case td @ TermDefinition(_, syntax.Fun, _, _, _, S(bod), _) =>
         val contClassSymbol = getContClassSymbol(S(td.sym))
         val (locals, bodRaw) = handlerCtx.handleFun(BlockMemberSymbol(contClassSymbol.id.name, Nil)) { returnedTerm(bod) }
         val bodTrm = instrumentBlock(contClassSymbol, bodRaw, locals, N)
         Define(FunDefn(td.sym, td.params, bodTrm),
           term(st.Blk(stats, res))(k))
+      case cls: ClassLikeDef =>
+        val bodBlk = cls.body.blk
+        val (mtds, rest1) = bodBlk.stats.partitionMap:
+          case td: TermDefinition if td.k is syntax.Fun => L(td)
+          case s => R(s)
+        val (flds, rest2) = rest1.partitionMap:
+          case LetDecl(sym: TermSymbol) => L(sym)
+          case s => R(s)
+        Define(ClsLikeDefn(cls.sym, syntax.Cls,
+            mtds.flatMap: td =>
+              td.body.map: bod =>
+                val contClassSymbol = getContClassSymbol(S(td.sym))
+                val (locals, bodRaw) = handlerCtx.handleFun(BlockMemberSymbol(contClassSymbol.id.name, Nil)) { returnedTerm(bod) }
+                val bodTrm = instrumentBlock(contClassSymbol, bodRaw, locals, N)
+                FunDefn(td.sym, td.params, bodTrm)
+            ,
+            flds, term(Blk(rest2, bodBlk.res))(ImplctRet).mapTail:
+              case Return(Value.Lit(syntax.Tree.UnitLit(true)), true) => End()
+              case t => t
+          ),
+        term(st.Blk(stats, res))(k))
       case _ => super.term(t)(k)
     case st.Blk(st.Handle(lhs, rhs, defs) :: stats, res) =>
       tl.log(s"Lowering.term ${t.showDbg.truncate(30, "[...]")}")
@@ -532,28 +550,33 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
               // Value.Ref(cur),
               // Case.Cls(contSym, contTrm) ->
               // FIXME: isCont$ hack
-              Select(Value.Ref(cur), Tree.Ident("isCont$")),
-              Case.Lit(Tree.BoolLit(true)) ->
-                Match(
-                  Select(Value.Ref(cur), Tree.Ident("handler")),
-                  Case.Lit(Tree.BoolLit(true)) -> blockBuilder // BAD! we should check equality to undefined, just being lazy (and wrong) for now
-                    .assign(tmp, equalToCurVal)
-                    .rest(Match(
-                      Value.Ref(tmp),
-                      Case.Lit(Tree.BoolLit(true)) -> blockBuilder
-                        .assign(resumeLocal, Call(Value.Ref(resumeSym), Value.Ref(cur) :: Nil))
-                        .assign(tmp, Call(Select(Select(Value.Ref(cur), Tree.Ident("params")), Tree.Ident("push")), Value.Ref(resumeLocal) :: Nil))
-                        .assign(cur, Call(
-                          Select(Select(Value.Ref(cur), Tree.Ident("handlerFun")), Tree.Ident("apply")),
-                          Value.Lit(Tree.UnitLit(false)) :: Select(Value.Ref(cur), Tree.Ident("params")) :: Nil
-                        ))
-                        .continue(lblH) :: Nil, 
-                      N,
-                      End()
-                    )) :: Nil,
-                  S(handlerCtx.linkAndHandle(uid, Value.Ref(cur), tmp)),
-                  End()
-                ) :: Nil,
+              Value.Ref(cur),
+              Case.Lit(Tree.BoolLit(true)) -> Match(
+                Select(Value.Ref(cur), Tree.Ident("isCont$")),
+                Case.Lit(Tree.BoolLit(true)) ->
+                  Match(
+                    Select(Value.Ref(cur), Tree.Ident("handler")),
+                    Case.Lit(Tree.BoolLit(true)) -> blockBuilder // BAD! we should check equality to undefined, just being lazy (and wrong) for now
+                      .assign(tmp, equalToCurVal)
+                      .rest(Match(
+                        Value.Ref(tmp),
+                        Case.Lit(Tree.BoolLit(true)) -> blockBuilder
+                          .assign(resumeLocal, Call(Value.Ref(resumeSym), Value.Ref(cur) :: Nil))
+                          .assign(tmp, Call(Select(Select(Value.Ref(cur), Tree.Ident("params")), Tree.Ident("push")), Value.Ref(resumeLocal) :: Nil))
+                          .assign(cur, Call(
+                            Select(Select(Value.Ref(cur), Tree.Ident("handlerFun")), Tree.Ident("apply")),
+                            Value.Lit(Tree.UnitLit(false)) :: Select(Value.Ref(cur), Tree.Ident("params")) :: Nil
+                          ))
+                          .continue(lblH) :: Nil, 
+                        N,
+                        End()
+                      )) :: Nil,
+                    S(handlerCtx.linkAndHandle(uid, Value.Ref(cur), tmp)),
+                    End()
+                  ) :: Nil,
+                N,
+                End()
+              ) :: Nil,
               N,
               End()
             ))
@@ -571,8 +594,15 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
           Match(
             // Value.Ref(res),
             // Case.Cls(contSym, contTrm) -> handlerCtx.linkAndHandle(uid, Value.Ref(res)) :: Nil,
-            Select(Value.Ref(res), Tree.Ident("isCont$")), // TODO: isCont$ hack
-            Case.Lit(Tree.BoolLit(true)) -> handlerCtx.linkAndHandle(uid, Value.Ref(res), tmp) :: Nil,
+            // N,
+            // Separation(res, uid, k(Value.Ref(res)))
+            Value.Ref(res),
+            Case.Lit(Tree.BoolLit(true)) -> Match(
+              Select(Value.Ref(res), Tree.Ident("isCont$")), // TODO: isCont$ hack
+              Case.Lit(Tree.BoolLit(true)) -> handlerCtx.linkAndHandle(uid, Value.Ref(res), tmp) :: Nil,
+              N,
+              End()
+            ) :: Nil,
             N,
             Separation(res, uid, k(Value.Ref(res)))
           )
@@ -589,7 +619,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     val contSym = freshTmp("cont")
     val valueSym = freshTmp("value")
     val lblChain = freshTmp("chainLoop")
-    val result = blockBuilder
+    blockBuilder
       .define(FunDefn(resumeSym,
         ParamList(ParamListFlags.empty, Param(FldFlags.empty, contParamSym, N) :: Nil) ::
           ParamList(ParamListFlags.empty, Param(FldFlags.empty, valueParamSym, N) :: Nil) :: Nil,
@@ -616,6 +646,4 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       .rest(
         removeSeparation(super.topLevel(Blk(/*effectSigDef :: */contDef :: t :: Nil, st.Lit(Tree.UnitLit(true)))))
       )
-    // Must be done after toplevel finished for the updated list
-    addContClasses(result)
     
