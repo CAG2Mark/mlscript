@@ -13,17 +13,58 @@ in
   foo(h)
   (() => h.perform("Hello"))()
 //│ JS:
-//│ let separator, cur, tmp, res, res1;
-//│ separator = undefined;
-//│ function Cont$(resume1, resumed1, next1) { return new Cont$.class(resume1, resumed1, next1); };
-//│ Cont$.class = class Cont$ {
-//│   constructor(resume, resumed, next) {
-//│     this.resume = resume;
-//│     this.resumed = resumed;
-//│     this.next = next;
+//│ let separator, cur, resume, tmp, res, res1;
+//│ class Cont$32$foo {
+//│   constructor() {
 //│     
 //│   }
-//│   toString() { return "Cont$(" + this.resume + ", " + this.resumed + ", " + this.next + ")"; }
+//│   toString() { return "Cont$32$foo"; }
+//│ }
+//│ class Cont$36$perform {
+//│   constructor() {
+//│     
+//│   }
+//│   toString() { return "Cont$36$perform"; }
+//│ }
+//│ class Cont$49$ {
+//│   constructor() {
+//│     
+//│   }
+//│   toString() { return "Cont$49$"; }
+//│ }
+//│ class Cont$44$ {
+//│   constructor() {
+//│     
+//│   }
+//│   toString() { return "Cont$44$"; }
+//│ }
+//│ separator = undefined;
+//│ function resume$(cont) {
+//│   return (value) => {
+//│     let cont1, value1;
+//│     cont1 = cont;
+//│     value1 = value;
+//│     chainLoop: while (true) {
+//│       if (cont1) {
+//│         value1 = cont1.resume(value1);
+//│         cont1 = cont1.next;
+//│         continue chainLoop;
+//│       }
+//│       return value1;
+//│       break;
+//│     }
+//│   };
+//│ }
+//│ function Cont$(resume2, resumed1, next1, isCont$1) { return new Cont$.class(resume2, resumed1, next1, isCont$1); };
+//│ Cont$.class = class Cont$ {
+//│   constructor(resume1, resumed, next, isCont$) {
+//│     this.resume = resume1;
+//│     this.resumed = resumed;
+//│     this.next = next;
+//│     this.isCont$ = isCont$;
+//│     
+//│   }
+//│   toString() { return "Cont$(" + this.resume1 + ", " + this.resumed + ", " + this.next + ", " + this.isCont$ + ")"; }
 //│ };
 //│ this.Effect = function Effect(perform1) { return new Effect.class(perform1); };
 //│ this.Effect.class = class Effect {
@@ -37,7 +78,7 @@ in
 //│   let res2;
 //│   res2 = e.perform("hi");
 //│   if (res2 instanceof globalThis.Cont$.class) {
-//│     return res2;
+//│     return new globalThis.Cont$32$foo(0, res2);
 //│   }
 //│   res2 = separator(0);
 //│   return res2;
@@ -46,7 +87,7 @@ in
 //│   let res2;
 //│   res2 = k(arg);
 //│   if (res2 instanceof globalThis.Cont$.class) {
-//│     return res2;
+//│     return new globalThis.Cont$36$perform(2, res2);
 //│   }
 //│   res2 = separator(2);
 //│   return res2;
@@ -56,7 +97,7 @@ in
 //│     let cont;
 //│     cont = new this.Cont$.class((x) => {
 //│       return x;
-//│     }, false, undefined);
+//│     }, false, undefined, true);
 //│     cont.last = cont;
 //│     cont.handler = this.h;
 //│     cont.handlerFun = perform;
@@ -67,7 +108,7 @@ in
 //│   });
 //│   res = this.foo(this.h);
 //│   if (res instanceof this.Cont$.class) {
-//│     cur = res;
+//│     cur = new this.Cont$44$(3, res);
 //│     break handlerBody;
 //│   }
 //│   res = separator(3);
@@ -75,13 +116,13 @@ in
 //│     let res2;
 //│     res2 = this.h.perform("Hello");
 //│     if (res2 instanceof this.Cont$.class) {
-//│       return res2;
+//│       return new this.Cont$49$(5, res2);
 //│     }
 //│     res2 = separator(5);
 //│     return res2;
 //│   })();
 //│   if (res1 instanceof this.Cont$.class) {
-//│     cur = res1;
+//│     cur = new this.Cont$44$(4, res1);
 //│     break handlerBody;
 //│   }
 //│   res1 = separator(4);
@@ -90,10 +131,12 @@ in
 //│ }
 //│ cur = separator(1);
 //│ handler: while (true) {
-//│   if (cur instanceof this.Cont$.class) {
+//│   if (cur.isCont$) {
 //│     if (cur.handler) {
 //│       tmp = cur.handler === this.h;
 //│       if (tmp) {
+//│         resume = resume$(cur);
+//│         tmp = cur.args.push(resume);
 //│         cur = cur.handlerFun.apply(null, cur.args);
 //│         continue handler;
 //│       }
@@ -104,7 +147,7 @@ in
 //│   break;
 //│ }
 //│ undefined
-//│ ═══[RUNTIME ERROR] TypeError: separator is not a function
+//│ ═══[RUNTIME ERROR] TypeError: globalThis.Cont$32$foo is not a constructor
 
 :fixme
 :sjs
@@ -118,17 +161,52 @@ handle h = Cell with
 in
   h.getVal()
 //│ JS:
-//│ let separator, cur, tmp, res;
-//│ separator = undefined;
-//│ function Cont$(resume1, resumed1, next1) { return new Cont$.class(resume1, resumed1, next1); };
-//│ Cont$.class = class Cont$ {
-//│   constructor(resume, resumed, next) {
-//│     this.resume = resume;
-//│     this.resumed = resumed;
-//│     this.next = next;
+//│ let separator, cur, resume, tmp, res;
+//│ class Cont$68$setVal {
+//│   constructor() {
 //│     
 //│   }
-//│   toString() { return "Cont$(" + this.resume + ", " + this.resumed + ", " + this.next + ")"; }
+//│   toString() { return "Cont$68$setVal"; }
+//│ }
+//│ class Cont$71$getVal {
+//│   constructor() {
+//│     
+//│   }
+//│   toString() { return "Cont$71$getVal"; }
+//│ }
+//│ class Cont$79$ {
+//│   constructor() {
+//│     
+//│   }
+//│   toString() { return "Cont$79$"; }
+//│ }
+//│ separator = undefined;
+//│ function resume$(cont) {
+//│   return (value) => {
+//│     let cont1, value1;
+//│     cont1 = cont;
+//│     value1 = value;
+//│     chainLoop: while (true) {
+//│       if (cont1) {
+//│         value1 = cont1.resume(value1);
+//│         cont1 = cont1.next;
+//│         continue chainLoop;
+//│       }
+//│       return value1;
+//│       break;
+//│     }
+//│   };
+//│ }
+//│ function Cont$(resume2, resumed1, next1, isCont$1) { return new Cont$.class(resume2, resumed1, next1, isCont$1); };
+//│ Cont$.class = class Cont$ {
+//│   constructor(resume1, resumed, next, isCont$) {
+//│     this.resume = resume1;
+//│     this.resumed = resumed;
+//│     this.next = next;
+//│     this.isCont$ = isCont$;
+//│     
+//│   }
+//│   toString() { return "Cont$(" + this.resume1 + ", " + this.resumed + ", " + this.next + ", " + this.isCont$ + ")"; }
 //│ };
 //│ this.Cell = function Cell(getVal1, setVal1) { return new Cell.class(getVal1, setVal1); };
 //│ this.Cell.class = class Cell {
@@ -145,7 +223,7 @@ in
 //│   globalThis.x = value;
 //│   res1 = k(undefined);
 //│   if (res1 instanceof globalThis.Cont$.class) {
-//│     return res1;
+//│     return new globalThis.Cont$68$setVal(1, res1);
 //│   }
 //│   res1 = separator(1);
 //│   return res1;
@@ -154,7 +232,7 @@ in
 //│   let res1;
 //│   res1 = k(globalThis.x);
 //│   if (res1 instanceof globalThis.Cont$.class) {
-//│     return res1;
+//│     return new globalThis.Cont$71$getVal(2, res1);
 //│   }
 //│   res1 = separator(2);
 //│   return res1;
@@ -164,7 +242,7 @@ in
 //│     let cont;
 //│     cont = new this.Cont$.class((x) => {
 //│       return x;
-//│     }, false, undefined);
+//│     }, false, undefined, true);
 //│     cont.last = cont;
 //│     cont.handler = this.h;
 //│     cont.handlerFun = getVal;
@@ -176,7 +254,7 @@ in
 //│     let cont;
 //│     cont = new this.Cont$.class((x) => {
 //│       return x;
-//│     }, false, undefined);
+//│     }, false, undefined, true);
 //│     cont.last = cont;
 //│     cont.handler = this.h;
 //│     cont.handlerFun = setVal;
@@ -187,7 +265,7 @@ in
 //│   });
 //│   res = this.h.getVal();
 //│   if (res instanceof this.Cont$.class) {
-//│     cur = res;
+//│     cur = new this.Cont$79$(3, res);
 //│     break handlerBody;
 //│   }
 //│   res = separator(3);
@@ -196,10 +274,12 @@ in
 //│ }
 //│ cur = separator(0);
 //│ handler: while (true) {
-//│   if (cur instanceof this.Cont$.class) {
+//│   if (cur.isCont$) {
 //│     if (cur.handler) {
 //│       tmp = cur.handler === this.h;
 //│       if (tmp) {
+//│         resume = resume$(cur);
+//│         tmp = cur.args.push(resume);
 //│         cur = cur.handlerFun.apply(null, cur.args);
 //│         continue handler;
 //│       }
@@ -210,11 +290,69 @@ in
 //│   break;
 //│ }
 //│ undefined
-//│ ═══[RUNTIME ERROR] TypeError: separator is not a function
+//│ ═══[RUNTIME ERROR] TypeError: this.Cont$79$ is not a constructor
 //│ x = 0
+
+:il
+:sjs
+class A(x) with
+  fun debug() = print(x)
+let x = new A()
+//│ JS:
+//│ let separator, tmp;
+//│ separator = undefined;
+//│ function resume$(cont) {
+//│   return (value) => {
+//│     let cont1, value1;
+//│     cont1 = cont;
+//│     value1 = value;
+//│     chainLoop: while (true) {
+//│       if (cont1) {
+//│         value1 = cont1.resume(value1);
+//│         cont1 = cont1.next;
+//│         continue chainLoop;
+//│       }
+//│       return value1;
+//│       break;
+//│     }
+//│   };
+//│ }
+//│ function Cont$(resume1, resumed1, next1, isCont$1) { return new Cont$.class(resume1, resumed1, next1, isCont$1); };
+//│ Cont$.class = class Cont$ {
+//│   constructor(resume, resumed, next, isCont$) {
+//│     this.resume = resume;
+//│     this.resumed = resumed;
+//│     this.next = next;
+//│     this.isCont$ = isCont$;
+//│     
+//│   }
+//│   toString() { return "Cont$(" + this.resume + ", " + this.resumed + ", " + this.next + ", " + this.isCont$ + ")"; }
+//│ };
+//│ this.A = function A(x1) { return new A.class(x1); };
+//│ this.A.class = class A {
+//│   constructor(x) {
+//│     this.x = x;
+//│     
+//│   }
+//│   debug() {
+//│     let res;
+//│     res = Predef.print(this.x);
+//│     if (res instanceof globalThis.Cont$.class) {
+//│       throw new globalThis.Error("Unhandled effects");
+//│     }
+//│     res = separator(0);
+//│     return res;
+//│   }
+//│   toString() { return "A(" + this.x + ")"; }
+//│ };
+//│ tmp = new this.A.class();
+//│ this.x = tmp;
+//│ undefined
+//│ x = A { x: undefined }
 
 :fixme
 :sjs
+:il
 fun f() =
   val x = 3
   let y = 5 in
@@ -222,16 +360,39 @@ fun f() =
     x + y
 //│ JS:
 //│ let separator;
+//│ class Cont$104$f {
+//│   constructor() {
+//│     
+//│   }
+//│   toString() { return "Cont$104$f"; }
+//│ }
 //│ separator = undefined;
-//│ function Cont$(resume1, resumed1, next1) { return new Cont$.class(resume1, resumed1, next1); };
+//│ function resume$(cont) {
+//│   return (value) => {
+//│     let cont1, value1;
+//│     cont1 = cont;
+//│     value1 = value;
+//│     chainLoop: while (true) {
+//│       if (cont1) {
+//│         value1 = cont1.resume(value1);
+//│         cont1 = cont1.next;
+//│         continue chainLoop;
+//│       }
+//│       return value1;
+//│       break;
+//│     }
+//│   };
+//│ }
+//│ function Cont$(resume1, resumed1, next1, isCont$1) { return new Cont$.class(resume1, resumed1, next1, isCont$1); };
 //│ Cont$.class = class Cont$ {
-//│   constructor(resume, resumed, next) {
+//│   constructor(resume, resumed, next, isCont$) {
 //│     this.resume = resume;
 //│     this.resumed = resumed;
 //│     this.next = next;
+//│     this.isCont$ = isCont$;
 //│     
 //│   }
-//│   toString() { return "Cont$(" + this.resume + ", " + this.resumed + ", " + this.next + ")"; }
+//│   toString() { return "Cont$(" + this.resume + ", " + this.resumed + ", " + this.next + ", " + this.isCont$ + ")"; }
 //│ };
 //│ function f() {
 //│   let y, res;
@@ -240,7 +401,7 @@ fun f() =
 //│   const x = 5;
 //│   res = x + y;
 //│   if (res instanceof globalThis.Cont$.class) {
-//│     return res;
+//│     return new globalThis.Cont$104$f(0, res);
 //│   }
 //│   res = separator(0);
 //│   return res;
