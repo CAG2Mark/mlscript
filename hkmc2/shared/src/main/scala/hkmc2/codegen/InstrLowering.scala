@@ -107,6 +107,15 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
   // blk: the block of code within this state
   class BlockState(id: BigInt, blk: Block)
 
+
+  object Separation:
+    def apply(res: Local, uid: BigInt, rest: Block) =
+      Assign(res, Call(Value.Ref(separationSymbol), List(Value.Lit(Tree.IntLit(uid)))), rest)
+    def unapply(blk: Block) = blk match
+      case Assign(res, Call(Value.Ref(sym), List(Value.Lit(Tree.IntLit(uid)))), rest) if sym == separationSymbol => 
+        Some(res, uid, rest)
+      case _ => None
+
   /* 
   Partition a function into a graph of states
   where states are separated by function calls
@@ -136,7 +145,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
   state 2:
     x2 + 2
   */
-  def partitionBlock(blk: Block): Ls[BlockState] = 
+  def partitionBlock(blk: Block, labelIds: Map[Symbol, (BigInt, BigInt)] = Map.empty): Ls[BlockState] = 
     // for readability :)
     case class PartRet(head: Block, states: Ls[BlockState])
 
@@ -188,6 +197,10 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     // jumpTo: what state End should jump to, if at all 
     // freshState: uid generator
     def go(blk: Block)(implicit labelIds: Map[Symbol, (BigInt, BigInt)], afterEnd: Option[BigInt]): PartRet = blk match
+      case Separation(result, uid, rest) =>
+        val PartRet(head, states) = go(rest)
+        PartRet(StateTransition(uid), BlockState(uid, head) :: states)
+
       case Match(scrut, arms, dflt, rest) => 
         val restParts = go(rest)
         // TODO: If restParts is a StateTransition, we can avoid creating a new state here
