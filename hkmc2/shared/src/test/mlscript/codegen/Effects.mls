@@ -14,7 +14,7 @@ in
   (() => h.perform("Hello"))()
 //│ ═══[COMPILATION ERROR] Could not find label 'handlerBody'
 //│ ═══[COMPILATION ERROR] Could not find label 'handlerBody'
-//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
+//│ /!!!\ Uncaught error: hkmc2.InternalError: Not in scope: e@17
 
 :fixme
 :sjs
@@ -28,7 +28,7 @@ handle h = Cell with
 in
   h.getVal()
 //│ ═══[COMPILATION ERROR] Could not find label 'handlerBody'
-//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
+//│ /!!!\ Uncaught error: hkmc2.InternalError: Not in scope: value@64
 
 :il
 :sjs
@@ -95,4 +95,188 @@ fun f() =
   let y = 5 in
     val x = 5
     x + y
-//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
+//│ JS:
+//│ let separator;
+//│ class Cont$118$f {
+//│   constructor() {
+//│     
+//│   }
+//│   resume(value$) {
+//│     if (this.pc$3 === 0) {
+//│       this.res$0 = value$;
+//│     } else {
+//│     }
+//│     contLoop: while (true) {
+//│       if (this.pc$3 === 1) {
+//│         const x = 3;
+//│         this.y$1 = 5;
+//│         const x = 5;
+//│         this.res$0 = x + this.y$1;
+//│         if (this.res$0 instanceof globalThis.Cont$.class) {
+//│           return new globalThis.Cont$118$f(0, this.res$0);
+//│         }
+//│         this.pc$3 = 2;
+//│         continue contLoop;
+//│       } else {
+//│         if (this.pc$3 === 2) {
+//│           this.pc$3 = 0;
+//│           continue contLoop;
+//│         } else {
+//│           if (this.pc$3 === 0) {
+//│             return this.res$0;
+//│           }
+//│         }
+//│       }
+//│       break;
+//│     }
+//│   }
+//│   toString() { return "Cont$118$f"; }
+//│ }
+//│ separator = undefined;
+//│ function resume$(cont) {
+//│   return (value) => {
+//│     let cont1, value1;
+//│     cont1 = cont;
+//│     value1 = value;
+//│     chainLoop: while (true) {
+//│       if (cont1) {
+//│         value1 = cont1.resume(value1);
+//│         cont1 = cont1.next;
+//│         continue chainLoop;
+//│       }
+//│       return value1;
+//│       break;
+//│     }
+//│   };
+//│ }
+//│ function Cont$(resume1, resumed1, next1, isCont$1) { return new Cont$.class(resume1, resumed1, next1, isCont$1); };
+//│ Cont$.class = class Cont$ {
+//│   constructor(resume, resumed, next, isCont$) {
+//│     this.resume = resume;
+//│     this.resumed = resumed;
+//│     this.next = next;
+//│     this.isCont$ = isCont$;
+//│     
+//│   }
+//│   toString() { return "Cont$(" + this.resume + ", " + this.resumed + ", " + this.next + ", " + this.isCont$ + ")"; }
+//│ };
+//│ function f() {
+//│   let y, res;
+//│   const x = 3;
+//│   y = 5;
+//│   const x = 5;
+//│   res = x + y;
+//│   if (res instanceof globalThis.Cont$.class) {
+//│     return new globalThis.Cont$118$f(0, res);
+//│   }
+//│   res = separator(0);
+//│   return res;
+//│ }
+//│ undefined
+//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Identifier 'x' has already been declared
+
+:il
+:sjs
+fun f() =
+  let x = 2
+  let y = f()
+  let z = 3
+  2
+//│ JS:
+//│ let separator;
+//│ class Cont$134$f {
+//│   constructor() {
+//│     
+//│   }
+//│   resume(value$) {
+//│     if (this.pc$4 === 0) {
+//│       this.res$2 = value$;
+//│     } else {
+//│     }
+//│     contLoop: while (true) {
+//│       if (this.pc$4 === 1) {
+//│         this.x$3 = 2;
+//│         this.res$2 = globalThis.f();
+//│         if (this.res$2 instanceof globalThis.Cont$.class) {
+//│           return new globalThis.Cont$134$f(0, this.res$2);
+//│         }
+//│         this.pc$4 = 2;
+//│         continue contLoop;
+//│       } else {
+//│         if (this.pc$4 === 2) {
+//│           this.pc$4 = 0;
+//│           continue contLoop;
+//│         } else {
+//│           if (this.pc$4 === 0) {
+//│             this.y$1 = this.res$2;
+//│             this.z$0 = 3;
+//│             return 2;
+//│           }
+//│         }
+//│       }
+//│       break;
+//│     }
+//│   }
+//│   toString() { return "Cont$134$f"; }
+//│ }
+//│ separator = undefined;
+//│ function resume$(cont) {
+//│   return (value) => {
+//│     let cont1, value1;
+//│     cont1 = cont;
+//│     value1 = value;
+//│     chainLoop: while (true) {
+//│       if (cont1) {
+//│         value1 = cont1.resume(value1);
+//│         cont1 = cont1.next;
+//│         continue chainLoop;
+//│       }
+//│       return value1;
+//│       break;
+//│     }
+//│   };
+//│ }
+//│ function Cont$(resume1, resumed1, next1, isCont$1) { return new Cont$.class(resume1, resumed1, next1, isCont$1); };
+//│ Cont$.class = class Cont$ {
+//│   constructor(resume, resumed, next, isCont$) {
+//│     this.resume = resume;
+//│     this.resumed = resumed;
+//│     this.next = next;
+//│     this.isCont$ = isCont$;
+//│     
+//│   }
+//│   toString() { return "Cont$(" + this.resume + ", " + this.resumed + ", " + this.next + ", " + this.isCont$ + ")"; }
+//│ };
+//│ function f() {
+//│   let x, y, z, res;
+//│   x = 2;
+//│   res = globalThis.f();
+//│   if (res instanceof globalThis.Cont$.class) {
+//│     return new globalThis.Cont$134$f(0, res);
+//│   }
+//│   res = separator(0);
+//│   y = res;
+//│   z = 3;
+//│   return 2;
+//│ }
+//│ undefined
+
+:il
+:sjs
+fun fact(factvalue) = 
+  if factvalue != 0 then
+    factvalue * fact(factvalue-1)
+  else 1
+fact(5)
+//│ FAILURE: Unexpected exception
+//│ /!!!\ Uncaught error: hkmc2.InternalError: Not in scope: factvalue@140
+//│ 	at: hkmc2.InternalError$.apply(Diagnostic.scala:39)
+//│ 	at: hkmc2.InternalError$.apply(Diagnostic.scala:43)
+//│ 	at: hkmc2.codegen.js.Scope.lookup_$bang$$anonfun$1(Scope.scala:86)
+//│ 	at: scala.Option.getOrElse(Option.scala:201)
+//│ 	at: hkmc2.codegen.js.Scope.lookup_$bang(Scope.scala:88)
+//│ 	at: hkmc2.codegen.js.JSBuilder.getVar(JSBuilder.scala:69)
+//│ 	at: hkmc2.codegen.js.JSBuilder.result(JSBuilder.scala:78)
+//│ 	at: hkmc2.codegen.js.JSBuilder.result(JSBuilder.scala:82)
+//│ 	at: hkmc2.codegen.js.JSBuilder.returningTerm(JSBuilder.scala:118)
+//│ 	at: hkmc2.codegen.js.JSBuilder.returningTerm(JSBuilder.scala:255)

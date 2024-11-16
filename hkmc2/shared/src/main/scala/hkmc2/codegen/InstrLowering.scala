@@ -314,7 +314,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
 
     val headId = freshId()
 
-    val ret = go(blk)(using Map.empty, N)
+    val ret = go(blk)(using labelIds, N)
     BlockState(headId, ret.head, N) :: ret.states
   
   val localsMap: MutMap[Local, TermSymbol] = MutMap()
@@ -325,20 +325,32 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     localsMap.get(sym) match
       case Some(value) => value
       case None => 
-        val ret = TermSymbol(ParamBind, S(cls), Tree.Ident(s"${sym.nme}$$${freshFieldId}"))
+        val ret = TermSymbol(ParamBind, S(cls), Tree.Ident(s"${sym.nme}$$${freshFieldId()}"))
         localsMap.addOne(sym -> ret)
         ret
 
+  // HACK: remove once match is fixed
+  def unrollMatch(b: Match): Block =
+    val Match(scrut, arms, dflt, rest) = b
+    arms match
+      case head :: Nil => b
+      case head :: next => Match(
+        scrut, List(head), 
+        S(unrollMatch(Match(scrut, next, dflt, End()))),
+        rest) 
+      case Nil => rest
+    
   // TODO: support class methods
-  def createContClass(cls: ClassSymbol, body: Block): ClsLikeDefn =
+  def createContClass(cls: ClassSymbol, body: Block, params: List[Local]): ClsLikeDefn =
     val parts = partitionBlock(body)
 
-    val localsMap = body.definedLocals.map(l => l -> getContLocalSymbol(cls, l)).toMap
+    val locals = params ::: body.definedLocals.toList 
+    val localsMap = locals.map(l => l -> getContLocalSymbol(cls, l)).toMap
     def mapSym(l: Local) = localsMap.getOrElse(l, l)
     
     val loopLbl = freshTmp("contLoop")
 
-    val pcSymbol = TermSymbol(ParamBind, S(cls), Tree.Ident(s"pc$$${freshFieldId}"))
+    val pcSymbol = TermSymbol(ParamBind, S(cls), Tree.Ident(s"pc$$${freshFieldId()}"))
 
     // NOTE: Symbols already replaced
     // TODO: set program counter when returning continuation
@@ -365,12 +377,12 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     
     // match block representing the function body
     val mainMatchCases = parts.toList.map(b => (Case.Lit(Tree.IntLit(b.id)), transformPart(b.blk.mapLocals(mapSym))))
-    val mainMatchBlk = Match(
+    val mainMatchBlk = unrollMatch(Match(
       Value.Ref(pcSymbol),
       mainMatchCases,
       N,
       End()
-    )
+    ))
 
     val lbl = blockBuilder.label(loopLbl, mainMatchBlk).rest(End())
     
@@ -388,12 +400,12 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       if assignedResumedCases.isEmpty then
         lbl
       else
-        Match(
+        unrollMatch(Match(
           Value.Ref(pcSymbol),
           assignedResumedCases,
           S(End()),
           lbl
-        )
+        ))
     
     val sym = BlockMemberSymbol("resume", List())
     val resumeFnDef = FunDefn(
@@ -437,7 +449,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     // 1. symbol in locals should be transformed to be accessed and modified using the class itself in this function
     // 2. calls to separation symbol should disappear and the block should read this.pc and jump to the correct symbol
     val old = addContClasses
-    val curClass = createContClass(sym, body)
+    val curClass = createContClass(sym, body, Nil) // FIXME: Missing params
     addContClasses = b => old(Define(curClass, b))
     sym.defn = S(ClassDef(N, syntax.Cls, sym, Nil, N, ObjBody(st.Blk(Nil, Term.Lit(Tree.UnitLit(true))))))
     body
