@@ -86,18 +86,6 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
   private def instCont(resume: Path): Result =
     Instantiate(contTrm, resume :: Value.Lit(Tree.BoolLit(false)) :: Value.Lit(Tree.UnitLit(true)) :: Value.Lit(Tree.BoolLit(true)) :: Nil)
   
-  extension (k: Block => Block)
-    def assign(l: Local, r: Result): Block => Block = b => k(Assign(l, r, b))
-    def assignField(lhs: Path, nme: Tree.Ident, rhs: Result): Block => Block = b => k(AssignField(lhs, nme, rhs, b))
-    def break(l: Local): Block = k(Break(l, false))
-    def chain(other: Block => Block): Block => Block = b => k(other(b))
-    def continue(l: Local): Block = k(Break(l, true))
-    def define(defn: Defn): Block => Block = b => k(Define(defn, b))
-    def end(): Block = rest(End())
-    def label(label: Local, body: Block): Block => Block = b => k(Label(label, body, b))
-    def ret(r: Result, implct: Bool): Block = k(Return(r, implct))
-    def rest(b: Block): Block = k(b)
-  private def blockBuilder: Block => Block = identity
   
   private val handlerCtx = HandlerCtx()
 
@@ -122,9 +110,23 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     def apply(res: Local, uid: BigInt, rest: Block) =
       Assign(res, Call(Value.Ref(separationSymbol), List(Value.Lit(Tree.IntLit(uid)))), rest)
     def unapply(blk: Block) = blk match
-      case Assign(res, Call(Value.Ref(sym), List(Value.Lit(Tree.IntLit(uid)))), rest) if sym == separationSymbol => 
+      case Assign(res, Call(Value.Ref(`separationSymbol`), List(Value.Lit(Tree.IntLit(uid)))), rest) => 
         Some(res, uid, rest)
       case _ => None
+  
+  extension (k: Block => Block)
+    def assign(l: Local, r: Result): Block => Block = b => k(Assign(l, r, b))
+    def assignField(lhs: Path, nme: Tree.Ident, rhs: Result): Block => Block = b => k(AssignField(lhs, nme, rhs, b))
+    def break(l: Local): Block = k(Break(l, false))
+    def chain(other: Block => Block): Block => Block = b => k(other(b))
+    def continue(l: Local): Block = k(Break(l, true))
+    def define(defn: Defn): Block => Block = b => k(Define(defn, b))
+    def end(): Block = rest(End())
+    def label(label: Local, body: Block): Block => Block = b => k(Label(label, body, b))
+    def ret(r: Result, implct: Bool): Block = k(Return(r, implct))
+    def rest(b: Block): Block = k(b)
+    def separation(res: Local, uid: BigInt): Block => Block = b => k(Separation(res, uid, b))
+  private def blockBuilder: Block => Block = identity
 
   /* 
   Partition a function into a graph of states
@@ -163,7 +165,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     object StateTransition:
       def apply(uid: BigInt) = Return(Call(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(uid)))), false)
       def unapply(blk: Block) = blk match
-        case Return(Call(Value.Ref(sym), List(Value.Lit(Tree.IntLit(uid)))), false) if sym == transitionSymbol =>
+        case Return(Call(Value.Ref(`transitionSymbol`), List(Value.Lit(Tree.IntLit(uid)))), false) =>
           S(uid)
         case _ => N 
 
@@ -383,7 +385,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
           
           blockBuilder
             .label(lblBdy, bod)
-            .assign(cur, Call(Value.Ref(separationSymbol), Value.Lit(Tree.IntLit(uid)) :: Nil)) // TODO: use new syntax
+            .separation(cur, uid)
             .label(lblH, Match(
               // Value.Ref(cur),
               // Case.Cls(contSym, contTrm) ->
@@ -424,7 +426,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
             Value.Ref(res),
             Case.Cls(contSym, contTrm) -> handlerCtx.linkAndHandle(uid, Value.Ref(res)) :: Nil,
             N,
-            Assign(res, Call(Value.Ref(separationSymbol), List(Value.Lit(Tree.IntLit(uid)))), k(Value.Ref(res)))
+            Separation(res, uid, k(Value.Ref(res)))
           )
         )
     case st.Lam(params, body) =>
@@ -440,7 +442,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     val valueSym = freshTmp("value")
     val lblChain = freshTmp("chainLoop")
     val result = blockBuilder
-      .assign(separationSymbol, Value.Lit(Tree.UnitLit(true)))
+      .assign(separationSymbol, Value.Lit(Tree.UnitLit(true))) // TODO: Remove placeholder for suppressing separator not found error
       .define(FunDefn(resumeSym,
         ParamList(ParamListFlags.empty, Param(FldFlags.empty, contParamSym, N) :: Nil) ::
           ParamList(ParamListFlags.empty, Param(FldFlags.empty, valueParamSym, N) :: Nil) :: Nil,
