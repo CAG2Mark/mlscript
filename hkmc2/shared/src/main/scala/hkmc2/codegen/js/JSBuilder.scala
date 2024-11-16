@@ -217,7 +217,7 @@ class JSBuilder extends CodeBuilder:
                   doc"${ths}.${sym.nme} = ${clsJS};"
               case N =>
                 fun match
-                case S(f) => doc"${f}; # ${sym.nme}.class = ${clsJS};"
+                case S(f) => doc"${f} # ${sym.nme}.class = ${clsJS};"
                 case N => clsJS
         thisProxy match
           case S(proxy) if !scope.thisProxyDefined =>
