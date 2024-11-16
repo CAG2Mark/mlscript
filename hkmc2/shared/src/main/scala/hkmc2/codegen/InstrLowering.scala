@@ -318,7 +318,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     BlockState(headId, ret.head, N) :: ret.states
   
   val localsMap: MutMap[Local, TermSymbol] = MutMap()
-  private val freshFieldId = FreshId()
+  private val freshFieldId = freshId()
   // NOTE: Should only be used for function parameters or variables/values strictly defined in the function body!
   // TODO: for class methods, map `this.whatever` to `this.this$.whatever` ($this is the current class)
   def getContLocalSymbol(cls: ClassSymbol, sym: Local): TermSymbol =
@@ -432,15 +432,17 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
 
   var addContClasses: Block => Block = identity
 
-  def instrumentBlock(sym: ClassSymbol, body: Block, locals: Set[Symbol]): Block =
-    // TODO: create a continuation class and return a transformed block to be used in a function or a lambda or a handler block
-    // 1. symbol in locals should be transformed to be accessed and modified using the class itself in this function
-    // 2. calls to separation symbol should disappear and the block should read this.pc and jump to the correct symbol
+  def instrumentBlock(sym: ClassSymbol, body: Block, locals: Set[Symbol], preTransform: Opt[Block => Block]): Block =
     val old = addContClasses
-    val curClass = createContClass(sym, body)
+    val curClass = preTransform match
+      case N => createContClass(sym, body)
+      case S(transform) => createContClass(sym, transform(body))
     addContClasses = b => old(Define(curClass, b))
     sym.defn = S(ClassDef(N, syntax.Cls, sym, Nil, N, ObjBody(st.Blk(Nil, Term.Lit(Tree.UnitLit(true))))))
-    body
+    def removeSeparation(blk: Block): Block = blk match
+      case Separation(_, _, blk) => removeSeparation(blk)
+      case _ => blk.mapChildBlocks(removeSeparation)
+    removeSeparation(body)
 
   override def term(t: st)(k: Result => Block)(using Subst): Block =
     t match
@@ -449,7 +451,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       case TermDefinition(_, syntax.Fun, _, _, _, S(bod), _) =>
         val contClassSymbol = getContClassSymbol(S(td.sym))
         val (locals, bodRaw) = handlerCtx.handleFun(contClassSymbol) { returnedTerm(bod) }
-        val bodTrm = instrumentBlock(contClassSymbol, bodRaw, locals)
+        val bodTrm = instrumentBlock(contClassSymbol, bodRaw, locals, N)
         Define(FunDefn(td.sym, td.params, bodTrm),
           term(st.Blk(stats, res))(k))
       case _ => super.term(t)(k)
@@ -492,7 +494,11 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
             Assign(cur, r, Break(lblBdy, false))
           ) { Assign(lhs, Instantiate(cls, handlerFuns), term(st.Blk(stats, res))(r => Assign(cur, r, End()))) }
           
-          val bod = instrumentBlock(contClassSymbol, bodRaw, locals)
+          def transformBodyBreaks(blk: Block): Block = blk match
+            case Break(`lblBdy`, false) => Return(Value.Ref(cur), false)
+            case _ => blk.mapChildBlocks(transformBodyBreaks)
+          
+          val bod = instrumentBlock(contClassSymbol, bodRaw, locals, S(transformBodyBreaks))
           
           val equalToCurVal = Call(Value.Ref(BuiltinSymbol("===", true, false, false)), Select(Value.Ref(cur), Tree.Ident("handler")) :: Value.Ref(lhs) :: Nil)
           
@@ -545,7 +551,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     case st.Lam(params, body) =>
       val contClassSymbol = getContClassSymbol(N)
       val (locals, bodRaw) = handlerCtx.handleFun(contClassSymbol) { returnedTerm(body) }
-      k(Value.Lam(params, instrumentBlock(contClassSymbol, bodRaw, locals)))
+      k(Value.Lam(params, instrumentBlock(contClassSymbol, bodRaw, locals, N)))
     case _ => super.term(t)(k)
 
   override def topLevel(t: st): Block =

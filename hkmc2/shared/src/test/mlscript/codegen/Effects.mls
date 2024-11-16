@@ -12,9 +12,7 @@ handle h = Effect with
 in
   foo(h)
   (() => h.perform("Hello"))()
-//│ ═══[COMPILATION ERROR] Could not find label 'handlerBody'
-//│ ═══[COMPILATION ERROR] Could not find label 'handlerBody'
-//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
+//│ /!!!\ Uncaught error: hkmc2.InternalError: Not in scope: e@17
 
 :fixme
 :sjs
@@ -27,8 +25,7 @@ handle h = Cell with
     k(())
 in
   h.getVal()
-//│ ═══[COMPILATION ERROR] Could not find label 'handlerBody'
-//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
+//│ /!!!\ Uncaught error: hkmc2.InternalError: Not in scope: value@64
 
 :il
 :sjs
@@ -77,7 +74,7 @@ let x = new A()
 //│     if (res instanceof globalThis.Cont$.class) {
 //│       throw new globalThis.Error("Unhandled effects");
 //│     }
-//│     res = separator(0);
+//│     res = separator(1);
 //│     return res;
 //│   }
 //│   toString() { return "A(" + this.x + ")"; }
@@ -95,4 +92,81 @@ fun f() =
   let y = 5 in
     val x = 5
     x + y
-//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
+//│ JS:
+//│ let separator;
+//│ class Cont$118$f {
+//│   constructor() {
+//│     
+//│   }
+//│   resume(value$) {
+//│     if (this.pc$0 === 1) {
+//│       this.res$0 = value$;
+//│     } else {
+//│     }
+//│     contLoop: while (true) {
+//│       if (this.pc$0 === 2) {
+//│         const x = 3;
+//│         this.y$0 = 5;
+//│         const x = 5;
+//│         this.res$0 = x + this.y$0;
+//│         if (this.res$0 instanceof globalThis.Cont$.class) {
+//│           return new globalThis.Cont$118$f(1, this.res$0);
+//│         }
+//│         this.pc$0 = 3;
+//│         continue contLoop;
+//│       } else {
+//│         if (this.pc$0 === 3) {
+//│           this.pc$0 = 1;
+//│           continue contLoop;
+//│         } else {
+//│           if (this.pc$0 === 1) {
+//│             return this.res$0;
+//│           }
+//│         }
+//│       }
+//│       break;
+//│     }
+//│   }
+//│   toString() { return "Cont$118$f"; }
+//│ }
+//│ separator = undefined;
+//│ function resume$(cont) {
+//│   return (value) => {
+//│     let cont1, value1;
+//│     cont1 = cont;
+//│     value1 = value;
+//│     chainLoop: while (true) {
+//│       if (cont1) {
+//│         value1 = cont1.resume(value1);
+//│         cont1 = cont1.next;
+//│         continue chainLoop;
+//│       }
+//│       return value1;
+//│       break;
+//│     }
+//│   };
+//│ }
+//│ function Cont$(resume1, resumed1, next1, isCont$1) { return new Cont$.class(resume1, resumed1, next1, isCont$1); };
+//│ Cont$.class = class Cont$ {
+//│   constructor(resume, resumed, next, isCont$) {
+//│     this.resume = resume;
+//│     this.resumed = resumed;
+//│     this.next = next;
+//│     this.isCont$ = isCont$;
+//│     
+//│   }
+//│   toString() { return "Cont$(" + this.resume + ", " + this.resumed + ", " + this.next + ", " + this.isCont$ + ")"; }
+//│ };
+//│ function f() {
+//│   let y, res;
+//│   const x = 3;
+//│   y = 5;
+//│   const x = 5;
+//│   res = x + y;
+//│   if (res instanceof globalThis.Cont$.class) {
+//│     return new globalThis.Cont$118$f(1, res);
+//│   }
+//│   return res;
+//│ }
+//│ undefined
+//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Identifier 'x' has already been declared
