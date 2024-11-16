@@ -12,8 +12,6 @@ handle h = Effect with
 in
   foo(h)
   (() => h.perform("Hello"))()
-//│ ═══[COMPILATION ERROR] Could not find label 'handlerBody'
-//│ ═══[COMPILATION ERROR] Could not find label 'handlerBody'
 //│ /!!!\ Uncaught error: hkmc2.InternalError: Not in scope: e@17
 
 :fixme
@@ -27,7 +25,6 @@ handle h = Cell with
     k(())
 in
   h.getVal()
-//│ ═══[COMPILATION ERROR] Could not find label 'handlerBody'
 //│ /!!!\ Uncaught error: hkmc2.InternalError: Not in scope: value@64
 
 :il
@@ -77,7 +74,7 @@ let x = new A()
 //│     if (res instanceof globalThis.Cont$.class) {
 //│       throw new globalThis.Error("Unhandled effects");
 //│     }
-//│     res = separator(0);
+//│     res = separator(1);
 //│     return res;
 //│   }
 //│   toString() { return "A(" + this.x + ")"; }
@@ -102,27 +99,27 @@ fun f() =
 //│     
 //│   }
 //│   resume(value$) {
-//│     if (this.pc$3 === 0) {
+//│     if (this.pc$0 === 1) {
 //│       this.res$0 = value$;
 //│     } else {
 //│     }
 //│     contLoop: while (true) {
-//│       if (this.pc$3 === 1) {
+//│       if (this.pc$0 === 2) {
 //│         const x = 3;
-//│         this.y$1 = 5;
+//│         this.y$0 = 5;
 //│         const x = 5;
-//│         this.res$0 = x + this.y$1;
+//│         this.res$0 = x + this.y$0;
 //│         if (this.res$0 instanceof globalThis.Cont$.class) {
-//│           return new globalThis.Cont$118$f(0, this.res$0);
+//│           return new globalThis.Cont$118$f(1, this.res$0);
 //│         }
-//│         this.pc$3 = 2;
+//│         this.pc$0 = 3;
 //│         continue contLoop;
 //│       } else {
-//│         if (this.pc$3 === 2) {
-//│           this.pc$3 = 0;
+//│         if (this.pc$0 === 3) {
+//│           this.pc$0 = 1;
 //│           continue contLoop;
 //│         } else {
-//│           if (this.pc$3 === 0) {
+//│           if (this.pc$0 === 1) {
 //│             return this.res$0;
 //│           }
 //│         }
@@ -167,13 +164,13 @@ fun f() =
 //│   const x = 5;
 //│   res = x + y;
 //│   if (res instanceof globalThis.Cont$.class) {
-//│     return new globalThis.Cont$118$f(0, res);
+//│     return new globalThis.Cont$118$f(1, res);
 //│   }
-//│   res = separator(0);
 //│   return res;
 //│ }
 //│ undefined
 //│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Identifier 'x' has already been declared
+<<<<<<<
 
 :il
 :sjs
@@ -280,3 +277,5 @@ fact(5)
 //│ 	at: hkmc2.codegen.js.JSBuilder.result(JSBuilder.scala:82)
 //│ 	at: hkmc2.codegen.js.JSBuilder.returningTerm(JSBuilder.scala:118)
 //│ 	at: hkmc2.codegen.js.JSBuilder.returningTerm(JSBuilder.scala:255)
+=======
+>>>>>>>

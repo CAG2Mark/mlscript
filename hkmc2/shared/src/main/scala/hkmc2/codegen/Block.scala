@@ -53,6 +53,19 @@ sealed abstract class Block extends Product with AutoLocated:
     case TryBlock(sub, fin, rst) => sub.definedVars ++ fin.definedVars ++ rst.definedVars
     case Label(lbl, bod, rst) => bod.definedVars ++ rst.definedVars
   
+  def mapChildBlocks(f: Block => Block): Block = this match
+    case Match(scrut, arms, dflt, rest) => Match(scrut, arms.map{case cse -> blk => cse -> f(blk)}, dflt.map(f), f(rest))
+    case Return(res, implct) => this
+    case Throw(exc) => this
+    case Label(label, body, rest) => Label(label, f(body), f(rest))
+    case Break(label, toBeginning) => this
+    case Begin(sub, rest) => Begin(f(sub), f(rest))
+    case TryBlock(sub, finallyDo, rest) => TryBlock(f(sub), f(finallyDo), f(rest))
+    case Assign(lhs, rhs, rest) => Assign(lhs, rhs, f(rest))
+    case AssignField(lhs, nme, rhs, rest) => AssignField(lhs, nme, rhs, f(rest))
+    case Define(defn, rest) => Define(defn, f(rest))
+    case End(msg) => this
+  
   
   // TODO conserve if no changes
   def mapTail(f: BlockTail => BlockTail): Block = this match
