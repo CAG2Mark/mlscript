@@ -432,14 +432,15 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
 
   var addContClasses: Block => Block = identity
 
-  def instrumentBlock(sym: ClassSymbol, blk: Block, locals: Set[Symbol]): Block =
+  def instrumentBlock(sym: ClassSymbol, body: Block, locals: Set[Symbol]): Block =
     // TODO: create a continuation class and return a transformed block to be used in a function or a lambda or a handler block
     // 1. symbol in locals should be transformed to be accessed and modified using the class itself in this function
     // 2. calls to separation symbol should disappear and the block should read this.pc and jump to the correct symbol
     val old = addContClasses
-    addContClasses = b => old(Define(ClsLikeDefn(sym, syntax.Cls, Nil, Nil, End()), b))
+    val curClass = createContClass(sym, body)
+    addContClasses = b => old(Define(curClass, b))
     sym.defn = S(ClassDef(N, syntax.Cls, sym, Nil, N, ObjBody(st.Blk(Nil, Term.Lit(Tree.UnitLit(true))))))
-    blk
+    body
 
   override def term(t: st)(k: Result => Block)(using Subst): Block =
     t match
