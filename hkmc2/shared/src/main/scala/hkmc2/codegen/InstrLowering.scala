@@ -105,7 +105,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
 
   // id: the id of the current state
   // blk: the block of code within this state
-  class BlockState(id: BigInt, blk: Block)
+  class BlockState(id: BigInt, blk: Block, sym: Opt[Local])
 
 
   object Separation:
@@ -199,7 +199,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     def go(blk: Block)(implicit labelIds: Map[Symbol, (BigInt, BigInt)], afterEnd: Option[BigInt]): PartRet = blk match
       case Separation(result, uid, rest) =>
         val PartRet(head, states) = go(rest)
-        PartRet(StateTransition(uid), BlockState(uid, head) :: states)
+        PartRet(StateTransition(uid), BlockState(uid, head, S(result)) :: states)
 
       case Match(scrut, arms, dflt, rest) => 
         val restParts = go(rest)
@@ -219,7 +219,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
         
         PartRet(
           Match(scrut, newArms, dfltParts.map(_.head), StateTransition(restId)),
-          BlockState(restId, restParts.head) :: states
+          BlockState(restId, restParts.head, N) :: states
         )
         
       case Return(c: Call, implct) => 
@@ -230,7 +230,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
 
         val retBlk = Return(Value.Ref(t), false)
 
-        PartRet(blk, BlockState(nextState, retBlk) :: Nil)
+        PartRet(blk, BlockState(nextState, retBlk, N) :: Nil)
       case l @ Label(label, body, rest) =>
         val startId = freshId() // start of body
         val endId = freshId() // start of rest
@@ -239,7 +239,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
         val PartRet(restNew, restParts) = go(rest)
         PartRet(
           StateTransition(startId), 
-          BlockState(startId, bodyNew) :: BlockState(endId, restNew) :: parts ::: restParts
+          BlockState(startId, bodyNew, N) :: BlockState(endId, restNew, N) :: parts ::: restParts
         )
 
       case Break(label, toBeginning) =>
@@ -262,7 +262,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
         val PartRet(subNew, subParts) = go(sub)(afterEnd = S(restId))
         val PartRet(restNew, restParts) = go(rest)
         
-        PartRet(subNew, BlockState(restId, restNew) :: subParts ::: restParts)
+        PartRet(subNew, BlockState(restId, restNew, N) :: subParts ::: restParts)
       case Assign(lhs, rhs: Call, rest) => ??? // TODO: awaiting changes
       case AssignField(lhs, nme, rhs: Call, rest) => ???
       case Define(defn, rest) => 
@@ -286,7 +286,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     val headId = freshId()
 
     val ret = go(blk)(using Map.empty, N)
-    BlockState(headId, ret.head) :: ret.states
+    BlockState(headId, ret.head, N) :: ret.states
   
 
   def createContClass(fun: FunDefn): ClsLikeDefn =
