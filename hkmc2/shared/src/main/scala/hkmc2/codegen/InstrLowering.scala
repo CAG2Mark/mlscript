@@ -21,6 +21,18 @@ import sem.Elaborator.Ctx.globalThisSymbol
 import scala.collection.mutable.Map as MutMap
 
 object InstrLowering:
+  extension (k: Block => Block)
+    def assign(l: Local, r: Result): Block => Block = b => k(Assign(l, r, b))
+    def assignField(lhs: Path, nme: Tree.Ident, rhs: Result): Block => Block = b => k(AssignField(lhs, nme, rhs, b))
+    def break(l: Local): Block = k(Break(l, false))
+    def chain(other: Block => Block): Block => Block = b => k(other(b))
+    def continue(l: Local): Block = k(Break(l, true))
+    def define(defn: Defn): Block => Block = b => k(Define(defn, b))
+    def end(): Block = rest(End())
+    def label(label: Local, body: Block): Block => Block = b => k(Label(label, body, b))
+    def ret(r: Result, implct: Bool): Block = k(Return(r, implct))
+    def rest(b: Block): Block = k(b)
+  private def blockBuilder: Block => Block = identity
   private class HandlerCtx:
     private var handlers: List[Result => Block] = (_ => Throw(
       Instantiate(Select(Value.Ref(Elaborator.Ctx.globalThisSymbol), Tree.Ident("Error")),
@@ -28,23 +40,31 @@ object InstrLowering:
     )) :: Nil
     private var toSave: List[Set[Local]] = Set.empty :: Nil
     private var contClasses: List[Path] = Value.Lit(Tree.UnitLit(true)) :: Nil
-    def linkAndHandle(pc: BigInt, res: Path): Block = handlers.head(instCont(pc, res))
+    private var levels: Int = 0
+    def linkAndHandle(pc: BigInt, res: Path, tmp: Local): Block = if levels == 0 then handlers.head(res) else instCont(pc, res, tmp)(handlers.head(_))
     def addVar(l: Local) =
       toSave = toSave.head + l :: toSave.tail
-    private def instCont(pc: BigInt, next: Path): Result =
+    private def instCont(pc: BigInt, res: Path, tmp: Local)(k: Result => Block): Block =
       // TODO: save locals too
-      Instantiate(contClasses.head, Value.Lit(Tree.IntLit(pc)) :: next :: Nil)
-    def handleScoped(contClass: ClassSymbol, handler: Result => Block)(scope: => Block): (Set[Local], Block) =
+      blockBuilder
+        .assign(tmp, Instantiate(contClasses.head, Value.Lit(Tree.IntLit(pc)) :: Value.Lit(Tree.UnitLit(true)) :: Nil))
+        .assignField(Value.Ref(tmp), Tree.Ident("pc$0"), Value.Lit(Tree.IntLit(pc)))
+        .assignField(Value.Ref(tmp), Tree.Ident("isCont$"), Value.Lit(Tree.BoolLit(true)))
+        .assignField(res, Tree.Ident("next"), Value.Ref(tmp))
+        .rest(k(res))
+    def handleScoped(contClass: BlockMemberSymbol, handler: Result => Block)(scope: => Block): (Set[Local], Block) =
       handlers ::= handler
       toSave ::= Set.empty
-      contClasses ::= Select(Value.Ref(globalThisSymbol), contClass.id)
+      contClasses ::= Value.Ref(contClass)
+      levels += 1
       val result = scope
       val locals = toSave.head
+      levels -= 1
       contClasses = contClasses.tail
       toSave = toSave.tail
       handlers = handlers.tail
       (locals, result)
-    def handleFun(contClass: ClassSymbol)(scope: => Block): (Set[Local], Block) =
+    def handleFun(contClass: BlockMemberSymbol)(scope: => Block): (Set[Local], Block) =
       handleScoped(contClass, Return(_, false))(scope)
 import InstrLowering.*
 
@@ -72,7 +92,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
   private val contTree: Tree.TypeDef = Tree.TypeDef(syntax.Cls, Tree.Error(), N, N)
   private val contSym: ClassSymbol = ClassSymbol(contTree, contIdent)
   private val contDef = ClassDef(
-    N,
+    S(globalThisSymbol),
     syntax.Cls,
     contSym,
     Nil,
@@ -82,6 +102,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     )),
     ObjBody(st.Blk(Nil, st.Lit(Tree.UnitLit(true)))))
   private val contTrm = Select(Select(Value.Ref(Elaborator.Ctx.globalThisSymbol), contIdent), Tree.Ident("class"))
+  // private val contTrm = Select(Value.Ref(contSym), Tree.Ident("class"))
   contSym.defn = S(contDef)
   
   private val resumeSym: BlockMemberSymbol = BlockMemberSymbol("resume$", Nil)
@@ -126,16 +147,6 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       case _ => None
   
   extension (k: Block => Block)
-    def assign(l: Local, r: Result): Block => Block = b => k(Assign(l, r, b))
-    def assignField(lhs: Path, nme: Tree.Ident, rhs: Result): Block => Block = b => k(AssignField(lhs, nme, rhs, b))
-    def break(l: Local): Block = k(Break(l, false))
-    def chain(other: Block => Block): Block => Block = b => k(other(b))
-    def continue(l: Local): Block = k(Break(l, true))
-    def define(defn: Defn): Block => Block = b => k(Define(defn, b))
-    def end(): Block = rest(End())
-    def label(label: Local, body: Block): Block => Block = b => k(Label(label, body, b))
-    def ret(r: Result, implct: Bool): Block = k(Return(r, implct))
-    def rest(b: Block): Block = k(b)
     def separation(res: Local, uid: BigInt): Block => Block = b => k(Separation(res, uid, b))
   private def blockBuilder: Block => Block = identity
 
@@ -444,17 +455,17 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
 
   var addContClasses: Block => Block = identity
 
+  def removeSeparation(blk: Block): Block = blk match
+    case Separation(_, _, blk) => removeSeparation(blk)
+    case _ => blk.mapChildBlocks(removeSeparation)
+  
   def instrumentBlock(sym: ClassSymbol, body: Block, locals: Set[Symbol], preTransform: Opt[Block => Block]): Block =
     val old = addContClasses
     val curClass = preTransform match
       case N => createContClass(sym, body, Nil)
       case S(transform) => createContClass(sym, transform(body), Nil)
-    addContClasses = b => old(Define(curClass, b))
     sym.defn = S(ClassDef(N, syntax.Cls, sym, Nil, N, ObjBody(st.Blk(Nil, Term.Lit(Tree.UnitLit(true))))))
-    def removeSeparation(blk: Block): Block = blk match
-      case Separation(_, _, blk) => removeSeparation(blk)
-      case _ => blk.mapChildBlocks(removeSeparation)
-    removeSeparation(body)
+    Define(curClass, removeSeparation(body))
 
   override def term(t: st)(k: Result => Block)(using Subst): Block =
     t match
@@ -462,7 +473,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       td match
       case TermDefinition(_, syntax.Fun, _, _, _, S(bod), _) =>
         val contClassSymbol = getContClassSymbol(S(td.sym))
-        val (locals, bodRaw) = handlerCtx.handleFun(contClassSymbol) { returnedTerm(bod) }
+        val (locals, bodRaw) = handlerCtx.handleFun(BlockMemberSymbol(contClassSymbol.id.name, Nil)) { returnedTerm(bod) }
         val bodTrm = instrumentBlock(contClassSymbol, bodRaw, locals, N)
         Define(FunDefn(td.sym, td.params, bodTrm),
           term(st.Blk(stats, res))(k))
@@ -502,9 +513,9 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
           val tmp = freshTmp()
           
           val contClassSymbol = getContClassSymbol(N)
-          val (locals, bodRaw) = handlerCtx.handleScoped(contClassSymbol, r =>
+          val (locals, bodRaw) = handlerCtx.handleScoped(BlockMemberSymbol(contClassSymbol.id.name, Nil), r =>
             Assign(cur, r, Break(lblBdy, false))
-          ) { Assign(lhs, Instantiate(cls, handlerFuns), term(st.Blk(stats, res))(r => Assign(cur, r, End()))) }
+          ) { Assign(lhs, Instantiate(cls, handlerFuns), term(st.Blk(stats, res))(r => Assign(cur, r, Break(lblBdy, false)))) }
           
           def transformBodyBreaks(blk: Block): Block = blk match
             case Break(`lblBdy`, false) => Return(Value.Ref(cur), false)
@@ -531,38 +542,44 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
                       Value.Ref(tmp),
                       Case.Lit(Tree.BoolLit(true)) -> blockBuilder
                         .assign(resumeLocal, Call(Value.Ref(resumeSym), Value.Ref(cur) :: Nil))
-                        .assign(tmp, Call(Select(Select(Value.Ref(cur), Tree.Ident("args")), Tree.Ident("push")), Value.Ref(resumeLocal) :: Nil))
+                        .assign(tmp, Call(Select(Select(Value.Ref(cur), Tree.Ident("params")), Tree.Ident("push")), Value.Ref(resumeLocal) :: Nil))
                         .assign(cur, Call(
                           Select(Select(Value.Ref(cur), Tree.Ident("handlerFun")), Tree.Ident("apply")),
-                          Value.Lit(Tree.UnitLit(false)) :: Select(Value.Ref(cur), Tree.Ident("args")) :: Nil
+                          Value.Lit(Tree.UnitLit(false)) :: Select(Value.Ref(cur), Tree.Ident("params")) :: Nil
                         ))
                         .continue(lblH) :: Nil, 
                       N,
                       End()
                     )) :: Nil,
-                  S(handlerCtx.linkAndHandle(uid, Value.Ref(cur))),
+                  S(handlerCtx.linkAndHandle(uid, Value.Ref(cur), tmp)),
                   End()
                 ) :: Nil,
               N,
               End()
             ))
             .rest(k(Value.Ref(cur)))
+    case st.App(Ref(_: BuiltinSymbol), args) =>
+      // Optimization: Assuming builtin symbols cannot have effect
+      super.term(t)(k)
     case st.App(f, args) =>
       tl.log(s"Lowering.term ${t.showDbg.truncate(30, "[...]")}")
       val uid = freshId()
       val res = freshTmp("res")
+      val tmp = freshTmp()
       super.term(t): r =>
         Assign(res, r,
           Match(
-            Value.Ref(res),
-            Case.Cls(contSym, contTrm) -> handlerCtx.linkAndHandle(uid, Value.Ref(res)) :: Nil,
+            // Value.Ref(res),
+            // Case.Cls(contSym, contTrm) -> handlerCtx.linkAndHandle(uid, Value.Ref(res)) :: Nil,
+            Select(Value.Ref(res), Tree.Ident("isCont$")), // TODO: isCont$ hack
+            Case.Lit(Tree.BoolLit(true)) -> handlerCtx.linkAndHandle(uid, Value.Ref(res), tmp) :: Nil,
             N,
             Separation(res, uid, k(Value.Ref(res)))
           )
         )
     case st.Lam(params, body) =>
       val contClassSymbol = getContClassSymbol(N)
-      val (locals, bodRaw) = handlerCtx.handleFun(contClassSymbol) { returnedTerm(body) }
+      val (locals, bodRaw) = handlerCtx.handleFun(BlockMemberSymbol(contClassSymbol.id.name, Nil)) { returnedTerm(body) }
       k(Value.Lam(params, instrumentBlock(contClassSymbol, bodRaw, locals, N)))
     case _ => super.term(t)(k)
 
@@ -573,7 +590,6 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     val valueSym = freshTmp("value")
     val lblChain = freshTmp("chainLoop")
     val result = blockBuilder
-      .assign(separationSymbol, Value.Lit(Tree.UnitLit(true))) // TODO: Remove placeholder for suppressing separator not found error
       .define(FunDefn(resumeSym,
         ParamList(ParamListFlags.empty, Param(FldFlags.empty, contParamSym, N) :: Nil) ::
           ParamList(ParamListFlags.empty, Param(FldFlags.empty, valueParamSym, N) :: Nil) :: Nil,
@@ -598,7 +614,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
           .end()
       ))
       .rest(
-        super.topLevel(Blk(/*effectSigDef :: */contDef :: t :: Nil, st.Lit(Tree.UnitLit(true))))
+        removeSeparation(super.topLevel(Blk(/*effectSigDef :: */contDef :: t :: Nil, st.Lit(Tree.UnitLit(true)))))
       )
     // Must be done after toplevel finished for the updated list
     addContClasses(result)
