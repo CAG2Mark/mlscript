@@ -38,35 +38,47 @@ object InstrLowering:
       Instantiate(Select(Value.Ref(Elaborator.Ctx.globalThisSymbol), Tree.Ident("Error")),
       Value.Lit(Tree.StrLit("Unhandled effects")) :: Nil)
     )) :: Nil
+    private var allLocals: List[Set[Local]] = Set.empty :: Nil
     private var toSave: List[Set[Local]] = Set.empty :: Nil
-    private var contClasses: List[Path] = Value.Lit(Tree.UnitLit(true)) :: Nil
+    private var contClasses: List[ClassSymbol] = Nil
     private var levels: Int = 0
-    def linkAndHandle(pc: BigInt, res: Path, tmp: Local): Block = if levels == 0 then handlers.head(res) else instCont(pc, res, tmp)(handlers.head(_))
-    def addVar(l: Local) =
+    def linkAndHandle(pc: BigInt, res: Path, tmp: Local, symbolResolver: (ClassSymbol, Local) => TermSymbol): Block =
+      if levels == 0 then handlers.head(res) else instCont(pc, res, tmp, symbolResolver)(handlers.head(_))
+    def addSavedVar(l: Local)(scoped: => Block): Block =
+      allLocals = allLocals.head + l :: allLocals.tail
+      val oldSave = toSave
       toSave = toSave.head + l :: toSave.tail
-    private def instCont(pc: BigInt, res: Path, tmp: Local)(k: Result => Block): Block =
-      // TODO: save locals too
-      blockBuilder
-        .assign(tmp, Instantiate(contClasses.head, Value.Lit(Tree.IntLit(pc)) :: Value.Lit(Tree.UnitLit(true)) :: Nil))
+      val result = scoped
+      toSave = oldSave
+      result
+    private def instCont(pc: BigInt, res: Path, tmp: Local, symbolResolver: (ClassSymbol, Local) => TermSymbol)(k: Result => Block): Block =
+      val resultHead = blockBuilder
+        .assign(tmp, Instantiate(Value.Ref(BlockMemberSymbol(contClasses.head.id.name, Nil)), Value.Lit(Tree.IntLit(pc)) :: Value.Lit(Tree.UnitLit(true)) :: Nil))
         .assignField(Value.Ref(tmp), Tree.Ident("pc$0"), Value.Lit(Tree.IntLit(pc)))
         .assignField(Value.Ref(tmp), Tree.Ident("isCont$"), Value.Lit(Tree.BoolLit(true)))
+      val resultSavedLocals = toSave.head.foldLeft(resultHead)((res, loc) =>
+        res.assignField(Value.Ref(tmp), symbolResolver(contClasses.head, loc).id, Value.Ref(loc))
+      )
+      resultSavedLocals
         .assignField(Select(res, Tree.Ident("tail")), Tree.Ident("next"), Value.Ref(tmp))
         .assignField(res, Tree.Ident("tail"), Value.Ref(tmp))
         .rest(k(res))
-    def handleScoped(contClass: BlockMemberSymbol, handler: Result => Block)(scope: => Block): (Set[Local], Block) =
+    def handleScoped(contClass: ClassSymbol, handler: Result => Block)(scoped: => Block): (Set[Local], Block) =
       handlers ::= handler
+      allLocals ::= Set.empty
       toSave ::= Set.empty
-      contClasses ::= Value.Ref(contClass)
+      contClasses ::= contClass
       levels += 1
-      val result = scope
-      val locals = toSave.head
+      val result = scoped
+      val locals = allLocals.head
       levels -= 1
       contClasses = contClasses.tail
       toSave = toSave.tail
+      allLocals = allLocals.tail
       handlers = handlers.tail
       (locals, result)
-    def handleFun(contClass: BlockMemberSymbol)(scope: => Block): (Set[Local], Block) =
-      handleScoped(contClass, Return(_, false))(scope)
+    def handleFun(contClass: ClassSymbol)(scoped: => Block): (Set[Local], Block) =
+      handleScoped(contClass, Return(_, false))(scoped)
 import InstrLowering.*
 
 class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
@@ -467,11 +479,15 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
 
   override def term(t: st)(k: Result => Block)(using Subst): Block =
     t match
+    case st.Blk((LetDecl(sym)) :: stats, res) =>
+      handlerCtx.addSavedVar(sym) { super.term(t)(k) }
+    case st.Blk((DefineVar(sym, rhs)) :: stats, res) =>
+      handlerCtx.addSavedVar(sym) { super.term(t)(k) }
     case st.Blk((d: Declaration) :: stats, res) =>
       d match
       case td @ TermDefinition(_, syntax.Fun, _, _, _, S(bod), _) =>
         val contClassSymbol = getContClassSymbol(S(td.sym))
-        val (locals, bodRaw) = handlerCtx.handleFun(BlockMemberSymbol(contClassSymbol.id.name, Nil)) { returnedTerm(bod) }
+        val (locals, bodRaw) = handlerCtx.handleFun(contClassSymbol) { returnedTerm(bod) }
         val bodTrm = instrumentBlock(contClassSymbol, bodRaw, locals, N)
         Define(FunDefn(td.sym, td.params, bodTrm),
           term(st.Blk(stats, res))(k))
@@ -487,7 +503,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
             mtds.flatMap: td =>
               td.body.map: bod =>
                 val contClassSymbol = getContClassSymbol(S(td.sym))
-                val (locals, bodRaw) = handlerCtx.handleFun(BlockMemberSymbol(contClassSymbol.id.name, Nil)) { returnedTerm(bod) }
+                val (locals, bodRaw) = handlerCtx.handleFun(contClassSymbol) { returnedTerm(bod) }
                 val bodTrm = instrumentBlock(contClassSymbol, bodRaw, locals, N)
                 FunDefn(td.sym, td.params, bodTrm)
             ,
@@ -532,9 +548,9 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
           val tmp = freshTmp()
           
           val contClassSymbol = getContClassSymbol(N)
-          val (locals, bodRaw) = handlerCtx.handleScoped(BlockMemberSymbol(contClassSymbol.id.name, Nil), r =>
+          val (locals, bodRaw) = handlerCtx.handleScoped(contClassSymbol, r =>
             Assign(cur, r, Break(lblBdy, false))
-          ) { Assign(lhs, Instantiate(cls, handlerFuns), term(st.Blk(stats, res))(r => Assign(cur, r, Break(lblBdy, false)))) }
+          ) { Assign(lhs, Instantiate(cls, handlerFuns), handlerCtx.addSavedVar(lhs){ term(st.Blk(stats, res))(r => Assign(cur, r, Break(lblBdy, false))) }) }
           
           def transformBodyBreaks(blk: Block): Block = blk match
             case Break(`lblBdy`, false) => Return(Value.Ref(cur), false)
@@ -572,7 +588,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
                         N,
                         End()
                       )) :: Nil,
-                    S(handlerCtx.linkAndHandle(uid, Value.Ref(cur), tmp)),
+                    S(handlerCtx.linkAndHandle(uid, Value.Ref(cur), tmp, getContLocalSymbol)),
                     End()
                   ) :: Nil,
                 N,
@@ -600,7 +616,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
             Value.Ref(res), // here, res is either undefined or continuation so actually only need to check against undefined
             Case.Lit(Tree.BoolLit(true)) -> Match(
               Select(Value.Ref(res), Tree.Ident("isCont$")), // TODO: isCont$ hack
-              Case.Lit(Tree.BoolLit(true)) -> handlerCtx.linkAndHandle(uid, Value.Ref(res), tmp) :: Nil,
+              Case.Lit(Tree.BoolLit(true)) -> handlerCtx.linkAndHandle(uid, Value.Ref(res), tmp, getContLocalSymbol) :: Nil,
               N,
               End()
             ) :: Nil,
@@ -610,7 +626,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
         )
     case st.Lam(params, body) =>
       val contClassSymbol = getContClassSymbol(N)
-      val (locals, bodRaw) = handlerCtx.handleFun(BlockMemberSymbol(contClassSymbol.id.name, Nil)) { returnedTerm(body) }
+      val (locals, bodRaw) = handlerCtx.handleFun(contClassSymbol) { returnedTerm(body) }
       k(Value.Lam(params, instrumentBlock(contClassSymbol, bodRaw, locals, N)))
     case _ => super.term(t)(k)
 
