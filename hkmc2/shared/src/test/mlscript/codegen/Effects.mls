@@ -8,6 +8,7 @@
 
 // TODO: use this syntax
 // TODO: prepend or append resumption parameter like fun perform(x)(resume): Str -> Str or fun perform(resume)(x): Str -> Str
+// Handle the case where the function is defined like fun perform: Str, then e.perform should also yield an effect?
 // handle ... fun perform(resume)(x)(y)(z): A = resume(x)
 // Dummy handler: fun dummy_perform(x)(y)(z) = { let result = new EffectSig$(h, perform(x)(y)(z)); result.tail = result; return result; }
 // resume: A -> ?
@@ -95,9 +96,7 @@ r
 //│ > hi
 //│ r = 'hi'
 
-// Resumption bug
-:fixme
-:sjs
+:expect 'hello'
 class Effect[A](perform: Str -> Str)
 val r = handle h = Effect with
   fun perform(arg, k) =
@@ -107,261 +106,9 @@ in
   h.perform("hi")
   h.perform("hello")
 r
-//│ JS:
-//│ let h, cur, resume, tmp, res, tmp1, res1, tmp2;
-//│ function resume$(cont) {
-//│   return (value) => {
-//│     let cont1, value1;
-//│     cont1 = cont;
-//│     value1 = value;
-//│     chainLoop: while (true) {
-//│       if (cont1) {
-//│         value1 = cont1.resume(value1);
-//│         cont1 = cont1.next;
-//│         continue chainLoop;
-//│       }
-//│       return value1;
-//│       break;
-//│     }
-//│   };
-//│ }
-//│ this.Cont$ = function Cont$(resume2, resumed1, next1, isCont$1) { return new Cont$.class(resume2, resumed1, next1, isCont$1); };
-//│ this.Cont$.class = class Cont$ {
-//│   constructor(resume1, resumed, next, isCont$) {
-//│     this.resume = resume1;
-//│     this.resumed = resumed;
-//│     this.next = next;
-//│     this.isCont$ = isCont$;
-//│     
-//│   }
-//│   toString() { return "Cont$(" + this.resume1 + ", " + this.resumed + ", " + this.next + ", " + this.isCont$ + ")"; }
-//│ };
-//│ this.Effect = function Effect(perform1) { return new Effect.class(perform1); };
-//│ this.Effect.class = class Effect {
-//│   constructor(perform) {
-//│     this.perform = perform;
-//│     
-//│   }
-//│   toString() { return "Effect(" + this.perform + ")"; }
-//│ };
-//│ function perform(arg, k) {
-//│   let res2, tmp3, res3, tmp4;
-//│   class Cont$194$perform {
-//│     constructor() {
-//│       
-//│     }
-//│     resume(value$) {
-//│       if (this.pc$0 === 2) {
-//│         this.res$0 = value$;
-//│       } else {
-//│         if (this.pc$0 === 3) {
-//│           this.res$0 = value$;
-//│         } else {
-//│         }
-//│       }
-//│       contLoop: while (true) {
-//│         if (this.pc$0 === 4) {
-//│           this.res$0 = Predef.print(arg);
-//│           if (this.res$0) {
-//│             if (this.res$0.isCont$) {
-//│               this.tmp$0 = new Cont$194$perform(2, undefined);
-//│               this.tmp$0.pc$0 = 2;
-//│               this.tmp$0.isCont$ = true;
-//│               this.res$0.tail.next = this.tmp$0;
-//│               this.res$0.tail = this.tmp$0;
-//│               return this.res$0;
-//│             }
-//│             this.pc$0 = 2;
-//│             continue contLoop;
-//│           }
-//│           this.pc$0 = 2;
-//│           continue contLoop;
-//│         } else {
-//│           if (this.pc$0 === 2) {
-//│             this.res$0 = k(arg);
-//│             if (this.res$0) {
-//│               if (this.res$0.isCont$) {
-//│                 this.tmp$0 = new Cont$194$perform(3, undefined);
-//│                 this.tmp$0.pc$0 = 3;
-//│                 this.tmp$0.isCont$ = true;
-//│                 this.res$0.tail.next = this.tmp$0;
-//│                 this.res$0.tail = this.tmp$0;
-//│                 return this.res$0;
-//│               }
-//│               this.pc$0 = 3;
-//│               continue contLoop;
-//│             }
-//│             this.pc$0 = 3;
-//│             continue contLoop;
-//│           } else {
-//│             if (this.pc$0 === 3) {
-//│               return this.res$0;
-//│             }
-//│           }
-//│         }
-//│         break;
-//│       }
-//│     }
-//│     toString() { return "Cont$194$perform"; }
-//│   }
-//│   res2 = Predef.print(arg);
-//│   if (res2) {
-//│     if (res2.isCont$) {
-//│       tmp3 = new Cont$194$perform(2, undefined);
-//│       tmp3.pc$0 = 2;
-//│       tmp3.isCont$ = true;
-//│       res2.tail.next = tmp3;
-//│       res2.tail = tmp3;
-//│       return res2;
-//│     }
-//│   }
-//│   res3 = k(arg);
-//│   if (res3) {
-//│     if (res3.isCont$) {
-//│       tmp4 = new Cont$194$perform(3, undefined);
-//│       tmp4.pc$0 = 3;
-//│       tmp4.isCont$ = true;
-//│       res3.tail.next = tmp4;
-//│       res3.tail = tmp4;
-//│       return res3;
-//│     }
-//│   }
-//│   return res3;
-//│ }
-//│ handlerBody: while (true) {
-//│   class Cont$208$ {
-//│     constructor() {
-//│       
-//│     }
-//│     resume(value$) {
-//│       if (this.pc$0 === 5) {
-//│         this.res$0 = value$;
-//│       } else {
-//│         if (this.pc$0 === 6) {
-//│           this.res$0 = value$;
-//│         } else {
-//│         }
-//│       }
-//│       contLoop: while (true) {
-//│         if (this.pc$0 === 7) {
-//│           this.h$0 = new globalThis.Effect((arg) => {
-//│             let cont;
-//│             cont = new globalThis.Cont$.class(undefined, false, undefined, true);
-//│             cont.tail = cont;
-//│             cont.handler = this.h$0;
-//│             cont.handlerFun = perform;
-//│             cont.params = [
-//│               arg
-//│             ];
-//│             return cont;
-//│           });
-//│           this.res$0 = this.h$0.perform("hi");
-//│           if (this.res$0) {
-//│             if (this.res$0.isCont$) {
-//│               this.tmp$0 = new Cont$208$(5, undefined);
-//│               this.tmp$0.pc$0 = 5;
-//│               this.tmp$0.isCont$ = true;
-//│               this.res$0.tail.next = this.tmp$0;
-//│               this.res$0.tail = this.tmp$0;
-//│               this.cur$0 = this.res$0;
-//│               return this.cur$0;
-//│             }
-//│             this.pc$0 = 5;
-//│             continue contLoop;
-//│           }
-//│           this.pc$0 = 5;
-//│           continue contLoop;
-//│         } else {
-//│           if (this.pc$0 === 5) {
-//│             this.res$0 = this.h$0.perform("hello");
-//│             if (this.res$0) {
-//│               if (this.res$0.isCont$) {
-//│                 this.tmp$0 = new Cont$208$(6, undefined);
-//│                 this.tmp$0.pc$0 = 6;
-//│                 this.tmp$0.isCont$ = true;
-//│                 this.res$0.tail.next = this.tmp$0;
-//│                 this.res$0.tail = this.tmp$0;
-//│                 this.cur$0 = this.res$0;
-//│                 return this.cur$0;
-//│               }
-//│               this.pc$0 = 6;
-//│               continue contLoop;
-//│             }
-//│             this.pc$0 = 6;
-//│             continue contLoop;
-//│           } else {
-//│             if (this.pc$0 === 6) {
-//│               this.cur$0 = this.res$0;
-//│               return this.cur$0;
-//│             }
-//│           }
-//│         }
-//│         break;
-//│       }
-//│     }
-//│     toString() { return "Cont$208$"; }
-//│   }
-//│   h = new this.Effect((arg) => {
-//│     let cont;
-//│     cont = new this.Cont$.class(undefined, false, undefined, true);
-//│     cont.tail = cont;
-//│     cont.handler = h;
-//│     cont.handlerFun = perform;
-//│     cont.params = [
-//│       arg
-//│     ];
-//│     return cont;
-//│   });
-//│   res = h.perform("hi");
-//│   if (res) {
-//│     if (res.isCont$) {
-//│       tmp1 = new Cont$208$(5, undefined);
-//│       tmp1.pc$0 = 5;
-//│       tmp1.isCont$ = true;
-//│       res.tail.next = tmp1;
-//│       res.tail = tmp1;
-//│       cur = res;
-//│       break handlerBody;
-//│     }
-//│   }
-//│   res1 = h.perform("hello");
-//│   if (res1) {
-//│     if (res1.isCont$) {
-//│       tmp2 = new Cont$208$(6, undefined);
-//│       tmp2.pc$0 = 6;
-//│       tmp2.isCont$ = true;
-//│       res1.tail.next = tmp2;
-//│       res1.tail = tmp2;
-//│       cur = res1;
-//│       break handlerBody;
-//│     }
-//│   }
-//│   cur = res1;
-//│   break handlerBody;
-//│   break;
-//│ }
-//│ handler: while (true) {
-//│   if (cur) {
-//│     if (cur.isCont$) {
-//│       if (cur.handler) {
-//│         tmp = cur.handler === h;
-//│         if (tmp) {
-//│           resume = resume$(cur.next);
-//│           tmp = cur.params.push(resume);
-//│           cur = cur.handlerFun.apply(null, cur.params);
-//│           continue handler;
-//│         }
-//│       } else {
-//│         throw new this.Error("Unhandled effects");
-//│       }
-//│     }
-//│   }
-//│   break;
-//│ }
-//│ this.r = cur;
-//│ undefined
-//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'perform')
-//│ r = 'hi'
+//│ > hi
+//│ > hello
+//│ r = 'hello'
 
 :expect 'b'
 class Effect[A](perform: Str -> Str)
@@ -375,6 +122,90 @@ val x =
 x
 //│ > t
 //│ x = 'b'
+
+// TODO: val is not working
+:expect 'Hello World!'
+class Effect[A](perform: Str -> Str)
+fun foo(h) =
+  print("Entering foo")
+  let result = h.perform("Hello")
+  print("Exiting foo")
+  result
+fun bar(h) =
+  print("Entering bar")
+  let result = foo(h) + " World"
+  print("Exiting bar")
+  result
+fun foobar(h) =
+  print("Entering foobar")
+  let result = bar(h) + "!"
+  print("Exiting foobar")
+  result
+val x = handle h = Effect with
+  fun perform(arg, k) =
+    print("handler called")
+    let result = k(arg)
+    print("handler finished")
+    result
+in
+  print("mainbody start")
+  let result = foobar(h)
+  print("mainbody end")
+  result
+x
+//│ > mainbody start
+//│ > Entering foobar
+//│ > Entering bar
+//│ > Entering foo
+//│ > handler called
+//│ > Exiting foo
+//│ > Exiting bar
+//│ > Exiting foobar
+//│ > mainbody end
+//│ > handler finished
+//│ x = 'Hello World!'
+
+:fixme
+:expect 'Hello World!'
+class Effect[A](perform: Str -> Str)
+fun foo(h) =
+  print("Entering foo")
+  let result = h.perform("Hello")
+  h.perform("Oops!")
+  print("Exiting foo")
+  result
+fun bar(h) =
+  print("Entering bar")
+  let result = foo(h) + " World"
+  print("Exiting bar")
+  result
+fun foobar(h) =
+  print("Entering foobar")
+  let result = bar(h) + "!"
+  print("Exiting foobar")
+  result
+val x = handle h = Effect with
+  fun perform(arg, k) =
+    print("handler called")
+    let result = k(arg)
+    print("handler finished")
+    result
+in
+  print("mainbody start")
+  let result = foobar(h)
+  print("mainbody end")
+  result
+x
+//│ > mainbody start
+//│ > Entering foobar
+//│ > Entering bar
+//│ > Entering foo
+//│ > handler called
+//│ > Exiting bar
+//│ > Exiting foobar
+//│ > mainbody end
+//│ > handler finished
+//│ ═══[RUNTIME ERROR] Expected: 'Hello World!', got: 'Cont$(undefined, false, Cont$400$foo, true) World!'
 
 :fixme
 :expect 1
@@ -400,27 +231,6 @@ k + m
 :expect 1
 k + m
 
-:fixme
-class Cell(getVal: () -> Int, setVal: Int -> ())
-let x = 0
-let k
-let m
-val res = handle h = Cell with
-  fun getVal(k) = k(x)
-  fun setVal(value, k) =
-    x = value
-    k(())
-in
-  k = h.getVal()
-  h.setVal(1)
-  m = h.getVal()
-//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'setVal')
-//│ k = 0
-//│ m = 1
-//│ x = 0
-
-
-:il
 class A(x) with
   fun debug() = print(x)
 let x = new A(333)
@@ -436,98 +246,11 @@ fun f() =
     x + y
 //│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Identifier 'x' has already been declared
 
-:sjs
 fun f() =
   let x = 2
   let y = f()
   let z = 3
   2
-//│ JS:
-//│ function resume$(cont) {
-//│   return (value) => {
-//│     let cont1, value1;
-//│     cont1 = cont;
-//│     value1 = value;
-//│     chainLoop: while (true) {
-//│       if (cont1) {
-//│         value1 = cont1.resume(value1);
-//│         cont1 = cont1.next;
-//│         continue chainLoop;
-//│       }
-//│       return value1;
-//│       break;
-//│     }
-//│   };
-//│ }
-//│ this.Cont$ = function Cont$(resume1, resumed1, next1, isCont$1) { return new Cont$.class(resume1, resumed1, next1, isCont$1); };
-//│ this.Cont$.class = class Cont$ {
-//│   constructor(resume, resumed, next, isCont$) {
-//│     this.resume = resume;
-//│     this.resumed = resumed;
-//│     this.next = next;
-//│     this.isCont$ = isCont$;
-//│     
-//│   }
-//│   toString() { return "Cont$(" + this.resume + ", " + this.resumed + ", " + this.next + ", " + this.isCont$ + ")"; }
-//│ };
-//│ function f() {
-//│   let x, y, z, res, tmp;
-//│   class Cont$403$f {
-//│     constructor() {
-//│       
-//│     }
-//│     resume(value$) {
-//│       if (this.pc$0 === 1) {
-//│         this.res$0 = value$;
-//│       } else {
-//│       }
-//│       contLoop: while (true) {
-//│         if (this.pc$0 === 2) {
-//│           this.x$0 = 2;
-//│           this.res$0 = globalThis.f();
-//│           if (this.res$0) {
-//│             if (this.res$0.isCont$) {
-//│               this.tmp$0 = new Cont$403$f(1, undefined);
-//│               this.tmp$0.pc$0 = 1;
-//│               this.tmp$0.isCont$ = true;
-//│               this.res$0.tail.next = this.tmp$0;
-//│               this.res$0.tail = this.tmp$0;
-//│               return this.res$0;
-//│             }
-//│             this.pc$0 = 1;
-//│             continue contLoop;
-//│           }
-//│           this.pc$0 = 1;
-//│           continue contLoop;
-//│         } else {
-//│           if (this.pc$0 === 1) {
-//│             this.y$0 = this.res$0;
-//│             this.z$0 = 3;
-//│             return 2;
-//│           }
-//│         }
-//│         break;
-//│       }
-//│     }
-//│     toString() { return "Cont$403$f"; }
-//│   }
-//│   x = 2;
-//│   res = globalThis.f();
-//│   if (res) {
-//│     if (res.isCont$) {
-//│       tmp = new Cont$403$f(1, undefined);
-//│       tmp.pc$0 = 1;
-//│       tmp.isCont$ = true;
-//│       res.tail.next = tmp;
-//│       res.tail = tmp;
-//│       return res;
-//│     }
-//│   }
-//│   y = res;
-//│   z = 3;
-//│   return 2;
-//│ }
-//│ undefined
 
 :expect 120
 :sjs
@@ -568,7 +291,7 @@ result
 //│ };
 //│ function fact(factvalue) {
 //│   let scrut, res1, tmp, tmp1;
-//│   class Cont$423$fact {
+//│   class Cont$598$fact {
 //│     constructor() {
 //│       
 //│     }
@@ -586,7 +309,7 @@ result
 //│             this.res$0 = globalThis.fact(this.tmp$0);
 //│             if (this.res$0) {
 //│               if (this.res$0.isCont$) {
-//│                 this.tmp$0 = new Cont$423$fact(1, undefined);
+//│                 this.tmp$0 = new Cont$598$fact(1, undefined);
 //│                 this.tmp$0.pc$0 = 1;
 //│                 this.tmp$0.isCont$ = true;
 //│                 this.res$0.tail.next = this.tmp$0;
@@ -616,7 +339,7 @@ result
 //│         break;
 //│       }
 //│     }
-//│     toString() { return "Cont$423$fact"; }
+//│     toString() { return "Cont$598$fact"; }
 //│   }
 //│   scrut = factvalue != 0;
 //│   if (scrut) {
@@ -624,7 +347,7 @@ result
 //│     res1 = globalThis.fact(tmp1);
 //│     if (res1) {
 //│       if (res1.isCont$) {
-//│         tmp = new Cont$423$fact(1, undefined);
+//│         tmp = new Cont$598$fact(1, undefined);
 //│         tmp.pc$0 = 1;
 //│         tmp.isCont$ = true;
 //│         res1.tail.next = tmp;
@@ -647,235 +370,37 @@ result
 //│ undefined
 //│ result = 120
 
-:sjs
-fun f() =
-  let x = 1
-  let z = f()
-  let y = 2
-  x + y
-//│ JS:
-//│ function resume$(cont) {
-//│   return (value) => {
-//│     let cont1, value1;
-//│     cont1 = cont;
-//│     value1 = value;
-//│     chainLoop: while (true) {
-//│       if (cont1) {
-//│         value1 = cont1.resume(value1);
-//│         cont1 = cont1.next;
-//│         continue chainLoop;
-//│       }
-//│       return value1;
-//│       break;
-//│     }
-//│   };
-//│ }
-//│ this.Cont$ = function Cont$(resume1, resumed1, next1, isCont$1) { return new Cont$.class(resume1, resumed1, next1, isCont$1); };
-//│ this.Cont$.class = class Cont$ {
-//│   constructor(resume, resumed, next, isCont$) {
-//│     this.resume = resume;
-//│     this.resumed = resumed;
-//│     this.next = next;
-//│     this.isCont$ = isCont$;
-//│     
-//│   }
-//│   toString() { return "Cont$(" + this.resume + ", " + this.resumed + ", " + this.next + ", " + this.isCont$ + ")"; }
-//│ };
-//│ function f() {
-//│   let x, z, y, res, tmp;
-//│   class Cont$449$f {
-//│     constructor() {
-//│       
-//│     }
-//│     resume(value$) {
-//│       let tmp1;
-//│       if (this.pc$0 === 1) {
-//│         this.res$0 = value$;
-//│       } else {
-//│       }
-//│       contLoop: while (true) {
-//│         if (this.pc$0 === 2) {
-//│           this.x$0 = 1;
-//│           this.res$0 = globalThis.f();
-//│           if (this.res$0) {
-//│             if (this.res$0.isCont$) {
-//│               this.tmp$0 = new Cont$449$f(1, undefined);
-//│               this.tmp$0.pc$0 = 1;
-//│               this.tmp$0.isCont$ = true;
-//│               this.res$0.tail.next = this.tmp$0;
-//│               this.res$0.tail = this.tmp$0;
-//│               return this.res$0;
-//│             }
-//│             this.pc$0 = 1;
-//│             continue contLoop;
-//│           }
-//│           this.pc$0 = 1;
-//│           continue contLoop;
-//│         } else {
-//│           if (this.pc$0 === 1) {
-//│             this.z$0 = this.res$0;
-//│             this.y$0 = 2;
-//│             tmp1 = this.x$0 + this.y$0;
-//│             this.pc$0 = 3;
-//│             continue contLoop;
-//│           } else {
-//│             if (this.pc$0 === 3) {
-//│               return tmp1;
-//│             }
-//│           }
-//│         }
-//│         break;
-//│       }
-//│     }
-//│     toString() { return "Cont$449$f"; }
-//│   }
-//│   x = 1;
-//│   res = globalThis.f();
-//│   if (res) {
-//│     if (res.isCont$) {
-//│       tmp = new Cont$449$f(1, undefined);
-//│       tmp.pc$0 = 1;
-//│       tmp.isCont$ = true;
-//│       res.tail.next = tmp;
-//│       res.tail = tmp;
-//│       return res;
-//│     }
-//│   }
-//│   z = res;
-//│   y = 2;
-//│   return x + y;
-//│ }
-//│ undefined
+// stack safe recursion
+:expect 5050
+class StackDelay(raise: () -> ())
+handle h = StackDelay with
+  fun raise(k) =
+    print("stack unwinded")
+    k(10)
+fun sum(depth, x) =
+  val new_depth = if depth > 70 then h.raise() else depth + 1
+  if x != 0 then
+    x + sum(new_depth, x - 1)
+  else 0
+let result = sum(0, 100)
+result
+//│ > stack unwinded
+//│ result = 5050
 
-// TODO: avoid duplicating continuation classes
-:sjs
-fun f() =
-  let x = 1
-  fun g() =
-    let y = 2
-    x
-  g()
-//│ JS:
-//│ function resume$(cont) {
-//│   return (value) => {
-//│     let cont1, value1;
-//│     cont1 = cont;
-//│     value1 = value;
-//│     chainLoop: while (true) {
-//│       if (cont1) {
-//│         value1 = cont1.resume(value1);
-//│         cont1 = cont1.next;
-//│         continue chainLoop;
-//│       }
-//│       return value1;
-//│       break;
-//│     }
-//│   };
-//│ }
-//│ this.Cont$ = function Cont$(resume1, resumed1, next1, isCont$1) { return new Cont$.class(resume1, resumed1, next1, isCont$1); };
-//│ this.Cont$.class = class Cont$ {
-//│   constructor(resume, resumed, next, isCont$) {
-//│     this.resume = resume;
-//│     this.resumed = resumed;
-//│     this.next = next;
-//│     this.isCont$ = isCont$;
-//│     
-//│   }
-//│   toString() { return "Cont$(" + this.resume + ", " + this.resumed + ", " + this.next + ", " + this.isCont$ + ")"; }
-//│ };
-//│ function f() {
-//│   let x, res, tmp;
-//│   class Cont$468$f {
-//│     constructor() {
-//│       
-//│     }
-//│     resume(value$) {
-//│       if (this.pc$0 === 2) {
-//│         this.res$0 = value$;
-//│       } else {
-//│       }
-//│       contLoop: while (true) {
-//│         if (this.pc$0 === 3) {
-//│           this.x$0 = 1;
-//│           
-//│           const this$Cont$468$f = this;
-//│           function g() {
-//│             let y;
-//│             class Cont$469$g {
-//│               constructor() {
-//│                 
-//│               }
-//│               resume(value$1) {
-//│                 contLoop1: while (true) {
-//│                   if (this.pc$0 === 1) {
-//│                     this.y$0 = 2;
-//│                     return this$Cont$468$f.x$0;
-//│                   }
-//│                   break;
-//│                 }
-//│               }
-//│               toString() { return "Cont$469$g"; }
-//│             }
-//│             y = 2;
-//│             return this$Cont$468$f.x$0;
-//│           }
-//│           this.res$0 = g();
-//│           if (this.res$0) {
-//│             if (this.res$0.isCont$) {
-//│               this.tmp$0 = new Cont$468$f(2, undefined);
-//│               this.tmp$0.pc$0 = 2;
-//│               this.tmp$0.isCont$ = true;
-//│               this.res$0.tail.next = this.tmp$0;
-//│               this.res$0.tail = this.tmp$0;
-//│               return this.res$0;
-//│             }
-//│             this.pc$0 = 2;
-//│             continue contLoop;
-//│           }
-//│           this.pc$0 = 2;
-//│           continue contLoop;
-//│         } else {
-//│           if (this.pc$0 === 2) {
-//│             return this.res$0;
-//│           }
-//│         }
-//│         break;
-//│       }
-//│     }
-//│     toString() { return "Cont$468$f"; }
-//│   }
-//│   x = 1;
-//│   function g() {
-//│     let y;
-//│     class Cont$469$g {
-//│       constructor() {
-//│         
-//│       }
-//│       resume(value$) {
-//│         contLoop: while (true) {
-//│           if (this.pc$0 === 1) {
-//│             this.y$0 = 2;
-//│             return x;
-//│           }
-//│           break;
-//│         }
-//│       }
-//│       toString() { return "Cont$469$g"; }
-//│     }
-//│     y = 2;
-//│     return x;
-//│   }
-//│   res = g();
-//│   if (res) {
-//│     if (res.isCont$) {
-//│       tmp = new Cont$468$f(2, undefined);
-//│       tmp.pc$0 = 2;
-//│       tmp.isCont$ = true;
-//│       res.tail.next = tmp;
-//│       res.tail = tmp;
-//│       return res;
-//│     }
-//│   }
-//│   return res;
-//│ }
-//│ undefined
+// stack safe recursion
+:fixme
+:expect 5050
+class StackDelay(raise: () -> ())
+handle h = StackDelay with
+  fun raise(k) =
+    print("stack unwinded")
+    k(10)
+fun sum(depth, x) =
+  val new_depth = if depth > 30 then h.raise() else depth + 1
+  if x != 0 then
+    x + sum(new_depth, x - 1)
+  else 0
+let result = sum(0, 100)
+result
+//│ > stack unwinded
+//│ ═══[RUNTIME ERROR] Expected: 5050, got: '100999897969594939291908988878685848382818079787776757473727170Cont$(undefined, false, Cont$714$sum, true)'
