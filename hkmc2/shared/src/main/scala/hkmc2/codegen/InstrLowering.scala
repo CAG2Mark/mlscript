@@ -19,6 +19,7 @@ import hkmc2.syntax.Keyword.`val`
 import sem.Elaborator.Ctx.globalThisSymbol
 
 import scala.collection.mutable.Map as MutMap
+import scala.collection.mutable.Set as MutSet
 
 object InstrLowering:
   extension (k: Block => Block)
@@ -126,21 +127,23 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       tmp
   private val freshId = FreshId()
 
+  type StateId = BigInt
+
   // id: the id of the current state
   // blk: the block of code within this state
   // sym: the variable to which the resumed value should set
-  class BlockState(val id: BigInt, val blk: Block, val sym: Opt[Local])
+  class BlockState(val id: StateId, val blk: Block, val sym: Opt[Local])
 
   // Note: can construct StateTransition and pattern match on it as if it were a case class
   object StateTransition:
-    def apply(uid: BigInt) = Return(Call(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(uid)))), false)
+    def apply(uid: StateId) = Return(Call(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(uid)))), false)
     def unapply(blk: Block) = blk match
       case Return(Call(Value.Ref(`transitionSymbol`), List(Value.Lit(Tree.IntLit(uid)))), false) if uid >= 0 =>
         S(uid)
       case _ => N 
 
   object Separation:
-    def apply(res: Local, uid: BigInt, rest: Block) =
+    def apply(res: Local, uid: StateId, rest: Block) =
       Assign(res, Call(Value.Ref(separationSymbol), List(Value.Lit(Tree.IntLit(uid)))), rest)
     def unapply(blk: Block) = blk match
       case Assign(res, Call(Value.Ref(`separationSymbol`), List(Value.Lit(Tree.IntLit(uid)))), rest) => 
@@ -148,7 +151,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       case _ => None
   
   extension (k: Block => Block)
-    def separation(res: Local, uid: BigInt): Block => Block = b => k(Separation(res, uid, b))
+    def separation(res: Local, uid: StateId): Block => Block = b => k(Separation(res, uid, b))
   private def blockBuilder: Block => Block = identity
 
   object FnEnd:
@@ -188,13 +191,13 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
   state 2:
     x2 + 2
   */
-  def partitionBlock(blk: Block, labelIds: Map[Symbol, (BigInt, BigInt)] = Map.empty): Ls[BlockState] = 
+  def partitionBlock(blk: Block, labelIds: Map[Symbol, (StateId, StateId)] = Map.empty): Ls[BlockState] = 
     // for readability :)
     case class PartRet(head: Block, states: Ls[BlockState])
 
     // Note: can construct StateTransition and pattern match on it as if it were a case class
     object StateTransition:
-      def apply(uid: BigInt) = Return(Call(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(uid)))), false)
+      def apply(uid: StateId) = Return(Call(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(uid)))), false)
       def unapply(blk: Block) = blk match
         case Return(Call(Value.Ref(`transitionSymbol`), List(Value.Lit(Tree.IntLit(uid)))), false) =>
           S(uid)
@@ -233,21 +236,21 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
           value
 
     // returns (truncated input block, child block states)
-    // TODO: replace Call pattern with special EffectfulCall pattern when Anson adds that
-    // TODO: don't split within Labels when not needed, ideally keep it intact. Need careful analysis for this
+    // TODO: don't split within Match, Begin and Labels when not needed, ideally keep it intact. Need careful analysis for this
     // blk: The block to transform
     // labelIds: maps label IDs to the state at the start of the label and the state after the label
     // jumpTo: what state End should jump to, if at all 
     // freshState: uid generator
-    def go(blk: Block)(implicit labelIds: Map[Symbol, (BigInt, BigInt)], afterEnd: Option[BigInt]): PartRet = blk match
+    def go(blk: Block)(implicit labelIds: Map[Symbol, (StateId, StateId)], afterEnd: Option[StateId]): PartRet = blk match
       case Separation(result, uid, rest) =>
         val PartRet(head, states) = go(rest)
         PartRet(StateTransition(uid), BlockState(uid, head, S(result)) :: states)
 
       case Match(scrut, arms, dflt, rest) => 
         val restParts = go(rest)
-        // TODO: If restParts is a StateTransition, we can avoid creating a new state here
-        val restId = freshId()
+        val restId: StateId = restParts.head match
+          case StateTransition(uid) => uid
+          case _ => freshId()
         
         val armsParts = arms.map((cse, blkk) => (cse, go(blkk)(afterEnd = S(restId))))
         val dfltParts = dflt.map(blkk => go(blkk)(afterEnd = S(restId)))
@@ -260,10 +263,17 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
 
         val newArms = armsParts.map((cse, partRet) => (cse, partRet.head))
         
-        PartRet(
-          Match(scrut, newArms, dfltParts.map(_.head), StateTransition(restId)),
-          BlockState(restId, restParts.head, N) :: states
-        )
+        restParts.head match
+          case StateTransition(_) =>
+            PartRet(
+              Match(scrut, newArms, dfltParts.map(_.head), StateTransition(restId)),
+              states
+            )
+          case _ =>
+            PartRet(
+              Match(scrut, newArms, dfltParts.map(_.head), StateTransition(restId)),
+              BlockState(restId, restParts.head, N) :: states
+            )
         
       case Return(c: Call, implct) => 
         // note: this is a tail-call, this case should eventually become impossible when there is a tail call optimizer
@@ -276,14 +286,26 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
         PartRet(blk, BlockState(nextState, retBlk, N) :: Nil)
       case l @ Label(label, body, rest) =>
         val startId = freshId() // start of body
-        val endId = freshId() // start of rest
+
+        val PartRet(restNew, restParts) = go(rest)
+
+        val endId: StateId = restNew match // start of rest
+          case StateTransition(uid) => uid 
+          case _ => freshId()
 
         val PartRet(bodyNew, parts) = go(body)(using labelIds + (label -> (startId, endId)), S(endId))
-        val PartRet(restNew, restParts) = go(rest)
-        PartRet(
-          StateTransition(startId), 
-          BlockState(startId, bodyNew, N) :: BlockState(endId, restNew, N) :: parts ::: restParts
-        )
+        
+        restNew match
+          case StateTransition(_) =>
+            PartRet(
+              StateTransition(startId), 
+              BlockState(startId, bodyNew, N) :: parts ::: restParts
+            )
+          case _ =>
+            PartRet(
+              StateTransition(startId), 
+              BlockState(startId, bodyNew, N) :: BlockState(endId, restNew, N) :: parts ::: restParts
+            )
 
       case Break(label, toBeginning) =>
         val (start, end) = labelIds.get(label) match
@@ -300,12 +322,16 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
           PartRet(StateTransition(end), Nil)
         
       case Begin(sub, rest) => 
-        // TODO: Same comment as in Match
-        val restId = freshId()
-        val PartRet(subNew, subParts) = go(sub)(afterEnd = S(restId))
         val PartRet(restNew, restParts) = go(rest)
-        
-        PartRet(subNew, BlockState(restId, restNew, N) :: subParts ::: restParts)
+        restNew match
+          case StateTransition(uid) => 
+            val PartRet(subNew, subParts) = go(sub)(afterEnd = S(uid))
+            PartRet(subNew, subParts ::: restParts)
+          case _ =>
+            val restId = freshId()
+            val PartRet(subNew, subParts) = go(sub)(afterEnd = S(restId))
+            PartRet(subNew, BlockState(restId, restNew, N) :: subParts ::: restParts)
+
       case Define(defn, rest) => 
         val PartRet(head, parts) = go(rest)
         PartRet(Define(defn, head), parts)
@@ -326,8 +352,8 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
 
     val headId = freshId()
 
-    val ret = go(blk)(using labelIds, N)
-    BlockState(headId, ret.head, N) :: ret.states
+    val result = go(blk)(using labelIds, N)
+    BlockState(headId, result.head, N) :: result.states
   
   val localsMap: MutMap[Local, TermSymbol] = MutMap()
   private val freshFieldId = freshId()
