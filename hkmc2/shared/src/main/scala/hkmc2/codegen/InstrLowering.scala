@@ -162,8 +162,18 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
         Some(res, uid, rest)
       case _ => None
   
+  object ReturnCont:
+    private val returnContSymbol = freshTmp("returnCont")
+    def apply(res: Local, rest: Block) =
+      Assign(res, Call(Value.Ref(returnContSymbol), List()), rest)
+    def unapply(blk: Block) = blk match
+      case Assign(res, Call(Value.Ref(`returnContSymbol`), List()), rest) => 
+        Some(res, rest)
+      case _ => None
+  
   extension (k: Block => Block)
     def separation(res: Local, uid: StateId): Block => Block = b => k(Separation(res, uid, b))
+    def returnCont(res: Local): Block => Block = b => k(ReturnCont(res, b))
   private def blockBuilder: Block => Block = identity
 
   object FnEnd:
@@ -492,16 +502,21 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       Tree.Ident("Cont$" + summon[Elaborator.State].nextUid + "$" + sym.map((sym: BlockMemberSymbol) => sym.nme).getOrElse(""))
     )
 
-  def removeSeparation(blk: Block): Block = blk match
-    case Separation(_, _, blk) => removeSeparation(blk)
-    case _ => blk.mapChildBlocks(removeSeparation)
+  def removeMarkers(blk: Block): Block = blk match
+    case Separation(_, _, blk) => removeMarkers(blk)
+    case ReturnCont(_, blk) => removeMarkers(blk)
+    case _ => blk.mapChildBlocks(removeMarkers)
   
   def instrumentBlock(sym: ClassSymbol, body: Block, locals: Set[Symbol], preTransform: Opt[Block => Block]): Block =
+    def rmR(blk: Block): Block = blk match
+      case ReturnCont(_, blk) => rmR(blk)
+      case _ => blk.mapChildBlocks(rmR)
+    
     val curClass = preTransform match
-      case N => createContClass(sym, body, Nil)
-      case S(transform) => createContClass(sym, transform(body), Nil)
+      case N => createContClass(sym, rmR(body), Nil)
+      case S(transform) => createContClass(sym, transform(rmR(body)), Nil)
     sym.defn = S(ClassDef(N, syntax.Cls, sym, Nil, N, ObjBody(st.Blk(Nil, Term.Lit(Tree.UnitLit(true))))))
-    Define(curClass, removeSeparation(body))
+    Define(curClass, removeMarkers(body))
 
   override def term(t: st)(k: Result => Block)(using Subst): Block =
     t match
@@ -642,7 +657,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
             Value.Ref(res), // here, res is either undefined or continuation so actually only need to check against undefined
             Case.Lit(Tree.BoolLit(true)) -> Match(
               Select(Value.Ref(res), Tree.Ident("isCont$")), // TODO: isCont$ hack
-              Case.Lit(Tree.BoolLit(true)) -> handlerCtx.linkAndHandle(uid, Value.Ref(res), tmp, getContLocalSymbol) :: Nil,
+              Case.Lit(Tree.BoolLit(true)) -> ReturnCont(res, handlerCtx.linkAndHandle(uid, Value.Ref(res), tmp, getContLocalSymbol)) :: Nil,
               N,
               End()
             ) :: Nil,
@@ -687,6 +702,6 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
           .end()
       ))
       .rest(
-        removeSeparation(super.topLevel(Blk(/*effectSigDef :: */contDef :: t :: Nil, st.Lit(Tree.UnitLit(true)))))
+        removeMarkers(super.topLevel(Blk(/*effectSigDef :: */contDef :: t :: Nil, st.Lit(Tree.UnitLit(true)))))
       )
     
