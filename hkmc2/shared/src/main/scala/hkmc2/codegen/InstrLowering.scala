@@ -415,7 +415,11 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     // NOTE: Symbols already replaced
     // TODO: set program counter when returning continuation
     def transformPart(blk: Block): Block = blk match
-      case ReturnCont(res, rest) => ???
+      case ReturnCont(res, uid, rest) =>
+        blockBuilder
+          .assignField(Select(Value.Ref(res), Tree.Ident("tail")), Tree.Ident("next"), Value.Ref(cls))
+          .assign(pcSymbol, Value.Lit(Tree.IntLit(uid)))
+          .ret(Value.Ref(res), false)
       case StateTransition(uid) =>
         blockBuilder
           .assign(pcSymbol, Value.Lit(Tree.IntLit(uid)))
@@ -514,7 +518,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       case _ => blk.mapChildBlocks(rmR)
     
     val curClass = preTransform match
-      case N => createContClass(sym, rmR(body), Nil)
+      case N => createContClass(sym, body, Nil)
       case S(transform) => createContClass(sym, transform(body), Nil)
     sym.defn = S(ClassDef(N, syntax.Cls, sym, Nil, N, ObjBody(st.Blk(Nil, Term.Lit(Tree.UnitLit(true))))))
     Define(curClass, removeMarkers(body))
