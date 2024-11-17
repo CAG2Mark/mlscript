@@ -513,10 +513,6 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     case _ => blk.mapChildBlocks(removeMarkers)
   
   def instrumentBlock(sym: ClassSymbol, body: Block, locals: Set[Symbol], preTransform: Opt[Block => Block]): Block =
-    def rmR(blk: Block): Block = blk match
-      case ReturnCont(_, _, blk) => rmR(blk)
-      case _ => blk.mapChildBlocks(rmR)
-    
     val curClass = preTransform match
       case N => createContClass(sym, body, Nil)
       case S(transform) => createContClass(sym, transform(body), Nil)
