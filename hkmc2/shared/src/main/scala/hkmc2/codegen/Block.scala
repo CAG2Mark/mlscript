@@ -78,9 +78,7 @@ sealed abstract class Block extends Product with AutoLocated:
 
   def mapLocals(f: Local => Local): Block = this match
     case Match(scrut, arms, dflt, rest) => 
-      val newScrut = scrut match
-        case Value.Ref(l) => Value.Ref(f(l))
-        case _ => scrut
+      val newScrut = scrut.mapLocals(f)
       val newArms = arms.map((c, b) => (c, b.mapLocals(f)))
       Match(newScrut, newArms, dflt.map(_.mapLocals(f)), rest.mapLocals(f))
     case Return(res, implct) => Return(res.mapLocals(f), implct)

@@ -50,7 +50,8 @@ object InstrLowering:
         .assign(tmp, Instantiate(contClasses.head, Value.Lit(Tree.IntLit(pc)) :: Value.Lit(Tree.UnitLit(true)) :: Nil))
         .assignField(Value.Ref(tmp), Tree.Ident("pc$0"), Value.Lit(Tree.IntLit(pc)))
         .assignField(Value.Ref(tmp), Tree.Ident("isCont$"), Value.Lit(Tree.BoolLit(true)))
-        .assignField(res, Tree.Ident("next"), Value.Ref(tmp))
+        .assignField(Select(res, Tree.Ident("tail")), Tree.Ident("next"), Value.Ref(tmp))
+        .assignField(res, Tree.Ident("tail"), Value.Ref(tmp))
         .rest(k(res))
     def handleScoped(contClass: BlockMemberSymbol, handler: Result => Block)(scope: => Block): (Set[Local], Block) =
       handlers ::= handler
@@ -510,8 +511,8 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
           
           val mkHandler: Path => Value.Lam = (sym: Path) => Value.Lam(realParams,
             blockBuilder
-              .assign(cont, instCont(idFunc))
-              .assignField(Value.Ref(cont), Tree.Ident("last"), Value.Ref(cont))
+              .assign(cont, instCont(Value.Lit(Tree.UnitLit(true))))
+              .assignField(Value.Ref(cont), Tree.Ident("tail"), Value.Ref(cont))
               .assignField(Value.Ref(cont), Tree.Ident("handler"), Value.Ref(lhs))
               .assignField(Value.Ref(cont), Tree.Ident("handlerFun"), sym)
               .assignField(Value.Ref(cont), Tree.Ident("params"), Value.Arr(realParams.map(p => Value.Ref(p.sym))))
@@ -561,7 +562,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
                       .rest(Match(
                         Value.Ref(tmp),
                         Case.Lit(Tree.BoolLit(true)) -> blockBuilder
-                          .assign(resumeLocal, Call(Value.Ref(resumeSym), Value.Ref(cur) :: Nil))
+                          .assign(resumeLocal, Call(Value.Ref(resumeSym), Select(Value.Ref(cur), Tree.Ident("next")) :: Nil))
                           .assign(tmp, Call(Select(Select(Value.Ref(cur), Tree.Ident("params")), Tree.Ident("push")), Value.Ref(resumeLocal) :: Nil))
                           .assign(cur, Call(
                             Select(Select(Value.Ref(cur), Tree.Ident("handlerFun")), Tree.Ident("apply")),
@@ -596,7 +597,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
             // Case.Cls(contSym, contTrm) -> handlerCtx.linkAndHandle(uid, Value.Ref(res)) :: Nil,
             // N,
             // Separation(res, uid, k(Value.Ref(res)))
-            Value.Ref(res),
+            Value.Ref(res), // here, res is either undefined or continuation so actually only need to check against undefined
             Case.Lit(Tree.BoolLit(true)) -> Match(
               Select(Value.Ref(res), Tree.Ident("isCont$")), // TODO: isCont$ hack
               Case.Lit(Tree.BoolLit(true)) -> handlerCtx.linkAndHandle(uid, Value.Ref(res), tmp) :: Nil,
