@@ -253,121 +253,15 @@ fun f() =
   2
 
 :expect 120
-:sjs
-fun fact(factvalue) = 
+class Eff(get: () -> Int)
+fun fact(e, factvalue) = 
   if factvalue != 0 then
-    factvalue * fact(factvalue-1)
-  else 1
-let result = fact(5)
+    factvalue * fact(e, factvalue-1)
+  else e.get()
+handle h = Eff with
+  fun get(k) = k(1)
+let result = fact(h, 5)
 result
-//│ JS:
-//│ let res;
-//│ function resume$(cont) {
-//│   return (value) => {
-//│     let cont1, value1;
-//│     cont1 = cont;
-//│     value1 = value;
-//│     chainLoop: while (true) {
-//│       if (cont1) {
-//│         value1 = cont1.resume(value1);
-//│         cont1 = cont1.next;
-//│         continue chainLoop;
-//│       }
-//│       return value1;
-//│       break;
-//│     }
-//│   };
-//│ }
-//│ this.Cont$ = function Cont$(resume1, resumed1, next1, isCont$1) { return new Cont$.class(resume1, resumed1, next1, isCont$1); };
-//│ this.Cont$.class = class Cont$ {
-//│   constructor(resume, resumed, next, isCont$) {
-//│     this.resume = resume;
-//│     this.resumed = resumed;
-//│     this.next = next;
-//│     this.isCont$ = isCont$;
-//│     
-//│   }
-//│   toString() { return "Cont$(" + this.resume + ", " + this.resumed + ", " + this.next + ", " + this.isCont$ + ")"; }
-//│ };
-//│ function fact(factvalue) {
-//│   let scrut, res1, tmp, tmp1;
-//│   class Cont$613$fact {
-//│     constructor() {
-//│       
-//│     }
-//│     resume(value$) {
-//│       let tmp2;
-//│       if (this.pc$0 === 1) {
-//│         this.res$0 = value$;
-//│       } else {
-//│       }
-//│       contLoop: while (true) {
-//│         if (this.pc$0 === 2) {
-//│           this.scrut$0 = factvalue != 0;
-//│           if (this.scrut$0) {
-//│             this.tmp$0 = factvalue - 1;
-//│             this.res$0 = globalThis.fact(this.tmp$0);
-//│             if (this.res$0) {
-//│               if (this.res$0.isCont$) {
-//│                 this.tmp$0 = new Cont$613$fact(1, undefined);
-//│                 this.tmp$0.pc$0 = 1;
-//│                 this.tmp$0.isCont$ = true;
-//│                 this.res$0.tail.next = this.tmp$0;
-//│                 this.res$0.tail = this.tmp$0;
-//│                 return this.res$0;
-//│               }
-//│               this.pc$0 = 1;
-//│               continue contLoop;
-//│             }
-//│             this.pc$0 = 1;
-//│             continue contLoop;
-//│           } else {
-//│             return 1;
-//│           }
-//│           break contLoop;
-//│         } else {
-//│           if (this.pc$0 === 1) {
-//│             tmp2 = factvalue * this.res$0;
-//│             this.pc$0 = 3;
-//│             continue contLoop;
-//│           } else {
-//│             if (this.pc$0 === 3) {
-//│               return tmp2;
-//│             }
-//│           }
-//│         }
-//│         break;
-//│       }
-//│     }
-//│     toString() { return "Cont$613$fact"; }
-//│   }
-//│   scrut = factvalue != 0;
-//│   if (scrut) {
-//│     tmp1 = factvalue - 1;
-//│     res1 = globalThis.fact(tmp1);
-//│     if (res1) {
-//│       if (res1.isCont$) {
-//│         tmp = new Cont$613$fact(1, undefined);
-//│         tmp.pc$0 = 1;
-//│         tmp.isCont$ = true;
-//│         res1.tail.next = tmp;
-//│         res1.tail = tmp;
-//│         return res1;
-//│       }
-//│     }
-//│     return factvalue * res1;
-//│   } else {
-//│     return 1;
-//│   }
-//│ }
-//│ res = this.fact(5);
-//│ if (res) {
-//│   if (res.isCont$) {
-//│     throw new this.Error("Unhandled effects");
-//│   }
-//│ }
-//│ this.result = res;
-//│ undefined
 //│ result = 120
 
 // stack safe recursion
@@ -403,4 +297,4 @@ fun sum(depth, x) =
 let result = sum(0, 100)
 result
 //│ > stack unwinded
-//│ ═══[RUNTIME ERROR] Expected: 5050, got: '100999897969594939291908988878685848382818079787776757473727170Cont$(undefined, false, Cont$732$sum, true)'
+//│ ═══[RUNTIME ERROR] Expected: 5050, got: '100999897969594939291908988878685848382818079787776757473727170Cont$(undefined, false, Cont$755$sum, true)'
