@@ -610,7 +610,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
                       .rest(Match(
                         Value.Ref(tmp),
                         Case.Lit(Tree.BoolLit(true)) -> blockBuilder
-                          .assign(resumeLocal, Call(Value.Ref(resumeSym), Select(Value.Ref(cur), Tree.Ident("next")) :: Nil))
+                          .assign(resumeLocal, Call(Value.Ref(resumeSym), Select(Value.Ref(cur), Tree.Ident("next")) :: Select(Value.Ref(cur), Tree.Ident("tail")) :: Nil))
                           .assign(tmp, Call(Select(Select(Value.Ref(cur), Tree.Ident("params")), Tree.Ident("push")), Value.Ref(resumeLocal) :: Nil))
                           .assign(cur, Call(
                             Select(Select(Value.Ref(cur), Tree.Ident("handlerFun")), Tree.Ident("apply")),
@@ -664,13 +664,14 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
 
   override def topLevel(t: st): Block =
     val contParamSym = VarSymbol(Tree.Ident("cont"), -1)
+    val tailParamSym = VarSymbol(Tree.Ident("tail"), -1)
     val valueParamSym = VarSymbol(Tree.Ident("value"), -1)
     val contSym = freshTmp("cont")
     val valueSym = freshTmp("value")
     val lblChain = freshTmp("chainLoop")
     blockBuilder
       .define(FunDefn(resumeSym,
-        ParamList(ParamListFlags.empty, Param(FldFlags.empty, contParamSym, N) :: Nil) ::
+        ParamList(ParamListFlags.empty, Param(FldFlags.empty, contParamSym, N) :: Param(FldFlags.empty, tailParamSym, N) :: Nil) ::
           ParamList(ParamListFlags.empty, Param(FldFlags.empty, valueParamSym, N) :: Nil) :: Nil,
         blockBuilder
           .assign(contSym, Value.Ref(contParamSym))
@@ -683,6 +684,19 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
               Value.Ref(contSym),
               Case.Lit(Tree.BoolLit(true)) -> blockBuilder
                 .assign(valueSym, Call(Select(Value.Ref(contSym), Tree.Ident("resume")), Value.Ref(valueSym) :: Nil))
+                .chain(Match(
+                  Value.Ref(valueSym),
+                  Case.Lit(Tree.BoolLit(true)) -> Match(
+                    Select(Value.Ref(valueSym), Tree.Ident("isCont$")),
+                    Case.Lit(Tree.BoolLit(true)) -> blockBuilder
+                      .assignField(Value.Ref(valueSym), Tree.Ident("tail"), Value.Ref(tailParamSym))
+                      .ret(Value.Ref(valueSym), false) :: Nil,
+                    N,
+                    End()
+                  ) :: Nil,
+                  N,
+                  _
+                ))
                 .assign(contSym, Select(Value.Ref(contSym), Tree.Ident("next")))
                 .continue(lblChain) :: Nil,
               N,

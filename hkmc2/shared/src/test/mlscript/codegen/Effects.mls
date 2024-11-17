@@ -17,7 +17,7 @@
 abstract class Effect[A] with
   fun perform(x: A): Str -> Str
 //│ JS:
-//│ function resume$(cont) {
+//│ function resume$(cont, tail) {
 //│   return (value) => {
 //│     let cont1, value1;
 //│     cont1 = cont;
@@ -25,6 +25,12 @@ abstract class Effect[A] with
 //│     chainLoop: while (true) {
 //│       if (cont1) {
 //│         value1 = cont1.resume(value1);
+//│         if (value1) {
+//│           if (value1.isCont$) {
+//│             value1.tail = tail;
+//│             return value1;
+//│           }
+//│         }
 //│         cont1 = cont1.next;
 //│         continue chainLoop;
 //│       }
@@ -96,19 +102,26 @@ r
 //│ > hi
 //│ r = 'hi'
 
-:expect 'hello'
+:expect 'hello5'
 class Effect[A](perform: Str -> Str)
 val r = handle h = Effect with
   fun perform(arg, k) =
+    let v = k(arg)
     print(arg)
-    k(arg)
+    v
 in
-  h.perform("hi")
-  h.perform("hello")
+  h.perform("hello1")
+  h.perform("hello2")
+  h.perform("hello3")
+  h.perform("hello4")
+  h.perform("hello5")
 r
-//│ > hi
-//│ > hello
-//│ r = 'hello'
+//│ > hello1
+//│ > hello2
+//│ > hello3
+//│ > hello4
+//│ > hello5
+//│ r = 'hello5'
 
 :expect 'b'
 class Effect[A](perform: Str -> Str)
@@ -129,17 +142,8 @@ class Effect[A](perform: Str -> Str)
 fun foo(h) =
   print("Entering foo")
   let result = h.perform("Hello")
+  h.perform("?")
   print("Exiting foo")
-  result
-fun bar(h) =
-  print("Entering bar")
-  let result = foo(h) + " World"
-  print("Exiting bar")
-  result
-fun foobar(h) =
-  print("Entering foobar")
-  let result = bar(h) + "!"
-  print("Exiting foobar")
   result
 val x = handle h = Effect with
   fun perform(arg, k) =
@@ -149,19 +153,17 @@ val x = handle h = Effect with
     result
 in
   print("mainbody start")
-  let result = foobar(h)
+  let result = foo(h) + " World!"
   print("mainbody end")
   result
 x
 //│ > mainbody start
-//│ > Entering foobar
-//│ > Entering bar
 //│ > Entering foo
 //│ > handler called
+//│ > handler called
 //│ > Exiting foo
-//│ > Exiting bar
-//│ > Exiting foobar
 //│ > mainbody end
+//│ > handler finished
 //│ > handler finished
 //│ x = 'Hello World!'
 
@@ -201,11 +203,15 @@ x
 //│ > Entering bar
 //│ > Entering foo
 //│ > handler called
+//│ > handler called
+//│ > Exiting foo
 //│ > Exiting bar
 //│ > Exiting foobar
 //│ > mainbody end
 //│ > handler finished
-//│ ═══[RUNTIME ERROR] Expected: 'Hello World!', got: 'Cont$(undefined, false, Cont$409$foo, true) World!'
+//│ > handler finished
+//│ x = 'Hello World!'
+//│ FAILURE: Unexpected lack of error to fix
 
 :fixme
 :expect 1
@@ -224,6 +230,7 @@ in
   m = h.getVal()
 k + m
 //│ ═══[RUNTIME ERROR] Expected: 1, got: 0
+//│ m = 1
 //│ x = 1
 
 // weird...?
@@ -281,19 +288,16 @@ result
 //│ result = 5050
 
 // stack safe recursion
-:fixme
-:expect 5050
+:expect 50005000
 class StackDelay(raise: () -> Int)
 handle h = StackDelay with
   fun raise(k) =
-    print("stack unwinded")
     k(10)
 fun sum(depth, x) =
   val new_depth = if depth > 30 then h.raise() else depth + 1
   if x != 0 then
     x + sum(new_depth, x - 1)
   else 0
-let result = sum(0, 100)
+let result = sum(0, 10000)
 result
-//│ > stack unwinded
-//│ ═══[RUNTIME ERROR] Expected: 5050, got: '100999897969594939291908988878685848382818079787776757473727170Cont$(undefined, false, Cont$752$sum, true)'
+//│ result = 50005000
