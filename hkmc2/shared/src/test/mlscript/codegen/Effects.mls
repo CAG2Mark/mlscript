@@ -273,29 +273,42 @@ result
 class StackDelay(raise: () -> ())
 handle h = StackDelay with
   fun raise(k) =
-    print("stack unwinded")
+    // console.trace("Stack unwinded!")
     k(10)
 fun sum(depth, x) =
-  val new_depth = if depth > 70 then h.raise() else depth + 1
+  val new_depth = if depth > 70 then
+    // console.trace("Too deep, heapifying the stack")
+    h.raise()
+  else
+    depth + 1
   if x != 0 then
     x + sum(new_depth, x - 1)
   else 0
 let result = sum(0, 100)
 result
-//│ > stack unwinded
 //│ result = 5050
 
 // stack safe recursion
-:expect 50005000
+:expect 450015000
 class StackDelay(raise: () -> Int)
 handle h = StackDelay with
-  fun raise(k) =
+  fun raise(k) = // TODO: This should codegen to a simple return without instrumentation
     k(10)
 fun sum(depth, x) =
-  val new_depth = if depth > 30 then h.raise() else depth + 1
+  val new_depth = if depth > 4000 then h.raise() else depth + 1
   if x != 0 then
     x + sum(new_depth, x - 1)
   else 0
-let result = sum(0, 10000)
+let result = sum(0, 30000)
 result
-//│ result = 50005000
+//│ result = 450015000
+
+:re
+fun sum(x) =
+  if x != 0 then
+    x + sum(x - 1)
+  else 0
+let result = sum(10000)
+result
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+//│ result = 450015000
