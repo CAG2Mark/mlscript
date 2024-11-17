@@ -296,16 +296,6 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
               Match(scrut, newArms, dfltParts.map(_.head), StateTransition(restId)),
               BlockState(restId, restParts.head, N) :: states
             )
-        
-      case Return(c: Call, implct) => 
-        // note: this is a tail-call, this case should eventually become impossible when there is a tail call optimizer
-        val t = freshTmp()
-        val nextState = freshId()
-        val blk = Assign(t, c, StateTransition(nextState))
-
-        val retBlk = Return(Value.Ref(t), false)
-
-        PartRet(blk, BlockState(nextState, retBlk, N) :: Nil)
       case l @ Label(label, body, rest) =>
         val startId = freshId() // start of body
 
