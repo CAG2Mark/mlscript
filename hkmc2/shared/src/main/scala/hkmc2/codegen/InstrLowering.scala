@@ -164,16 +164,16 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
   
   object ReturnCont:
     private val returnContSymbol = freshTmp("returnCont")
-    def apply(res: Local, rest: Block) =
-      Assign(res, Call(Value.Ref(returnContSymbol), List()), rest)
+    def apply(res: Local, uid: StateId, rest: Block) =
+      Assign(res, Call(Value.Ref(returnContSymbol), List(Value.Lit(Tree.IntLit(uid)))), rest)
     def unapply(blk: Block) = blk match
-      case Assign(res, Call(Value.Ref(`returnContSymbol`), List()), rest) => 
-        Some(res, rest)
+      case Assign(res, Call(Value.Ref(`returnContSymbol`), List(Value.Lit(Tree.IntLit(uid)))), rest) => 
+        Some(res, uid, rest)
       case _ => None
   
   extension (k: Block => Block)
     def separation(res: Local, uid: StateId): Block => Block = b => k(Separation(res, uid, b))
-    def returnCont(res: Local): Block => Block = b => k(ReturnCont(res, b))
+    def returnCont(res: Local, uid: StateId): Block => Block = b => k(ReturnCont(res, uid, b))
   private def blockBuilder: Block => Block = identity
 
   object FnEnd:
@@ -505,12 +505,12 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
 
   def removeMarkers(blk: Block): Block = blk match
     case Separation(_, _, blk) => removeMarkers(blk)
-    case ReturnCont(_, blk) => removeMarkers(blk)
+    case ReturnCont(_, _, blk) => removeMarkers(blk)
     case _ => blk.mapChildBlocks(removeMarkers)
   
   def instrumentBlock(sym: ClassSymbol, body: Block, locals: Set[Symbol], preTransform: Opt[Block => Block]): Block =
     def rmR(blk: Block): Block = blk match
-      case ReturnCont(_, blk) => rmR(blk)
+      case ReturnCont(_, _, blk) => rmR(blk)
       case _ => blk.mapChildBlocks(rmR)
     
     val curClass = preTransform match
@@ -658,7 +658,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
             Value.Ref(res), // here, res is either undefined or continuation so actually only need to check against undefined
             Case.Lit(Tree.BoolLit(true)) -> Match(
               Select(Value.Ref(res), Tree.Ident("isCont$")), // TODO: isCont$ hack
-              Case.Lit(Tree.BoolLit(true)) -> ReturnCont(res, handlerCtx.linkAndHandle(uid, Value.Ref(res), tmp, getContLocalSymbol)) :: Nil,
+              Case.Lit(Tree.BoolLit(true)) -> ReturnCont(res, uid, handlerCtx.linkAndHandle(uid, Value.Ref(res), tmp, getContLocalSymbol)) :: Nil,
               N,
               End()
             ) :: Nil,
