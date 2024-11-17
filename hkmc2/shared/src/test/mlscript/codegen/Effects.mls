@@ -123,35 +123,6 @@ x
 //│ > t
 //│ x = 'b'
 
-:expect 'Hello World!'
-class Effect[A](perform: Str -> Str)
-fun foo(h) =
-  print("Entering foo")
-  h.perform("Hello")
-fun bar(h) =
-  print("Entering bar")
-  foo(h) + " World"
-fun foobar(h) =
-  print("Entering foobar")
-  foo(h) + "!"
-val x = handle h = Effect with
-  fun perform(arg, k) =
-    print("handler called")
-    val result = k(arg)
-    print("handler finished")
-    result
-in
-  print("mainbody start")
-  foobar(h)
-x
-//│ > mainbody start
-//│ > Entering foobar
-//│ > Entering foo
-//│ > handler called
-//│ > handler finished
-//│ FAILURE: Unexpected runtime error
-//│ ═══[RUNTIME ERROR] Expected: 'Hello World!', got: 'Hello!'
-
 // TODO: val is not working
 :expect 'Hello World!'
 class Effect[A](perform: Str -> Str)
@@ -234,7 +205,7 @@ x
 //│ > Exiting foobar
 //│ > mainbody end
 //│ > handler finished
-//│ ═══[RUNTIME ERROR] Expected: 'Hello World!', got: 'Cont$(undefined, false, Cont$490$foo, true) World!'
+//│ ═══[RUNTIME ERROR] Expected: 'Hello World!', got: 'Cont$(undefined, false, Cont$400$foo, true) World!'
 
 :fixme
 :expect 1
@@ -289,3 +260,38 @@ fun fact(factvalue) =
 let result = fact(5)
 result
 //│ result = 120
+
+// stack safe recursion
+:expect 5050
+class StackDelay(raise: () -> ())
+handle h = StackDelay with
+  fun raise(k) =
+    print("stack unwinded")
+    k(10)
+fun sum(depth, x) =
+  val new_depth = if depth > 70 then h.raise() else depth + 1
+  if x != 0 then
+    x + sum(new_depth, x - 1)
+  else 0
+let result = sum(0, 100)
+result
+//│ > stack unwinded
+//│ result = 5050
+
+// stack safe recursion
+:fixme
+:expect 5050
+class StackDelay(raise: () -> ())
+handle h = StackDelay with
+  fun raise(k) =
+    print("stack unwinded")
+    k(10)
+fun sum(depth, x) =
+  val new_depth = if depth > 30 then h.raise() else depth + 1
+  if x != 0 then
+    x + sum(new_depth, x - 1)
+  else 0
+let result = sum(0, 100)
+result
+//│ > stack unwinded
+//│ ═══[RUNTIME ERROR] Expected: 5050, got: '100999897969594939291908988878685848382818079787776757473727170Cont$(undefined, false, Cont$714$sum, true)'
