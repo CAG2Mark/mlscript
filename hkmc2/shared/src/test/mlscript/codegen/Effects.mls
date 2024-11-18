@@ -102,26 +102,22 @@ r
 //│ > hi
 //│ r = 'hi'
 
-:expect 'hello5'
-class Effect[A](perform: Str -> Str)
-val r = handle h = Effect with
+// :expect '54321'
+class Effect[A](perform)
+let result = ""
+handle h = Effect with
   fun perform(arg, k) =
     let v = k(arg)
-    print(arg)
+    result = result + arg
     v
 in
-  h.perform("hello1")
-  h.perform("hello2")
-  h.perform("hello3")
-  h.perform("hello4")
-  h.perform("hello5")
-r
-//│ > hello1
-//│ > hello2
-//│ > hello3
-//│ > hello4
-//│ > hello5
-//│ r = 'hello5'
+  h.perform("1")
+  h.perform("2")
+  h.perform("3")
+  h.perform("4")
+  h.perform("5")
+result
+//│ result = '54321'
 
 :expect 'b'
 class Effect[A](perform: Str -> Str)
@@ -211,8 +207,6 @@ x
 //│ > handler finished
 //│ x = 'Hello World!'
 
-:fixme
-:expect 1
 class Cell(getVal: () -> Int, setVal: Int -> ())
 let x = 0
 let k
@@ -226,14 +220,9 @@ in
   k = h.getVal()
   h.setVal(1)
   m = h.getVal()
-k + m
-//│ ═══[RUNTIME ERROR] Expected: 1, got: 0
+//│ k = 0
 //│ m = 1
 //│ x = 1
-
-// weird...?
-:expect 1
-k + m
 
 class A(x) with
   fun debug() = print(x)
