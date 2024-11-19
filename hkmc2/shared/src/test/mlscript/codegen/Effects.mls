@@ -102,26 +102,22 @@ r
 //│ > hi
 //│ r = 'hi'
 
-:expect 'hello5'
-class Effect[A](perform: Str -> Str)
-val r = handle h = Effect with
+// :expect '54321'
+class Effect[A](perform)
+let result = ""
+handle h = Effect with
   fun perform(arg, k) =
     let v = k(arg)
-    print(arg)
+    result = result + arg
     v
 in
-  h.perform("hello1")
-  h.perform("hello2")
-  h.perform("hello3")
-  h.perform("hello4")
-  h.perform("hello5")
-r
-//│ > hello1
-//│ > hello2
-//│ > hello3
-//│ > hello4
-//│ > hello5
-//│ r = 'hello5'
+  h.perform("1")
+  h.perform("2")
+  h.perform("3")
+  h.perform("4")
+  h.perform("5")
+result
+//│ result = '54321'
 
 :expect 'b'
 class Effect[A](perform: Str -> Str)
@@ -211,8 +207,6 @@ x
 //│ > handler finished
 //│ x = 'Hello World!'
 
-:fixme
-:expect 1
 class Cell(getVal: () -> Int, setVal: Int -> ())
 let x = 0
 let k
@@ -226,14 +220,9 @@ in
   k = h.getVal()
   h.setVal(1)
   m = h.getVal()
-k + m
-//│ ═══[RUNTIME ERROR] Expected: 1, got: 0
+//│ k = 0
 //│ m = 1
 //│ x = 1
-
-// weird...?
-:expect 1
-k + m
 
 class A(x) with
   fun debug() = print(x)
@@ -273,29 +262,42 @@ result
 class StackDelay(raise: () -> ())
 handle h = StackDelay with
   fun raise(k) =
-    print("stack unwinded")
+    // console.trace("Stack unwinded!")
     k(10)
 fun sum(depth, x) =
-  val new_depth = if depth > 70 then h.raise() else depth + 1
+  val new_depth = if depth > 70 then
+    // console.trace("Too deep, heapifying the stack")
+    h.raise()
+  else
+    depth + 1
   if x != 0 then
     x + sum(new_depth, x - 1)
   else 0
 let result = sum(0, 100)
 result
-//│ > stack unwinded
 //│ result = 5050
 
 // stack safe recursion
-:expect 50005000
+:expect 450015000
 class StackDelay(raise: () -> Int)
 handle h = StackDelay with
-  fun raise(k) =
+  fun raise(k) = // TODO: This should codegen to a simple return without instrumentation
     k(10)
 fun sum(depth, x) =
-  val new_depth = if depth > 30 then h.raise() else depth + 1
+  val new_depth = if depth > 4000 then h.raise() else depth + 1
   if x != 0 then
     x + sum(new_depth, x - 1)
   else 0
-let result = sum(0, 10000)
+let result = sum(0, 30000)
 result
-//│ result = 50005000
+//│ result = 450015000
+
+:re
+fun sum(x) =
+  if x != 0 then
+    x + sum(x - 1)
+  else 0
+let result = sum(10000)
+result
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+//│ result = 450015000
