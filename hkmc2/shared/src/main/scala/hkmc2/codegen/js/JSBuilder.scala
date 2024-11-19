@@ -322,9 +322,9 @@ class JSBuilder extends CodeBuilder:
       )
   
   def block(t: Block)(using Raise, Scope): Document =
-    if t.definedVars.isEmpty then returningTerm(t).stripBreaks else
-      val vars = t.definedVars.toSeq.sortBy(_.uid).iterator.map(l =>
-        l -> scope.allocateName(l))
+    val vars = t.definedVars.toSeq.sortBy(_.uid).filter(scope.lookup(_).isEmpty).iterator.map(l =>
+      l -> scope.allocateName(l))
+    if vars.isEmpty then returningTerm(t).stripBreaks else
       doc"let " :: vars.map: (_, nme) =>
         nme
       .toList.mkDocument(", ")
