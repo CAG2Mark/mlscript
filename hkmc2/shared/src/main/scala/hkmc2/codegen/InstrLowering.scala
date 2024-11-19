@@ -360,7 +360,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       case Return(_, _) => PartRet(blk, Nil)
       // ignored cases
       case TryBlock(sub, finallyDo, rest) => ??? // ignore
-      case Throw(_) => ??? // ignore
+      case Throw(_) => PartRet(blk, Nil)
 
     val headId = freshId()
 
@@ -401,35 +401,26 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     val loopLbl = freshTmp("contLoop")
 
     val pcSymbol = TermSymbol(ParamBind, S(cls), Tree.Ident(s"pc$$${freshFieldId}"))
+    
 
     // NOTE: Symbols already replaced
     // TODO: set program counter when returning continuation
-    def transformPart(blk: Block): Block = blk match
-      case ReturnCont(res, uid, rest) =>
-        blockBuilder
-          .assignField(Select(Value.Ref(res), Tree.Ident("tail")), Tree.Ident("next"), Value.Ref(cls))
-          .assign(pcSymbol, Value.Lit(Tree.IntLit(uid)))
-          .ret(Value.Ref(res), false)
-      case StateTransition(uid) =>
-        blockBuilder
-          .assign(pcSymbol, Value.Lit(Tree.IntLit(uid)))
-          .continue(loopLbl)
-      case FnEnd() =>
-        blockBuilder.break(loopLbl)
-      case Match(scrut, arms, dflt, rest) => 
-        val newArms = arms.map((c, b) => (c, transformPart(b)))
-        Match(scrut, newArms, dflt.map(transformPart), transformPart(rest))
-      case Return(res, implct) => blk
-      case Throw(exc) => blk
-      case Label(label, body, rest) => Label(label, transformPart(body), transformPart(rest))
-      case Break(label, toBeginning) => blk
-      case Begin(sub, rest) => Begin(transformPart(sub), transformPart(rest))
-      case TryBlock(sub, finallyDo, rest) => TryBlock(transformPart(sub), transformPart(finallyDo), transformPart(rest))
-      case Assign(lhs, rhs, rest) => Assign(lhs, rhs, transformPart(rest))
-      case AssignField(lhs, nme, rhs, rest) => AssignField(lhs, nme, rhs, transformPart(rest))
-      case Define(defn, rest) => Define(defn, transformPart(rest))
-      case End(msg) => blk
-    
+    def transformPart(blk: Block): Block = 
+      def f(blk: Block): Block = blk match
+        case ReturnCont(res, uid, rest) =>
+          blockBuilder
+            .assignField(Select(Value.Ref(res), Tree.Ident("tail")), Tree.Ident("next"), Value.Ref(cls))
+            .assign(pcSymbol, Value.Lit(Tree.IntLit(uid)))
+            .ret(Value.Ref(res), false)
+        case StateTransition(uid) =>
+          blockBuilder
+            .assign(pcSymbol, Value.Lit(Tree.IntLit(uid)))
+            .continue(loopLbl)
+        case FnEnd() =>
+          blockBuilder.break(loopLbl)
+        case c => c.mapChildBlocks(f)
+      f(blk)
+
     // match block representing the function body
     val mainMatchCases = parts.toList.map(b => (Case.Lit(Tree.IntLit(b.id)), transformPart(b.blk.mapLocals(mapSym))))
     val mainMatchBlk = unrollMatch(Match(
