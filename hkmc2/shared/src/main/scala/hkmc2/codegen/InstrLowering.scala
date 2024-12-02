@@ -96,46 +96,15 @@ import InstrLowering.*
 
 class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
   
-  private val optimize: Bool = true
-
-/*
-  private val effectSigIdent: Tree.Ident = Tree.Ident("EffectSig$")
-  private val effectSigTree: Tree.TypeDef = Tree.TypeDef(syntax.Cls, Tree.Error(), N, N)
-  private val effectSigSym: ClassSymbol = ClassSymbol(effectSigTree, effectSigIdent)
-  private val effectSigDef = ClassDef(
-    N,
-    syntax.Cls,
-    effectSigSym,
-    Nil,
-    S(("handler" :: "handlerFun" :: "args" :: "cont" :: Nil).map(name =>
-      Param(FldFlags.empty, TermSymbol(ParamBind, S(effectSigSym), Tree.Ident(name)), None)
-    )),
-    ObjBody(st.Blk(Nil, st.Lit(Tree.UnitLit(true)))))
-  private val effectSigTrm = Select(Select(Value.Ref(Elaborator.Ctx.globalThisSymbol), effectSigIdent), Tree.Ident("class"))
-  effectSigSym.defn = S(effectSigDef)
-*/
+  // Opt-Level 1 => builtin is not function call
+  private val optimize: Int = 1
   
-  private val contIdent: Tree.Ident = Tree.Ident("Cont$")
-  private val contTree: Tree.TypeDef = Tree.TypeDef(syntax.Cls, Tree.Error(), N, N)
-  private val contSym: ClassSymbol = ClassSymbol(contTree, contIdent)
-  private val contDef = ClassDef(
-    S(globalThisSymbol),
-    syntax.Cls,
-    contSym,
-    Nil,
-    // FIXME: __isCont hack
-    S(("resume" :: "resumed" :: "next" :: "__isCont" :: Nil).map(name =>
-      Param(FldFlags.empty, TermSymbol(ParamBind, S(contSym), Tree.Ident(name)), None)
-    )),
-    ObjBody(st.Blk(Nil, st.Lit(Tree.UnitLit(true)))))
-  private val contTrm = Select(Select(Value.Ref(Elaborator.Ctx.globalThisSymbol), contIdent), Tree.Ident("class"))
-  // private val contTrm = Select(Value.Ref(contSym), Tree.Ident("class"))
-  contSym.defn = S(contDef)
+  private val contCls: Path = Select(Select(Select(Value.Ref(Elaborator.Ctx.globalThisSymbol), Tree.Ident("Predef")), Tree.Ident("__Cont")), Tree.Ident("class"))
   
-  private val resumeSym: BlockMemberSymbol = BlockMemberSymbol("resume$", Nil)
+  private val resumeFun: Path = Select(Select(Value.Ref(Elaborator.Ctx.globalThisSymbol), Tree.Ident("Predef")), Tree.Ident("__resume"))
   
   private def instCont(resume: Path): Result =
-    Instantiate(contTrm, resume :: Value.Lit(Tree.BoolLit(false)) :: Value.Lit(Tree.UnitLit(true)) :: Value.Lit(Tree.BoolLit(true)) :: Nil)
+    Instantiate(contCls, resume :: Value.Lit(Tree.BoolLit(false)) :: Value.Lit(Tree.UnitLit(true)) :: Value.Lit(Tree.BoolLit(true)) :: Nil)
   
   
   private val handlerCtx = HandlerCtx()
@@ -517,7 +486,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
   def instrumentBlock(sym: ClassSymbol, body: Block, locals: Set[Symbol], preTransform: Opt[Block => Block]): Block =
     val (containMarker, unmarkedBody) = removeMarkers(body)
     // Optimization: if there is no marker there is nothing to do
-    if !containMarker && optimize then return body
+    if !containMarker && optimize >= 2 then return body
     val curClass = preTransform match
       case N => createContClass(sym, body, Nil)
       case S(transform) => createContClass(sym, transform(body), Nil)
@@ -630,8 +599,8 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
                           Value.Ref(tmp),
                           Case.Lit(Tree.BoolLit(true)) -> blockBuilder
                             // tmp2 = __resume(cur.next, tail)
-                            .assign(tmp, Call(Value.Ref(resumeSym), Select(Value.Ref(cur), Tree.Ident("next")) :: Value.Ref(handlerTailList) :: Nil))
-                            // .assign(resumeLocal, Call(Value.Ref(resumeSym), Select(Value.Ref(cur), Tree.Ident("next")) :: Select(Value.Ref(cur), Tree.Ident("tail")) :: Nil))
+                            .assign(tmp, Call(resumeFun, Select(Value.Ref(cur), Tree.Ident("next")) :: Value.Ref(handlerTailList) :: Nil))
+                            // .assign(resumeLocal, Call(resumeFun, Select(Value.Ref(cur), Tree.Ident("next")) :: Select(Value.Ref(cur), Tree.Ident("tail")) :: Nil))
                             // _ = cur.params.push(resume)
                             .assign(tmp, Call(Select(Select(Value.Ref(cur), Tree.Ident("params")), Tree.Ident("push")), Value.Ref(tmp) :: Nil))
                             // cur = cur.handlerFun.apply(cur, cur.params)
@@ -676,7 +645,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
                         // cur = __resume(handlerTail.next, handlerTail)(cur)
                         .assign(tmp, Select(Value.Ref(handlerTailList), Tree.Ident("next")))
                         .assignField(Value.Ref(handlerTailList), Tree.Ident("next"), Value.Lit(Tree.UnitLit(true)))
-                        .assign(tmp, Call(Value.Ref(resumeSym), Value.Ref(tmp) :: Value.Ref(handlerTailList) :: Nil))
+                        .assign(tmp, Call(resumeFun, Value.Ref(tmp) :: Value.Ref(handlerTailList) :: Nil))
                         .assign(cur, Call(Value.Ref(tmp), Value.Ref(cur) :: Nil))
                         .continue(lblH)
                         :: Nil,
@@ -687,10 +656,10 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
               ))
               .rest(k(Value.Ref(cur)))
           }
-    case st.App(Ref(_: BuiltinSymbol), args) if optimize =>
+    case st.App(Ref(_: BuiltinSymbol), args) if optimize >= 1 =>
       // Optimization: Assuming builtin symbols cannot have effect
       super.term(t)(k)
-    case st.Ret(t: st.App) if handlerCtx.canPreserveTailCall() && optimize =>
+    case st.Ret(t: st.App) if handlerCtx.canPreserveTailCall() && optimize >= 2 =>
       // Optimization: we can simply return here
       super.term(t): r =>
         Return(r, false)
@@ -724,52 +693,5 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     case _ => super.term(t)(k)
 
   override def topLevel(t: st): Block =
-    val contParamSym = VarSymbol(Tree.Ident("cont"), -1)
-    val tailParamSym = VarSymbol(Tree.Ident("tail"), -1)
-    val valueParamSym = VarSymbol(Tree.Ident("value"), -1)
-    val contSym = freshTmp("cont")
-    val valueSym = freshTmp("value")
-    val lblChain = freshTmp("chainLoop")
-    blockBuilder
-      .define(FunDefn(resumeSym,
-        ParamList(ParamListFlags.empty, Param(FldFlags.empty, contParamSym, N) :: Param(FldFlags.empty, tailParamSym, N) :: Nil) ::
-          ParamList(ParamListFlags.empty, Param(FldFlags.empty, valueParamSym, N) :: Nil) :: Nil,
-        blockBuilder
-          .assign(contSym, Value.Ref(contParamSym))
-          .assign(valueSym, Value.Ref(valueParamSym))
-          .label(lblChain, blockBuilder
-          .chain(Match(
-              // Value.Ref(contSym),
-              // Case.Cls(contSym) ->
-              // FIXME: __isCont hack, here bc of undefined we omitted it
-              Value.Ref(contSym),
-              Case.Lit(Tree.BoolLit(true)) -> blockBuilder
-                .assign(valueSym, Call(Select(Value.Ref(contSym), Tree.Ident("resume")), Value.Ref(valueSym) :: Nil))
-                .chain(Match(
-                  Value.Ref(valueSym),
-                  Case.Lit(Tree.BoolLit(true)) -> Match(
-                    Select(Value.Ref(valueSym), Tree.Ident("__isCont")),
-                    Case.Lit(Tree.BoolLit(true)) -> blockBuilder
-                      // An effect, __resume is called inside of handler so we need to make sure we produce what a function normally expects
-                      // It should be resumed after the handler block but before all existing handler "tails"
-                      .assignField(Value.Ref(valueSym), Tree.Ident("tail"), Value.Ref(tailParamSym))
-                      .ret(Value.Ref(valueSym)) :: Nil,
-                    N,
-                    End()
-                  ) :: Nil,
-                  N,
-                  _
-                ))
-                .assign(contSym, Select(Value.Ref(contSym), Tree.Ident("next")))
-                .continue(lblChain) :: Nil,
-              N,
-              _
-            ))
-            .ret(Value.Ref(valueSym))
-          )
-          .end()
-      ))
-      .rest(
-        removeMarkers(super.topLevel(Blk(/*effectSigDef :: */contDef :: t :: Nil, st.Lit(Tree.UnitLit(true)))))._2
-      )
+    removeMarkers(super.topLevel(Blk(t :: Nil, st.Lit(Tree.UnitLit(true)))))._2
     

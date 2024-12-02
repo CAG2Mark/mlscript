@@ -1,6 +1,7 @@
 :js
 :il
 
+// Check: __resume should not be instrumented
 print(Predef.__resume)
 //│ > __resume(cont, tail) {
 //│ >     return (value) => {
@@ -35,7 +36,6 @@ print(Predef.__resume)
 
 // note: seems we can't use traits yet :|
 // using a field to store the effect handler instead
-// TODO: put resume$ and Cont$ into a Predef (resume$ should not be instrumented) for correctness, as the same Cont$ should be used for all function code
 
 // TODO: use this syntax
 // TODO: prepend or append resumption parameter like fun perform(x)(resume): Str -> Str or fun perform(resume)(x): Str -> Str
@@ -48,49 +48,11 @@ print(Predef.__resume)
 abstract class Effect[A] with
   fun perform(x: A): Str -> Str
 //│ JS:
-//│ function resume$(cont, tail) {
-//│   return (value) => {
-//│     let cont1, value1;
-//│     cont1 = cont;
-//│     value1 = value;
-//│     chainLoop: while (true) {
-//│       if (cont1) {
-//│         value1 = cont1.resume(value1);
-//│         if (value1) {
-//│           if (value1.isCont$) {
-//│             value1.tail = tail;
-//│             return value1;
-//│           }
-//│         }
-//│         cont1 = cont1.next;
-//│         continue chainLoop;
-//│       }
-//│       return value1;
-//│       break;
-//│     }
-//│   };
-//│ }
-//│ this.Cont$ = function Cont$(resume1, resumed1, next1, isCont$1) { return new Cont$.class(resume1, resumed1, next1, isCont$1); };
-//│ this.Cont$.class = class Cont$ {
-//│   constructor(resume, resumed, next, isCont$) {
-//│     this.resume = resume;
-//│     this.resumed = resumed;
-//│     this.next = next;
-//│     this.isCont$ = isCont$;
-//│     
-//│   }
-//│   toString() { return "Cont$(" + this.resume + ", " + this.resumed + ", " + this.next + ", " + this.isCont$ + ")"; }
-//│ };
-//│ this.Effect = class Effect {
-//│   constructor() {
-//│     
-//│   }
-//│   toString() { return "Effect"; }
-//│ };
-//│ undefined
+//│ this.Effect = class Effect { constructor() {  } toString() { return "Effect"; } }; undefined
+
+class Effect[A](perform: Str -> Str)
 
 :expect 'b'
-class Effect[A](perform: Str -> Str)
 val r = handle h = Effect with
   fun perform(arg, k) = "b"
 in
@@ -99,7 +61,6 @@ r
 //│ r = 'b'
 
 :expect 'k'
-class Effect[A](perform: Str -> Str)
 val r = handle h = Effect with
   fun perform(arg, k) = arg
 in
@@ -108,7 +69,6 @@ r
 //│ r = 'k'
 
 :expect 'Hello'
-class Effect[A](perform: Str -> Str)
 fun foo(e) = e.perform("hi")
 val r = handle h = Effect with
   fun perform(arg, k) =
@@ -121,7 +81,6 @@ r
 //│ r = 'Hello'
 
 :expect 'hi'
-class Effect[A](perform: Str -> Str)
 fun foo(e) = e.perform("hi")
 val r = handle h = Effect with
   fun perform(arg, k) =
@@ -134,7 +93,6 @@ r
 //│ r = 'hi'
 
 // :expect '54321'
-class Effect[A](perform)
 let result = ""
 handle h = Effect with
   fun perform(arg, k) =
@@ -151,7 +109,6 @@ result
 //│ result = '54321'
 
 :expect 'b'
-class Effect[A](perform: Str -> Str)
 val x =
   handle h = Effect with
     fun perform(arg, k) =
@@ -165,7 +122,6 @@ x
 
 // TODO: val is not working
 :expect 'Hello World!'
-class Effect[A](perform: Str -> Str)
 fun foo(h) =
   print("Entering foo")
   let result = h.perform("Hello")
@@ -195,7 +151,6 @@ x
 //│ x = 'Hello World!'
 
 :expect 'Hello World!'
-class Effect[A](perform: Str -> Str)
 fun foo(h) =
   print("Entering foo")
   let result = h.perform("Hello")

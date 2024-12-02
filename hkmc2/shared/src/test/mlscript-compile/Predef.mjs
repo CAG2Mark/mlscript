@@ -1,6 +1,16 @@
 const Predef$class = class Predef {
   constructor() {
-    
+    this.__Cont = function __Cont(resume1, resumed1, next1, __isCont1) { return new __Cont.class(resume1, resumed1, next1, __isCont1); };
+    this.__Cont.class = class __Cont {
+      constructor(resume, resumed, next, __isCont) {
+        this.resume = resume;
+        this.resumed = resumed;
+        this.next = next;
+        this.__isCont = __isCont;
+        
+      }
+      toString() { return "__Cont(" + this.resume + ", " + this.resumed + ", " + this.next + ", " + this.__isCont + ")"; }
+    };
   }
   id(x) {
     return x;
