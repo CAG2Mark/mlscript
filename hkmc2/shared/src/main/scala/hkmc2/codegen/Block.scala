@@ -54,7 +54,7 @@ sealed abstract class Block extends Product with AutoLocated:
     case Label(lbl, bod, rst) => bod.definedVars ++ rst.definedVars
   
   def mapChildBlocks(f: Block => Block): Block = this match
-    case Match(scrut, arms, dflt, rest) => Match(scrut, arms.map{case cse -> blk => cse -> f(blk)}, dflt.map(f), f(rest))
+    case Match(scrut, arms, dflt, rest) => Match(scrut, arms.map{case cse -> trm => cse -> f(trm)}, dflt.map(f), f(rest))
     case Return(res, implct) => this
     case Throw(exc) => this
     case Label(label, body, rest) => Label(label, f(body), f(rest))
