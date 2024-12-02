@@ -1,46 +1,21 @@
 :js
-
-:global
 :il
 
-print(Predef.__resume)
-//│ > __resume(cont, tail) {
-//│ >     return (value) => {
-//│ >       let scrut, tmp, tmp1, tmp2;
-//│ >       tmp3: while (true) {
-//│ >         if (cont) {
-//│ >           tmp = cont.resume(value);
-//│ >           value = tmp;
-//│ >           if (value) {
-//│ >             scrut = value["__isCont"];
-//│ >             if (scrut) {
-//│ >               value.tail = tail;
-//│ >               return value;
-//│ >             } else {
-//│ >               cont = cont.next;
-//│ >               tmp1 = undefined;
-//│ >             }
-//│ >           } else {
-//│ >             cont = cont.next;
-//│ >             tmp1 = undefined;
-//│ >           }
-//│ >           tmp2 = tmp1;
-//│ >           continue tmp3;
-//│ >         } else {
-//│ >           tmp2 = value;
-//│ >         }
-//│ >         break;
-//│ >       }
-//│ >       return tmp2;
-//│ >     };
-//│ >   }
-
-// :lot
 :fixme
+:expect 3
+let count = 1
 class IdEffect(f)
 handle h1 = IdEffect with
-  fun f(x, k) = k(x)
+  fun f(x, k) =
+    set count += 1
+    k(x)
 handle h2 = IdEffect with
-  fun f(x, k) = k(x)
+  fun f(x, k) =
+    set count += 1
+    k(x)
+print(h1.f(3))
 print(h2.f(3))
-//│ /!!!\ Uncaught error: hkmc2.InternalError: `this` not in scope: class:Cont$59$
+print("Oops")
+set count += 1
+//│ > 3
+//│ ═══[RUNTIME ERROR] Expected: 3, got: 2

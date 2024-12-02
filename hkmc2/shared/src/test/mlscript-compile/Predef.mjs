@@ -51,7 +51,7 @@ const Predef$class = class Predef {
           tmp = cont.resume(value);
           value = tmp;
           if (value) {
-            scrut = value["__isCont"];
+            scrut = value.__isCont;
             if (scrut) {
               value.tail = tail;
               return value;

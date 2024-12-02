@@ -337,7 +337,7 @@ class JSBuilder extends CodeBuilder:
 object JSBuilder:
   import scala.util.matching.Regex
   
-  private val identifierPattern: Regex = "^[A-Za-z$][A-Za-z0-9$]*$".r
+  private val identifierPattern: Regex = "^[A-Za-z_$][A-Za-z_0-9$]*$".r
 
   def isValidIdentifier(s: Str): Bool = identifierPattern.matches(s) && !keywords.contains(s)
   

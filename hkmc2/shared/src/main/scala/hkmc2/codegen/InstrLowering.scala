@@ -64,7 +64,7 @@ object InstrLowering:
     private def instCont(pc: BigInt, res: Path, tmp: Local, symbolResolver: (ClassSymbol, Local) => TermSymbol)(k: Result => Block): Block =
       val resultHead = blockBuilder
         .assign(tmp, Instantiate(Value.Ref(BlockMemberSymbol(contClasses.head.id.name, Nil)), Value.Lit(Tree.IntLit(pc)) :: Value.Lit(Tree.UnitLit(true)) :: Nil))
-        .assignField(Value.Ref(tmp), Tree.Ident("pc$0"), Value.Lit(Tree.IntLit(pc)))
+        .assignField(Value.Ref(tmp), Tree.Ident("__pc"), Value.Lit(Tree.IntLit(pc)))
         .assignField(Value.Ref(tmp), Tree.Ident("__isCont"), Value.Lit(Tree.BoolLit(true)))
       val resultSavedLocals = toSave.head.foldLeft(resultHead)((res, loc) =>
         res.assignField(Value.Ref(tmp), symbolResolver(contClasses.head, loc).id, Value.Ref(loc))
@@ -97,6 +97,7 @@ import InstrLowering.*
 class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
   
   // Opt-Level 1 => builtin is not function call
+  // Opt-Level 2 => Tail-Call & Cont class elimination
   private val optimize: Int = 1
   
   private val contCls: Path = Select(Select(Select(Value.Ref(Elaborator.Ctx.globalThisSymbol), Tree.Ident("Predef")), Tree.Ident("__Cont")), Tree.Ident("class"))
@@ -349,16 +350,16 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     val result = go(blk)(using labelIds, N)
     BlockState(headId, result.head, N) :: result.states
   
-  val localsMap: MutMap[Local, TermSymbol] = MutMap()
-  private val freshFieldId = freshId()
+  val localsMap: MutMap[(ClassSymbol, Local), TermSymbol] = MutMap()
+  private val freshFieldId = freshId
   // NOTE: Should only be used for function parameters or variables/values strictly defined in the function body!
   // TODO: for class methods, map `this.whatever` to `this.this$.whatever` ($this is the current class)
   def getContLocalSymbol(cls: ClassSymbol, sym: Local): TermSymbol =
-    localsMap.get(sym) match
+    localsMap.get((cls, sym)) match
       case Some(value) => value
       case None => 
-        val ret = TermSymbol(ParamBind, S(cls), Tree.Ident(s"${sym.nme}$$${freshFieldId}"))
-        localsMap.addOne(sym -> ret)
+        val ret = TermSymbol(ParamBind, S(cls), Tree.Ident(s"${sym.nme}$$${freshFieldId()}"))
+        localsMap.addOne((cls, sym) -> ret)
         ret
 
   // HACK: remove once match is fixed
@@ -382,7 +383,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     
     val loopLbl = freshTmp("contLoop")
 
-    val pcSymbol = TermSymbol(ParamBind, S(cls), Tree.Ident(s"pc$$${freshFieldId}"))
+    val pcSymbol = TermSymbol(ParamBind, S(cls), Tree.Ident("__pc"))
     
 
     // NOTE: Symbols already replaced

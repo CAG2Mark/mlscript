@@ -11,7 +11,7 @@ print(Predef.__resume)
 //│ >           tmp = cont.resume(value);
 //│ >           value = tmp;
 //│ >           if (value) {
-//│ >             scrut = value["__isCont"];
+//│ >             scrut = value.__isCont;
 //│ >             if (scrut) {
 //│ >               value.tail = tail;
 //│ >               return value;
@@ -231,8 +231,9 @@ fun f() =
   let z = 3
   2
 
-:expect 120
 class Eff(get: () -> Int)
+
+:expect 120
 fun fact(e, factvalue) = 
   if factvalue != 0 then
     factvalue * fact(e, factvalue-1)
@@ -243,9 +244,10 @@ let result = fact(h, 5)
 result
 //│ result = 120
 
+class StackDelay(raise: () -> ())
+
 // stack safe recursion
 :expect 5050
-class StackDelay(raise: () -> ())
 handle h = StackDelay with
   fun raise(k) =
     // console.trace("Stack unwinded!")
@@ -263,9 +265,10 @@ let result = sum(0, 100)
 result
 //│ result = 5050
 
+class StackDelay(raise: () -> Int)
+
 // stack safe recursion
 :expect 450015000
-class StackDelay(raise: () -> Int)
 handle h = StackDelay with
   fun raise(k) = // TODO: This should codegen to a simple return without instrumentation
     k(10)
