@@ -25,14 +25,16 @@ object InstrLowering:
 
   private val pcIdent: Tree.Ident = Tree.Ident("__pc")
   private val isContIdent: Tree.Ident = Tree.Ident("__isCont") // FIXME: hack
+  private val nextHandlerIdent: Tree.Ident = Tree.Ident("nextHandler")
+  private val tailHandlerIdent: Tree.Ident = Tree.Ident("tailHandler")
   private val nextIdent: Tree.Ident = Tree.Ident("next")
   private val tailIdent: Tree.Ident = Tree.Ident("tail")
   private val handlerIdent: Tree.Ident = Tree.Ident("handler")
   private val handlerFunIdent: Tree.Ident = Tree.Ident("handlerFun")
   private val paramsIdent: Tree.Ident = Tree.Ident("params")
   
-  private val contCls: Path = Select(Select(Select(Value.Ref(Elaborator.Ctx.globalThisSymbol), Tree.Ident("Predef")), Tree.Ident("__Cont")), Tree.Ident("class"))
-  private val resumeFun: Path = Select(Select(Value.Ref(Elaborator.Ctx.globalThisSymbol), Tree.Ident("Predef")), Tree.Ident("__resume"))
+  private val contCls: Path = PathBuilder(Elaborator.Ctx.globalThisSymbol).sel(Tree.Ident("Predef")).sel(Tree.Ident("__Cont")).sel(Tree.Ident("class")).get
+  private val resumeFun: Path = PathBuilder(Elaborator.Ctx.globalThisSymbol).sel(Tree.Ident("Predef")).sel(Tree.Ident("__resume")).get
   extension (k: Block => Block)
     
     def chain(other: Block => Block): Block => Block = b => k(other(b))
@@ -55,6 +57,8 @@ object InstrLowering:
     def isContHack = sel(isContIdent)
     def next = sel(nextIdent)
     def tail = sel(tailIdent)
+    def nextHandler = sel(nextHandlerIdent)
+    def tailHandler = sel(tailHandlerIdent)
     def get = p
   
   private object PathBuilder:
@@ -62,7 +66,7 @@ object InstrLowering:
     def apply(l: Local) = new PathBuilder(Value.Ref(l))
   private class HandlerCtx:
     private var handlers: List[Result => Block] = (_ => Throw(
-      Instantiate(Select(Value.Ref(Elaborator.Ctx.globalThisSymbol), Tree.Ident("Error")),
+      Instantiate(PathBuilder(Elaborator.Ctx.globalThisSymbol).sel(Tree.Ident("Error")).get,
       Value.Lit(Tree.StrLit("Unhandled effects")) :: Nil)
     )) :: Nil
     private var allLocals: List[Set[Local]] = Set.empty :: Nil
@@ -598,87 +602,55 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
           
           val bod = instrumentBlock(contClassSymbol, bodRaw, locals, S(transformBodyBreaks))
           
-          val equalToCurVal = Call(Value.Ref(BuiltinSymbol("===", true, false, false)), Select(Value.Ref(cur), handlerIdent) :: Value.Ref(lhs) :: Nil)
-          val notEqualToSavedNext = Call(Value.Ref(BuiltinSymbol("!==", true, false, false)), Select(Value.Ref(handlerTailList), nextIdent) :: Value.Ref(savedNext) :: Nil)
-          val tailNotEmpty = Call(Value.Ref(BuiltinSymbol("!==", true, false, false)), Select(Value.Ref(handlerTailList), nextIdent) :: Value.Lit(Tree.UnitLit(true)) :: Nil)
-          handlerCtx.addSavedVars(handlerTailList :: cur :: Nil) {
-            blockBuilder
-              .label(lblBdy, bod)
-              .separation(cur, uid)
-              .assign(handlerTailList, instCont(Value.Lit(Tree.UnitLit(true)))) // just a dummy link list head
-              .label(lblH, Match(
-                // Value.Ref(cur),
-                // Case.Cls(contSym, contTrm) ->
-                // FIXME: __isCont hack
-                Value.Ref(cur),
-                Case.Lit(Tree.BoolLit(true)) -> Match(
-                  Select(Value.Ref(cur), isContIdent),
-                  Case.Lit(Tree.BoolLit(true)) ->
-                    Match(
-                      Select(Value.Ref(cur), handlerIdent),
-                      Case.Lit(Tree.BoolLit(true)) -> blockBuilder // BAD! we should check equality to undefined, just being lazy (and wrong) for now
-                        .assign(tmp, equalToCurVal)
-                        .rest(Match(
-                          Value.Ref(tmp),
-                          Case.Lit(Tree.BoolLit(true)) -> blockBuilder
-                            // tmp2 = __resume(cur.next, tail)
-                            .assign(tmp, Call(resumeFun, Select(Value.Ref(cur), nextIdent) :: Value.Ref(handlerTailList) :: Nil))
-                            // .assign(resumeLocal, Call(resumeFun, Select(Value.Ref(cur), nextIdent) :: Select(Value.Ref(cur), tailIdent) :: Nil))
-                            // _ = cur.params.push(resume)
-                            .assign(tmp, Call(Select(Select(Value.Ref(cur), paramsIdent), Tree.Ident("push")), Value.Ref(tmp) :: Nil))
-                            // cur = cur.handlerFun.apply(cur, cur.params)
-                            .assign(savedNext, Select(Value.Ref(handlerTailList), nextIdent))
-                            .assign(cur, Call(
-                              Select(Select(Value.Ref(cur), handlerFunIdent), Tree.Ident("apply")),
-                              Value.Ref(cur) :: Select(Value.Ref(cur), paramsIdent) :: Nil
-                            ))
-                            // when handlerFun ends, it could be either
-                            // 1. handled all effects
-                            // 2. new effect raised
-                            // In case 2, the handler may (if not tail call) be appended to the list wrongly, we fix it here
-                            .assign(tmp, notEqualToSavedNext)
-                            .chain(Match(
-                              Value.Ref(tmp),
-                              Case.Lit(Tree.BoolLit(true)) -> AssignField(
-                                Select(Value.Ref(handlerTailList), nextIdent),
-                                nextIdent,
-                                Value.Ref(savedNext),
-                                End()
-                              ) :: Nil,
-                              N,
-                              _
-                            ))
-                            .continue(lblH) :: Nil, 
-                          N,
-                          End()
-                        )) :: Nil,
-                      
-                      S(handlerCtx.linkAndHandle(uid, Value.Ref(cur), tmp, getContLocalSymbol)),
-                      End()
-                    ) :: Nil,
-                  N,
-                  End()
-                ) :: Nil,
-                N,
+          val equalToCurVal = Call(Value.Ref(BuiltinSymbol("===", true, false, false)), PathBuilder(cur).sel(handlerIdent).get :: Value.Ref(lhs) :: Nil)
+          val notEqualToSavedNext = Call(Value.Ref(BuiltinSymbol("!==", true, false, false)), PathBuilder(handlerTailList).next.get :: Value.Ref(savedNext) :: Nil)
+          val tailNotEmpty = Call(Value.Ref(BuiltinSymbol("!==", true, false, false)), PathBuilder(handlerTailList).next.get :: Value.Lit(Tree.UnitLit(true)) :: Nil)
+          handlerCtx.addSavedVars(handlerTailList :: cur :: Nil) { blockBuilder
+            .label(lblBdy, bod)
+            .separation(cur, uid)
+            .assign(handlerTailList, instCont(Value.Lit(Tree.UnitLit(true)))) // just a dummy link list head
+            .label(lblH,
+              blockBuilder.ifthen(Value.Ref(cur), Case.Lit(Tree.BoolLit(true)), blockBuilder.ifthen(
+                PathBuilder(cur).sel(handlerIdent).get,
+                Case.Lit(Tree.BoolLit(true)),
                 blockBuilder
-                  .assign(tmp, tailNotEmpty)
-                  .rest(
-                    Match(
-                      Value.Ref(tmp),
-                      Case.Lit(Tree.BoolLit(true)) -> blockBuilder
-                        // cur = __resume(handlerTail.next, handlerTail)(cur)
-                        .assign(tmp, Select(Value.Ref(handlerTailList), nextIdent))
-                        .assignField(Value.Ref(handlerTailList), nextIdent, Value.Lit(Tree.UnitLit(true)))
-                        .assign(tmp, Call(resumeFun, Value.Ref(tmp) :: Value.Ref(handlerTailList) :: Nil))
-                        .assign(cur, Call(Value.Ref(tmp), Value.Ref(cur) :: Nil))
-                        .continue(lblH)
-                        :: Nil,
-                      N,
-                      End()
+                  .assign(tmp, equalToCurVal)
+                  .ifthen(Value.Ref(tmp), Case.Lit(Tree.BoolLit(true)), blockBuilder
+                    // resume = __resume(cur.next, tail)
+                    .assign(tmp, Call(resumeFun, PathBuilder(cur).next.get :: Value.Ref(handlerTailList) :: Nil))
+                    // _ = cur.params.push(resume)
+                    .assign(tmp, Call(PathBuilder(cur).sel(paramsIdent).sel(Tree.Ident("push")).get, Value.Ref(tmp) :: Nil))
+                    // savedNext = handlerTailList.next
+                    .assign(savedNext, PathBuilder(handlerTailList).next.get)
+                    // cur = cur.handlerFun.apply(cur, cur.params)
+                    .assign(cur, Call(PathBuilder(cur).sel(handlerFunIdent).sel(Tree.Ident("apply")).get, Value.Ref(cur) :: PathBuilder(cur).sel(paramsIdent).get :: Nil))
+                    // when handlerFun ends, it could be either
+                    // 1. handled all effects
+                    // 2. new effect raised
+                    // In case 2, the handler will appended to the list wrongly, we fix it here
+                    .assign(tmp, notEqualToSavedNext)
+                    .ifthen(Value.Ref(tmp), Case.Lit(Tree.BoolLit(true)),
+                      AssignField(
+                        PathBuilder(handlerTailList).next.get,
+                        nextIdent,
+                        Value.Ref(savedNext),
+                        End()
+                      )
                     )
-                  )
-              ))
-              .rest(k(Value.Ref(cur)))
+                    .continue(lblH)
+                  ).rest(handlerCtx.linkAndHandle(uid, Value.Ref(cur), tmp, getContLocalSymbol))
+              ).end())
+              .assign(tmp, tailNotEmpty)
+              .ifthen(Value.Ref(tmp), Case.Lit(Tree.BoolLit(true)), blockBuilder
+                // cur = __resume(handlerTail.next, handlerTail)(cur)
+                .assign(tmp, PathBuilder(handlerTailList).next.get)
+                .assignField(Value.Ref(handlerTailList), nextIdent, Value.Lit(Tree.UnitLit(true)))
+                .assign(tmp, Call(resumeFun, Value.Ref(tmp) :: Value.Ref(handlerTailList) :: Nil))
+                .assign(cur, Call(Value.Ref(tmp), Value.Ref(cur) :: Nil))
+                .continue(lblH)
+              ).end()
+            ) // lblH
+            .rest(k(Value.Ref(cur)))
           }
     case st.App(Ref(_: BuiltinSymbol), args) if optimize >= 1 =>
       // Optimization: Assuming builtin symbols cannot have effect
