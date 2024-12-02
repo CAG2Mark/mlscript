@@ -1,9 +1,40 @@
 :js
 :il
 
+print(Predef.__resume)
+//│ > __resume(cont, tail) {
+//│ >     return (value) => {
+//│ >       let scrut, tmp, tmp1, tmp2;
+//│ >       tmp3: while (true) {
+//│ >         if (cont) {
+//│ >           tmp = cont.resume(value);
+//│ >           value = tmp;
+//│ >           if (value) {
+//│ >             scrut = value["__isCont"];
+//│ >             if (scrut) {
+//│ >               value.tail = tail;
+//│ >               return value;
+//│ >             } else {
+//│ >               cont = cont.next;
+//│ >               tmp1 = undefined;
+//│ >             }
+//│ >           } else {
+//│ >             cont = cont.next;
+//│ >             tmp1 = undefined;
+//│ >           }
+//│ >           tmp2 = tmp1;
+//│ >           continue tmp3;
+//│ >         } else {
+//│ >           tmp2 = value;
+//│ >         }
+//│ >         break;
+//│ >       }
+//│ >       return tmp2;
+//│ >     };
+//│ >   }
+
 // note: seems we can't use traits yet :|
 // using a field to store the effect handler instead
-
 // TODO: put resume$ and Cont$ into a Predef (resume$ should not be instrumented) for correctness, as the same Cont$ should be used for all function code
 
 // TODO: use this syntax

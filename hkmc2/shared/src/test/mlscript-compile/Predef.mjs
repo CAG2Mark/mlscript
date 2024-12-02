@@ -32,6 +32,36 @@ const Predef$class = class Predef {
   } 
   tupleGet(xs1, i1) {
     return globalThis.Array.prototype.at.call(xs1, i1);
+  } 
+  __resume(cont, tail) {
+    return (value) => {
+      let scrut, tmp, tmp1, tmp2;
+      tmp3: while (true) {
+        if (cont) {
+          tmp = cont.resume(value);
+          value = tmp;
+          if (value) {
+            scrut = value["__isCont"];
+            if (scrut) {
+              value.tail = tail;
+              return value;
+            } else {
+              cont = cont.next;
+              tmp1 = undefined;
+            }
+          } else {
+            cont = cont.next;
+            tmp1 = undefined;
+          }
+          tmp2 = tmp1;
+          continue tmp3;
+        } else {
+          tmp2 = value;
+        }
+        break;
+      }
+      return tmp2;
+    };
   }
   toString() { return "Predef"; }
 }; const Predef = new Predef$class;

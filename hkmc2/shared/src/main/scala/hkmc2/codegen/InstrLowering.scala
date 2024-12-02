@@ -65,7 +65,7 @@ object InstrLowering:
       val resultHead = blockBuilder
         .assign(tmp, Instantiate(Value.Ref(BlockMemberSymbol(contClasses.head.id.name, Nil)), Value.Lit(Tree.IntLit(pc)) :: Value.Lit(Tree.UnitLit(true)) :: Nil))
         .assignField(Value.Ref(tmp), Tree.Ident("pc$0"), Value.Lit(Tree.IntLit(pc)))
-        .assignField(Value.Ref(tmp), Tree.Ident("isCont$"), Value.Lit(Tree.BoolLit(true)))
+        .assignField(Value.Ref(tmp), Tree.Ident("__isCont"), Value.Lit(Tree.BoolLit(true)))
       val resultSavedLocals = toSave.head.foldLeft(resultHead)((res, loc) =>
         res.assignField(Value.Ref(tmp), symbolResolver(contClasses.head, loc).id, Value.Ref(loc))
       )
@@ -123,8 +123,8 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     syntax.Cls,
     contSym,
     Nil,
-    // FIXME: isCont$ hack
-    S(("resume" :: "resumed" :: "next" :: "isCont$" :: Nil).map(name =>
+    // FIXME: __isCont hack
+    S(("resume" :: "resumed" :: "next" :: "__isCont" :: Nil).map(name =>
       Param(FldFlags.empty, TermSymbol(ParamBind, S(contSym), Tree.Ident(name)), None)
     )),
     ObjBody(st.Blk(Nil, st.Lit(Tree.UnitLit(true)))))
@@ -617,10 +617,10 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
               .label(lblH, Match(
                 // Value.Ref(cur),
                 // Case.Cls(contSym, contTrm) ->
-                // FIXME: isCont$ hack
+                // FIXME: __isCont hack
                 Value.Ref(cur),
                 Case.Lit(Tree.BoolLit(true)) -> Match(
-                  Select(Value.Ref(cur), Tree.Ident("isCont$")),
+                  Select(Value.Ref(cur), Tree.Ident("__isCont")),
                   Case.Lit(Tree.BoolLit(true)) ->
                     Match(
                       Select(Value.Ref(cur), Tree.Ident("handler")),
@@ -629,7 +629,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
                         .rest(Match(
                           Value.Ref(tmp),
                           Case.Lit(Tree.BoolLit(true)) -> blockBuilder
-                            // tmp2 = resume$(cur.next, tail)
+                            // tmp2 = __resume(cur.next, tail)
                             .assign(tmp, Call(Value.Ref(resumeSym), Select(Value.Ref(cur), Tree.Ident("next")) :: Value.Ref(handlerTailList) :: Nil))
                             // .assign(resumeLocal, Call(Value.Ref(resumeSym), Select(Value.Ref(cur), Tree.Ident("next")) :: Select(Value.Ref(cur), Tree.Ident("tail")) :: Nil))
                             // _ = cur.params.push(resume)
@@ -673,7 +673,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
                     Match(
                       Value.Ref(tmp),
                       Case.Lit(Tree.BoolLit(true)) -> blockBuilder
-                        // cur = resume$(handlerTail.next, handlerTail)(cur)
+                        // cur = __resume(handlerTail.next, handlerTail)(cur)
                         .assign(tmp, Select(Value.Ref(handlerTailList), Tree.Ident("next")))
                         .assignField(Value.Ref(handlerTailList), Tree.Ident("next"), Value.Lit(Tree.UnitLit(true)))
                         .assign(tmp, Call(Value.Ref(resumeSym), Value.Ref(tmp) :: Value.Ref(handlerTailList) :: Nil))
@@ -708,7 +708,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
             // Separation(res, uid, k(Value.Ref(res)))
             Value.Ref(res), // here, res is either undefined or continuation so actually only need to check against undefined
             Case.Lit(Tree.BoolLit(true)) -> Match(
-              Select(Value.Ref(res), Tree.Ident("isCont$")), // TODO: isCont$ hack
+              Select(Value.Ref(res), Tree.Ident("__isCont")), // TODO: __isCont hack
               Case.Lit(Tree.BoolLit(true)) -> ReturnCont(res, uid, handlerCtx.linkAndHandle(uid, Value.Ref(res), tmp, getContLocalSymbol)) :: Nil,
               N,
               End()
@@ -741,16 +741,16 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
           .chain(Match(
               // Value.Ref(contSym),
               // Case.Cls(contSym) ->
-              // FIXME: isCont$ hack, here bc of undefined we omitted it
+              // FIXME: __isCont hack, here bc of undefined we omitted it
               Value.Ref(contSym),
               Case.Lit(Tree.BoolLit(true)) -> blockBuilder
                 .assign(valueSym, Call(Select(Value.Ref(contSym), Tree.Ident("resume")), Value.Ref(valueSym) :: Nil))
                 .chain(Match(
                   Value.Ref(valueSym),
                   Case.Lit(Tree.BoolLit(true)) -> Match(
-                    Select(Value.Ref(valueSym), Tree.Ident("isCont$")),
+                    Select(Value.Ref(valueSym), Tree.Ident("__isCont")),
                     Case.Lit(Tree.BoolLit(true)) -> blockBuilder
-                      // An effect, resume$ is called inside of handler so we need to make sure we produce what a function normally expects
+                      // An effect, __resume is called inside of handler so we need to make sure we produce what a function normally expects
                       // It should be resumed after the handler block but before all existing handler "tails"
                       .assignField(Value.Ref(valueSym), Tree.Ident("tail"), Value.Ref(tailParamSym))
                       .ret(Value.Ref(valueSym)) :: Nil,

@@ -20,3 +20,14 @@ fun tupleSlice(xs, i, j) =
 
 fun tupleGet(xs, i) =
   globalThis.Array.prototype.at.call(xs, i)
+
+fun __resume(cont, tail)(value) =
+  while cont then
+    value = cont.resume(value)
+    if value and value.__isCont then
+      set value.tail = tail
+      return value
+    else
+      cont = cont.next
+  else
+    value
