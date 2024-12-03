@@ -1,5 +1,27 @@
 const Predef$class = class Predef {
   constructor() {
+    this.MatchResult = function MatchResult(captures1) { return new MatchResult.class(captures1); };
+    this.MatchResult.class = class MatchResult {
+      constructor(captures) {
+        this.captures = captures;
+        
+      }
+      toString() { return "MatchResult(" + this.captures + ")"; }
+    };
+    this.MatchFailure = function MatchFailure(errors1) { return new MatchFailure.class(errors1); };
+    this.MatchFailure.class = class MatchFailure {
+      constructor(errors) {
+        this.errors = errors;
+        
+      }
+      toString() { return "MatchFailure(" + this.errors + ")"; }
+    };
+    this.Test = class Test {
+      constructor() {
+        this.y = 1;
+      }
+      toString() { return "Test"; }
+    };
     this.__Cont = function __Cont(resume1, resumed1, next1, __isCont1) { return new __Cont.class(resume1, resumed1, next1, __isCont1); };
     this.__Cont.class = class __Cont {
       constructor(resume, resumed, next, __isCont) {
@@ -25,9 +47,14 @@ const Predef$class = class Predef {
   pipe(x2, f) {
     return f(x2);
   } 
-  call(receiver, f1) {
-    return (arg) => {
-      return f1.call(receiver, arg);
+  apply(receiver, f1) {
+    return (...args) => {
+      return f1(receiver, ...args);
+    };
+  } 
+  call(receiver1, f2) {
+    return (...args) => {
+      return f2.call(receiver1, ...args);
     };
   } 
   print(x3) {
@@ -42,6 +69,40 @@ const Predef$class = class Predef {
   } 
   tupleGet(xs1, i1) {
     return globalThis.Array.prototype.at.call(xs1, i1);
+  } 
+  stringStartsWith(string, prefix) {
+    return string.startsWith(prefix);
+  } 
+  stringGet(string1, i2) {
+    return string1.at(i2);
+  } 
+  stringDrop(string2, n) {
+    return string2.slice(n);
+  } 
+  checkArgs(functionName, expected, isUB, got) {
+    let scrut, name, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9;
+    tmp = got < expected;
+    tmp1 = got > expected;
+    tmp2 = isUB && tmp1;
+    scrut = tmp || tmp2;
+    if (scrut) {
+      scrut1 = functionName.length > 0;
+      if (scrut1) {
+        tmp3 = " '" + functionName;
+        tmp4 = tmp3 + "'";
+      } else {
+        tmp4 = "";
+      }
+      name = tmp4;
+      tmp5 = "Function" + name;
+      tmp6 = tmp5 + " expected ";
+      tmp7 = tmp6 + expected;
+      tmp8 = tmp7 + " arguments but got ";
+      tmp9 = tmp8 + got;
+      throw globalThis.Error(tmp9);
+    } else {
+      return undefined;
+    }
   } 
   __resume(cont, tail) {
     return (value) => {

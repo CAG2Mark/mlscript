@@ -11,12 +11,11 @@ import hkmc2.semantics.{Term => st}
 
 import syntax.{Literal, Tree, ParamBind}
 import semantics.*
-import semantics.Term.*
+import Elaborator.State
 
 import Subst.subst
 import scala.annotation.tailrec
 import hkmc2.syntax.Keyword.`val`
-import sem.Elaborator.Ctx.globalThisSymbol
 
 import scala.collection.mutable.Map as MutMap
 import scala.collection.mutable.Set as MutSet
@@ -30,9 +29,6 @@ object InstrLowering:
   private val handlerIdent: Tree.Ident = Tree.Ident("handler")
   private val handlerFunIdent: Tree.Ident = Tree.Ident("handlerFun")
   private val paramsIdent: Tree.Ident = Tree.Ident("params")
-  
-  private val contCls: Path = Elaborator.Ctx.globalThisSymbol.asPath.sel(Tree.Ident("Predef")).sel(Tree.Ident("__Cont")).sel(Tree.Ident("class"))
-  private val resumeFun: Path = Elaborator.Ctx.globalThisSymbol.asPath.sel(Tree.Ident("Predef")).sel(Tree.Ident("__resume"))
   extension (k: Block => Block)
     
     def chain(other: Block => Block): Block => Block = b => k(other(b))
@@ -40,9 +36,9 @@ object InstrLowering:
     def transform(f: (Block => Block) => (Block => Block)) = f(k)
     
     def assign(l: Local, r: Result) = k.chain(Assign(l, r, _))
-    def assignField(lhs: Path, nme: Tree.Ident, rhs: Result) = k.chain(AssignField(lhs, nme, rhs, _))
-    def break(l: Local): Block = k.rest(Break(l, false))
-    def continue(l: Local): Block = k.rest(Break(l, true))
+    def assignFieldN(lhs: Path, nme: Tree.Ident, rhs: Result) = k.chain(AssignField(lhs, nme, rhs, _)(N))
+    def break(l: Local): Block = k.rest(Break(l))
+    def continue(l: Local): Block = k.rest(Continue(l))
     def define(defn: Defn) = k.chain(Define(defn, _))
     def end() = k.rest(End())
     def ifthen(scrut: Path, cse: Case, trm: Block): Block => Block = k.chain(Match(scrut, cse -> trm :: Nil, N, _))
@@ -52,17 +48,28 @@ object InstrLowering:
     
   private def blockBuilder: Block => Block = identity
   extension (p: Path)
-    def sel(id: Tree.Ident) = Select(p, id)
-    def pc = p.sel(pcIdent)
-    def isContHack = p.sel(isContIdent)
-    def next = p.sel(nextIdent)
-    def tail = p.sel(tailIdent)
+    def selN(id: Tree.Ident) = Select(p, id)(N)
+    def pc = p.selN(pcIdent)
+    def isContHack = p.selN(isContIdent)
+    def next = p.selN(nextIdent)
+    def tail = p.selN(tailIdent)
+    def asArg = Arg(false, p)
   extension (l: Local)
     def asPath: Path = Value.Ref(l)
   
+import InstrLowering.*
+
+class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
+  
+  // Opt-Level 1 => builtin is not function call
+  // Opt-Level 2 => Tail-Call & Cont class elimination
+  private val optimize: Int = 1
+  
+  private val contCls: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__Cont")).selN(Tree.Ident("class"))
+  private val resumeFun: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__resume"))
   private class HandlerCtx:
     private var handlers: List[Result => Block] = (_ => Throw(
-      Instantiate(Elaborator.Ctx.globalThisSymbol.asPath.sel(Tree.Ident("Error")),
+      Instantiate(State.globalThisSymbol.asPath.selN(Tree.Ident("Error")),
       Value.Lit(Tree.StrLit("Unhandled effects")) :: Nil)
     )) :: Nil
     private var allLocals: List[Set[Local]] = Set.empty :: Nil
@@ -90,14 +97,14 @@ object InstrLowering:
     private def instCont(pc: BigInt, res: Path, tmp: Local, symbolResolver: (ClassSymbol, Local) => TermSymbol)(k: Result => Block): Block =
       blockBuilder
         .assign(tmp, Instantiate(BlockMemberSymbol(contClasses.head.id.name, Nil).asPath, Value.Lit(Tree.IntLit(pc)) :: Value.Lit(Tree.UnitLit(true)) :: Nil))
-        .assignField(tmp.asPath, pcIdent, Value.Lit(Tree.IntLit(pc)))
-        .assignField(tmp.asPath, isContIdent, Value.Lit(Tree.BoolLit(true)))
+        .assignFieldN(tmp.asPath, pcIdent, Value.Lit(Tree.IntLit(pc)))
+        .assignFieldN(tmp.asPath, isContIdent, Value.Lit(Tree.BoolLit(true)))
         .transform(toSave.head.foldLeft(_)((res, loc) =>
-          res.assignField(tmp.asPath, symbolResolver(contClasses.head, loc).id, loc.asPath)
+          res.assignFieldN(tmp.asPath, symbolResolver(contClasses.head, loc).id, loc.asPath)
         ))
-        .assignField(tmp.asPath, nextIdent, res.tail.next)
-        .assignField(res.tail, nextIdent, tmp.asPath)
-        .assignField(res, tailIdent, tmp.asPath)
+        .assignFieldN(tmp.asPath, nextIdent, res.tail.next)
+        .assignFieldN(res.tail, nextIdent, tmp.asPath)
+        .assignFieldN(res, tailIdent, tmp.asPath)
         .rest(k(res))
     def handleScoped(contClass: ClassSymbol, handler: Result => Block, tce: Bool = false)(scoped: => Block): (Set[Local], Block) =
       handlers ::= handler
@@ -117,21 +124,13 @@ object InstrLowering:
       (locals, result)
     def handleFun(contClass: ClassSymbol)(scoped: => Block): (Set[Local], Block) =
       handleScoped(contClass, Return(_, false), true)(scoped)
-import InstrLowering.*
-
-class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
-  
-  // Opt-Level 1 => builtin is not function call
-  // Opt-Level 2 => Tail-Call & Cont class elimination
-  private val optimize: Int = 1
-  
   private def instCont(resume: Path): Result =
     Instantiate(contCls, resume :: Value.Lit(Tree.BoolLit(false)) :: Value.Lit(Tree.UnitLit(true)) :: Value.Lit(Tree.BoolLit(true)) :: Nil)
   
   
   private val handlerCtx = HandlerCtx()
 
-  private def freshTmp(dbgNme: Str = "tmp") = new TempSymbol(summon[Elaborator.State].nextUid, N, dbgNme)
+  private def freshTmp(dbgNme: Str = "tmp") = new TempSymbol(N, dbgNme)
   // special function denoting state transitions, transitionFn should never appear in the real output
   private val transitionSymbol = freshTmp("transition")
   private val separationSymbol = freshTmp("separator")
@@ -149,29 +148,38 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
   // blk: the block of code within this state
   // sym: the variable to which the resumed value should set
   class BlockState(val id: StateId, val blk: Block, val sym: Opt[Local])
+  
+  object SimpleCall:
+    def apply(fun: Path, args: List[Path]) = Call(fun, args.map(Arg(false, _)))
+    def unapply(res: Result) = res match
+      case Call(fun, args) => args.foldRight[Opt[List[Path]]](S(Nil))((arg, acc) => acc.flatMap(acc => arg match
+        case Arg(false, p) => S(p :: acc)
+        case _ => N
+      )).map((fun, _))
+      case _ => N
 
   // Note: can construct StateTransition and pattern match on it as if it were a case class
   object StateTransition:
-    def apply(uid: StateId) = Return(Call(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(uid)))), false)
+    def apply(uid: StateId) = Return(SimpleCall(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(uid)))), false)
     def unapply(blk: Block) = blk match
-      case Return(Call(Value.Ref(`transitionSymbol`), List(Value.Lit(Tree.IntLit(uid)))), false) if uid >= 0 =>
+      case Return(SimpleCall(Value.Ref(`transitionSymbol`), List(Value.Lit(Tree.IntLit(uid)))), false) if uid >= 0 =>
         S(uid)
       case _ => N 
 
   object Separation:
     def apply(res: Local, uid: StateId, rest: Block) =
-      Assign(res, Call(Value.Ref(separationSymbol), List(Value.Lit(Tree.IntLit(uid)))), rest)
+      Assign(res, SimpleCall(Value.Ref(separationSymbol), List(Value.Lit(Tree.IntLit(uid)))), rest)
     def unapply(blk: Block) = blk match
-      case Assign(res, Call(Value.Ref(`separationSymbol`), List(Value.Lit(Tree.IntLit(uid)))), rest) => 
+      case Assign(res, SimpleCall(Value.Ref(`separationSymbol`), List(Value.Lit(Tree.IntLit(uid)))), rest) => 
         Some(res, uid, rest)
       case _ => None
   
   object ReturnCont:
     private val returnContSymbol = freshTmp("returnCont")
     def apply(res: Local, uid: StateId, rest: Block) =
-      Assign(res, Call(Value.Ref(returnContSymbol), List(Value.Lit(Tree.IntLit(uid)))), rest)
+      Assign(res, SimpleCall(Value.Ref(returnContSymbol), List(Value.Lit(Tree.IntLit(uid)))), rest)
     def unapply(blk: Block) = blk match
-      case Assign(res, Call(Value.Ref(`returnContSymbol`), List(Value.Lit(Tree.IntLit(uid)))), rest) => 
+      case Assign(res, SimpleCall(Value.Ref(`returnContSymbol`), List(Value.Lit(Tree.IntLit(uid)))), rest) => 
         Some(res, uid, rest)
       case _ => None
   
@@ -180,9 +188,9 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     def returnCont(res: Local, uid: StateId): Block => Block = b => k(ReturnCont(res, uid, b))
 
   object FnEnd:
-    def apply() = Return(Call(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(-1)))), false)
+    def apply() = Return(SimpleCall(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(-1)))), false)
     def unapply(blk: Block) = blk match
-      case Return(Call(Value.Ref(`transitionSymbol`), List(Value.Lit(Tree.IntLit(uid)))), false) if  uid == -1 =>
+      case Return(SimpleCall(Value.Ref(`transitionSymbol`), List(Value.Lit(Tree.IntLit(uid)))), false) if  uid == -1 =>
         true
       case _ => false 
 
@@ -222,9 +230,9 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
 
     // Note: can construct StateTransition and pattern match on it as if it were a case class
     object StateTransition:
-      def apply(uid: StateId) = Return(Call(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(uid)))), false)
+      def apply(uid: StateId) = Return(SimpleCall(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(uid)))), false)
       def unapply(blk: Block) = blk match
-        case Return(Call(Value.Ref(`transitionSymbol`), List(Value.Lit(Tree.IntLit(uid)))), false) =>
+        case Return(SimpleCall(Value.Ref(`transitionSymbol`), List(Value.Lit(Tree.IntLit(uid)))), false) =>
           S(uid)
         case _ => N 
 
@@ -240,7 +248,8 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       case Throw(_) => false
       case l @ Label(label, body, rest) => 
         labelBodyHasCall(l) || containsCall(rest)
-      case Break(label, toBeginning) => false
+      case Break(label) => false
+      case Continue(label) => false
       case Begin(sub, rest) => containsCallRec(sub) || containsCall(rest)
       case TryBlock(sub, finallyDo, rest) => containsCallRec(sub) || containsCallRec(finallyDo) || containsCall(rest)
       case Assign(lhs, c: Call, rest) => true
@@ -322,7 +331,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
               BlockState(startId, bodyNew, N) :: BlockState(endId, restNew, N) :: parts ::: restParts
             )
 
-      case Break(label, toBeginning) =>
+      case Break(label) =>
         val (start, end) = labelIds.get(label) match
           case N => raise(ErrorReport(
             msg"Could not find label '${label.nme}'" ->
@@ -330,12 +339,17 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
             source = Diagnostic.Source.Compilation))
             return PartRet(blk, Nil)
           case S(value) => value
-        
-        if toBeginning then
-          PartRet(StateTransition(start), Nil)
-        else
-          PartRet(StateTransition(end), Nil)
-        
+        PartRet(StateTransition(end), Nil)
+      case Continue(label) =>
+        val (start, end) = labelIds.get(label) match
+          case N => raise(ErrorReport(
+            msg"Could not find label '${label.nme}'" ->
+            label.toLoc :: Nil,
+            source = Diagnostic.Source.Compilation))
+            return PartRet(blk, Nil)
+          case S(value) => value
+        PartRet(StateTransition(start), Nil)
+
       case Begin(sub, rest) => 
         val PartRet(restNew, restParts) = go(rest)
         restNew match
@@ -357,9 +371,9 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       case Assign(lhs, rhs, rest) =>
         val PartRet(head, parts) = go(rest)
         PartRet(Assign(lhs, rhs, head), parts)
-      case AssignField(lhs, nme, rhs, rest) =>
+      case blk @ AssignField(lhs, nme, rhs, rest) =>
         val PartRet(head, parts) = go(rest)
-        PartRet(AssignField(lhs, nme, rhs, head), parts)
+        PartRet(blk.mapChildBlocks(_ => head), parts)
       case Return(_, _) => PartRet(blk, Nil)
       // ignored cases
       case TryBlock(sub, finallyDo, rest) => ??? // ignore
@@ -412,7 +426,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       def f(blk: Block): Block = blk match
         case ReturnCont(res, uid, rest) =>
           blockBuilder
-            .assignField(res.asPath.tail, nextIdent, cls.asPath)
+            .assignFieldN(res.asPath.tail, nextIdent, cls.asPath)
             .assign(pcSymbol, Value.Lit(Tree.IntLit(uid)))
             .ret(res.asPath)
         case StateTransition(uid) =>
@@ -435,7 +449,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
 
     val lbl = blockBuilder.label(loopLbl, mainMatchBlk).rest(End())
     
-    val resumedVal = VarSymbol(Tree.Ident("value$"), summon[Elaborator.State].nextUid)
+    val resumedVal = VarSymbol(Tree.Ident("value$"))
 
     def createAssignment(sym: Local) = Assign(sym, resumedVal.asPath, End())
     
@@ -459,7 +473,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     val sym = BlockMemberSymbol("resume", List())
     val resumeFnDef = FunDefn(
       BlockMemberSymbol("resume", List()),
-      List(ParamList(ParamListFlags.empty, List(Param(FldFlags.empty, resumedVal, N)))),
+      List(PlainParamList(List(Param(FldFlags.empty, resumedVal, N)))),
       resumeBody
     )
 
@@ -469,7 +483,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       syntax.Cls,
       cls,
       List(),
-      S(List(Param(FldFlags.empty, resumedVal, N))),
+      S(PlainParamList(List(Param(FldFlags.empty, resumedVal, N)))),
       ObjBody(st.Blk(Nil, st.Lit(Tree.UnitLit(true))))
     )
     sym.defn = S(clsDef)
@@ -478,6 +492,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       cls,
       syntax.Cls,
       List(resumeFnDef),
+      List(),
       List(),
       End()
     )
@@ -488,7 +503,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
   def getContClassSymbol(sym: Opt[BlockMemberSymbol]): ClassSymbol =
     ClassSymbol(
       Tree.TypeDef(syntax.Cls, Tree.Error(), N, N),
-      Tree.Ident("Cont$" + summon[Elaborator.State].nextUid + "$" + sym.map((sym: BlockMemberSymbol) => sym.nme).getOrElse(""))
+      Tree.Ident("Cont$" + State.suid.nextUid + "$" + sym.map((sym: BlockMemberSymbol) => sym.nme).getOrElse(""))
     )
   
   def removeMarkers(blk: Block): (Bool, Block) =
@@ -522,7 +537,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       handlerCtx.addSavedVar(sym) { super.term(t)(k) }
     case st.Blk((d: Declaration) :: stats, res) =>
       d match
-      case td @ TermDefinition(_, syntax.Fun, _, _, _, S(bod), _) =>
+      case td @ TermDefinition(k = syntax.Fun, body = S(bod)) =>
         val contClassSymbol = getContClassSymbol(S(td.sym))
         val (locals, bodRaw) = handlerCtx.handleFun(contClassSymbol) { returnedTerm(bod) }
         val bodTrm = instrumentBlock(contClassSymbol, bodRaw, locals, N)
@@ -533,9 +548,11 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
         val (mtds, rest1) = bodBlk.stats.partitionMap:
           case td: TermDefinition if td.k is syntax.Fun => L(td)
           case s => R(s)
-        val (flds, rest2) = rest1.partitionMap:
+        val (privateFlds, rest2) = rest1.partitionMap:
           case LetDecl(sym: TermSymbol) => L(sym)
           case s => R(s)
+        val publicFlds = rest2.collect:
+          case td @ TermDefinition(k = (_: syntax.Val)) => td
         Define(ClsLikeDefn(cls.sym, syntax.Cls,
             mtds.flatMap: td =>
               td.body.map: bod =>
@@ -544,7 +561,9 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
                 val bodTrm = instrumentBlock(contClassSymbol, bodRaw, locals, N)
                 FunDefn(td.sym, td.params, bodTrm)
             ,
-            flds, term(Blk(rest2, bodBlk.res))(ImplctRet).mapTail:
+            privateFlds,
+            publicFlds,
+            term(st.Blk(rest2, bodBlk.res))(ImplctRet).mapTail:
               case Return(Value.Lit(syntax.Tree.UnitLit(true)), true) => End()
               case t => t
           ),
@@ -556,19 +575,19 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       // FIXME: Assumed defs are in the correct order, which is not checked currently
       val termHandlerFuns = (k: Ls[Value.Lam] => Block) => (defs.reverse.foldRight[Ls[Value.Lam] => Block](k)((df, acc) =>
         df match
-        case TermDefinition(_, _, sym, params, _, _, _) =>
+        case TermDefinition(sym = sym, params = params) =>
           val realParams = params.head.params.dropRight(1)
-          val idFuncX = VarSymbol(Tree.Ident("x"), -1)
-          val idFunc = Value.Lam(Param(FldFlags.empty, idFuncX, N) :: Nil, Return(idFuncX.asPath, false))
+          val idFuncX = VarSymbol(Tree.Ident("x"))
+          val idFunc = Value.Lam(PlainParamList(Param(FldFlags.empty, idFuncX, N) :: Nil), Return(idFuncX.asPath, false))
           val cont = freshTmp("cont")
           
-          val mkHandler: Path => Value.Lam = (sym: Path) => Value.Lam(realParams,
+          val mkHandler: Path => Value.Lam = (sym: Path) => Value.Lam(PlainParamList(realParams),
             blockBuilder
               .assign(cont, instCont(Value.Lit(Tree.UnitLit(true))))
-              .assignField(cont.asPath, tailIdent, cont.asPath)
-              .assignField(cont.asPath, handlerIdent, lhs.asPath)
-              .assignField(cont.asPath, handlerFunIdent, sym)
-              .assignField(cont.asPath, paramsIdent, Value.Arr(realParams.map(p => p.sym.asPath)))
+              .assignFieldN(cont.asPath, tailIdent, cont.asPath)
+              .assignFieldN(cont.asPath, handlerIdent, lhs.asPath)
+              .assignFieldN(cont.asPath, handlerFunIdent, sym)
+              .assignFieldN(cont.asPath, paramsIdent, Value.Arr(realParams.map(p => p.sym.asPath.asArg)))
               .ret(cont.asPath)
           )
           // FIXME: do the dummy identifier do any harm?
@@ -587,11 +606,11 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
           
           val contClassSymbol = getContClassSymbol(N)
           val (locals, bodRaw) = handlerCtx.handleScoped(contClassSymbol, r =>
-            Assign(cur, r, Break(lblBdy, false))
-          ) { Assign(lhs, Instantiate(cls, handlerFuns), handlerCtx.addSavedVar(lhs){ term(st.Blk(stats, res))(r => Assign(cur, r, Break(lblBdy, false))) }) }
+            Assign(cur, r, Break(lblBdy))
+          ) { Assign(lhs, Instantiate(cls, handlerFuns), handlerCtx.addSavedVar(lhs){ term(st.Blk(stats, res))(r => Assign(cur, r, Break(lblBdy))) }) }
           
           def transformBodyBreaks(blk: Block): Block = blk match
-            case Break(`lblBdy`, false) => Return(cur.asPath, false)
+            case Break(`lblBdy`) => Return(cur.asPath, false)
             case _ => blk.mapChildBlocks(transformBodyBreaks)
           
           val bod = instrumentBlock(contClassSymbol, bodRaw, locals, S(transformBodyBreaks))
@@ -600,28 +619,28 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
           val equalBuiltin = getBinaryBuiltin("===").asPath
           val nequalBuiltin = getBinaryBuiltin("!==").asPath
           
-          val equalToCurVal = Call(equalBuiltin, cur.asPath.sel(handlerIdent) :: lhs.asPath :: Nil)
-          val notEqualToSavedNext = Call(nequalBuiltin, handlerTailList.asPath.next :: savedNext.asPath :: Nil)
-          val tailNotEmpty = Call(nequalBuiltin, handlerTailList.asPath.next :: Value.Lit(Tree.UnitLit(true)) :: Nil)
+          val equalToCurVal = SimpleCall(equalBuiltin, cur.asPath.selN(handlerIdent) :: lhs.asPath :: Nil)
+          val notEqualToSavedNext = SimpleCall(nequalBuiltin, handlerTailList.asPath.next :: savedNext.asPath :: Nil)
+          val tailNotEmpty = SimpleCall(nequalBuiltin, handlerTailList.asPath.next :: Value.Lit(Tree.UnitLit(true)) :: Nil)
           handlerCtx.addSavedVars(handlerTailList :: cur :: Nil) { blockBuilder
             .label(lblBdy, bod)
             .separation(cur, uid)
             .assign(handlerTailList, instCont(Value.Lit(Tree.UnitLit(true)))) // just a dummy link list head
             .label(lblH,
               blockBuilder.ifthen(cur.asPath, Case.Lit(Tree.BoolLit(true)), blockBuilder.ifthen(
-                cur.asPath.sel(handlerIdent),
+                cur.asPath.selN(handlerIdent),
                 Case.Lit(Tree.BoolLit(true)),
                 blockBuilder
                   .assign(tmp, equalToCurVal)
                   .ifthen(tmp.asPath, Case.Lit(Tree.BoolLit(true)), blockBuilder
                     // resume = __resume(cur.next, tail)
-                    .assign(tmp, Call(resumeFun, cur.asPath.next :: handlerTailList.asPath :: Nil))
+                    .assign(tmp, SimpleCall(resumeFun, cur.asPath.next :: handlerTailList.asPath :: Nil))
                     // _ = cur.params.push(resume)
-                    .assign(tmp, Call(cur.asPath.sel(paramsIdent).sel(Tree.Ident("push")), tmp.asPath :: Nil))
+                    .assign(tmp, SimpleCall(cur.asPath.selN(paramsIdent).selN(Tree.Ident("push")), tmp.asPath :: Nil))
                     // savedNext = handlerTailList.next
                     .assign(savedNext, handlerTailList.asPath.next)
                     // cur = cur.handlerFun.apply(cur, cur.params)
-                    .assign(cur, Call(cur.asPath.sel(handlerFunIdent).sel(Tree.Ident("apply")), cur.asPath :: cur.asPath.sel(paramsIdent) :: Nil))
+                    .assign(cur, SimpleCall(cur.asPath.selN(handlerFunIdent).selN(Tree.Ident("apply")), cur.asPath :: cur.asPath.selN(paramsIdent) :: Nil))
                     // when handlerFun ends, it could be either
                     // 1. handled all effects
                     // 2. new effect raised
@@ -633,7 +652,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
                         nextIdent,
                         savedNext.asPath,
                         End()
-                      )
+                      )(N)
                     )
                     .continue(lblH)
                   ).rest(handlerCtx.linkAndHandle(uid, cur.asPath, tmp, getContLocalSymbol))
@@ -642,15 +661,15 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
               .ifthen(tmp.asPath, Case.Lit(Tree.BoolLit(true)), blockBuilder
                 // cur = __resume(handlerTail.next, handlerTail)(cur)
                 .assign(tmp, handlerTailList.asPath.next)
-                .assignField(handlerTailList.asPath, nextIdent, Value.Lit(Tree.UnitLit(true)))
-                .assign(tmp, Call(resumeFun, tmp.asPath :: handlerTailList.asPath :: Nil))
-                .assign(cur, Call(tmp.asPath, cur.asPath :: Nil))
+                .assignFieldN(handlerTailList.asPath, nextIdent, Value.Lit(Tree.UnitLit(true)))
+                .assign(tmp, SimpleCall(resumeFun, tmp.asPath :: handlerTailList.asPath :: Nil))
+                .assign(cur, SimpleCall(tmp.asPath, cur.asPath :: Nil))
                 .continue(lblH)
               ).end()
             ) // lblH
             .rest(k(cur.asPath))
           }
-    case st.App(Ref(_: BuiltinSymbol), args) if optimize >= 1 =>
+    case st.App(st.Ref(_: BuiltinSymbol), args) if optimize >= 1 =>
       // Optimization: Assuming builtin symbols cannot have effect
       super.term(t)(k)
     case st.Ret(t: st.App) if handlerCtx.canPreserveTailCall() && optimize >= 2 =>
@@ -687,5 +706,5 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     case _ => super.term(t)(k)
 
   override def topLevel(t: st): Block =
-    removeMarkers(super.topLevel(Blk(t :: Nil, st.Lit(Tree.UnitLit(true)))))._2
+    removeMarkers(super.topLevel(st.Blk(t :: Nil, st.Lit(Tree.UnitLit(true)))))._2
     

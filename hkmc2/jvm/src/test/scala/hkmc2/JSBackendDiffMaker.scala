@@ -5,6 +5,14 @@ import scala.collection.mutable
 import mlscript.utils.*, shorthands.*
 import utils.*
 
+import semantics.*
+import codegen.*
+import codegen.js.{JSBuilder, JSBuilderArgNumSanityChecks, JSBuilderSelSanityChecks}
+import document.*
+import codegen.Block
+import codegen.js.Scope
+import hkmc2.syntax.Tree.Ident
+import hkmc2.codegen.Path
 
 abstract class JSBackendDiffMaker extends MLsDiffMaker:
   
@@ -14,6 +22,7 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
   val sjs = NullaryCommand("sjs")
   val showRepl = NullaryCommand("showRepl")
   val silent = NullaryCommand("silent")
+  val noSanityCheck = NullaryCommand("noSanityCheck")
   val expect = Command("expect"): ln =>
     ln.trim
   
@@ -42,10 +51,14 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
     super.processTerm(blk, inImport)
     if js.isSet then
       val low = ltl.givenIn:
-        if instrLowering.isSet then codegen.InstrLowering() else codegen.Lowering()
-      val jsb = codegen.js.JSBuilder()
-      import semantics.*
-      import codegen.*
+        if instrLowering.isSet then
+          new codegen.InstrLowering with codegen.LoweringSelSanityChecks(noSanityCheck.isUnset)
+        else
+          new codegen.Lowering with codegen.LoweringSelSanityChecks(noSanityCheck.isUnset)
+      given Elaborator.Ctx = curCtx
+      val jsb = new JSBuilder
+        with JSBuilderArgNumSanityChecks(noSanityCheck.isUnset)
+        with JSBuilderSelSanityChecks(noSanityCheck.isUnset)
       val le = low.program(blk)
       if showLoweredTree.isSet then
         output(s"Lowered:")
@@ -77,6 +90,7 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
                     output(s"> ${line}")
               content match
               case "undefined" =>
+              case "null" =>
               case _ =>
                 expect.get match
                   case S(expected) if content != expected => raise:

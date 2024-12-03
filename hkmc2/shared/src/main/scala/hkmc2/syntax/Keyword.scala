@@ -93,7 +93,8 @@ object Keyword:
   val `super` = Keyword("super", N, N)
   val `new` = Keyword("new", N, curPrec) // TODO: check the prec
   // val `namespace` = Keyword("namespace", N, N)
-  val `module` = Keyword("module", N, N)
+  val `module` = Keyword("module", N, curPrec)
+  val `object` = Keyword("object", N, curPrec)
   val `open` = Keyword("open", N, curPrec)
   val `type` = Keyword("type", N, N)
   val `where` = Keyword("where", N, N)
@@ -109,8 +110,10 @@ object Keyword:
   val `public` = Keyword("public", N, N)
   val `private` = Keyword("private", N, N)
   val `return` = Keyword("return", N, curPrec)
+  val `throw` = Keyword("throw", N, curPrec)
   val `import` = Keyword("import", N, curPrec)
   val `this` = Keyword("this", N, N)
+  val `pattern` = Keyword("pattern", N, N)
   
   // * The lambda operator is special:
   // *  it should associate very strongly on the left and very loosely on the right

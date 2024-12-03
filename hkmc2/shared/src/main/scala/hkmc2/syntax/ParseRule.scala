@@ -5,6 +5,7 @@ import sourcecode.{Name, Line}
 import mlscript.utils.*, shorthands.*
 import hkmc2.Message._
 import BracketKind._
+import semantics.Elaborator.State
 
 
 // * TODO: add lookahead to Expr as a PartialFunction[Ls[Token], Bool]
@@ -49,7 +50,10 @@ class ParseRule[+A](val name: Str, val omitAltsStr: Bool = false)(val alts: Alt[
       case str1 :: str2 :: Nil => s"$str1 or $str2"
       case strs => strs.init.mkString(", ") + ", or " + strs.last
 
-object ParseRule:
+end ParseRule
+
+
+class ParseRules(using State):
   import Keyword.*
   import Alt.*
   import Tree.*
@@ -187,6 +191,22 @@ object ParseRule:
         ) { case (body, _) => IfLike(kw, body) }
       )
   
+  def typeAliasLike(kw: Keyword, kind: TypeDefKind): Kw[TypeDef] =
+    Kw(kw):
+      ParseRule(s"${kind.desc} declaration"):
+        Expr(
+          ParseRule(s"${kind.desc} head")(
+            Kw(`=`):
+              ParseRule(s"${kind.desc} declaration equals sign"):
+                Expr(
+                  ParseRule(s"${kind.desc} declaration right-hand side")(
+                    End(())
+                  )
+                ) { case (rhs, ()) => S(rhs) },
+            End(N),
+          )
+        ) { (lhs, rhs) => TypeDef(kind, lhs, rhs, N) }
+  
   val prefixRules: ParseRule[Tree] = ParseRule("start of statement", omitAltsStr = true)(
     letLike(`let`),
     letLike(`set`),
@@ -254,23 +274,12 @@ object ParseRule:
     ,
     Kw(`fun`)(termDefBody(Fun)),
     Kw(`val`)(termDefBody(ImmutVal)),
-    Kw(`type`):
-      ParseRule("type alias declaration"):
-        Expr(
-          ParseRule("type alias head")(
-            Kw(`=`):
-              ParseRule("type alias declaration equals sign"):
-                Expr(
-                  ParseRule("type alias declaration right-hand side")(
-                    End(())
-                  )
-                ) { case (rhs, ()) => S(rhs) },
-            End(N),
-          )
-        ) { (lhs, rhs) => TypeDef(Als, lhs, rhs, N) },
+    typeAliasLike(`type`, Als),
+    typeAliasLike(`pattern`, Pat),
     Kw(`class`)(typeDeclBody(Cls)),
     Kw(`trait`)(typeDeclBody(Trt)),
     Kw(`module`)(typeDeclBody(Mod)),
+    Kw(`object`)(typeDeclBody(Obj)),
     Kw(`open`):
       ParseRule("'open' keyword")(
         exprOrBlk(ParseRule("'open' declaration")(End(()))){
@@ -285,6 +294,7 @@ object ParseRule:
     modified(`private`),
     modified(`out`),
     modified(`return`),
+    modified(`throw`),
     modified(`import`), // TODO improve – only allow strings
     // modified(`type`),
     singleKw(`true`)(BoolLit(true)),
@@ -350,4 +360,5 @@ object ParseRule:
     genInfixRule(`restricts`, (rhs, _: Unit) => lhs => InfixApp(lhs, `restricts`, rhs)),
   )
 
+end ParseRules
 

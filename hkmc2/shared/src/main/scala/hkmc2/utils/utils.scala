@@ -20,11 +20,15 @@ extension (s: String)
     .mkString("\"", "", "\"")
 
 
+import hkmc2.semantics.TermDefFlags
 import hkmc2.semantics.FldFlags
 import scala.collection.mutable.Buffer
 import mlscript.utils.StringOps
 
 trait ProductWithTail extends Product
+
+trait ProductWithExtraInfo extends Product:
+  def extraInfo: Str
 
 extension (t: Product)
   def showAsTree(using post: Product => String = Function.const("")): String =
@@ -36,12 +40,17 @@ extension (t: Product)
       case Nil => "Nil"
       case xs: List[_] => "Ls of \n" + xs.iterator.map(aux(_)).mkString("\n").indent("  ")
       case s: String => s.escaped
-      case FldFlags(mut, spec, genGetter) =>
+      case TermDefFlags(mod) =>
+        val flags = Buffer.empty[String]
+        if mod then flags += "module"
+        flags.mkString("(", ", ", ")")
+      case FldFlags(mut, spec, genGetter, mod) =>
         val flags = Buffer.empty[String]
         if mut then flags += "mut"
         if spec then flags += "spec"
         if genGetter then flags += "gen"
-        if flags.isEmpty then "()" else flags.mkString("(", ", ", ")")
+        if mod then flags += "module"
+        flags.mkString("(", ", ", ")")
       case Loc(start, end, origin) =>
         val (sl, _, sc) = origin.fph.getLineColAt(start)
         val (el, _, ec) = origin.fph.getLineColAt(end)
@@ -49,7 +58,12 @@ extension (t: Product)
       case t: Product => t.showAsTree(inTailPos)
       case v => v.toString
     val postfix = post(t)
-    val prefix = t.productPrefix + (if postfix.isEmpty then "" else s" ($postfix)")
+    val midfix = t match
+      case t: ProductWithExtraInfo => t.extraInfo match
+        case "" => ""
+        case str => "{" + str + "}"
+      case _ => ""
+    val prefix = t.productPrefix + midfix + (if postfix.isEmpty then "" else s" ($postfix)")
     t.productArity match
       case 0 => prefix
       case 1 => prefix + " of " + aux(t.productElement(0))
