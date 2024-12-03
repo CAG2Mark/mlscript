@@ -50,7 +50,7 @@ object InstrLowering:
     def ret(r: Result) = k.rest(Return(r, false))
     def staticif(b: Boolean, f: (Block => Block) => (Block => Block)) = if b then k.transform(f) else k
     
-  private def termBuilder: Block => Block = identity
+  private def blockBuilder: Block => Block = identity
   extension (p: Path)
     def sel(id: Tree.Ident) = Select(p, id)
     def pc = p.sel(pcIdent)
@@ -88,7 +88,7 @@ object InstrLowering:
       toSave = oldSave
       result
     private def instCont(pc: BigInt, res: Path, tmp: Local, symbolResolver: (ClassSymbol, Local) => TermSymbol)(k: Result => Block): Block =
-      termBuilder
+      blockBuilder
         .assign(tmp, Instantiate(BlockMemberSymbol(contClasses.head.id.name, Nil).asPath, Value.Lit(Tree.IntLit(pc)) :: Value.Lit(Tree.UnitLit(true)) :: Nil))
         .assignField(tmp.asPath, pcIdent, Value.Lit(Tree.IntLit(pc)))
         .assignField(tmp.asPath, isContIdent, Value.Lit(Tree.BoolLit(true)))
@@ -411,16 +411,16 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     def transformPart(blk: Block): Block = 
       def f(blk: Block): Block = blk match
         case ReturnCont(res, uid, rest) =>
-          termBuilder
+          blockBuilder
             .assignField(res.asPath.tail, nextIdent, cls.asPath)
             .assign(pcSymbol, Value.Lit(Tree.IntLit(uid)))
             .ret(res.asPath)
         case StateTransition(uid) =>
-          termBuilder
+          blockBuilder
             .assign(pcSymbol, Value.Lit(Tree.IntLit(uid)))
             .continue(loopLbl)
         case FnEnd() =>
-          termBuilder.break(loopLbl)
+          blockBuilder.break(loopLbl)
         case c => c.mapChildBlocks(f)
       f(blk)
 
@@ -433,7 +433,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       End()
     ))
 
-    val lbl = termBuilder.label(loopLbl, mainMatchBlk).rest(End())
+    val lbl = blockBuilder.label(loopLbl, mainMatchBlk).rest(End())
     
     val resumedVal = VarSymbol(Tree.Ident("value$"), summon[Elaborator.State].nextUid)
 
@@ -563,7 +563,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
           val cont = freshTmp("cont")
           
           val mkHandler: Path => Value.Lam = (sym: Path) => Value.Lam(realParams,
-            termBuilder
+            blockBuilder
               .assign(cont, instCont(Value.Lit(Tree.UnitLit(true))))
               .assignField(cont.asPath, tailIdent, cont.asPath)
               .assignField(cont.asPath, handlerIdent, lhs.asPath)
@@ -603,17 +603,17 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
           val equalToCurVal = Call(equalBuiltin, cur.asPath.sel(handlerIdent) :: lhs.asPath :: Nil)
           val notEqualToSavedNext = Call(nequalBuiltin, handlerTailList.asPath.next :: savedNext.asPath :: Nil)
           val tailNotEmpty = Call(nequalBuiltin, handlerTailList.asPath.next :: Value.Lit(Tree.UnitLit(true)) :: Nil)
-          handlerCtx.addSavedVars(handlerTailList :: cur :: Nil) { termBuilder
+          handlerCtx.addSavedVars(handlerTailList :: cur :: Nil) { blockBuilder
             .label(lblBdy, bod)
             .separation(cur, uid)
             .assign(handlerTailList, instCont(Value.Lit(Tree.UnitLit(true)))) // just a dummy link list head
             .label(lblH,
-              termBuilder.ifthen(cur.asPath, Case.Lit(Tree.BoolLit(true)), termBuilder.ifthen(
+              blockBuilder.ifthen(cur.asPath, Case.Lit(Tree.BoolLit(true)), blockBuilder.ifthen(
                 cur.asPath.sel(handlerIdent),
                 Case.Lit(Tree.BoolLit(true)),
-                termBuilder
+                blockBuilder
                   .assign(tmp, equalToCurVal)
-                  .ifthen(tmp.asPath, Case.Lit(Tree.BoolLit(true)), termBuilder
+                  .ifthen(tmp.asPath, Case.Lit(Tree.BoolLit(true)), blockBuilder
                     // resume = __resume(cur.next, tail)
                     .assign(tmp, Call(resumeFun, cur.asPath.next :: handlerTailList.asPath :: Nil))
                     // _ = cur.params.push(resume)
@@ -639,7 +639,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
                   ).rest(handlerCtx.linkAndHandle(uid, cur.asPath, tmp, getContLocalSymbol))
               ).end())
               .assign(tmp, tailNotEmpty)
-              .ifthen(tmp.asPath, Case.Lit(Tree.BoolLit(true)), termBuilder
+              .ifthen(tmp.asPath, Case.Lit(Tree.BoolLit(true)), blockBuilder
                 // cur = __resume(handlerTail.next, handlerTail)(cur)
                 .assign(tmp, handlerTailList.asPath.next)
                 .assignField(handlerTailList.asPath, nextIdent, Value.Lit(Tree.UnitLit(true)))
