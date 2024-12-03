@@ -50,7 +50,18 @@ abstract class Effect[A] with
 //│ JS:
 //│ this.Effect = class Effect { constructor() {  } toString() { return "Effect"; } }; undefined
 
+:sjs
 class Effect[A](perform: Str -> Str)
+//│ JS:
+//│ this.Effect = function Effect(perform1) { return new Effect.class(perform1); };
+//│ this.Effect.class = class Effect {
+//│   constructor(perform) {
+//│     this.perform = perform;
+//│     
+//│   }
+//│   toString() { return "Effect(" + this.perform + ")"; }
+//│ };
+//│ undefined
 
 :expect 'b'
 val r = handle h = Effect with

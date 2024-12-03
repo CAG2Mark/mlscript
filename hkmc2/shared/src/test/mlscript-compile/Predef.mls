@@ -35,3 +35,20 @@ fun __resume(cont, tail)(value) =
       cont = cont.next
   else
     value
+
+fun __debugCont(cont) =
+  let msg = "Chain: "
+  let first = true
+  while cont then
+    if first then
+      set first = false
+    else
+      set msg = msg + " -> "
+    set msg = msg + "(" + cont.constructor.name
+    if cont.tail then
+      set msg = msg + " with tail " + cont.tail.constructor.name
+    else ()
+    set msg = msg + ")"
+    set cont = cont.next
+  else
+    print(msg)

@@ -72,6 +72,44 @@ const Predef$class = class Predef {
       }
       return tmp2;
     };
+  } 
+  __debugCont(cont1) {
+    let msg, first, scrut, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8;
+    msg = "Chain: ";
+    first = true;
+    tmp9: while (true) {
+      if (cont1) {
+        if (first) {
+          first = false;
+          tmp = undefined;
+        } else {
+          tmp1 = msg + " -> ";
+          msg = tmp1;
+          tmp = undefined;
+        }
+        tmp2 = msg + "(";
+        tmp3 = tmp2 + cont1.constructor.name;
+        msg = tmp3;
+        scrut = cont1.tail;
+        if (scrut) {
+          tmp4 = msg + " with tail ";
+          tmp5 = tmp4 + cont1.tail.constructor.name;
+          msg = tmp5;
+          tmp6 = undefined;
+        } else {
+          tmp6 = undefined;
+        }
+        tmp7 = msg + ")";
+        msg = tmp7;
+        cont1 = cont1.next;
+        tmp8 = undefined;
+        continue tmp9;
+      } else {
+        tmp8 = this.print(msg);
+      }
+      break;
+    }
+    return tmp8;
   }
   toString() { return "Predef"; }
 }; const Predef = new Predef$class;

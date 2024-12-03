@@ -25,20 +25,19 @@ object InstrLowering:
 
   private val pcIdent: Tree.Ident = Tree.Ident("__pc")
   private val isContIdent: Tree.Ident = Tree.Ident("__isCont") // FIXME: hack
-  private val nextHandlerIdent: Tree.Ident = Tree.Ident("nextHandler")
-  private val tailHandlerIdent: Tree.Ident = Tree.Ident("tailHandler")
   private val nextIdent: Tree.Ident = Tree.Ident("next")
   private val tailIdent: Tree.Ident = Tree.Ident("tail")
   private val handlerIdent: Tree.Ident = Tree.Ident("handler")
   private val handlerFunIdent: Tree.Ident = Tree.Ident("handlerFun")
   private val paramsIdent: Tree.Ident = Tree.Ident("params")
   
-  private val contCls: Path = PathBuilder(Elaborator.Ctx.globalThisSymbol).sel(Tree.Ident("Predef")).sel(Tree.Ident("__Cont")).sel(Tree.Ident("class")).get
-  private val resumeFun: Path = PathBuilder(Elaborator.Ctx.globalThisSymbol).sel(Tree.Ident("Predef")).sel(Tree.Ident("__resume")).get
+  private val contCls: Path = Elaborator.Ctx.globalThisSymbol.asPath.sel(Tree.Ident("Predef")).sel(Tree.Ident("__Cont")).sel(Tree.Ident("class"))
+  private val resumeFun: Path = Elaborator.Ctx.globalThisSymbol.asPath.sel(Tree.Ident("Predef")).sel(Tree.Ident("__resume"))
   extension (k: Block => Block)
     
     def chain(other: Block => Block): Block => Block = b => k(other(b))
     def rest(b: Block): Block = k(b)
+    def transform(f: (Block => Block) => (Block => Block)) = f(k)
     
     def assign(l: Local, r: Result) = k.chain(Assign(l, r, _))
     def assignField(lhs: Path, nme: Tree.Ident, rhs: Result) = k.chain(AssignField(lhs, nme, rhs, _))
@@ -49,24 +48,21 @@ object InstrLowering:
     def ifthen(scrut: Path, cse: Case, trm: Block): Block => Block = k.chain(Match(scrut, cse -> trm :: Nil, N, _))
     def label(label: Local, body: Block) = k.chain(Label(label, body, _))
     def ret(r: Result) = k.rest(Return(r, false))
+    def staticif(b: Boolean, f: (Block => Block) => (Block => Block)) = if b then k.transform(f) else k
     
-  private def blockBuilder: Block => Block = identity
-  private class PathBuilder(p: Path):
-    def sel(id: Tree.Ident) = PathBuilder(Select(p, id))
-    def pc = sel(pcIdent)
-    def isContHack = sel(isContIdent)
-    def next = sel(nextIdent)
-    def tail = sel(tailIdent)
-    def nextHandler = sel(nextHandlerIdent)
-    def tailHandler = sel(tailHandlerIdent)
-    def get = p
+  private def termBuilder: Block => Block = identity
+  extension (p: Path)
+    def sel(id: Tree.Ident) = Select(p, id)
+    def pc = p.sel(pcIdent)
+    def isContHack = p.sel(isContIdent)
+    def next = p.sel(nextIdent)
+    def tail = p.sel(tailIdent)
+  extension (l: Local)
+    def asPath: Path = Value.Ref(l)
   
-  private object PathBuilder:
-    def apply(p: Path) = new PathBuilder(p)
-    def apply(l: Local) = new PathBuilder(Value.Ref(l))
   private class HandlerCtx:
     private var handlers: List[Result => Block] = (_ => Throw(
-      Instantiate(PathBuilder(Elaborator.Ctx.globalThisSymbol).sel(Tree.Ident("Error")).get,
+      Instantiate(Elaborator.Ctx.globalThisSymbol.asPath.sel(Tree.Ident("Error")),
       Value.Lit(Tree.StrLit("Unhandled effects")) :: Nil)
     )) :: Nil
     private var allLocals: List[Set[Local]] = Set.empty :: Nil
@@ -92,17 +88,16 @@ object InstrLowering:
       toSave = oldSave
       result
     private def instCont(pc: BigInt, res: Path, tmp: Local, symbolResolver: (ClassSymbol, Local) => TermSymbol)(k: Result => Block): Block =
-      val resultHead = blockBuilder
-        .assign(tmp, Instantiate(Value.Ref(BlockMemberSymbol(contClasses.head.id.name, Nil)), Value.Lit(Tree.IntLit(pc)) :: Value.Lit(Tree.UnitLit(true)) :: Nil))
-        .assignField(Value.Ref(tmp), pcIdent, Value.Lit(Tree.IntLit(pc)))
-        .assignField(Value.Ref(tmp), isContIdent, Value.Lit(Tree.BoolLit(true)))
-      val resultSavedLocals = toSave.head.foldLeft(resultHead)((res, loc) =>
-        res.assignField(Value.Ref(tmp), symbolResolver(contClasses.head, loc).id, Value.Ref(loc))
-      )
-      resultSavedLocals
-        .assignField(Value.Ref(tmp), nextIdent, PathBuilder(res).tail.next.get)
-        .assignField(PathBuilder(res).tail.get, nextIdent, Value.Ref(tmp))
-        .assignField(res, tailIdent, Value.Ref(tmp))
+      termBuilder
+        .assign(tmp, Instantiate(BlockMemberSymbol(contClasses.head.id.name, Nil).asPath, Value.Lit(Tree.IntLit(pc)) :: Value.Lit(Tree.UnitLit(true)) :: Nil))
+        .assignField(tmp.asPath, pcIdent, Value.Lit(Tree.IntLit(pc)))
+        .assignField(tmp.asPath, isContIdent, Value.Lit(Tree.BoolLit(true)))
+        .transform(toSave.head.foldLeft(_)((res, loc) =>
+          res.assignField(tmp.asPath, symbolResolver(contClasses.head, loc).id, loc.asPath)
+        ))
+        .assignField(tmp.asPath, nextIdent, res.tail.next)
+        .assignField(res.tail, nextIdent, tmp.asPath)
+        .assignField(res, tailIdent, tmp.asPath)
         .rest(k(res))
     def handleScoped(contClass: ClassSymbol, handler: Result => Block, tce: Bool = false)(scoped: => Block): (Set[Local], Block) =
       handlers ::= handler
@@ -183,7 +178,6 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
   extension (k: Block => Block)
     def separation(res: Local, uid: StateId): Block => Block = b => k(Separation(res, uid, b))
     def returnCont(res: Local, uid: StateId): Block => Block = b => k(ReturnCont(res, uid, b))
-  private def blockBuilder: Block => Block = identity
 
   object FnEnd:
     def apply() = Return(Call(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(-1)))), false)
@@ -417,33 +411,33 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
     def transformPart(blk: Block): Block = 
       def f(blk: Block): Block = blk match
         case ReturnCont(res, uid, rest) =>
-          blockBuilder
-            .assignField(PathBuilder(res).tail.get, nextIdent, Value.Ref(cls))
+          termBuilder
+            .assignField(res.asPath.tail, nextIdent, cls.asPath)
             .assign(pcSymbol, Value.Lit(Tree.IntLit(uid)))
-            .ret(Value.Ref(res))
+            .ret(res.asPath)
         case StateTransition(uid) =>
-          blockBuilder
+          termBuilder
             .assign(pcSymbol, Value.Lit(Tree.IntLit(uid)))
             .continue(loopLbl)
         case FnEnd() =>
-          blockBuilder.break(loopLbl)
+          termBuilder.break(loopLbl)
         case c => c.mapChildBlocks(f)
       f(blk)
 
     // match block representing the function body
     val mainMatchCases = parts.toList.map(b => (Case.Lit(Tree.IntLit(b.id)), transformPart(b.blk.mapLocals(mapSym))))
     val mainMatchBlk = unrollMatch(Match(
-      Value.Ref(pcSymbol),
+      pcSymbol.asPath,
       mainMatchCases,
       N,
       End()
     ))
 
-    val lbl = blockBuilder.label(loopLbl, mainMatchBlk).rest(End())
+    val lbl = termBuilder.label(loopLbl, mainMatchBlk).rest(End())
     
     val resumedVal = VarSymbol(Tree.Ident("value$"), summon[Elaborator.State].nextUid)
 
-    def createAssignment(sym: Local) = Assign(sym, Value.Ref(resumedVal), End())
+    def createAssignment(sym: Local) = Assign(sym, resumedVal.asPath, End())
     
     val assignedResumedCases = for 
       b   <- parts
@@ -456,7 +450,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
         lbl
       else
         unrollMatch(Match(
-          Value.Ref(pcSymbol),
+          pcSymbol.asPath,
           assignedResumedCases,
           S(End()),
           lbl
@@ -565,17 +559,17 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
         case TermDefinition(_, _, sym, params, _, _, _) =>
           val realParams = params.head.params.dropRight(1)
           val idFuncX = VarSymbol(Tree.Ident("x"), -1)
-          val idFunc = Value.Lam(Param(FldFlags.empty, idFuncX, N) :: Nil, Return(Value.Ref(idFuncX), false))
+          val idFunc = Value.Lam(Param(FldFlags.empty, idFuncX, N) :: Nil, Return(idFuncX.asPath, false))
           val cont = freshTmp("cont")
           
           val mkHandler: Path => Value.Lam = (sym: Path) => Value.Lam(realParams,
-            blockBuilder
+            termBuilder
               .assign(cont, instCont(Value.Lit(Tree.UnitLit(true))))
-              .assignField(Value.Ref(cont), tailIdent, Value.Ref(cont))
-              .assignField(Value.Ref(cont), handlerIdent, Value.Ref(lhs))
-              .assignField(Value.Ref(cont), handlerFunIdent, sym)
-              .assignField(Value.Ref(cont), paramsIdent, Value.Arr(realParams.map(p => Value.Ref(p.sym))))
-              .ret(Value.Ref(cont))
+              .assignField(cont.asPath, tailIdent, cont.asPath)
+              .assignField(cont.asPath, handlerIdent, lhs.asPath)
+              .assignField(cont.asPath, handlerFunIdent, sym)
+              .assignField(cont.asPath, paramsIdent, Value.Arr(realParams.map(p => p.sym.asPath)))
+              .ret(cont.asPath)
           )
           // FIXME: do the dummy identifier do any harm?
           // This automatically instrument df as desired
@@ -597,60 +591,64 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
           ) { Assign(lhs, Instantiate(cls, handlerFuns), handlerCtx.addSavedVar(lhs){ term(st.Blk(stats, res))(r => Assign(cur, r, Break(lblBdy, false))) }) }
           
           def transformBodyBreaks(blk: Block): Block = blk match
-            case Break(`lblBdy`, false) => Return(Value.Ref(cur), false)
+            case Break(`lblBdy`, false) => Return(cur.asPath, false)
             case _ => blk.mapChildBlocks(transformBodyBreaks)
           
           val bod = instrumentBlock(contClassSymbol, bodRaw, locals, S(transformBodyBreaks))
           
-          val equalToCurVal = Call(Value.Ref(BuiltinSymbol("===", true, false, false)), PathBuilder(cur).sel(handlerIdent).get :: Value.Ref(lhs) :: Nil)
-          val notEqualToSavedNext = Call(Value.Ref(BuiltinSymbol("!==", true, false, false)), PathBuilder(handlerTailList).next.get :: Value.Ref(savedNext) :: Nil)
-          val tailNotEmpty = Call(Value.Ref(BuiltinSymbol("!==", true, false, false)), PathBuilder(handlerTailList).next.get :: Value.Lit(Tree.UnitLit(true)) :: Nil)
-          handlerCtx.addSavedVars(handlerTailList :: cur :: Nil) { blockBuilder
+          def getBinaryBuiltin(nme: Str) = BuiltinSymbol(nme, true, false, false)
+          val equalBuiltin = getBinaryBuiltin("===").asPath
+          val nequalBuiltin = getBinaryBuiltin("!==").asPath
+          
+          val equalToCurVal = Call(equalBuiltin, cur.asPath.sel(handlerIdent) :: lhs.asPath :: Nil)
+          val notEqualToSavedNext = Call(nequalBuiltin, handlerTailList.asPath.next :: savedNext.asPath :: Nil)
+          val tailNotEmpty = Call(nequalBuiltin, handlerTailList.asPath.next :: Value.Lit(Tree.UnitLit(true)) :: Nil)
+          handlerCtx.addSavedVars(handlerTailList :: cur :: Nil) { termBuilder
             .label(lblBdy, bod)
             .separation(cur, uid)
             .assign(handlerTailList, instCont(Value.Lit(Tree.UnitLit(true)))) // just a dummy link list head
             .label(lblH,
-              blockBuilder.ifthen(Value.Ref(cur), Case.Lit(Tree.BoolLit(true)), blockBuilder.ifthen(
-                PathBuilder(cur).sel(handlerIdent).get,
+              termBuilder.ifthen(cur.asPath, Case.Lit(Tree.BoolLit(true)), termBuilder.ifthen(
+                cur.asPath.sel(handlerIdent),
                 Case.Lit(Tree.BoolLit(true)),
-                blockBuilder
+                termBuilder
                   .assign(tmp, equalToCurVal)
-                  .ifthen(Value.Ref(tmp), Case.Lit(Tree.BoolLit(true)), blockBuilder
+                  .ifthen(tmp.asPath, Case.Lit(Tree.BoolLit(true)), termBuilder
                     // resume = __resume(cur.next, tail)
-                    .assign(tmp, Call(resumeFun, PathBuilder(cur).next.get :: Value.Ref(handlerTailList) :: Nil))
+                    .assign(tmp, Call(resumeFun, cur.asPath.next :: handlerTailList.asPath :: Nil))
                     // _ = cur.params.push(resume)
-                    .assign(tmp, Call(PathBuilder(cur).sel(paramsIdent).sel(Tree.Ident("push")).get, Value.Ref(tmp) :: Nil))
+                    .assign(tmp, Call(cur.asPath.sel(paramsIdent).sel(Tree.Ident("push")), tmp.asPath :: Nil))
                     // savedNext = handlerTailList.next
-                    .assign(savedNext, PathBuilder(handlerTailList).next.get)
+                    .assign(savedNext, handlerTailList.asPath.next)
                     // cur = cur.handlerFun.apply(cur, cur.params)
-                    .assign(cur, Call(PathBuilder(cur).sel(handlerFunIdent).sel(Tree.Ident("apply")).get, Value.Ref(cur) :: PathBuilder(cur).sel(paramsIdent).get :: Nil))
+                    .assign(cur, Call(cur.asPath.sel(handlerFunIdent).sel(Tree.Ident("apply")), cur.asPath :: cur.asPath.sel(paramsIdent) :: Nil))
                     // when handlerFun ends, it could be either
                     // 1. handled all effects
                     // 2. new effect raised
                     // In case 2, the handler will appended to the list wrongly, we fix it here
                     .assign(tmp, notEqualToSavedNext)
-                    .ifthen(Value.Ref(tmp), Case.Lit(Tree.BoolLit(true)),
+                    .ifthen(tmp.asPath, Case.Lit(Tree.BoolLit(true)),
                       AssignField(
-                        PathBuilder(handlerTailList).next.get,
+                        handlerTailList.asPath.next,
                         nextIdent,
-                        Value.Ref(savedNext),
+                        savedNext.asPath,
                         End()
                       )
                     )
                     .continue(lblH)
-                  ).rest(handlerCtx.linkAndHandle(uid, Value.Ref(cur), tmp, getContLocalSymbol))
+                  ).rest(handlerCtx.linkAndHandle(uid, cur.asPath, tmp, getContLocalSymbol))
               ).end())
               .assign(tmp, tailNotEmpty)
-              .ifthen(Value.Ref(tmp), Case.Lit(Tree.BoolLit(true)), blockBuilder
+              .ifthen(tmp.asPath, Case.Lit(Tree.BoolLit(true)), termBuilder
                 // cur = __resume(handlerTail.next, handlerTail)(cur)
-                .assign(tmp, PathBuilder(handlerTailList).next.get)
-                .assignField(Value.Ref(handlerTailList), nextIdent, Value.Lit(Tree.UnitLit(true)))
-                .assign(tmp, Call(resumeFun, Value.Ref(tmp) :: Value.Ref(handlerTailList) :: Nil))
-                .assign(cur, Call(Value.Ref(tmp), Value.Ref(cur) :: Nil))
+                .assign(tmp, handlerTailList.asPath.next)
+                .assignField(handlerTailList.asPath, nextIdent, Value.Lit(Tree.UnitLit(true)))
+                .assign(tmp, Call(resumeFun, tmp.asPath :: handlerTailList.asPath :: Nil))
+                .assign(cur, Call(tmp.asPath, cur.asPath :: Nil))
                 .continue(lblH)
               ).end()
             ) // lblH
-            .rest(k(Value.Ref(cur)))
+            .rest(k(cur.asPath))
           }
     case st.App(Ref(_: BuiltinSymbol), args) if optimize >= 1 =>
       // Optimization: Assuming builtin symbols cannot have effect
@@ -667,19 +665,19 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
       super.term(t): r =>
         Assign(res, r,
           Match(
-            // Value.Ref(res),
-            // Case.Cls(contSym, contTrm) -> handlerCtx.linkAndHandle(uid, Value.Ref(res)) :: Nil,
+            // res.asPath,
+            // Case.Cls(contSym, contTrm) -> handlerCtx.linkAndHandle(uid, res.asPath) :: Nil,
             // N,
-            // Separation(res, uid, k(Value.Ref(res)))
-            Value.Ref(res), // here, res is either undefined or continuation so actually only need to check against undefined
+            // Separation(res, uid, k(res.asPath))
+            res.asPath, // here, res is either undefined or continuation so actually only need to check against undefined
             Case.Lit(Tree.BoolLit(true)) -> Match(
-              PathBuilder(res).isContHack.get,
-              Case.Lit(Tree.BoolLit(true)) -> ReturnCont(res, uid, handlerCtx.linkAndHandle(uid, Value.Ref(res), tmp, getContLocalSymbol)) :: Nil,
+              res.asPath.isContHack,
+              Case.Lit(Tree.BoolLit(true)) -> ReturnCont(res, uid, handlerCtx.linkAndHandle(uid, res.asPath, tmp, getContLocalSymbol)) :: Nil,
               N,
               End()
             ) :: Nil,
             N,
-            Separation(res, uid, k(Value.Ref(res)))
+            Separation(res, uid, k(res.asPath))
           )
         )
     case st.Lam(params, body) =>
