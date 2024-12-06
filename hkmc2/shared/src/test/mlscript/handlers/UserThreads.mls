@@ -1,0 +1,51 @@
+:js
+:il
+
+class ThreadEffect with
+  fun fork(thread: () -> ()): ()
+  fun yld(): ()
+
+class ThreadEffect(fork: (() -> ()) -> (), yld: () -> ())
+
+fun f(h, x)() =
+  print("f " + x)
+  h.yld()
+  print("f " + x)
+  h.yld()
+  print("f " + x)
+
+let x = []
+handle h = ThreadEffect with
+  fun fork(thread, k) =
+    x.push(thread)
+    k()
+    while x.length != 0 then
+      x.pop()()
+    else
+      ()
+  fun yld(k) =
+    while x.length != 0 then
+      x.pop()()
+    else
+      ()
+    k()
+in
+  print(3)
+  h.fork(f(h, 0))
+  h.fork(f(h, 1))
+  h.fork(f(h, 2))
+  h.yld()
+  print(4)
+//│ > 3
+//│ > f 2
+//│ > f 1
+//│ > f 0
+//│ > f 0
+//│ > f 0
+//│ > f 1
+//│ > f 1
+//│ > f 2
+//│ > f 2
+//│ > 4
+//│ x = []
+
