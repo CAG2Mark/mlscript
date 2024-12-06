@@ -14,38 +14,64 @@ fun f(h, x)() =
   h.yld()
   print("f " + x)
 
+fun main(h) =
+  print("main start")
+  h.fork(f(h, 0))
+  h.fork(f(h, 1))
+  h.fork(f(h, 2))
+  print("main end")
+
+// task queue
 let x = []
+fun drain() =
+  while x.length != 0 then
+    x.pop()()
+  else
+    ()
+//│ x = []
+
+// LIFO
 handle h = ThreadEffect with
   fun fork(thread, k) =
     x.push(thread)
     k()
-    while x.length != 0 then
-      x.pop()()
-    else
-      ()
+    drain()
   fun yld(k) =
-    while x.length != 0 then
-      x.pop()()
-    else
-      ()
-    k()
+    x.unshift(k)
+    drain()
 in
-  print(3)
-  h.fork(f(h, 0))
-  h.fork(f(h, 1))
-  h.fork(f(h, 2))
-  h.yld()
-  print(4)
-//│ > 3
+  main(h)
+//│ > main start
+//│ > main end
 //│ > f 2
 //│ > f 1
 //│ > f 0
-//│ > f 0
-//│ > f 0
-//│ > f 1
-//│ > f 1
 //│ > f 2
+//│ > f 1
+//│ > f 0
 //│ > f 2
-//│ > 4
-//│ x = []
+//│ > f 1
+//│ > f 0
 
+// FIFO
+handle h = ThreadEffect with
+  fun fork(thread, k) =
+    x.unshift(thread)
+    k()
+    drain()
+  fun yld(k) =
+    x.unshift(k)
+    drain()
+in
+  main(h)
+//│ > main start
+//│ > main end
+//│ > f 0
+//│ > f 1
+//│ > f 2
+//│ > f 0
+//│ > f 1
+//│ > f 2
+//│ > f 0
+//│ > f 1
+//│ > f 2
