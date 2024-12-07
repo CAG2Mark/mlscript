@@ -154,7 +154,7 @@ const Predef$class = class Predef {
       let scrut, tmp, tmp1, tmp2;
       tmp3: while (true) {
         if (cont) {
-          tmp = cont.resume(value);
+          tmp = cont.resume(value) ?? null;
           value = tmp;
           if (value) {
             scrut = value.__isCont;
@@ -163,11 +163,11 @@ const Predef$class = class Predef {
               return value;
             } else {
               cont = cont.next;
-              tmp1 = undefined;
+              tmp1 = null;
             }
           } else {
             cont = cont.next;
-            tmp1 = undefined;
+            tmp1 = null;
           }
           tmp2 = tmp1;
           continue tmp3;
@@ -187,11 +187,11 @@ const Predef$class = class Predef {
       if (cont1) {
         if (first) {
           first = false;
-          tmp = undefined;
+          tmp = null;
         } else {
           tmp1 = msg + " -> ";
           msg = tmp1;
-          tmp = undefined;
+          tmp = null;
         }
         tmp2 = msg + "(";
         tmp3 = tmp2 + cont1.constructor.name;
@@ -201,14 +201,14 @@ const Predef$class = class Predef {
           tmp4 = msg + " with tail ";
           tmp5 = tmp4 + cont1.tail.constructor.name;
           msg = tmp5;
-          tmp6 = undefined;
+          tmp6 = null;
         } else {
-          tmp6 = undefined;
+          tmp6 = null;
         }
         tmp7 = msg + ")";
         msg = tmp7;
         cont1 = cont1.next;
-        tmp8 = undefined;
+        tmp8 = null;
         continue tmp9;
       } else {
         tmp8 = this.print(msg);

@@ -8,7 +8,7 @@ print(Predef.__resume)
 //│ >       let scrut, tmp, tmp1, tmp2;
 //│ >       tmp3: while (true) {
 //│ >         if (cont) {
-//│ >           tmp = cont.resume(value);
+//│ >           tmp = cont.resume(value) ?? null;
 //│ >           value = tmp;
 //│ >           if (value) {
 //│ >             scrut = value.__isCont;
@@ -17,11 +17,11 @@ print(Predef.__resume)
 //│ >               return value;
 //│ >             } else {
 //│ >               cont = cont.next;
-//│ >               tmp1 = undefined;
+//│ >               tmp1 = null;
 //│ >             }
 //│ >           } else {
 //│ >             cont = cont.next;
-//│ >             tmp1 = undefined;
+//│ >             tmp1 = null;
 //│ >           }
 //│ >           tmp2 = tmp1;
 //│ >           continue tmp3;
@@ -48,7 +48,7 @@ print(Predef.__resume)
 abstract class Effect[A] with
   fun perform(x: A): Str -> Str
 //│ JS:
-//│ this.Effect = class Effect { constructor() {  } toString() { return "Effect"; } }; undefined
+//│ this.Effect = class Effect { constructor() {  } toString() { return "Effect"; } }; null
 
 :sjs
 class Effect[A](perform: Str -> Str)
@@ -61,7 +61,7 @@ class Effect[A](perform: Str -> Str)
 //│   }
 //│   toString() { return "Effect(" + this.perform + ")"; }
 //│ };
-//│ undefined
+//│ null
 
 :expect 'b'
 val r = handle h = Effect with
@@ -234,6 +234,8 @@ fun f() =
   let y = 5 in
     val x = 5
     x + y
+//│ > try { function f(...args) {   globalThis.Predef.checkArgs("f", 0, true, args.length);   let y;   class Cont$1009$f {     constructor() {            }     resume(...args1) {       globalThis.Predef.checkArgs("resume", 1, true, args1.length);       let value$ = args1[0];       contLoop: while (true) {         if (this.__pc === 0) {           const x = 3;           this.y$1 = 5;           const x = 5;           return x + this.y$1;         }         break;       }     }     toString() { return "Cont$1009$f"; }   }   const x = 3;   y = 5;   const x = 5;   return x + y; } null } catch (e) { console.log('\u200B' + e + '\u200B'); }
+//│ >                                                                                                                                                                                                                                                                                                                                                                                                            ^
 //│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Identifier 'x' has already been declared
 
 fun f() =
