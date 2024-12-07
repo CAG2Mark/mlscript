@@ -181,8 +181,8 @@ sealed abstract class Result:
 // type Local = LocalSymbol
 type Local = Symbol
 
-case class Call(fun: Path, args: Ls[Arg]) extends Result:
-  override def mapLocals(f: Local => Local) = Call(fun.mapLocals(f), args.map(_.mapLocals(f)))
+case class Call(fun: Path, args: Ls[Arg])(val isMlsFun: Bool) extends Result:
+  override def mapLocals(f: Local => Local) = Call(fun.mapLocals(f), args.map(_.mapLocals(f)))(isMlsFun)
 
 case class Instantiate(cls: Path, args: Ls[Path]) extends Result:
   def mapLocals(f: Local => Local): Instantiate = Instantiate(cls, args.map(_.mapLocals(f)))

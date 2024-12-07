@@ -7,7 +7,7 @@ import utils.*
 
 import semantics.*
 import codegen.*
-import codegen.js.{JSBuilder, JSBuilderArgNumSanityChecks, JSBuilderSelSanityChecks}
+import codegen.js.{JSBuilder, JSBuilderArgNumSanityChecks}
 import document.*
 import codegen.Block
 import codegen.js.Scope
@@ -23,6 +23,7 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
   val showRepl = NullaryCommand("showRepl")
   val silent = NullaryCommand("silent")
   val noSanityCheck = NullaryCommand("noSanityCheck")
+  val traceJS = NullaryCommand("traceJS")
   val expect = Command("expect"): ln =>
     ln.trim
   
@@ -52,13 +53,16 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
     if js.isSet then
       val low = ltl.givenIn:
         if instrLowering.isSet then
-          new codegen.InstrLowering with codegen.LoweringSelSanityChecks(noSanityCheck.isUnset)
+          new codegen.InstrLowering
+          with codegen.LoweringSelSanityChecks(noSanityCheck.isUnset)
+          with codegen.LoweringTraceLog(traceJS.isSet)
         else
-          new codegen.Lowering with codegen.LoweringSelSanityChecks(noSanityCheck.isUnset)
+          new codegen.Lowering
+          with codegen.LoweringSelSanityChecks(noSanityCheck.isUnset)
+          with codegen.LoweringTraceLog(traceJS.isSet)
       given Elaborator.Ctx = curCtx
       val jsb = new JSBuilder
         with JSBuilderArgNumSanityChecks(noSanityCheck.isUnset)
-        with JSBuilderSelSanityChecks(noSanityCheck.isUnset)
       val le = low.program(blk)
       if showLoweredTree.isSet then
         output(s"Lowered:")
@@ -99,7 +103,11 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
                   case _ => output(s"$prefix= ${content}")
           case ReplHost.Empty =>
           case ReplHost.Unexecuted(message) => ???
-          case ReplHost.Error(isSyntaxError, message) =>
+          case ReplHost.Error(isSyntaxError, message, otherOutputs) =>
+            if otherOutputs.nonEmpty then
+              otherOutputs.splitSane('\n').foreach: line =>
+                output(s"> ${line}")
+            
             if (isSyntaxError) then
               // If there is a syntax error in the generated code,
               // it should be a code generation error.
@@ -111,7 +119,16 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
                 source = Diagnostic.Source.Runtime))
         if stderr.nonEmpty then output(s"// Standard Error:\n${stderr}")
       
+      
+      if traceJS.isSet then
+        host.execute(
+          "globalThis.Predef.TraceLogger.enabled = true; " +
+          "globalThis.Predef.TraceLogger.resetIndent(0)")
+      
       mkQuery("", jsStr)
+      
+      if traceJS.isSet then
+        host.execute("globalThis.Predef.TraceLogger.enabled = false")
       
       import Elaborator.Ctx.*
       def definedValues = curCtx.env.iterator.flatMap:

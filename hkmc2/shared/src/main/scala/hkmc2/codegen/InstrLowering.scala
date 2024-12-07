@@ -150,7 +150,7 @@ class InstrLowering(using TL, Raise, Elaborator.State) extends Lowering:
   class BlockState(val id: StateId, val blk: Block, val sym: Opt[Local])
   
   object SimpleCall:
-    def apply(fun: Path, args: List[Path]) = Call(fun, args.map(Arg(false, _)))
+    def apply(fun: Path, args: List[Path]) = Call(fun, args.map(Arg(false, _)))(true)
     def unapply(res: Result) = res match
       case Call(fun, args) => args.foldRight[Opt[List[Path]]](S(Nil))((arg, acc) => acc.flatMap(acc => arg match
         case Arg(false, p) => S(p :: acc)
