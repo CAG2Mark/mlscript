@@ -446,3 +446,14 @@ trait LoweringTraceLog
     ) |>:
       Ret(Value.Ref(resSym))
     )
+
+
+trait LoweringHandler
+    (instrument: Bool)(using TL, Raise, Elaborator.State)
+    extends Lowering:
+  override def term(t: st)(k: Result => Block)(using Subst): Block =
+    if !instrument then return super.term(t)(k)
+    super.term(t)(k)
+  override def program(main: st): Program =
+    if !instrument then return super.program(main)
+    super.program(main)
