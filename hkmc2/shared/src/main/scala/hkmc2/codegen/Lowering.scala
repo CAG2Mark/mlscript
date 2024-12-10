@@ -174,7 +174,7 @@ class Lowering(using TL, Raise, Elaborator.State):
     case st.Lam(params, body) =>
       val (paramLists, bodyBlock) = setupFunctionDef(params :: Nil, body, N)
       k(Value.Lam(paramLists.head, bodyBlock))
-
+    
     /* 
     case t @ st.If(Split.Let(sym, trm, tail)) =>
       // term(st.Blk(semantics.LetDecl(sym) :: semantics.DefineVar(sym, trm) :: Nil, st.If(tail)(t.normalized)))(k)
