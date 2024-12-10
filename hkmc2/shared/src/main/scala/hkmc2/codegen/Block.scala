@@ -24,6 +24,7 @@ sealed abstract class Block extends Product with AutoLocated:
   
   protected def children: Ls[Located] = ??? // Maybe extending AutoLocated is unnecessary
   
+  // TODO: implement for HandleBlock
   lazy val definedVars: Set[Local] = this match
     case _: Return | _: Throw => Set.empty
     case Begin(sub, rst) => sub.definedVars ++ rst.definedVars
@@ -39,6 +40,7 @@ sealed abstract class Block extends Product with AutoLocated:
     case TryBlock(sub, fin, rst) => sub.definedVars ++ fin.definedVars ++ rst.definedVars
     case Label(lbl, bod, rst) => bod.definedVars ++ rst.definedVars
   
+  // TODO: implement for HandleBlock
   // TODO conserve if no changes
   def mapTail(f: BlockTail => BlockTail): Block = this match
     case b: BlockTail => f(b)
@@ -82,7 +84,7 @@ case class AssignField(lhs: Path, nme: Tree.Ident, rhs: Result, rest: Block)(sym
 
 case class Define(defn: Defn, rest: Block) extends Block with ProductWithTail
 
-case class HandleBlock(handlers: Ls[Handler], body: Block, rest: Block) extends Block with ProductWithTail
+case class HandleBlock(lhs: Local, handlers: Ls[Handler], rest: Block) extends Block with ProductWithTail
 
 sealed abstract class Defn:
   val sym: MemberSymbol[?]

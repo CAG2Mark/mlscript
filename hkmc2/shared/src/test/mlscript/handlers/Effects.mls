@@ -1,22 +1,66 @@
 :js
 
-:sjs
+:fixme
+:lot
 class Effect[A](perform: Str -> Str)
 val r = handle h = Effect with
-  fun perform(arg, k) = "b"
-  2 + 2
+  fun perform(arg, k) = k(arg)
 in
   h.perform("k")
 r
-//│ FAILURE: Unexpected exception
-//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
-//│ 	at: scala.Predef$.$qmark$qmark$qmark(Predef.scala:344)
-//│ 	at: hkmc2.codegen.Lowering.term(Lowering.scala:308)
-//│ 	at: hkmc2.JSBackendDiffMaker$$anon$3.hkmc2$codegen$LoweringHandler$$super$term(JSBackendDiffMaker.scala:55)
-//│ 	at: hkmc2.codegen.LoweringHandler.term(Lowering.scala:457)
-//│ 	at: hkmc2.codegen.LoweringHandler.term$(Lowering.scala:453)
-//│ 	at: hkmc2.JSBackendDiffMaker$$anon$3.term(JSBackendDiffMaker.scala:55)
-//│ 	at: hkmc2.codegen.Lowering.subTerm(Lowering.scala:321)
-//│ 	at: hkmc2.codegen.Lowering.term(Lowering.scala:101)
-//│ 	at: hkmc2.JSBackendDiffMaker$$anon$3.hkmc2$codegen$LoweringHandler$$super$term(JSBackendDiffMaker.scala:55)
-//│ 	at: hkmc2.codegen.LoweringHandler.term(Lowering.scala:457)
+//│ Lowered:
+//│ Program:
+//│   imports = Nil
+//│   main = Define:
+//│     defn = ClsLikeDefn:
+//│       sym = class:Effect
+//│       k = Cls
+//│       methods = Nil
+//│       privateFields = Nil
+//│       publicFields = Nil
+//│       ctor = End of ""
+//│     rest = HandleBlock: \
+//│     lhs = h
+//│     handlers = Ls of 
+//│       Handler:
+//│         sym = member:perform
+//│         resumeSym = k
+//│         params = Ls of 
+//│           ParamList:
+//│             flags = ParamListFlags of false
+//│             params = Ls of 
+//│               Param:
+//│                 flags = ()
+//│                 sym = arg
+//│                 sign = N
+//│             restParam = N
+//│         body = Return:
+//│           res = Call:
+//│             fun = Ref of k
+//│             args = Ls of 
+//│               Arg:
+//│                 spread = false
+//│                 value = Ref of arg
+//│           implct = false
+//│     rest = Assign: \
+//│     lhs = $tmp
+//│     rhs = Call:
+//│       fun = Select:
+//│         qual = Ref of h
+//│         name = Ident of "perform"
+//│       args = Ls of 
+//│         Arg:
+//│           spread = false
+//│           value = Lit of StrLit of "k"
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       owner = S of globalThis:block#1
+//│       k = ImmutVal
+//│       sym = member:r
+//│       rhs = Ref of $tmp
+//│     rest = Return: \
+//│     res = Select{member:r}:
+//│       qual = Ref of globalThis:block#1
+//│       name = Ident of "r"
+//│     implct = true
+//│ /!!!\ Uncaught error: scala.MatchError: HandleBlock(h,List(Handler(member:perform,k,List(ParamList(‹›,List(Param(‹›,arg,None)),None)),Return(Call(Ref(k),List(Arg(false,Ref(arg)))),false))),Assign($tmp,Call(Select(Ref(h),Ident(perform)),List(Arg(false,Lit(StrLit(k))))),Define(ValDefn(Some(globalThis:block#1),ImmutVal,member:r,Ref($tmp)),Return(Select(Ref(globalThis:block#1),Ident(r)),true)))) (of class hkmc2.codegen.HandleBlock)

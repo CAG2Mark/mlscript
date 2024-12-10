@@ -174,7 +174,7 @@ class Lowering(using TL, Raise, Elaborator.State):
     case st.Lam(params, body) =>
       val (paramLists, bodyBlock) = setupFunctionDef(params :: Nil, body, N)
       k(Value.Lam(paramLists.head, bodyBlock))
-    
+
     /* 
     case t @ st.If(Split.Let(sym, trm, tail)) =>
       // term(st.Blk(semantics.LetDecl(sym) :: semantics.DefineVar(sym, trm) :: Nil, st.If(tail)(t.normalized)))(k)
@@ -305,7 +305,17 @@ class Lowering(using TL, Raise, Elaborator.State):
         k(Value.Ref(l))
       )
 
-    case Handle(lhs, rhs, defs) => HandleBlock(???, ???, ???)
+    case Handle(lhs, rhs, defs) => 
+      val handlers = defs.map {
+        case HandlerTermDefinition(resumeSym, td) => td.body match
+          case None => 
+            raise(ErrorReport(msg"Handler function definitions cannot be empty" -> td.toLoc :: Nil))
+            N
+          case Some(bod) =>
+            val (paramLists, bodyBlock) = setupFunctionDef(td.params, bod, S(td.sym.nme))      
+            S(Handler(td.sym, resumeSym, paramLists, bodyBlock))
+      }.collect{ case Some(v) => v }
+      HandleBlock(lhs, handlers, k(Value.Lit(syntax.Tree.UnitLit(true))))
     
     case Error => End("error")
     
