@@ -207,7 +207,9 @@ extends Importer:
       val sym =
         fieldOrVarSym(Handler, id)
       val newCtx = ctx + (id.name -> sym)
-      Term.Handle(sym, term(cls)(using newCtx), ObjBody(block(sts)._1))
+      // NOTE: `defs` is nil because it doesn't really matter what's in there, no point wasting time transforming the defs. 
+      // The handler has no body anyways so those defs can never be called
+      Term.Handle(sym, term(cls)(using newCtx), Nil)
       
     case h: Handle =>
       raise(ErrorReport(
@@ -561,10 +563,42 @@ extends Importer:
         raise(ErrorReport(msg"Unsupported let binding shape" -> tree.toLoc :: Nil))
         go(sts, Term.Error :: acc)
       case (hd @ Handle(id: Ident, cls: Ident, Block(sts_), N)) :: sts =>
-        val sym =
-          fieldOrVarSym(LetBind, id)
+        val sym = fieldOrVarSym(LetBind, id)
         log(s"Processing `handle` statement $id (${sym}) ${ctx.outer}")
-        val newAcc = Term.Handle(sym, term(cls), ObjBody(block(sts_)._1)) :: acc
+
+        val elabed = block(sts_)._1
+        
+        elabed.res match
+          case Term.Lit(UnitLit(true)) => 
+          case trm => raise(WarningReport(msg"Terms in handler block do nothing" -> trm.toLoc :: Nil))
+
+        val tds = elabed.stats.map {
+          case td @ TermDefinition(owner, Fun, sym, params, sign, body, resSym, flags) => 
+            val paramsRev = params.reverse
+            // Find last param
+            val (resumeParam, newParams) = paramsRev.replaceAndPopFirst(
+              params => {
+                params.params.reverse match
+                  case head :: next => 
+                    Some((ParamList(params.flags, next.reverse, params.restParam), head))
+                  case Nil => None
+              }
+            )
+
+            resumeParam match
+              case None => 
+                raise(ErrorReport(msg"Handler function is missing resumption parameter" -> td.toLoc :: Nil))
+                None
+              case Some(value) =>
+                val newTd = TermDefinition(owner, Fun, sym, newParams.reverse, sign, body, resSym, flags)
+                S(HandlerTermDefinition(value.sym, newTd))
+              
+          case st => 
+            raise(ErrorReport(msg"Only function definitions are allowed in handler blocks" -> st.toLoc :: Nil))
+            None
+        }.collect { case Some(x) => x }
+
+        val newAcc = Term.Handle(sym, term(cls), tds) :: acc
         ctx + (id.name -> sym) givenIn:
           go(sts, newAcc)
       case (tree @ Handle(_, _, _, N)) :: sts =>
