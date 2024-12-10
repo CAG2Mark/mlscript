@@ -1,0 +1,22 @@
+:js
+
+:sjs
+class Effect[A](perform: Str -> Str)
+val r = handle h = Effect with
+  fun perform(arg, k) = "b"
+  2 + 2
+in
+  h.perform("k")
+r
+//│ FAILURE: Unexpected exception
+//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
+//│ 	at: scala.Predef$.$qmark$qmark$qmark(Predef.scala:344)
+//│ 	at: hkmc2.codegen.Lowering.term(Lowering.scala:308)
+//│ 	at: hkmc2.JSBackendDiffMaker$$anon$3.hkmc2$codegen$LoweringHandler$$super$term(JSBackendDiffMaker.scala:55)
+//│ 	at: hkmc2.codegen.LoweringHandler.term(Lowering.scala:457)
+//│ 	at: hkmc2.codegen.LoweringHandler.term$(Lowering.scala:453)
+//│ 	at: hkmc2.JSBackendDiffMaker$$anon$3.term(JSBackendDiffMaker.scala:55)
+//│ 	at: hkmc2.codegen.Lowering.subTerm(Lowering.scala:321)
+//│ 	at: hkmc2.codegen.Lowering.term(Lowering.scala:101)
+//│ 	at: hkmc2.JSBackendDiffMaker$$anon$3.hkmc2$codegen$LoweringHandler$$super$term(JSBackendDiffMaker.scala:55)
+//│ 	at: hkmc2.codegen.LoweringHandler.term(Lowering.scala:457)

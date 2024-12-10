@@ -304,6 +304,8 @@ class Lowering(using TL, Raise, Elaborator.State):
         term(finallyDo)(_ => End()),
         k(Value.Ref(l))
       )
+
+    case Handle(lhs, rhs, defs) => HandleBlock(???, ???, ???)
     
     case Error => End("error")
     

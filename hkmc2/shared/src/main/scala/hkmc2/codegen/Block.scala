@@ -82,7 +82,7 @@ case class AssignField(lhs: Path, nme: Tree.Ident, rhs: Result, rest: Block)(sym
 
 case class Define(defn: Defn, rest: Block) extends Block with ProductWithTail
 
-case class Handle(handlers: Ls[Handler], body: Block, rest: Block) extends Block with ProductWithTail
+case class HandleBlock(handlers: Ls[Handler], body: Block, rest: Block) extends Block with ProductWithTail
 
 sealed abstract class Defn:
   val sym: MemberSymbol[?]
