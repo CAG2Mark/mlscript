@@ -204,12 +204,7 @@ extends Importer:
         msg"Expected a body for handle bindings in expression position" ->
           tree.toLoc :: Nil))
           
-      val sym =
-        fieldOrVarSym(Handler, id)
-      val newCtx = ctx + (id.name -> sym)
-      // NOTE: `defs` is nil because it doesn't really matter what's in there, no point wasting time transforming the defs. 
-      // The handler has no body anyways so those defs can never be called
-      Term.Handle(sym, term(cls)(using newCtx), Nil)
+      block(Handle(id, cls, Block(sts), N) :: Nil)._1
       
     case h: Handle =>
       raise(ErrorReport(
@@ -563,7 +558,7 @@ extends Importer:
         raise(ErrorReport(msg"Unsupported let binding shape" -> tree.toLoc :: Nil))
         go(sts, Term.Error :: acc)
       case (hd @ Handle(id: Ident, cls: Ident, Block(sts_), N)) :: sts =>
-        val sym = fieldOrVarSym(LetBind, id)
+        val sym = fieldOrVarSym(HandlerBind, id)
         log(s"Processing `handle` statement $id (${sym}) ${ctx.outer}")
 
         val elabed = block(sts_)._1
