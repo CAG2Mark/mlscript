@@ -18,3 +18,20 @@ fun f() =
 let x = f()
 //│ > Bye!
 //│ x = 3
+
+fun f() =
+  handle h = Effect with
+    fun f(r) =
+      let m = r()
+      print("Bye!")
+      m
+  in
+    h.f()
+    return 3
+  10
+
+:fixme
+:expect 3
+let x = f()
+//│ > Bye!
+//│ ═══[RUNTIME ERROR] Expected: 3, got: 10
