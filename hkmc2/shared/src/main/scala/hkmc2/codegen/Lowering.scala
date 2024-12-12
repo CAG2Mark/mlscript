@@ -305,17 +305,12 @@ class Lowering(using TL, Raise, Elaborator.State):
         k(Value.Ref(l))
       )
 
-    case Handle(lhs, rhs, defs) => 
-      val handlers = defs.map {
-        case HandlerTermDefinition(resumeSym, td) => td.body match
-          case None => 
-            raise(ErrorReport(msg"Handler function definitions cannot be empty" -> td.toLoc :: Nil))
-            N
-          case Some(bod) =>
-            val (paramLists, bodyBlock) = setupFunctionDef(td.params, bod, S(td.sym.nme))      
-            S(Handler(td.sym, resumeSym, paramLists, bodyBlock))
-      }.collect{ case Some(v) => v }
-      HandleBlock(lhs, handlers, k(Value.Lit(syntax.Tree.UnitLit(true))))
+    case Handle(lhs, rhs, defs) =>
+      raise(ErrorReport(
+        msg"Effect handlers are not enabled" ->
+        t.toLoc :: Nil,
+        source = Diagnostic.Source.Compilation))
+      Assign(lhs, Value.Lit(syntax.Tree.UnitLit(true)), k(Value.Lit(syntax.Tree.UnitLit(true))))
     
     case Error => End("error")
     
@@ -465,7 +460,20 @@ trait LoweringHandler
     extends Lowering:
   override def term(t: st)(k: Result => Block)(using Subst): Block =
     if !instrument then return super.term(t)(k)
-    super.term(t)(k)
+    t match
+    case st.Blk(Handle(lhs, rhs, defs) :: stmts, res) =>
+      val handlers = defs.map {
+        case HandlerTermDefinition(resumeSym, td) => td.body match
+          case None => 
+            raise(ErrorReport(msg"Handler function definitions cannot be empty" -> td.toLoc :: Nil))
+            N
+          case Some(bod) =>
+            val (paramLists, bodyBlock) = setupFunctionDef(td.params, bod, S(td.sym.nme))      
+            S(Handler(td.sym, resumeSym, paramLists, bodyBlock))
+      }.collect{ case Some(v) => v }
+      val resSym = TempSymbol(S(t))
+      HandleBlock(lhs, resSym, handlers, term(st.Blk(stmts, res))(res => Assign(resSym, res, End())), k(Value.Ref(resSym)))
+    case _ => super.term(t)(k)
   override def program(main: st): Program =
     if !instrument then return super.program(main)
     super.program(main)

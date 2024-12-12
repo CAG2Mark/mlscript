@@ -24,7 +24,6 @@ sealed abstract class Block extends Product with AutoLocated:
   
   protected def children: Ls[Located] = ??? // Maybe extending AutoLocated is unnecessary
   
-  // TODO: implement for HandleBlock
   lazy val definedVars: Set[Local] = this match
     case _: Return | _: Throw => Set.empty
     case Begin(sub, rst) => sub.definedVars ++ rst.definedVars
@@ -37,16 +36,18 @@ sealed abstract class Block extends Product with AutoLocated:
     case Break(_) => Set.empty
     case Continue(_) => Set.empty
     case Define(defn, rst) => rst.definedVars
+    case HandleBlock(lhs, res, handlers, bod, rst) => bod.definedVars ++ rst.definedVars + lhs
     case TryBlock(sub, fin, rst) => sub.definedVars ++ fin.definedVars ++ rst.definedVars
     case Label(lbl, bod, rst) => bod.definedVars ++ rst.definedVars
   
-  // TODO: implement for HandleBlock
   // TODO conserve if no changes
   def mapTail(f: BlockTail => BlockTail): Block = this match
     case b: BlockTail => f(b)
     case Begin(sub, rst) => Begin(sub, rst.mapTail(f))
     case Assign(lhs, rhs, rst) => Assign(lhs, rhs, rst.mapTail(f))
     case Define(defn, rst) => Define(defn, rst.mapTail(f))
+    case HandleBlock(lhs, res, handlers, body, rest) =>
+      HandleBlock(lhs, res, handlers.map(h => Handler(h.sym, h.resumeSym, h.params, h.body.mapTail(f))), body.mapTail(f), rest.mapTail(f))
     case Match(scrut, arms, dflt, rst) =>
       Match(scrut, arms.map(_ -> _.mapTail(f)), dflt.map(_.mapTail(f)), rst.mapTail(f))
   
@@ -84,7 +85,7 @@ case class AssignField(lhs: Path, nme: Tree.Ident, rhs: Result, rest: Block)(sym
 
 case class Define(defn: Defn, rest: Block) extends Block with ProductWithTail
 
-case class HandleBlock(lhs: Local, handlers: Ls[Handler], rest: Block) extends Block with ProductWithTail
+case class HandleBlock(lhs: Local, res: Local, handlers: Ls[Handler], body: Block, rest: Block) extends Block with ProductWithTail
 
 sealed abstract class Defn:
   val sym: MemberSymbol[?]
