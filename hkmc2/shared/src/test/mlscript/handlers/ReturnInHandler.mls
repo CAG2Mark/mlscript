@@ -1,0 +1,20 @@
+:js
+:il
+abstract class Effect with
+  fun f(): ()
+
+class Effect(f: () -> ())
+
+fun f() =
+  handle h = Effect with
+    fun f(r) =
+      let m = r()
+      print("Bye!")
+      m
+  h.f()
+  return 3
+
+// works because return is returning inside the continuation if any effect is invoked
+let x = f()
+//│ > Bye!
+//│ x = 3
