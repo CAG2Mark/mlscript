@@ -2,8 +2,9 @@
 
 :fixme
 :lot
-class Effect[A](perform: Str -> Str)
-val r = handle h = Effect with
+abstract class Effect with
+  fun perform(arg: Str): Str
+let r = handle h = Effect with
   fun perform(arg, k) = k(arg)
 in
   h.perform("k")
@@ -20,7 +21,7 @@ r
 //│       publicFields = Nil
 //│       ctor = End of ""
 //│     rest = HandleBlock: \
-//│     lhs = h
+//│     lhs = globalThis:block#1.h
 //│     handlers = Ls of 
 //│       Handler:
 //│         sym = member:perform
@@ -46,21 +47,16 @@ r
 //│     lhs = $tmp
 //│     rhs = Call:
 //│       fun = Select:
-//│         qual = Ref of h
+//│         qual = Ref of globalThis:block#1.h
 //│         name = Ident of "perform"
 //│       args = Ls of 
 //│         Arg:
 //│           spread = false
 //│           value = Lit of StrLit of "k"
-//│     rest = Define: \
-//│     defn = ValDefn:
-//│       owner = S of globalThis:block#1
-//│       k = ImmutVal
-//│       sym = member:r
-//│       rhs = Ref of $tmp
+//│     rest = Assign: \
+//│     lhs = globalThis:block#1.r
+//│     rhs = Ref of $tmp
 //│     rest = Return: \
-//│     res = Select{member:r}:
-//│       qual = Ref of globalThis:block#1
-//│       name = Ident of "r"
+//│     res = Ref of globalThis:block#1.r
 //│     implct = true
-//│ /!!!\ Uncaught error: scala.MatchError: HandleBlock(h,List(Handler(member:perform,k,List(ParamList(‹›,List(Param(‹›,arg,None)),None)),Return(Call(Ref(k),List(Arg(false,Ref(arg)))),false))),Assign($tmp,Call(Select(Ref(h),Ident(perform)),List(Arg(false,Lit(StrLit(k))))),Define(ValDefn(Some(globalThis:block#1),ImmutVal,member:r,Ref($tmp)),Return(Select(Ref(globalThis:block#1),Ident(r)),true)))) (of class hkmc2.codegen.HandleBlock)
+//│ /!!!\ Uncaught error: scala.MatchError: HandleBlock(globalThis:block#1.h,List(Handler(member:perform,k,List(ParamList(‹›,List(Param(‹›,arg,None)),None)),Return(Call(Ref(k),List(Arg(false,Ref(arg)))),false))),Assign($tmp,Call(Select(Ref(globalThis:block#1.h),Ident(perform)),List(Arg(false,Lit(StrLit(k))))),Assign(globalThis:block#1.r,Ref($tmp),Return(Ref(globalThis:block#1.r),true)))) (of class hkmc2.codegen.HandleBlock)

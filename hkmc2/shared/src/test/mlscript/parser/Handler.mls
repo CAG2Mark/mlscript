@@ -18,41 +18,41 @@ handle h = Eff
 //│ ╙──      	              ^
 
 :parseOnly
+fun foo(x) = 1
 handle h = Eff with
   fun f(r) = r(0)
   fun g(a, r) = r(1)
 //│ Parsed:
+//│ 	TermDef(Fun,App(Ident(foo),Tup(List(Ident(x)))),Some(IntLit(1)))
 //│ 	Handle(Ident(h),Ident(Eff),Block(List(TermDef(Fun,App(Ident(f),Tup(List(Ident(r)))),Some(App(Ident(r),Tup(List(IntLit(0)))))), TermDef(Fun,App(Ident(g),Tup(List(Ident(a), Ident(r)))),Some(App(Ident(r),Tup(List(IntLit(1)))))))),None)
 
 
 :e
-fun foo(x) = 1
 handle 1 = 1 with
   fun f(r) = r(0)
 in
   foo(h)
 //│ ╔══[ERROR] Unsupported handle binding shape
-//│ ║  l.30: 	handle 1 = 1 with
+//│ ║  l.31: 	handle 1 = 1 with
 //│ ║        	       ^^^^^^^^^^
-//│ ║  l.31: 	  fun f(r) = r(0)
+//│ ║  l.32: 	  fun f(r) = r(0)
 //│ ╙──      	^^^^^^^^^^^^^^^^^
+//│ ╔══[ERROR] Name not found: foo
+//│ ║  l.34: 	  foo(h)
+//│ ╙──      	  ^^^
 //│ ╔══[ERROR] Name not found: h
-//│ ║  l.33: 	  foo(h)
+//│ ║  l.34: 	  foo(h)
 //│ ╙──      	      ^
 
-class Eff
+abstract class Eff
 fun foo(h) = 0
+
+:el
 handle h = Eff with
   fun f(r) = r(0)
 in
   foo(h)
-
-class Eff
-fun foo(h) = 0
-handle h = Eff with
-  fun f(r) = r(0)
-  fun g(a, r) = r(1)
-foo(h) 
+//│ Elab: { { handle globalThis:block#6.h = SynthSel(Ref(globalThis:block#5),Ident(Eff)) List(HandlerTermDefinition(r,TermDefinition(Some(globalThis:block#6),Fun,member:f,List(ParamList(‹›,List(),None)),None,Some(App(Ref(r),Tup(List(Fld(‹›,Lit(IntLit(0)),None))))),‹result of member:f›,‹›))); globalThis:block#5#666(.)foo‹member:foo›(globalThis:block#6.h#666) } }
 
 :e
 (
@@ -69,26 +69,13 @@ foo(h)
 //│ ╙──      	^^^^^^^^^^^^^^^^^^^^^^
 
 :el
-class Eff
-fun foo(h) = 0
-handle h = Eff with
-  fun f(r) = r(0)
-  fun g(a, r) = r(1)
-foo(h)
-//│ Elab: { Cls Eff { }; ‹› fun member:foo(Param(‹›,h,None), ) = 0; handle globalThis:block#8.h = SynthSel(Ref(globalThis:block#8),Ident(Eff)) List(HandlerTermDefinition(r,TermDefinition(Some(globalThis:block#8),Fun,member:f,List(ParamList(‹›,List(),None)),None,Some(App(Ref(r),Tup(List(Fld(‹›,Lit(IntLit(0)),None))))),‹result of member:f›,‹›)), HandlerTermDefinition(r,TermDefinition(Some(globalThis:block#8),Fun,member:g,List(ParamList(‹›,List(Param(‹›,a,None)),None)),None,Some(App(Ref(r),Tup(List(Fld(‹›,Lit(IntLit(1)),None))))),‹result of member:g›,‹›))); globalThis:block#8#666(.)foo‹member:foo›(globalThis:block#8.h#666) }
-
-:el
-class Eff
-fun foo(h) = 0
 handle h = Eff with
   fun f(r) = r(0)
   fun g(a, r)()() = r(1)
 foo(h)
-//│ Elab: { Cls Eff { }; ‹› fun member:foo(Param(‹›,h,None), ) = 0; handle globalThis:block#9.h = SynthSel(Ref(globalThis:block#9),Ident(Eff)) List(HandlerTermDefinition(r,TermDefinition(Some(globalThis:block#9),Fun,member:f,List(ParamList(‹›,List(),None)),None,Some(App(Ref(r),Tup(List(Fld(‹›,Lit(IntLit(0)),None))))),‹result of member:f›,‹›)), HandlerTermDefinition(r,TermDefinition(Some(globalThis:block#9),Fun,member:g,List(ParamList(‹›,List(Param(‹›,a,None)),None), ParamList(‹›,List(),None), ParamList(‹›,List(),None)),None,Some(App(Ref(r),Tup(List(Fld(‹›,Lit(IntLit(1)),None))))),‹result of member:g›,‹›))); globalThis:block#9#666(.)foo‹member:foo›(globalThis:block#9.h#666) }
+//│ Elab: { handle globalThis:block#8.h = SynthSel(Ref(globalThis:block#5),Ident(Eff)) List(HandlerTermDefinition(r,TermDefinition(Some(globalThis:block#8),Fun,member:f,List(ParamList(‹›,List(),None)),None,Some(App(Ref(r),Tup(List(Fld(‹›,Lit(IntLit(0)),None))))),‹result of member:f›,‹›)), HandlerTermDefinition(r,TermDefinition(Some(globalThis:block#8),Fun,member:g,List(ParamList(‹›,List(Param(‹›,a,None)),None), ParamList(‹›,List(),None), ParamList(‹›,List(),None)),None,Some(App(Ref(r),Tup(List(Fld(‹›,Lit(IntLit(1)),None))))),‹result of member:g›,‹›))); globalThis:block#5#666(.)foo‹member:foo›(globalThis:block#8.h#666) }
 
 :e
-class Eff
-fun foo(h) = 0
 handle h = Eff with
   fun f(r) = r(0)
   fun g(a, r) = r(1)
@@ -97,15 +84,13 @@ handle h = Eff with
     fun x() = x
 foo(h)
 //│ ╔══[ERROR] Only function definitions are allowed in handler blocks
-//│ ║  l.95: 	  val x = 24
+//│ ║  l.82: 	  val x = 24
 //│ ╙──      	          ^^
 //│ ╔══[ERROR] Only function definitions are allowed in handler blocks
-//│ ║  l.97: 	    fun x() = x
+//│ ║  l.84: 	    fun x() = x
 //│ ╙──      	              ^
 
 :e
-class Eff
-fun foo(h) = 0
 handle h = Eff with
   fun f(r) = r(0)
   fun g(a, r) = 
@@ -116,25 +101,23 @@ handle h = Eff with
     foo(h)
 foo(h)
 //│ ╔══[ERROR] Handler function is missing resumption parameter
-//│ ║  l.113: 	      fun f = r(0)
-//│ ╙──       	              ^^^^
+//│ ║  l.98: 	      fun f = r(0)
+//│ ╙──      	              ^^^^
 //│ ╔══[ERROR] Handler function is missing resumption parameter
-//│ ║  l.114: 	      fun g() = r(0)
-//│ ╙──       	                ^^^^
+//│ ║  l.99: 	      fun g() = r(0)
+//│ ╙──      	                ^^^^
 //│ ╔══[ERROR] Handler function is missing resumption parameter
-//│ ║  l.115: 	      fun h()() = r(1)
+//│ ║  l.100: 	      fun h()() = r(1)
 //│ ╙──       	                  ^^^^
 
 :w
 :el
-class Eff
-fun foo(h) = 0
 handle h = Eff with
   fun f(r) = r(0)
   fun g(a, r) = r(1)
   12345
 foo(h)
 //│ ╔══[WARNING] Terms in handler block do nothing
-//│ ║  l.135: 	  12345
+//│ ║  l.118: 	  12345
 //│ ╙──       	  ^^^^^
-//│ Elab: { Cls Eff { }; ‹› fun member:foo(Param(‹›,h,None), ) = 0; handle globalThis:block#12.h = SynthSel(Ref(globalThis:block#12),Ident(Eff)) List(HandlerTermDefinition(r,TermDefinition(Some(globalThis:block#12),Fun,member:f,List(ParamList(‹›,List(),None)),None,Some(App(Ref(r),Tup(List(Fld(‹›,Lit(IntLit(0)),None))))),‹result of member:f›,‹›)), HandlerTermDefinition(r,TermDefinition(Some(globalThis:block#12),Fun,member:g,List(ParamList(‹›,List(Param(‹›,a,None)),None)),None,Some(App(Ref(r),Tup(List(Fld(‹›,Lit(IntLit(1)),None))))),‹result of member:g›,‹›))); globalThis:block#12#666(.)foo‹member:foo›(globalThis:block#12.h#666) }
+//│ Elab: { handle globalThis:block#11.h = SynthSel(Ref(globalThis:block#5),Ident(Eff)) List(HandlerTermDefinition(r,TermDefinition(Some(globalThis:block#11),Fun,member:f,List(ParamList(‹›,List(),None)),None,Some(App(Ref(r),Tup(List(Fld(‹›,Lit(IntLit(0)),None))))),‹result of member:f›,‹›)), HandlerTermDefinition(r,TermDefinition(Some(globalThis:block#11),Fun,member:g,List(ParamList(‹›,List(Param(‹›,a,None)),None)),None,Some(App(Ref(r),Tup(List(Fld(‹›,Lit(IntLit(1)),None))))),‹result of member:g›,‹›))); globalThis:block#5#666(.)foo‹member:foo›(globalThis:block#11.h#666) }
