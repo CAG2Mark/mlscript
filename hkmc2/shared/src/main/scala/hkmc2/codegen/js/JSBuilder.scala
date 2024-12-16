@@ -167,7 +167,7 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
                 privFlds.map(f => doc" # #${f.nme};").mkDocument(doc"")
               } # constructor(${
                 ctorParams.unzip._2.mkDocument(", ")
-              }) { #{ ${if parentSym.isDefined then doc" # super()" else ""} # ${
+              }) { #{ ${if parentSym.isDefined then doc" # super();" else ""} # ${
                 ctorCode.stripBreaks
               } #}  # }${
                 mtds.map: 

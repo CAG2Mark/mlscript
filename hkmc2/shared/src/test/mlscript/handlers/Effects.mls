@@ -6,8 +6,7 @@ abstract class Effect with
 :ge
 handle h = Effect with
   fun perform(arg, k) = k(arg)
-in
-  h.perform("k")
+h.perform("k")
 //│ ╔══[COMPILATION ERROR] Effect handlers are not enabled
 //│ ║  l.7: 	handle h = Effect with
 //│ ║       	           ^^^^^^^^^^^
@@ -21,20 +20,216 @@ in
 :expect 'b'
 handle h = Effect with
   fun perform(arg, k) = "b"
-in
-  h.perform("k")
+h.perform("k")
 //│ = 'b'
 
 :expect 'k'
 handle h = Effect with
   fun perform(arg, k) = arg
-in
-  h.perform("k")
+h.perform("k")
 //│ = 'k'
+
+:expect 'k'
+handle h = Effect with
+  fun perform(arg, k) = k(arg)
+h.perform("k")
+//│ = 'k'
+
+:expect 'hi'
+fun foo(e) = e.perform("hi")
+handle h = Effect with
+  fun perform(arg, k) =
+    print(arg)
+    k(arg)
+foo(h)
+//│ > hi
+//│ = 'hi'
+
+fun foo(e) = e.perform("hi")
+
+:expect 'Hello World!'
+handle h = Effect with
+  fun perform(arg, k) =
+    print(arg)
+    k(arg)
+(() => h.perform("Hello") + " World!")()
+//│ > Hello
+//│ = 'Hello World!'
+
+:expect '54321'
+:fixme
+let result = ""
+handle h = Effect with
+  fun perform(arg, k) =
+    let v = k(arg)
+    result = result + arg
+    v
+in
+  h.perform("1")
+  h.perform("2")
+  h.perform("3")
+  h.perform("4")
+  h.perform("5")
+result
+//│ ═══[RUNTIME ERROR] Expected: '54321', got: '5'
+//│ ═══[RUNTIME ERROR] Expected: '54321', got: '5'
+
+:expect 'b'
+handle h = Effect with
+  fun perform(arg, k) =
+    print(arg)
+    "b"
+h.perform("t")
+//│ > t
+//│ = 'b'
+
+// FIXME: there should be 2 finished
+:expect 'Hello World!'
+fun foo(h) =
+  print("Entering foo")
+  let result = h.perform("Hello")
+  h.perform("?")
+  print("Exiting foo")
+  result
+handle h = Effect with
+  fun perform(arg, k) =
+    print("handler called")
+    let result = k(arg)
+    print("handler finished")
+    result
+print("mainbody start")
+let result = foo(h) + " World!"
+print("mainbody end")
+result
+//│ > mainbody start
+//│ > Entering foo
+//│ > handler called
+//│ > handler called
+//│ > Exiting foo
+//│ > mainbody end
+//│ > handler finished
+//│ = 'Hello World!'
+//│ result = 'Hello World!'
+
+// FIXME: there should be 2 finished
+:expect 'Hello World!'
+fun foo(h) =
+  print("Entering foo")
+  let result = h.perform("Hello")
+  h.perform("Oops!")
+  print("Exiting foo")
+  result
+fun bar(h) =
+  print("Entering bar")
+  let result = foo(h) + " World"
+  print("Exiting bar")
+  result
+fun foobar(h) =
+  print("Entering foobar")
+  let result = bar(h) + "!"
+  print("Exiting foobar")
+  result
+handle h = Effect with
+  fun perform(arg, k) =
+    print("handler called")
+    let result = k(arg)
+    print("handler finished")
+    result
+print("mainbody start")
+let result = foobar(h)
+print("mainbody end")
+result
+//│ > mainbody start
+//│ > Entering foobar
+//│ > Entering bar
+//│ > Entering foo
+//│ > handler called
+//│ > handler called
+//│ > Exiting foo
+//│ > Exiting bar
+//│ > Exiting foobar
+//│ > mainbody end
+//│ > handler finished
+//│ = 'Hello World!'
+//│ result = 'Hello World!'
 
 :fixme
 handle h = Effect with
-  fun perform(arg, k) = k(arg)
-in
-  h.perform("k")
-//│ ═══[RUNTIME ERROR] Error: Resume not implemented
+  fun perform(arg, k) = arg
+fun f() = 3
+f()
+//│ ═══[RUNTIME ERROR] TypeError: globalThis.f is not a function
+
+abstract class Cell with
+  fun getVal(): Int
+  fun setVal(Int): ()
+
+let x = 0
+let k
+let m
+handle h = Cell with
+  fun getVal(k) = k(x)
+  fun setVal(value, k) =
+    x = value
+    k(())
+k = h.getVal()
+h.setVal(1)
+m = h.getVal()
+//│ k = 0
+//│ m = 1
+//│ x = 1
+
+abstract class Eff with
+  fun get(): Int
+
+:expect 120
+fun fact(e, factvalue) = 
+  if factvalue != 0 then
+    factvalue * fact(e, factvalue-1)
+  else e.get()
+handle h = Eff with
+  fun get(k) = k(1)
+fact(h, 5)
+//│ = 120
+
+abstract class StackDelay with
+  fun raise(): ()
+
+// stack safe recursion
+:expect 5050
+fun sum(depth, x) =
+  let new_depth = if depth > 70 then
+    // console.trace("Too deep, heapifying the stack")
+    h.raise()
+  else
+    depth + 1
+  if x != 0 then
+    x + sum(new_depth, x - 1)
+  else 0
+handle h = StackDelay with
+  fun raise(k) =
+    // console.trace("Stack unwinded!")
+    k(10)
+sum(0, 100)
+//│ = 5050
+
+// stack safe recursion
+:expect 450015000
+fun sum(depth, x) =
+  let new_depth = if depth > 1000 then h.raise() else depth + 1
+  if x != 0 then
+    x + sum(new_depth, x - 1)
+  else 0
+handle h = StackDelay with
+  fun raise(k) = // TODO: This should codegen to a simple return without instrumentation
+    k(10)
+sum(0, 30000)
+//│ = 450015000
+
+:re
+fun sum(x) =
+  if x != 0 then
+    x + sum(x - 1)
+  else 0
+sum(10000)
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded

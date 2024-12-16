@@ -66,7 +66,11 @@ sealed abstract class Block extends Product with AutoLocated:
     case b @ AssignField(l, n, r: Path, rst) => AssignField(l, n, f(r), rst)(b.symbol)
     case Match(scrut: Path, arms, dflt, rst) => Match(f(scrut), arms, dflt, rst)
     case Define(ValDefn(owner, k, sym, rhs: Path), rst) => Define(ValDefn(owner, k, sym, f(rhs)), rst)
-    case _: Return | _: Throw | _: Assign | _: AssignField | _: End | _: Break | _: Continue | _: Match | _: Label | _: Begin | _: TryBlock | _: Define | _: HandleBlock => this
+    case _: Return | _: Throw | _: Assign | _: AssignField | _: End | _: Break | _: Continue | _: Match | _: Label | _: Begin | _: TryBlock | _: Define | _: HandleBlock => this.mapResult {
+      case r @ Call(fun, args) => S(_(Call(f(fun), args.map(arg => Arg(arg.spread, f(arg.value))))(r.isMlsFun)))
+      case r @ Instantiate(cls, args) => S(_(Instantiate(f(cls), args.map(f))))
+      case r => N
+    }
   
   def mapValue(f: Value => Value): Block =
     def go(p: Path): Path = p match
