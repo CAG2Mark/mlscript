@@ -129,7 +129,7 @@ class Lowering(using TL, Raise, Elaborator.State):
           case s => R(s)
         val publicFlds = rest2.collect:
           case td @ TermDefinition(k = (_: syntax.Val)) => td
-        Define(ClsLikeDefn(cls.sym, syntax.Cls,
+        Define(ClsLikeDefn(cls.sym, syntax.Cls, N,
             mtds.flatMap: td =>
               td.body.map: bod =>
                 val (paramLists, bodyBlock) = setupFunctionDef(td.params, bod, S(td.sym.nme))
@@ -471,9 +471,15 @@ trait LoweringHandler
             val (paramLists, bodyBlock) = setupFunctionDef(td.params, bod, S(td.sym.nme))      
             S(Handler(td.sym, resumeSym, paramLists, bodyBlock))
       }.collect{ case Some(v) => v }
-      val resSym = TempSymbol(S(t))
-      HandleBlock(lhs, resSym, handlers, term(st.Blk(stmts, res))(res => Assign(resSym, res, End())), k(Value.Ref(resSym)))
+      val resInSym = TempSymbol(S(t), "cur")
+      val resOutSym = TempSymbol(S(t))
+      subTerm(rhs): cls =>
+        Assign(
+          lhs,
+          Instantiate(cls, Nil),
+          HandleBlock(lhs, resInSym, resOutSym, handlers, term(st.Blk(stmts, res))(res => Assign(resInSym, res, End())), k(Value.Ref(resOutSym)))
+        )
     case _ => super.term(t)(k)
-  override def program(main: st): Program =
-    if !instrument then return super.program(main)
-    super.program(main)
+  override def topLevel(t: st): Block =
+    if !instrument then return super.topLevel(t)
+    HandlerLowering().translateTopLevel(super.topLevel(t))

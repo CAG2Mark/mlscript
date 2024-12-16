@@ -67,6 +67,23 @@ const Predef$class = class Predef {
       }
       toString() { return "Test"; }
     };
+    this.__Cont = function __Cont(next1, resumed1) { return new __Cont.class(next1, resumed1); };
+    this.__Cont.class = class __Cont {
+      constructor(next, resumed) {
+        this.next = next;
+        this.resumed = resumed;
+        
+      }
+      toString() { return "__Cont(" + this.next + ", " + this.resumed + ")"; }
+    };
+    this.__Return = function __Return(value1) { return new __Return.class(value1); };
+    this.__Return.class = class __Return {
+      constructor(value) {
+        this.value = value;
+        
+      }
+      toString() { return "__Return(" + this.value + ")"; }
+    };
   }
   id(x) {
     return x;
@@ -137,6 +154,106 @@ const Predef$class = class Predef {
     } else {
       return null;
     }
+  } 
+  __handleEffect(cur, handler, handlerTailList) {
+    let handlerCont, scrut, scrut1, savedNext, scrut2, savedNext1, scrut3, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+    handlerCont = cur.nextHandler;
+    tmp8: while (true) {
+      if (handlerCont instanceof this.__Cont.class) {
+        scrut = handlerCont.nextHandler !== cur.handler;
+        if (scrut) {
+          handlerCont = handlerCont.nextHandler;
+          tmp = null;
+          continue tmp8;
+        } else {
+          tmp = null;
+        }
+      } else {
+        tmp = null;
+      }
+      break;
+    }
+    if (handlerCont) {
+      savedNext1 = handlerCont.next;
+      tmp1 = this.__resume(cur, handlerCont, handlerCont);
+      tmp2 = cur.handlerFun(tmp1) ?? null;
+      cur = tmp2;
+      scrut3 = savedNext1 !== handlerCont.next;
+      if (scrut3) {
+        handlerCont.next.next = savedNext1;
+        tmp3 = null;
+      } else {
+        tmp3 = null;
+      }
+      if (cur instanceof this.__Cont.class) {
+        return cur;
+      } else {
+        if (cur instanceof this.__Return.class) {
+          return cur;
+        } else {
+          tmp4 = this.__resume(handlerCont, undefined, undefined);
+          return tmp4(cur) ?? null;
+        }
+      }
+    } else {
+      scrut1 = handler === cur.handler;
+      if (scrut1) {
+        savedNext = handlerTailList.next;
+        tmp5 = this.__resume(cur, handlerTailList, handlerCont);
+        tmp6 = cur.handlerFun(tmp5) ?? null;
+        cur = tmp6;
+        scrut2 = savedNext !== handlerTailList.next;
+        if (scrut2) {
+          handlerTailList.next.next = savedNext;
+          tmp7 = null;
+        } else {
+          tmp7 = null;
+        }
+        return cur;
+      } else {
+        return cur;
+      }
+    }
+  } 
+  __resume(cur1, tail, handlerCont) {
+    return (value) => {
+      let nextHandler, cont, scrut, tmp, tmp1, tmp2, tmp3;
+      nextHandler = cur1.nextHandler;
+      cont = cur1.next;
+      tmp4: while (true) {
+        if (cont instanceof this.__Cont.class) {
+          tmp = cont.resume(value) ?? null;
+          value = tmp;
+          if (value instanceof this.__Cont.class) {
+            value.tail = tail;
+            value.tailHandler.nextHandler = nextHandler;
+            return value;
+          } else {
+            if (value instanceof this.__Return.class) {
+              return value;
+            } else {
+              cont = cont.next;
+              tmp1 = null;
+            }
+            tmp2 = tmp1;
+          }
+          tmp3 = tmp2;
+          continue tmp4;
+        } else {
+          scrut = nextHandler !== handlerCont;
+          if (scrut) {
+            cont = nextHandler.next;
+            nextHandler = nextHandler.nextHandler;
+            tmp3 = null;
+            continue tmp4;
+          } else {
+            tmp3 = value;
+          }
+        }
+        break;
+      }
+      return tmp3;
+    };
   }
   toString() { return "Predef"; }
 }; const Predef = new Predef$class;

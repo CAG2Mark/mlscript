@@ -36,9 +36,43 @@ sealed abstract class Block extends Product with AutoLocated:
     case Break(_) => Set.empty
     case Continue(_) => Set.empty
     case Define(defn, rst) => rst.definedVars
-    case HandleBlock(lhs, res, handlers, bod, rst) => bod.definedVars ++ rst.definedVars + lhs
+    case HandleBlock(lhs, resIn, resOut, hdr, bod, rst) => bod.definedVars ++ rst.definedVars + lhs
     case TryBlock(sub, fin, rst) => sub.definedVars ++ fin.definedVars ++ rst.definedVars
     case Label(lbl, bod, rst) => bod.definedVars ++ rst.definedVars
+  
+  // ignoring blocks inside functions and handle block
+  def map(f: Block => Block): Block = this match
+    case _: Return | _: Throw | _: End | _: Break | _: Continue => this
+    case Match(scrut, arms, dflt, rst) => Match(scrut, arms.map(_ -> f(_)), dflt.map(f), f(rst))
+    case Label(lbl, bod, rst) => Label(lbl, f(bod), f(rst))
+    case Begin(sub, rst) => Begin(f(sub), f(rst))
+    case TryBlock(sub, fin, rst) => TryBlock(f(sub), f(fin), f(rst))
+    case Assign(l, r, rst) => Assign(l, r, f(rst))
+    case b @ AssignField(l, n, r, rst) => AssignField(l, n, r, f(rst))(b.symbol)
+    case Define(defn, rst) => Define(defn, f(rst))
+    case HandleBlock(l, resIn, resOut, hdr, bod, rst) => HandleBlock(l, resIn, resOut, hdr, bod, f(rst))
+  
+  def mapResult(f: Result => Opt[(Result => Block) => Block]): Block = this match
+    case Return(res, implct) => f(res).map(_(Return(_, implct))).getOrElse(this)
+    case Throw(exc) => f(exc).map(_(Throw(_))).getOrElse(this)
+    case Assign(l, r, rst) => f(r).map(_(Assign(l, _, rst))).getOrElse(this)
+    case b @ AssignField(l, n, r, rst) => f(r).map(_(AssignField(l, n, _, rst)(b.symbol))).getOrElse(this)
+    case _: End | _: Break | _: Continue | _: Match | _: Label | _: Begin | _: TryBlock | _: Define | _: HandleBlock => this
+  
+  def mapPath(f: Path => Path): Block = this match
+    case Return(res: Path, implct) => Return(f(res), implct)
+    case Throw(exc: Path) => Throw(f(exc))
+    case Assign(l, r: Path, rst) => Assign(l, f(r), rst)
+    case b @ AssignField(l, n, r: Path, rst) => AssignField(l, n, f(r), rst)(b.symbol)
+    case Match(scrut: Path, arms, dflt, rst) => Match(f(scrut), arms, dflt, rst)
+    case Define(ValDefn(owner, k, sym, rhs: Path), rst) => Define(ValDefn(owner, k, sym, f(rhs)), rst)
+    case _: Return | _: Throw | _: Assign | _: AssignField | _: End | _: Break | _: Continue | _: Match | _: Label | _: Begin | _: TryBlock | _: Define | _: HandleBlock => this
+  
+  def mapValue(f: Value => Value): Block =
+    def go(p: Path): Path = p match
+      case sel: Select => Select(go(sel.qual), sel.name)(sel.symbol)
+      case v: Value => f(v)
+    this.mapPath(go)
   
   // TODO conserve if no changes
   def mapTail(f: BlockTail => BlockTail): Block = this match
@@ -46,8 +80,8 @@ sealed abstract class Block extends Product with AutoLocated:
     case Begin(sub, rst) => Begin(sub, rst.mapTail(f))
     case Assign(lhs, rhs, rst) => Assign(lhs, rhs, rst.mapTail(f))
     case Define(defn, rst) => Define(defn, rst.mapTail(f))
-    case HandleBlock(lhs, res, handlers, body, rest) =>
-      HandleBlock(lhs, res, handlers.map(h => Handler(h.sym, h.resumeSym, h.params, h.body.mapTail(f))), body.mapTail(f), rest.mapTail(f))
+    case HandleBlock(lhs, resIn, resOut, handlers, body, rest) =>
+      HandleBlock(lhs, resIn, resOut, handlers.map(h => Handler(h.sym, h.resumeSym, h.params, h.body.mapTail(f))), body.mapTail(f), rest.mapTail(f))
     case Match(scrut, arms, dflt, rst) =>
       Match(scrut, arms.map(_ -> _.mapTail(f)), dflt.map(_.mapTail(f)), rst.mapTail(f))
   
@@ -81,11 +115,11 @@ case class TryBlock(sub: Block, finallyDo: Block, rest: Block) extends Block wit
 case class Assign(lhs: Local, rhs: Result, rest: Block) extends Block with ProductWithTail
 // case class Assign(lhs: Path, rhs: Result, rest: Block) extends Block with ProductWithTail
 
-case class AssignField(lhs: Path, nme: Tree.Ident, rhs: Result, rest: Block)(symbol: Opt[FieldSymbol]) extends Block with ProductWithTail
+case class AssignField(lhs: Path, nme: Tree.Ident, rhs: Result, rest: Block)(val symbol: Opt[FieldSymbol]) extends Block with ProductWithTail
 
 case class Define(defn: Defn, rest: Block) extends Block with ProductWithTail
 
-case class HandleBlock(lhs: Local, res: Local, handlers: Ls[Handler], body: Block, rest: Block) extends Block with ProductWithTail
+case class HandleBlock(lhs: Local, resIn: Local, resOut: Local, handlers: Ls[Handler], body: Block, rest: Block) extends Block with ProductWithTail
 
 sealed abstract class Defn:
   val sym: MemberSymbol[?]
@@ -106,6 +140,7 @@ final case class ValDefn(
 final case class ClsLikeDefn(
   sym: MemberSymbol[? <: ClassLikeDef],
   k: syntax.ClsLikeKind,
+  parentSym: Opt[Path],
   methods: Ls[FunDefn],
   privateFields: Ls[TermSymbol],
   publicFields: Ls[TermDefinition],

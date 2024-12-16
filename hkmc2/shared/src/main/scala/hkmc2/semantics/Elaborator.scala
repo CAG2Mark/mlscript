@@ -22,7 +22,7 @@ object Elaborator:
     ",",
     "+", "-", "*", "/", "%",
     "==", "!=", "<", "<=", ">", ">=",
-    "===",
+    "===", "!==",
     "&&", "||")
   private val unaryOps = Set("-", "+", "!", "~")
   private val aliasOps = Map(

@@ -60,3 +60,55 @@ module TraceLogger with
 class Test with
   val y = 1
 
+// Private definitions for algebraic effects
+
+abstract class __Cont(next, resumed) with
+  fun resume(value)
+
+class __Return(value)
+
+fun __handleEffect(cur, handler, handlerTailList) =
+  let handlerCont = cur.nextHandler
+  while handlerCont is __Cont and handlerCont.nextHandler !== cur.handler then
+    set handlerCont = handlerCont.nextHandler
+  else ()
+  if handlerCont then
+    let savedNext = handlerCont.next
+    set cur = cur.handlerFun(__resume(cur, handlerCont, handlerCont))
+    if savedNext !== handlerCont.next then
+      set handlerCont.next.next = savedNext
+    else ()
+    if cur is __Cont then
+      cur
+    else if cur is __Return then
+      cur
+    else
+      __resume(handlerCont, undefined, undefined)(cur)
+  else if handler === cur.handler then
+    let savedNext = handlerTailList.next
+    set cur = cur.handlerFun(__resume(cur, handlerTailList, handlerCont))
+    if savedNext !== handlerTailList.next then
+      set handlerTailList.next.next = savedNext
+    else ()
+    cur
+  else cur
+
+fun __resume(cur, tail, handlerCont)(value) =
+  let nextHandler = cur.nextHandler
+  let cont = cur.next
+  while
+    cont is __Cont then
+      value = cont.resume(value)
+      if value is __Cont then
+        set value.tail = tail
+        set value.tailHandler.nextHandler = nextHandler
+        return value
+      else if value is __Return then
+        return value
+      else
+        set cont = cont.next
+    nextHandler !== handlerCont then
+      set cont = nextHandler.next
+      set nextHandler = nextHandler.nextHandler
+    else value
+

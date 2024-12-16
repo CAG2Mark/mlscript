@@ -155,7 +155,7 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
                 Return(Lam(ps, block), false)
             val (params, bodyDoc) = setupFunction(some(sym.nme), ps, result)
             doc"function ${sym.nme}($params) { #{  # ${bodyDoc} #}  # }"
-          case ClsLikeDefn(sym, syntax.Cls, mtds, privFlds, _pubFlds, ctor) =>
+          case ClsLikeDefn(sym, syntax.Cls, parentSym, mtds, privFlds, _pubFlds, ctor) =>
             // * Note: `_pubFlds` is not used because in JS, fields are not declared
             val clsDefn = sym.defn.getOrElse(die)
             val clsParams = clsDefn.paramsOpt.fold(Nil)(_.paramSyms)
@@ -163,11 +163,11 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
             val ctorCode = ctorParams.foldRight(body(ctor)):
               case ((sym, nme), acc) =>
                 doc"this.${sym.name} = $nme; # ${acc}"
-            val clsJS = doc"class ${sym.nme} { #{ ${
+            val clsJS = doc"class ${sym.nme}${parentSym.map(p => s" extends ${result(p)}").getOrElse("")} { #{ ${
                 privFlds.map(f => doc" # #${f.nme};").mkDocument(doc"")
               } # constructor(${
                 ctorParams.unzip._2.mkDocument(", ")
-              }) { #{  # ${
+              }) { #{ ${if parentSym.isDefined then doc" # super()" else ""} # ${
                 ctorCode.stripBreaks
               } #}  # }${
                 mtds.map: 
@@ -219,7 +219,7 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
                   doc"${ths}.${sym.nme} = ${clsJS};"
               case N =>
                 fun match
-                case S(f) => doc"${f}; # ${sym.nme}.class = ${clsJS};"
+                case S(f) => doc"${f} # ${sym.nme}.class = ${clsJS};"
                 case N => clsJS
         thisProxy match
           case S(proxy) if !scope.thisProxyDefined =>
@@ -351,7 +351,7 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
 object JSBuilder:
   import scala.util.matching.Regex
   
-  private val identifierPattern: Regex = "^[A-Za-z$][A-Za-z0-9$]*$".r
+  private val identifierPattern: Regex = "^[A-Za-z_$][A-Za-z0-9_$]*$".r
 
   def isValidIdentifier(s: Str): Bool = identifierPattern.matches(s) && !keywords.contains(s)
   
