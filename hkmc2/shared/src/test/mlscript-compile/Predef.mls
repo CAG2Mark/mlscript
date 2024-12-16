@@ -79,19 +79,28 @@ fun __handleEffect(cur, handler, handlerTailList) =
       set handlerCont.next.next = savedNext
     else ()
     if cur is __Cont then
-      cur
+      return cur
     else if cur is __Return then
-      cur
+      return cur
     else
-      __resume(handlerCont, undefined, undefined)(cur)
+      set cur = __resume(handlerCont, undefined, undefined)(cur)
   else if handler === cur.handler then
     let savedNext = handlerTailList.next
     set cur = cur.handlerFun(__resume(cur, handlerTailList, handlerCont))
     if savedNext !== handlerTailList.next then
       set handlerTailList.next.next = savedNext
     else ()
-    cur
-  else cur
+  else return cur
+  while
+    cur is
+      __Cont then return cur
+      __Return then return cur
+    handlerTailList.next is __Cont then
+      let saved = handlerTailList.next.next
+      set cur = handlerTailList.next.resume(cur)
+      set handlerTailList.next = saved
+    else cur
+    
 
 fun __resume(cur, tail, handlerCont)(value) =
   let nextHandler = cur.nextHandler

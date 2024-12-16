@@ -57,7 +57,6 @@ handle h = Effect with
 //│ = 'Hello World!'
 
 :expect '54321'
-:fixme
 let result = ""
 handle h = Effect with
   fun perform(arg, k) =
@@ -71,8 +70,8 @@ in
   h.perform("4")
   h.perform("5")
 result
-//│ ═══[RUNTIME ERROR] Expected: '54321', got: '5'
-//│ ═══[RUNTIME ERROR] Expected: '54321', got: '5'
+//│ = '54321'
+//│ result = '54321'
 
 :expect 'b'
 handle h = Effect with
@@ -83,7 +82,6 @@ h.perform("t")
 //│ > t
 //│ = 'b'
 
-// FIXME: there should be 2 finished
 :expect 'Hello World!'
 fun foo(h) =
   print("Entering foo")
@@ -108,10 +106,10 @@ result
 //│ > Exiting foo
 //│ > mainbody end
 //│ > handler finished
+//│ > handler finished
 //│ = 'Hello World!'
 //│ result = 'Hello World!'
 
-// FIXME: there should be 2 finished
 :expect 'Hello World!'
 fun foo(h) =
   print("Entering foo")
@@ -149,6 +147,7 @@ result
 //│ > Exiting bar
 //│ > Exiting foobar
 //│ > mainbody end
+//│ > handler finished
 //│ > handler finished
 //│ = 'Hello World!'
 //│ result = 'Hello World!'

@@ -400,7 +400,6 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
       .assign(handlerTailList, Instantiate(contClsPath, Nil))
       .label(lblLoop, handlerLoop)
       .ret(h.resIn.asPath)
-    // TODO: fix handler loop, resume handlerTailList in __handleEffect
     // TODO: implement special continuation class for nested effects
     val defn = FunDefn(sym, PlainParamList(Nil) :: Nil, body)
     val result = Define(defn, CallPlaceholder(h.resOut, freshId(), true, Call(sym.asPath, Nil)(true), h.rest))
@@ -529,6 +528,5 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
     case b => b
 
   def translateTopLevel(b: Block): Block =
-    // TODO: we should skip continuation class on top level
     translateBlock(b, HandlerCtx(true, true, _ => rtThrowMsg("Unhandled effects")))
     
