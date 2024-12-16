@@ -1,0 +1,21 @@
+:js
+:handler
+
+:fixme
+:expect 3
+let count = 0
+class IdEffect(f)
+handle h1 = IdEffect with
+  fun f(x, k) =
+    set count += 1
+    k(x)
+handle h2 = IdEffect with
+  fun f(x, k) =
+    set count += 1
+    k(x)
+print(h1.f(3))
+print(h2.f(3))
+print("Oops")
+set count += 1
+//│ ═══[RUNTIME ERROR] Error: Nested effects not implemented
+//│ ═══[RUNTIME ERROR] Expected: 3, got: 0

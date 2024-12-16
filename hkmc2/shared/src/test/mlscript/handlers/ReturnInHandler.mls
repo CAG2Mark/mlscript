@@ -1,0 +1,33 @@
+:js
+:handler
+
+abstract class Effect with
+  fun f(): ()
+
+fun f() =
+  handle h = Effect with
+    fun f(r) =
+      let m = r()
+      print("Bye!")
+      m
+  h.f()
+  return 3
+f()
+//│ > Bye!
+//│ = 3
+
+fun f() =
+  handle h = Effect with
+    fun f(r) =
+      let m = r()
+      print("Bye!")
+      m
+  in
+    h.f()
+    return 3
+  10
+
+:expect 3
+f()
+//│ > Bye!
+//│ = 3

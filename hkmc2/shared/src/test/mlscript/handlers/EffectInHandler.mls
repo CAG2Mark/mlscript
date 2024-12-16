@@ -1,0 +1,23 @@
+:js
+:handler
+
+class PrintEffect with
+  fun print(s: String): ()
+  fun aux(s: String): ()
+
+:e
+handle h = PrintEffect with
+  fun print(x, k) =
+    print(x)
+    k(())
+  fun aux(x, k) =
+    h.print(x)
+    k(())
+    h.print(x)
+h.aux(3)
+//│ ╔══[ERROR] Name not found: h
+//│ ║  l.14: 	    h.print(x)
+//│ ╙──      	    ^
+//│ ╔══[ERROR] Name not found: h
+//│ ║  l.16: 	    h.print(x)
+//│ ╙──      	    ^
