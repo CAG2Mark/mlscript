@@ -69,7 +69,7 @@ class __Return(value)
 
 fun __handleEffect(cur, handler, handlerTailList) =
   let handlerCont = cur.nextHandler
-  while handlerCont is __Cont and handlerCont.nextHandler !== cur.handler then
+  while handlerCont is __Cont and handlerCont.handler !== cur.handler then
     set handlerCont = handlerCont.nextHandler
   else ()
   if handlerCont then
@@ -89,6 +89,9 @@ fun __handleEffect(cur, handler, handlerTailList) =
     set cur = cur.handlerFun(__resume(cur, handlerTailList, handlerCont))
     if savedNext !== handlerTailList.next then
       set handlerTailList.next.next = savedNext
+      if savedNext === undefined then
+        set handlerTailList.tail = handlerTailList.next
+      else ()
     else ()
   else return cur
   while

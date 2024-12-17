@@ -1,21 +1,82 @@
 :js
 :handler
 
-:fixme
-:expect 3
-let count = 0
-class IdEffect(f)
-handle h1 = IdEffect with
-  fun f(x, k) =
-    set count += 1
-    k(x)
-handle h2 = IdEffect with
-  fun f(x, k) =
-    set count += 1
-    k(x)
-print(h1.f(3))
-print(h2.f(3))
-print("Oops")
-set count += 1
-//│ ═══[RUNTIME ERROR] Error: Nested effects not implemented
-//│ ═══[RUNTIME ERROR] Expected: 3, got: 0
+let id = 0
+class MaybeStop with
+  fun f(x: Bool): ()
+fun handleEffects(g) =
+  handle h1 = MaybeStop with
+    fun f(x, k) =
+      if x then
+        print("h1 stop")
+      else
+        set id += 1
+        let cur = id
+        print("h1 start " + String(cur))
+        let result = k(x)
+        print("h1 end " + String(cur))
+        result
+  handle h2 = MaybeStop with
+    fun f(x, k) =
+      if x then
+        print("h2 stop")
+      else
+        set id += 1
+        let cur = id
+        print("h2 start " + String(cur))
+        let result = k(x)
+        print("h2 end " + String(cur))
+        result
+  g(h1, h2)
+//│ id = 0
+
+fun f(h1, h2) =
+  h1.f(false)
+  h2.f(false)
+  h1.f(false)
+  h2.f(false)
+  h1.f(false)
+  h2.f(false)
+handleEffects(f)
+//│ > h1 start 1
+//│ > h2 start 2
+//│ > h1 start 3
+//│ > h2 start 4
+//│ > h1 start 5
+//│ > h2 start 6
+//│ > h2 end 6
+//│ > h2 end 4
+//│ > h2 end 2
+//│ > h1 end 5
+//│ > h1 end 3
+//│ > h1 end 1
+//│ = false
+
+fun f(h1, h2) =
+  h1.f(false)
+  h2.f(false)
+  h1.f(false)
+  h2.f(true)
+  h1.f(false)
+  h2.f(false)
+handleEffects(f)
+//│ > h1 start 7
+//│ > h2 start 8
+//│ > h1 start 9
+//│ > h2 stop
+//│ > h2 end 8
+//│ > h1 end 9
+//│ > h1 end 7
+
+fun f(h1, h2) =
+  h1.f(false)
+  h2.f(false)
+  h1.f(true)
+  h2.f(false)
+  h1.f(false)
+  h2.f(false)
+handleEffects(f)
+//│ > h1 start 10
+//│ > h2 start 11
+//│ > h1 stop
+//│ > h1 end 10

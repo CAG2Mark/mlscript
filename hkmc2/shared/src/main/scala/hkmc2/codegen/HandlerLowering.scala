@@ -17,6 +17,7 @@ object HandlerLowering:
   private val pcIdent: Tree.Ident = Tree.Ident("pc")
   private val nextIdent: Tree.Ident = Tree.Ident("next")
   private val tailIdent: Tree.Ident = Tree.Ident("tail")
+  private val nextHandlerIdent: Tree.Ident = Tree.Ident("nextHandler")
   private val tailHandlerIdent: Tree.Ident = Tree.Ident("tailHandler")
   private val handlerIdent: Tree.Ident = Tree.Ident("handler")
   private val handlerFunIdent: Tree.Ident = Tree.Ident("handlerFun")
@@ -45,6 +46,8 @@ object HandlerLowering:
     def pc = p.selN(pcIdent)
     def next = p.selN(nextIdent)
     def tail = p.selN(tailIdent)
+    def nextHandler = p.selN(nextHandlerIdent)
+    def tailHandler = p.selN(tailHandlerIdent)
     def value = p.selN(Tree.Ident("value"))
     def asArg = Arg(false, p)
   
@@ -296,6 +299,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
       // ignored cases
       case TryBlock(sub, finallyDo, rest) => ??? // ignore
       case Throw(_) => PartRet(blk, Nil)
+      case _: HandleBlock => die // already translated at this point
 
     val headId = freshId()
 
@@ -381,7 +385,16 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
         .assign(tmp, h.resIn.asPath)
         .assign(h.resIn, SimpleCall(handleEffectFun, h.resIn.asPath :: h.lhs.asPath :: handlerTailList.asPath :: Nil))
         .assign(tmp, unchanged)
-        .ifthen(tmp.asPath, Case.Lit(Tree.BoolLit(true)), rtThrowMsg("Nested effects not implemented"))
+        .ifthen(tmp.asPath, Case.Lit(Tree.BoolLit(true)), blockBuilder
+          .assign(tmp, Instantiate(contClsPath, Nil))
+          .assignFieldN(tmp.asPath, nextIdent, handlerTailList.asPath.next)
+          .assignFieldN(tmp.asPath, handlerIdent, h.lhs.asPath)
+          .assignFieldN(h.resIn.asPath.tailHandler, nextHandlerIdent, tmp.asPath)
+          .assignFieldN(h.resIn.asPath, tailHandlerIdent, tmp.asPath)
+          .assignFieldN(h.resIn.asPath, tailIdent, handlerTailList.asPath.tail)
+          .ret(h.resIn.asPath)
+          // .rest(rtThrowMsg("Nested effect not implemented"))
+        )
         .continue(lblLoop)
       )
       .break(lblLoop)
@@ -398,6 +411,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
     val body = h.handlers.foldLeft(cur)((builder, handler) => builder.assignFieldN(h.lhs.asPath, Tree.Ident(handler.sym.nme), handler.sym.asPath))
       .label(lbl, handlerBody)
       .assign(handlerTailList, Instantiate(contClsPath, Nil))
+      .assignFieldN(handlerTailList.asPath, tailIdent, handlerTailList.asPath)
       .label(lblLoop, handlerLoop)
       .ret(h.resIn.asPath)
     // TODO: implement special continuation class for nested effects
