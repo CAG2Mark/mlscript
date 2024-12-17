@@ -414,7 +414,6 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
       .assignFieldN(handlerTailList.asPath, tailIdent, handlerTailList.asPath)
       .label(lblLoop, handlerLoop)
       .ret(h.resIn.asPath)
-    // TODO: implement special continuation class for nested effects
     val defn = FunDefn(sym, PlainParamList(Nil) :: Nil, body)
     val result = Define(defn, CallPlaceholder(h.resOut, freshId(), true, Call(sym.asPath, Nil)(true), h.rest))
     result
@@ -469,26 +468,15 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
           blockBuilder.break(loopLbl)
         case c => c.map(f)
       f(blk)
-    
-    // HACK: remove once match is fixed
-    def unrollMatch(b: Match): Block =
-      val Match(scrut, arms, dflt, rest) = b
-      arms match
-        case head :: Nil => b
-        case head :: next => Match(
-          scrut, List(head), 
-          S(unrollMatch(Match(scrut, next, dflt, End()))),
-          rest) 
-        case Nil => rest
 
     // match block representing the function body
     val mainMatchCases = parts.toList.map(b => (Case.Lit(Tree.IntLit(b.id)), transformPart(b.blk)))
-    val mainMatchBlk = unrollMatch(Match(
+    val mainMatchBlk = Match(
       pcSymbol.asPath,
       mainMatchCases,
       N,
       End()
-    ))
+    )
 
     val lbl = blockBuilder.label(loopLbl, mainMatchBlk).rest(End())
     
@@ -506,12 +494,12 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
       if assignedResumedCases.isEmpty then
         lbl
       else
-        unrollMatch(Match(
+        Match(
           pcSymbol.asPath,
           assignedResumedCases,
-          S(End()),
+          N,
           lbl
-        ))
+        )
     
     val resumeSym = BlockMemberSymbol("resume", List())
     val resumeFnDef = FunDefn(

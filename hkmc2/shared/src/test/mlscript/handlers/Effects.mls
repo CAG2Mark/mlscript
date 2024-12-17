@@ -159,6 +159,14 @@ fun f() = 3
 f()
 //│ ═══[RUNTIME ERROR] TypeError: globalThis.f is not a function
 
+:fixme
+fun f(perform) =
+  handle h = Effect with
+    fun perform(arg, k) = arg
+  perform()
+f(() => 3)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 1 arguments but got 0
+
 abstract class Cell with
   fun getVal(): Int
   fun setVal(Int): ()

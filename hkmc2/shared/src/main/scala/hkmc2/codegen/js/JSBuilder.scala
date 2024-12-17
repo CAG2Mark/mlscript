@@ -230,46 +230,26 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
     case Return(res, true) => doc" # ${result(res)}"
     case Return(res, false) => doc" # return ${result(res)};"
     
-    // TODO factor out common logic
-    case Match(scrut, Case.Lit(syntax.Tree.BoolLit(true)) -> trm :: Nil, els, rest) =>
-      val t = doc" # if (${ result(scrut) }) { #{ ${
-          returningTerm(trm)
-        } #}  # }"
+    case Match(scrut, Nil, els, rest) =>
       val e = els match
       case S(el) =>
-        doc" else { #{ ${ returningTerm(el) } #}  # }"
-      case N  => doc""
-      t :: e :: returningTerm(rest)
-    case Match(scrut, Case.Cls(cls, pth) -> trm :: Nil, els, rest) =>
+        returningTerm(el)
+      case N => doc""
+      e :: returningTerm(rest)
+    case Match(scrut, hd :: tl, els, rest) =>
       val sd = result(scrut)
-      val test = cls match
-        // case _: semantics.ModuleSymbol => doc"=== ${result(pth)}"
-        case Elaborator.ctx.Builtins.Str => doc"typeof $sd === 'string'"
-        case Elaborator.ctx.Builtins.Num => doc"typeof $sd === 'number'"
-        case Elaborator.ctx.Builtins.Int => doc"globalThis.Number.isInteger($sd)"
-        case _ => doc"$sd instanceof ${result(pth)}"
-      val t = doc" # if ($test) { #{ ${
-          returningTerm(trm)
-        } #}  # }"
-      val e = els match
-      case S(el) =>
-        doc" else { #{ ${ returningTerm(el) } #}  # }"
-      case N  => doc""
-      t :: e :: returningTerm(rest)
-    case Match(scrut, Case.Lit(lit) -> trm :: Nil, els, rest) =>
-      val t = doc" # if (${ result(scrut) } === ${lit.idStr}) { #{ ${
-          returningTerm(trm)
-        } #}  # }"
-      val e = els match
-      case S(el) =>
-        doc" else { #{ ${ returningTerm(el) } #}  # }"
-      case N  => doc""
-      t :: e :: returningTerm(rest)
-    case Match(scrut, Case.Tup(len, inf) -> trm :: Nil, els, rest) =>
-      val test = doc"globalThis.Array.isArray(${ result(scrut) }) && ${ result(scrut) }.length ${if inf then ">=" else "==="} ${len}"
-      val t = doc" # if (${ test }) { #{ ${
-          returningTerm(trm)
-        } #}  # }"
+      def cond(cse: Case) = cse match
+        case Case.Lit(syntax.Tree.BoolLit(true)) => sd
+        case Case.Lit(lit) => doc"$sd === ${lit.idStr}"
+        case Case.Cls(cls, pth) => cls match
+          // case _: semantics.ModuleSymbol => doc"=== ${result(pth)}"
+          case Elaborator.ctx.Builtins.Str => doc"typeof $sd === 'string'"
+          case Elaborator.ctx.Builtins.Num => doc"typeof $sd === 'number'"
+          case Elaborator.ctx.Builtins.Int => doc"globalThis.Number.isInteger($sd)"
+          case _ => doc"$sd instanceof ${result(pth)}"
+        case Case.Tup(len, inf) => doc"globalThis.Array.isArray($sd) && $sd.length ${if inf then ">=" else "==="} ${len}"
+      val h = doc" # if (${ cond(hd._1) }) { #{ ${ returningTerm(hd._2) } #}  # }"
+      val t = tl.foldLeft(h)((acc, arm) => acc :: doc" else if (${ cond(arm._1) }) { #{ ${ returningTerm(arm._2) } #}  # }")
       val e = els match
       case S(el) =>
         doc" else { #{ ${ returningTerm(el) } #}  # }"
