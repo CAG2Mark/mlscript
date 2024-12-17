@@ -155,12 +155,58 @@ const Predef$class = class Predef {
       return null;
     }
   } 
-  __handleEffect(cur, handler, handlerTailList) {
+  __mkEffect(handler, handlerFun) {
+    let res, tmp;
+    tmp = new this.__Cont.class(undefined, undefined);
+    res = tmp;
+    res.tail = res;
+    res.tailHandler = res;
+    res.handler = handler;
+    res.handlerFun = handlerFun;
+    return res;
+  } 
+  __handleBlockImpl(cur, handler1) {
+    let handlerTailList, nxt, scrut, handlerCont, tmp, tmp1, tmp2, tmp3, tmp4;
+    tmp = new this.__Cont.class(undefined, undefined);
+    handlerTailList = tmp;
+    handlerTailList.tail = handlerTailList;
+    tmp5: while (true) {
+      if (cur instanceof this.__Return.class) {
+        return cur;
+      } else {
+        if (cur instanceof this.__Cont.class) {
+          tmp1 = this.__handleEffect(cur, handler1, handlerTailList);
+          nxt = tmp1;
+          scrut = cur === nxt;
+          if (scrut) {
+            tmp2 = new this.__Cont.class(undefined, undefined);
+            handlerCont = tmp2;
+            handlerCont.next = handlerTailList.next;
+            handlerCont.handler = handler1;
+            cur.tailHandler.nextHandler = handlerCont;
+            cur.tailHandler = handlerCont;
+            cur.tail = handlerTailList.tail;
+            return cur;
+          } else {
+            cur = nxt;
+            tmp3 = null;
+          }
+          tmp4 = tmp3;
+          continue tmp5;
+        } else {
+          return cur;
+        }
+      }
+      break;
+    }
+    return tmp4;
+  } 
+  __handleEffect(cur1, handler2, handlerTailList) {
     let handlerCont, scrut, scrut1, savedNext, scrut2, scrut3, savedNext1, scrut4, scrut5, saved, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15;
-    handlerCont = cur.nextHandler;
+    handlerCont = cur1.nextHandler;
     tmp16: while (true) {
       if (handlerCont instanceof this.__Cont.class) {
-        scrut = handlerCont.handler !== cur.handler;
+        scrut = handlerCont.handler !== cur1.handler;
         if (scrut) {
           handlerCont = handlerCont.nextHandler;
           tmp = null;
@@ -175,9 +221,9 @@ const Predef$class = class Predef {
     }
     if (handlerCont) {
       savedNext1 = handlerCont.next;
-      tmp1 = this.__resume(cur, handlerCont, handlerCont);
-      tmp2 = cur.handlerFun(tmp1) ?? null;
-      cur = tmp2;
+      tmp1 = this.__resume(cur1, handlerCont, handlerCont);
+      tmp2 = cur1.handlerFun(tmp1) ?? null;
+      cur1 = tmp2;
       scrut4 = savedNext1 !== handlerCont.next;
       if (scrut4) {
         handlerCont.next.next = savedNext1;
@@ -185,27 +231,27 @@ const Predef$class = class Predef {
       } else {
         tmp3 = null;
       }
-      if (cur instanceof this.__Cont.class) {
-        return cur;
+      if (cur1 instanceof this.__Cont.class) {
+        return cur1;
       } else {
-        if (cur instanceof this.__Return.class) {
-          return cur;
+        if (cur1 instanceof this.__Return.class) {
+          return cur1;
         } else {
           tmp4 = this.__resume(handlerCont, undefined, undefined);
-          tmp5 = tmp4(cur) ?? null;
-          cur = tmp5;
+          tmp5 = tmp4(cur1) ?? null;
+          cur1 = tmp5;
           tmp6 = null;
         }
         tmp7 = tmp6;
       }
       tmp8 = tmp7;
     } else {
-      scrut1 = handler === cur.handler;
+      scrut1 = handler2 === cur1.handler;
       if (scrut1) {
         savedNext = handlerTailList.next;
-        tmp9 = this.__resume(cur, handlerTailList, handlerCont);
-        tmp10 = cur.handlerFun(tmp9) ?? null;
-        cur = tmp10;
+        tmp9 = this.__resume(cur1, handlerTailList, handlerCont);
+        tmp10 = cur1.handlerFun(tmp9) ?? null;
+        cur1 = tmp10;
         scrut2 = savedNext !== handlerTailList.next;
         if (scrut2) {
           handlerTailList.next.next = savedNext;
@@ -222,27 +268,27 @@ const Predef$class = class Predef {
         }
         tmp13 = tmp12;
       } else {
-        return cur;
+        return cur1;
       }
       tmp8 = tmp13;
     }
     tmp17: while (true) {
-      if (cur instanceof this.__Cont.class) {
-        return cur;
+      if (cur1 instanceof this.__Cont.class) {
+        return cur1;
       } else {
-        if (cur instanceof this.__Return.class) {
-          return cur;
+        if (cur1 instanceof this.__Return.class) {
+          return cur1;
         } else {
           scrut5 = handlerTailList.next;
           if (scrut5 instanceof this.__Cont.class) {
             saved = handlerTailList.next.next;
-            tmp14 = handlerTailList.next.resume(cur) ?? null;
-            cur = tmp14;
+            tmp14 = handlerTailList.next.resume(cur1) ?? null;
+            cur1 = tmp14;
             handlerTailList.next = saved;
             tmp15 = null;
             continue tmp17;
           } else {
-            tmp15 = cur;
+            tmp15 = cur1;
           }
         }
       }
@@ -250,11 +296,11 @@ const Predef$class = class Predef {
     }
     return tmp15;
   } 
-  __resume(cur1, tail, handlerCont) {
+  __resume(cur2, tail, handlerCont) {
     return (value) => {
       let nextHandler, cont, scrut, tmp, tmp1, tmp2, tmp3;
-      nextHandler = cur1.nextHandler;
-      cont = cur1.next;
+      nextHandler = cur2.nextHandler;
+      cont = cur2.next;
       tmp4: while (true) {
         if (cont instanceof this.__Cont.class) {
           tmp = cont.resume(value) ?? null;

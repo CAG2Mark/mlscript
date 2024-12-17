@@ -67,6 +67,33 @@ abstract class __Cont(next, resumed) with
 
 class __Return(value)
 
+fun __mkEffect(handler, handlerFun) =
+  let res = new __Cont(undefined, undefined)
+  set res.tail = res
+  set res.tailHandler = res
+  set res.handler = handler
+  set res.handlerFun = handlerFun
+  res
+
+fun __handleBlockImpl(cur, handler) =
+  let handlerTailList = new __Cont(undefined, undefined)
+  set handlerTailList.tail = handlerTailList
+  while cur is
+    __Return then return cur
+    __Cont then
+      let nxt = __handleEffect(cur, handler, handlerTailList)
+      if cur === nxt then
+        let handlerCont = new __Cont(undefined, undefined)
+        set handlerCont.next = handlerTailList.next
+        set handlerCont.handler = handler
+        set cur.tailHandler.nextHandler = handlerCont
+        set cur.tailHandler = handlerCont
+        set cur.tail = handlerTailList.tail
+        return cur
+      else
+        set cur = nxt
+    else return cur
+
 fun __handleEffect(cur, handler, handlerTailList) =
   let handlerCont = cur.nextHandler
   while handlerCont is __Cont and handlerCont.handler !== cur.handler then
@@ -103,7 +130,6 @@ fun __handleEffect(cur, handler, handlerTailList) =
       set cur = handlerTailList.next.resume(cur)
       set handlerTailList.next = saved
     else cur
-    
 
 fun __resume(cur, tail, handlerCont)(value) =
   let nextHandler = cur.nextHandler

@@ -75,6 +75,8 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
   private val contClsPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__Cont")).selN(Tree.Ident("class"))
   private val retClsPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__Return")).selN(Tree.Ident("class"))
   private val handleEffectFun: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__handleEffect"))
+  private val mkEffectPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__mkEffect"))
+  private val handleBlockImplPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__handleBlockImpl"))
   private val mapPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Map"))
   private val dummyClsSym = ClassSymbol(
     Tree.TypeDef(syntax.Cls, Tree.Error(), N, N),
@@ -369,51 +371,13 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
     val handlerBody = translateBlock(prepareBody(h.body), HandlerCtx(false, false, state => blockBuilder
       .assignFieldN(state.res.tail, nextIdent, Instantiate(state.cls, Value.Lit(Tree.IntLit(state.uid)) :: Nil))
       .assignFieldN(state.res, tailIdent, state.res.tail.next)
-      .assign(h.resIn, state.res)
-      .break(lbl)))
+      .ret(SimpleCall(handleBlockImplPath, state.res :: h.lhs.asPath :: Nil))))
     
-    def getBinaryBuiltin(nme: Str) = BuiltinSymbol(nme, true, false, false)
-    val equalBuiltin = getBinaryBuiltin("===").asPath
-    
-    val tmp = freshTmp()
-    val handlerTailList = freshTmp("handlerTailList")
-    val unchanged = SimpleCall(equalBuiltin, tmp.asPath :: h.resIn.asPath :: Nil)
-    val handlerLoop = blockBuilder
-      .ifthen(h.resIn.asPath, Case.Cls(dummyClsSym, retClsPath), Return(h.resIn.asPath, false))
-      // TODO: this should be EffectSig
-      .ifthen(h.resIn.asPath, Case.Cls(dummyClsSym, contClsPath), blockBuilder
-        .assign(tmp, h.resIn.asPath)
-        .assign(h.resIn, SimpleCall(handleEffectFun, h.resIn.asPath :: h.lhs.asPath :: handlerTailList.asPath :: Nil))
-        .assign(tmp, unchanged)
-        .ifthen(tmp.asPath, Case.Lit(Tree.BoolLit(true)), blockBuilder
-          .assign(tmp, Instantiate(contClsPath, Nil))
-          .assignFieldN(tmp.asPath, nextIdent, handlerTailList.asPath.next)
-          .assignFieldN(tmp.asPath, handlerIdent, h.lhs.asPath)
-          .assignFieldN(h.resIn.asPath.tailHandler, nextHandlerIdent, tmp.asPath)
-          .assignFieldN(h.resIn.asPath, tailHandlerIdent, tmp.asPath)
-          .assignFieldN(h.resIn.asPath, tailIdent, handlerTailList.asPath.tail)
-          .ret(h.resIn.asPath)
-          // .rest(rtThrowMsg("Nested effect not implemented"))
-        )
-        .continue(lblLoop)
-      )
-      .break(lblLoop)
     val cur: Block => Block = h.handlers.foldLeft(blockBuilder)((builder, handler) =>
       val lam = Value.Lam(PlainParamList(Param(FldFlags.empty, handler.resumeSym, N) :: Nil), translateBlock(handler.body, functionHandlerCtx))
       val tmp = freshTmp()
-      builder.define(FunDefn(handler.sym, handler.params, blockBuilder
-        .assign(tmp, Instantiate(contClsPath, Nil))
-        .assignFieldN(tmp.asPath, tailIdent, tmp.asPath)
-        .assignFieldN(tmp.asPath, tailHandlerIdent, tmp.asPath)
-        .assignFieldN(tmp.asPath, handlerIdent, h.lhs.asPath)
-        .assignFieldN(tmp.asPath, handlerFunIdent, lam)
-        .ret(tmp.asPath))))
-    val body = h.handlers.foldLeft(cur)((builder, handler) => builder.assignFieldN(h.lhs.asPath, Tree.Ident(handler.sym.nme), handler.sym.asPath))
-      .label(lbl, handlerBody)
-      .assign(handlerTailList, Instantiate(contClsPath, Nil))
-      .assignFieldN(handlerTailList.asPath, tailIdent, handlerTailList.asPath)
-      .label(lblLoop, handlerLoop)
-      .ret(h.resIn.asPath)
+      builder.define(FunDefn(handler.sym, handler.params, Return(SimpleCall(mkEffectPath, h.lhs.asPath :: lam :: Nil), false))))
+    val body = h.handlers.foldLeft(cur)((builder, handler) => builder.assignFieldN(h.lhs.asPath, Tree.Ident(handler.sym.nme), handler.sym.asPath)).rest(handlerBody)
     val defn = FunDefn(sym, PlainParamList(Nil) :: Nil, body)
     val result = Define(defn, CallPlaceholder(h.resOut, freshId(), true, Call(sym.asPath, Nil)(true), h.rest))
     result
