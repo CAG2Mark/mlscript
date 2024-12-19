@@ -41,11 +41,11 @@ final case class BbCtx(
 given (using ctx: BbCtx): Raise = ctx.raise
 
 object BbCtx:
-  def allocTy(using ctx: BbCtx): Type = ClassLikeType(ctx.getCls("Alloc").get, Nil)
   def intTy(using ctx: BbCtx): Type = ClassLikeType(ctx.getCls("Int").get, Nil)
   def numTy(using ctx: BbCtx): Type = ClassLikeType(ctx.getCls("Num").get, Nil)
   def strTy(using ctx: BbCtx): Type = ClassLikeType(ctx.getCls("Str").get, Nil)
   def boolTy(using ctx: BbCtx): Type = ClassLikeType(ctx.getCls("Bool").get, Nil)
+  def errTy(using ctx: BbCtx): Type = ClassLikeType(ctx.getCls("Error").get, Nil)
   private def codeBaseTy(ct: TypeArg, cr: TypeArg, isVar: TypeArg)(using ctx: BbCtx): Type =
     ClassLikeType(ctx.getCls("CodeBase").get, ct :: cr :: isVar :: Nil)
   def codeTy(ct: Type, cr: Type)(using ctx: BbCtx): Type =
@@ -58,6 +58,8 @@ object BbCtx:
     ClassLikeType(ctx.getCls("Ref").get, Wildcard(ct, ct) :: Wildcard.out(sk) :: Nil)
   def init(raise: Raise)(using Elaborator.State, Elaborator.Ctx): BbCtx =
     new BbCtx(raise, summon, None, 1, HashMap.empty)
+
+  val builtinOps = Set("+", "-", "*", "/", "<", ">", "<=", ">=", "==", "!=", "&&", "||")
 end BbCtx
 
 
@@ -76,9 +78,6 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
     val out = freshVar(hint)
     // in.state.upperBounds ::= out // * Not needed for soundness; complicates inferred types
     Wildcard(in, out)
-
-  private def allocType(using BbCtx): Type =
-    BbCtx.allocTy
 
   private def error(msg: Ls[Message -> Opt[Loc]])(using BbCtx) =
     raise(ErrorReport(msg))
@@ -100,10 +99,7 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
         case N => ctx.get(sym) match
           case Some(ty) => ty
           case _ =>
-            if sym.nme === "Alloc" then
-              allocType
-            else
-              error(msg"Variable not found: ${sym.nme}" -> ty.toLoc :: Nil)
+            error(msg"Variable not found: ${sym.nme}" -> ty.toLoc :: Nil)
     case FunTy(Term.Tup(params), ret, eff) =>
       PolyFunType(params.map {
         case Fld(_, p, _) => typeAndSubstType(p, !pol)
@@ -190,6 +186,10 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
       case _: UnitLit => Top
       case _: BoolLit => BbCtx.boolTy), Bot, Bot)
     case Ref(sym: Symbol) if sym.nme === "error" => (Bot, Bot, Bot)
+    case Ref(sym: Symbol) if BbCtx.builtinOps(sym.nme) => ctx.get(sym) match
+      case S(ty) => (tryMkMono(ty, code), Bot, Bot)
+      case N =>
+        (error(msg"Cannot quote operator ${sym.nme}" -> code.toLoc :: Nil), Bot, Bot)
     case Lam(PlainParamList(params), body) =>
       val nestCtx = ctx.nextLevel
       given BbCtx = nestCtx
@@ -264,7 +264,7 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
     split match
     case Split.Cons(Branch(scrutinee, Pattern.ClassLike(sym, _, _, _), cons), alts) =>
       // * Pattern matching for classes
-      val (clsTy, tv, emptyTy) = ctx.getCls(sym.nme).flatMap(_.defn) match
+      val (clsTy, tv, emptyTy) = sym.asCls.flatMap(_.defn) match
         case S(cls) =>
           (ClassLikeType(sym, cls.tparams.map(_ => freshWildcard(N))), (freshVar(N)), ClassLikeType(sym, cls.tparams.map(_ => Wildcard.empty)))
         case _ =>
@@ -311,7 +311,7 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
     case Split.Else(alts) => sign match
       case S(sign) => ascribe(alts, sign)
       case _ => typeCheck(alts)
-    case Split.End => ???
+    case Split.End => (Bot, Bot)
 
   // * Note: currently, the returned type is not used or useful, but it could be in the future
   private def ascribe(lhs: Term, rhs: GeneralType)(using ctx: BbCtx): (GeneralType, Type) =
@@ -431,6 +431,10 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
             goStats(stats)
           case (clsDef: ClassDef) :: stats =>
             goStats(stats)
+          case (modDef: ModuleDef) :: stats =>
+            goStats(stats)
+          case Import(sym, pth) :: stats =>
+            goStats(stats) // TODO:
         goStats(stats)
         val (ty, eff) = typeCheck(res)
         (ty, effBuff.foldLeft(eff)((res, e) => res | e))
@@ -471,7 +475,9 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
               case _ => (error(msg"${field.name} is not a valid member in class ${clsSym.nme}" -> t.toLoc :: Nil), Bot)
           case N => 
             (error(msg"Not a valid class: ${cls.describe}" -> cls.toLoc :: Nil), Bot)
-      case Term.App(lhs, Term.Tup(rhs)) =>
+      case Term.App(lhs: Term.SynthSel, Term.Tup(Nil)) if lhs.sym.exists(_.isGetter) =>
+        typeCheck(lhs) // * Getter access will be elaborated to applications. But they cannot be typed as normal applications.
+      case t @ Term.App(lhs, Term.Tup(rhs)) =>
         val (funTy, lhsEff) = typeCheck(lhs)
         app((funTy, lhsEff), rhs, t)
       case Term.New(cls, args) =>
@@ -517,14 +523,14 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
         val (res, eff) = typeCheck(body)
         val tv = freshVar(N)(using ctx)
         constrain(eff, tv | sk)
-        (extrude(res)(using ctx, true), tv | allocType)
+        (extrude(res)(using ctx, true), tv)
       case Term.RegRef(reg, value) =>
         val (regTy, regEff) = typeCheck(reg)
         val (valTy, valEff) = typeCheck(value)
         val sk = freshVar(N)
         constrain(tryMkMono(regTy, reg), BbCtx.regionTy(sk))
         (BbCtx.refTy(tryMkMono(valTy, value), sk), sk | (regEff | valEff))
-      case Term.Assgn(lhs, rhs) =>
+      case Term.SetRef(lhs, rhs) =>
         val (lhsTy, lhsEff) = typeCheck(lhs)
         val (rhsTy, rhsEff) = typeCheck(rhs)
         val sk = freshVar(N)
@@ -543,6 +549,10 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
         (BbCtx.codeTy(ty, ctxTy), eff)
       case _: Term.Unquoted =>
         (error(msg"Unquote should nest in quasiquote" -> t.toLoc :: Nil), Bot)
+      case Throw(e) =>
+        val (ty, eff) = typeCheck(e)
+        constrain(tryMkMono(ty, e), BbCtx.errTy)
+        (Bot, eff)
       case Term.Error =>
         (Bot, Bot) // TODO: error type?
       case _ =>
@@ -551,5 +561,5 @@ class BBTyper(using elState: Elaborator.State, tl: TL):
   def typePurely(t: Term)(using BbCtx): GeneralType =
     val (ty, eff) = typeCheck(t)
     given CCtx = CCtx.init(t, N)
-    constrain(eff, allocType)
+    constrain(eff, Bot)
     ty
