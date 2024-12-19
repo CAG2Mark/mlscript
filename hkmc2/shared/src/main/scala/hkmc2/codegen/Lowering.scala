@@ -472,8 +472,9 @@ trait LoweringHandler
             S(Handler(td.sym, resumeSym, paramLists, bodyBlock))
       }.collect{ case Some(v) => v }
       val resSym = TempSymbol(S(t))
-      HandleBlock(lhs, resSym, handlers, term(st.Blk(stmts, res))(res => Assign(resSym, res, End())), k(Value.Ref(resSym)))
+      subTerm(rhs): cls =>
+        HandleBlock(lhs, resSym, cls, handlers, term(st.Blk(stmts, res))(HandleBlockReturn(_)), k(Value.Ref(resSym)))
     case _ => super.term(t)(k)
-  override def program(main: st): Program =
-    if !instrument then return super.program(main)
-    super.program(main)
+  override def topLevel(t: st): Block =
+    if !instrument then return super.topLevel(t)
+    super.topLevel(t)
