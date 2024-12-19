@@ -607,25 +607,14 @@ extends Importer:
           case trm => raise(WarningReport(msg"Terms in handler block do nothing" -> trm.toLoc :: Nil))
 
         val tds = elabed.stats.map {
-          case td @ TermDefinition(owner, Fun, sym, params, sign, body, resSym, flags) => 
-            val paramsRev = params.reverse
-            // Find last param
-            val (resumeParam, newParams) = paramsRev.replaceAndPopFirst(
-              params => {
-                params.params.reverse match
-                  case head :: next => 
-                    Some((ParamList(params.flags, next.reverse, params.restParam), head))
-                  case Nil => None
-              }
-            )
-
-            resumeParam match
-              case None => 
-                raise(ErrorReport(msg"Handler function is missing resumption parameter" -> td.toLoc :: Nil))
-                None
-              case Some(value) =>
+          case td @ TermDefinition(owner, Fun, sym, params, sign, body, resSym, flags) =>
+            params.reverse match
+              case ParamList(_, value :: Nil, _) :: newParams =>
                 val newTd = TermDefinition(owner, Fun, sym, newParams.reverse, sign, body, resSym, flags)
                 S(HandlerTermDefinition(value.sym, newTd))
+              case _ => 
+                raise(ErrorReport(msg"Handler function is missing resumption parameter" -> td.toLoc :: Nil))
+                None
               
           case st => 
             raise(ErrorReport(msg"Only function definitions are allowed in handler blocks" -> st.toLoc :: Nil))
