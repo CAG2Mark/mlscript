@@ -471,14 +471,9 @@ trait LoweringHandler
             val (paramLists, bodyBlock) = setupFunctionDef(td.params, bod, S(td.sym.nme))      
             S(Handler(td.sym, resumeSym, paramLists, bodyBlock))
       }.collect{ case Some(v) => v }
-      val resInSym = TempSymbol(S(t), "cur")
-      val resOutSym = TempSymbol(S(t))
+      val resSym = TempSymbol(S(t))
       subTerm(rhs): cls =>
-        Assign(
-          lhs,
-          Instantiate(cls, Nil),
-          HandleBlock(lhs, resInSym, resOutSym, handlers, term(st.Blk(stmts, res))(res => Assign(resInSym, res, End())), k(Value.Ref(resOutSym)))
-        )
+        HandleBlock(lhs, resSym, cls, handlers, term(st.Blk(stmts, res))(HandleBlockReturn(_)), k(Value.Ref(resSym)))
     case _ => super.term(t)(k)
   override def topLevel(t: st): Block =
     if !instrument then return super.topLevel(t)

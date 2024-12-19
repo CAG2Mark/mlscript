@@ -180,7 +180,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
       case AssignField(_, _, _, rest) => containsCall(rest)
       case Define(defn, rest) => containsCall(rest)
       case End(msg) => false
-      case _: HandleBlock => die // already translated at this point
+      case _: HandleBlock | _: HandleBlockReturn => die // already translated at this point
     
     def labelBodyHasCall(blk: Label) =
       val Label(label, body, rest) = blk
@@ -301,7 +301,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
       // ignored cases
       case TryBlock(sub, finallyDo, rest) => ??? // ignore
       case Throw(_) => PartRet(blk, Nil)
-      case _: HandleBlock => die // already translated at this point
+      case _: HandleBlock | _: HandleBlockReturn => die // already translated at this point
 
     val headId = freshId()
 
@@ -358,14 +358,15 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
     val sym = BlockMemberSymbol(s"handleBlock$$${freshId()}", Nil)
     val lbl = freshTmp("handlerBody")
     val lblLoop = freshTmp("handlerLoop")
+    val tmp = freshTmp("retCont")
     def prepareBody(b: Block): Block =
       def go(b: Block): Block =
         b.map(go) match
         case Return(res, implct) =>
           // In the case of res is effectful, it will be handled in translateBlock
-          Assign(h.resIn, res, Return(Instantiate(retClsPath, h.resIn.asPath :: Nil), implct))
-        case Assign(h.resIn, rhs, End("")) =>
-          Return(rhs, false)
+          Assign(tmp, res, Return(Instantiate(retClsPath, tmp.asPath :: Nil), implct))
+        case HandleBlockReturn(res) =>
+          Return(res, false)
         case b => b
       go(b)
     val handlerBody = translateBlock(prepareBody(h.body), HandlerCtx(false, false, state => blockBuilder
@@ -376,10 +377,10 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
     val cur: Block => Block = h.handlers.foldLeft(blockBuilder)((builder, handler) =>
       val lam = Value.Lam(PlainParamList(Param(FldFlags.empty, handler.resumeSym, N) :: Nil), translateBlock(handler.body, functionHandlerCtx))
       val tmp = freshTmp()
-      builder.define(FunDefn(handler.sym, handler.params, Return(SimpleCall(mkEffectPath, h.lhs.asPath :: lam :: Nil), false))))
+      builder.define(FunDefn(handler.sym, handler.params, Return(SimpleCall(mkEffectPath, h.lhs.asPath :: lam :: Nil), false)))).assign(h.lhs, Instantiate(h.cls, Nil))
     val body = h.handlers.foldLeft(cur)((builder, handler) => builder.assignFieldN(h.lhs.asPath, Tree.Ident(handler.sym.nme), handler.sym.asPath)).rest(handlerBody)
     val defn = FunDefn(sym, PlainParamList(Nil) :: Nil, body)
-    val result = Define(defn, CallPlaceholder(h.resOut, freshId(), true, Call(sym.asPath, Nil)(true), h.rest))
+    val result = Define(defn, CallPlaceholder(h.res, freshId(), true, Call(sym.asPath, Nil)(true), h.rest))
     result
   
   private def genContClass(b: Block)(using HandlerCtx): Opt[ClsLikeDefn] =
