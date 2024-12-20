@@ -64,6 +64,7 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
         new codegen.Lowering
           with codegen.LoweringSelSanityChecks(instrument = false)
           with codegen.LoweringTraceLog(instrument = false)
+          with codegen.LoweringHandler(handler.isSet)
       given Elaborator.Ctx = curCtx
       val jsb = new JSBuilder
         with JSBuilderArgNumSanityChecks(instrument = false)

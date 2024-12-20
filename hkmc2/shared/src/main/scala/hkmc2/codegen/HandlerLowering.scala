@@ -371,7 +371,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
       go(b)
     val handlerBody = translateBlock(prepareBody(h.body), HandlerCtx(false, false, state => blockBuilder
       .assignFieldN(state.res.tail, nextIdent, Instantiate(state.cls, Value.Lit(Tree.IntLit(state.uid)) :: Nil))
-      .assignFieldN(state.res, tailIdent, state.res.tail.next)
+      // .assignFieldN(state.res, tailIdent, state.res.tail.next)
       .ret(SimpleCall(handleBlockImplPath, state.res :: h.lhs.asPath :: Nil))))
     
     val cur: Block => Block = h.handlers.foldLeft(blockBuilder)((builder, handler) =>
