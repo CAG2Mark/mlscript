@@ -5,13 +5,11 @@ const Option$class = class Option {
     this.Some.class = class Some {
       constructor(value) {
         this.value = value;
-        
       }
       toString() { return "Some(" + this.value + ")"; }
     };
     const None$class = class None {
       constructor() {
-        
       }
       toString() { return "None"; }
     };
@@ -22,7 +20,6 @@ const Option$class = class Option {
       constructor(fst, snd) {
         this.fst = fst;
         this.snd = snd;
-        
       }
       toString() { return "Both(" + this.fst + ", " + this.snd + ")"; }
     };

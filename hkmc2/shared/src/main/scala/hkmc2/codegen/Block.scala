@@ -119,9 +119,11 @@ final case class ValDefn(
 final case class ClsLikeDefn(
   sym: MemberSymbol[? <: ClassLikeDef],
   k: syntax.ClsLikeKind,
+  parentSym: Opt[Path],
   methods: Ls[FunDefn],
   privateFields: Ls[TermSymbol],
   publicFields: Ls[TermDefinition],
+  preCtor: Block,
   ctor: Block,
 ) extends Defn
 

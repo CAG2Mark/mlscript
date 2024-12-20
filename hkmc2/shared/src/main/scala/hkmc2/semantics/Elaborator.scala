@@ -18,13 +18,15 @@ import Keyword.{`let`, `set`}
 
 object Elaborator:
   
-  private val binaryOps = Ls(
+  private val binaryOps = Set(
     ",",
     "+", "-", "*", "/", "%",
     "==", "!=", "<", "<=", ">", ">=",
     "===",
     "&&", "||")
   private val unaryOps = Set("-", "+", "!", "~")
+  private val anyOps = Set("super")
+  private val builtins = binaryOps ++ unaryOps ++ anyOps
   private val aliasOps = Map(
     ";" -> ",",
     "+." -> "+",
@@ -124,8 +126,8 @@ object Elaborator:
     val suid = new Uid.Symbol.State
     val globalThisSymbol = TopLevelSymbol("globalThis")
     val builtinOpsMap =
-      val baseBuiltins = binaryOps.map: op =>
-          op -> BuiltinSymbol(op, binary = true, unary = unaryOps(op), nullary = false)
+      val baseBuiltins = builtins.map: op =>
+          op -> BuiltinSymbol(op, binary = binaryOps(op), unary = unaryOps(op), nullary = false, anyarity = anyOps(op))
         .toMap
       baseBuiltins ++ aliasOps.map:
         case (alias, base) => alias -> baseBuiltins(base)

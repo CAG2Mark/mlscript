@@ -6,13 +6,11 @@ const Stack$class = class Stack {
       constructor(head, tail) {
         this.head = head;
         this.tail = tail;
-        
       }
       toString() { return "Cons(" + this.head + ", " + this.tail + ")"; }
     };
     const Nil$class = class Nil {
       constructor() {
-        
       }
       toString() { return "Nil"; }
     };
@@ -91,7 +89,6 @@ const Stack$class = class Stack {
   } 
   zip(...xss) {
     let tmp, tmp1;
-    
     const this$Stack = this;
     function go(heads, tails) {
       return (caseScrut) => {

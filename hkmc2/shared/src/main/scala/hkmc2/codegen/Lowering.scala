@@ -129,7 +129,7 @@ class Lowering(using TL, Raise, Elaborator.State):
           case s => R(s)
         val publicFlds = rest2.collect:
           case td @ TermDefinition(k = (_: syntax.Val)) => td
-        Define(ClsLikeDefn(cls.sym, syntax.Cls,
+        Define(ClsLikeDefn(cls.sym, syntax.Cls, N,
             mtds.flatMap: td =>
               td.body.map: bod =>
                 val (paramLists, bodyBlock) = setupFunctionDef(td.params, bod, S(td.sym.nme))
@@ -137,6 +137,7 @@ class Lowering(using TL, Raise, Elaborator.State):
             ,
             privateFlds,
             publicFlds,
+            End(),
             term(Blk(rest2, bodBlk.res))(ImplctRet).mapTail:
               case Return(Value.Lit(syntax.Tree.UnitLit(true)), true) => End()
               case t => t
