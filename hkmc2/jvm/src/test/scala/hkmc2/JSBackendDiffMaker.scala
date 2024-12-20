@@ -10,7 +10,7 @@ import codegen.*
 import codegen.js.{JSBuilder, JSBuilderArgNumSanityChecks}
 import document.*
 import codegen.Block
-import codegen.js.Scope
+import utils.Scope
 import hkmc2.syntax.Tree.Ident
 import hkmc2.codegen.Path
 import hkmc2.Diagnostic.Source
@@ -29,8 +29,8 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
   val expect = Command("expect"): ln =>
     ln.trim
   
-  private val baseScp: codegen.js.Scope =
-    codegen.js.Scope.empty
+  private val baseScp: utils.Scope =
+    utils.Scope.empty
   
   val ltl = new TraceLogger:
     override def doTrace = debugLowering.isSet
@@ -87,6 +87,9 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
       if showLoweredTree.isSet then
         output(s"Lowered:")
         output(le.showAsTree)
+      if ppLoweredTree.isSet then
+        output(s"Pretty Lowered:")
+        output(Printer.mkDocument(le)(using summon[Raise], baseScp.nest).toString)
       
       // * Note that the codegen scope is not in sync with curCtx in terms of its `this` symbol.
       // * We do not nest TopLevelSymbol in codegen `Scope`s
