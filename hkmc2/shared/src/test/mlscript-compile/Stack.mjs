@@ -5,13 +5,11 @@ const Stack$class = class Stack {
       constructor(head, tail) {
         this.head = head;
         this.tail = tail;
-        
       }
       toString() { return "Cons(" + this.head + ", " + this.tail + ")"; }
     };
     const Nil$class = class Nil {
       constructor() {
-        
       }
       toString() { return "Nil"; }
     };

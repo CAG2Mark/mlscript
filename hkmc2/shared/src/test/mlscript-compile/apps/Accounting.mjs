@@ -3,13 +3,11 @@ import Str from "./../Str.mjs";
 import Predef from "./../Predef.mjs";
 class Num {
   constructor() {
-    
   }
   toString() { return "Num"; }
 }
 class Bool {
   constructor() {
-    
   }
   toString() { return "Bool"; }
 }
@@ -20,11 +18,9 @@ class Accounting {
     this.Project.class = class Project {
       constructor(num) {
         this.num = num;
-        
       }
       toString() { return "Project(" + this.num + ")"; }
     };
-    
     const this$Accounting = this;
     this.Line = function Line(name1, proj1, starting_balance1, isMatchable1) { return new Line.class(name1, proj1, starting_balance1, isMatchable1); };
     this.Line.class = class Line {

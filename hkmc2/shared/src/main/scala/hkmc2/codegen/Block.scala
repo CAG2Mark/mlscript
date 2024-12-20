@@ -152,6 +152,7 @@ final case class ClsLikeDefn(
   methods: Ls[FunDefn],
   privateFields: Ls[TermSymbol],
   publicFields: Ls[TermDefinition],
+  preCtor: Block,
   ctor: Block,
 ) extends Defn
 

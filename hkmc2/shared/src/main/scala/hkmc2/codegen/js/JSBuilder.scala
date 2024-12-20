@@ -80,18 +80,21 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
       else err(msg"Illegal reference to builtin symbol '${l.nme}'")
     case Value.Ref(l) => getVar(l)
     
-    case Call(Value.Ref(l: BuiltinSymbol), lhs :: rhs :: Nil) =>
+    case Call(Value.Ref(l: BuiltinSymbol), lhs :: rhs :: Nil) if !l.anyarity =>
       if l.binary then
         val res = doc"${result(lhs)} ${l.nme} ${result(rhs)}"
         if needsParens(l.nme) then doc"(${res})" else res
       else err(msg"Cannot call non-binary builtin symbol '${l.nme}'")
-    case Call(Value.Ref(l: BuiltinSymbol), rhs :: Nil) =>
+    case Call(Value.Ref(l: BuiltinSymbol), rhs :: Nil) if !l.anyarity =>
       if l.unary then
         val res = doc"${l.nme} ${result(rhs)}"
         if needsParens(l.nme) then doc"(${res})" else res
       else err(msg"Cannot call non-unary builtin symbol '${l.nme}'")
     case Call(Value.Ref(l: BuiltinSymbol), args) =>
-      err(msg"Illeal arity for builtin symbol '${l.nme}'")
+      if l.anyarity then
+        val argsDoc = args.map(result).mkDocument(", ")
+        doc"${l.nme}(${argsDoc})"
+      else err(msg"Illeal arity for builtin symbol '${l.nme}'")
     
     case c @ Call(fun, args) =>
       val base = fun match
@@ -101,7 +104,7 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
       if c.isMlsFun then doc"${base}(${argsDoc})" else doc"${base}(${argsDoc}) ?? null"
     case Value.Lam(ps, bod) => scope.nest givenIn:
       val (params, bodyDoc) = setupFunction(none, ps, bod)
-      doc"($params) => { #{  # ${
+      doc"($params) => { #{ ${
         bodyDoc
       } #}  # }"
     case Select(qual, id) =>
@@ -154,21 +157,22 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
               case (ps, block) => 
                 Return(Lam(ps, block), false)
             val (params, bodyDoc) = setupFunction(some(sym.nme), ps, result)
-            doc"function ${sym.nme}($params) { #{  # ${bodyDoc} #}  # }"
-          case ClsLikeDefn(sym, syntax.Cls, parentSym, mtds, privFlds, _pubFlds, ctor) =>
+            doc"function ${sym.nme}($params) { #{ ${bodyDoc} #}  # }"
+          case ClsLikeDefn(sym, syntax.Cls, parentSym, mtds, privFlds, _pubFlds, preCtor, ctor) =>
             // * Note: `_pubFlds` is not used because in JS, fields are not declared
             val clsDefn = sym.defn.getOrElse(die)
             val clsParams = clsDefn.paramsOpt.fold(Nil)(_.paramSyms)
             val ctorParams = clsParams.map(p => p -> scope.allocateName(p))
-            val ctorCode = ctorParams.foldRight(body(ctor)):
-              case ((sym, nme), acc) =>
-                doc"this.${sym.name} = $nme; # ${acc}"
+            val preCtorCode = ctorParams.foldLeft(body(preCtor)):
+              case (acc, (sym, nme)) =>
+                doc"$acc # this.${sym.name} = $nme;"
+            val ctorCode = doc"$preCtorCode${body(ctor)}"
             val clsJS = doc"class ${sym.nme}${parentSym.map(p => s" extends ${result(p)}").getOrElse("")} { #{ ${
                 privFlds.map(f => doc" # #${f.nme};").mkDocument(doc"")
               } # constructor(${
                 ctorParams.unzip._2.mkDocument(", ")
-              }) { #{ ${if parentSym.isDefined then doc" # super();" else ""} # ${
-                ctorCode.stripBreaks
+              }) { #{ ${
+                ctorCode
               } #}  # }${
                 mtds.map: 
                   case td @ FunDefn(_, ps :: pss, bod) =>
@@ -176,7 +180,7 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
                       case (ps, block) => 
                         Return(Lam(ps, block), false)
                     val (params, bodyDoc) = setupFunction(some(td.sym.nme), ps, result)
-                    doc" # ${td.sym.nme}($params) { #{  # ${
+                    doc" # ${td.sym.nme}($params) { #{ ${
                       bodyDoc
                     } #}  # }"
                 .mkDocument(" ")
@@ -224,9 +228,9 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
         thisProxy match
           case S(proxy) if !scope.thisProxyDefined =>
             scope.thisProxyDefined = true
-            doc" # const $proxy = this; # ${res.stripBreaks}${returningTerm(rst)}"
+            doc"const $proxy = this; # $res${returningTerm(rst)}"
           case _ => doc"$res${returningTerm(rst)}"
-      doc" # ${resJS}"
+      doc" # $resJS"
     case Return(res, true) => doc" # ${result(res)}"
     case Return(res, false) => doc" # return ${result(res)};"
     
@@ -257,7 +261,7 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
       t :: e :: returningTerm(rest)
     
     case Begin(sub, thn) =>
-      doc"${returningTerm(sub)} # ${returningTerm(thn).stripBreaks}"
+      doc"${returningTerm(sub)}${returningTerm(thn)}"
       
     case End("") => doc""
     case End(msg) =>
@@ -301,7 +305,7 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
         val v = doc"this.${getVar(i._1)}"
         doc"""$v = await import("${i._2.toString
           }"); # if ($v.default !== undefined) $v = $v.default;"""
-    imps.mkDocument(doc" # ") :/: block(p.main) :: (
+    imps.mkDocument(doc" # ") :/: block(p.main).stripBreaks :: (
       exprt match
         case S(e) => doc"\nexport default ${e};\n"
         case N => doc""
@@ -310,8 +314,8 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
   def block(t: Block)(using Raise, Scope): Document =
     val vars = t.definedVars.toSeq.filter(scope.lookup(_).isEmpty).sortBy(_.uid).iterator.map(l =>
       l -> scope.allocateName(l))
-    if vars.isEmpty then returningTerm(t).stripBreaks else
-      doc"let " :: vars.map: (_, nme) =>
+    if vars.isEmpty then returningTerm(t) else
+      doc" # let " :: vars.map: (_, nme) =>
         nme
       .toList.mkDocument(", ")
       :: doc";" :: returningTerm(t)
@@ -430,12 +434,12 @@ trait JSBuilderArgNumSanityChecks
       val paramRest = params.restParam.map(p => Scope.scope.allocateName(p.sym))
       val paramsStr = Scope.scope.allocateName(functionParamVarargSymbol)
       val functionName = JSBuilder.makeStringLiteral(name.fold("")(n => s"${JSBuilder.escapeStringCharacters(n)}"))
-      val checkArgsNum = doc"globalThis.Predef.checkArgs($functionName, ${params.paramCountLB}, ${params.paramCountUB.toString}, $paramsStr.length);\n"
+      val checkArgsNum = doc"\nglobalThis.Predef.checkArgs($functionName, ${params.paramCountLB}, ${params.paramCountUB.toString}, $paramsStr.length);"
       val paramsAssign = paramsList.zipWithIndex.map{(nme, i) =>
-        doc"let ${nme} = ${paramsStr}[$i];\n"}.mkDocument("")
+        doc"\nlet ${nme} = ${paramsStr}[$i];"}.mkDocument("")
       val restAssign = paramRest match
         case N => doc""
-        case S(p) => doc"let $p = globalThis.Predef.tupleSlice($paramsStr, ${params.paramCountLB}, 0);\n"
+        case S(p) => doc"\nlet $p = globalThis.Predef.tupleSlice($paramsStr, ${params.paramCountLB}, 0);"
       (doc"...$paramsStr", doc"$checkArgsNum$paramsAssign$restAssign${this.body(body)}")
     else
       super.setupFunction(name, params, body)

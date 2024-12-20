@@ -4,7 +4,6 @@ const Predef$class = class Predef {
     this.MatchResult.class = class MatchResult {
       constructor(captures) {
         this.captures = captures;
-        
       }
       toString() { return "MatchResult(" + this.captures + ")"; }
     };
@@ -12,7 +11,6 @@ const Predef$class = class Predef {
     this.MatchFailure.class = class MatchFailure {
       constructor(errors) {
         this.errors = errors;
-        
       }
       toString() { return "MatchFailure(" + this.errors + ")"; }
     };
@@ -72,7 +70,6 @@ const Predef$class = class Predef {
       constructor(next, resumed) {
         this.next = next;
         this.resumed = resumed;
-        
       }
       toString() { return "__Cont(" + this.next + ", " + this.resumed + ")"; }
     };
@@ -80,7 +77,6 @@ const Predef$class = class Predef {
     this.__Return.class = class __Return {
       constructor(value) {
         this.value = value;
-        
       }
       toString() { return "__Return(" + this.value + ")"; }
     };

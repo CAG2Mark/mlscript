@@ -473,7 +473,8 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
       resumeBody
     )
     
-    S(ClsLikeDefn(sym, syntax.Cls, S(contClsPath), resumeFnDef :: Nil, Nil, Nil, End()))
+    S(ClsLikeDefn(sym, syntax.Cls, S(contClsPath), resumeFnDef :: Nil, Nil, Nil,
+      Assign(freshTmp(), SimpleCall(Value.Ref(State.builtinOpsMap("super")), Value.Lit(Tree.UnitLit(true)) :: Value.Lit(Tree.UnitLit(true)) :: Nil), End()), End()))
   
   private def genNormalBody(b: Block, clsSym: BlockMemberSymbol)(using HandlerCtx): Block =
     val tmp = freshTmp("cont")
