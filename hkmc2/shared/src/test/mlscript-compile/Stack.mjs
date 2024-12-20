@@ -10,8 +10,7 @@ const Stack$class = class Stack {
       toString() { return "Cons(" + this.head + ", " + this.tail + ")"; }
     };
     const Nil$class = class Nil {
-      constructor() {
-      }
+      constructor() {}
       toString() { return "Nil"; }
     };
     this.Nil = new Nil$class;

@@ -2,13 +2,11 @@ import fs from "fs";
 import Str from "./../Str.mjs";
 import Predef from "./../Predef.mjs";
 class Num {
-  constructor() {
-  }
+  constructor() {}
   toString() { return "Num"; }
 }
 class Bool {
-  constructor() {
-  }
+  constructor() {}
   toString() { return "Bool"; }
 }
 class Accounting {

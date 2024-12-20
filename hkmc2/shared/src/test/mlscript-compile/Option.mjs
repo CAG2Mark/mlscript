@@ -9,8 +9,7 @@ const Option$class = class Option {
       toString() { return "Some(" + this.value + ")"; }
     };
     const None$class = class None {
-      constructor() {
-      }
+      constructor() {}
       toString() { return "None"; }
     };
     this.None = new None$class;

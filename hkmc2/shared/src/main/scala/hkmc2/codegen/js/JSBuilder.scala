@@ -115,9 +115,7 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
       if c.isMlsFun then doc"${base}(${argsDoc})" else doc"${base}(${argsDoc}) ?? null"
     case Value.Lam(ps, bod) => scope.nest givenIn:
       val (params, bodyDoc) = setupFunction(none, ps, bod)
-      doc"($params) => { #{ ${
-        bodyDoc
-      } #}  # }"
+      doc"($params) => ${ braced(bodyDoc) }"
     case Select(qual, id) =>
       val name = id.name
       doc"${result(qual)}${
@@ -162,13 +160,13 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
             S(defn.sym).collectFirst{ case s: InnerSymbol => s }):
           defn match
           case FunDefn(sym, Nil, body) =>
-            doc"function ${sym.nme}() { #{ ${this.body(body)} #}  # }"
+            doc"function ${sym.nme}() ${ braced(this.body(body)) }"
           case FunDefn(sym, ps :: pss, bod) =>
             val result = pss.foldRight(bod):
               case (ps, block) => 
                 Return(Lam(ps, block), false)
             val (params, bodyDoc) = setupFunction(some(sym.nme), ps, result)
-            doc"function ${sym.nme}($params) { #{ ${bodyDoc} #}  # }"
+            doc"function ${sym.nme}($params) ${ braced(bodyDoc) }"
           case ClsLikeDefn(sym, syntax.Cls, parentSym, mtds, privFlds, _pubFlds, preCtor, ctor) =>
             // * Note: `_pubFlds` is not used because in JS, fields are not declared
             val clsDefn = sym.defn.getOrElse(die)
@@ -182,22 +180,16 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
                 privFlds.map(f => doc" # #${f.nme};").mkDocument(doc"")
               } # constructor(${
                 ctorParams.unzip._2.mkDocument(", ")
-              }) { #{ ${
-                ctorCode
-              } #}  # }${
+              }) ${ braced(ctorCode) }${
                 mtds.map: 
                   case td @ FunDefn(_, ps :: pss, bod) =>
                     val result = pss.foldRight(bod):
                       case (ps, block) => 
                         Return(Lam(ps, block), false)
                     val (params, bodyDoc) = setupFunction(some(td.sym.nme), ps, result)
-                    doc" # ${td.sym.nme}($params) { #{ ${
-                      bodyDoc
-                    } #}  # }"
+                    doc" # ${td.sym.nme}($params) ${ braced(bodyDoc) }"
                   case td @ FunDefn(_, Nil, bod) =>
-                    doc" # get ${td.sym.nme}() { #{ ${
-                      this.body(bod)
-                    } #}  # }"
+                    doc" # get ${td.sym.nme}() ${ braced(body(bod)) }"
                 .mkDocument(" ")
               }${
                 if mtds.exists(_.sym.nme == "toString")
@@ -249,49 +241,28 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
     case Return(res, true) => doc" # ${result(res)}"
     case Return(res, false) => doc" # return ${result(res)};"
     
-    // TODO factor out common logic
-    case Match(scrut, Case.Lit(syntax.Tree.BoolLit(true)) -> trm :: Nil, els, rest) =>
-      val t = doc" # if (${ result(scrut) }) { #{ ${
-          returningTerm(trm)
-        } #}  # }"
+    case Match(scrut, Nil, els, rest) =>
       val e = els match
-      case S(el) =>
-        doc" else { #{ ${ returningTerm(el) } #}  # }"
-      case N  => doc""
-      t :: e :: returningTerm(rest)
-    case Match(scrut, Case.Cls(cls, pth) -> trm :: Nil, els, rest) =>
+      case S(el) => returningTerm(el)
+      case N => doc""
+      e :: returningTerm(rest)
+    case Match(scrut, hd :: tl, els, rest) =>
       val sd = result(scrut)
-      val test = cls match
-        // case _: semantics.ModuleSymbol => doc"=== ${result(pth)}"
-        case Elaborator.ctx.Builtins.Str => doc"typeof $sd === 'string'"
-        case Elaborator.ctx.Builtins.Num => doc"typeof $sd === 'number'"
-        case Elaborator.ctx.Builtins.Int => doc"globalThis.Number.isInteger($sd)"
-        case _ => doc"$sd instanceof ${result(pth)}"
-      val t = doc" # if ($test) { #{ ${
-          returningTerm(trm)
-        } #}  # }"
+      def cond(cse: Case) = cse match
+        case Case.Lit(syntax.Tree.BoolLit(true)) => sd
+        case Case.Lit(lit) => doc"$sd === ${lit.idStr}"
+        case Case.Cls(cls, pth) => cls match
+          // case _: semantics.ModuleSymbol => doc"=== ${result(pth)}"
+          case Elaborator.ctx.Builtins.Str => doc"typeof $sd === 'string'"
+          case Elaborator.ctx.Builtins.Num => doc"typeof $sd === 'number'"
+          case Elaborator.ctx.Builtins.Int => doc"globalThis.Number.isInteger($sd)"
+          case _ => doc"$sd instanceof ${result(pth)}"
+        case Case.Tup(len, inf) => doc"globalThis.Array.isArray($sd) && $sd.length ${if inf then ">=" else "==="} ${len}"
+      val h = doc" # if (${ cond(hd._1) }) ${ braced(returningTerm(hd._2)) }"
+      val t = tl.foldLeft(h)((acc, arm) => acc :: doc" else if (${ cond(arm._1) }) ${ braced(returningTerm(arm._2)) }")
       val e = els match
       case S(el) =>
-        doc" else { #{ ${ returningTerm(el) } #}  # }"
-      case N  => doc""
-      t :: e :: returningTerm(rest)
-    case Match(scrut, Case.Lit(lit) -> trm :: Nil, els, rest) =>
-      val t = doc" # if (${ result(scrut) } === ${lit.idStr}) { #{ ${
-          returningTerm(trm)
-        } #}  # }"
-      val e = els match
-      case S(el) =>
-        doc" else { #{ ${ returningTerm(el) } #}  # }"
-      case N  => doc""
-      t :: e :: returningTerm(rest)
-    case Match(scrut, Case.Tup(len, inf) -> trm :: Nil, els, rest) =>
-      val test = doc"globalThis.Array.isArray(${ result(scrut) }) && ${ result(scrut) }.length ${if inf then ">=" else "==="} ${len}"
-      val t = doc" # if (${ test }) { #{ ${
-          returningTerm(trm)
-        } #}  # }"
-      val e = els match
-      case S(el) =>
-        doc" else { #{ ${ returningTerm(el) } #}  # }"
+        doc" else ${ braced(returningTerm(el)) }"
       case N  => doc""
       t :: e :: returningTerm(rest)
     
@@ -318,8 +289,7 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
       } # break; #}  # }${returningTerm(rst)}"
       
     case TryBlock(sub, fin, rst) =>
-      doc" # try { #{ ${returningTerm(sub)
-        } #}  # } finally { #{ ${returningTerm(fin)} #}  # } # ${
+      doc" # try ${ braced(returningTerm(sub)) } finally ${ braced(returningTerm(fin)) } # ${
         returningTerm(rst).stripBreaks}"
     
     // case _ => ???
@@ -357,6 +327,12 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
   
   def body(t: Block)(using Raise, Scope): Document = scope.nest givenIn:
     block(t)
+  
+  def braced(t: Document)(using Raise, Scope): Document =
+    if t.isEmpty then
+      doc"{}"
+    else
+      doc"{ #{ ${t} #}  # }"
   
   def setupFunction(name: Option[Str], params: ParamList, body: Block)
       (using Raise, Scope): (Document, Document) =
