@@ -5,12 +5,12 @@ abstract class Effect with
 
 :ge
 handle h = Effect with
-  fun perform(arg, k) = k(arg)
+  fun perform(arg)(k) = k(arg)
 h.perform("k")
 //│ ╔══[COMPILATION ERROR] Effect handlers are not enabled
 //│ ║  l.7: 	handle h = Effect with
 //│ ║       	           ^^^^^^^^^^^
-//│ ║  l.8: 	  fun perform(arg, k) = k(arg)
+//│ ║  l.8: 	  fun perform(arg)(k) = k(arg)
 //│ ╙──     	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 //│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of null (reading 'perform')
 
@@ -19,26 +19,26 @@ h.perform("k")
 
 :expect 'b'
 handle h = Effect with
-  fun perform(arg, k) = "b"
+  fun perform(arg)(k) = "b"
 h.perform("k")
 //│ = 'b'
 
 :expect 'k'
 handle h = Effect with
-  fun perform(arg, k) = arg
+  fun perform(arg)(k) = arg
 h.perform("k")
 //│ = 'k'
 
 :expect 'k'
 handle h = Effect with
-  fun perform(arg, k) = k(arg)
+  fun perform(arg)(k) = k(arg)
 h.perform("k")
 //│ = 'k'
 
 :expect 'hi'
 fun foo(e) = e.perform("hi")
 handle h = Effect with
-  fun perform(arg, k) =
+  fun perform(arg)(k) =
     print(arg)
     k(arg)
 foo(h)
@@ -49,7 +49,7 @@ fun foo(e) = e.perform("hi")
 
 :expect 'Hello World!'
 handle h = Effect with
-  fun perform(arg, k) =
+  fun perform(arg)(k) =
     print(arg)
     k(arg)
 (() => h.perform("Hello") + " World!")()
@@ -59,7 +59,7 @@ handle h = Effect with
 :expect '54321'
 let result = ""
 handle h = Effect with
-  fun perform(arg, k) =
+  fun perform(arg)(k) =
     let v = k(arg)
     result = result + arg
     v
@@ -75,7 +75,7 @@ result
 
 :expect 'b'
 handle h = Effect with
-  fun perform(arg, k) =
+  fun perform(arg)(k) =
     print(arg)
     "b"
 h.perform("t")
@@ -90,7 +90,7 @@ fun foo(h) =
   print("Exiting foo")
   result
 handle h = Effect with
-  fun perform(arg, k) =
+  fun perform(arg)(k) =
     print("handler called")
     let result = k(arg)
     print("handler finished")
@@ -128,7 +128,7 @@ fun foobar(h) =
   print("Exiting foobar")
   result
 handle h = Effect with
-  fun perform(arg, k) =
+  fun perform(arg)(k) =
     print("handler called")
     let result = k(arg)
     print("handler finished")
@@ -154,7 +154,7 @@ result
 
 :fixme
 handle h = Effect with
-  fun perform(arg, k) = arg
+  fun perform(arg)(k) = arg
 fun f() = 3
 f()
 //│ ═══[RUNTIME ERROR] TypeError: globalThis.f is not a function
@@ -162,7 +162,7 @@ f()
 :fixme
 fun f(perform) =
   handle h = Effect with
-    fun perform(arg, k) = arg
+    fun perform(arg)(k) = arg
   perform()
 f(() => 3)
 //│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 1 arguments but got 0
@@ -176,7 +176,7 @@ let k
 let m
 handle h = Cell with
   fun getVal(k) = k(x)
-  fun setVal(value, k) =
+  fun setVal(value)(k) =
     x = value
     k(())
 k = h.getVal()

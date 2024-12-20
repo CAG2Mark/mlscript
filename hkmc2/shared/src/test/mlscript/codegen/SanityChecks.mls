@@ -2,7 +2,7 @@
 
 
 
-:sjs
+:ssjs
 fun f(x, y) = x + y
 f(2, 3)
 //│ JS:
@@ -17,7 +17,7 @@ f(2, 3)
 
 
 :expect NaN
-:sjs
+:ssjs
 :noSanityCheck
 fun f2(x, y) = x + y
 f2(2)
@@ -25,7 +25,7 @@ f2(2)
 //│ function f2(x, y) { return x + y; } this.f2(2)
 //│ = NaN
 
-:sjs
+:ssjs
 :re
 f(2)
 //│ JS:
@@ -33,7 +33,7 @@ f(2)
 //│ ═══[RUNTIME ERROR] Error: Function 'f' expected 2 arguments but got 1
 
 
-:sjs
+:ssjs
 :re
 fun f(x)(y, z) = x + y + z
 f(3)(4)
@@ -57,14 +57,14 @@ f(3)(4)
 
 
 :expect NaN
-:sjs
+:ssjs
 :noSanityCheck
 let f = (x, y) => x + y in f(2)
 //│ JS:
 //│ this.f = (x, y) => { return x + y; }; this.f(2) ?? null
 //│ = NaN
 
-:sjs
+:ssjs
 :re
 let f = (x, y) => x + y
 f(2)
@@ -81,7 +81,7 @@ f(2)
 
 
 :expect NaN
-:sjs
+:ssjs
 :noSanityCheck
 class Cls(x, y) with
   fun f(z, p) = x + y + z + p
@@ -106,7 +106,7 @@ Cls(1, 2).f(3)
 //│ tmp.f(3) ?? null
 //│ = NaN
 
-:sjs
+:ssjs
 :re
 class Cls(x, y) with
   fun f(z, p) = x + y + z + p
@@ -135,7 +135,7 @@ Cls(1, 2).f(3)
 //│ ═══[RUNTIME ERROR] Error: Function 'f' expected 2 arguments but got 1
 
 
-:sjs
+:ssjs
 :re
 class Cls(x, y) with
   fun f(z, p)(q, s) = x + y + z + p + q + s
@@ -167,12 +167,12 @@ Cls(1, 2).f(3, 4)(5)
 //│   toString() { return "Cls(" + this.x + ", " + this.y + ")"; }
 //│ };
 //│ tmp = this.Cls(1, 2);
-//│ tmp1 = tmp.f(3, 4) ?? null;
+//│ tmp1 = tmp.f(3, 4);
 //│ tmp1(5) ?? null
 //│ ═══[RUNTIME ERROR] Error: Function expected 2 arguments but got 1
 
 
-:sjs
+:ssjs
 console.log(1)
 //│ JS:
 //│ this.console.log(1) ?? null
@@ -180,7 +180,7 @@ console.log(1)
 
 
 :re
-:sjs
+:ssjs
 globalThis.x
 //│ JS:
 //│ let selRes;
@@ -193,7 +193,7 @@ globalThis.x
 //│ ═══[RUNTIME ERROR] Error: Access to required field 'x' yielded 'undefined'
 
 :re
-:sjs
+:ssjs
 globalThis.x()
 //│ JS:
 //│ this.x() ?? null
@@ -203,7 +203,7 @@ globalThis.x()
 
 
 :re
-:sjs
+:ssjs
 module M with
   class A(x) with
     fun f(y) = x + y
@@ -250,7 +250,7 @@ if M.A(1).y is
 
 
 
-:sjs
+:ssjs
 :re
 M.A(1).y
   console.log()
@@ -268,7 +268,7 @@ M.A(1).y
 
 
 
-:sjs
+:ssjs
 :noSanityCheck
 M.A(1).y
   console.log()
@@ -286,7 +286,7 @@ M.A(2).y > 1
 //│ ═══[RUNTIME ERROR] Error: Access to required field 'y' yielded 'undefined'
 
 :re
-:sjs
+:ssjs
 M.A(1).g(0)
 //│ JS:
 //│ let tmp; tmp = this.M.A(1); tmp.g(0) ?? null
@@ -294,8 +294,11 @@ M.A(1).g(0)
 
 
 
-:sjs
+:ssjs
 M.A(1).f(0)
 //│ JS:
 //│ let tmp; tmp = this.M.A(1); tmp.f(0) ?? null
 //│ = 1
+
+
+

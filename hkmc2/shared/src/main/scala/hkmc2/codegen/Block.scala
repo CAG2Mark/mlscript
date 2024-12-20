@@ -38,8 +38,21 @@ sealed abstract class Block extends Product with AutoLocated:
     case Define(defn, rst) => rst.definedVars
     case HandleBlock(lhs, res, cls, hdr, bod, rst) => bod.definedVars ++ rst.definedVars + lhs
     case HandleBlockReturn(_) => Set.empty
+    case HandleBlock(lhs, res, cls, hdr, bod, rst) => bod.definedVars ++ rst.definedVars + lhs
+    case HandleBlockReturn(_) => Set.empty
     case TryBlock(sub, fin, rst) => sub.definedVars ++ fin.definedVars ++ rst.definedVars
     case Label(lbl, bod, rst) => bod.definedVars ++ rst.definedVars
+  
+  lazy val size: Int = this match
+    case _: Return | _: Throw | _: End | _: Break | _: Continue => 1
+    case Begin(sub, rst) => sub.size + rst.size
+    case Assign(_, _, rst) => 1 + rst.size
+    case AssignField(_, _, _, rst) => 1 + rst.size
+    case Match(_, arms, dflt, rst) =>
+      1 + arms.map(_._2.size).sum + dflt.map(_.size).getOrElse(0) + rst.size
+    case Define(_, rst) => 1 + rst.size
+    case TryBlock(sub, fin, rst) => 1 + sub.size + fin.size + rst.size
+    case Label(_, bod, rst) => 1 + bod.size + rst.size
   
   // ignoring blocks inside functions and handle block
   def map(f: Block => Block): Block = this match
@@ -87,6 +100,8 @@ sealed abstract class Block extends Product with AutoLocated:
     case Begin(sub, rst) => Begin(sub, rst.mapTail(f))
     case Assign(lhs, rhs, rst) => Assign(lhs, rhs, rst.mapTail(f))
     case Define(defn, rst) => Define(defn, rst.mapTail(f))
+    case HandleBlock(lhs, res, cls, handlers, body, rest) =>
+      HandleBlock(lhs, res, cls, handlers.map(h => Handler(h.sym, h.resumeSym, h.params, h.body.mapTail(f))), body.mapTail(f), rest.mapTail(f))
     case HandleBlock(lhs, res, cls, handlers, body, rest) =>
       HandleBlock(lhs, res, cls, handlers.map(h => Handler(h.sym, h.resumeSym, h.params, h.body.mapTail(f))), body.mapTail(f), rest.mapTail(f))
     case Match(scrut, arms, dflt, rst) =>

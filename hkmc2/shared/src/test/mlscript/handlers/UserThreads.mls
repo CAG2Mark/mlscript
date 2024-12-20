@@ -30,7 +30,7 @@ fun drain() =
 
 // LIFO
 handle h = ThreadEffect with
-  fun fork(thread, k) =
+  fun fork(thread)(k) =
     x.push(thread)
     k()
     drain()
@@ -53,7 +53,7 @@ in
 
 // FIFO
 handle h = ThreadEffect with
-  fun fork(thread, k) =
+  fun fork(thread)(k) =
     x.unshift(thread)
     k()
     drain()

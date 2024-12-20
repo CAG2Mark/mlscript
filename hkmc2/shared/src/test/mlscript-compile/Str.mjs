@@ -1,6 +1,5 @@
 const Str$class = class Str {
-  constructor() {
-  }
+  constructor() {}
   concat(a, b) {
     return a + b;
   } 

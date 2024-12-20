@@ -74,18 +74,3 @@ extension (t: Product)
           if inTailPos then ": \\\n" + args.mkString("\n")
           else ":\n" + args.mkString("\n").indent("  ")
 
-
-extension [T](xs: Ls[T])
-  def replaceFirst(repl: T => Opt[T]): List[T] = xs match
-    case Nil => Nil
-    case head :: tail => repl(head) match
-      case None => head :: replaceFirst(repl)
-      case Some(value) => value :: tail
-  
-  def replaceAndPopFirst[V](repl: T => Opt[(T, V)]): (Opt[V], Ls[T]) = xs match
-    case Nil => (None, Nil)
-    case head :: tail => repl(head) match
-      case N => 
-        val next = tail.replaceAndPopFirst(repl)
-        (next._1, head :: next._2)
-      case S((replaced, popped)) => (S(popped), replaced :: tail)
