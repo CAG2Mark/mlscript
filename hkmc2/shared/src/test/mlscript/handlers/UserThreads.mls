@@ -20,22 +20,20 @@ fun main(h) =
   print("main end")
 
 // task queue
-let x = []
+let tasks = []
 fun drain() =
-  while x.length != 0 then
-    x.pop()()
-  else
-    ()
-//│ x = []
+  while tasks.length != 0 do
+    tasks.pop()()
+//│ tasks = []
 
 // LIFO
 handle h = ThreadEffect with
   fun fork(thread)(k) =
-    x.push(thread)
+    tasks.push(thread)
     k()
     drain()
   fun yld(k) =
-    x.unshift(k)
+    tasks.unshift(k)
     drain()
 in
   main(h)
@@ -54,11 +52,11 @@ in
 // FIFO
 handle h = ThreadEffect with
   fun fork(thread)(k) =
-    x.unshift(thread)
+    tasks.unshift(thread)
     k()
     drain()
   fun yld(k) =
-    x.unshift(k)
+    tasks.unshift(k)
     drain()
 in
   main(h)

@@ -1,0 +1,56 @@
+:js
+:handler
+
+
+abstract class Effect[A] with
+  fun perform(arg: A): A
+
+
+handle h = Effect with
+  fun perform(arg)(k) =
+    print("performing " + arg)
+    k("ok")
+h.perform("hi")
+h.perform("hello")
+//│ > performing hi
+//│ > performing hello
+//│ = 'ok'
+
+h
+//│ = Effect { perform: [Function: perform] }
+
+h.perform("oops")
+//│ > <ref *1> __Cont {
+//│ >   next: undefined,
+//│ >   resumed: undefined,
+//│ >   tail: [Circular *1],
+//│ >   tailHandler: [Circular *1],
+//│ >   handler: Effect { perform: [Function: perform] },
+//│ >   handlerFun: [Function (anonymous)]
+//│ = }
+
+
+handle h = Effect with
+  fun perform(arg)(k) =
+    print("performing " + arg)
+    k of if arg > 0
+      then h.perform(arg - 1) + " " + arg
+      else "0"
+[
+  print("–––");
+  h.perform(2)
+  print("–––");
+  h.perform(3)
+]
+//│ > –––
+//│ > performing 2
+//│ > performing 1
+//│ > performing 0
+//│ > –––
+//│ > performing 3
+//│ > performing 2
+//│ > performing 1
+//│ > performing 0
+//│ = [ '0 1 2', '0 1 2 3' ]
+
+
