@@ -1,9 +1,11 @@
 :js
 :handler
 
+
 class ThreadEffect with
   fun fork(thread: () -> ()): ()
   fun yld(): ()
+
 
 fun f(h, x)() =
   print("f " + x)
@@ -19,12 +21,14 @@ fun main(h) =
   h.fork(f(h, 2))
   print("main end")
 
+
 // task queue
 let tasks = []
 fun drain() =
   while tasks.length != 0 do
     tasks.pop()()
 //│ tasks = []
+
 
 // LIFO
 handle h = ThreadEffect with
@@ -49,6 +53,7 @@ in
 //│ > f 1
 //│ > f 0
 
+
 // FIFO
 handle h = ThreadEffect with
   fun fork(thread)(k) =
@@ -71,3 +76,5 @@ in
 //│ > f 0
 //│ > f 1
 //│ > f 2
+
+
