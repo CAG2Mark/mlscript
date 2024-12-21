@@ -315,7 +315,7 @@ class Lowering(using TL, Raise, Elaborator.State):
         msg"Effect handlers are not enabled" ->
         t.toLoc :: Nil,
         source = Diagnostic.Source.Compilation))
-      Assign(lhs, Value.Lit(syntax.Tree.UnitLit(true)), k(Value.Lit(syntax.Tree.UnitLit(true))))
+      End("error")
     
     // * BbML-specific cases: t.Cls#field and mutable operations
     case SelProj(prefix, _, proj) =>
