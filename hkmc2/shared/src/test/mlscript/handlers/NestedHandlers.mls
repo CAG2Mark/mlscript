@@ -80,3 +80,28 @@ handleEffects(f)
 //│ > h2 start 11
 //│ > h1 stop
 //│ > h1 end 10
+
+:fixme
+:expect 1023
+class Eff with
+  fun perform(): ()
+class Box(n)
+fun f(h, box, n) =
+  if n <= 1 then 
+    h.perform()
+  else
+    handle h2 = Eff with
+      fun perform()(k) =
+        set box.n = box.n + 1
+        h.perform()
+        k()
+    f(h2, box, n - 1)
+    f(h2, box, n - 1)
+let box = Box(0)
+handle h = Eff with
+  fun perform()(k) =
+    set box.n = box.n + 1
+    k()
+f(h, box, 10)
+box.n
+//│ ═══[RUNTIME ERROR] Error: Unhandled effects
