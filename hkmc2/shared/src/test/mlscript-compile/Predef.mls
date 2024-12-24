@@ -69,30 +69,29 @@ class Test with
 
 // Private definitions for algebraic effects
 
-abstract class __Cont(next, resumed) with
+abstract class __Cont(next) with
   fun resume(value)
+class __TailList(next, tail)
+class __HandleBlock(next, nextHandler, handler)
 
+class __EffectSig(next, nextHandler, tail, tailHandler, resumed, handler, handlerFun)
 class __Return(value)
 
 fun __mkEffect(handler, handlerFun) =
-  let res = new __Cont(undefined, undefined)
+  let res = new __EffectSig(null, null, null, null, false, handler, handlerFun)
   set res.tail = res
   set res.tailHandler = res
-  set res.handler = handler
-  set res.handlerFun = handlerFun
   res
 
 fun __handleBlockImpl(cur, handler) =
-  let handlerTailList = new __Cont(undefined, undefined)
+  let handlerTailList = new __TailList(null, null)
   set handlerTailList.tail = handlerTailList
   while cur is
     __Return then return cur
-    __Cont then
+    __EffectSig then
       let nxt = __handleEffect(cur, handler, handlerTailList)
       if cur === nxt then
-        let handlerCont = new __Cont(undefined, undefined)
-        set handlerCont.next = handlerTailList.next
-        set handlerCont.handler = handler
+        let handlerCont = new __HandleBlock(handlerTailList.next, null, handler)
         set cur.tailHandler.nextHandler = handlerCont
         set cur.tailHandler = handlerCont
         set cur.tail = handlerTailList.tail
@@ -103,7 +102,7 @@ fun __handleBlockImpl(cur, handler) =
 
 fun __handleEffect(cur, handler, handlerTailList) =
   let handlerCont = cur.nextHandler
-  while handlerCont is __Cont and handlerCont.handler !== cur.handler then
+  while handlerCont is __HandleBlock and handlerCont.handler !== cur.handler then
     set handlerCont = handlerCont.nextHandler
   else ()
   if handlerCont then
@@ -112,25 +111,25 @@ fun __handleEffect(cur, handler, handlerTailList) =
     if savedNext !== handlerCont.next then
       set handlerCont.next.next = savedNext
     else ()
-    if cur is __Cont then
+    if cur is __EffectSig then
       return cur
     else if cur is __Return then
       return cur
     else
-      set cur = __resume(handlerCont, undefined, undefined)(cur)
+      set cur = __resume(handlerCont, null, null)(cur)
   else if handler === cur.handler then
     let savedNext = handlerTailList.next
     set cur = cur.handlerFun(__resume(cur, handlerTailList, handlerCont))
     if savedNext !== handlerTailList.next then
       set handlerTailList.next.next = savedNext
-      if savedNext === undefined then
+      if savedNext === null then
         set handlerTailList.tail = handlerTailList.next
       else ()
     else ()
   else return cur
   while
     cur is
-      __Cont then return cur
+      __EffectSig then return cur
       __Return then return cur
     handlerTailList.next is __Cont then
       let saved = handlerTailList.next.next
@@ -144,7 +143,7 @@ fun __resume(cur, tail, handlerCont)(value) =
   while
     cont is __Cont then
       value = cont.resume(value)
-      if value is __Cont then
+      if value is __EffectSig then
         set value.tail = tail
         set value.tailHandler.nextHandler = nextHandler
         return value

@@ -158,13 +158,12 @@ fun f() = 3
 f()
 //│ ═══[RUNTIME ERROR] TypeError: globalThis.f is not a function
 
-:fixme
 fun f(perform) =
   handle h = Effect with
     fun perform(arg)(k) = arg
   perform()
 f(() => 3)
-//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 1 arguments but got 0
+//│ = 3
 
 abstract class Cell with
   fun getVal(): Int
@@ -174,7 +173,7 @@ let x = 0
 let k
 let m
 handle h = Cell with
-  fun getVal(k) = k(x)
+  fun getVal()(k) = k(x)
   fun setVal(value)(k) =
     x = value
     k(())
@@ -194,7 +193,7 @@ fun fact(e, factvalue) =
     factvalue * fact(e, factvalue-1)
   else e.get()
 handle h = Eff with
-  fun get(k) = k(1)
+  fun get()(k) = k(1)
 fact(h, 5)
 //│ = 120
 
@@ -213,7 +212,7 @@ fun sum(depth, x) =
     x + sum(new_depth, x - 1)
   else 0
 handle h = StackDelay with
-  fun raise(k) =
+  fun raise()(k) =
     // console.trace("Stack unwinded!")
     k(10)
 sum(0, 100)
@@ -227,7 +226,7 @@ fun sum(depth, x) =
     x + sum(new_depth, x - 1)
   else 0
 handle h = StackDelay with
-  fun raise(k) = // TODO: This should codegen to a simple return without instrumentation
+  fun raise()(k) = // TODO: This should codegen to a simple return without instrumentation
     k(10)
 sum(0, 30000)
 //│ = 450015000

@@ -69,13 +69,42 @@ const Predef$class = class Predef {
       }
       toString() { return "Test"; }
     };
-    this.__Cont = function __Cont(next1, resumed1) { return new __Cont.class(next1, resumed1); };
+    this.__Cont = function __Cont(next1) { return new __Cont.class(next1); };
     this.__Cont.class = class __Cont {
-      constructor(next, resumed) {
+      constructor(next) {
         this.next = next;
-        this.resumed = resumed;
       }
-      toString() { return "__Cont(" + this.next + ", " + this.resumed + ")"; }
+      toString() { return "__Cont(" + this.next + ")"; }
+    };
+    this.__TailList = function __TailList(next1, tail1) { return new __TailList.class(next1, tail1); };
+    this.__TailList.class = class __TailList {
+      constructor(next, tail) {
+        this.next = next;
+        this.tail = tail;
+      }
+      toString() { return "__TailList(" + this.next + ", " + this.tail + ")"; }
+    };
+    this.__HandleBlock = function __HandleBlock(next1, nextHandler1, handler1) { return new __HandleBlock.class(next1, nextHandler1, handler1); };
+    this.__HandleBlock.class = class __HandleBlock {
+      constructor(next, nextHandler, handler) {
+        this.next = next;
+        this.nextHandler = nextHandler;
+        this.handler = handler;
+      }
+      toString() { return "__HandleBlock(" + this.next + ", " + this.nextHandler + ", " + this.handler + ")"; }
+    };
+    this.__EffectSig = function __EffectSig(next1, nextHandler1, tail1, tailHandler1, resumed1, handler1, handlerFun1) { return new __EffectSig.class(next1, nextHandler1, tail1, tailHandler1, resumed1, handler1, handlerFun1); };
+    this.__EffectSig.class = class __EffectSig {
+      constructor(next, nextHandler, tail, tailHandler, resumed, handler, handlerFun) {
+        this.next = next;
+        this.nextHandler = nextHandler;
+        this.tail = tail;
+        this.tailHandler = tailHandler;
+        this.resumed = resumed;
+        this.handler = handler;
+        this.handlerFun = handlerFun;
+      }
+      toString() { return "__EffectSig(" + this.next + ", " + this.nextHandler + ", " + this.tail + ", " + this.tailHandler + ", " + this.resumed + ", " + this.handler + ", " + this.handlerFun + ")"; }
     };
     this.__Return = function __Return(value1) { return new __Return.class(value1); };
     this.__Return.class = class __Return {
@@ -174,32 +203,28 @@ const Predef$class = class Predef {
   } 
   __mkEffect(handler, handlerFun) {
     let res, tmp;
-    tmp = new this.__Cont.class(undefined, undefined);
+    tmp = new this.__EffectSig.class(null, null, null, null, false, handler, handlerFun);
     res = tmp;
     res.tail = res;
     res.tailHandler = res;
-    res.handler = handler;
-    res.handlerFun = handlerFun;
     return res;
   } 
   __handleBlockImpl(cur, handler1) {
     let handlerTailList, nxt, scrut, handlerCont, tmp, tmp1, tmp2, tmp3, tmp4;
-    tmp = new this.__Cont.class(undefined, undefined);
+    tmp = new this.__TailList.class(null, null);
     handlerTailList = tmp;
     handlerTailList.tail = handlerTailList;
     tmp5: while (true) {
       if (cur instanceof this.__Return.class) {
         return cur;
       } else {
-        if (cur instanceof this.__Cont.class) {
+        if (cur instanceof this.__EffectSig.class) {
           tmp1 = this.__handleEffect(cur, handler1, handlerTailList);
           nxt = tmp1;
           scrut = cur === nxt;
           if (scrut) {
-            tmp2 = new this.__Cont.class(undefined, undefined);
+            tmp2 = new this.__HandleBlock.class(handlerTailList.next, null, handler1);
             handlerCont = tmp2;
-            handlerCont.next = handlerTailList.next;
-            handlerCont.handler = handler1;
             cur.tailHandler.nextHandler = handlerCont;
             cur.tailHandler = handlerCont;
             cur.tail = handlerTailList.tail;
@@ -222,7 +247,7 @@ const Predef$class = class Predef {
     let handlerCont, scrut, scrut1, savedNext, scrut2, scrut3, savedNext1, scrut4, scrut5, saved, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15;
     handlerCont = cur1.nextHandler;
     tmp16: while (true) {
-      if (handlerCont instanceof this.__Cont.class) {
+      if (handlerCont instanceof this.__HandleBlock.class) {
         scrut = handlerCont.handler !== cur1.handler;
         if (scrut) {
           handlerCont = handlerCont.nextHandler;
@@ -248,13 +273,13 @@ const Predef$class = class Predef {
       } else {
         tmp3 = null;
       }
-      if (cur1 instanceof this.__Cont.class) {
+      if (cur1 instanceof this.__EffectSig.class) {
         return cur1;
       } else {
         if (cur1 instanceof this.__Return.class) {
           return cur1;
         } else {
-          tmp4 = this.__resume(handlerCont, undefined, undefined);
+          tmp4 = this.__resume(handlerCont, null, null);
           tmp5 = tmp4(cur1) ?? null;
           cur1 = tmp5;
           tmp6 = null;
@@ -272,7 +297,7 @@ const Predef$class = class Predef {
         scrut2 = savedNext !== handlerTailList.next;
         if (scrut2) {
           handlerTailList.next.next = savedNext;
-          scrut3 = savedNext === undefined;
+          scrut3 = savedNext === null;
           if (scrut3) {
             handlerTailList.tail = handlerTailList.next;
             tmp11 = null;
@@ -290,7 +315,7 @@ const Predef$class = class Predef {
       tmp8 = tmp13;
     }
     tmp17: while (true) {
-      if (cur1 instanceof this.__Cont.class) {
+      if (cur1 instanceof this.__EffectSig.class) {
         return cur1;
       } else {
         if (cur1 instanceof this.__Return.class) {
@@ -322,7 +347,7 @@ const Predef$class = class Predef {
         if (cont instanceof this.__Cont.class) {
           tmp = cont.resume(value) ?? null;
           value = tmp;
-          if (value instanceof this.__Cont.class) {
+          if (value instanceof this.__EffectSig.class) {
             value.tail = tail;
             value.tailHandler.nextHandler = nextHandler;
             return value;

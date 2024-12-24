@@ -72,6 +72,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
     .ret(state.res)
   )
   private def handlerCtx(using HandlerCtx): HandlerCtx = summon
+  private val effectSigPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__EffectSig")).selN(Tree.Ident("class"))
   private val contClsPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__Cont")).selN(Tree.Ident("class"))
   private val retClsPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__Return")).selN(Tree.Ident("class"))
   private val handleEffectFun: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__handleEffect"))
@@ -374,11 +375,29 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
       // .assignFieldN(state.res, tailIdent, state.res.tail.next)
       .ret(SimpleCall(handleBlockImplPath, state.res :: h.lhs.asPath :: Nil))))
     
-    val cur: Block => Block = h.handlers.foldLeft(blockBuilder)((builder, handler) =>
+    // TODO: better class name
+    val effectClsName = "Effect$" + State.suid.nextUid
+    val handlers = h.handlers.map(handler =>
       val lam = Value.Lam(PlainParamList(Param(FldFlags.empty, handler.resumeSym, N) :: Nil), translateBlock(handler.body, functionHandlerCtx))
       val tmp = freshTmp()
-      builder.define(FunDefn(handler.sym, handler.params, Return(SimpleCall(mkEffectPath, h.lhs.asPath :: lam :: Nil), false)))).assign(h.lhs, Instantiate(h.cls, Nil))
-    val body = h.handlers.foldLeft(cur)((builder, handler) => builder.assignFieldN(h.lhs.asPath, Tree.Ident(handler.sym.nme), handler.sym.asPath)).rest(handlerBody)
+      FunDefn(handler.sym, handler.params, Return(SimpleCall(mkEffectPath, h.lhs.asPath :: lam :: Nil), false)))
+    
+    val effectClsSym = ClassSymbol(
+      Tree.TypeDef(syntax.Cls, Tree.Error(), N, N),
+      Tree.Ident(effectClsName)
+    )
+    effectClsSym.defn = S(ClassDef(N, syntax.Cls, effectClsSym, Nil, N, ObjBody(Term.Blk(Nil, Term.Lit(Tree.UnitLit(true))))))
+    // TODO: it seems that our current syntax didn't know how to call super, calling it with empty param list now
+    val clsDefn = ClsLikeDefn(effectClsSym, syntax.Cls, S(h.cls), handlers, Nil, Nil,
+      Assign(freshTmp(), SimpleCall(Value.Ref(State.builtinOpsMap("super")), Nil), End()), End())
+    
+    val body = blockBuilder.define(clsDefn).assign(h.lhs, Instantiate(Value.Ref(BlockMemberSymbol(effectClsName, Nil)), Nil)).rest(handlerBody)
+    
+    // val cur: Block => Block = h.handlers.foldLeft(blockBuilder)((builder, handler) =>
+    //   val lam = Value.Lam(PlainParamList(Param(FldFlags.empty, handler.resumeSym, N) :: Nil), translateBlock(handler.body, functionHandlerCtx))
+    //   val tmp = freshTmp()
+    //   builder.define(FunDefn(handler.sym, handler.params, Return(SimpleCall(mkEffectPath, h.lhs.asPath :: lam :: Nil), false)))).assign(h.lhs, Instantiate(h.cls, Nil))
+    // val body = h.handlers.foldLeft(cur)((builder, handler) => builder.assignFieldN(h.lhs.asPath, Tree.Ident(handler.sym.nme), handler.sym.asPath)).rest(handlerBody)
     val defn = FunDefn(sym, PlainParamList(Nil) :: Nil, body)
     val result = Define(defn, CallPlaceholder(h.res, freshId(), true, Call(sym.asPath, Nil)(true), h.rest))
     result
@@ -401,7 +420,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
         .assign(res, c)
         .ifthen(
           res.asPath,
-          Case.Cls(dummyClsSym, contClsPath),
+          Case.Cls(dummyClsSym, effectSigPath),
           ReturnCont(res, uid)
         )
         .staticif(canRet, _.ifthen(
@@ -484,7 +503,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
       .assign(res, c)
       .ifthen(
         res.asPath,
-        Case.Cls(dummyClsSym, contClsPath),
+        Case.Cls(dummyClsSym, effectSigPath),
         handlerCtx.linkAndHandle(LinkState(res.asPath, clsSym.asPath, uid))
       )
       .staticif(canRet && !handlerCtx.isTopLevel, _.ifthen(
