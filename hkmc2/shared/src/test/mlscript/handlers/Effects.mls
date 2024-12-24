@@ -107,7 +107,6 @@ result
 //│ > handler finished
 //│ > handler finished
 //│ = 'Hello World!'
-//│ result = 'Hello World!'
 
 :expect 'Hello World!'
 fun foo(h) =
@@ -149,7 +148,6 @@ result
 //│ > handler finished
 //│ > handler finished
 //│ = 'Hello World!'
-//│ result = 'Hello World!'
 
 :fixme
 handle h = Effect with
@@ -177,12 +175,12 @@ handle h = Cell with
   fun setVal(value)(k) =
     x = value
     k(())
-k = h.getVal()
+print(h.getVal())
 h.setVal(1)
-m = h.getVal()
-//│ k = 0
-//│ m = 1
-//│ x = 1
+print(h.getVal())
+//│ > 0
+//│ > 1
+
 
 abstract class Eff with
   fun get(): Int

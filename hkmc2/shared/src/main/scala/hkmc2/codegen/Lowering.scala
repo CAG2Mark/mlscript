@@ -310,7 +310,7 @@ class Lowering(using TL, Raise, Elaborator.State):
         k(Value.Ref(l))
       )
 
-    case Handle(lhs, rhs, defs) =>
+    case Handle(lhs, rhs, clsSym, defs) =>
       raise(ErrorReport(
         msg"Effect handlers are not enabled" ->
         t.toLoc :: Nil,
@@ -486,7 +486,7 @@ trait LoweringHandler
   override def term(t: st)(k: Result => Block)(using Subst): Block =
     if !instrument then return super.term(t)(k)
     t match
-    case st.Blk(Handle(lhs, rhs, defs) :: stmts, res) =>
+    case st.Blk(Handle(lhs, rhs, cls, defs) :: stmts, res) =>
       val handlers = defs.map {
         case HandlerTermDefinition(resumeSym, td) => td.body match
           case None => 
@@ -497,8 +497,8 @@ trait LoweringHandler
             S(Handler(td.sym, resumeSym, paramLists, bodyBlock))
       }.collect{ case Some(v) => v }
       val resSym = TempSymbol(S(t))
-      subTerm(rhs): cls =>
-        HandleBlock(lhs, resSym, cls, handlers, term(st.Blk(stmts, res))(HandleBlockReturn(_)), k(Value.Ref(resSym)))
+      subTerm(rhs): par =>
+        HandleBlock(lhs, resSym, par, cls, handlers, term(st.Blk(stmts, res))(HandleBlockReturn(_)), k(Value.Ref(resSym)))
     case _ => super.term(t)(k)
   override def topLevel(t: st): Block =
     if !instrument then return super.topLevel(t)

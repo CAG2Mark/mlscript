@@ -375,23 +375,16 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
       // .assignFieldN(state.res, tailIdent, state.res.tail.next)
       .ret(SimpleCall(handleBlockImplPath, state.res :: h.lhs.asPath :: Nil))))
     
-    // TODO: better class name
-    val effectClsName = "Effect$" + State.suid.nextUid
     val handlers = h.handlers.map(handler =>
       val lam = Value.Lam(PlainParamList(Param(FldFlags.empty, handler.resumeSym, N) :: Nil), translateBlock(handler.body, functionHandlerCtx))
       val tmp = freshTmp()
       FunDefn(handler.sym, handler.params, Return(SimpleCall(mkEffectPath, h.lhs.asPath :: lam :: Nil), false)))
     
-    val effectClsSym = ClassSymbol(
-      Tree.TypeDef(syntax.Cls, Tree.Error(), N, N),
-      Tree.Ident(effectClsName)
-    )
-    effectClsSym.defn = S(ClassDef(N, syntax.Cls, effectClsSym, Nil, N, ObjBody(Term.Blk(Nil, Term.Lit(Tree.UnitLit(true))))))
     // TODO: it seems that our current syntax didn't know how to call super, calling it with empty param list now
-    val clsDefn = ClsLikeDefn(effectClsSym, syntax.Cls, S(h.cls), handlers, Nil, Nil,
+    val clsDefn = ClsLikeDefn(h.cls, syntax.Cls, S(h.par), handlers, Nil, Nil,
       Assign(freshTmp(), SimpleCall(Value.Ref(State.builtinOpsMap("super")), Nil), End()), End())
     
-    val body = blockBuilder.define(clsDefn).assign(h.lhs, Instantiate(Value.Ref(BlockMemberSymbol(effectClsName, Nil)), Nil)).rest(handlerBody)
+    val body = blockBuilder.define(clsDefn).assign(h.lhs, Instantiate(Value.Ref(BlockMemberSymbol(h.cls.id.name, Nil)), Nil)).rest(handlerBody)
     
     // val cur: Block => Block = h.handlers.foldLeft(blockBuilder)((builder, handler) =>
     //   val lam = Value.Lam(PlainParamList(Param(FldFlags.empty, handler.resumeSym, N) :: Nil), translateBlock(handler.body, functionHandlerCtx))

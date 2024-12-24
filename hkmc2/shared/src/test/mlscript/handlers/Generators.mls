@@ -6,70 +6,33 @@ abstract class Generator with
   fun produce(result): ()
 
 fun permutations_impl(gen, l1, l2) =
-  print("called with")
-  print(l1)
-  print(l2)
   if l2 is
     [f, ...t] do
-      print("l2 list match")
-      print(f)
-      print(t)
       handle genWithPrefix = Generator with
         fun produce(result)(resume) =
           result.unshift(f)
           gen.produce(result)
           resume(())
-      print("l2 enter handle")
       permutations_impl(genWithPrefix, [], l1.concat(t))
       l1.push(f)
-      print("l2 appended")
-      print(l1)
       permutations_impl(gen, l1, t)
     [] and l1 is [] do
       gen.produce([])
 fun permutations(gen, l) =
   permutations_impl(gen, [], l)
 
+:fixme
 let res = []
 handle gen = Generator with
   fun produce(result)(resume) =
     res.push(result)
     resume(())
-in permutations(gen, [1, 2, 3])
+in permutations(gen, [1, 2, 3, 4])
 res
-//│ > called with
-//│ > 
-//│ > 1,2,3
-//│ > l2 list match
-//│ > 1
-//│ > 2,3
-//│ > l2 enter handle
-//│ > called with
-//│ > 
-//│ > 2,3
-//│ > l2 list match
-//│ > 2
-//│ > 3
-//│ > l2 enter handle
-//│ > called with
-//│ > 
-//│ > 3
-//│ > l2 list match
-//│ > 3
-//│ > 
-//│ > l2 enter handle
-//│ > called with
-//│ > 
-//│ > 
-//│ > l2 appended
-//│ > 3
-//│ > called with
-//│ > 3
-//│ > 
-//│ = [ [ 1, 2, 3 ] ]
-//│ res = [ [ 1, 2, 3 ] ]
+//│ ═══[RUNTIME ERROR] Error: Unhandled effects
+//│ res = [ [ 1, 2, 3, 4 ] ]
 
-
+// FIXME: result is wrong
 fun permutations_foreach(l, f) =
   handle gen = Generator with
     fun produce(result)(resume) =
@@ -78,33 +41,5 @@ fun permutations_foreach(l, f) =
   permutations(gen, l)
 
 permutations_foreach([1, 2, 3], print)
-//│ > called with
-//│ > 
 //│ > 1,2,3
-//│ > l2 list match
-//│ > 1
-//│ > 2,3
-//│ > l2 enter handle
-//│ > called with
-//│ > 
-//│ > 2,3
-//│ > l2 list match
-//│ > 2
-//│ > 3
-//│ > l2 enter handle
-//│ > called with
-//│ > 
-//│ > 3
-//│ > l2 list match
-//│ > 3
-//│ > 
-//│ > l2 enter handle
-//│ > called with
-//│ > 
-//│ > 
-//│ > 1,2,3
-//│ > l2 appended
-//│ > 3
-//│ > called with
-//│ > 3
-//│ > 
+//│ > 1,3,2

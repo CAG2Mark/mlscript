@@ -39,7 +39,7 @@ enum Term extends Statement:
   case Ret(result: Term)
   case Throw(result: Term)
   case Try(body: Term, finallyDo: Term)
-  case Handle(lhs: LocalSymbol, rhs: Term, defs: Ls[HandlerTermDefinition])
+  case Handle(lhs: LocalSymbol, rhs: Term, derivedClsSym: ClassSymbol, defs: Ls[HandlerTermDefinition])
   
   lazy val symbol: Opt[Symbol] = this match
     case Ref(sym) => S(sym)
@@ -128,7 +128,7 @@ sealed trait Statement extends AutoLocated with ProductWithExtraInfo:
       pat.paramsOpt.toList.flatMap(_.subTerms) ::: pat.body.blk :: Nil
     case Import(sym, pth) => Nil
     case Try(body, finallyDo) => body :: finallyDo :: Nil
-    case Handle(lhs, rhs, defs) => rhs :: defs.flatMap(_.td.subTerms)
+    case Handle(lhs, rhs, derivedClsSym, defs) => rhs :: defs.flatMap(_.td.subTerms)
     case Neg(e) => e :: Nil
   
   protected def children: Ls[Located] = this match
@@ -180,7 +180,7 @@ sealed trait Statement extends AutoLocated with ProductWithExtraInfo:
     case Asc(term, ty) => s"${term.toString}: ${ty.toString}"
     case LetDecl(sym) => s"let ${sym}"
     case DefineVar(sym, rhs) => s"${sym} = ${rhs.showDbg}"
-    case Handle(lhs, rhs, defs) => s"handle ${lhs} = ${rhs} ${defs}"
+    case Handle(lhs, rhs, derivedClsSym, defs) => s"handle ${lhs} = ${rhs} ${defs}"
     case Region(name, body) => s"region ${name.nme} in ${body.showDbg}"
     case RegRef(reg, value) => s"(${reg.showDbg}).ref ${value.showDbg}"
     case Assgn(lhs, rhs) => s"${lhs.showDbg} := ${rhs.showDbg}"

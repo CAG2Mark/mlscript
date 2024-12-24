@@ -601,8 +601,13 @@ extends Importer:
       case (hd @ Handle(id: Ident, cls: Ident, Block(sts_), N)) :: sts =>
         val sym = fieldOrVarSym(HandlerBind, id)
         log(s"Processing `handle` statement $id (${sym}) ${ctx.outer}")
+        
+        // TODO: shouldn't need uid here
+        val derivedClsSym = ClassSymbol(Tree.TypeDef(syntax.Cls, Tree.Error(), N, N), Tree.Ident(s"Effect$$${cls.name}$$${State.suid.nextUid}"))
+        derivedClsSym.defn = S(ClassDef(N, syntax.Cls, derivedClsSym, Nil, N, ObjBody(Term.Blk(Nil, Term.Lit(Tree.UnitLit(true))))))
 
-        val elabed = block(sts_)._1
+        val elabed = ctx.nest(S(derivedClsSym)).givenIn:
+          block(sts_)._1
         
         elabed.res match
           case Term.Lit(UnitLit(true)) => 
@@ -623,9 +628,10 @@ extends Importer:
             None
         }.collect { case Some(x) => x }
 
-        val newAcc = Term.Handle(sym, term(cls), tds) :: acc
-        ctx + (id.name -> sym) givenIn:
-          go(sts, newAcc)
+        val newAcc = Term.Handle(sym, term(cls), derivedClsSym, tds) :: acc
+        ctx.nest(N).givenIn:
+          ctx + (id.name -> sym) givenIn:
+            go(sts, newAcc)
       case (tree @ Handle(_, _, _, N)) :: sts =>
         raise(ErrorReport(msg"Unsupported handle binding shape" -> tree.toLoc :: Nil))
         go(sts, Term.Error :: acc)

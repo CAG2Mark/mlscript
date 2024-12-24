@@ -210,11 +210,11 @@ const Predef$class = class Predef {
     return res;
   } 
   __handleBlockImpl(cur, handler1) {
-    let handlerTailList, nxt, scrut, handlerCont, tmp, tmp1, tmp2, tmp3, tmp4;
+    let handlerTailList, nxt, scrut, handlerCont, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
     tmp = new this.__TailList.class(null, null);
     handlerTailList = tmp;
     handlerTailList.tail = handlerTailList;
-    tmp5: while (true) {
+    tmp6: while (true) {
       if (cur instanceof this.__Return.class) {
         return cur;
       } else {
@@ -227,21 +227,28 @@ const Predef$class = class Predef {
             handlerCont = tmp2;
             cur.tailHandler.nextHandler = handlerCont;
             cur.tailHandler = handlerCont;
-            cur.tail = handlerTailList.tail;
+            scrut1 = handlerTailList.next !== null;
+            if (scrut1) {
+              cur.tail = handlerTailList.tail;
+              tmp3 = null;
+            } else {
+              cur.tail = handlerCont;
+              tmp3 = null;
+            }
             return cur;
           } else {
             cur = nxt;
-            tmp3 = null;
+            tmp4 = null;
           }
-          tmp4 = tmp3;
-          continue tmp5;
+          tmp5 = tmp4;
+          continue tmp6;
         } else {
           return cur;
         }
       }
       break;
     }
-    return tmp4;
+    return tmp5;
   } 
   __handleEffect(cur1, handler2, handlerTailList) {
     let handlerCont, scrut, scrut1, savedNext, scrut2, scrut3, savedNext1, scrut4, scrut5, saved, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15;
@@ -340,10 +347,10 @@ const Predef$class = class Predef {
   } 
   __resume(cur2, tail, handlerCont) {
     return (value) => {
-      let nextHandler, cont, scrut, tmp, tmp1, tmp2, tmp3;
+      let nextHandler, cont, scrut, tmp, tmp1, tmp2;
       nextHandler = cur2.nextHandler;
       cont = cur2.next;
-      tmp4: while (true) {
+      tmp3: while (true) {
         if (cont instanceof this.__Cont.class) {
           tmp = cont.resume(value) ?? null;
           value = tmp;
@@ -352,30 +359,25 @@ const Predef$class = class Predef {
             value.tailHandler.nextHandler = nextHandler;
             return value;
           } else {
-            if (value instanceof this.__Return.class) {
-              return value;
-            } else {
-              cont = cont.next;
-              tmp1 = null;
-            }
-            tmp2 = tmp1;
+            cont = cont.next;
+            tmp1 = null;
           }
-          tmp3 = tmp2;
-          continue tmp4;
+          tmp2 = tmp1;
+          continue tmp3;
         } else {
           scrut = nextHandler !== handlerCont;
           if (scrut) {
             cont = nextHandler.next;
             nextHandler = nextHandler.nextHandler;
-            tmp3 = null;
-            continue tmp4;
+            tmp2 = null;
+            continue tmp3;
           } else {
-            tmp3 = value;
+            tmp2 = value;
           }
         }
         break;
       }
-      return tmp3;
+      return tmp2;
     };
   }
   toString() { return "Predef"; }
