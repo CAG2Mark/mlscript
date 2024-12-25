@@ -100,23 +100,32 @@ fun __handleBlockImpl(cur, handler) =
     else return cur
 
 fun __handleEffect(cur, handler, handlerTailList) =
+  let prevCont = cur
   let handlerCont = cur.nextHandler
   while handlerCont is __HandleBlock and handlerCont.handler !== cur.handler do
+    set prevCont = handlerCont
     set handlerCont = handlerCont.nextHandler
   if handlerCont then
+    let origTail = cur.tailHandler
+    set prevCont.nextHandler = null
+    set cur.tailHandler = prevCont
     let savedNext = handlerCont.next
-    set cur = cur.handlerFun(__resume(cur, handlerCont, cur.handler))
+    set cur = cur.handlerFun(__resume(cur, handlerCont))
     if savedNext !== handlerCont.next do
       set handlerCont.next.next = savedNext
     if cur is __EffectSig then
+      set cur.tailHandler.nextHandler = handlerCont
+      set cur.tailHandler = origTail
       return cur
     else if cur is __Return then
+      set cur.tailHandler.nextHandler = handlerCont
+      set cur.tailHandler = origTail
       return cur
     else
       set cur = __resume(handlerCont, null, null)(cur)
   else if handler === cur.handler then
     let savedNext = handlerTailList.next
-    set cur = cur.handlerFun(__resume(cur, handlerTailList, handler))
+    set cur = cur.handlerFun(__resume(cur, handlerTailList))
     if savedNext !== handlerTailList.next do
       set handlerTailList.next.next = savedNext
       if savedNext === null do
@@ -128,12 +137,15 @@ fun __handleEffect(cur, handler, handlerTailList) =
       __EffectSig then return cur
       __Return then return cur
     handlerTailList.next is __Cont then
-      let saved = handlerTailList.next.next
-      set cur = handlerTailList.next.resume(cur)
-      set handlerTailList.next = saved
+      let nxt = handlerTailList.next
+      set handlerTailList.next = handlerTailList.next.next
+      set cur = nxt.resume(cur)
     else cur
 
-fun __resume(cur, tail, handler)(value) =
+fun __resume(cur, tail)(value) =
+  if cur.resumed do
+    throw Error("multiple resumption")
+  set cur.resumed = true
   let nextHandler = cur.nextHandler
   let tailHandler = cur.tailHandler
   let cont = cur.next
@@ -148,7 +160,7 @@ fun __resume(cur, tail, handler)(value) =
         return value
       else
         set cont = cont.next
-    nextHandler is __HandleBlock and nextHandler.handler !== handler then
+    nextHandler is __HandleBlock then
       set cont = nextHandler.next
       set nextHandler = nextHandler.nextHandler
     else value
