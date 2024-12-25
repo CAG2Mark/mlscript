@@ -105,3 +105,24 @@ handle h = Eff with
 f(h, box, 10)
 box.n
 //│ ═══[RUNTIME ERROR] Error: Unhandled effects
+
+:fixme
+handle h1 = Eff with
+  fun perform()(k) = 
+    print("h1")
+    k()
+handle h2 = Eff with
+  fun perform()(k) = 
+    print("h2")
+    h1.perform()
+    k()
+handle h3 = Eff with
+  fun perform()(k) = 
+    print("h3")
+    h2.perform()
+    k()
+h1.perform()
+h3.perform()
+//│ > h1
+//│ > h3
+//│ ═══[RUNTIME ERROR] Error: Unhandled effects
