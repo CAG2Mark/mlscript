@@ -83,11 +83,18 @@ fun __mkEffect(handler, handlerFun) =
   set res.tailHandler = res
   res
 
+// fun checkEffectHead(cur) =
+//   if cur is __EffectSig then
+//     let hand = cur
+//     while hand.nextHandler !== null do
+//       set hand = hand.nextHandler
+//     assert(hand === cur.tailHandler)
+//     assert(cur.resumed === false)
+
 fun __handleBlockImpl(cur, handler) =
   let handlerCont = new __HandleBlock(null, null, null, handler)
   set handlerCont.tail = handlerCont
   while cur is
-    __Return then return cur
     __EffectSig then
       let nxt = __handleEffect(cur, handler, handlerCont)
       if cur === nxt then
@@ -122,7 +129,7 @@ fun __handleEffect(cur, handler, handlerTailList) =
       set cur.tailHandler = origTail
       return cur
     else
-      set cur = __resume(handlerCont, null, null)(cur)
+      set cur = __resume(handlerCont, null)(cur)
   else if handler === cur.handler then
     let savedNext = handlerTailList.next
     set cur = cur.handlerFun(__resume(cur, handlerTailList))
@@ -142,26 +149,80 @@ fun __handleEffect(cur, handler, handlerTailList) =
       set cur = nxt.resume(cur)
     else cur
 
+// fun __resume(cur, tail)(value) =
+//   if cur.resumed do
+//     throw Error("multiple resumption")
+//   set cur.resumed = true
+//   let cont = cur.next
+//   while
+//     cont is __Cont then
+//       value = cont.resume(value)
+//       if value is __EffectSig then
+//         set value.tail = tail
+//         if cur.tailHandler !== cur do
+//           set value.tailHandler.nextHandler = cur.nextHandler
+//           set value.tailHandler = cur.tailHandler
+//         return value
+//       else
+//         set cont = cont.next
+//     cur.nextHandler is __HandleBlock then
+//       set cont = cur.nextHandler.next
+//       set cur.nextHandler = cur.nextHandler.nextHandler
+//     else value
+
 fun __resume(cur, tail)(value) =
   if cur.resumed do
     throw Error("multiple resumption")
   set cur.resumed = true
-  let nextHandler = cur.nextHandler
-  let tailHandler = cur.tailHandler
+  
   let cont = cur.next
   while
-    cont is __Cont then
-      value = cont.resume(value)
+    cont is __Cont do
+      // NOTE: we do not need to link to cont.next again if it is effsig
+      // because cont.resume will not change its own next
+      set value = cont.resume(value)
       if value is __EffectSig then
         set value.tail = tail
-        if tailHandler !== cur do
-          set value.tailHandler.nextHandler = nextHandler
-          set value.tailHandler = tailHandler
+        if cur.tailHandler !== cur do
+          set value.tailHandler.nextHandler = cur.nextHandler
+          set value.tailHandler = cur.tailHandler
         return value
       else
         set cont = cont.next
-    nextHandler is __HandleBlock then
-      set cont = nextHandler.next
-      set nextHandler = nextHandler.nextHandler
-    else value
-
+  // We're done with the head, now resume the handle blocks
+  while
+    cur.nextHandler is __HandleBlock and
+      cur.nextHandler.next is __Cont then
+        // resuming tailHandlerList or post handler continuations
+        let nxt = cur.nextHandler.next
+        set value = nxt.resume(value)
+        if value is __EffectSig then
+          // console.dir(cur.nextHandler.next)
+          // console.dir(value.tail.next)
+          // console.dir(value)
+          // console.dir(cur)
+          // console.dir(nxt)
+          // console.log(nxt.resume.toString())
+          assert(cur.tailHandler !== cur)
+          assert(cur.nextHandler !== null)
+          // This checks when continuation resume results in tail call to effectful func
+          if cur.nextHandler.next === value.tail.next then
+            set value.tail.next = null
+          else
+            set cur.nextHandler.next = cur.nextHandler.next.next
+          set value.tail = tail
+          set value.tailHandler.nextHandler = cur.nextHandler
+          set value.tailHandler = cur.tailHandler
+          return value
+        else
+          assert(cur.nextHandler.next !== cur.nextHandler.next.next)
+          set cur.nextHandler.next = cur.nextHandler.next.next
+      // here using else will emit the wrong code and cause null to be returned from the loop
+      true then
+        // the list is empty, go to next handle block
+        assert(cur.nextHandler.next === null)
+        assert(cur.nextHandler !== cur.nextHandler.nextHandler)
+        set cur.nextHandler = cur.nextHandler.nextHandler
+    else
+      assert(cur.nextHandler === null)
+      return value

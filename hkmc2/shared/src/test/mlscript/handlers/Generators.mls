@@ -21,26 +21,37 @@ fun permutations_impl(gen, l1, l2) =
 fun permutations(gen, l) =
   permutations_impl(gen, [], l)
 
-:fixme
 let res = []
 handle gen = Generator with
   fun produce(result)(resume) =
     res.push(result)
     resume(())
 in permutations(gen, [1, 2, 3, 4])
-res
-//│ ═══[RUNTIME ERROR] Error: Unhandled effects
-//│ res = [ [ 1, 2, 3, 4 ] ]
+//│ > [
+//│ >   [ 1, 2, 3, 4 ], [ 1, 2, 4, 3 ],
+//│ >   [ 1, 3, 2, 4 ], [ 1, 3, 4, 2 ],
+//│ >   [ 1, 4, 2, 3 ], [ 1, 4, 3, 2 ],
+//│ >   [ 2, 1, 3, 4 ], [ 2, 1, 4, 3 ],
+//│ >   [ 2, 3, 1, 4 ], [ 2, 3, 4, 1 ],
+//│ >   [ 2, 4, 1, 3 ], [ 2, 4, 3, 1 ],
+//│ >   [ 3, 1, 2, 4 ], [ 3, 1, 4, 2 ],
+//│ >   [ 3, 2, 1, 4 ], [ 3, 2, 4, 1 ],
+//│ >   [ 3, 4, 1, 2 ], [ 3, 4, 2, 1 ],
+//│ >   [ 4, 1, 2, 3 ], [ 4, 1, 3, 2 ],
+//│ >   [ 4, 2, 1, 3 ], [ 4, 2, 3, 1 ],
+//│ >   [ 4, 3, 1, 2 ], [ 4, 3, 2, 1 ]
+//│ res = ]
 
-// FIXME: result is wrong
 fun permutations_foreach(l, f) =
   handle gen = Generator with
     fun produce(result)(resume) =
       f(result)
       resume(())
   permutations(gen, l)
-
-:fixme
-res = permutations_foreach([1, 2, 3], print)
+permutations_foreach([1, 2, 3], print)
 //│ > 1,2,3
-//│ ═══[RUNTIME ERROR] Error: Unhandled effects
+//│ > 1,3,2
+//│ > 2,1,3
+//│ > 2,3,1
+//│ > 3,1,2
+//│ > 3,2,1
