@@ -84,14 +84,15 @@ const Predef$class = class Predef {
       }
       toString() { return "__TailList(" + this.next + ", " + this.tail + ")"; }
     };
-    this.__HandleBlock = function __HandleBlock(next1, nextHandler1, handler1) { return new __HandleBlock.class(next1, nextHandler1, handler1); };
+    this.__HandleBlock = function __HandleBlock(next1, nextHandler1, tail1, handler1) { return new __HandleBlock.class(next1, nextHandler1, tail1, handler1); };
     this.__HandleBlock.class = class __HandleBlock {
-      constructor(next, nextHandler, handler) {
+      constructor(next, nextHandler, tail, handler) {
         this.next = next;
         this.nextHandler = nextHandler;
+        this.tail = tail;
         this.handler = handler;
       }
-      toString() { return "__HandleBlock(" + this.next + ", " + this.nextHandler + ", " + this.handler + ")"; }
+      toString() { return "__HandleBlock(" + this.next + ", " + this.nextHandler + ", " + this.tail + ", " + this.handler + ")"; }
     };
     this.__EffectSig = function __EffectSig(next1, nextHandler1, tail1, tailHandler1, resumed1, handler1, handlerFun1) { return new __EffectSig.class(next1, nextHandler1, tail1, tailHandler1, resumed1, handler1, handlerFun1); };
     this.__EffectSig.class = class __EffectSig {
@@ -210,45 +211,36 @@ const Predef$class = class Predef {
     return res;
   } 
   __handleBlockImpl(cur, handler1) {
-    let handlerTailList, nxt, scrut, handlerCont, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
-    tmp = new this.__TailList.class(null, null);
-    handlerTailList = tmp;
-    handlerTailList.tail = handlerTailList;
-    tmp6: while (true) {
+    let handlerCont, nxt, scrut, tmp, tmp1, tmp2, tmp3;
+    tmp = new this.__HandleBlock.class(null, null, null, handler1);
+    handlerCont = tmp;
+    handlerCont.tail = handlerCont;
+    tmp4: while (true) {
       if (cur instanceof this.__Return.class) {
         return cur;
       } else {
         if (cur instanceof this.__EffectSig.class) {
-          tmp1 = this.__handleEffect(cur, handler1, handlerTailList);
+          tmp1 = this.__handleEffect(cur, handler1, handlerCont);
           nxt = tmp1;
           scrut = cur === nxt;
           if (scrut) {
-            tmp2 = new this.__HandleBlock.class(handlerTailList.next, null, handler1);
-            handlerCont = tmp2;
             cur.tailHandler.nextHandler = handlerCont;
             cur.tailHandler = handlerCont;
-            scrut1 = handlerTailList.next !== null;
-            if (scrut1) {
-              cur.tail = handlerTailList.tail;
-              tmp3 = null;
-            } else {
-              cur.tail = handlerCont;
-              tmp3 = null;
-            }
+            cur.tail = handlerCont.tail;
             return cur;
           } else {
             cur = nxt;
-            tmp4 = null;
+            tmp2 = null;
           }
-          tmp5 = tmp4;
-          continue tmp6;
+          tmp3 = tmp2;
+          continue tmp4;
         } else {
           return cur;
         }
       }
       break;
     }
-    return tmp5;
+    return tmp3;
   } 
   __handleEffect(cur1, handler2, handlerTailList) {
     let handlerCont, scrut, scrut1, savedNext, scrut2, scrut3, savedNext1, scrut4, scrut5, saved, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15;
@@ -270,7 +262,7 @@ const Predef$class = class Predef {
     }
     if (handlerCont) {
       savedNext1 = handlerCont.next;
-      tmp1 = this.__resume(cur1, handlerCont, handlerCont);
+      tmp1 = this.__resume(cur1, handlerCont, cur1.handler);
       tmp2 = cur1.handlerFun(tmp1) ?? null;
       cur1 = tmp2;
       scrut4 = savedNext1 !== handlerCont.next;
@@ -298,7 +290,7 @@ const Predef$class = class Predef {
       scrut1 = handler2 === cur1.handler;
       if (scrut1) {
         savedNext = handlerTailList.next;
-        tmp9 = this.__resume(cur1, handlerTailList, handlerCont);
+        tmp9 = this.__resume(cur1, handlerTailList, handler2);
         tmp10 = cur1.handlerFun(tmp9) ?? null;
         cur1 = tmp10;
         scrut2 = savedNext !== handlerTailList.next;
@@ -345,39 +337,51 @@ const Predef$class = class Predef {
     }
     return tmp15;
   } 
-  __resume(cur2, tail, handlerCont) {
+  __resume(cur2, tail, handler3) {
     return (value) => {
-      let nextHandler, cont, scrut, tmp, tmp1, tmp2;
+      let nextHandler, tailHandler, cont, scrut, scrut1, tmp, tmp1, tmp2, tmp3;
       nextHandler = cur2.nextHandler;
+      tailHandler = cur2.tailHandler;
       cont = cur2.next;
-      tmp3: while (true) {
+      tmp4: while (true) {
         if (cont instanceof this.__Cont.class) {
           tmp = cont.resume(value) ?? null;
           value = tmp;
           if (value instanceof this.__EffectSig.class) {
             value.tail = tail;
-            value.tailHandler.nextHandler = nextHandler;
+            scrut1 = tailHandler !== cur2;
+            if (scrut1) {
+              value.tailHandler.nextHandler = nextHandler;
+              value.tailHandler = tailHandler;
+              tmp1 = null;
+            } else {
+              tmp1 = null;
+            }
             return value;
           } else {
             cont = cont.next;
-            tmp1 = null;
-          }
-          tmp2 = tmp1;
-          continue tmp3;
-        } else {
-          scrut = nextHandler !== handlerCont;
-          if (scrut) {
-            cont = nextHandler.next;
-            nextHandler = nextHandler.nextHandler;
             tmp2 = null;
-            continue tmp3;
+          }
+          tmp3 = tmp2;
+          continue tmp4;
+        } else {
+          if (nextHandler instanceof this.__HandleBlock.class) {
+            scrut = nextHandler.handler !== handler3;
+            if (scrut) {
+              cont = nextHandler.next;
+              nextHandler = nextHandler.nextHandler;
+              tmp3 = null;
+              continue tmp4;
+            } else {
+              tmp3 = value;
+            }
           } else {
-            tmp2 = value;
+            tmp3 = value;
           }
         }
         break;
       }
-      return tmp2;
+      return tmp3;
     };
   }
   toString() { return "Predef"; }

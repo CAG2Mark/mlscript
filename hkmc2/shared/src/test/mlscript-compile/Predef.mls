@@ -72,7 +72,7 @@ class Test with
 abstract class __Cont(next) with
   fun resume(value)
 class __TailList(next, tail)
-class __HandleBlock(next, nextHandler, handler)
+class __HandleBlock(next, nextHandler, tail, handler)
 
 class __EffectSig(next, nextHandler, tail, tailHandler, resumed, handler, handlerFun)
 class __Return(value)
@@ -84,20 +84,16 @@ fun __mkEffect(handler, handlerFun) =
   res
 
 fun __handleBlockImpl(cur, handler) =
-  let handlerTailList = new __TailList(null, null)
-  set handlerTailList.tail = handlerTailList
+  let handlerCont = new __HandleBlock(null, null, null, handler)
+  set handlerCont.tail = handlerCont
   while cur is
     __Return then return cur
     __EffectSig then
-      let nxt = __handleEffect(cur, handler, handlerTailList)
+      let nxt = __handleEffect(cur, handler, handlerCont)
       if cur === nxt then
-        let handlerCont = new __HandleBlock(handlerTailList.next, null, handler)
         set cur.tailHandler.nextHandler = handlerCont
         set cur.tailHandler = handlerCont
-        if handlerTailList.next !== null then
-          set cur.tail = handlerTailList.tail
-        else
-          set cur.tail = handlerCont
+        set cur.tail = handlerCont.tail
         return cur
       else
         set cur = nxt
@@ -109,7 +105,7 @@ fun __handleEffect(cur, handler, handlerTailList) =
     set handlerCont = handlerCont.nextHandler
   if handlerCont then
     let savedNext = handlerCont.next
-    set cur = cur.handlerFun(__resume(cur, handlerCont, handlerCont))
+    set cur = cur.handlerFun(__resume(cur, handlerCont, cur.handler))
     if savedNext !== handlerCont.next do
       set handlerCont.next.next = savedNext
     if cur is __EffectSig then
@@ -120,7 +116,7 @@ fun __handleEffect(cur, handler, handlerTailList) =
       set cur = __resume(handlerCont, null, null)(cur)
   else if handler === cur.handler then
     let savedNext = handlerTailList.next
-    set cur = cur.handlerFun(__resume(cur, handlerTailList, handlerCont))
+    set cur = cur.handlerFun(__resume(cur, handlerTailList, handler))
     if savedNext !== handlerTailList.next do
       set handlerTailList.next.next = savedNext
       if savedNext === null do
@@ -137,21 +133,22 @@ fun __handleEffect(cur, handler, handlerTailList) =
       set handlerTailList.next = saved
     else cur
 
-fun __resume(cur, tail, handlerCont)(value) =
+fun __resume(cur, tail, handler)(value) =
   let nextHandler = cur.nextHandler
-  // let tailHandler = cur.tailHandler
+  let tailHandler = cur.tailHandler
   let cont = cur.next
   while
     cont is __Cont then
       value = cont.resume(value)
       if value is __EffectSig then
         set value.tail = tail
-        set value.tailHandler.nextHandler = nextHandler
-        // set value.tailHandler = tailHandler
+        if tailHandler !== cur do
+          set value.tailHandler.nextHandler = nextHandler
+          set value.tailHandler = tailHandler
         return value
       else
         set cont = cont.next
-    nextHandler !== handlerCont then
+    nextHandler is __HandleBlock and nextHandler.handler !== handler then
       set cont = nextHandler.next
       set nextHandler = nextHandler.nextHandler
     else value
