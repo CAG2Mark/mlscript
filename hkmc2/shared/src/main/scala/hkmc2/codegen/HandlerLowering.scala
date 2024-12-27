@@ -393,7 +393,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
   private def translateCls(cls: ClsLikeDefn): ClsLikeDefn =
     cls.copy(methods = cls.methods.map(translateFun), ctor = translateBlock(cls.ctor, functionHandlerCtx))
 
-  // to ensure the fun and class reference sin the continuation class is properly scoped,
+  // to ensure the fun and class references in the continuation class are properly scoped,
   // we move all function defns to the top level of the handler block
   def popDefns(b: Block, acc: List[Defn]): (Block, List[Defn]) =
     b match
