@@ -126,3 +126,22 @@ h3.perform()
 //│ > h3
 //│ > h2
 //│ > h1
+
+:expect 11
+:handler
+let d = 0
+handle h1 = Eff with
+  fun perform()(k) =
+    set d = d + 1
+    k()
+let i = 0
+h1.perform()
+while i < 10 do 
+  handle h2 = Eff with
+    fun perform()(k) =
+      set d = d + 1 
+      k()
+  h2.perform()
+  set i = i + 1
+d
+//│ = 11

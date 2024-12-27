@@ -236,3 +236,18 @@ fun sum(x) =
   else 0
 sum(10000)
 //│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+
+:handler
+:expect 2
+fun foo(h) =
+  h.perform()
+  if true then
+    fun g() = 2
+    g()
+  else
+    fun g() = 3
+    g()
+handle h = Eff with
+  fun perform()(k) = k(())
+foo(h)
+//│ = 2
