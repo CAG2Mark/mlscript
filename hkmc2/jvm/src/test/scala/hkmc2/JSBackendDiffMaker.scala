@@ -14,6 +14,7 @@ import utils.Scope
 import hkmc2.syntax.Tree.Ident
 import hkmc2.codegen.Path
 import hkmc2.Diagnostic.Source
+import hkmc2.syntax.Keyword.`then`
 
 abstract class JSBackendDiffMaker extends MLsDiffMaker:
   
@@ -27,6 +28,8 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
   val traceJS = NullaryCommand("traceJS")
   val handler = NullaryCommand("handler")
   val expect = Command("expect"): ln =>
+    ln.trim
+  val stackSafe = Command("stackSafe"): ln =>
     ln.trim
   
   private val baseScp: utils.Scope =
@@ -50,10 +53,23 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
   override def run(): Unit =
     try super.run() finally if hostCreated then host.terminate()
   
+  private val DEFAULT_STACK_LIMT = 500
+  
   override def processTerm(blk: semantics.Term.Blk, inImport: Bool)(using Raise): Unit =
     super.processTerm(blk, inImport)
     val outerRaise: Raise = summon
     var showingJSYieldedCompileError = false
+    val stackLimit = stackSafe.get.map(_.toIntOption) match
+      case None => None
+      case Some(value) => value match
+        case None => Some(DEFAULT_STACK_LIMT)
+        case Some(value) =>
+          if value < 0 then
+            failures += 1
+            output("/!\\ Stack limit must be positive, but the stack limit here is set to " + value)
+            Some(DEFAULT_STACK_LIMT)
+          else
+            Some(value)
     if showJS.isSet then
       given Raise =
         case d @ ErrorReport(source = Source.Compilation) =>
@@ -64,7 +80,7 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
         new codegen.Lowering
           with codegen.LoweringSelSanityChecks(instrument = false)
           with codegen.LoweringTraceLog(instrument = false)
-          with codegen.LoweringHandler(handler.isSet)
+          with codegen.LoweringHandler(handler.isSet, stackLimit)
       given Elaborator.Ctx = curCtx
       val jsb = new JSBuilder
         with JSBuilderArgNumSanityChecks(instrument = false)
@@ -80,7 +96,7 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
         new codegen.Lowering
           with codegen.LoweringSelSanityChecks(noSanityCheck.isUnset)
           with codegen.LoweringTraceLog(traceJS.isSet)
-          with codegen.LoweringHandler(handler.isSet)
+          with codegen.LoweringHandler(handler.isSet, stackLimit)
       given Elaborator.Ctx = curCtx
       val jsb = new JSBuilder
         with JSBuilderArgNumSanityChecks(noSanityCheck.isUnset)

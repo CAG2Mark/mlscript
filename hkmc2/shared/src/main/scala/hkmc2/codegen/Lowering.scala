@@ -481,7 +481,7 @@ trait LoweringTraceLog
 
 
 trait LoweringHandler
-    (instrument: Bool)(using TL, Raise, Elaborator.State)
+    (instrument: Bool, stackLimit: Option[Int])(using TL, Raise, Elaborator.State)
     extends Lowering:
   override def term(t: st)(k: Result => Block)(using Subst): Block =
     if !instrument then return super.term(t)(k)
@@ -501,5 +501,11 @@ trait LoweringHandler
         HandleBlock(lhs, resSym, par, cls, handlers, term(st.Blk(stmts, res))(HandleBlockReturn(_)), k(Value.Ref(resSym)))
     case _ => super.term(t)(k)
   override def topLevel(t: st): Block =
-    if !instrument then return super.topLevel(t)
-    HandlerLowering().translateTopLevel(super.topLevel(t))
+    val ir = super.topLevel(t)
+    val stackSafePass = stackLimit match
+      case None => ir
+      case Some(lim) =>
+        val transform = StackSafeTransform(lim)
+        transform.transformTopLevel(ir)
+    val handlerPass = if instrument then HandlerLowering().translateTopLevel(stackSafePass) else stackSafePass
+    handlerPass
