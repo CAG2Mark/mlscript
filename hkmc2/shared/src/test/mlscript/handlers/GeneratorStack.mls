@@ -16,10 +16,16 @@ fun (:+) append(l, e) =
     Nil then e :: Nil
     Cons(h, t) then h :: t :+ e
 
+fun length(l) =
+  if l is
+    Nil then 0
+    Cons(_, t) then 1 + length(t)
+
 fun permutations_impl(gen, l1, l2) =
   if l2 is
-    Nil then
-      if l1 is Nil then gen.produce(Nil) else ()
+    Nil and
+      l1 is Nil then gen.produce(Nil)
+      else ()
     Cons(f, t) then
       handle gen2 = Generator with
         fun produce(result)(resume) =
@@ -31,18 +37,36 @@ fun permutations_impl(gen, l1, l2) =
 fun permutations(gen, l) =
   permutations_impl(gen, Nil, l)
 
-// FIXME: result is discarded
-handle gen = Generator with
-  fun produce(result)(resume) =
-    // print(result)
-    let r = resume(())
-    // print(r)
-    result :: r
-permutations(gen, 1 :: 2 :: 3 :: 4 :: Nil), Nil
-//│ > Cons {
-//│ >   head: Cons { head: 1, tail: Cons { head: 2, tail: [Cons] } },
-//│ >   tail: Cons {
-//│ >     head: Cons { head: 1, tail: [Cons] },
-//│ >     tail: Cons { head: [Cons], tail: [Cons] }
-//│ >   }
-//│ = }
+let result =
+  handle gen = Generator with
+    fun produce(result)(resume) =
+      print(result)
+      let r = resume(())
+      result :: r
+  permutations(gen, 1 :: 2 :: 3 :: 4 :: Nil), Nil
+in length(result)
+//│ > Cons(1, Cons(2, Cons(3, Cons(4, Nil))))
+//│ > Cons(1, Cons(2, Cons(4, Cons(3, Nil))))
+//│ > Cons(1, Cons(3, Cons(2, Cons(4, Nil))))
+//│ > Cons(1, Cons(3, Cons(4, Cons(2, Nil))))
+//│ > Cons(1, Cons(4, Cons(2, Cons(3, Nil))))
+//│ > Cons(1, Cons(4, Cons(3, Cons(2, Nil))))
+//│ > Cons(2, Cons(1, Cons(3, Cons(4, Nil))))
+//│ > Cons(2, Cons(1, Cons(4, Cons(3, Nil))))
+//│ > Cons(2, Cons(3, Cons(1, Cons(4, Nil))))
+//│ > Cons(2, Cons(3, Cons(4, Cons(1, Nil))))
+//│ > Cons(2, Cons(4, Cons(1, Cons(3, Nil))))
+//│ > Cons(2, Cons(4, Cons(3, Cons(1, Nil))))
+//│ > Cons(3, Cons(1, Cons(2, Cons(4, Nil))))
+//│ > Cons(3, Cons(1, Cons(4, Cons(2, Nil))))
+//│ > Cons(3, Cons(2, Cons(1, Cons(4, Nil))))
+//│ > Cons(3, Cons(2, Cons(4, Cons(1, Nil))))
+//│ > Cons(3, Cons(4, Cons(1, Cons(2, Nil))))
+//│ > Cons(3, Cons(4, Cons(2, Cons(1, Nil))))
+//│ > Cons(4, Cons(1, Cons(2, Cons(3, Nil))))
+//│ > Cons(4, Cons(1, Cons(3, Cons(2, Nil))))
+//│ > Cons(4, Cons(2, Cons(1, Cons(3, Nil))))
+//│ > Cons(4, Cons(2, Cons(3, Cons(1, Nil))))
+//│ > Cons(4, Cons(3, Cons(1, Cons(2, Nil))))
+//│ > Cons(4, Cons(3, Cons(2, Cons(1, Nil))))
+//│ = 24
