@@ -239,17 +239,17 @@ const Predef$class = class Predef {
     return tmp3;
   } 
   __handleEffect(cur1, handler2, handlerTailList) {
-    let prevCont, handlerCont, scrut, scrut1, savedNext, scrut2, scrut3, origTail, savedNext1, scrut4, scrut5, nxt, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15;
+    let prevCont, handlerCont, scrut, scrut1, savedNext, scrut2, scrut3, origTail, savedNext1, scrut4, scrut5, nxt, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14;
     prevCont = cur1;
     handlerCont = cur1.nextHandler;
-    tmp16: while (true) {
+    tmp15: while (true) {
       if (handlerCont instanceof this.__HandleBlock.class) {
         scrut = handlerCont.handler !== cur1.handler;
         if (scrut) {
           prevCont = handlerCont;
           handlerCont = handlerCont.nextHandler;
           tmp = null;
-          continue tmp16;
+          continue tmp15;
         } else {
           tmp = null;
         }
@@ -288,37 +288,36 @@ const Predef$class = class Predef {
           cur1 = tmp5;
           tmp6 = null;
         }
-        tmp7 = tmp6;
       }
-      tmp8 = tmp7;
+      tmp7 = tmp6;
     } else {
       scrut1 = handler2 === cur1.handler;
       if (scrut1) {
         savedNext = handlerTailList.next;
-        tmp9 = this.__resume(cur1, handlerTailList);
-        tmp10 = cur1.handlerFun(tmp9) ?? null;
-        cur1 = tmp10;
+        tmp8 = this.__resume(cur1, handlerTailList);
+        tmp9 = cur1.handlerFun(tmp8) ?? null;
+        cur1 = tmp9;
         scrut2 = savedNext !== handlerTailList.next;
         if (scrut2) {
           handlerTailList.next.next = savedNext;
           scrut3 = savedNext === null;
           if (scrut3) {
             handlerTailList.tail = handlerTailList.next;
-            tmp11 = null;
+            tmp10 = null;
           } else {
-            tmp11 = null;
+            tmp10 = null;
           }
-          tmp12 = tmp11;
+          tmp11 = tmp10;
         } else {
-          tmp12 = null;
+          tmp11 = null;
         }
-        tmp13 = tmp12;
+        tmp12 = tmp11;
       } else {
         return cur1;
       }
-      tmp8 = tmp13;
+      tmp7 = tmp12;
     }
-    tmp17: while (true) {
+    tmp16: while (true) {
       if (cur1 instanceof this.__EffectSig.class) {
         return cur1;
       } else {
@@ -329,18 +328,18 @@ const Predef$class = class Predef {
           if (scrut5 instanceof this.__Cont.class) {
             nxt = handlerTailList.next;
             handlerTailList.next = handlerTailList.next.next;
-            tmp14 = nxt.resume(cur1) ?? null;
-            cur1 = tmp14;
-            tmp15 = null;
-            continue tmp17;
+            tmp13 = nxt.resume(cur1) ?? null;
+            cur1 = tmp13;
+            tmp14 = null;
+            continue tmp16;
           } else {
-            tmp15 = cur1;
+            tmp14 = cur1;
           }
         }
       }
       break;
     }
-    return tmp15;
+    return tmp14;
   } 
   __resume(cur2, tail) {
     return (value) => {
