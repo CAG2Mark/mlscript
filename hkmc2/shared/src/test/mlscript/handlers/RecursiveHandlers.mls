@@ -54,6 +54,7 @@ handle h2 = Effect with
 //│ = [ undefined, undefined ]
 
 
+// The current implementation does not treat function call to potentially open new handler scope
 let res =
   handle h = Effect with
     fun perform(arg)(k) =
@@ -78,6 +79,8 @@ in res.toString()
 //│ > B hola amigos
 //│ = '‹,‹,‹,‹,hola,friend,›,bye,›,amigos,›,adios,›'
 
+
+// This is the semantics we want
 let res =
   print("A " + "hi")
   handle g = Effect with
@@ -103,7 +106,6 @@ in res.toString()
 //│ = '‹,‹,‹,‹,hola,amigos,›,adios,›,friend,›,bye,›'
 
 
-:handler 
 let str = ""
 if true do
   handle h1 = Effect with
