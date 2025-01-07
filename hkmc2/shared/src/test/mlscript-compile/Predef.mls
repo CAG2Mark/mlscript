@@ -106,9 +106,10 @@ fun __handleBlockImpl(cur, handler) =
     __EffectSig then
       let nxt = __handleEffect(cur, handler, handlerCont)
       if cur === nxt then
-        set cur.tailHandler.nextHandler = handlerCont
-        set cur.tailHandler = handlerCont
-        set cur.tail = handlerCont.tail
+        set
+          cur.tailHandler.nextHandler = handlerCont
+          cur.tailHandler = handlerCont
+          cur.tail = handlerCont.tail
         return cur
       else
         set cur = nxt
