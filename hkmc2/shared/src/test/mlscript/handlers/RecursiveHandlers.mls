@@ -52,7 +52,7 @@ handle h2 = Effect with
 //│ = [ undefined, undefined ]
 
 
-// The current implementation does not treat function call to potentially open new handler scope
+// The current implementation insert new handlers surrounding the entire handle block, and hence "later" handle block become the outer one
 let res =
   handle h = Effect with
     fun perform(arg)(k) =
@@ -78,7 +78,7 @@ in res.toString()
 //│ = '‹,‹,‹,‹,hola,friend,›,bye,›,amigos,›,adios,›'
 
 
-// This is the semantics we want
+// Output for the "later" handle block as the inner one
 let res =
   print("A " + "hi")
   handle g = Effect with
