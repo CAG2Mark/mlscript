@@ -599,39 +599,41 @@ extends Importer:
         raise(ErrorReport(msg"Unsupported let binding shape" -> tree.toLoc :: Nil))
         go(sts, Term.Error :: acc)
       case (hd @ Handle(id: Ident, cls: Ident, Block(sts_), N)) :: sts =>
-        val sym = fieldOrVarSym(HandlerBind, id)
-        log(s"Processing `handle` statement $id (${sym}) ${ctx.outer}")
-        
-        // TODO: shouldn't need uid here
-        val derivedClsSym = ClassSymbol(Tree.TypeDef(syntax.Cls, Tree.Error(), N, N), Tree.Ident(s"Effect$$${cls.name}$$${State.suid.nextUid}"))
-        derivedClsSym.defn = S(ClassDef(N, syntax.Cls, derivedClsSym, Nil, N, ObjBody(Term.Blk(Nil, Term.Lit(Tree.UnitLit(true))))))
+        val res: Term.Blk = ctx.nest(N).givenIn:
+          val sym = fieldOrVarSym(HandlerBind, id)
+          log(s"Processing `handle` statement $id (${sym}) ${ctx.outer}")
+          
+          // TODO: shouldn't need uid here
+          val derivedClsSym = ClassSymbol(Tree.TypeDef(syntax.Cls, Tree.Error(), N, N), Tree.Ident(s"Effect$$${cls.name}$$${State.suid.nextUid}"))
+          derivedClsSym.defn = S(ClassDef(N, syntax.Cls, derivedClsSym, Nil, N, ObjBody(Term.Blk(Nil, Term.Lit(Tree.UnitLit(true))))))
 
-        val elabed = ctx.nest(S(derivedClsSym)).givenIn:
-          block(sts_)._1
-        
-        elabed.res match
-          case Term.Lit(UnitLit(true)) => 
-          case trm => raise(WarningReport(msg"Terms in handler block do nothing" -> trm.toLoc :: Nil))
+          val elabed = ctx.nest(S(derivedClsSym)).givenIn:
+            block(sts_)._1
+          
+          elabed.res match
+            case Term.Lit(UnitLit(true)) => 
+            case trm => raise(WarningReport(msg"Terms in handler block do nothing" -> trm.toLoc :: Nil))
 
-        val tds = elabed.stats.map {
-          case td @ TermDefinition(owner, Fun, sym, params, sign, body, resSym, flags) =>
-            params.reverse match
-              case ParamList(_, value :: Nil, _) :: newParams =>
-                val newTd = TermDefinition(owner, Fun, sym, newParams.reverse, sign, body, resSym, flags)
-                S(HandlerTermDefinition(value.sym, newTd))
-              case _ => 
-                raise(ErrorReport(msg"Handler function is missing resumption parameter" -> td.toLoc :: Nil))
-                None
-              
-          case st => 
-            raise(ErrorReport(msg"Only function definitions are allowed in handler blocks" -> st.toLoc :: Nil))
-            None
-        }.collect { case Some(x) => x }
+          val tds = elabed.stats.map {
+            case td @ TermDefinition(owner, Fun, sym, params, sign, body, resSym, flags) =>
+              params.reverse match
+                case ParamList(_, value :: Nil, _) :: newParams =>
+                  val newTd = TermDefinition(owner, Fun, sym, newParams.reverse, sign, body, resSym, flags)
+                  S(HandlerTermDefinition(value.sym, newTd))
+                case _ => 
+                  raise(ErrorReport(msg"Handler function is missing resumption parameter" -> td.toLoc :: Nil))
+                  None
+                
+            case st => 
+              raise(ErrorReport(msg"Only function definitions are allowed in handler blocks" -> st.toLoc :: Nil))
+              None
+          }.collect { case Some(x) => x }
 
-        val newAcc = Term.Handle(sym, term(cls), derivedClsSym, tds) :: acc
-        ctx.nest(N).givenIn:
-          ctx + (id.name -> sym) givenIn:
-            go(sts, newAcc)
+          val newAcc = Term.Handle(sym, term(cls), derivedClsSym, tds) :: acc
+          val newCtx = ctx + (id.name -> sym)
+          val body = block(sts)(using newCtx)._1
+          Term.Blk(newAcc.reverse, body)
+        (res, ctx)
       case (tree @ Handle(_, _, _, N)) :: sts =>
         raise(ErrorReport(msg"Unsupported handle binding shape" -> tree.toLoc :: Nil))
         go(sts, Term.Error :: acc)

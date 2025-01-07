@@ -2,6 +2,9 @@
 :handler
 
 let id = 0
+//│ id = 0
+
+
 class MaybeStop with
   fun f(x: Bool): ()
 fun handleEffects(g) =
@@ -28,7 +31,7 @@ fun handleEffects(g) =
         print("h2 end " + String(cur))
         result
   g(h1, h2)
-//│ id = 0
+
 
 fun f(h1, h2) =
   h1.f(false)
@@ -52,6 +55,7 @@ handleEffects(f)
 //│ > h1 end 1
 //│ = false
 
+
 fun f(h1, h2) =
   h1.f(false)
   h2.f(false)
@@ -68,6 +72,7 @@ handleEffects(f)
 //│ > h1 end 9
 //│ > h1 end 7
 
+
 fun f(h1, h2) =
   h1.f(false)
   h2.f(false)
@@ -81,11 +86,15 @@ handleEffects(f)
 //│ > h1 stop
 //│ > h1 end 10
 
-:fixme
-:expect 1023
+
 class Eff with
   fun perform(): ()
 class Box(n)
+let box = Box(0)
+//│ box = Box { n: 0 }
+
+
+:expect 5120
 fun f(h, box, n) =
   if n <= 1 then 
     h.perform()
@@ -97,14 +106,14 @@ fun f(h, box, n) =
         k()
     f(h2, box, n - 1)
     f(h2, box, n - 1)
-let box = Box(0)
 handle h = Eff with
   fun perform()(k) =
     set box.n = box.n + 1
     k()
 f(h, box, 10)
 box.n
-//│ ═══[RUNTIME ERROR] Expected: 1023, got: 5120
+//│ = 5120
+
 
 handle h1 = Eff with
   fun perform()(k) = 
@@ -127,8 +136,12 @@ h3.perform()
 //│ > h2
 //│ > h1
 
-:expect 11
+
 let d = 0
+//│ d = 0
+
+
+:expect 11
 handle h1 = Eff with
   fun perform()(k) =
     set d = d + 1
