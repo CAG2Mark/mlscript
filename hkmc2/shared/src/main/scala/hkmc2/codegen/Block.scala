@@ -219,33 +219,41 @@ sealed abstract class Block extends Product with AutoLocated:
     case HandleBlockReturn(res) => res.freeVars
     case End(msg) => Set.empty
 
-  def floatOutDefns =
+  def floatOutDefns(outerOnly: Bool) =
     def rec(b: Block, acc: List[Defn]): (Block, List[Defn]) =
       b match
         case Match(scrut, arms, dflt, rest) =>
-          val (armsRes, armsDefns) = arms.foldLeft[(List[(Case, Block)], List[Defn])](Nil, acc)(
-            (accc, d) =>
-              val (accCases, accDefns) = accc
-              val (cse, blk) = d
-              val (resBlk, resDefns) = rec(blk, accDefns)
-              ((cse, resBlk) :: accCases, resDefns)
-          )
-          dflt match
-            case None =>
-              val (rstRes, rstDefns) = rec(rest, armsDefns)
-              (Match(scrut, armsRes, None, rstRes), rstDefns)
+          if outerOnly then
+            val (rstRes, rstDefns) = rec(rest, acc)
+            (Match(scrut, arms, dflt, rstRes), rstDefns)
+          else
+            val (armsRes, armsDefns) = arms.foldLeft[(List[(Case, Block)], List[Defn])](Nil, acc)(
+              (accc, d) =>
+                val (accCases, accDefns) = accc
+                val (cse, blk) = d
+                val (resBlk, resDefns) = rec(blk, accDefns)
+                ((cse, resBlk) :: accCases, resDefns)
+            )
+            dflt match
+              case None =>
+                val (rstRes, rstDefns) = rec(rest, armsDefns)
+                (Match(scrut, armsRes, None, rstRes), rstDefns)
 
-            case Some(dflt) =>
-              val (dfltRes, dfltDefns) = rec(dflt, armsDefns)
-              val (rstRes, rstDefns) = rec(rest, dfltDefns)
-              (Match(scrut, armsRes, S(dfltRes), rstRes), rstDefns)
+              case Some(dflt) =>
+                val (dfltRes, dfltDefns) = rec(dflt, armsDefns)
+                val (rstRes, rstDefns) = rec(rest, dfltDefns)
+                (Match(scrut, armsRes, S(dfltRes), rstRes), rstDefns)
           
         case Return(res, implct) => (b, acc)
         case Throw(exc) => (b, acc)
         case Label(label, body, rest) =>
-          val (bodyRes, bodyDefns) = rec(body, acc)
-          val (rstRes, rstDefns) = rec(rest, bodyDefns)
-          (Label(label, bodyRes, rstRes), rstDefns)
+          if outerOnly then
+            val (rstRes, rstDefns) = rec(rest, acc)
+            (Label(label, body, rstRes), rstDefns)
+          else
+            val (bodyRes, bodyDefns) = rec(body, acc)
+            val (rstRes, rstDefns) = rec(rest, bodyDefns)
+            (Label(label, bodyRes, rstRes), rstDefns)
         case Break(label) => (b, acc)
         case Continue(label) => (b, acc)
         case Begin(sub, rest) => 
@@ -253,10 +261,14 @@ sealed abstract class Block extends Product with AutoLocated:
           val (rstRes, rstDefns) = rec(rest, subDefns)
           (Begin(subRes, rstRes), rstDefns)
         case TryBlock(sub, finallyDo, rest) =>
-          val (subRes, subDefns) = rec(sub, acc)
-          val (finallyRes, finallyDefns) = rec(rest, subDefns)
-          val (rstRes, rstDefns) = rec(rest, finallyDefns)
-          (TryBlock(subRes, finallyRes, rstRes), rstDefns)
+          if outerOnly then
+            val (rstRes, rstDefns) = rec(rest, acc)
+            (TryBlock(sub, finallyDo, rstRes), rstDefns)
+          else
+            val (subRes, subDefns) = rec(sub, acc)
+            val (finallyRes, finallyDefns) = rec(rest, subDefns)
+            val (rstRes, rstDefns) = rec(rest, finallyDefns)
+            (TryBlock(subRes, finallyRes, rstRes), rstDefns)
         case Assign(lhs, rhs, rest) => 
           val (rstRes, rstDefns) = rec(rest, acc)
           (Assign(lhs, rhs, rstRes), rstDefns)

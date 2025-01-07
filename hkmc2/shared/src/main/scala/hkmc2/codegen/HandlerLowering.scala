@@ -355,7 +355,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
   private def thirdPass(b: Block): Block =
     // to ensure the fun and class references in the continuation class are properly scoped,
     // we move all function defns to the top level of the handler block
-    val (blk, defns) = b.floatOutDefns
+    val (blk, defns) = b.floatOutDefns(false)
     val syms = defns.collect {
       case ClsLikeDefn(sym, k, parentPath, methods, privateFields, publicFields, preCtor, ctor) => sym
       case FunDefn(sym, params, body) => sym
