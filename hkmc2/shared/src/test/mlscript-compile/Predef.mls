@@ -138,11 +138,6 @@ fun __handleEffect(cur, handler, handlerTailList) =
           cur.tailHandler.nextHandler = handlerCont
           cur.tailHandler = origTail
         return cur
-      __Return then
-        set
-          cur.tailHandler.nextHandler = handlerCont
-          cur.tailHandler = origTail
-        return cur
     else
       set cur = __resume(handlerCont, null)(cur)
   else if handler === cur.handler then
@@ -157,7 +152,6 @@ fun __handleEffect(cur, handler, handlerTailList) =
   while
     cur is
       __EffectSig then return cur
-      __Return then return cur
     handlerTailList.next is __Cont then
       let nxt = handlerTailList.next
       set

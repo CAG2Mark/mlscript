@@ -44,7 +44,7 @@ sealed abstract class Block extends Product with AutoLocated:
     case Label(lbl, bod, rst) => bod.definedVars ++ rst.definedVars
   
   lazy val size: Int = this match
-    case _: Return | _: Throw | _: End | _: Break | _: Continue => 1
+    case _: Return | _: Throw | _: End | _: Break | _: Continue | _: HandleBlockReturn => 1
     case Begin(sub, rst) => sub.size + rst.size
     case Assign(_, _, rst) => 1 + rst.size
     case AssignField(_, _, _, rst) => 1 + rst.size
@@ -53,6 +53,7 @@ sealed abstract class Block extends Product with AutoLocated:
     case Define(_, rst) => 1 + rst.size
     case TryBlock(sub, fin, rst) => 1 + sub.size + fin.size + rst.size
     case Label(_, bod, rst) => 1 + bod.size + rst.size
+    case HandleBlock(lhs, res, par, cls, handlers, bdy, rst) => 1 + handlers.map(_.body.size).sum + bdy.size + rst.size
   
   // ignoring blocks inside functions and handle block
   def map(f: Block => Block): Block = this match

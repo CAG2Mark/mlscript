@@ -301,16 +301,10 @@ const Predef$class = class Predef {
         cur1.tailHandler = origTail;
         return cur1;
       } else {
-        if (cur1 instanceof this.__Return.class) {
-          cur1.tailHandler.nextHandler = handlerCont;
-          cur1.tailHandler = origTail;
-          return cur1;
-        } else {
-          tmp4 = this.__resume(handlerCont, null);
-          tmp5 = tmp4(cur1) ?? null;
-          cur1 = tmp5;
-          tmp6 = null;
-        }
+        tmp4 = this.__resume(handlerCont, null);
+        tmp5 = tmp4(cur1) ?? null;
+        cur1 = tmp5;
+        tmp6 = null;
       }
       tmp7 = tmp6;
     } else {
@@ -344,20 +338,16 @@ const Predef$class = class Predef {
       if (cur1 instanceof this.__EffectSig.class) {
         return cur1;
       } else {
-        if (cur1 instanceof this.__Return.class) {
-          return cur1;
+        scrut5 = handlerTailList.next;
+        if (scrut5 instanceof this.__Cont.class) {
+          nxt = handlerTailList.next;
+          handlerTailList.next = handlerTailList.next.next;
+          tmp13 = nxt.resume(cur1) ?? null;
+          cur1 = tmp13;
+          tmp14 = null;
+          continue tmp16;
         } else {
-          scrut5 = handlerTailList.next;
-          if (scrut5 instanceof this.__Cont.class) {
-            nxt = handlerTailList.next;
-            handlerTailList.next = handlerTailList.next.next;
-            tmp13 = nxt.resume(cur1) ?? null;
-            cur1 = tmp13;
-            tmp14 = null;
-            continue tmp16;
-          } else {
-            tmp14 = cur1;
-          }
+          tmp14 = cur1;
         }
       }
       break;

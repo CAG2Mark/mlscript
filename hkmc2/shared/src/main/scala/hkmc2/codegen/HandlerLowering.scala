@@ -513,12 +513,13 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
           Case.Cls(dummyClsSym, effectSigPath),
           ReturnCont(res, uid)
         )
+        .chain(ResumptionPoint(res, uid, _))
         .staticif(canRet, _.ifthen(
           res.asPath,
           Case.Cls(dummyClsSym, retClsPath),
           blockBuilder.ret(if handlerCtx.isHandleFree then res.asPath.value else res.asPath)
         ))
-        .rest(ResumptionPoint(res, uid, rest))
+        .rest(rest)
       case b => b
     val actualBlock = prepareBlock(b)
     if trivial then return N

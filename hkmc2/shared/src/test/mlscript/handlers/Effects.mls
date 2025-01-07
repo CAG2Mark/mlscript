@@ -207,7 +207,7 @@ sum(0, 100)
 // stack safe recursion
 :expect 450015000
 handle h = StackDelay with
-  fun raise()(k) = // TODO: This should codegen to a simple return without instrumentation
+  fun raise()(k) =
     k(10)
 fun sum(depth, x) =
   let new_depth = if depth > 1000 then h.raise() else depth + 1
