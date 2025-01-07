@@ -353,8 +353,9 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
   private val thirdPassFresh = FreshId()
   // moves definitions to the top level of the block
   private def thirdPass(b: Block): Block =
-
-    val (blk, defns) = popDefns(b, Nil)
+    // to ensure the fun and class references in the continuation class are properly scoped,
+    // we move all function defns to the top level of the handler block
+    val (blk, defns) = b.floatOutDefns
     val syms = defns.collect {
       case ClsLikeDefn(sym, k, parentPath, methods, privateFields, publicFields, preCtor, ctor) => sym
       case FunDefn(sym, params, body) => sym
@@ -392,64 +393,6 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
   
   private def translateCls(cls: ClsLikeDefn): ClsLikeDefn =
     cls.copy(methods = cls.methods.map(translateFun), ctor = translateBlock(cls.ctor, functionHandlerCtx))
-
-  // to ensure the fun and class references in the continuation class are properly scoped,
-  // we move all function defns to the top level of the handler block
-  def popDefns(b: Block, acc: List[Defn]): (Block, List[Defn]) =
-    b match
-      case Match(scrut, arms, dflt, rest) =>
-        val (armsRes, armsDefns) = arms.foldLeft[(List[(Case, Block)], List[Defn])](Nil, acc)(
-          (accc, d) =>
-            val (accCases, accDefns) = accc
-            val (cse, blk) = d
-            val (resBlk, resDefns) = popDefns(blk, accDefns)
-            ((cse, resBlk) :: accCases, resDefns)
-        )
-        dflt match
-          case None =>
-            val (rstRes, rstDefns) = popDefns(rest, armsDefns)
-            (Match(scrut, armsRes, None, rstRes), rstDefns)
-
-          case Some(dflt) =>
-            val (dfltRes, dfltDefns) = popDefns(dflt, armsDefns)
-            val (rstRes, rstDefns) = popDefns(rest, dfltDefns)
-            (Match(scrut, armsRes, S(dfltRes), rstRes), rstDefns)
-        
-      case Return(res, implct) => (b, acc)
-      case Throw(exc) => (b, acc)
-      case Label(label, body, rest) =>
-        val (bodyRes, bodyDefns) = popDefns(body, acc)
-        val (rstRes, rstDefns) = popDefns(rest, bodyDefns)
-        (Label(label, bodyRes, rstRes), rstDefns)
-      case Break(label) => (b, acc)
-      case Continue(label) => (b, acc)
-      case Begin(sub, rest) => 
-        val (subRes, subDefns) = popDefns(sub, acc)
-        val (rstRes, rstDefns) = popDefns(rest, subDefns)
-        (Begin(subRes, rstRes), rstDefns)
-      case TryBlock(sub, finallyDo, rest) =>
-        val (subRes, subDefns) = popDefns(sub, acc)
-        val (finallyRes, finallyDefns) = popDefns(rest, subDefns)
-        val (rstRes, rstDefns) = popDefns(rest, finallyDefns)
-        (TryBlock(subRes, finallyRes, rstRes), rstDefns)
-      case Assign(lhs, rhs, rest) => 
-        val (rstRes, rstDefns) = popDefns(rest, acc)
-        (Assign(lhs, rhs, rstRes), rstDefns)
-      case a @ AssignField(path, nme, result, rest) =>
-        val (rstRes, rstDefns) = popDefns(rest, acc)
-        (AssignField(path, nme, result, rstRes)(a.symbol), rstDefns)
-      case Define(defn, rest) => defn match
-        case ValDefn(owner, k, sym, rhs) => 
-          val (rstRes, rstDefns) = popDefns(rest, acc)
-          (Define(defn, rstRes), rstDefns)
-        case _ =>
-          val (rstRes, rstDefns) = popDefns(rest, defn :: acc)
-          (rstRes, rstDefns)
-      case HandleBlock(lhs, res, par, cls, handlers, body, rest) =>
-        val (rstRes, rstDefns) = popDefns(rest, acc)
-        (HandleBlock(lhs, res, par, cls, handlers, body, rstRes), rstDefns)
-      case HandleBlockReturn(res) => (b, acc)
-      case End(msg) => (b, acc)
   
   // Handle block becomes a FunDefn and CallPlaceholder
   private def translateHandleBlock(h: HandleBlock): Block =
