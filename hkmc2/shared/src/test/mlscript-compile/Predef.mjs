@@ -114,6 +114,11 @@ const Predef$class = class Predef {
       }
       toString() { return "__Return(" + this.value + ")"; }
     };
+    this.__StackDelay = function __StackDelay() { return new __StackDelay.class(); };
+    this.__StackDelay.class = class __StackDelay {
+      constructor() {}
+      toString() { return "__StackDelay(" +  + ")"; }
+    };
   }
   id(x) {
     return x;

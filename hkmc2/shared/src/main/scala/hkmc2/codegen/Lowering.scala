@@ -508,4 +508,5 @@ trait LoweringHandler
         val transform = StackSafeTransform(lim)
         transform.transformTopLevel(ir)
     val handlerPass = if instrument then HandlerLowering().translateTopLevel(stackSafePass) else stackSafePass
+    // val handlerPass = stackSafePass
     handlerPass
