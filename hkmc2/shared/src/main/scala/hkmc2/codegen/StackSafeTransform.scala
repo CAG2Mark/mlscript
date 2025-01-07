@@ -134,6 +134,10 @@ class StackSafeTransform(depthLimit: Int)(using State):
   def rewriteFn(defn: FunDefn) = FunDefn(defn.sym, defn.params, rewriteBlk(defn.body))
 
   def transformTopLevel(b: Block) =
+    def replaceReturns(b: Block): Block = b match
+      case Return(res, false) => HandleBlockReturn(res)
+      case _ => b.map(replaceReturns)
+    
     // symbols
     val resumeSym = VarSymbol(Tree.Ident("resume"))
     val handlerSym = TempSymbol(None, "stackHandler");
@@ -159,7 +163,7 @@ class StackSafeTransform(depthLimit: Int)(using State):
       blockBuilder
         .assignFieldN(predefPath, STACK_DEPTH_IDENT, intLit(0)) // set stackDepth = 0
         .assignFieldN(predefPath, STACK_HANDLER_IDENT, handlerSym.asPath) // assign stack handler
-        .rest(transform(blk)), // transform the rest of the body
+        .rest(replaceReturns(transform(blk))), // transform the rest of the body
       blockBuilder // reset the stack safety values
         .assignFieldN(predefPath, STACK_DEPTH_IDENT, intLit(0)) // set stackDepth = 0
         .assignFieldN(predefPath, STACK_HANDLER_IDENT, Value.Lit(Tree.UnitLit(false))) // set stackHandler = null

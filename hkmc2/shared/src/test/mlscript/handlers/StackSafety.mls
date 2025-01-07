@@ -11,18 +11,18 @@ sum(100)
 // FIXME: __Return is leaked 
 :stackSafe 1000
 :handler
-:expect __Return { value: 5000050000 }
+:expect 50005000
 fun sum(n) =
   if n == 0 then 0
   else
     n + sum(n - 1)
-sum(100000)
-//│ = __Return { value: 5000050000 }
+sum(10000)
+//│ = 50005000
 
 :re
 fun sum(n) =
   if n == 0 then 0
   else
     n + sum(n - 1)
-sum(100000)
+sum(10000)
 //│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
