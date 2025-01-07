@@ -1,20 +1,8 @@
 :js
+:handler
 
 abstract class Effect with
   fun perform(arg: Str): Str
-
-:ge
-handle h = Effect with
-  fun perform(arg)(k) = k(arg)
-h.perform("k")
-//│ ╔══[COMPILATION ERROR] Effect handlers are not enabled
-//│ ║  l.7: 	handle h = Effect with
-//│ ║       	           ^^^^^^^^^^^
-//│ ║  l.8: 	  fun perform(arg)(k) = k(arg)
-//│ ╙──     	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-:global
-:handler
 
 :expect 'b'
 handle h = Effect with
@@ -149,12 +137,11 @@ result
 //│ > handler finished
 //│ = 'Hello World!'
 
-:fixme
 handle h = Effect with
   fun perform(arg)(k) = arg
 fun f() = 3
 f()
-//│ ═══[RUNTIME ERROR] TypeError: globalThis.f is not a function
+//│ = 3
 
 fun f(perform) =
   handle h = Effect with
@@ -180,6 +167,7 @@ h.setVal(1)
 print(h.getVal())
 //│ > 0
 //│ > 1
+//│ x = 1
 
 
 abstract class Eff with
@@ -200,6 +188,10 @@ abstract class StackDelay with
 
 // stack safe recursion
 :expect 5050
+handle h = StackDelay with
+  fun raise()(k) =
+    // console.trace("Stack unwinded!")
+    k(10)
 fun sum(depth, x) =
   let new_depth = if depth > 70 then
     // console.trace("Too deep, heapifying the stack")
@@ -209,23 +201,19 @@ fun sum(depth, x) =
   if x != 0 then
     x + sum(new_depth, x - 1)
   else 0
-handle h = StackDelay with
-  fun raise()(k) =
-    // console.trace("Stack unwinded!")
-    k(10)
 sum(0, 100)
 //│ = 5050
 
 // stack safe recursion
 :expect 450015000
+handle h = StackDelay with
+  fun raise()(k) =
+    k(10)
 fun sum(depth, x) =
   let new_depth = if depth > 1000 then h.raise() else depth + 1
   if x != 0 then
     x + sum(new_depth, x - 1)
   else 0
-handle h = StackDelay with
-  fun raise()(k) = // TODO: This should codegen to a simple return without instrumentation
-    k(10)
 sum(0, 30000)
 //│ = 450015000
 

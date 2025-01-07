@@ -7,7 +7,7 @@ abstract class Effect with
 fun f() =
   handle h = Effect with
     fun f()(r) =
-      let m = r()
+      let m = r(())
       print("Bye!")
       m
   h.f()
@@ -30,4 +30,25 @@ fun f() =
 :expect 3
 f()
 //│ > Bye!
+//│ = 3
+
+let l = () =>
+  handle h = Effect with
+    fun f()(r) = r(())
+  return 3
+  4
+//│ l = [Function (anonymous)]
+
+l()
+//│ = 3
+
+handle h1 = Effect with
+  fun f()(r) = r(())
+let l = () =>
+  handle h2 = Effect with
+    fun f()(r) = r(())
+  h1.f()
+  return 3
+  4
+l()
 //│ = 3
