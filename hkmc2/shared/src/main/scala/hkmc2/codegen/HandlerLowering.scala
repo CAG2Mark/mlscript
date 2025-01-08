@@ -11,6 +11,7 @@ import semantics.Elaborator.State
 import syntax.{Literal, Tree, ParamBind}
 import semantics.*
 import scala.annotation.tailrec
+import hkmc2.semantics.Elaborator.ctx
 
 object HandlerLowering:
 
@@ -62,7 +63,7 @@ object HandlerLowering:
 
 import HandlerLowering.*
 
-class HandlerLowering(using TL, Raise, Elaborator.State):
+class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
 
   private val functionHandlerCtx = HandlerCtx(true, false, state =>
     val tmp = freshTmp()
@@ -73,16 +74,14 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
   )
   private def handlerCtx(using HandlerCtx): HandlerCtx = summon
   private val effectSigPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__EffectSig")).selN(Tree.Ident("class"))
+  private val effectSigSym: ClassSymbol = ctx.Builtins.Predef.tree.definedSymbols.get("__EffectSig").get.asCls.get
   private val contClsPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__Cont")).selN(Tree.Ident("class"))
   private val retClsPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__Return")).selN(Tree.Ident("class"))
+  private val retClsSym: ClassSymbol = ctx.Builtins.Predef.tree.definedSymbols.get("__Return").get.asCls.get
   private val handleEffectFun: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__handleEffect"))
   private val mkEffectPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__mkEffect"))
   private val handleBlockImplPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__handleBlockImpl"))
   private val mapPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Map"))
-  private val dummyClsSym = ClassSymbol(
-    Tree.TypeDef(syntax.Cls, Tree.Error(), N, N),
-    Tree.Ident("Dummy")
-  )
   
   private def freshTmp(dbgNme: Str = "tmp") = new TempSymbol(N, dbgNme)
   
@@ -453,13 +452,13 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
         .assign(res, c)
         .ifthen(
           res.asPath,
-          Case.Cls(dummyClsSym, effectSigPath),
+          Case.Cls(effectSigSym, effectSigPath),
           ReturnCont(res, uid)
         )
         .chain(ResumptionPoint(res, uid, _))
         .staticif(canRet, _.ifthen(
           res.asPath,
-          Case.Cls(dummyClsSym, retClsPath),
+          Case.Cls(retClsSym, retClsPath),
           blockBuilder.ret(if handlerCtx.isHandleFree then res.asPath.value else res.asPath)
         ))
         .rest(rest)
@@ -537,12 +536,12 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
       .assign(res, c)
       .ifthen(
         res.asPath,
-        Case.Cls(dummyClsSym, effectSigPath),
+        Case.Cls(effectSigSym, effectSigPath),
         handlerCtx.linkAndHandle(LinkState(res.asPath, clsSym.asPath, uid))
       )
       .staticif(canRet && !handlerCtx.isTopLevel, _.ifthen(
         res.asPath,
-        Case.Cls(dummyClsSym, retClsPath),
+        Case.Cls(retClsSym, retClsPath),
         blockBuilder.ret(if handlerCtx.isHandleFree then res.asPath.value else res.asPath)
       ))
       .rest(rest)

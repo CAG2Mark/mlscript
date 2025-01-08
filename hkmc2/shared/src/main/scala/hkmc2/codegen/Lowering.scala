@@ -481,7 +481,7 @@ trait LoweringTraceLog
 
 
 trait LoweringHandler
-    (instrument: Bool)(using TL, Raise, Elaborator.State)
+    (instrument: Bool)(using TL, Raise, Elaborator.State, Elaborator.Ctx)
     extends Lowering:
   override def term(t: st)(k: Result => Block)(using Subst): Block =
     if !instrument then return super.term(t)(k)
