@@ -238,14 +238,14 @@ const Predef$class = class Predef {
     tmp = new this.__HandleBlock.class(null, null, null, handler1);
     handlerCont = tmp;
     handlerCont.tail = handlerCont;
+    cur.tailHandler.nextHandler = handlerCont;
+    cur.tailHandler = handlerCont;
     tmp4: while (true) {
       if (cur instanceof this.__EffectSig.class) {
-        tmp1 = this.__handleEffect(cur, handler1, handlerCont);
+        tmp1 = this.__handleEffect(cur);
         nxt = tmp1;
         scrut = cur === nxt;
         if (scrut) {
-          cur.tailHandler.nextHandler = handlerCont;
-          cur.tailHandler = handlerCont;
           cur.tail = handlerCont.tail;
           return cur;
         } else {
@@ -261,18 +261,18 @@ const Predef$class = class Predef {
     }
     return tmp3;
   } 
-  __handleEffect(cur1, handler2, handlerTailList) {
-    let prevCont, handlerCont, scrut, scrut1, savedNext, scrut2, scrut3, origTail, savedNext1, scrut4, scrut5, nxt, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14;
+  __handleEffect(cur1) {
+    let prevCont, handlerCont, scrut, scrut1, origTail, savedNext, scrut2, scrut3, findTail, scrut4, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9;
     prevCont = cur1;
     handlerCont = cur1.nextHandler;
-    tmp15: while (true) {
+    tmp10: while (true) {
       if (handlerCont instanceof this.__HandleBlock.class) {
         scrut = handlerCont.handler !== cur1.handler;
         if (scrut) {
           prevCont = handlerCont;
           handlerCont = handlerCont.nextHandler;
           tmp = null;
-          continue tmp15;
+          continue tmp10;
         } else {
           tmp = null;
         }
@@ -281,85 +281,68 @@ const Predef$class = class Predef {
       }
       break;
     }
-    if (handlerCont) {
-      origTail = cur1.tailHandler;
-      prevCont.nextHandler = null;
-      cur1.tailHandler = prevCont;
-      savedNext1 = handlerCont.next;
-      tmp1 = this.__resume(cur1, handlerCont);
-      tmp2 = cur1.handlerFun(tmp1) ?? null;
-      cur1 = tmp2;
-      scrut4 = savedNext1 !== handlerCont.next;
-      if (scrut4) {
-        handlerCont.next.next = savedNext1;
-        tmp3 = null;
-      } else {
-        tmp3 = null;
-      }
-      if (cur1 instanceof this.__EffectSig.class) {
-        cur1.tailHandler.nextHandler = handlerCont;
-        cur1.tailHandler = origTail;
-        return cur1;
-      } else {
-        tmp4 = this.__resume(handlerCont, null);
-        tmp5 = tmp4(cur1) ?? null;
-        cur1 = tmp5;
-        tmp6 = null;
-      }
-      tmp7 = tmp6;
+    scrut1 = handlerCont === null;
+    if (scrut1) {
+      return cur1;
     } else {
-      scrut1 = handler2 === cur1.handler;
-      if (scrut1) {
-        savedNext = handlerTailList.next;
-        tmp8 = this.__resume(cur1, handlerTailList);
-        tmp9 = cur1.handlerFun(tmp8) ?? null;
-        cur1 = tmp9;
-        scrut2 = savedNext !== handlerTailList.next;
-        if (scrut2) {
-          handlerTailList.next.next = savedNext;
-          scrut3 = savedNext === null;
-          if (scrut3) {
-            handlerTailList.tail = handlerTailList.next;
-            tmp10 = null;
-          } else {
-            tmp10 = null;
-          }
-          tmp11 = tmp10;
-        } else {
-          tmp11 = null;
-        }
-        tmp12 = tmp11;
-      } else {
-        return cur1;
-      }
-      tmp7 = tmp12;
+      tmp1 = null;
     }
-    tmp16: while (true) {
+    origTail = cur1.tailHandler;
+    prevCont.nextHandler = null;
+    cur1.tailHandler = prevCont;
+    savedNext = handlerCont.next;
+    tmp2 = this.__resume(cur1, handlerCont);
+    tmp3 = cur1.handlerFun(tmp2) ?? null;
+    cur1 = tmp3;
+    scrut2 = savedNext !== handlerCont.next;
+    if (scrut2) {
+      handlerCont.next.next = savedNext;
+      scrut3 = handlerCont.tail === handlerCont;
+      if (scrut3) {
+        handlerCont.tail = handlerCont.next;
+        tmp4 = null;
+      } else {
+        tmp4 = null;
+      }
+      tmp5 = tmp4;
+    } else {
+      tmp5 = null;
+    }
+    if (cur1 instanceof this.__EffectSig.class) {
+      cur1.tailHandler.nextHandler = handlerCont;
+      cur1.tailHandler = origTail;
+      return cur1;
+    } else {
+      tmp6 = this.__resume(handlerCont, null);
+      tmp7 = tmp6(cur1) ?? null;
+      cur1 = tmp7;
       if (cur1 instanceof this.__EffectSig.class) {
-        return cur1;
-      } else {
-        scrut5 = handlerTailList.next;
-        if (scrut5 instanceof this.__Cont.class) {
-          nxt = handlerTailList.next;
-          handlerTailList.next = handlerTailList.next.next;
-          tmp13 = nxt.resume(cur1) ?? null;
-          cur1 = tmp13;
-          tmp14 = null;
-          continue tmp16;
-        } else {
-          tmp14 = cur1;
+        findTail = cur1;
+        tmp11: while (true) {
+          scrut4 = findTail.nextHandler;
+          if (scrut4 instanceof this.__HandleBlock.class) {
+            findTail = findTail.nextHandler;
+            tmp8 = null;
+            continue tmp11;
+          } else {
+            tmp8 = null;
+          }
+          break;
         }
+        cur1.tailHandler = findTail;
+        tmp9 = null;
+      } else {
+        tmp9 = null;
       }
-      break;
+      return cur1;
     }
-    return tmp14;
   } 
   __resume(cur2, tail) {
     return (value) => {
       let scrut, cont, scrut1, scrut2, scrut3, scrut4, nxt, scrut5, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22;
       scrut = cur2.resumed;
       if (scrut) {
-        throw Error("multiple resumption");
+        throw Error("Multiple resumption");
       } else {
         tmp = null;
       }

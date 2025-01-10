@@ -94,15 +94,16 @@ fun __mkEffect(handler, handlerFun) =
 
 fun __handleBlockImpl(cur, handler) =
   let handlerCont = new __HandleBlock(null, null, null, handler)
-  set handlerCont.tail = handlerCont
+  set
+    handlerCont.tail = handlerCont
+    cur.tailHandler.nextHandler = handlerCont
+    cur.tailHandler = handlerCont
   while cur is
     __EffectSig then
-      let nxt = __handleEffect(cur, handler, handlerCont)
+      let nxt = __handleEffect(cur)
       if cur === nxt then
-        set
-          cur.tailHandler.nextHandler = handlerCont
-          cur.tailHandler = handlerCont
-          cur.tail = handlerCont.tail
+        // handler not found, begin unwinding
+        set cur.tail = handlerCont.tail
         return cur
       else
         set cur = nxt
@@ -110,7 +111,7 @@ fun __handleBlockImpl(cur, handler) =
       return cur
 
 // return either new effect, final result or the same continuation if there is no handler
-fun __handleEffect(cur, handler, handlerTailList) =
+fun __handleEffect(cur) =
   let
     prevCont = cur
     handlerCont = cur.nextHandler
@@ -118,45 +119,46 @@ fun __handleEffect(cur, handler, handlerTailList) =
     set
       prevCont = handlerCont
       handlerCont = handlerCont.nextHandler
-  if handlerCont then
-    let origTail = cur.tailHandler
-    set
-      prevCont.nextHandler = null
-      cur.tailHandler = prevCont
-    let savedNext = handlerCont.next
-    set cur = cur.handlerFun(__resume(cur, handlerCont))
-    if savedNext !== handlerCont.next do
-      set handlerCont.next.next = savedNext
-    if cur is
-      __EffectSig then
-        set
-          cur.tailHandler.nextHandler = handlerCont
-          cur.tailHandler = origTail
-        return cur
-    else
-      set cur = __resume(handlerCont, null)(cur)
-  else if handler === cur.handler then
-    let savedNext = handlerTailList.next
-    set cur = cur.handlerFun(__resume(cur, handlerTailList))
-    if savedNext !== handlerTailList.next do
-      set handlerTailList.next.next = savedNext
-      if savedNext === null do
-        set handlerTailList.tail = handlerTailList.next
-  else
+  
+  // no matching handler
+  if handlerCont === null do
     return cur
-  while
-    cur is
-      __EffectSig then return cur
-    handlerTailList.next is __Cont then
-      let nxt = handlerTailList.next
-      set
-        handlerTailList.next = handlerTailList.next.next
-        cur = nxt.resume(cur)
-    else cur
+  
+  // unlink the unrelated handler blocks
+  let origTail = cur.tailHandler
+  set
+    prevCont.nextHandler = null
+    cur.tailHandler = prevCont
+
+  // handle the effect, where the handler continuation will be appended to handlerCont.next
+  let savedNext = handlerCont.next
+  set cur = cur.handlerFun(__resume(cur, handlerCont))
+  if savedNext !== handlerCont.next do
+    set handlerCont.next.next = savedNext
+    // for the handle block at the bottom of the stack, tail is used for unwinding
+    // otherwise it is unused and it is fine to set it here as well
+    if handlerCont.tail === handlerCont do
+      set handlerCont.tail = handlerCont.next
+  
+  if cur is __EffectSig then
+    set
+      cur.tailHandler.nextHandler = handlerCont
+      cur.tailHandler = origTail
+    cur
+  else
+    // now resume the handle blocks
+    set cur = __resume(handlerCont, null)(cur)
+    if cur is __EffectSig do
+      // the tailHandler might have changed so we have to recompute here
+      let findTail = cur
+      while findTail.nextHandler is __HandleBlock do
+        set findTail = findTail.nextHandler
+      set cur.tailHandler = findTail
+    cur
 
 fun __resume(cur, tail)(value) =
   if cur.resumed do
-    throw Error("multiple resumption")
+    throw Error("Multiple resumption")
   set cur.resumed = true
   
   let cont = cur.next

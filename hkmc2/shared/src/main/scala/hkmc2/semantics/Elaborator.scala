@@ -634,7 +634,7 @@ extends Importer:
           log(s"Processing `handle` statement $id (${sym}) ${ctx.outer}")
           
           // TODO: shouldn't need uid here
-          val derivedClsSym = ClassSymbol(Tree.TypeDef(syntax.Cls, Tree.Error(), N, N), Tree.Ident(s"Effect$$${cls.name}$$${State.suid.nextUid}"))
+          val derivedClsSym = ClassSymbol(Tree.TypeDef(syntax.Cls, Tree.Error(), N, N), Tree.Ident(s"${cls.name}$$${id.name}$$${State.suid.nextUid}"))
           derivedClsSym.defn = S(ClassDef(N, syntax.Cls, derivedClsSym, Nil, N, ObjBody(Term.Blk(Nil, Term.Lit(Tree.UnitLit(true)))), List()))
 
           val elabed = ctx.nest(S(derivedClsSym)).givenIn:
