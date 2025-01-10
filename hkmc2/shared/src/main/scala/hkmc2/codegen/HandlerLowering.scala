@@ -400,7 +400,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
       Tree.Ident("Cont$" + State.suid.nextUid)
     )
     val pcVar = VarSymbol(Tree.Ident("pc"))
-    sym.defn = S(ClassDef(N, syntax.Cls, sym, Nil, S(PlainParamList(Param(FldFlags.empty, pcVar, N) :: Nil)), ObjBody(Term.Blk(Nil, Term.Lit(Tree.UnitLit(true))))))
+    sym.defn = S(ClassDef(N, syntax.Cls, sym, Nil, S(PlainParamList(Param(FldFlags.empty, pcVar, N) :: Nil)), ObjBody(Term.Blk(Nil, Term.Lit(Tree.UnitLit(true)))), List()))
     
     var trivial = true
     def prepareBlock(b: Block): Block =
