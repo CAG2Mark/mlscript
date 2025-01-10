@@ -78,10 +78,8 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
   private val contClsPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__Cont")).selN(Tree.Ident("class"))
   private val retClsPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__Return")).selN(Tree.Ident("class"))
   private val retClsSym: ClassSymbol = ctx.Builtins.Predef.tree.definedSymbols.get("__Return").get.asCls.get
-  private val handleEffectFun: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__handleEffect"))
   private val mkEffectPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__mkEffect"))
   private val handleBlockImplPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__handleBlockImpl"))
-  private val mapPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Map"))
   
   private def freshTmp(dbgNme: Str = "tmp") = new TempSymbol(N, dbgNme)
   
@@ -157,40 +155,6 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
   def partitionBlock(blk: Block, labelIds: Map[Symbol, (StateId, StateId)] = Map.empty): Ls[BlockState] = 
     // for readability :)
     case class PartRet(head: Block, states: Ls[BlockState])
-
-    // used to analyze whether to touch labels, currently unused.
-    val labelCallCache: scala.collection.mutable.Map[Symbol, Bool] = scala.collection.mutable.Map()
-    def containsCallRec(blk: Block): Bool = containsCall(blk)
-    @tailrec
-    def containsCall(blk: Block): Bool = blk match
-      case Match(scrut, arms, dflt, rest) => arms.find((_, blk) => containsCallRec(blk)).isDefined || containsCall(rest)
-      case Return(c: Call, implct) => true
-      case Return(_, _) => false 
-      case Throw(c: Call) => true
-      case Throw(_) => false
-      case l @ Label(label, body, rest) => 
-        labelBodyHasCall(l) || containsCall(rest)
-      case Break(label) => false
-      case Continue(label) => false
-      case Begin(sub, rest) => containsCallRec(sub) || containsCall(rest)
-      case TryBlock(sub, finallyDo, rest) => containsCallRec(sub) || containsCallRec(finallyDo) || containsCall(rest)
-      case Assign(lhs, c: Call, rest) => true
-      case Assign(_, _, rest) => containsCall(rest)
-      case AssignField(lhs, nme, c: Call, rest) => true
-      case AssignField(_, _, _, rest) => containsCall(rest)
-      case Define(defn, rest) => containsCall(rest)
-      case End(msg) => false
-      case _: HandleBlock | _: HandleBlockReturn => die // already translated at this point
-    
-    def labelBodyHasCall(blk: Label) =
-      val Label(label, body, rest) = blk
-      labelCallCache.get(label) match
-        case N =>
-          val res = containsCallRec(body)
-          labelCallCache.addOne(label -> res)
-          res
-        case S(value) =>
-          value
 
     // returns (truncated input block, child block states)
     // TODO: don't split within Match, Begin and Labels when not needed, ideally keep it intact. Need careful analysis for this
@@ -314,13 +278,14 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
    * 2.
    * a) generate continuation class
    * b) generate normal function body
+   * 3. float out definitions
    */
   
-  private def translateBlock(b: Block, h: HandlerCtx, topLevel: Bool = false): Block =
+  private def translateBlock(b: Block, h: HandlerCtx): Block =
     given HandlerCtx = h
     val stage1 = firstPass(b)
     val stage2 = secondPass(stage1)
-    if topLevel then stage2
+    if h.isTopLevel then stage2
     else thirdPass(stage2)
   
   private def firstPass(b: Block)(using HandlerCtx): Block =
@@ -425,11 +390,6 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
     
     val body = blockBuilder.define(clsDefn).assign(h.lhs, Instantiate(Value.Ref(BlockMemberSymbol(h.cls.id.name, Nil)), Nil)).rest(handlerBody)
     
-    // val cur: Block => Block = h.handlers.foldLeft(blockBuilder)((builder, handler) =>
-    //   val lam = Value.Lam(PlainParamList(Param(FldFlags.empty, handler.resumeSym, N) :: Nil), translateBlock(handler.body, functionHandlerCtx))
-    //   val tmp = freshTmp()
-    //   builder.define(FunDefn(handler.sym, handler.params, Return(SimpleCall(mkEffectPath, h.lhs.asPath :: lam :: Nil), false)))).assign(h.lhs, Instantiate(h.cls, Nil))
-    // val body = h.handlers.foldLeft(cur)((builder, handler) => builder.assignFieldN(h.lhs.asPath, Tree.Ident(handler.sym.nme), handler.sym.asPath)).rest(handlerBody)
     val defn = FunDefn(sym, PlainParamList(Nil) :: Nil, body)
     val result = Define(defn, CallPlaceholder(h.res, freshId(), true, Call(sym.asPath, Nil)(true), h.rest))
     result
@@ -548,5 +508,5 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
     case b => b
 
   def translateTopLevel(b: Block): Block =
-    translateBlock(b, HandlerCtx(true, true, _ => rtThrowMsg("Unhandled effects")), true)
+    translateBlock(b, HandlerCtx(true, true, _ => rtThrowMsg("Unhandled effects")))
     
