@@ -78,6 +78,7 @@ class Test with
 
 abstract class __Cont(next) with
   fun resume(value)
+
 class __TailList(next, tail)
 class __HandleBlock(next, nextHandler, tail, handler)
 
@@ -90,14 +91,6 @@ fun __mkEffect(handler, handlerFun) =
     res.tail = res
     res.tailHandler = res
   res
-
-// fun checkEffectHead(cur) =
-//   if cur is __EffectSig then
-//     let hand = cur
-//     while hand.nextHandler !== null do
-//       set hand = hand.nextHandler
-//     assert(hand === cur.tailHandler)
-//     assert(cur.resumed === false)
 
 fun __handleBlockImpl(cur, handler) =
   let handlerCont = new __HandleBlock(null, null, null, handler)
@@ -116,6 +109,7 @@ fun __handleBlockImpl(cur, handler) =
     else
       return cur
 
+// return either new effect, final result or the same continuation if there is no handler
 fun __handleEffect(cur, handler, handlerTailList) =
   let
     prevCont = cur
@@ -160,27 +154,6 @@ fun __handleEffect(cur, handler, handlerTailList) =
         cur = nxt.resume(cur)
     else cur
 
-// fun __resume(cur, tail)(value) =
-//   if cur.resumed do
-//     throw Error("multiple resumption")
-//   set cur.resumed = true
-//   let cont = cur.next
-//   while
-//     cont is __Cont then
-//       value = cont.resume(value)
-//       if value is __EffectSig then
-//         set value.tail = tail
-//         if cur.tailHandler !== cur do
-//           set value.tailHandler.nextHandler = cur.nextHandler
-//           set value.tailHandler = cur.tailHandler
-//         return value
-//       else
-//         set cont = cont.next
-//     cur.nextHandler is __HandleBlock then
-//       set cont = cur.nextHandler.next
-//       set cur.nextHandler = cur.nextHandler.nextHandler
-//     else value
-
 fun __resume(cur, tail)(value) =
   if cur.resumed do
     throw Error("multiple resumption")
@@ -189,10 +162,9 @@ fun __resume(cur, tail)(value) =
   let cont = cur.next
   while
     cont is __Cont do
-      // NOTE: we do not need to link to cont.next again if it is effsig
-      // because cont.resume will not change its own next
       set value = cont.resume(value)
       if value is __EffectSig then
+        // We are returning to handler, which perform unwinding logic so tail is needed
         set value.tail = tail
         if cur.tailHandler !== cur do
           set
@@ -201,6 +173,7 @@ fun __resume(cur, tail)(value) =
         return value
       else
         set cont = cont.next
+  
   // We're done with the head, now resume the handle blocks
   while
     cur.nextHandler is __HandleBlock and
@@ -209,12 +182,6 @@ fun __resume(cur, tail)(value) =
         let nxt = cur.nextHandler.next
         set value = nxt.resume(value)
         if value is __EffectSig then
-          // console.dir(cur.nextHandler.next)
-          // console.dir(value.tail.next)
-          // console.dir(value)
-          // console.dir(cur)
-          // console.dir(nxt)
-          // console.log(nxt.resume.toString())
           assert(cur.tailHandler !== cur)
           assert(cur.nextHandler !== null)
           // This checks when continuation resume results in tail call to effectful func
