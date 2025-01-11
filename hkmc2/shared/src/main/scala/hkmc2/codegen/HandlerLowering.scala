@@ -18,10 +18,6 @@ object HandlerLowering:
   private val pcIdent: Tree.Ident = Tree.Ident("pc")
   private val nextIdent: Tree.Ident = Tree.Ident("next")
   private val tailIdent: Tree.Ident = Tree.Ident("tail")
-  private val nextHandlerIdent: Tree.Ident = Tree.Ident("nextHandler")
-  private val tailHandlerIdent: Tree.Ident = Tree.Ident("tailHandler")
-  private val handlerIdent: Tree.Ident = Tree.Ident("handler")
-  private val handlerFunIdent: Tree.Ident = Tree.Ident("handlerFun")
 
   extension (k: Block => Block)
     
@@ -47,8 +43,6 @@ object HandlerLowering:
     def pc = p.selN(pcIdent)
     def next = p.selN(nextIdent)
     def tail = p.selN(tailIdent)
-    def nextHandler = p.selN(nextHandlerIdent)
-    def tailHandler = p.selN(tailHandlerIdent)
     def value = p.selN(Tree.Ident("value"))
     def asArg = Arg(false, p)
   
