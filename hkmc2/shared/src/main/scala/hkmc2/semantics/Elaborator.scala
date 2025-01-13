@@ -112,7 +112,9 @@ object Elaborator:
       def nme: Str = base.nme
       def ref(id: Tree.Ident)(using Elaborator.State): Term =
         val emptyTup: Tree.Tup = Tree.Tup(Nil)
-        Term.App(base.ref(id), Term.Tup(Nil)(emptyTup))(Tree.App(id, emptyTup), FlowSymbol("‹get-res›"))
+        Term.App(base.ref(id), Term.Tup(Nil)(emptyTup))(
+          Tree.App(id, emptyTup) // FIXME
+          , FlowSymbol("‹get-res›"))
       def symbol: Opt[Symbol] = base.symbol
     given Conversion[Symbol, Elem] = RefElem(_)
     val empty: Ctx = Ctx(N, N, Map.empty)
@@ -181,6 +183,12 @@ extends Importer:
   def term(tree: Tree, inAppPrefix: Bool = false): Ctxl[Term] =
   trace[Term](s"Elab term ${tree.showDbg}", r => s"~> $r"):
     tree.desugared match
+    case Bra(k, e) =>
+      k match
+      case BracketKind.Round =>
+      case _ =>
+        raise(ErrorReport(msg"Unsupported ${k.name} in this position" -> tree.toLoc :: Nil))
+      term(e)
     case Block(s :: Nil) =>
       term(s)
     case Block(sts) =>
@@ -319,7 +327,7 @@ extends Importer:
         case _ =>
           raise(ErrorReport(msg"Identifier `${idn.name}` does not name a known class symbol." -> idn.toLoc :: Nil))
           N
-      Term.SelProj(term(pre), c, idp)(N)
+      Term.SelProj(term(pre), c, idp)(f)
     case App(Ident("#"), Tree.Tup(Sel(pre, Ident(name)) :: App(Ident(proj), args) :: Nil)) =>
       term(App(App(Ident("#"), Tree.Tup(Sel(pre, Ident(name)) :: Ident(proj) :: Nil)), args))
     case App(Ident("!"), Tree.Tup(rhs :: Nil)) =>
@@ -377,6 +385,36 @@ extends Importer:
       val preTrm = term(pre)
       val sym = resolveField(nme, preTrm.symbol, nme)
       Term.Sel(preTrm, nme)(sym)
+    case MemberProj(ct, nme) =>
+      val c = cls(ct, inAppPrefix = false)
+      val f = c.symbol.flatMap(_.asCls) match
+        case S(cls: ClassSymbol) =>
+          cls.tree.allSymbols.get(nme.name) match
+          case S(fld: FieldSymbol) => S(fld)
+          case _ =>
+            raise(ErrorReport(msg"Class '${cls.nme}' does not contain member '${nme.name}'." -> nme.toLoc :: Nil))
+            N
+        case _ =>
+          raise:
+            ErrorReport:
+              msg"${ct.describe.capitalize} is not a known class." -> ct.toLoc ::
+              msg"Note: any expression of the form `‹expression›::‹identifier›` is a member projection;" -> N ::
+              msg"  add a space before ‹identifier› to make it an operator application." -> N ::
+              Nil
+          N
+      val self = VarSymbol(Ident("self"))
+      val args = VarSymbol(Ident("args"))
+      val ps = ParamList(ParamListFlags.empty,
+        Param(FldFlags.empty, self, N) :: Nil,
+        S:
+          Param(FldFlags.empty, args, N)
+      )
+      val rs = FlowSymbol("‹app-res›")
+      Term.Lam(ps,
+        Term.App(Term.SelProj(self.ref(), c, nme)(f), args.ref())(
+          Tree.App(nme, Tree.Tup(Nil)) // FIXME
+          , rs)
+      )
     case tree @ Tup(fields) =>
       Term.Tup(fields.map(fld(_)))(tree)
     case New(body) => // TODO handle Under
@@ -632,7 +670,7 @@ extends Importer:
         val res: Term.Blk = ctx.nest(N).givenIn:
           val sym = fieldOrVarSym(HandlerBind, id)
           log(s"Processing `handle` statement $id (${sym}) ${ctx.outer}")
-          
+
           // TODO: shouldn't need uid here
           val derivedClsSym = ClassSymbol(Tree.TypeDef(syntax.Cls, Tree.Error(), N, N), Tree.Ident(s"${cls.name}$$${id.name}$$${State.suid.nextUid}"))
           derivedClsSym.defn = S(ClassDef(N, syntax.Cls, derivedClsSym, Nil, N, ObjBody(Term.Blk(Nil, Term.Lit(Tree.UnitLit(true)))), List()))
@@ -689,6 +727,9 @@ extends Importer:
           go(sts, Nil, Term.Error :: acc)
       case (td @ TermDef(k, nme, rhs)) :: sts =>
         log(s"Processing term definition $nme")
+        td.symbName match
+        case S(L(d)) => raise(d)
+        case _ => ()
         td.name match
           case R(id) =>
             val sym = members.getOrElse(id.name, die)
@@ -710,7 +751,17 @@ extends Importer:
               val s = st.map(term(_)(using newCtx))
               val b = rhs.map(term(_)(using newCtx))
               val r = FlowSymbol(s"‹result of ${sym}›")
-              val tdf = TermDefinition(owner, k, sym, pss, s, b, r, 
+              val real_pss =
+                // * Local functions (i.e. those without owner) with no parameter lists
+                // * are elaborated into functions with a single empty parameter list.
+                // * This is because JS does not support local "getter" functions.
+                owner match
+                case S(_) => pss
+                case N => pss match
+                  case Nil if k is Fun =>
+                    ParamList(ParamListFlags.empty, Nil, N) :: Nil
+                  case _ => pss
+              val tdf = TermDefinition(owner, k, sym, real_pss, s, b, r, 
                 TermDefFlags.empty.copy(isModMember = isModMember), annotations)
               sym.defn = S(tdf)
               
@@ -725,11 +776,11 @@ extends Importer:
               s match
                 case N if em => raise:
                   ErrorReport:
-                    msg"Function returning module values must have explicit return types." ->
+                    msg"Functions returning module values must have explicit return types." ->
                     td.head.toLoc :: Nil
                 case S(t) if em && ModuleChecker.isTypeParam(t) => raise:
                   ErrorReport:
-                    msg"Function returning module values must have concrete return types." ->
+                    msg"Functions returning module values must have concrete return types." ->
                     td.head.toLoc :: Nil
                 case S(_) if em && !mm => raise:
                   ErrorReport:
@@ -749,6 +800,9 @@ extends Importer:
             go(sts, Nil, acc)
       case (td @ TypeDef(k, head, extension, body)) :: sts =>
         assert((k is Als) || (k is Cls) || (k is Mod) || (k is Obj) || (k is Pat), k)
+        td.symbName match
+        case S(L(d)) => raise(d)
+        case _ => ()
         val nme = td.name match
           case R(id) => id
           case L(d) =>
