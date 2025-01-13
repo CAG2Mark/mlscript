@@ -261,7 +261,8 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
       // ignored cases
       case TryBlock(sub, finallyDo, rest) => ??? // ignore
       case Throw(_) => PartRet(blk, Nil)
-      case _: HandleBlock | _: HandleBlockReturn => die // already translated at this point
+      case _: HandleBlock => lastWords("unexpected handleBlock") // already translated at this point
+      case _: HandleBlockReturn => lastWords("unexpected handleBlockReturn") // already translated at this point
 
     val headId = freshId()
 
@@ -279,11 +280,10 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
   
   private def translateBlock(b: Block, h: HandlerCtx): Block =
     given HandlerCtx = h
+    
     val stage1 = firstPass(b)
     val stage2 = secondPass(stage1)
-    if h.isTopLevel then stage2
-    else thirdPass(stage2)
-  
+    if h.isTopLevel then stage2 else thirdPass(stage2)
   private def firstPass(b: Block)(using HandlerCtx): Block =
     b.map(firstPass) match
       case b: HandleBlock => translateHandleBlock(b)
@@ -316,45 +316,75 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
     // to ensure the fun and class references in the continuation class are properly scoped,
     // we move all function defns to the top level of the handler block
     val (blk, defns) = b.floatOutDefns
-    val syms = defns.collect {
+    val clsDefns = defns.collect {
       case ClsLikeDefn(sym, k, parentPath, methods, privateFields, publicFields, preCtor, ctor) => sym
+    }
+    val funDefns = defns.collect {
       case FunDefn(sym, params, body) => sym
     }
 
-    val bmsMap = syms.collect {
+    def getBms =
+      var l: List[BlockMemberSymbol] = Nil
+      given SymbolSubst with
+        override def mapBlockMemberSym(b: BlockMemberSymbol) =
+          l = b :: l
+          b
+      b.mapSyms
+      l
+
+    val toConvert = getBms.map(b =>
+      val clsDefn = b.asCls
+      val modDefn = b.asMod
+      // check if this BlockMemberSymbol belongs to a definition in this block
+      val isThisBlock = clsDefn match
+        case None => modDefn match
+          case None => false
+          case Some(value) => clsDefns.contains(value)
+        case Some(value) => clsDefns.contains(value)
+      if isThisBlock then Some(b)
+      else None
+    ).collect { case Some(b) => b }
+
+    val fnBmsMap = funDefns.map {
       case sym: BlockMemberSymbol => 
         sym -> BlockMemberSymbol(sym.nme + "$" + thirdPassFresh(), sym.trees)
     }.toMap
 
-    val clsMap = syms.collect {
-      case sym: ClassSymbol => 
-        val newSym = ClassSymbol(sym.tree, Tree.Ident(sym.id.name + "$" +  + thirdPassFresh()))
-        newSym.defn = sym.defn
-        sym -> newSym
-    }.toMap
+    val clsBmsMap = toConvert.map(b =>
+      b -> BlockMemberSymbol(b.nme + "$" + thirdPassFresh(), b.trees)  
+    ).toMap
 
-    val modMap = syms.collect {
-      case sym: ModuleSymbol =>
-        sym -> ModuleSymbol(sym.tree, Tree.Ident(sym.id.name + "$" +  + thirdPassFresh()))
-    }.toMap
+    val bmsMap = (fnBmsMap ++ clsBmsMap).toMap
 
-    val clsNmeMap = clsMap.map {
-      case (c1, c2) => c1.id.name -> c2.id.name
-    }.toMap
+    val clsMap = clsBmsMap.map {
+      case b1 -> b2 => b1.asCls match
+        case Some(value) => 
+          val newSym = ClassSymbol(value.tree, Tree.Ident(b2.nme))
+          newSym.defn = value.defn
+          S(value -> newSym)
+        case None => None
+    }.collect{ case Some(x) => x }.toMap 
 
-    val modNmeMap = modMap.map {
-      case (c1, c2) => c1.id.name -> c2.id.name
-    }
-
-    val nmeMap = clsNmeMap ++ modNmeMap
+    val modMap = clsBmsMap.map {
+      case b1 -> b2 => b1.asMod match
+        case Some(value) => 
+          val newSym = ModuleSymbol(value.tree, Tree.Ident(b2.nme))
+          newSym.defn = value.defn
+          S(value -> newSym)
+        case None => None
+    }.collect{ case Some(x) => x }.toMap
     
     val newBlk = defns.foldLeft(blk)((acc, defn) => Define(defn, acc))
 
     given SymbolSubst with
       override def mapBlockMemberSym(b: BlockMemberSymbol) = bmsMap.get(b) match
-        case None => clsNmeMap.get(b.nme) match
+        case None => b.asCls match
           case None => b
-          case Some(value) => BlockMemberSymbol(value, b.trees) // TODO: refactor once BlockMemberSymbol changes are in place
+          case Some(cls) => 
+            clsMap.get(cls) match
+              case None => b
+              case Some(sym) => 
+                BlockMemberSymbol(sym.nme, b.trees) // TODO: properly map trees
         case Some(value) => value
       override def mapClsSym(s: ClassSymbol): ClassSymbol = clsMap.get(s).getOrElse(s)
       override def mapModuleSym(s: ModuleSymbol): ModuleSymbol = modMap.get(s).getOrElse(s)

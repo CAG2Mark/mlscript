@@ -148,7 +148,7 @@ if true do
 //│ let tmp;
 //│ function handleBlock$0() {
 //│   let h, scrut, tmp1, res;
-//│   class Effect$h$1217 extends globalThis.Effect {
+//│   class Effect$h$1156 extends globalThis.Effect {
 //│     constructor() {
 //│       let tmp2;
 //│       tmp2 = super();
@@ -158,11 +158,11 @@ if true do
 //│         return arg;
 //│       });
 //│     }
-//│     toString() { return "Effect$h$1217"; }
+//│     toString() { return "Effect$h$1156"; }
 //│   }
-//│   h = new Effect$h$1217();
-//│   function Cont$1242$1(pc1) { return new Cont$1242$1.class(pc1); }
-//│   Cont$1242$1.class = class Cont$1242$1 extends globalThis.Predef.__Cont.class {
+//│   h = new Effect$h$1156();
+//│   function Cont$1181(pc1) { return new Cont$1181.class(pc1); }
+//│   Cont$1181.class = class Cont$1181 extends globalThis.Predef.__Cont.class {
 //│     constructor(pc) {
 //│       let tmp2;
 //│       tmp2 = super(null, null);
@@ -201,7 +201,7 @@ if true do
 //│         break;
 //│       }
 //│     }
-//│     toString() { return "Cont$1242$1(" + this.pc + ")"; }
+//│     toString() { return "Cont$1181(" + this.pc + ")"; }
 //│   };
 //│   function f$0() {
 //│     return 3;
@@ -210,7 +210,7 @@ if true do
 //│   if (scrut) {
 //│     res = f$0();
 //│     if (res instanceof globalThis.Predef.__EffectSig.class) {
-//│       res.tail.next = new Cont$1242$1(1);
+//│       res.tail.next = new Cont$1181(1);
 //│       return globalThis.Predef.__handleBlockImpl(res, h);
 //│     }
 //│     tmp1 = res;
@@ -230,7 +230,7 @@ fun f(perform) =
   handle h = Effect with
     fun perform(arg)(k) = arg
   perform()
-f(() => 3)
+f(() => 3) 
 //│ = 3
 
 abstract class Cell with
@@ -339,11 +339,11 @@ foo(h)
 //│ = 3
 
 :handler
-:expect 3
-:fixme
+:expect 123
 fun foo(h) =
   h.perform()
-  if false then
+  fun A() = 1
+  let a = if true then
     class A() with
       fun f() = 2
     A().f()
@@ -351,7 +351,43 @@ fun foo(h) =
     class A() with
       fun f() = 3
     A().f()
+  let b = if false then
+    class A() with
+      fun f() = 2
+    A().f()
+  else
+    class A() with
+      fun f() = 3
+    A().f()
+  A() * 100 + a * 10 + b
 handle h = Eff with
   fun perform()(k) = k(())
-foo(h)
-//│ ═══[RUNTIME ERROR] Expected: 3, got: 2
+foo(h) 
+//│ = 123
+
+:handler
+:expect 123
+fun foo(h) =
+  h.perform()
+  fun A() = 1
+  let a = if true then
+    module A with
+      fun f() = 2
+    A.f()
+  else
+    module A with
+      fun f() = 3
+    A.f()
+  let b = if false then
+    module A with
+      fun f() = 2
+    A.f()
+  else
+    module A with
+      fun f() = 3
+    A.f()
+  A() * 100 + a * 10 + b
+handle h = Eff with
+  fun perform()(k) = k(())
+foo(h) 
+//│ = 123

@@ -90,10 +90,6 @@ sealed abstract class Block extends Product with AutoLocated:
     }
   
   def mapSyms(using State, SymbolSubst): Block =
-    
-
-    // def resMap[T <: Result]
-    
     def pMap(p: Param) = 
       val newSym: LocalSymbol & NamedSymbol = p.sym.subst
       Param(p.flags, p.sym.subst, p.sign)
@@ -178,7 +174,6 @@ sealed abstract class Block extends Product with AutoLocated:
       case Break(s) => Break(s.subst)
       case Continue(s) => Continue(s.subst)
       case End(_) => this
-
   
   def mapValue(f: Value => Value): Block =
     def go(p: Path): Path = p match
