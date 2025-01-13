@@ -146,7 +146,7 @@ class StackSafeTransform(depthLimit: Int)(using State):
       Tree.TypeDef(syntax.Cls, Tree.Error(), N, N),
       Tree.Ident("StackDelay$")
     )
-    clsSym.defn = S(ClassDef(N, syntax.Cls, clsSym, Nil, N, ObjBody(Term.Blk(Nil, Term.Lit(Tree.UnitLit(true))))))
+    clsSym.defn = S(ClassDef(N, syntax.Cls, clsSym, Nil, N, ObjBody(Term.Blk(Nil, Term.Lit(Tree.UnitLit(true)))), Nil))
 
     val (blk, defns) = b.floatOutDefns(true)
 

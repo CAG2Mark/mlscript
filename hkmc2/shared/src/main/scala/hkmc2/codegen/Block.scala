@@ -89,29 +89,19 @@ sealed abstract class Block extends Product with AutoLocated:
       case r => N
     }
   
-  def mapSyms(f: Local => Local)(using State): Block = 
-    def g(t: Local) = t match 
-      case t: TermSymbol =>
-        TermSymbol(t.k, t.owner.map(symMap), t.id)
-  
-      case _ => f(t)
-    def symMap[T <: Local : ClassTag](l: T): T = g(l) match
-      case r : T => r
-      case _ => l
-    
-
-    // def resMap[T <: Result]
-    
-    def pMap(p: Param) = Param(p.flags, symMap(p.sym), p.sign)
+  def mapSyms(using State, SymbolSubst): Block =
+    def pMap(p: Param) = 
+      val newSym: LocalSymbol & NamedSymbol = p.sym.subst
+      Param(p.flags, p.sym.subst, p.sign)
     def pListMap(p: ParamList) = ParamList(p.flags, p.params.map(pMap), p.restParam.map(pMap))
     def pathMap(p: Path): Path = p match
-      case s @ Select(qual, name) => Select(pathMap(qual), name)(s.symbol.map(symMap))
-      case Value.Ref(l) => Value.Ref(symMap(l))
-      case Value.This(sym) => Value.This(symMap(sym))
+      case s @ Select(qual, name) => Select(pathMap(qual), name)(s.symbol.map(_.subst))
+      case Value.Ref(l) => Value.Ref(l.subst)
+      case Value.This(sym) => Value.This(sym.subst)
       case Value.Lit(lit) => p
       case Value.Lam(params, body) => Value.Lam(
         pListMap(params),
-        body.mapSyms(symMap)
+        body.mapSyms
       )
       case Value.Arr(elems) => Value.Arr(elems.map(a => Arg(a.spread, pathMap(a.value))))
 
@@ -127,60 +117,63 @@ sealed abstract class Block extends Product with AutoLocated:
     this match
       case Return(res, implct) => Return(resMap(res), implct)
       case Throw(exc: Path) => Throw(pathMap(exc))
-      case Assign(l, r, rst) => Assign(symMap(l), resMap(r), rst.mapSyms(symMap))
-      case blk @ AssignField(l, n, r, rst) => AssignField(pathMap(l), n, _resMap(r), rst.mapSyms(symMap))(blk.symbol)
+      case Assign(l, r, rst) => Assign(l.subst, resMap(r), rst.mapSyms)
+      case blk @ AssignField(l, n, r, rst) => AssignField(pathMap(l), n, _resMap(r), rst.mapSyms)(blk.symbol)
       case Match(scrut, arms, dflt, rst) => 
         val newArms = arms.map((cse, blk) =>
           val newCse = cse match
             case Case.Lit(lit) => cse
-            case Case.Cls(cls, path) => Case.Cls(symMap(cls), pathMap(path))
+            // HACK: cls.subst gives something other than ClassSymbol | ModuleSymbol and it doesn't type check...
+            case Case.Cls(cls, path) => cls match 
+              case s: ClassSymbol => Case.Cls(s.subst, pathMap(path))
+              case s: ModuleSymbol => Case.Cls(s.subst, pathMap(path))
             case Case.Tup(len, inf) => cse
-          (newCse, blk.mapSyms(symMap))
+          (newCse, blk.mapSyms)
         )
-        Match(pathMap(scrut), newArms, dflt.map(_.mapSyms(symMap)), rst.mapSyms(symMap))
+        Match(pathMap(scrut), newArms, dflt.map(_.mapSyms), rst.mapSyms)
       case Define(d, rst) => 
         val newDefn = d match
           case FunDefn(sym, params, body) => 
-            FunDefn(symMap(sym), params.map(pListMap), body.mapSyms(symMap))
+            FunDefn(sym.subst, params.map(pListMap), body.mapSyms)
           case ValDefn(owner, k, sym, rhs) => 
-            ValDefn(owner.map(symMap), k, symMap(sym), pathMap(rhs))
+            ValDefn(owner.map(_.subst), k, sym.subst, pathMap(rhs))
           case ClsLikeDefn(sym, k, parentPath, methods, privateFields, publicFields, preCtor, ctor) =>
             ClsLikeDefn(
-              symMap(sym), k, parentPath.map(pathMap),
-              methods.map(fDef => FunDefn(symMap(fDef.sym), fDef.params.map(pListMap), fDef.body.mapSyms(symMap))),
-              privateFields.map(symMap),
+              sym.subst, k, parentPath.map(pathMap),
+              methods.map(fDef => FunDefn(fDef.sym.subst, fDef.params.map(pListMap), fDef.body.mapSyms)),
+              privateFields.map(_.subst),
               publicFields.map(t => TermDefinition(
-                t.owner.map(symMap),
+                t.owner.map(_.subst),
                 t.k,
-                symMap(t.sym),
+                t.sym.subst,
                 t.params.map(pListMap),
                 t.sign,
                 t.body,
-                symMap(t.resSym),
-                t.flags
+                t.resSym.subst,
+                t.flags,
+                t.annotations,
               )),
-              preCtor.mapSyms(symMap),
-              ctor.mapSyms(symMap)
+              preCtor.mapSyms,
+              ctor.mapSyms
             )
-        Define(newDefn, rst.mapSyms(symMap))
+        Define(newDefn, rst.mapSyms)
       
       case HandleBlockReturn(res: Path) => HandleBlockReturn(pathMap(res))
       case Throw(res) => Throw(resMap(res))
-      case Label(lbl, body, rest) => Label(symMap(lbl), body.mapSyms(symMap), rest.mapSyms(symMap))
+      case Label(lbl, body, rest) => Label(lbl.subst, body.mapSyms, rest.mapSyms)
       case HandleBlockReturn(res) => HandleBlockReturn(resMap(res))
-      case Begin(sub, rest) => Begin(sub.mapSyms(symMap), rest.mapSyms(symMap))
-      case TryBlock(sub, fin, rest) => TryBlock(sub.mapSyms(symMap), fin.mapSyms(symMap), rest.mapSyms(symMap))
+      case Begin(sub, rest) => Begin(sub.mapSyms, rest.mapSyms)
+      case TryBlock(sub, fin, rest) => TryBlock(sub.mapSyms, fin.mapSyms, rest.mapSyms)
       case HandleBlock(lhs, res, par, cls, handlers, body, rest) =>
         HandleBlock(
-          symMap(lhs), symMap(res), pathMap(par), symMap(cls), 
-          handlers.map(h => Handler(symMap(h.sym), symMap(h.resumeSym), h.params.map(pListMap), body.mapSyms(symMap))),
-          body.mapSyms(symMap),
-          rest.mapSyms(symMap)
+          lhs.subst, res.subst, pathMap(par), cls.subst, 
+          handlers.map(h => Handler(h.sym.subst, h.resumeSym.subst, h.params.map(pListMap), body.mapSyms)),
+          body.mapSyms,
+          rest.mapSyms
         )
-      case Break(s) => Break(symMap(s))
-      case Continue(s) => Continue(symMap(s))
+      case Break(s) => Break(s.subst)
+      case Continue(s) => Continue(s.subst)
       case End(_) => this
-
   
   def mapValue(f: Value => Value): Block =
     def go(p: Path): Path = p match
@@ -196,8 +189,10 @@ sealed abstract class Block extends Product with AutoLocated:
     case Define(defn, rst) => Define(defn, rst.mapTail(f))
     case HandleBlock(lhs, res, par, cls, handlers, body, rest) =>
       HandleBlock(lhs, res, par, cls, handlers.map(h => Handler(h.sym, h.resumeSym, h.params, h.body.mapTail(f))), body.mapTail(f), rest.mapTail(f))
+    case Match(scrut, arms, dflt, rst: End) =>
+      Match(scrut, arms.map(_ -> _.mapTail(f)), dflt.map(_.mapTail(f)), rst)
     case Match(scrut, arms, dflt, rst) =>
-      Match(scrut, arms.map(_ -> _.mapTail(f)), dflt.map(_.mapTail(f)), rst.mapTail(f))
+      Match(scrut, arms, dflt, rst.mapTail(f))
   
   lazy val freeVars: Set[Local] = this match
     case Match(scrut, arms, dflt, rest) =>

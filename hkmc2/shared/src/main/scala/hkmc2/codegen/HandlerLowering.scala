@@ -11,16 +11,15 @@ import semantics.Elaborator.State
 import syntax.{Literal, Tree, ParamBind}
 import semantics.*
 import scala.annotation.tailrec
+import hkmc2.semantics.Elaborator.ctx
+
+import hkmc2.utils.SymbolSubst
 
 object HandlerLowering:
 
   private val pcIdent: Tree.Ident = Tree.Ident("pc")
   private val nextIdent: Tree.Ident = Tree.Ident("next")
   private val tailIdent: Tree.Ident = Tree.Ident("tail")
-  private val nextHandlerIdent: Tree.Ident = Tree.Ident("nextHandler")
-  private val tailHandlerIdent: Tree.Ident = Tree.Ident("tailHandler")
-  private val handlerIdent: Tree.Ident = Tree.Ident("handler")
-  private val handlerFunIdent: Tree.Ident = Tree.Ident("handlerFun")
 
   extension (k: Block => Block)
     
@@ -46,8 +45,6 @@ object HandlerLowering:
     def pc = p.selN(pcIdent)
     def next = p.selN(nextIdent)
     def tail = p.selN(tailIdent)
-    def nextHandler = p.selN(nextHandlerIdent)
-    def tailHandler = p.selN(tailHandlerIdent)
     def value = p.selN(Tree.Ident("value"))
     def asArg = Arg(false, p)
   
@@ -62,7 +59,7 @@ object HandlerLowering:
 
 import HandlerLowering.*
 
-class HandlerLowering(using TL, Raise, Elaborator.State):
+class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
 
   private val functionHandlerCtx = HandlerCtx(true, false, state =>
     val tmp = freshTmp()
@@ -73,16 +70,12 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
   )
   private def handlerCtx(using HandlerCtx): HandlerCtx = summon
   private val effectSigPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__EffectSig")).selN(Tree.Ident("class"))
+  private val effectSigSym: ClassSymbol = ctx.Builtins.Predef.tree.definedSymbols.get("__EffectSig").get.asCls.get
   private val contClsPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__Cont")).selN(Tree.Ident("class"))
   private val retClsPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__Return")).selN(Tree.Ident("class"))
-  private val handleEffectFun: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__handleEffect"))
+  private val retClsSym: ClassSymbol = ctx.Builtins.Predef.tree.definedSymbols.get("__Return").get.asCls.get
   private val mkEffectPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__mkEffect"))
   private val handleBlockImplPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__handleBlockImpl"))
-  private val mapPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Map"))
-  private val dummyClsSym = ClassSymbol(
-    Tree.TypeDef(syntax.Cls, Tree.Error(), N, N),
-    Tree.Ident("Dummy")
-  )
   
   private def freshTmp(dbgNme: Str = "tmp") = new TempSymbol(N, dbgNme)
   
@@ -158,40 +151,6 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
   def partitionBlock(blk: Block, labelIds: Map[Symbol, (StateId, StateId)] = Map.empty): Ls[BlockState] = 
     // for readability :)
     case class PartRet(head: Block, states: Ls[BlockState])
-
-    // used to analyze whether to touch labels, currently unused.
-    val labelCallCache: scala.collection.mutable.Map[Symbol, Bool] = scala.collection.mutable.Map()
-    def containsCallRec(blk: Block): Bool = containsCall(blk)
-    @tailrec
-    def containsCall(blk: Block): Bool = blk match
-      case Match(scrut, arms, dflt, rest) => arms.find((_, blk) => containsCallRec(blk)).isDefined || containsCall(rest)
-      case Return(c: Call, implct) => true
-      case Return(_, _) => false 
-      case Throw(c: Call) => true
-      case Throw(_) => false
-      case l @ Label(label, body, rest) => 
-        labelBodyHasCall(l) || containsCall(rest)
-      case Break(label) => false
-      case Continue(label) => false
-      case Begin(sub, rest) => containsCallRec(sub) || containsCall(rest)
-      case TryBlock(sub, finallyDo, rest) => containsCallRec(sub) || containsCallRec(finallyDo) || containsCall(rest)
-      case Assign(lhs, c: Call, rest) => true
-      case Assign(_, _, rest) => containsCall(rest)
-      case AssignField(lhs, nme, c: Call, rest) => true
-      case AssignField(_, _, _, rest) => containsCall(rest)
-      case Define(defn, rest) => containsCall(rest)
-      case End(msg) => false
-      case _: HandleBlock | _: HandleBlockReturn => die // already translated at this point
-    
-    def labelBodyHasCall(blk: Label) =
-      val Label(label, body, rest) = blk
-      labelCallCache.get(label) match
-        case N =>
-          val res = containsCallRec(body)
-          labelCallCache.addOne(label -> res)
-          res
-        case S(value) =>
-          value
 
     // returns (truncated input block, child block states)
     // TODO: don't split within Match, Begin and Labels when not needed, ideally keep it intact. Need careful analysis for this
@@ -302,7 +261,8 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
       // ignored cases
       case TryBlock(sub, finallyDo, rest) => ??? // ignore
       case Throw(_) => PartRet(blk, Nil)
-      case _: HandleBlock | _: HandleBlockReturn => die // already translated at this point
+      case _: HandleBlock => lastWords("unexpected handleBlock") // already translated at this point
+      case _: HandleBlockReturn => lastWords("unexpected handleBlockReturn") // already translated at this point
 
     val headId = freshId()
 
@@ -315,15 +275,15 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
    * 2.
    * a) generate continuation class
    * b) generate normal function body
+   * 3. float out definitions
    */
   
-  private def translateBlock(b: Block, h: HandlerCtx, topLevel: Bool = false): Block =
+  private def translateBlock(b: Block, h: HandlerCtx): Block =
     given HandlerCtx = h
+    
     val stage1 = firstPass(b)
     val stage2 = secondPass(stage1)
-    if topLevel then stage2
-    else thirdPass(stage2)
-  
+    if h.isTopLevel then stage2 else thirdPass(stage2)
   private def firstPass(b: Block)(using HandlerCtx): Block =
     b.map(firstPass) match
       case b: HandleBlock => translateHandleBlock(b)
@@ -356,37 +316,81 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
     // to ensure the fun and class references in the continuation class are properly scoped,
     // we move all function defns to the top level of the handler block
     val (blk, defns) = b.floatOutDefns(false)
-    val syms = defns.collect {
+    val clsDefns = defns.collect {
       case ClsLikeDefn(sym, k, parentPath, methods, privateFields, publicFields, preCtor, ctor) => sym
+    }
+    val funDefns = defns.collect {
       case FunDefn(sym, params, body) => sym
     }
-    val newSyms: Map[Symbol, Symbol] = syms.map {
+
+    def getBms =
+      var l: List[BlockMemberSymbol] = Nil
+      given SymbolSubst with
+        override def mapBlockMemberSym(b: BlockMemberSymbol) =
+          l = b :: l
+          b
+      b.mapSyms
+      l
+
+    val toConvert = getBms.map(b =>
+      val clsDefn = b.asCls
+      val modDefn = b.asMod
+      // check if this BlockMemberSymbol belongs to a definition in this block
+      val isThisBlock = clsDefn match
+        case None => modDefn match
+          case None => false
+          case Some(value) => clsDefns.contains(value)
+        case Some(value) => clsDefns.contains(value)
+      if isThisBlock then Some(b)
+      else None
+    ).collect { case Some(b) => b }
+
+    val fnBmsMap = funDefns.map {
       case sym: BlockMemberSymbol => 
         sym -> BlockMemberSymbol(sym.nme + "$" + thirdPassFresh(), sym.trees)
-      case sym: ClassSymbol => 
-        val newSym = ClassSymbol(sym.tree, Tree.Ident(sym.id.name + "$" +  + thirdPassFresh()))
-        newSym.defn = sym.defn
-        sym -> newSym
-      case sym: ModuleSymbol =>
-        sym -> ModuleSymbol(sym.tree, Tree.Ident(sym.id.name + "$" +  + thirdPassFresh()))
-      case sym => sym -> sym
     }.toMap
 
-    val clsNmeMap = newSyms.collect {
-      case (c1: ClassSymbol, c2: ClassSymbol) => c1.id.name -> c2.id.name
-    }.toMap
+    val clsBmsMap = toConvert.map(b =>
+      b -> BlockMemberSymbol(b.nme + "$" + thirdPassFresh(), b.trees)  
+    ).toMap
 
-    def symMap(l: Local) = newSyms.get(l) match
-      case None => l match
-        case b: BlockMemberSymbol => clsNmeMap.get(b.nme) match
-          case None => l
-          case Some(value) => BlockMemberSymbol(value, b.trees)
-        case _ => l
-      case Some(value) => value
+    val bmsMap = (fnBmsMap ++ clsBmsMap).toMap
 
+    val clsMap = clsBmsMap.map {
+      case b1 -> b2 => b1.asCls match
+        case Some(value) => 
+          val newSym = ClassSymbol(value.tree, Tree.Ident(b2.nme))
+          newSym.defn = value.defn
+          S(value -> newSym)
+        case None => None
+    }.collect{ case Some(x) => x }.toMap 
+
+    val modMap = clsBmsMap.map {
+      case b1 -> b2 => b1.asMod match
+        case Some(value) => 
+          val newSym = ModuleSymbol(value.tree, Tree.Ident(b2.nme))
+          newSym.defn = value.defn
+          S(value -> newSym)
+        case None => None
+    }.collect{ case Some(x) => x }.toMap
     
     val newBlk = defns.foldLeft(blk)((acc, defn) => Define(defn, acc))
-    newBlk.mapSyms(symMap)
+
+    given SymbolSubst with
+      override def mapBlockMemberSym(b: BlockMemberSymbol) = bmsMap.get(b) match
+        case None => b.asCls match
+          case None => b
+          case Some(cls) => 
+            clsMap.get(cls) match
+              case None => b
+              case Some(sym) => 
+                BlockMemberSymbol(sym.nme, b.trees) // TODO: properly map trees
+        case Some(value) => value
+      override def mapClsSym(s: ClassSymbol): ClassSymbol = clsMap.get(s).getOrElse(s)
+      override def mapModuleSym(s: ModuleSymbol): ModuleSymbol = modMap.get(s).getOrElse(s)
+      override def mapTermSym(s: TermSymbol): TermSymbol = TermSymbol(s.k, s.owner.map(_.subst), s.id)
+
+    newBlk.mapSyms
   
   private def translateFun(f: FunDefn): FunDefn =
     FunDefn(f.sym, f.params, translateBlock(f.body, functionHandlerCtx))
@@ -426,11 +430,6 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
     
     val body = blockBuilder.define(clsDefn).assign(h.lhs, Instantiate(Value.Ref(BlockMemberSymbol(h.cls.id.name, Nil)), Nil)).rest(handlerBody)
     
-    // val cur: Block => Block = h.handlers.foldLeft(blockBuilder)((builder, handler) =>
-    //   val lam = Value.Lam(PlainParamList(Param(FldFlags.empty, handler.resumeSym, N) :: Nil), translateBlock(handler.body, functionHandlerCtx))
-    //   val tmp = freshTmp()
-    //   builder.define(FunDefn(handler.sym, handler.params, Return(SimpleCall(mkEffectPath, h.lhs.asPath :: lam :: Nil), false)))).assign(h.lhs, Instantiate(h.cls, Nil))
-    // val body = h.handlers.foldLeft(cur)((builder, handler) => builder.assignFieldN(h.lhs.asPath, Tree.Ident(handler.sym.nme), handler.sym.asPath)).rest(handlerBody)
     val defn = FunDefn(sym, PlainParamList(Nil) :: Nil, body)
     val result = Define(defn, CallPlaceholder(h.res, freshId(), true, Call(sym.asPath, Nil)(true), h.rest))
     result
@@ -441,7 +440,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
       Tree.Ident("Cont$" + State.suid.nextUid)
     )
     val pcVar = VarSymbol(Tree.Ident("pc"))
-    sym.defn = S(ClassDef(N, syntax.Cls, sym, Nil, S(PlainParamList(Param(FldFlags.empty, pcVar, N) :: Nil)), ObjBody(Term.Blk(Nil, Term.Lit(Tree.UnitLit(true))))))
+    sym.defn = S(ClassDef(N, syntax.Cls, sym, Nil, S(PlainParamList(Param(FldFlags.empty, pcVar, N) :: Nil)), ObjBody(Term.Blk(Nil, Term.Lit(Tree.UnitLit(true)))), List()))
     
     var trivial = true
     def prepareBlock(b: Block): Block =
@@ -453,13 +452,13 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
         .assign(res, c)
         .ifthen(
           res.asPath,
-          Case.Cls(dummyClsSym, effectSigPath),
+          Case.Cls(effectSigSym, effectSigPath),
           ReturnCont(res, uid)
         )
         .chain(ResumptionPoint(res, uid, _))
         .staticif(canRet, _.ifthen(
           res.asPath,
-          Case.Cls(dummyClsSym, retClsPath),
+          Case.Cls(retClsSym, retClsPath),
           blockBuilder.ret(if handlerCtx.isHandleFree then res.asPath.value else res.asPath)
         ))
         .rest(rest)
@@ -537,17 +536,17 @@ class HandlerLowering(using TL, Raise, Elaborator.State):
       .assign(res, c)
       .ifthen(
         res.asPath,
-        Case.Cls(dummyClsSym, effectSigPath),
+        Case.Cls(effectSigSym, effectSigPath),
         handlerCtx.linkAndHandle(LinkState(res.asPath, clsSym.asPath, uid))
       )
       .staticif(canRet && !handlerCtx.isTopLevel, _.ifthen(
         res.asPath,
-        Case.Cls(dummyClsSym, retClsPath),
+        Case.Cls(retClsSym, retClsPath),
         blockBuilder.ret(if handlerCtx.isHandleFree then res.asPath.value else res.asPath)
       ))
       .rest(rest)
     case b => b
 
   def translateTopLevel(b: Block): Block =
-    translateBlock(b, HandlerCtx(true, true, _ => rtThrowMsg("Unhandled effects")), true)
+    translateBlock(b, HandlerCtx(true, true, _ => rtThrowMsg("Unhandled effects")))
     

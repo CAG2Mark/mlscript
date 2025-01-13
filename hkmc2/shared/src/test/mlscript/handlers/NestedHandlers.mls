@@ -157,3 +157,32 @@ while i < 10 do
   set i = i + 1
 d
 //│ = 11
+
+abstract class Eff2 with
+  fun f1(): ()
+  fun f2(): ()
+
+
+// Effect performed at end of handler, which trigger a special branch to handle
+handle h1 = Eff2 with
+  fun f1()(k) =
+    print("h1.f1 pre")
+    k()
+    print("h1.f1 post")
+  fun f2()(k) = k()
+handle h2 = Eff2 with
+  fun f1()(k) =
+    print("h2.f1")
+    k()
+  fun f2()(k) =
+    print("h2.f2 pre")
+    k()
+    print("h2.f2 post")
+    h1.f1()
+h2.f2()
+h2.f1()
+//│ > h2.f2 pre
+//│ > h2.f1
+//│ > h2.f2 post
+//│ > h1.f1 pre
+//│ > h1.f1 post
