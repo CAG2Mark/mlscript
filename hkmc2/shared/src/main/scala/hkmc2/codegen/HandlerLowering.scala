@@ -13,6 +13,8 @@ import semantics.*
 import scala.annotation.tailrec
 import hkmc2.semantics.Elaborator.ctx
 
+import hkmc2.utils.SymbolSubst
+
 object HandlerLowering:
 
   private val pcIdent: Tree.Ident = Tree.Ident("pc")
@@ -318,33 +320,47 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
       case ClsLikeDefn(sym, k, parentPath, methods, privateFields, publicFields, preCtor, ctor) => sym
       case FunDefn(sym, params, body) => sym
     }
-    val newSyms: Map[Symbol, Symbol] = syms.map {
+
+    val bmsMap = syms.collect {
       case sym: BlockMemberSymbol => 
         sym -> BlockMemberSymbol(sym.nme + "$" + thirdPassFresh(), sym.trees)
+    }.toMap
+
+    val clsMap = syms.collect {
       case sym: ClassSymbol => 
         val newSym = ClassSymbol(sym.tree, Tree.Ident(sym.id.name + "$" +  + thirdPassFresh()))
         newSym.defn = sym.defn
         sym -> newSym
+    }.toMap
+
+    val modMap = syms.collect {
       case sym: ModuleSymbol =>
         sym -> ModuleSymbol(sym.tree, Tree.Ident(sym.id.name + "$" +  + thirdPassFresh()))
-      case sym => sym -> sym
     }.toMap
 
-    val clsNmeMap = newSyms.collect {
-      case (c1: ClassSymbol, c2: ClassSymbol) => c1.id.name -> c2.id.name
+    val clsNmeMap = clsMap.map {
+      case (c1, c2) => c1.id.name -> c2.id.name
     }.toMap
 
-    def symMap(l: Local) = newSyms.get(l) match
-      case None => l match
-        case b: BlockMemberSymbol => clsNmeMap.get(b.nme) match
-          case None => l
-          case Some(value) => BlockMemberSymbol(value, b.trees)
-        case _ => l
-      case Some(value) => value
+    val modNmeMap = modMap.map {
+      case (c1, c2) => c1.id.name -> c2.id.name
+    }
 
+    val nmeMap = clsNmeMap ++ modNmeMap
     
     val newBlk = defns.foldLeft(blk)((acc, defn) => Define(defn, acc))
-    newBlk.mapSyms(symMap)
+
+    given SymbolSubst with
+      override def mapBlockMemberSym(b: BlockMemberSymbol) = bmsMap.get(b) match
+        case None => clsNmeMap.get(b.nme) match
+          case None => b
+          case Some(value) => BlockMemberSymbol(value, b.trees) // TODO: refactor once BlockMemberSymbol changes are in place
+        case Some(value) => value
+      override def mapClsSym(s: ClassSymbol): ClassSymbol = clsMap.get(s).getOrElse(s)
+      override def mapModuleSym(s: ModuleSymbol): ModuleSymbol = modMap.get(s).getOrElse(s)
+      override def mapTermSym(s: TermSymbol): TermSymbol = TermSymbol(s.k, s.owner.map(_.subst), s.id)
+
+    newBlk.mapSyms
   
   private def translateFun(f: FunDefn): FunDefn =
     FunDefn(f.sym, f.params, translateBlock(f.body, functionHandlerCtx))

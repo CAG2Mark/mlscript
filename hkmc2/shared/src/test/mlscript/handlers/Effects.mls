@@ -322,3 +322,36 @@ handle h = Eff with
   fun perform()(k) = k(())
 foo(h)
 //│ = 2
+
+:handler
+:expect 3
+fun foo(h) =
+  h.perform()
+  if false then
+    fun g() = 2
+    g()
+  else
+    fun g() = 3
+    g()
+handle h = Eff with
+  fun perform()(k) = k(())
+foo(h)
+//│ = 3
+
+:handler
+:expect 3
+:fixme
+fun foo(h) =
+  h.perform()
+  if false then
+    class A() with
+      fun f() = 2
+    A().f()
+  else
+    class A() with
+      fun f() = 3
+    A().f()
+handle h = Eff with
+  fun perform()(k) = k(())
+foo(h)
+//│ ═══[RUNTIME ERROR] Expected: 3, got: 2
