@@ -152,14 +152,12 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
     // for readability :)
     case class PartRet(head: Block, states: Ls[BlockState])
 
-    /* 
-    * returns (truncated input block, child block states)
-    * TODO: don't split within Match, Begin and Labels when not needed, ideally keep it intact. Need careful analysis for this
-    * blk: The block to transform
-    * labelIds: maps label IDs to the state at the start of the label and the state after the label
-    * jumpTo: what state End should jump to, if at all 
-    * freshState: uid generator
-    */
+    // * returns (truncated input block, child block states)
+    // * blk: The block to transform
+    // * labelIds: maps label IDs to the state at the start of the label and the state after the label
+    // * jumpTo: what state End should jump to, if at all 
+    // * freshState: uid generator
+    // TODO: don't split within Match, Begin and Labels when not needed, ideally keep it intact. Need careful analysis for this.
     def go(blk: Block)(implicit labelIds: Map[Symbol, (StateId, StateId)], afterEnd: Option[StateId]): PartRet = blk match
       case ResumptionPoint(result, uid, rest) =>
         val PartRet(head, states) = go(rest)
@@ -334,45 +332,45 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
       l
 
     val toConvert = getBms.map(b =>
-      val clsDefn = b.asCls
-      val modDefn = b.asMod
-      // check if this BlockMemberSymbol belongs to a definition in this block
-      val isThisBlock = clsDefn match
-        case None => modDefn match
-          case None => false
+        val clsDefn = b.asCls
+        val modDefn = b.asMod
+        // check if this BlockMemberSymbol belongs to a definition in this block
+        val isThisBlock = clsDefn match
+          case None => modDefn match
+            case None => false
+            case Some(value) => clsDefns.contains(value)
           case Some(value) => clsDefns.contains(value)
-        case Some(value) => clsDefns.contains(value)
-      if isThisBlock then Some(b)
-      else None
-    ).collect { case Some(b) => b }
+        if isThisBlock then Some(b)
+        else None
+      ).collect { case Some(b) => b }
 
     val fnBmsMap = funDefns.map(b =>
-      b -> BlockMemberSymbol(b.nme + "$" + thirdPassFresh(), b.trees)
-    ).toMap
+        b -> BlockMemberSymbol(b.nme + "$" + thirdPassFresh(), b.trees)
+      ).toMap
 
     val clsBmsMap = toConvert.map(b =>
-      b -> BlockMemberSymbol(b.nme + "$" + thirdPassFresh(), b.trees)  
-    ).toMap
+        b -> BlockMemberSymbol(b.nme + "$" + thirdPassFresh(), b.trees)  
+      ).toMap
 
     val bmsMap = (fnBmsMap ++ clsBmsMap).toMap
 
     val clsMap = clsBmsMap.map:
-      case b1 -> b2 => b1.asCls match
-        case Some(value) => 
-          val newSym = ClassSymbol(value.tree, Tree.Ident(b2.nme))
-          newSym.defn = value.defn
-          S(value -> newSym)
-        case None => None
-    .collect{ case Some(x) => x }.toMap 
+        case b1 -> b2 => b1.asCls match
+          case Some(value) => 
+            val newSym = ClassSymbol(value.tree, Tree.Ident(b2.nme))
+            newSym.defn = value.defn
+            S(value -> newSym)
+          case None => None
+      .collect{ case Some(x) => x }.toMap 
 
     val modMap = clsBmsMap.map:
-      case b1 -> b2 => b1.asMod match
-        case Some(value) => 
-          val newSym = ModuleSymbol(value.tree, Tree.Ident(b2.nme))
-          newSym.defn = value.defn
-          S(value -> newSym)
-        case None => None
-    .collect{ case Some(x) => x }.toMap
+        case b1 -> b2 => b1.asMod match
+          case Some(value) => 
+            val newSym = ModuleSymbol(value.tree, Tree.Ident(b2.nme))
+            newSym.defn = value.defn
+            S(value -> newSym)
+          case None => None
+      .collect{ case Some(x) => x }.toMap
     
     val newBlk = defns.foldLeft(blk)((acc, defn) => Define(defn, acc))
 

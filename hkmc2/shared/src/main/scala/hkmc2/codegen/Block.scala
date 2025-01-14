@@ -355,7 +355,7 @@ case class End(msg: Str = "") extends BlockTail with ProductWithTail
 
 enum Case:
   case Lit(lit: Literal)
-  case Cls(cls: ClassLikeSymbol | ModuleSymbol, path: Path)
+  case Cls(cls: ClassLikeSymbol, path: Path)
   case Tup(len: Int, inf: Bool)
 
   lazy val freeVars: Set[Local] = this match
