@@ -68,29 +68,25 @@ class FlowSymbol(label: Str)(using State) extends Symbol:
   override def toString: Str =
     label + State.dbgUid(uid)
 
-  override def subst(using s: SymbolSubst): FlowSymbol = s.mapFlowSym(this)
+  def subst(using s: SymbolSubst): FlowSymbol = s.mapFlowSym(this)
 
 
 sealed trait LocalSymbol extends Symbol:
-  override def subst(using s: SymbolSubst): LocalSymbol
+  def subst(using s: SymbolSubst): LocalSymbol
 sealed trait NamedSymbol extends Symbol:
   def name: Str
   def id: Ident
-  override def subst(using s: SymbolSubst): NamedSymbol
+  def subst(using s: SymbolSubst): NamedSymbol
 
-abstract class BlockLocalSymbol(name: Str)(using State) extends FlowSymbol(name) with LocalSymbol:
+abstract class BlockLocalSymbol(name: Str)(using State) extends FlowSymbol(name):
+  self: LocalSymbol => // * using `with LocalSymbol` in the `extends` clause makes Scala think there's a bad override
   var decl: Opt[Declaration] = N
-  // HACK: for some reason, if there is no concrete implementation, Scala overrides this subst with the one in
-  // FlowSymbol and then gives a type error because FlowSymbol is not a subtype of BlockLocalSymbol...
-  // Any way to force it to be abstract?
-  // For now, you should be careful when extending BlockLocalSymbol.
-  override def subst(using SymbolSubst): BlockLocalSymbol = lastWords("tried to subst BlockLocalSymbol")
 
-class TempSymbol(val trm: Opt[Term], dbgNme: Str = "tmp")(using State) extends BlockLocalSymbol(dbgNme):
+class TempSymbol(val trm: Opt[Term], dbgNme: Str = "tmp")(using State) extends BlockLocalSymbol(dbgNme) with LocalSymbol:
   val nameHints: MutSet[Str] = MutSet.empty
   override def toLoc: Option[Loc] = trm.flatMap(_.toLoc)
   override def toString: Str = s"$$${super.toString}"
-  override def subst(using s: SymbolSubst): BlockLocalSymbol = s.mapTempSym(this)
+  override def subst(using s: SymbolSubst): TempSymbol = s.mapTempSym(this)
 
 
 // * When instantiating forall-qualified TVs, we need to duplicate the information
@@ -101,10 +97,10 @@ class InstSymbol(val origin: Symbol)(using State) extends LocalSymbol:
   override def toLoc: Option[Loc] = origin.toLoc
   override def toString: Str = origin.toString
 
-  override def subst(using sub: SymbolSubst): InstSymbol = sub.mapInstSym(this)
+  def subst(using sub: SymbolSubst): InstSymbol = sub.mapInstSym(this)
 
 
-class VarSymbol(val id: Ident)(using State) extends BlockLocalSymbol(id.name) with NamedSymbol:
+class VarSymbol(val id: Ident)(using State) extends BlockLocalSymbol(id.name) with NamedSymbol with LocalSymbol:
   val name: Str = id.name
   // override def toString: Str = s"$name@$uid"
   override def subst(using s: SymbolSubst): VarSymbol = s.mapVarSym(this)
@@ -115,7 +111,7 @@ class BuiltinSymbol
   def toLoc: Option[Loc] = N
   override def toString: Str = s"builtin:$nme${State.dbgUid(uid)}"
 
-  override def subst(using sub: SymbolSubst): BuiltinSymbol = sub.mapBuiltInSym(this)
+  def subst(using sub: SymbolSubst): BuiltinSymbol = sub.mapBuiltInSym(this)
 
 
 /** This is the outside-facing symbol associated to a possibly-overloaded
@@ -147,7 +143,7 @@ class BlockMemberSymbol(val nme: Str, val trees: Ls[Tree])(using State)
   override val isGetter: Bool = // TODO: this should be checked based on a special syntax for getter
     trmImplTree.exists(t => t.k === Fun && t.paramLists.isEmpty)
 
-  override def subst(using sub: SymbolSubst): BlockMemberSymbol = sub.mapBlockMemberSym(this)
+  def subst(using sub: SymbolSubst): BlockMemberSymbol = sub.mapBlockMemberSym(this)
 
 end BlockMemberSymbol
 
@@ -166,11 +162,11 @@ class TermSymbol(val k: TermDefKind, val owner: Opt[InnerSymbol], val id: Tree.I
   def toLoc: Option[Loc] = id.toLoc
   override def toString: Str = s"${owner.getOrElse("")}.${id.name}"
   
-  override def subst(using sub: SymbolSubst): TermSymbol = sub.mapTermSym(this)
+  def subst(using sub: SymbolSubst): TermSymbol = sub.mapTermSym(this)
 
 
 sealed trait CtorSymbol extends Symbol:
-  override def subst(using sub: SymbolSubst): CtorSymbol = sub.mapCtorSym(this)
+  def subst(using sub: SymbolSubst): CtorSymbol = sub.mapCtorSym(this)
 
 case class Extr(isTop: Bool)(using State) extends CtorSymbol:
   def nme: Str = if isTop then "Top" else "Bot"
@@ -221,7 +217,7 @@ class TypeAliasSymbol(val id: Tree.Ident)(using State) extends MemberSymbol[Type
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of type alias here
   override def toString: Str = s"module:${id.name}${State.dbgUid(uid)}"
 
-  override def subst(using sub: SymbolSubst): TypeAliasSymbol = sub.mapTypeAliasSym(this)
+  def subst(using sub: SymbolSubst): TypeAliasSymbol = sub.mapTypeAliasSym(this)
 
 class PatternSymbol(val id: Tree.Ident)(using State)
     extends MemberSymbol[PatternDef] with CtorSymbol with InnerSymbol:
@@ -237,4 +233,4 @@ class TopLevelSymbol(blockNme: Str)(using State)
   def toLoc: Option[Loc] = N
   override def toString: Str = s"globalThis:$blockNme${State.dbgUid(uid)}"
 
-  override def subst(using sub: SymbolSubst): TopLevelSymbol = sub.mapTopLevelSym(this)
+  def subst(using sub: SymbolSubst): TopLevelSymbol = sub.mapTopLevelSym(this)
