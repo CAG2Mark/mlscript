@@ -152,12 +152,14 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
     // for readability :)
     case class PartRet(head: Block, states: Ls[BlockState])
 
-    // returns (truncated input block, child block states)
-    // TODO: don't split within Match, Begin and Labels when not needed, ideally keep it intact. Need careful analysis for this
-    // blk: The block to transform
-    // labelIds: maps label IDs to the state at the start of the label and the state after the label
-    // jumpTo: what state End should jump to, if at all 
-    // freshState: uid generator
+    /* 
+    * returns (truncated input block, child block states)
+    * TODO: don't split within Match, Begin and Labels when not needed, ideally keep it intact. Need careful analysis for this
+    * blk: The block to transform
+    * labelIds: maps label IDs to the state at the start of the label and the state after the label
+    * jumpTo: what state End should jump to, if at all 
+    * freshState: uid generator
+    */
     def go(blk: Block)(implicit labelIds: Map[Symbol, (StateId, StateId)], afterEnd: Option[StateId]): PartRet = blk match
       case ResumptionPoint(result, uid, rest) =>
         val PartRet(head, states) = go(rest)
@@ -279,11 +281,11 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
    */
   
   private def translateBlock(b: Block, h: HandlerCtx): Block =
-    given HandlerCtx = h
-    
+    given HandlerCtx = h  
     val stage1 = firstPass(b)
     val stage2 = secondPass(stage1)
     if h.isTopLevel then stage2 else thirdPass(stage2)
+  
   private def firstPass(b: Block)(using HandlerCtx): Block =
     b.map(firstPass) match
       case b: HandleBlock => translateHandleBlock(b)
@@ -316,12 +318,11 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
     // to ensure the fun and class references in the continuation class are properly scoped,
     // we move all function defns to the top level of the handler block
     val (blk, defns) = b.floatOutDefns
-    val clsDefns = defns.collect {
+    val clsDefns = defns.collect:
       case ClsLikeDefn(sym, k, parentPath, methods, privateFields, publicFields, preCtor, ctor) => sym
-    }
-    val funDefns = defns.collect {
+    
+    val funDefns = defns.collect:
       case FunDefn(sym, params, body) => sym
-    }
 
     def getBms =
       var l: List[BlockMemberSymbol] = Nil
@@ -345,10 +346,9 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
       else None
     ).collect { case Some(b) => b }
 
-    val fnBmsMap = funDefns.map {
-      case sym: BlockMemberSymbol => 
-        sym -> BlockMemberSymbol(sym.nme + "$" + thirdPassFresh(), sym.trees)
-    }.toMap
+    val fnBmsMap = funDefns.map(b =>
+      b -> BlockMemberSymbol(b.nme + "$" + thirdPassFresh(), b.trees)
+    ).toMap
 
     val clsBmsMap = toConvert.map(b =>
       b -> BlockMemberSymbol(b.nme + "$" + thirdPassFresh(), b.trees)  
@@ -356,23 +356,23 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
 
     val bmsMap = (fnBmsMap ++ clsBmsMap).toMap
 
-    val clsMap = clsBmsMap.map {
+    val clsMap = clsBmsMap.map:
       case b1 -> b2 => b1.asCls match
         case Some(value) => 
           val newSym = ClassSymbol(value.tree, Tree.Ident(b2.nme))
           newSym.defn = value.defn
           S(value -> newSym)
         case None => None
-    }.collect{ case Some(x) => x }.toMap 
+    .collect{ case Some(x) => x }.toMap 
 
-    val modMap = clsBmsMap.map {
+    val modMap = clsBmsMap.map:
       case b1 -> b2 => b1.asMod match
         case Some(value) => 
           val newSym = ModuleSymbol(value.tree, Tree.Ident(b2.nme))
           newSym.defn = value.defn
           S(value -> newSym)
         case None => None
-    }.collect{ case Some(x) => x }.toMap
+    .collect{ case Some(x) => x }.toMap
     
     val newBlk = defns.foldLeft(blk)((acc, defn) => Define(defn, acc))
 
