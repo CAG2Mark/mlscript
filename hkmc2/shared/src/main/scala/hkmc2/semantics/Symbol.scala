@@ -187,8 +187,9 @@ type TypeSymbol = ClassSymbol | TypeAliasSymbol
 
 type FieldSymbol = TermSymbol | MemberSymbol[?]
 
-abstract class ClassLikeSymbol(using State) extends MemberSymbol[ClassDef | ModuleDef]:
-  override def subst(using sub: SymbolSubst): ClassLikeSymbol
+sealed trait ClassLikeSymbol extends Symbol:
+  self: MemberSymbol[? <: ClassDef | ModuleDef] =>
+  def subst(using sub: SymbolSubst): ClassLikeSymbol
 
 
 /** This is the symbol associated to specific definitions.
@@ -198,7 +199,7 @@ sealed trait InnerSymbol extends Symbol:
   def subst(using SymbolSubst): InnerSymbol
 
 class ClassSymbol(val tree: Tree.TypeDef, val id: Tree.Ident)(using State)
-    extends ClassLikeSymbol with CtorSymbol with InnerSymbol:
+    extends MemberSymbol[ClassDef] with ClassLikeSymbol with CtorSymbol with InnerSymbol:
   def nme = id.name
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of classe here
   override def toString: Str = s"class:$nme${State.dbgUid(uid)}"
@@ -208,7 +209,7 @@ class ClassSymbol(val tree: Tree.TypeDef, val id: Tree.Ident)(using State)
   override def subst(using sub: SymbolSubst): ClassSymbol = sub.mapClsSym(this)
 
 class ModuleSymbol(val tree: Tree.TypeDef, val id: Tree.Ident)(using State)
-    extends ClassLikeSymbol with CtorSymbol with InnerSymbol:
+    extends MemberSymbol[ModuleDef] with ClassLikeSymbol with CtorSymbol with InnerSymbol:
   def nme = id.name
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of module here
   override def toString: Str = s"module:${id.name}${State.dbgUid(uid)}"
