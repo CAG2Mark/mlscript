@@ -53,38 +53,56 @@ class StackSafeTransform(depthLimit: Int)(using State):
 
   // Increases the stack depth, assigns the call to a value, then decreases the stack depth
   // then binds that value to a desired block
-  def extractRes(res: Result, decrement: Bool, f: Result => Block) =
+  def extractRes(res: Result, isTailCall: Bool, f: Result => Block) =
     res match
       case Call(Value.Ref(s: BuiltinSymbol), args) => f(res)
       case Call(path, args) =>
-        val tmp = TempSymbol(None, "tmp")
-        val inc = blockBuilder
-          .assignFieldN(predefPath, STACK_DEPTH_IDENT, op("+", stackDepthPath, intLit(1)))
-        
-        if decrement then
-          inc
-            .assign(tmp, res)
-            .assignFieldN(predefPath, STACK_DEPTH_IDENT, op("-", stackDepthPath, intLit(1)))
-            .rest(f(tmp.asPath))
+        if isTailCall then
+          blockBuilder
+            .assignFieldN(predefPath, STACK_DEPTH_IDENT, op("+", stackDepthPath, intLit(1)))
+            .ret(res)
         else
-          inc.ret(res)
+          val tmp = TempSymbol(None, "tmp")
+          val prevDepth = TempSymbol(None, "prevDepth")
+          blockBuilder
+            .assign(prevDepth, stackDepthPath)
+            .assignFieldN(predefPath, STACK_DEPTH_IDENT, op("+", stackDepthPath, intLit(1)))
+            .assign(tmp, res)
+            .assignFieldN(predefPath, STACK_DEPTH_IDENT, prevDepth.asPath)
+            .rest(f(tmp.asPath))
       case _ => f(res)
 
   // Rewrites anything that can contain a Call to increase the stack depth
-  def transform(b: Block): Block = b match
-    case Return(c: Call, implct) => extractRes(c, false, Return(_, false))
-    case Return(res, implct) => extractRes(res, true, Return(_, false))
-    case Assign(lhs, rhs, rest) => extractRes(rhs, true, Assign(lhs, _, transform(rest)))
-    case b @ AssignField(lhs, nme, rhs, rest) => extractRes(rhs, true, AssignField(lhs, nme, _, transform(rest))(b.symbol))
-    case Define(defn, rest) => Define(rewriteDefn(defn), transform(rest))
-    case HandleBlock(lhs, res, par, cls, handlers, body, rest) =>
-      HandleBlock(
-        lhs, res, par, cls, handlers.map(h => Handler(h.sym, h.resumeSym, h.params, transform(h.body))),
-        transform(body), transform(rest)
-      )
-    case HandleBlockReturn(c: Call) => extractRes(c, false, HandleBlockReturn(_))
-    case HandleBlockReturn(res) => extractRes(res, true, HandleBlockReturn(_))
-    case _ => b.map(transform)
+  def transform(b: Block): Block = 
+    // 1. rewrite lambdas
+    def firstPass(b: Block): Block = b.map(firstPass) match
+      case HandleBlock(lhs, res, par, cls, handlers, body, rest) =>
+        HandleBlock(
+          lhs, res, par, cls, handlers.map(h => Handler(h.sym, h.resumeSym, h.params, firstPass(h.body))),
+          firstPass(body), firstPass(rest)
+        )
+      case b => b.mapValue {
+        case Value.Lam(params, body) => Value.Lam(params, rewriteBlk(body))
+        case v => v
+      }
+    
+    // 2. rewrite calls and definitions
+    def secondPass(b: Block): Block = b match
+      case Return(c: Call, implct) => extractRes(c, true, Return(_, false))
+      case Return(res, implct) => extractRes(res, false, Return(_, false))
+      case Assign(lhs, rhs, rest) => extractRes(rhs, false, Assign(lhs, _, secondPass(rest)))
+      case b @ AssignField(lhs, nme, rhs, rest) => extractRes(rhs, false, AssignField(lhs, nme, _, secondPass(rest))(b.symbol))
+      case Define(defn, rest) => Define(rewriteDefn(defn), secondPass(rest))
+      case HandleBlock(lhs, res, par, cls, handlers, body, rest) =>
+        HandleBlock(
+          lhs, res, par, cls, handlers.map(h => Handler(h.sym, h.resumeSym, h.params, secondPass(h.body))),
+          secondPass(body), secondPass(rest)
+        )
+      case HandleBlockReturn(c: Call) => extractRes(c, true, HandleBlockReturn(_))
+      case HandleBlockReturn(res) => extractRes(res, false, HandleBlockReturn(_))
+      case _ => b.map(secondPass)
+    
+    secondPass(firstPass(b))
   
   // TODO: this will just do some simple analysis. some more in-depth analysis could be done at some other point
   def isTrivial(b: Block): Boolean = b match
@@ -141,7 +159,12 @@ class StackSafeTransform(depthLimit: Int)(using State):
 
   def transformTopLevel(b: Block) =
     def replaceReturns(b: Block): Block = b match
-      case Return(res, false) => HandleBlockReturn(res)
+      case Return(res, _) => HandleBlockReturn(res)
+      case HandleBlock(lhs, res, par, cls, handlers, body, rest) =>
+        HandleBlock(
+          lhs, res, par, cls, handlers,
+          replaceReturns(body), replaceReturns(rest)
+        )
       case _ => b.map(replaceReturns)
     
     // symbols

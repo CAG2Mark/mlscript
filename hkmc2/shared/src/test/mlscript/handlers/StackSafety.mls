@@ -10,6 +10,7 @@ sum(100)
 //│ = 5050
 
 // preserve tail calls
+// MUST see "return globalThis.hi(tmp)" in the output
 :stackSafe 5
 :handler
 :expect 0
@@ -22,8 +23,8 @@ hi(0)
 //│ let res;
 //│ function hi(n) {
 //│   let scrut, tmp, diff, scrut1, scrut2, scrut3, tmp1, res1;
-//│   function Cont$243(pc1) { return new Cont$243.class(pc1); }
-//│   Cont$243.class = class Cont$243 extends globalThis.Predef.__Cont.class {
+//│   function Cont$241(pc1) { return new Cont$241.class(pc1); }
+//│   Cont$241.class = class Cont$241 extends globalThis.Predef.__Cont.class {
 //│     constructor(pc) {
 //│       let tmp2;
 //│       tmp2 = super(null, null);
@@ -72,7 +73,7 @@ hi(0)
 //│         break;
 //│       }
 //│     }
-//│     toString() { return "Cont$243(" + this.pc + ")"; }
+//│     toString() { return "Cont$241(" + this.pc + ")"; }
 //│   };
 //│   diff = globalThis.Predef.__stackDepth - globalThis.Predef.__stackOffset;
 //│   scrut1 = diff >= 5;
@@ -81,7 +82,7 @@ hi(0)
 //│   if (scrut3) {
 //│     res1 = globalThis.Predef.__stackHandler.perform();
 //│     if (res1 instanceof globalThis.Predef.__EffectSig.class) {
-//│       res1.tail.next = new Cont$243.class(6);
+//│       res1.tail.next = new Cont$241.class(6);
 //│       res1.tail = res1.tail.next;
 //│       return res1;
 //│     }
@@ -106,8 +107,8 @@ hi(0)
 //│     perform() {
 //│       return globalThis.Predef.__mkEffect(stackHandler, (resume) => {
 //│         let res2, curOffset, res3;
-//│         function Cont$218(pc1) { return new Cont$218.class(pc1); }
-//│         Cont$218.class = class Cont$218 extends globalThis.Predef.__Cont.class {
+//│         function Cont$216(pc1) { return new Cont$216.class(pc1); }
+//│         Cont$216.class = class Cont$216 extends globalThis.Predef.__Cont.class {
 //│           constructor(pc) {
 //│             let tmp;
 //│             tmp = super(null, null);
@@ -137,13 +138,13 @@ hi(0)
 //│               break;
 //│             }
 //│           }
-//│           toString() { return "Cont$218(" + this.pc + ")"; }
+//│           toString() { return "Cont$216(" + this.pc + ")"; }
 //│         };
 //│         curOffset = globalThis.Predef.__stackOffset;
 //│         globalThis.Predef.__stackOffset = globalThis.Predef.__stackDepth;
 //│         res3 = resume();
 //│         if (res3 instanceof globalThis.Predef.__EffectSig.class) {
-//│           res3.tail.next = new Cont$218.class(3);
+//│           res3.tail.next = new Cont$216.class(3);
 //│           res3.tail = res3.tail.next;
 //│           return res3;
 //│         }
@@ -155,8 +156,8 @@ hi(0)
 //│     toString() { return "StackDelay$"; }
 //│   }
 //│   stackHandler = new StackDelay$();
-//│   function Cont$194(pc1) { return new Cont$194.class(pc1); }
-//│   Cont$194.class = class Cont$194 extends globalThis.Predef.__Cont.class {
+//│   function Cont$192(pc1) { return new Cont$192.class(pc1); }
+//│   Cont$192.class = class Cont$192 extends globalThis.Predef.__Cont.class {
 //│     constructor(pc) {
 //│       let tmp;
 //│       tmp = super(null, null);
@@ -185,14 +186,14 @@ hi(0)
 //│         break;
 //│       }
 //│     }
-//│     toString() { return "Cont$194(" + this.pc + ")"; }
+//│     toString() { return "Cont$192(" + this.pc + ")"; }
 //│   };
 //│   globalThis.Predef.__stackDepth = 0;
 //│   globalThis.Predef.__stackHandler = stackHandler;
 //│   globalThis.Predef.__stackDepth = globalThis.Predef.__stackDepth + 1;
 //│   res1 = globalThis.hi(0);
 //│   if (res1 instanceof globalThis.Predef.__EffectSig.class) {
-//│     res1.tail.next = new Cont$194(1);
+//│     res1.tail.next = new Cont$192(1);
 //│     return globalThis.Predef.__handleBlockImpl(res1, stackHandler);
 //│   }
 //│   return res1;
@@ -218,9 +219,9 @@ sum(10000)
 //│ JS (unsanitized):
 //│ let res;
 //│ function sum(n) {
-//│   let scrut, tmp, tmp1, diff, scrut1, scrut2, scrut3, tmp2, tmp3, res1, res2;
-//│   function Cont$488(pc1) { return new Cont$488.class(pc1); }
-//│   Cont$488.class = class Cont$488 extends globalThis.Predef.__Cont.class {
+//│   let scrut, tmp, tmp1, diff, scrut1, scrut2, scrut3, tmp2, prevDepth, tmp3, res1, res2;
+//│   function Cont$484(pc1) { return new Cont$484.class(pc1); }
+//│   Cont$484.class = class Cont$484 extends globalThis.Predef.__Cont.class {
 //│     constructor(pc) {
 //│       let tmp4;
 //│       tmp4 = super(null, null);
@@ -256,6 +257,7 @@ sum(10000)
 //│             return 0;
 //│           } else {
 //│             tmp = n - 1;
+//│             prevDepth = globalThis.Predef.__stackDepth;
 //│             globalThis.Predef.__stackDepth = globalThis.Predef.__stackDepth + 1;
 //│             res2 = globalThis.sum(tmp);
 //│             if (res2 instanceof globalThis.Predef.__EffectSig.class) {
@@ -272,7 +274,7 @@ sum(10000)
 //│           break contLoop;
 //│         } else if (this.pc === 7) {
 //│           tmp2 = res2;
-//│           globalThis.Predef.__stackDepth = globalThis.Predef.__stackDepth - 1;
+//│           globalThis.Predef.__stackDepth = prevDepth;
 //│           tmp1 = tmp2;
 //│           return n + tmp1;
 //│         } else if (this.pc === 6) {
@@ -283,7 +285,7 @@ sum(10000)
 //│         break;
 //│       }
 //│     }
-//│     toString() { return "Cont$488(" + this.pc + ")"; }
+//│     toString() { return "Cont$484(" + this.pc + ")"; }
 //│   };
 //│   diff = globalThis.Predef.__stackDepth - globalThis.Predef.__stackOffset;
 //│   scrut1 = diff >= 1000;
@@ -292,7 +294,7 @@ sum(10000)
 //│   if (scrut3) {
 //│     res1 = globalThis.Predef.__stackHandler.perform();
 //│     if (res1 instanceof globalThis.Predef.__EffectSig.class) {
-//│       res1.tail.next = new Cont$488.class(6);
+//│       res1.tail.next = new Cont$484.class(6);
 //│       res1.tail = res1.tail.next;
 //│       return res1;
 //│     }
@@ -303,15 +305,16 @@ sum(10000)
 //│     return 0;
 //│   } else {
 //│     tmp = n - 1;
+//│     prevDepth = globalThis.Predef.__stackDepth;
 //│     globalThis.Predef.__stackDepth = globalThis.Predef.__stackDepth + 1;
 //│     res2 = globalThis.sum(tmp);
 //│     if (res2 instanceof globalThis.Predef.__EffectSig.class) {
-//│       res2.tail.next = new Cont$488.class(7);
+//│       res2.tail.next = new Cont$484.class(7);
 //│       res2.tail = res2.tail.next;
 //│       return res2;
 //│     }
 //│     tmp2 = res2;
-//│     globalThis.Predef.__stackDepth = globalThis.Predef.__stackDepth - 1;
+//│     globalThis.Predef.__stackDepth = prevDepth;
 //│     tmp1 = tmp2;
 //│     return n + tmp1;
 //│   }
@@ -326,8 +329,8 @@ sum(10000)
 //│     perform() {
 //│       return globalThis.Predef.__mkEffect(stackHandler, (resume) => {
 //│         let res2, curOffset, res3;
-//│         function Cont$462(pc1) { return new Cont$462.class(pc1); }
-//│         Cont$462.class = class Cont$462 extends globalThis.Predef.__Cont.class {
+//│         function Cont$458(pc1) { return new Cont$458.class(pc1); }
+//│         Cont$458.class = class Cont$458 extends globalThis.Predef.__Cont.class {
 //│           constructor(pc) {
 //│             let tmp;
 //│             tmp = super(null, null);
@@ -357,13 +360,13 @@ sum(10000)
 //│               break;
 //│             }
 //│           }
-//│           toString() { return "Cont$462(" + this.pc + ")"; }
+//│           toString() { return "Cont$458(" + this.pc + ")"; }
 //│         };
 //│         curOffset = globalThis.Predef.__stackOffset;
 //│         globalThis.Predef.__stackOffset = globalThis.Predef.__stackDepth;
 //│         res3 = resume();
 //│         if (res3 instanceof globalThis.Predef.__EffectSig.class) {
-//│           res3.tail.next = new Cont$462.class(3);
+//│           res3.tail.next = new Cont$458.class(3);
 //│           res3.tail = res3.tail.next;
 //│           return res3;
 //│         }
@@ -375,8 +378,8 @@ sum(10000)
 //│     toString() { return "StackDelay$"; }
 //│   }
 //│   stackHandler = new StackDelay$();
-//│   function Cont$438(pc1) { return new Cont$438.class(pc1); }
-//│   Cont$438.class = class Cont$438 extends globalThis.Predef.__Cont.class {
+//│   function Cont$434(pc1) { return new Cont$434.class(pc1); }
+//│   Cont$434.class = class Cont$434 extends globalThis.Predef.__Cont.class {
 //│     constructor(pc) {
 //│       let tmp;
 //│       tmp = super(null, null);
@@ -405,14 +408,14 @@ sum(10000)
 //│         break;
 //│       }
 //│     }
-//│     toString() { return "Cont$438(" + this.pc + ")"; }
+//│     toString() { return "Cont$434(" + this.pc + ")"; }
 //│   };
 //│   globalThis.Predef.__stackDepth = 0;
 //│   globalThis.Predef.__stackHandler = stackHandler;
 //│   globalThis.Predef.__stackDepth = globalThis.Predef.__stackDepth + 1;
 //│   res1 = globalThis.sum(10000);
 //│   if (res1 instanceof globalThis.Predef.__EffectSig.class) {
-//│     res1.tail.next = new Cont$438(1);
+//│     res1.tail.next = new Cont$434(1);
 //│     return globalThis.Predef.__handleBlockImpl(res1, stackHandler);
 //│   }
 //│   return res1;
@@ -426,11 +429,74 @@ sum(10000)
 //│ res
 //│ = 50005000
 
-// stack-overflows without
+// stack-overflows without :stackSafe
 :re
 fun sum(n) =
   if n == 0 then 0
   else
     n + sum(n - 1)
 sum(10000)
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+
+:handler
+:stackSafe 100
+mut val ctr = 0
+fun dummy(x) = x
+fun foo(f) = 
+  if ctr > 10000 then 0
+  else 
+    set ctr += 1
+    dummy(f(f))
+foo(foo)
+//│ = 0
+//│ ctr = 10001
+
+:stackSafe 1000
+:handler
+:expect 50005000
+val foo =
+  val f = n =>
+    if n <= 0 then 0
+    else n + f(n-1)
+  f(10000)
+foo
+//│ = 50005000
+//│ foo = 50005000
+
+:re
+fun foo() =
+  val f = n =>
+    if n <= 0 then 0
+    else n + f(n-1)
+  f(10000)
+foo()
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+
+abstract class Eff with
+  fun perform(a): ()
+
+// functions and lambdas inside handlers
+:handler
+:stackSafe 100
+:expect 50005000
+fun foo(h) = h.perform
+handle h = Eff with
+  fun perform(resume) =
+    val f = n =>
+      if n <= 0 then 0
+      else n + f(n-1)
+    resume(f(10000))
+foo(h)
+//│ = 50005000
+
+:re
+:handler
+fun foo(h) = h.perform(2)
+handle h = Eff with
+  fun perform(a)(resume) =
+    val f = n =>
+      if n <= 0 then 0
+      else n + f(n-1)
+    resume(f(10000))
+foo(h)
 //│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded

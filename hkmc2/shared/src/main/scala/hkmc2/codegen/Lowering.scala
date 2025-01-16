@@ -432,7 +432,7 @@ class Lowering(lowerHandlers: Bool, stackLimit: Option[Int])(using TL, Raise, St
       case Some(lim) => StackSafeTransform(lim).transformTopLevel(res)
     
     if lowerHandlers then HandlerLowering().translateTopLevel(stackSafe)
-    else res
+    else stackSafe
   
   def program(main: st): Program =
     def go(acc: Ls[Local -> Str], trm: st): Program =
