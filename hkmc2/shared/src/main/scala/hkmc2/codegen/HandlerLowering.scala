@@ -274,7 +274,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
    * 2.
    *   a) generate continuation class
    *   b) generate normal function body
-   *   3. float out definitions
+   * 3. float out definitions
    */
   
   private def translateBlock(b: Block, h: HandlerCtx): Block =
