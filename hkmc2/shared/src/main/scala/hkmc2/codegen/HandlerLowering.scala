@@ -1,55 +1,29 @@
 package hkmc2
 package codegen
 
+import scala.annotation.tailrec
+
 import mlscript.utils.*, shorthands.*
-import utils.*
-
+import hkmc2.utils.*
+import hkmc2.utils.SymbolSubst
 import hkmc2.Message.MessageContext
-
-import semantics.Elaborator.State
 
 import syntax.{Literal, Tree, ParamBind}
 import semantics.*
-import scala.annotation.tailrec
-import hkmc2.semantics.Elaborator.ctx
-
-import hkmc2.utils.SymbolSubst
+import semantics.Elaborator.ctx
+import semantics.Elaborator.State
 
 object HandlerLowering:
 
   private val pcIdent: Tree.Ident = Tree.Ident("pc")
   private val nextIdent: Tree.Ident = Tree.Ident("next")
   private val tailIdent: Tree.Ident = Tree.Ident("tail")
-
-  extension (k: Block => Block)
-    
-    def chain(other: Block => Block): Block => Block = b => k(other(b))
-    def rest(b: Block): Block = k(b)
-    def transform(f: (Block => Block) => (Block => Block)) = f(k)
-    
-    def assign(l: Local, r: Result) = k.chain(Assign(l, r, _))
-    def assignFieldN(lhs: Path, nme: Tree.Ident, rhs: Result) = k.chain(AssignField(lhs, nme, rhs, _)(N))
-    def break(l: Local): Block = k.rest(Break(l))
-    def continue(l: Local): Block = k.rest(Continue(l))
-    def define(defn: Defn) = k.chain(Define(defn, _))
-    def end() = k.rest(End())
-    def ifthen(scrut: Path, cse: Case, trm: Block): Block => Block = k.chain(Match(scrut, cse -> trm :: Nil, N, _))
-    def label(label: Local, body: Block) = k.chain(Label(label, body, _))
-    def ret(r: Result) = k.rest(Return(r, false))
-    def staticif(b: Boolean, f: (Block => Block) => (Block => Block)) = if b then k.transform(f) else k
-    
-  private def blockBuilder: Block => Block = identity
   
   extension (p: Path)
-    def selN(id: Tree.Ident) = Select(p, id)(N)
     def pc = p.selN(pcIdent)
+    def value = p.selN(Tree.Ident("value"))
     def next = p.selN(nextIdent)
     def tail = p.selN(tailIdent)
-    def value = p.selN(Tree.Ident("value"))
-    def asArg = Arg(false, p)
-  
-  extension (l: Local)
-    def asPath: Path = Value.Ref(l)
   
   private case class LinkState(res: Path, cls: Path, uid: StateId)
   
@@ -173,7 +147,6 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
         
         val armsParts = arms.map((cse, blkk) => (cse, go(blkk)(afterEnd = S(restId))))
         val dfltParts = dflt.map(blkk => go(blkk)(afterEnd = S(restId)))
-        
 
         val states_ = restParts.states ::: armsParts.flatMap(_._2.states)
         val states = dfltParts match
@@ -218,7 +191,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
 
       case Break(label) =>
         val (start, end) = labelIds.get(label) match
-          case N => raise(ErrorReport(
+          case N => raise(InternalError(
             msg"Could not find label '${label.nme}'" ->
             label.toLoc :: Nil,
             source = Diagnostic.Source.Compilation))
@@ -227,7 +200,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
         PartRet(StateTransition(end), Nil)
       case Continue(label) =>
         val (start, end) = labelIds.get(label) match
-          case N => raise(ErrorReport(
+          case N => raise(InternalError(
             msg"Could not find label '${label.nme}'" ->
             label.toLoc :: Nil,
             source = Diagnostic.Source.Compilation))
@@ -275,8 +248,8 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
    * The actual translation:
    * 1. add call markers, transform class, function, lambda and sub handler blocks
    * 2.
-   * a) generate continuation class
-   * b) generate normal function body
+   *   a) generate continuation class
+   *   b) generate normal function body
    * 3. float out definitions
    */
   
@@ -286,13 +259,12 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
     val stage2 = secondPass(stage1)
     if h.isTopLevel then stage2 else thirdPass(stage2)
   
-  private def firstPass(b: Block)(using HandlerCtx): Block =
-    b.map(firstPass) match
-      case b: HandleBlock => translateHandleBlock(b)
-      case b => b.mapValue {
+  private def firstPass(b: Block)(using HandlerCtx): Block = b.map(firstPass) match
+    case b: HandleBlock => translateHandleBlock(b)
+    case b => b.mapValue:
         case Value.Lam(params, body) => Value.Lam(params, translateBlock(body, functionHandlerCtx))
         case v => v
-      } match {
+      .match
         case Return(c: Call, implct) if handlerCtx.isHandleFree => Return(c, implct)
         case b => b.mapResult:
           case r @ Call(Value.Ref(_: BuiltinSymbol), _) => N
@@ -300,11 +272,11 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
             val res = freshTmp("res")
             S(k => CallPlaceholder(res, freshId(), false, c, k(Value.Ref(res))))
           case r => N
-      } match
+      .match
         case Define(f: FunDefn, rst) => Define(translateFun(f), rst)
         case Define(c: ClsLikeDefn, rst) => Define(translateCls(c), rst)
         case b => b
-  
+
   private def secondPass(b: Block)(using HandlerCtx): Block =
     val cls = if handlerCtx.isTopLevel then N else genContClass(b)
     cls match

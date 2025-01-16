@@ -10,12 +10,6 @@ import hkmc2.syntax.Tree
 
 
 class StackSafeTransform(depthLimit: Int)(using State):
-  extension (l: Local)
-    def asPath: Path = Value.Ref(l)
-  extension (p: Path)
-    def selN(id: Tree.Ident) = Select(p, id)(N)
-    def asArg = Arg(false, p)
-
   private val STACK_DEPTH_IDENT: Tree.Ident = Tree.Ident("__stackDepth")
   private val STACK_OFFSET_IDENT: Tree.Ident = Tree.Ident("__stackOffset")
   private val STACK_HANDLER_IDENT: Tree.Ident = Tree.Ident("__stackHandler")
@@ -32,24 +26,6 @@ class StackSafeTransform(depthLimit: Int)(using State):
     Call(State.builtinOpsMap(op).asPath, List(a.asArg, b.asArg))(true)
 
   // TODO: this code is copied from HandlerLowering and is quite useful. Maybe refactor it into a utils file
-  extension (k: Block => Block)
-    
-    def chain(other: Block => Block): Block => Block = b => k(other(b))
-    def rest(b: Block): Block = k(b)
-    def transform(f: (Block => Block) => (Block => Block)) = f(k)
-    
-    def assign(l: Local, r: Result) = k.chain(Assign(l, r, _))
-    def assignFieldN(lhs: Path, nme: Tree.Ident, rhs: Result) = k.chain(AssignField(lhs, nme, rhs, _)(N))
-    def break(l: Local): Block = k.rest(Break(l))
-    def continue(l: Local): Block = k.rest(Continue(l))
-    def define(defn: Defn) = k.chain(Define(defn, _))
-    def end() = k.rest(End())
-    def ifthen(scrut: Path, cse: Case, trm: Block): Block => Block = k.chain(Match(scrut, cse -> trm :: Nil, N, _))
-    def label(label: Local, body: Block) = k.chain(Label(label, body, _))
-    def ret(r: Result) = k.rest(Return(r, false))
-    def staticif(b: Boolean, f: (Block => Block) => (Block => Block)) = if b then k.transform(f) else k
-    
-  private def blockBuilder: Block => Block = identity
 
   // Increases the stack depth, assigns the call to a value, then decreases the stack depth
   // then binds that value to a desired block
@@ -160,7 +136,7 @@ class StackSafeTransform(depthLimit: Int)(using State):
           scrutSym.asPath, Case.Lit(Tree.BoolLit(true)), 
           blockBuilder.assign( // tmp = perform(undefined)
             TempSymbol(None, "tmp"), 
-            Call(Select(stackHandlerPath, Tree.Ident("perform"))(N), Nil)(true)).end())
+            Call(Select(stackHandlerPath, Tree.Ident("perform"))(N), Nil)(true)).end)
         .rest(newBody)
      
   def rewriteFn(defn: FunDefn) = FunDefn(defn.sym, defn.params, rewriteBlk(defn.body))

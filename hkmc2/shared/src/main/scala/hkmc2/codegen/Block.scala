@@ -12,7 +12,6 @@ import hkmc2.semantics.{Term => st}
 import syntax.{Literal, Tree}
 import semantics.*
 import semantics.Term.*
-import scala.reflect.ClassTag
 import sem.Elaborator.State
 
 
@@ -105,20 +104,16 @@ sealed abstract class Block extends Product with AutoLocated:
       )
       case Value.Arr(elems) => Value.Arr(elems.map(a => Arg(a.spread, pathMap(a.value))))
 
-    def _resMap(r: Result) = r match
+    def resMap(r: Result) = r match
       case p: Path => pathMap(p)
       case c @ Call(fun, args) => Call(pathMap(fun), args.map(a => Arg(a.spread, pathMap(a.value))))(c.isMlsFun)
       case Instantiate(cls, args) => Instantiate(pathMap(cls), args.map(pathMap))
-
-    def resMap[T <: Result : ClassTag](l: T): T = _resMap(l) match
-      case r : T => r
-      case _ => l
 
     this match
       case Return(res, implct) => Return(resMap(res), implct)
       case Throw(exc: Path) => Throw(pathMap(exc))
       case Assign(l, r, rst) => Assign(l.subst, resMap(r), rst.mapSyms)
-      case blk @ AssignField(l, n, r, rst) => AssignField(pathMap(l), n, _resMap(r), rst.mapSyms)(blk.symbol)
+      case blk @ AssignField(l, n, r, rst) => AssignField(pathMap(l), n, resMap(r), rst.mapSyms)(blk.symbol)
       case Match(scrut, arms, dflt, rst) => 
         val newArms = arms.map((cse, blk) =>
           val newCse = cse match
@@ -394,7 +389,9 @@ case class Call(fun: Path, args: Ls[Arg])(val isMlsFun: Bool) extends Result
 
 case class Instantiate(cls: Path, args: Ls[Path]) extends Result
 
-sealed abstract class Path extends Result
+sealed abstract class Path extends Result:
+  def selN(id: Tree.Ident) = Select(this, id)(N)
+  def asArg = Arg(false, this)
 
 case class Select(qual: Path, name: Tree.Ident)(val symbol: Opt[FieldSymbol]) extends Path with ProductWithExtraInfo:
   def extraInfo: Str = symbol.mkString
@@ -408,3 +405,24 @@ enum Value extends Path:
 
 case class Arg(spread: Bool, value: Path)
 
+extension (k: Block => Block)
+  
+  def chain(other: Block => Block): Block => Block = b => k(other(b))
+  def rest(b: Block): Block = k(b)
+  def transform(f: (Block => Block) => (Block => Block)) = f(k)
+  
+  def assign(l: Local, r: Result) = k.chain(Assign(l, r, _))
+  def assignFieldN(lhs: Path, nme: Tree.Ident, rhs: Result) = k.chain(AssignField(lhs, nme, rhs, _)(N))
+  def break(l: Local): Block = k.rest(Break(l))
+  def continue(l: Local): Block = k.rest(Continue(l))
+  def define(defn: Defn) = k.chain(Define(defn, _))
+  def end = k.rest(End())
+  def ifthen(scrut: Path, cse: Case, trm: Block): Block => Block = k.chain(Match(scrut, cse -> trm :: Nil, N, _))
+  def label(label: Local, body: Block) = k.chain(Label(label, body, _))
+  def ret(r: Result) = k.rest(Return(r, false))
+  def staticif(b: Boolean, f: (Block => Block) => (Block => Block)) = if b then k.transform(f) else k
+
+def blockBuilder: Block => Block = identity
+
+extension (l: Local)
+  def asPath: Path = Value.Ref(l)
