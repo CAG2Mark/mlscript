@@ -17,10 +17,12 @@ class StackSafeTransform(depthLimit: Int)(using State):
     def asArg = Arg(false, p)
 
   private val STACK_DEPTH_IDENT: Tree.Ident = Tree.Ident("__stackDepth")
+  private val STACK_OFFSET_IDENT: Tree.Ident = Tree.Ident("__stackOffset")
   private val STACK_HANDLER_IDENT: Tree.Ident = Tree.Ident("__stackHandler")
 
   private val stackDelayClsPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__StackDelay")).selN(Tree.Ident("class"))
   private val stackDepthPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(STACK_DEPTH_IDENT)
+  private val stackOffsetPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(STACK_OFFSET_IDENT)
   private val stackHandlerPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(STACK_HANDLER_IDENT)
   private val predefPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef"))
 
@@ -51,39 +53,40 @@ class StackSafeTransform(depthLimit: Int)(using State):
 
   // Increases the stack depth, assigns the call to a value, then decreases the stack depth
   // then binds that value to a desired block
-  def extractRes(res: Result, f: Result => Block) =
+  def extractRes(res: Result, decrement: Bool, f: Result => Block) =
     res match
-      case c: Call if c.isMlsFun => 
+      case Call(Value.Ref(s: BuiltinSymbol), args) => f(res)
+      case Call(path, args) =>
         val tmp = TempSymbol(None, "tmp")
-        val depthPositive = TempSymbol(None, "depthPositive")
-        blockBuilder
+        val inc = blockBuilder
           .assignFieldN(predefPath, STACK_DEPTH_IDENT, op("+", stackDepthPath, intLit(1)))
-          .assign(tmp, res)
-          .assign(depthPositive, op(">", stackDepthPath, intLit(0)))
-          .ifthen( // only reduce stack depth if it's positive, since the stack depth is reset after the stack is unwound
-            depthPositive.asPath, Case.Lit(Tree.BoolLit(true)),
-            blockBuilder
-              .assignFieldN(predefPath, STACK_DEPTH_IDENT, op("-", stackDepthPath, intLit(1)))
-              .end()
-            )
-          .rest(f(tmp.asPath))
+        
+        if decrement then
+          inc
+            .assign(tmp, res)
+            .assignFieldN(predefPath, STACK_DEPTH_IDENT, op("-", stackDepthPath, intLit(1)))
+            .rest(f(tmp.asPath))
+        else
+          inc.ret(res)
       case _ => f(res)
 
   // Rewrites anything that can contain a Call to increase the stack depth
   def transform(b: Block): Block = b match
-    case Return(res, implct) => extractRes(res, Return(_, false))
-    case Assign(lhs, rhs, rest) => extractRes(rhs, Assign(lhs, _, transform(rest)))
-    case b @ AssignField(lhs, nme, rhs, rest) => extractRes(rhs, AssignField(lhs, nme, _, transform(rest))(b.symbol))
+    case Return(c: Call, implct) => extractRes(c, false, Return(_, false))
+    case Return(res, implct) => extractRes(res, true, Return(_, false))
+    case Assign(lhs, rhs, rest) => extractRes(rhs, true, Assign(lhs, _, transform(rest)))
+    case b @ AssignField(lhs, nme, rhs, rest) => extractRes(rhs, true, AssignField(lhs, nme, _, transform(rest))(b.symbol))
     case Define(defn, rest) => Define(rewriteDefn(defn), transform(rest))
     case HandleBlock(lhs, res, par, cls, handlers, body, rest) =>
       HandleBlock(
         lhs, res, par, cls, handlers.map(h => Handler(h.sym, h.resumeSym, h.params, transform(h.body))),
         transform(body), transform(rest)
       )
-    case HandleBlockReturn(res) => extractRes(res, HandleBlockReturn(_))
+    case HandleBlockReturn(c: Call) => extractRes(c, false, HandleBlockReturn(_))
+    case HandleBlockReturn(res) => extractRes(res, true, HandleBlockReturn(_))
     case _ => b.map(transform)
   
-  // TODO: this will just some simple analysis. some more in-depth analysis could be done at some other point
+  // TODO: this will just do some simple analysis. some more in-depth analysis could be done at some other point
   def isTrivial(b: Block): Boolean = b match
     case Match(scrut, arms, dflt, rest) => 
       arms.foldLeft(dflt.map(isTrivial).getOrElse(true))((acc, bl) => acc && isTrivial(bl._2)) && isTrivial(rest)
@@ -111,19 +114,22 @@ class StackSafeTransform(depthLimit: Int)(using State):
       )
 
   def rewriteBlk(blk: Block) =
+    val diffSym = TempSymbol(None, "diff")
     val scrut1Sym = TempSymbol(None, "scrut1")
     val scrut2Sym = TempSymbol(None, "scrut2")
     val scrutSym = TempSymbol(None, "scrut")
-    val scrut1 = op(">=", stackDepthPath, intLit(depthLimit))
+    val diff = op("-", stackDepthPath, stackOffsetPath)
+    val scrut1 = op(">=", diffSym.asPath, intLit(depthLimit))
     val scrut2 = op("!==", stackHandlerPath, Value.Lit(Tree.UnitLit(false)))
     val scrutVal = op("&&", scrut1Sym.asPath, scrut2Sym.asPath)
 
     val newBody = transform(blk)
 
     blockBuilder
-      .assign(scrut1Sym, scrut1) // stackDepth >= depthLimit
-      .assign(scrut2Sym, scrut2) // stackHandler !== null
-      .assign(scrutSym, scrutVal) // stackDepth >= depthLimit && stackHandler !== null
+      .assign(diffSym, diff)        // diff = stackDepth - stackOffset
+      .assign(scrut1Sym, scrut1)    // diff >= depthLimit
+      .assign(scrut2Sym, scrut2)    // stackHandler !== null
+      .assign(scrutSym, scrutVal)   // diff >= depthLimit && stackHandler !== null
       .ifthen(
         scrutSym.asPath, Case.Lit(Tree.BoolLit(true)), 
         blockBuilder.assign( // tmp = perform(undefined)
@@ -140,8 +146,11 @@ class StackSafeTransform(depthLimit: Int)(using State):
     
     // symbols
     val resumeSym = VarSymbol(Tree.Ident("resume"))
-    val handlerSym = TempSymbol(None, "stackHandler");
-    val resSym = TempSymbol(None, "res");
+    val handlerSym = TempSymbol(None, "stackHandler")
+    val resSym = TempSymbol(None, "res")
+    val handlerRes = TempSymbol(None, "res")
+    val curOffsetSym = TempSymbol(None, "curOffset")
+    
     val clsSym = ClassSymbol(
       Tree.TypeDef(syntax.Cls, Tree.Error(), N, N),
       Tree.Ident("StackDelay$")
@@ -156,10 +165,21 @@ class StackSafeTransform(depthLimit: Int)(using State):
       stackDelayClsPath, clsSym,
       List(Handler(
         BlockMemberSymbol("perform", Nil), resumeSym, List(ParamList(ParamListFlags.empty, Nil, N)),
+        /* 
+          fun perform() =
+            let curOffset = stackOffset
+            stackOffset = stackDepth
+            let ret = resume()
+            stackOffset = curOffset
+            ret
+         */
         blockBuilder
-          .assignFieldN(predefPath, STACK_DEPTH_IDENT, intLit(0)) // Q: should this be 0 or 1 to account for some overhead?
-          .ret(Call(Value.Ref(resumeSym), List())(true))
-      )), // create a "unit" handler, i.e. fun perform(k) = k(())
+          .assign(curOffsetSym, stackOffsetPath)
+          .assignFieldN(predefPath, STACK_OFFSET_IDENT, stackDepthPath)
+          .assign(handlerRes, Call(Value.Ref(resumeSym), List())(true))
+          .assignFieldN(predefPath, STACK_OFFSET_IDENT, curOffsetSym.asPath)
+          .ret(handlerRes.asPath)
+      )),
       blockBuilder
         .assignFieldN(predefPath, STACK_DEPTH_IDENT, intLit(0)) // set stackDepth = 0
         .assignFieldN(predefPath, STACK_HANDLER_IDENT, handlerSym.asPath) // assign stack handler
