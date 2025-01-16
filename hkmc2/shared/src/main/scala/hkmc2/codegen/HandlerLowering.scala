@@ -18,36 +18,12 @@ object HandlerLowering:
   private val pcIdent: Tree.Ident = Tree.Ident("pc")
   private val nextIdent: Tree.Ident = Tree.Ident("next")
   private val tailIdent: Tree.Ident = Tree.Ident("tail")
-
-  extension (k: Block => Block)
-    
-    def chain(other: Block => Block): Block => Block = b => k(other(b))
-    def rest(b: Block): Block = k(b)
-    def transform(f: (Block => Block) => (Block => Block)) = f(k)
-    
-    def assign(l: Local, r: Result) = k.chain(Assign(l, r, _))
-    def assignFieldN(lhs: Path, nme: Tree.Ident, rhs: Result) = k.chain(AssignField(lhs, nme, rhs, _)(N))
-    def break(l: Local): Block = k.rest(Break(l))
-    def continue(l: Local): Block = k.rest(Continue(l))
-    def define(defn: Defn) = k.chain(Define(defn, _))
-    def end = k.rest(End())
-    def ifthen(scrut: Path, cse: Case, trm: Block): Block => Block = k.chain(Match(scrut, cse -> trm :: Nil, N, _))
-    def label(label: Local, body: Block) = k.chain(Label(label, body, _))
-    def ret(r: Result) = k.rest(Return(r, false))
-    def staticif(b: Boolean, f: (Block => Block) => (Block => Block)) = if b then k.transform(f) else k
-    
-  private def blockBuilder: Block => Block = identity
   
   extension (p: Path)
-    def selN(id: Tree.Ident) = Select(p, id)(N)
     def pc = p.selN(pcIdent)
+    def value = p.selN(Tree.Ident("value"))
     def next = p.selN(nextIdent)
     def tail = p.selN(tailIdent)
-    def value = p.selN(Tree.Ident("value"))
-    def asArg = Arg(false, p)
-  
-  extension (l: Local)
-    def asPath: Path = Value.Ref(l)
   
   private case class LinkState(res: Path, cls: Path, uid: StateId)
   
