@@ -104,16 +104,16 @@ sealed abstract class Block extends Product with AutoLocated:
       )
       case Value.Arr(elems) => Value.Arr(elems.map(a => Arg(a.spread, pathMap(a.value))))
 
-    def _resMap(r: Result) = r match
+    def resMap(r: Result) = r match
       case p: Path => pathMap(p)
       case c @ Call(fun, args) => Call(pathMap(fun), args.map(a => Arg(a.spread, pathMap(a.value))))(c.isMlsFun)
       case Instantiate(cls, args) => Instantiate(pathMap(cls), args.map(pathMap))
 
     this match
-      case Return(res, implct) => Return(_resMap(res), implct)
+      case Return(res, implct) => Return(resMap(res), implct)
       case Throw(exc: Path) => Throw(pathMap(exc))
-      case Assign(l, r, rst) => Assign(l.subst, _resMap(r), rst.mapSyms)
-      case blk @ AssignField(l, n, r, rst) => AssignField(pathMap(l), n, _resMap(r), rst.mapSyms)(blk.symbol)
+      case Assign(l, r, rst) => Assign(l.subst, resMap(r), rst.mapSyms)
+      case blk @ AssignField(l, n, r, rst) => AssignField(pathMap(l), n, resMap(r), rst.mapSyms)(blk.symbol)
       case Match(scrut, arms, dflt, rst) => 
         val newArms = arms.map((cse, blk) =>
           val newCse = cse match
@@ -151,9 +151,9 @@ sealed abstract class Block extends Product with AutoLocated:
         Define(newDefn, rst.mapSyms)
       
       case HandleBlockReturn(res: Path) => HandleBlockReturn(pathMap(res))
-      case Throw(res) => Throw(_resMap(res))
+      case Throw(res) => Throw(resMap(res))
       case Label(lbl, body, rest) => Label(lbl.subst, body.mapSyms, rest.mapSyms)
-      case HandleBlockReturn(res) => HandleBlockReturn(_resMap(res))
+      case HandleBlockReturn(res) => HandleBlockReturn(resMap(res))
       case Begin(sub, rest) => Begin(sub.mapSyms, rest.mapSyms)
       case TryBlock(sub, fin, rest) => TryBlock(sub.mapSyms, fin.mapSyms, rest.mapSyms)
       case HandleBlock(lhs, res, par, cls, handlers, body, rest) =>
