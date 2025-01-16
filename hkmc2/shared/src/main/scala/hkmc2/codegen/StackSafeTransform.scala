@@ -56,7 +56,7 @@ class StackSafeTransform(depthLimit: Int)(using State):
   def extractRes(res: Result, isTailCall: Bool, f: Result => Block) =
     res match
       case Call(Value.Ref(s: BuiltinSymbol), args) => f(res)
-      case Call(path, args) =>
+      case _: Call | _: Instantiate =>
         if isTailCall then
           blockBuilder
             .assignFieldN(predefPath, STACK_DEPTH_IDENT, op("+", stackDepthPath, intLit(1)))
@@ -104,23 +104,29 @@ class StackSafeTransform(depthLimit: Int)(using State):
     
     secondPass(firstPass(b))
   
-  // TODO: this will just do some simple analysis. some more in-depth analysis could be done at some other point
-  def isTrivial(b: Block): Boolean = b match
-    case Match(scrut, arms, dflt, rest) => 
-      arms.foldLeft(dflt.map(isTrivial).getOrElse(true))((acc, bl) => acc && isTrivial(bl._2)) && isTrivial(rest)
-    case Return(res, implct) => true
-    case Throw(exc) => ???
-    case Label(label, body, rest) => ???
-    case Break(label) => ???
-    case Continue(label) => ???
-    case Begin(sub, rest) => ???
-    case TryBlock(sub, finallyDo, rest) => ???
-    case Assign(lhs, rhs, rest) => ???
-    case AssignField(lhs, nme, rhs, rest) => ???
-    case Define(defn, rest) => ???
-    case HandleBlock(lhs, res, par, cls, handlers, body, rest) => ???
-    case HandleBlockReturn(res) => ???
-    case End(msg) => ???
+  def isTrivial(b: Block): Boolean = 
+    def resTrivial(r: Result) = r match
+      case Call(Value.Ref(_: BuiltinSymbol), _) => true
+      case _: Call => false
+      case _: Instantiate => false
+      case _ => true
+
+    b match
+      case Match(scrut, arms, dflt, rest) => 
+        arms.foldLeft(dflt.map(isTrivial).getOrElse(true))((acc, bl) => acc && isTrivial(bl._2)) && isTrivial(rest)
+      case Return(res, implct) => resTrivial(res)
+      case Throw(exc) => resTrivial(exc)
+      case Label(label, body, rest) => isTrivial(body) && isTrivial(rest)
+      case Break(label) => true
+      case Continue(label) => true
+      case Begin(sub, rest) => isTrivial(sub) && isTrivial(rest)
+      case TryBlock(sub, finallyDo, rest) => isTrivial(sub) && isTrivial(finallyDo) && isTrivial(rest)
+      case Assign(lhs, rhs, rest) => resTrivial(rhs) && isTrivial(rest)
+      case AssignField(lhs, nme, rhs, rest) => resTrivial(rhs) && isTrivial(rest)
+      case Define(defn, rest) => isTrivial(rest)
+      case HandleBlock(lhs, res, par, cls, handlers, body, rest) => isTrivial(body) && isTrivial(rest) 
+      case HandleBlockReturn(res) => true
+      case End(msg) => true
 
   def rewriteDefn(defn: Defn) = defn match
     case d: FunDefn => rewriteFn(d)
@@ -132,28 +138,30 @@ class StackSafeTransform(depthLimit: Int)(using State):
       )
 
   def rewriteBlk(blk: Block) =
-    val diffSym = TempSymbol(None, "diff")
-    val scrut1Sym = TempSymbol(None, "scrut1")
-    val scrut2Sym = TempSymbol(None, "scrut2")
-    val scrutSym = TempSymbol(None, "scrut")
-    val diff = op("-", stackDepthPath, stackOffsetPath)
-    val scrut1 = op(">=", diffSym.asPath, intLit(depthLimit))
-    val scrut2 = op("!==", stackHandlerPath, Value.Lit(Tree.UnitLit(false)))
-    val scrutVal = op("&&", scrut1Sym.asPath, scrut2Sym.asPath)
-
     val newBody = transform(blk)
 
-    blockBuilder
-      .assign(diffSym, diff)        // diff = stackDepth - stackOffset
-      .assign(scrut1Sym, scrut1)    // diff >= depthLimit
-      .assign(scrut2Sym, scrut2)    // stackHandler !== null
-      .assign(scrutSym, scrutVal)   // diff >= depthLimit && stackHandler !== null
-      .ifthen(
-        scrutSym.asPath, Case.Lit(Tree.BoolLit(true)), 
-        blockBuilder.assign( // tmp = perform(undefined)
-          TempSymbol(None, "tmp"), 
-          Call(Select(stackHandlerPath, Tree.Ident("perform"))(N), Nil)(true)).end())
-      .rest(newBody)
+    if isTrivial(blk) then 
+      newBody
+    else
+      val diffSym = TempSymbol(None, "diff")
+      val scrut1Sym = TempSymbol(None, "scrut1")
+      val scrut2Sym = TempSymbol(None, "scrut2")
+      val scrutSym = TempSymbol(None, "scrut")
+      val diff = op("-", stackDepthPath, stackOffsetPath)
+      val scrut1 = op(">=", diffSym.asPath, intLit(depthLimit))
+      val scrut2 = op("!==", stackHandlerPath, Value.Lit(Tree.UnitLit(false)))
+      val scrutVal = op("&&", scrut1Sym.asPath, scrut2Sym.asPath)
+      blockBuilder
+        .assign(diffSym, diff)        // diff = stackDepth - stackOffset
+        .assign(scrut1Sym, scrut1)    // diff >= depthLimit
+        .assign(scrut2Sym, scrut2)    // stackHandler !== null
+        .assign(scrutSym, scrutVal)   // diff >= depthLimit && stackHandler !== null
+        .ifthen(
+          scrutSym.asPath, Case.Lit(Tree.BoolLit(true)), 
+          blockBuilder.assign( // tmp = perform(undefined)
+            TempSymbol(None, "tmp"), 
+            Call(Select(stackHandlerPath, Tree.Ident("perform"))(N), Nil)(true)).end())
+        .rest(newBody)
      
   def rewriteFn(defn: FunDefn) = FunDefn(defn.sym, defn.params, rewriteBlk(defn.body))
 
