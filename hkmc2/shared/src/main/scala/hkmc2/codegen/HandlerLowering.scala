@@ -1,19 +1,17 @@
 package hkmc2
 package codegen
 
+import scala.annotation.tailrec
+
 import mlscript.utils.*, shorthands.*
-import utils.*
-
+import hkmc2.utils.*
+import hkmc2.utils.SymbolSubst
 import hkmc2.Message.MessageContext
-
-import semantics.Elaborator.State
 
 import syntax.{Literal, Tree, ParamBind}
 import semantics.*
-import scala.annotation.tailrec
-import hkmc2.semantics.Elaborator.ctx
-
-import hkmc2.utils.SymbolSubst
+import semantics.Elaborator.ctx
+import semantics.Elaborator.State
 
 object HandlerLowering:
 
@@ -32,7 +30,7 @@ object HandlerLowering:
     def break(l: Local): Block = k.rest(Break(l))
     def continue(l: Local): Block = k.rest(Continue(l))
     def define(defn: Defn) = k.chain(Define(defn, _))
-    def end() = k.rest(End())
+    def end = k.rest(End())
     def ifthen(scrut: Path, cse: Case, trm: Block): Block => Block = k.chain(Match(scrut, cse -> trm :: Nil, N, _))
     def label(label: Local, body: Block) = k.chain(Label(label, body, _))
     def ret(r: Result) = k.rest(Return(r, false))
@@ -173,7 +171,6 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
         
         val armsParts = arms.map((cse, blkk) => (cse, go(blkk)(afterEnd = S(restId))))
         val dfltParts = dflt.map(blkk => go(blkk)(afterEnd = S(restId)))
-        
 
         val states_ = restParts.states ::: armsParts.flatMap(_._2.states)
         val states = dfltParts match
@@ -218,7 +215,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
 
       case Break(label) =>
         val (start, end) = labelIds.get(label) match
-          case N => raise(ErrorReport(
+          case N => raise(InternalError(
             msg"Could not find label '${label.nme}'" ->
             label.toLoc :: Nil,
             source = Diagnostic.Source.Compilation))
@@ -227,7 +224,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
         PartRet(StateTransition(end), Nil)
       case Continue(label) =>
         val (start, end) = labelIds.get(label) match
-          case N => raise(ErrorReport(
+          case N => raise(InternalError(
             msg"Could not find label '${label.nme}'" ->
             label.toLoc :: Nil,
             source = Diagnostic.Source.Compilation))
@@ -275,9 +272,9 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
    * The actual translation:
    * 1. add call markers, transform class, function, lambda and sub handler blocks
    * 2.
-   * a) generate continuation class
-   * b) generate normal function body
-   * 3. float out definitions
+   *   a) generate continuation class
+   *   b) generate normal function body
+   *   3. float out definitions
    */
   
   private def translateBlock(b: Block, h: HandlerCtx): Block =
@@ -286,13 +283,12 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
     val stage2 = secondPass(stage1)
     if h.isTopLevel then stage2 else thirdPass(stage2)
   
-  private def firstPass(b: Block)(using HandlerCtx): Block =
-    b.map(firstPass) match
-      case b: HandleBlock => translateHandleBlock(b)
-      case b => b.mapValue {
+  private def firstPass(b: Block)(using HandlerCtx): Block = b.map(firstPass) match
+    case b: HandleBlock => translateHandleBlock(b)
+    case b => b.mapValue:
         case Value.Lam(params, body) => Value.Lam(params, translateBlock(body, functionHandlerCtx))
         case v => v
-      } match {
+      .match
         case Return(c: Call, implct) if handlerCtx.isHandleFree => Return(c, implct)
         case b => b.mapResult:
           case r @ Call(Value.Ref(_: BuiltinSymbol), _) => N
@@ -300,11 +296,11 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
             val res = freshTmp("res")
             S(k => CallPlaceholder(res, freshId(), false, c, k(Value.Ref(res))))
           case r => N
-      } match
+      .match
         case Define(f: FunDefn, rst) => Define(translateFun(f), rst)
         case Define(c: ClsLikeDefn, rst) => Define(translateCls(c), rst)
         case b => b
-  
+
   private def secondPass(b: Block)(using HandlerCtx): Block =
     val cls = if handlerCtx.isTopLevel then N else genContClass(b)
     cls match
