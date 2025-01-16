@@ -377,8 +377,6 @@ class Lowering(lowerHandlers: Bool)(using TL, Raise, State, Ctx):
         k(Value.Ref(l))
       )
     
-    case Handle(lhs, rhs, clsSym, defs) => die // FIXME
-    
     // * BbML-specific cases: t.Cls#field and mutable operations
     case sp @ SelProj(prefix, _, proj) =>
       setupSelection(prefix, proj, sp.sym)(k)

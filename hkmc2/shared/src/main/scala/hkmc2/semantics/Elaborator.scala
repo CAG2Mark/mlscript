@@ -206,16 +206,16 @@ extends Importer:
           term(bod),
         ), Term.Assgn(lt, sym.ref(id))))
       case _ => ??? // TODO error
-    case Handle(id, cls, blk, S(bod)) =>
-      term(Block(Handle(id, cls, blk, N) :: bod :: Nil))
-    case Handle(id: Ident, cls: Ident, Block(sts), N) =>
+    case Hndl(id, cls, blk, S(bod)) =>
+      term(Block(Hndl(id, cls, blk, N) :: bod :: Nil))
+    case Hndl(id: Ident, cls: Ident, Block(sts), N) =>
       raise(ErrorReport(
         msg"Expected a body for handle bindings in expression position" ->
           tree.toLoc :: Nil))
           
-      block(Handle(id, cls, Block(sts), N) :: Nil)._1
+      block(Hndl(id, cls, Block(sts), N) :: Nil)._1
       
-    case h: Handle =>
+    case h: Hndl =>
       raise(ErrorReport(
         msg"Unsupported handle binding shape" ->
           h.toLoc :: Nil))
@@ -653,7 +653,7 @@ extends Importer:
       case (tree @ LetLike(`let`, lhs, S(rhs), N)) :: sts =>
         raise(ErrorReport(msg"Unsupported let binding shape" -> tree.toLoc :: Nil))
         go(sts, Nil, Term.Error :: acc)
-      case (hd @ Handle(id: Ident, cls: Ident, Block(sts_), N)) :: sts =>
+      case (hd @ Hndl(id: Ident, cls: Ident, Block(sts_), N)) :: sts =>
         reportUnusedAnnotations
         val res: Term.Blk = ctx.nest(N).givenIn:
           val sym = fieldOrVarSym(HandlerBind, id)
@@ -684,13 +684,13 @@ extends Importer:
               raise(ErrorReport(msg"Only function definitions are allowed in handler blocks" -> st.toLoc :: Nil))
               None
           }.collect { case Some(x) => x }
-
-          val newAcc = Term.Handle(sym, term(cls), derivedClsSym, tds) :: acc
+          
+          val newAcc = Handle(sym, term(cls), derivedClsSym, tds) :: acc
           val newCtx = ctx + (id.name -> sym)
           val body = block(sts)(using newCtx)._1
           Term.Blk(newAcc.reverse, body)
         (res, ctx)
-      case (tree @ Handle(_, _, _, N)) :: sts =>
+      case (tree @ Hndl(_, _, _, N)) :: sts =>
         raise(ErrorReport(msg"Unsupported handle binding shape" -> tree.toLoc :: Nil))
         go(sts, Nil, Term.Error :: acc)
 
