@@ -31,7 +31,7 @@ iid
 :e
 iid("42")
 //│ ╔══[ERROR] Type error in string literal with expected type 'A
-//│ ║  l.32: 	iid("42")
+//│ ║  l.18: 	iid("42")
 //│ ║        	    ^^^^
 //│ ╟── because: cannot constrain  Str  <:  'A
 //│ ╟── because: cannot constrain  Str  <:  'A
@@ -61,7 +61,7 @@ foo(bar)
 :e
 fun badfoo: [A extends Str restricts Int] -> A -> A
 //│ ╔══[ERROR] Type error in block
-//│ ║  l.62: 	fun badfoo: [A extends Str restricts Int] -> A -> A
+//│ ║  l.34: 	fun badfoo: [A extends Str restricts Int] -> A -> A
 //│ ║        	                                             ^^^^^^
 //│ ╙── because: cannot constrain  Int  <:  Str
 //│ Type: ⊤
@@ -112,8 +112,8 @@ fun h: [C] -> ([A extends Int] -> A -> ([B extends A -> A restricts A -> A] -> B
 :e
 bazbaz: [A extends Int] -> A -> ([B extends A -> A restricts A -> A] -> B) -> A
 //│ ╔══[ERROR] Cannot type non-function term SynthSel(Ref(globalThis:block#17),Ident(bazbaz)) as (A) ->{⊥} (forall 'B: 'B) ->{⊥} A
-//│ ║  l.113: 	bazbaz: [A extends Int] -> A -> ([B extends A -> A restricts A -> A] -> B) -> A
-//│ ╙──       	^^^^^^
+//│ ║  l.64: 	bazbaz: [A extends Int] -> A -> ([B extends A -> A restricts A -> A] -> B) -> A
+//│ ╙──      	^^^^^^
 //│ Type: forall 'A: ('A) ->{⊥} (forall 'B: 'A -> 'A) ->{⊥} 'A
 //│ Where:
 //│   'A <: Int
