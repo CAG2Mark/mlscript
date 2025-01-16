@@ -123,10 +123,7 @@ sealed abstract class Block extends Product with AutoLocated:
         val newArms = arms.map((cse, blk) =>
           val newCse = cse match
             case Case.Lit(lit) => cse
-            // HACK: cls.subst gives something other than ClassSymbol | ModuleSymbol and it doesn't type check...
-            case Case.Cls(cls, path) => cls match 
-              case s: ClassSymbol => Case.Cls(s.subst, pathMap(path))
-              case s: ModuleSymbol => Case.Cls(s.subst, pathMap(path))
+            case Case.Cls(cls, path) => Case.Cls(cls.subst, pathMap(path))
             case Case.Tup(len, inf) => cse
           (newCse, blk.mapSyms)
         )
@@ -370,7 +367,7 @@ case class End(msg: Str = "") extends BlockTail with ProductWithTail
 
 enum Case:
   case Lit(lit: Literal)
-  case Cls(cls: ClassSymbol | ModuleSymbol, path: Path)
+  case Cls(cls: ClassLikeSymbol, path: Path)
   case Tup(len: Int, inf: Bool)
 
   lazy val freeVars: Set[Local] = this match
