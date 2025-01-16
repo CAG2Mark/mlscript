@@ -14,7 +14,6 @@ import utils.Scope
 import hkmc2.syntax.Tree.Ident
 import hkmc2.codegen.Path
 import hkmc2.Diagnostic.Source
-import hkmc2.syntax.Keyword.`then`
 
 abstract class JSBackendDiffMaker extends MLsDiffMaker:
   
