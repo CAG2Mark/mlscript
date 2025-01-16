@@ -376,7 +376,9 @@ case class Call(fun: Path, args: Ls[Arg])(val isMlsFun: Bool) extends Result
 
 case class Instantiate(cls: Path, args: Ls[Path]) extends Result
 
-sealed abstract class Path extends Result
+sealed abstract class Path extends Result:
+  def selN(id: Tree.Ident) = Select(this, id)(N)
+  def asArg = Arg(false, this)
 
 case class Select(qual: Path, name: Tree.Ident)(val symbol: Opt[FieldSymbol]) extends Path with ProductWithExtraInfo:
   def extraInfo: Str = symbol.mkString
@@ -408,10 +410,6 @@ extension (k: Block => Block)
   def staticif(b: Boolean, f: (Block => Block) => (Block => Block)) = if b then k.transform(f) else k
 
 def blockBuilder: Block => Block = identity
-
-extension (p: Path)
-  def selN(id: Tree.Ident) = Select(p, id)(N)
-  def asArg = Arg(false, p)
 
 extension (l: Local)
   def asPath: Path = Value.Ref(l)
