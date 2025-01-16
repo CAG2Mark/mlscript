@@ -198,10 +198,10 @@ class JSBuilder(using Elaborator.State, Elaborator.Ctx) extends CodeBuilder:
                 else doc""" # toString() { return "${sym.nme}${
                   if clsDefn.paramsOpt.isEmpty then doc"""""""
                   else doc"""(" + ${
-                      ctorParams.headOption.fold("")("this." + _._2)
+                      ctorParams.headOption.fold("")("this." + _._1.name)
                     }${
                       ctorParams.tailOption.fold("")(_.map(
-                        """ + ", " + this.""" + _._2).mkString)
+                        """ + ", " + this.""" + _._1.name).mkString)
                     } + ")""""
                 }; }"""
               } #}  # }"
