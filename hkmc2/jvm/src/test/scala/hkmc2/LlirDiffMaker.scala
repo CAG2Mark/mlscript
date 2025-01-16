@@ -16,6 +16,7 @@ import hkmc2.codegen.llir.Fresh
 import hkmc2.utils.Scope
 import hkmc2.codegen.llir.Ctx
 import hkmc2.codegen.llir._
+import hkmc2.semantics.Elaborator
 
 abstract class LlirDiffMaker extends BbmlDiffMaker:
   val llir = NullaryCommand("llir")
@@ -29,6 +30,8 @@ abstract class LlirDiffMaker extends BbmlDiffMaker:
   def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit) =
     val p = new java.io.PrintWriter(f)
     try { op(p) } finally { p.close() }
+
+  given Elaborator.Ctx = curCtx
 
   override def processTerm(trm: Blk, inImport: Bool)(using Raise): Unit = 
     super.processTerm(trm, inImport)
