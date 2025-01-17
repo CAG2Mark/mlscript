@@ -27,7 +27,12 @@ object HandlerLowering:
   
   private case class LinkState(res: Path, cls: Path, uid: StateId)
   
-  private case class HandlerCtx(isHandleFree: Bool, isTopLevel: Bool, ctorThis: Option[Path], linkAndHandle: LinkState => Block)
+  private case class HandlerCtx(
+    isHandleFree: Bool,
+    isTopLevel: Bool,
+    ctorThis: Option[Path],
+    linkAndHandle: LinkState => Block
+  )
   
   type StateId = BigInt
 
@@ -35,28 +40,27 @@ import HandlerLowering.*
 
 class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
 
-  private val functionHandlerCtx = HandlerCtx(true, false, N, state =>
-    val tmp = freshTmp()
-    blockBuilder
-      .assignFieldN(state.res.tail, nextIdent, Instantiate(state.cls.selN(Tree.Ident("class")), Value.Lit(Tree.IntLit(state.uid)) :: Nil))
-      .assignFieldN(state.res, tailIdent, state.res.tail.next)
-      .ret(state.res)
-  )
-  private def ctorCtx(ctorThis: Path) = HandlerCtx(true, false, S(ctorThis), state =>
-    val tmp = freshTmp()
-    blockBuilder
-      .assignFieldN(state.res.tail, nextIdent, Instantiate(state.cls.selN(Tree.Ident("class")), Value.Lit(Tree.IntLit(state.uid)) :: Nil))
-      .assignFieldN(state.res, tailIdent, state.res.tail.next)
-      .ret(state.res)
-  )
+  private def funcLikeHandlerCtx(ctorThis: Option[Path]) =
+    HandlerCtx(true, false, ctorThis, state =>
+      val tmp = freshTmp()
+      blockBuilder
+        .assignFieldN(state.res.tail, nextIdent, Instantiate(
+          state.cls.selN(Tree.Ident("class")),
+          Value.Lit(Tree.IntLit(state.uid)) :: Nil))
+        .assignFieldN(state.res, tailIdent, state.res.tail.next)
+        .ret(state.res))
+  private val functionHandlerCtx = funcLikeHandlerCtx(N)
+  private def ctorCtx(ctorThis: Path) = funcLikeHandlerCtx(S(ctorThis))
   private def handlerCtx(using HandlerCtx): HandlerCtx = summon
-  private val effectSigPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__EffectSig")).selN(Tree.Ident("class"))
-  private val effectSigSym: ClassSymbol = ctx.Builtins.Predef.tree.definedSymbols.get("__EffectSig").get.asCls.get
-  private val contClsPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__Cont")).selN(Tree.Ident("class"))
-  private val retClsPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__Return")).selN(Tree.Ident("class"))
-  private val retClsSym: ClassSymbol = ctx.Builtins.Predef.tree.definedSymbols.get("__Return").get.asCls.get
-  private val mkEffectPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__mkEffect"))
-  private val handleBlockImplPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef")).selN(Tree.Ident("__handleBlockImpl"))
+  private val predefPath: Path = State.globalThisSymbol.asPath.selN(Tree.Ident("Predef"))
+  private val predefSym: ModuleSymbol = ctx.Builtins.Predef
+  private val effectSigPath: Path = predefPath.selN(Tree.Ident("__EffectSig")).selN(Tree.Ident("class"))
+  private val effectSigSym: ClassSymbol = predefSym.tree.definedSymbols.get("__EffectSig").get.asCls.get
+  private val contClsPath: Path = predefPath.selN(Tree.Ident("__Cont")).selN(Tree.Ident("class"))
+  private val retClsPath: Path = predefPath.selN(Tree.Ident("__Return")).selN(Tree.Ident("class"))
+  private val retClsSym: ClassSymbol = predefSym.tree.definedSymbols.get("__Return").get.asCls.get
+  private val mkEffectPath: Path = predefPath.selN(Tree.Ident("__mkEffect"))
+  private val handleBlockImplPath: Path = predefPath.selN(Tree.Ident("__handleBlockImpl"))
   
   private def freshTmp(dbgNme: Str = "tmp") = new TempSymbol(N, dbgNme)
   
@@ -97,15 +101,22 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
   object CallPlaceholder:
     private val callSymbol = freshTmp("callPlaceholder")
     def apply(res: Local, uid: StateId, canRet: Bool, c: Call, rest: Block) =
-      Assign(res, SimpleCall(Value.Ref(callSymbol), List(Value.Lit(Tree.IntLit(uid)), Value.Lit(Tree.BoolLit(canRet)))), Assign(res, c, rest))
+      Assign(
+        res,
+        SimpleCall(Value.Ref(callSymbol), List(Value.Lit(Tree.IntLit(uid)), Value.Lit(Tree.BoolLit(canRet)))),
+        Assign(res, c, rest))
     def unapply(blk: Block) = blk match
-      case Assign(res, SimpleCall(Value.Ref(`callSymbol`), List(Value.Lit(Tree.IntLit(uid)), Value.Lit(Tree.BoolLit(canRet)))), Assign(_, c: Call, rest)) =>
+      case Assign(
+          res,
+          SimpleCall(Value.Ref(`callSymbol`), List(Value.Lit(Tree.IntLit(uid)), Value.Lit(Tree.BoolLit(canRet)))),
+          Assign(_, c: Call, rest)) =>
         Some(res, uid, canRet, c, rest)
       case _ => None
   
   object StateTransition:
     private val transitionSymbol = freshTmp("transition")
-    def apply(uid: StateId) = Return(SimpleCall(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(uid)))), false)
+    def apply(uid: StateId) =
+      Return(SimpleCall(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(uid)))), false)
     def unapply(blk: Block) = blk match
       case Return(SimpleCall(Value.Ref(`transitionSymbol`), List(Value.Lit(Tree.IntLit(uid)))), false) =>
         S(uid)
@@ -140,8 +151,10 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
     // * labelIds: maps label IDs to the state at the start of the label and the state after the label
     // * jumpTo: what state End should jump to, if at all 
     // * freshState: uid generator
-    // TODO: don't split within Match, Begin and Labels when not needed, ideally keep it intact. Need careful analysis for this.
-    def go(blk: Block)(implicit labelIds: Map[Symbol, (StateId, StateId)], afterEnd: Option[StateId]): PartRet = blk match
+    // TODO: don't split within Match, Begin and Labels when not needed, ideally keep it intact.
+    // Need careful analysis for this.
+    def go(blk: Block)(implicit labelIds: Map[Symbol, (StateId, StateId)], afterEnd: Option[StateId]): PartRet =
+      blk match
       case ResumptionPoint(result, uid, rest) =>
         val PartRet(head, states) = go(rest)
         PartRet(StateTransition(uid), BlockState(uid, head, S(result)) :: states)
@@ -404,11 +417,12 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
       go(b)
     val handlerBody = translateBlock(prepareBody(h.body), HandlerCtx(false, false, N, state => blockBuilder
       .assignFieldN(state.res.tail, nextIdent, Instantiate(state.cls, Value.Lit(Tree.IntLit(state.uid)) :: Nil))
-      // .assignFieldN(state.res, tailIdent, state.res.tail.next)
       .ret(SimpleCall(handleBlockImplPath, state.res :: h.lhs.asPath :: Nil))))
     
     val handlers = h.handlers.map: handler =>
-      val lam = Value.Lam(PlainParamList(Param(FldFlags.empty, handler.resumeSym, N) :: Nil), translateBlock(handler.body, functionHandlerCtx))
+      val lam = Value.Lam(
+        PlainParamList(Param(FldFlags.empty, handler.resumeSym, N) :: Nil),
+        translateBlock(handler.body, functionHandlerCtx))
       val tmp = freshTmp()
       FunDefn(handler.sym, handler.params, Return(SimpleCall(mkEffectPath, h.lhs.asPath :: lam :: Nil), false))
     
@@ -416,7 +430,10 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
     val clsDefn = ClsLikeDefn(h.cls, syntax.Cls, S(h.par), handlers, Nil, Nil,
       Assign(freshTmp(), SimpleCall(Value.Ref(State.builtinOpsMap("super")), Nil), End()), End())
     
-    val body = blockBuilder.define(clsDefn).assign(h.lhs, Instantiate(Value.Ref(BlockMemberSymbol(h.cls.id.name, Nil)), Nil)).rest(handlerBody)
+    val body = blockBuilder
+      .define(clsDefn)
+      .assign(h.lhs, Instantiate(Value.Ref(BlockMemberSymbol(h.cls.id.name, Nil)), Nil))
+      .rest(handlerBody)
     
     val defn = FunDefn(sym, PlainParamList(Nil) :: Nil, body)
     val result = Define(defn, CallPlaceholder(h.res, freshId(), true, Call(sym.asPath, Nil)(true), h.rest))
@@ -428,7 +445,14 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
       Tree.Ident("Cont$" + State.suid.nextUid)
     )
     val pcVar = VarSymbol(Tree.Ident("pc"))
-    sym.defn = S(ClassDef(N, syntax.Cls, sym, Nil, S(PlainParamList(Param(FldFlags.empty, pcVar, N) :: Nil)), ObjBody(Term.Blk(Nil, Term.Lit(Tree.UnitLit(true)))), List()))
+    sym.defn = S(ClassDef(
+      N,
+      syntax.Cls,
+      sym,
+      Nil,
+      S(PlainParamList(Param(FldFlags.empty, pcVar, N) :: Nil)),
+      ObjBody(Term.Blk(Nil, Term.Lit(Tree.UnitLit(true)))),
+      List()))
     
     var trivial = true
     def prepareBlock(b: Block): Block =
@@ -515,8 +539,17 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
       resumeBody
     )
     
-    S(ClsLikeDefn(sym, syntax.Cls, S(contClsPath), resumeFnDef :: Nil, Nil, Nil,
-      Assign(freshTmp(), SimpleCall(Value.Ref(State.builtinOpsMap("super")), Value.Lit(Tree.UnitLit(true)) :: Value.Lit(Tree.UnitLit(true)) :: Nil), End()), End()))
+    S(ClsLikeDefn(
+      sym,
+      syntax.Cls,
+      S(contClsPath),
+      resumeFnDef :: Nil,
+      Nil,
+      Nil,
+      Assign(freshTmp(), SimpleCall(
+        Value.Ref(State.builtinOpsMap("super")),
+        Value.Lit(Tree.UnitLit(true)) :: Value.Lit(Tree.UnitLit(true)) :: Nil), End()),
+      End()))
   
   private def genNormalBody(b: Block, clsSym: BlockMemberSymbol)(using HandlerCtx): Block =
     val tmp = freshTmp("cont")
