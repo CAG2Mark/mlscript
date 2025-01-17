@@ -6,6 +6,20 @@ abstract class Effect with
   fun perform(arg: Str): Str
 
 
+// non-resumptive handlers
+handle h = Effect with
+  fun perform(arg)(k) =
+    "x"
+h.perform("y")
+let x = 123
+//│ = 'x'
+
+:fixme
+x
+//│ ╔══[ERROR] Name not found: x
+//│ ║  l.18: 	x
+//│ ╙──      	^
+
 handle h = Effect with
   fun perform(arg)(k) =
     print(arg)
@@ -14,9 +28,8 @@ let x = 123
 :fixme
 x
 //│ ╔══[ERROR] Name not found: x
-//│ ║  l.15: 	x
+//│ ║  l.29: 	x
 //│ ╙──      	^
-:fixme
 
 
 :fixme
