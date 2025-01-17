@@ -1,0 +1,39 @@
+:js
+:handler
+
+
+abstract class Effect with
+  fun perform(arg: Str): Str
+
+
+class Lol(h) with
+  print(h.perform("k"))
+
+
+let oops = 
+  handle h = Effect with
+    fun perform(arg)(k) =
+      print(arg)
+      "b"
+  Lol(h)
+//│ > k
+//│ oops = 'b'
+
+:expect 'b'
+oops
+//│ = 'b'
+
+
+let oops = 
+  handle h = Effect with
+    fun perform(arg)(k) =
+      print(arg)
+      k("b")
+  Lol(h)
+//│ > k
+//│ > b
+
+// FIXME should return an instance of Lol or crash
+oops
+
+

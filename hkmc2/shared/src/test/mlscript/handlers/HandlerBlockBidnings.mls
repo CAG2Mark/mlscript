@@ -1,0 +1,34 @@
+:js
+:handler
+
+
+abstract class Effect with
+  fun perform(arg: Str): Str
+
+
+handle h = Effect with
+  fun perform(arg)(k) =
+    print(arg)
+let x = 123
+
+:fixme
+x
+//│ ╔══[ERROR] Name not found: x
+//│ ║  l.15: 	x
+//│ ╙──      	^
+:fixme
+
+
+:fixme
+handle h = Effect with
+  fun perform(arg)(k) =
+    print(arg)
+val y = 123
+//│ ═══[RUNTIME ERROR] ReferenceError: y is not defined
+
+:fixme
+:expect 123
+y
+//│ ═══[RUNTIME ERROR] Expected: 123, got: undefined
+
+
