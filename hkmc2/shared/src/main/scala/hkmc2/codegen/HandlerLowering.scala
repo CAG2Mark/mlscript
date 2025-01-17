@@ -142,6 +142,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
   // sym: the variable to which the resumed value should set
   class BlockState(val id: StateId, val blk: Block, val sym: Opt[Local])
   
+  // does not include the entry point
   def partitionBlock(blk: Block, labelIds: Map[Symbol, (StateId, StateId)] = Map.empty): Ls[BlockState] = 
     // for readability :)
     case class PartRet(head: Block, states: Ls[BlockState])
@@ -242,6 +243,8 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
       case Define(defn, rest) => 
         val PartRet(head, parts) = go(rest)
         PartRet(Define(defn, head), parts)
+      // implicit returns is used inside constructors when call occur in tail position,
+      // which may transition to `return this;` (inserted in second pass) after the implicit return
       case End(_) | Return(_, true) => afterEnd match
         case None => PartRet(FnEnd(), Nil)
         case Some(value) => PartRet(StateTransition(value), Nil)
@@ -259,10 +262,8 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
       case _: HandleBlock => lastWords("unexpected handleBlock") // already translated at this point
       case _: HandleBlockReturn => lastWords("unexpected handleBlockReturn") // already translated at this point
 
-    val headId = freshId()
-
     val result = go(blk)(using labelIds, N)
-    BlockState(headId, result.head, N) :: result.states
+    result.states
   
   /**
    * The actual translation:
