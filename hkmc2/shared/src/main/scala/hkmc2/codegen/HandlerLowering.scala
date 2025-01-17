@@ -27,7 +27,7 @@ object HandlerLowering:
   
   private case class LinkState(res: Path, cls: Path, uid: StateId)
   
-  private case class HandlerCtx(isHandleFree: Bool, isTopLevel: Bool, linkAndHandle: LinkState => Block)
+  private case class HandlerCtx(isHandleFree: Bool, isTopLevel: Bool, ctorThis: Option[Path], linkAndHandle: LinkState => Block)
   
   type StateId = BigInt
 
@@ -35,7 +35,14 @@ import HandlerLowering.*
 
 class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
 
-  private val functionHandlerCtx = HandlerCtx(true, false, state =>
+  private val functionHandlerCtx = HandlerCtx(true, false, N, state =>
+    val tmp = freshTmp()
+    blockBuilder
+      .assignFieldN(state.res.tail, nextIdent, Instantiate(state.cls.selN(Tree.Ident("class")), Value.Lit(Tree.IntLit(state.uid)) :: Nil))
+      .assignFieldN(state.res, tailIdent, state.res.tail.next)
+      .ret(state.res)
+  )
+  private def ctorCtx(ctorThis: Path) = HandlerCtx(true, false, S(ctorThis), state =>
     val tmp = freshTmp()
     blockBuilder
       .assignFieldN(state.res.tail, nextIdent, Instantiate(state.cls.selN(Tree.Ident("class")), Value.Lit(Tree.IntLit(state.uid)) :: Nil))
@@ -222,7 +229,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
       case Define(defn, rest) => 
         val PartRet(head, parts) = go(rest)
         PartRet(Define(defn, head), parts)
-      case End(_) | Return(Value.Lit(Tree.UnitLit(true)), true) => afterEnd match
+      case End(_) | Return(_, true) => afterEnd match
         case None => PartRet(FnEnd(), Nil)
         case Some(value) => PartRet(StateTransition(value), Nil)
       // identity cases
@@ -377,7 +384,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
     FunDefn(f.sym, f.params, translateBlock(f.body, functionHandlerCtx))
   
   private def translateCls(cls: ClsLikeDefn): ClsLikeDefn =
-    cls.copy(methods = cls.methods.map(translateFun), ctor = translateBlock(cls.ctor, functionHandlerCtx))
+    cls.copy(methods = cls.methods.map(translateFun), ctor = translateBlock(cls.ctor, ctorCtx(cls.sym.asPath)))
   
   // Handle block becomes a FunDefn and CallPlaceholder
   private def translateHandleBlock(h: HandleBlock): Block =
@@ -395,7 +402,7 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
           Return(res, false)
         case b => b
       go(b)
-    val handlerBody = translateBlock(prepareBody(h.body), HandlerCtx(false, false, state => blockBuilder
+    val handlerBody = translateBlock(prepareBody(h.body), HandlerCtx(false, false, N, state => blockBuilder
       .assignFieldN(state.res.tail, nextIdent, Instantiate(state.cls, Value.Lit(Tree.IntLit(state.uid)) :: Nil))
       // .assignFieldN(state.res, tailIdent, state.res.tail.next)
       .ret(SimpleCall(handleBlockImplPath, state.res :: h.lhs.asPath :: Nil))))
@@ -444,7 +451,9 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
           ))
           .rest(rest)
       case b => b
-    val actualBlock = prepareBlock(b)
+    val actualBlock = handlerCtx.ctorThis match
+      case N => prepareBlock(b)
+      case S(thisPath) => Begin(prepareBlock(b), Return(thisPath, false))
     if trivial then return N
     
     val parts = partitionBlock(actualBlock)
@@ -529,5 +538,5 @@ class HandlerLowering(using TL, Raise, Elaborator.State, Elaborator.Ctx):
     case b => b
 
   def translateTopLevel(b: Block): Block =
-    translateBlock(b, HandlerCtx(true, true, _ => rtThrowMsg("Unhandled effects")))
+    translateBlock(b, HandlerCtx(true, true, N, _ => rtThrowMsg("Unhandled effects")))
     
