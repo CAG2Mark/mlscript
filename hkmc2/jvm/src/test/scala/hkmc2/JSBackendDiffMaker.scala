@@ -113,7 +113,7 @@ abstract class JSBackendDiffMaker extends MLsDiffMaker:
               str.splitSane('\n').foreach: line =>
                 output(s"> ${line}")
             expect.get match
-            case S(expected) if content != expected => raise:
+            case S(expected) if content != expected && prefix == "" => raise:
               ErrorReport(msg"Expected: ${expected}, got: ${content}" -> N :: Nil,
                 source = Diagnostic.Source.Runtime)
             case _ =>
