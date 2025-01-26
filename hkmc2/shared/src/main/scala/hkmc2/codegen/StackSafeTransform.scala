@@ -7,6 +7,7 @@ import hkmc2.codegen.*
 import hkmc2.semantics.Elaborator.State
 import hkmc2.semantics.*
 import hkmc2.syntax.Tree
+import hkmc2.codegen.llir.FreshInt
 
 class StackSafeTransform(depthLimit: Int)(using State):
   private val STACK_LIMIT_IDENT: Tree.Ident = Tree.Ident("__stackLimit")
@@ -43,7 +44,7 @@ class StackSafeTransform(depthLimit: Int)(using State):
         .assignFieldN(predefPath, STACK_DEPTH_IDENT, prevDepth.asPath)
         .rest(f(tmp.asPath))
 
-  def extractResTopLevel(res: Result, isTailCall: Bool, f: Result => Block) =
+  def extractResTopLevel(res: Result, isTailCall: Bool, f: Result => Block)(implicit stackSafeFnPath: Path) =
     val resumeSym = VarSymbol(Tree.Ident("resume"))
     val handlerSym = TempSymbol(None, "stackHandler")
     val resSym = TempSymbol(None, "res")
@@ -55,40 +56,18 @@ class StackSafeTransform(depthLimit: Int)(using State):
       Tree.Ident("StackDelay$")
     )
 
-    // the global stack handler is created here
-    HandleBlock(
-      handlerSym, resSym,
-      stackDelayClsPath, clsSym,
-      Handler(
-        BlockMemberSymbol("perform", Nil), resumeSym, ParamList(ParamListFlags.empty, Nil, N) :: Nil,
-        /* 
-          fun perform() =
-            let curOffset = stackOffset
-            stackOffset = stackDepth
-            let ret = resume()
-            stackOffset = curOffset
-            ret
-        */
-        blockBuilder
-          .assign(curOffsetSym, stackOffsetPath)
-          .assignFieldN(predefPath, STACK_OFFSET_IDENT, stackDepthPath)
-          .assign(handlerRes, Call(Value.Ref(resumeSym), Nil)(true))
-          .assignFieldN(predefPath, STACK_OFFSET_IDENT, curOffsetSym.asPath)
-          .ret(handlerRes.asPath)
-      ) :: Nil,
-      blockBuilder
-        .assignFieldN(predefPath, STACK_LIMIT_IDENT, intLit(depthLimit)) // set stackLimit before call
-        .assignFieldN(predefPath, STACK_DEPTH_IDENT, intLit(1)) // set stackDepth = 1 before call
-        .assignFieldN(predefPath, STACK_HANDLER_IDENT, handlerSym.asPath) // assign stack handler
-        .rest(HandleBlockReturn(res)),
-      blockBuilder // reset the stack safety values
-        .assignFieldN(predefPath, STACK_DEPTH_IDENT, intLit(0)) // set stackDepth = 0 after call
-        .assignFieldN(predefPath, STACK_HANDLER_IDENT, Value.Lit(Tree.UnitLit(false))) // set stackHandler = null
-        .rest(f(resSym.asPath))
+    val funSym = BlockMemberSymbol("callWrapper", Nil)
+    val newDefn = FunDefn(
+      None, funSym, List(ParamList(ParamListFlags.empty, Nil, None)),
+      Return(res, false)
     )
 
+    blockBuilder
+      .define(newDefn)
+      .rest(f(Call(stackSafeFnPath, intLit(depthLimit).asArg :: funSym.asPath.asArg :: Nil)(true)))
+
   // Rewrites anything that can contain a Call to increase the stack depth
-  def transform(b: Block, isTopLevel: Bool = false): Block =
+  def transform(b: Block, isTopLevel: Bool = false)(implicit stackSafeFnPath: Path): Block =
     def usesStack(r: Result) = r match
       case Call(Value.Ref(_: BuiltinSymbol), _) => false
       case _: Call | _: Instantiate => true
@@ -130,7 +109,7 @@ class StackSafeTransform(depthLimit: Int)(using State):
     walker.applyBlock(b)
     trivial
 
-  def rewriteCls(defn: ClsLikeDefn): ClsLikeDefn = 
+  def rewriteCls(defn: ClsLikeDefn)(implicit stackSafeFnPath: Path): ClsLikeDefn = 
     val ClsLikeDefn(owner, isym, sym, k, paramsOpt, 
       parentPath, methods, privateFields, publicFields, preCtor, ctor) = defn
     ClsLikeDefn(
@@ -138,7 +117,7 @@ class StackSafeTransform(depthLimit: Int)(using State):
       publicFields, rewriteBlk(preCtor), rewriteBlk(ctor)
     )
 
-  def rewriteBlk(blk: Block) =
+  def rewriteBlk(blk: Block)(implicit stackSafeFnPath: Path) =
     val newBody = transform(blk)
 
     if isTrivial(blk) then 
@@ -164,6 +143,87 @@ class StackSafeTransform(depthLimit: Int)(using State):
             Call(Select(stackHandlerPath, Tree.Ident("perform"))(N), Nil)(true)).end)
         .rest(newBody)
      
-  def rewriteFn(defn: FunDefn) = FunDefn(defn.owner, defn.sym, defn.params, rewriteBlk(defn.body))
+  def rewriteFn(defn: FunDefn)(implicit stackSafeFnPath: Path) = FunDefn(defn.owner, defn.sym, defn.params, rewriteBlk(defn.body))
 
-  def transformTopLevel(b: Block) = transform(b, true)
+  def transformTopLevel(b: Block) =
+    /*
+    Defines the function doStackSafe$. This should be in the predef, but predef functions are currently not
+    instrumented (and for a good reason), so we define this at the start of each compilation unit.
+
+    fun doStackSafe$(stackLimit, f) =
+      handle h = __StackDelay with
+        fun perform(resume) =
+          let curOffset = stackOffset
+          stackOffset = stackDepth
+          let ret = resume()
+          stackOffset = curOffset
+          ret
+      set __stackHandler = h
+      set __stackLimit = stackLimit
+      set __stackDepth = 1
+      let res = f()
+      set __stackDepth = 0
+      set __stackHandler = null
+      res
+  */
+    val stackLimitSym = VarSymbol(Tree.Ident("stackLimit"))
+    val localFunSym = VarSymbol(Tree.Ident("f"))
+
+    val resumeSym = VarSymbol(Tree.Ident("resume"))
+    val handlerSym = TempSymbol(None, "stackHandler")
+    val resSym = TempSymbol(None, "res")
+    val handlerRes = TempSymbol(None, "res")
+    val curOffsetSym = TempSymbol(None, "curOffset")
+    
+    val clsSym = ClassSymbol(
+      Tree.TypeDef(syntax.Cls, Tree.Error(), N, N),
+      Tree.Ident("StackDelay$")
+    )
+    
+    // the global stack handler is created here
+    // we set stackDepth = 2 here instead of 1, since the call to doStackSafe$ already uses one call
+    val bod = HandleBlock(
+      handlerSym, resSym,
+      stackDelayClsPath, clsSym,
+      Handler(
+        BlockMemberSymbol("perform", Nil), resumeSym, ParamList(ParamListFlags.empty, Nil, N) :: Nil,
+        /* 
+          fun perform() =
+            let curOffset = stackOffset
+            stackOffset = stackDepth
+            let ret = resume()
+            stackOffset = curOffset
+            ret
+        */
+        blockBuilder
+          .assign(curOffsetSym, stackOffsetPath)
+          .assignFieldN(predefPath, STACK_OFFSET_IDENT, stackDepthPath)
+          .assign(handlerRes, Call(Value.Ref(resumeSym), Nil)(true))
+          .assignFieldN(predefPath, STACK_OFFSET_IDENT, curOffsetSym.asPath)
+          .ret(handlerRes.asPath)
+      ) :: Nil,
+      blockBuilder
+        .assignFieldN(predefPath, STACK_HANDLER_IDENT, handlerSym.asPath) // assign stack handler
+        .assignFieldN(predefPath, STACK_LIMIT_IDENT, stackLimitSym.asPath) // set stackLimit before call
+        .assignFieldN(predefPath, STACK_DEPTH_IDENT, intLit(2)) // set stackDepth = 2 before call.
+        .rest(HandleBlockReturn(Call(localFunSym.asPath, Nil)(false))),
+      blockBuilder // reset the stack safety values
+        .assignFieldN(predefPath, STACK_DEPTH_IDENT, intLit(0)) // set stackDepth = 0 after call
+        .assignFieldN(predefPath, STACK_HANDLER_IDENT, Value.Lit(Tree.UnitLit(false))) // set stackHandler = null
+        .ret(resSym.asPath)
+    )
+
+    val stackSafeFnSym = BlockMemberSymbol("doStackSafe$", Nil)
+    val stackSafeFnPath = stackSafeFnSym.asPath
+    
+    val stackSafeFnDefn = FunDefn(
+      None, stackSafeFnSym,
+      PlainParamList(
+        Param(FldFlags.empty, stackLimitSym, None) :: Param(FldFlags.empty, localFunSym, None) :: Nil
+        ) :: Nil,
+      bod
+    )
+
+    blockBuilder
+      .define(stackSafeFnDefn)
+      .rest(transform(b, true)(stackSafeFnPath))
