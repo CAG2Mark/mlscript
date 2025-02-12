@@ -153,3 +153,13 @@ lazy val compiler = crossProject(JSPlatform, JVMPlatform).in(file("compiler"))
 lazy val compilerJVM = compiler.jvm
 lazy val compilerJS = compiler.js
 
+lazy val benchmark = crossProject(JSPlatform, JVMPlatform).in(file("benchmark"))
+  .settings(
+    name := "benchmark",
+    scalaVersion := scala3Version,
+    sourceDirectory := baseDirectory.value.getParentFile()/"src",
+    // mainClass := Some("Benchmark"),
+  )
+  .dependsOn(hkmc2)
+lazy val benchmarkJVM = benchmark.jvm
+lazy val benchmarkJS = benchmark.js
