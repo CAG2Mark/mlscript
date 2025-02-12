@@ -1,10 +1,11 @@
 import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.mjs";
 import fs from "fs";
 import NofibPrelude from "./NofibPrelude.mjs";
+import BenchmarkPrelude from "./BenchmarkPrelude.mjs";
 let treejoin1;
 treejoin1 = class treejoin {
   static {
-    let tmp, tmp1, res, handleBlock$, handleBlock$1, handleBlock$2;
+    let res, handleBlock$;
     this.Tree = class Tree {
       constructor() {}
       toString() { return "Tree"; }
@@ -36,249 +37,37 @@ treejoin1 = class treejoin {
     };
     this.Empty = new Empty$class;
     this.Empty.class = Empty$class;
-    handleBlock$2 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$3, StackDelay$3;
-      StackDelay$3 = class StackDelay$ extends runtime.StackDelay {
-        constructor() {
-          let tmp2;
-          tmp2 = super();
-        }
-        perform() {
-          return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$3;
-            Cont$handler$stackHandler$3 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$3.class = class Cont$handler$stackHandler$ extends runtime.Cont.class {
-              constructor(pc, next) {
-                let tmp2;
-                tmp2 = super(next, false);
-                this.pc = pc;
-                this.next = next;
-              }
-              resume(value$) {
-                if (this.pc === 67) {
-                  res2 = value$;
-                }
-                contLoop: while (true) {
-                  if (this.pc === 67) {
-                    if (res2 instanceof runtime.Return.class) {
-                      this.completed = true;
-                      return res2
-                    }
-                    this.pc = 68;
-                    continue contLoop;
-                  } else if (this.pc === 68) {
-                    this.completed = true;
-                    return res2
-                  }
-                  break;
-                }
-              }
-              toString() { return "Cont$handler$stackHandler$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
-            };
-            runtime.stackOffset = runtime.stackDepth;
-            res2 = resume();
-            if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$3.class(67, handleBlock.contHead.next);
-              if (handleBlock.lastHandlerCont === null) {
-                handleBlock.lastHandlerCont = handleBlock.contHead.next;
-              }
-              return res2
-            }
-            if (res2 instanceof runtime.Return.class) {
-              return res2
-            }
-            return res2
-          })
-        }
-        toString() { return "StackDelay$"; }
-      };
-      stackHandler = new StackDelay$3();
-      Cont$handleBlock$stackHandler$3 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$3.class = class Cont$handleBlock$stackHandler$ extends runtime.Cont.class {
-        constructor(pc, next) {
-          let tmp2;
-          tmp2 = super(next, false);
-          this.pc = pc;
-          this.next = next;
-        }
-        resume(value$) {
-          if (this.pc === 65) {
-            res1 = value$;
-          }
-          contLoop: while (true) {
-            if (this.pc === 65) {
-              if (res1 instanceof runtime.Return.class) {
-                this.completed = true;
-                return res1
-              }
-              this.pc = 66;
-              continue contLoop;
-            } else if (this.pc === 66) {
-              this.completed = true;
-              return res1
-            }
-            break;
-          }
-        }
-        toString() { return "Cont$handleBlock$stackHandler$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
-      };
-      runtime.stackLimit = 500;
-      runtime.stackOffset = 0;
-      runtime.stackDepth = 1;
-      runtime.stackHandler = stackHandler;
-      res1 = treejoin.testTreejoin_nofib(0);
-      if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$3(65, null);
-        return runtime.handleBlockImpl(res1, stackHandler)
-      }
-      if (res1 instanceof runtime.Return.class) {
-        return res1
-      }
-      return res1
-    };
-    tmp = handleBlock$2();
-    if (tmp instanceof runtime.EffectSig.class) {
-      throw new globalThis.Error("Unhandled effects");
-    }
-    runtime.stackDepth = 0;
-    runtime.stackHandler = null;
-    handleBlock$1 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$3, StackDelay$3;
-      StackDelay$3 = class StackDelay$1 extends runtime.StackDelay {
-        constructor() {
-          let tmp2;
-          tmp2 = super();
-        }
-        perform() {
-          return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$3;
-            Cont$handler$stackHandler$3 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$3.class = class Cont$handler$stackHandler$1 extends runtime.Cont.class {
-              constructor(pc, next) {
-                let tmp2;
-                tmp2 = super(next, false);
-                this.pc = pc;
-                this.next = next;
-              }
-              resume(value$) {
-                if (this.pc === 62) {
-                  res2 = value$;
-                }
-                contLoop: while (true) {
-                  if (this.pc === 62) {
-                    if (res2 instanceof runtime.Return.class) {
-                      this.completed = true;
-                      return res2
-                    }
-                    this.pc = 63;
-                    continue contLoop;
-                  } else if (this.pc === 63) {
-                    this.completed = true;
-                    return res2
-                  }
-                  break;
-                }
-              }
-              toString() { return "Cont$handler$stackHandler$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
-            };
-            runtime.stackOffset = runtime.stackDepth;
-            res2 = resume();
-            if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$3.class(62, handleBlock.contHead.next);
-              if (handleBlock.lastHandlerCont === null) {
-                handleBlock.lastHandlerCont = handleBlock.contHead.next;
-              }
-              return res2
-            }
-            if (res2 instanceof runtime.Return.class) {
-              return res2
-            }
-            return res2
-          })
-        }
-        toString() { return "StackDelay$"; }
-      };
-      stackHandler = new StackDelay$3();
-      Cont$handleBlock$stackHandler$3 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$3.class = class Cont$handleBlock$stackHandler$1 extends runtime.Cont.class {
-        constructor(pc, next) {
-          let tmp2;
-          tmp2 = super(next, false);
-          this.pc = pc;
-          this.next = next;
-        }
-        resume(value$) {
-          if (this.pc === 60) {
-            res1 = value$;
-          }
-          contLoop: while (true) {
-            if (this.pc === 60) {
-              if (res1 instanceof runtime.Return.class) {
-                this.completed = true;
-                return res1
-              }
-              this.pc = 61;
-              continue contLoop;
-            } else if (this.pc === 61) {
-              this.completed = true;
-              return res1
-            }
-            break;
-          }
-        }
-        toString() { return "Cont$handleBlock$stackHandler$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
-      };
-      runtime.stackLimit = 500;
-      runtime.stackOffset = 0;
-      runtime.stackDepth = 1;
-      runtime.stackHandler = stackHandler;
-      res1 = runtime.safeCall(tmp.toString());
-      if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$3(60, null);
-        return runtime.handleBlockImpl(res1, stackHandler)
-      }
-      if (res1 instanceof runtime.Return.class) {
-        return res1
-      }
-      return res1
-    };
-    tmp1 = handleBlock$1();
-    if (tmp1 instanceof runtime.EffectSig.class) {
-      throw new globalThis.Error("Unhandled effects");
-    }
-    runtime.stackDepth = 0;
-    runtime.stackHandler = null;
     handleBlock$ = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$3, StackDelay$3;
-      StackDelay$3 = class StackDelay$2 extends runtime.StackDelay {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$1, StackDelay$1;
+      StackDelay$1 = class StackDelay$ extends runtime.StackDelay {
         constructor() {
-          let tmp2;
-          tmp2 = super();
+          let tmp;
+          tmp = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$3;
-            Cont$handler$stackHandler$3 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$3.class = class Cont$handler$stackHandler$2 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$1;
+            Cont$handler$stackHandler$1 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$1.class = class Cont$handler$stackHandler$ extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp2;
-                tmp2 = super(next, false);
+                let tmp;
+                tmp = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 57) {
+                if (this.pc === 59) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 57) {
+                  if (this.pc === 59) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 58;
+                    this.pc = 60;
                     continue contLoop;
-                  } else if (this.pc === 58) {
+                  } else if (this.pc === 60) {
                     this.completed = true;
                     return res2
                   }
@@ -290,7 +79,7 @@ treejoin1 = class treejoin {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$3.class(57, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$1.class(59, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -304,28 +93,28 @@ treejoin1 = class treejoin {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$3();
-      Cont$handleBlock$stackHandler$3 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$3.class = class Cont$handleBlock$stackHandler$2 extends runtime.Cont.class {
+      stackHandler = new StackDelay$1();
+      Cont$handleBlock$stackHandler$1 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$1.class = class Cont$handleBlock$stackHandler$ extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp2;
-          tmp2 = super(next, false);
+          let tmp;
+          tmp = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 55) {
+          if (this.pc === 57) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 55) {
+            if (this.pc === 57) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 56;
+              this.pc = 58;
               continue contLoop;
-            } else if (this.pc === 56) {
+            } else if (this.pc === 58) {
               this.completed = true;
               return res1
             }
@@ -338,9 +127,63 @@ treejoin1 = class treejoin {
       runtime.stackOffset = 0;
       runtime.stackDepth = 1;
       runtime.stackHandler = stackHandler;
-      res1 = NofibPrelude.print(tmp1);
+      res1 = BenchmarkPrelude.benchmark(() => {
+        let tmp, curDepth, stackDelayRes, Cont$lambda$2;
+        Cont$lambda$2 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+        Cont$lambda$2.class = class Cont$lambda$ extends runtime.Cont.class {
+          constructor(pc, next) {
+            let tmp1;
+            tmp1 = super(next, false);
+            this.pc = pc;
+            this.next = next;
+          }
+          resume(value$) {
+            if (this.pc === 55) {
+              stackDelayRes = value$;
+            } else if (this.pc === 56) {
+              tmp = value$;
+            }
+            contLoop: while (true) {
+              if (this.pc === 55) {
+                runtime.stackDepth = runtime.stackDepth + 1;
+                tmp = treejoin.testTreejoin_nofib(0);
+                if (tmp instanceof runtime.EffectSig.class) {
+                  this.pc = 56;
+                  return tmp
+                }
+                this.pc = 56;
+                continue contLoop;
+              } else if (this.pc === 56) {
+                tmp = runtime.resetDepth(tmp, curDepth);
+                runtime.stackDepth = runtime.stackDepth + 1;
+                this.completed = true;
+                return runtime.safeCall(tmp.toString())
+              }
+              break;
+            }
+          }
+          toString() { return "Cont$lambda$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+        };
+        curDepth = runtime.stackDepth;
+        stackDelayRes = runtime.checkDepth();
+        if (stackDelayRes instanceof runtime.EffectSig.class) {
+          stackDelayRes.tail.next = new Cont$lambda$2.class(55, null);
+          stackDelayRes.tail = stackDelayRes.tail.next;
+          return stackDelayRes
+        }
+        runtime.stackDepth = runtime.stackDepth + 1;
+        tmp = treejoin.testTreejoin_nofib(0);
+        if (tmp instanceof runtime.EffectSig.class) {
+          tmp.tail.next = new Cont$lambda$2.class(56, null);
+          tmp.tail = tmp.tail.next;
+          return tmp
+        }
+        tmp = runtime.resetDepth(tmp, curDepth);
+        runtime.stackDepth = runtime.stackDepth + 1;
+        return runtime.safeCall(tmp.toString())
+      });
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$3(55, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$1(57, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -363,9 +206,9 @@ treejoin1 = class treejoin {
     return tmp || tmp1
   } 
   static isDigit(c1) {
-    let n, tmp, tmp1, tmp2, curDepth, stackDelayRes, Cont$func$isDigit$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_131_194$1;
-    Cont$func$isDigit$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_131_194$1 = function Cont$func$isDigit$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_131_194$(pc1, next1) { return new Cont$func$isDigit$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_131_194$.class(pc1, next1); };
-    Cont$func$isDigit$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_131_194$1.class = class Cont$func$isDigit$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_131_194$ extends runtime.Cont.class {
+    let n, tmp, tmp1, tmp2, curDepth, stackDelayRes, Cont$func$isDigit$treejoin$_mls_L0_185_248$1;
+    Cont$func$isDigit$treejoin$_mls_L0_185_248$1 = function Cont$func$isDigit$treejoin$_mls_L0_185_248$(pc1, next1) { return new Cont$func$isDigit$treejoin$_mls_L0_185_248$.class(pc1, next1); };
+    Cont$func$isDigit$treejoin$_mls_L0_185_248$1.class = class Cont$func$isDigit$treejoin$_mls_L0_185_248$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp3;
         tmp3 = super(next, false);
@@ -399,19 +242,19 @@ treejoin1 = class treejoin {
           break;
         }
       }
-      toString() { return "Cont$func$isDigit$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_131_194$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$isDigit$treejoin$_mls_L0_185_248$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$isDigit$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_131_194$1.class(0, null);
+      stackDelayRes.tail.next = new Cont$func$isDigit$treejoin$_mls_L0_185_248$1.class(0, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp = runtime.safeCall(c1.codePointAt(0));
     if (tmp instanceof runtime.EffectSig.class) {
-      tmp.tail.next = new Cont$func$isDigit$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_131_194$1.class(1, null);
+      tmp.tail.next = new Cont$func$isDigit$treejoin$_mls_L0_185_248$1.class(1, null);
       tmp.tail = tmp.tail.next;
       return tmp
     }
@@ -422,9 +265,9 @@ treejoin1 = class treejoin {
     return tmp1 && tmp2
   } 
   static insertT(k, e, t) {
-    let param0, param1, k_, k__, l_, scrut, scrut1, param01, param11, param2, k_1, l, r, scrut2, tmp, tmp1, tmp2, tmp3, tmp4, curDepth, tmp5, tmp6, stackDelayRes, Cont$func$insertT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_377_715$1;
-    Cont$func$insertT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_377_715$1 = function Cont$func$insertT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_377_715$(pc1, next1) { return new Cont$func$insertT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_377_715$.class(pc1, next1); };
-    Cont$func$insertT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_377_715$1.class = class Cont$func$insertT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_377_715$ extends runtime.Cont.class {
+    let param0, param1, k_, k__, l_, scrut, scrut1, param01, param11, param2, k_1, l, r, scrut2, tmp, tmp1, tmp2, tmp3, tmp4, curDepth, tmp5, tmp6, stackDelayRes, Cont$func$insertT$treejoin$_mls_L0_431_769$1;
+    Cont$func$insertT$treejoin$_mls_L0_431_769$1 = function Cont$func$insertT$treejoin$_mls_L0_431_769$(pc1, next1) { return new Cont$func$insertT$treejoin$_mls_L0_431_769$.class(pc1, next1); };
+    Cont$func$insertT$treejoin$_mls_L0_431_769$1.class = class Cont$func$insertT$treejoin$_mls_L0_431_769$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp7;
         tmp7 = super(next, false);
@@ -586,12 +429,12 @@ treejoin1 = class treejoin {
           break;
         }
       }
-      toString() { return "Cont$func$insertT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_377_715$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$insertT$treejoin$_mls_L0_431_769$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$insertT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_377_715$1.class(2, null);
+      stackDelayRes.tail.next = new Cont$func$insertT$treejoin$_mls_L0_431_769$1.class(2, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -607,7 +450,7 @@ treejoin1 = class treejoin {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp = treejoin.insertT(k, e, l);
         if (tmp instanceof runtime.EffectSig.class) {
-          tmp.tail.next = new Cont$func$insertT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_377_715$1.class(3, null);
+          tmp.tail.next = new Cont$func$insertT$treejoin$_mls_L0_431_769$1.class(3, null);
           tmp.tail = tmp.tail.next;
           return tmp
         }
@@ -618,7 +461,7 @@ treejoin1 = class treejoin {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp1 = treejoin.insertT(k, e, r);
         if (tmp1 instanceof runtime.EffectSig.class) {
-          tmp1.tail.next = new Cont$func$insertT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_377_715$1.class(4, null);
+          tmp1.tail.next = new Cont$func$insertT$treejoin$_mls_L0_431_769$1.class(4, null);
           tmp1.tail = tmp1.tail.next;
           return tmp1
         }
@@ -634,7 +477,7 @@ treejoin1 = class treejoin {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp2 = treejoin.Leaf(k, e);
       if (tmp2 instanceof runtime.EffectSig.class) {
-        tmp2.tail.next = new Cont$func$insertT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_377_715$1.class(5, null);
+        tmp2.tail.next = new Cont$func$insertT$treejoin$_mls_L0_431_769$1.class(5, null);
         tmp2.tail = tmp2.tail.next;
         return tmp2
       }
@@ -645,7 +488,7 @@ treejoin1 = class treejoin {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp3 = treejoin.Leaf(k_, k__);
         if (tmp3 instanceof runtime.EffectSig.class) {
-          tmp3.tail.next = new Cont$func$insertT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_377_715$1.class(6, null);
+          tmp3.tail.next = new Cont$func$insertT$treejoin$_mls_L0_431_769$1.class(6, null);
           tmp3.tail = tmp3.tail.next;
           return tmp3
         }
@@ -658,7 +501,7 @@ treejoin1 = class treejoin {
           runtime.stackDepth = runtime.stackDepth + 1;
           tmp4 = treejoin.Leaf(k_, k__);
           if (tmp4 instanceof runtime.EffectSig.class) {
-            tmp4.tail.next = new Cont$func$insertT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_377_715$1.class(7, null);
+            tmp4.tail.next = new Cont$func$insertT$treejoin$_mls_L0_431_769$1.class(7, null);
             tmp4.tail = tmp4.tail.next;
             return tmp4
           }
@@ -669,7 +512,7 @@ treejoin1 = class treejoin {
           runtime.stackDepth = runtime.stackDepth + 1;
           tmp5 = globalThis.Error("already exist");
           if (tmp5 instanceof runtime.EffectSig.class) {
-            tmp5.tail.next = new Cont$func$insertT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_377_715$1.class(8, null);
+            tmp5.tail.next = new Cont$func$insertT$treejoin$_mls_L0_431_769$1.class(8, null);
             tmp5.tail = tmp5.tail.next;
             return tmp5
           }
@@ -684,7 +527,7 @@ treejoin1 = class treejoin {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp6 = new globalThis.Error("match error");
       if (tmp6 instanceof runtime.EffectSig.class) {
-        tmp6.tail.next = new Cont$func$insertT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_377_715$1.class(9, null);
+        tmp6.tail.next = new Cont$func$insertT$treejoin$_mls_L0_431_769$1.class(9, null);
         tmp6.tail = tmp6.tail.next;
         return tmp6
       }
@@ -693,9 +536,9 @@ treejoin1 = class treejoin {
     }
   } 
   static lookupT(k1, t1) {
-    let param0, param1, k_, e1, scrut, param01, param11, param2, k_1, l, r, scrut1, tmp, curDepth, stackDelayRes, Cont$func$lookupT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_721_891$1;
-    Cont$func$lookupT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_721_891$1 = function Cont$func$lookupT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_721_891$(pc1, next1) { return new Cont$func$lookupT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_721_891$.class(pc1, next1); };
-    Cont$func$lookupT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_721_891$1.class = class Cont$func$lookupT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_721_891$ extends runtime.Cont.class {
+    let param0, param1, k_, e1, scrut, param01, param11, param2, k_1, l, r, scrut1, tmp, curDepth, stackDelayRes, Cont$func$lookupT$treejoin$_mls_L0_775_945$1;
+    Cont$func$lookupT$treejoin$_mls_L0_775_945$1 = function Cont$func$lookupT$treejoin$_mls_L0_775_945$(pc1, next1) { return new Cont$func$lookupT$treejoin$_mls_L0_775_945$.class(pc1, next1); };
+    Cont$func$lookupT$treejoin$_mls_L0_775_945$1.class = class Cont$func$lookupT$treejoin$_mls_L0_775_945$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp1;
         tmp1 = super(next, false);
@@ -775,12 +618,12 @@ treejoin1 = class treejoin {
           break;
         }
       }
-      toString() { return "Cont$func$lookupT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_721_891$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$lookupT$treejoin$_mls_L0_775_945$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$lookupT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_721_891$1.class(11, null);
+      stackDelayRes.tail.next = new Cont$func$lookupT$treejoin$_mls_L0_775_945$1.class(11, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -817,7 +660,7 @@ treejoin1 = class treejoin {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp = new globalThis.Error("match error");
       if (tmp instanceof runtime.EffectSig.class) {
-        tmp.tail.next = new Cont$func$lookupT$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_721_891$1.class(12, null);
+        tmp.tail.next = new Cont$func$lookupT$treejoin$_mls_L0_775_945$1.class(12, null);
         tmp.tail = tmp.tail.next;
         return tmp
       }
@@ -826,9 +669,9 @@ treejoin1 = class treejoin {
     }
   } 
   static readInt(s) {
-    let readInt_, stackDelayRes, Cont$func$readInt$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_897_1161$1;
-    Cont$func$readInt$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_897_1161$1 = function Cont$func$readInt$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_897_1161$(pc1, next1) { return new Cont$func$readInt$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_897_1161$.class(pc1, next1); };
-    Cont$func$readInt$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_897_1161$1.class = class Cont$func$readInt$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_897_1161$ extends runtime.Cont.class {
+    let readInt_, stackDelayRes, Cont$func$readInt$treejoin$_mls_L0_951_1215$1;
+    Cont$func$readInt$treejoin$_mls_L0_951_1215$1 = function Cont$func$readInt$treejoin$_mls_L0_951_1215$(pc1, next1) { return new Cont$func$readInt$treejoin$_mls_L0_951_1215$.class(pc1, next1); };
+    Cont$func$readInt$treejoin$_mls_L0_951_1215$1.class = class Cont$func$readInt$treejoin$_mls_L0_951_1215$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp;
         tmp = super(next, false);
@@ -848,12 +691,12 @@ treejoin1 = class treejoin {
           break;
         }
       }
-      toString() { return "Cont$func$readInt$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_897_1161$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$readInt$treejoin$_mls_L0_951_1215$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     readInt_ = function readInt_(n, cs) {
-      let s_, param0, param1, c2, cs_, s_1, scrut, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, curDepth, stackDelayRes1, Cont$func$readInt_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_916_1144$1;
-      Cont$func$readInt_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_916_1144$1 = function Cont$func$readInt_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_916_1144$(pc1, next1) { return new Cont$func$readInt_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_916_1144$.class(pc1, next1); };
-      Cont$func$readInt_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_916_1144$1.class = class Cont$func$readInt_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_916_1144$ extends runtime.Cont.class {
+      let s_, param0, param1, c2, cs_, s_1, scrut, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, curDepth, stackDelayRes1, Cont$func$readInt_$treejoin$_mls_L0_970_1198$1;
+      Cont$func$readInt_$treejoin$_mls_L0_970_1198$1 = function Cont$func$readInt_$treejoin$_mls_L0_970_1198$(pc1, next1) { return new Cont$func$readInt_$treejoin$_mls_L0_970_1198$.class(pc1, next1); };
+      Cont$func$readInt_$treejoin$_mls_L0_970_1198$1.class = class Cont$func$readInt_$treejoin$_mls_L0_970_1198$ extends runtime.Cont.class {
         constructor(pc, next) {
           let tmp7;
           tmp7 = super(next, false);
@@ -964,12 +807,12 @@ treejoin1 = class treejoin {
             break;
           }
         }
-        toString() { return "Cont$func$readInt_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_916_1144$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+        toString() { return "Cont$func$readInt_$treejoin$_mls_L0_970_1198$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
       };
       curDepth = runtime.stackDepth;
       stackDelayRes1 = runtime.checkDepth();
       if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-        stackDelayRes1.tail.next = new Cont$func$readInt_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_916_1144$1.class(15, null);
+        stackDelayRes1.tail.next = new Cont$func$readInt_$treejoin$_mls_L0_970_1198$1.class(15, null);
         stackDelayRes1.tail = stackDelayRes1.tail.next;
         return stackDelayRes1
       }
@@ -981,7 +824,7 @@ treejoin1 = class treejoin {
         runtime.stackDepth = runtime.stackDepth + 1;
         scrut = treejoin.isDigit(c2);
         if (scrut instanceof runtime.EffectSig.class) {
-          scrut.tail.next = new Cont$func$readInt_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_916_1144$1.class(16, null);
+          scrut.tail.next = new Cont$func$readInt_$treejoin$_mls_L0_970_1198$1.class(16, null);
           scrut.tail = scrut.tail.next;
           return scrut
         }
@@ -991,7 +834,7 @@ treejoin1 = class treejoin {
           runtime.stackDepth = runtime.stackDepth + 1;
           tmp1 = runtime.safeCall(c2.codePointAt(0));
           if (tmp1 instanceof runtime.EffectSig.class) {
-            tmp1.tail.next = new Cont$func$readInt_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_916_1144$1.class(17, null);
+            tmp1.tail.next = new Cont$func$readInt_$treejoin$_mls_L0_970_1198$1.class(17, null);
             tmp1.tail = tmp1.tail.next;
             return tmp1
           }
@@ -1004,7 +847,7 @@ treejoin1 = class treejoin {
           runtime.stackDepth = runtime.stackDepth + 1;
           tmp4 = NofibPrelude.Cons(c2, cs);
           if (tmp4 instanceof runtime.EffectSig.class) {
-            tmp4.tail.next = new Cont$func$readInt_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_916_1144$1.class(18, null);
+            tmp4.tail.next = new Cont$func$readInt_$treejoin$_mls_L0_970_1198$1.class(18, null);
             tmp4.tail = tmp4.tail.next;
             return tmp4
           }
@@ -1012,7 +855,7 @@ treejoin1 = class treejoin {
           runtime.stackDepth = runtime.stackDepth + 1;
           tmp5 = NofibPrelude.dropWhile(treejoin.isSpace, tmp4);
           if (tmp5 instanceof runtime.EffectSig.class) {
-            tmp5.tail.next = new Cont$func$readInt_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_916_1144$1.class(19, null);
+            tmp5.tail.next = new Cont$func$readInt_$treejoin$_mls_L0_970_1198$1.class(19, null);
             tmp5.tail = tmp5.tail.next;
             return tmp5
           }
@@ -1027,7 +870,7 @@ treejoin1 = class treejoin {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp6 = NofibPrelude.dropWhile(treejoin.isSpace, cs);
         if (tmp6 instanceof runtime.EffectSig.class) {
-          tmp6.tail.next = new Cont$func$readInt_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_916_1144$1.class(20, null);
+          tmp6.tail.next = new Cont$func$readInt_$treejoin$_mls_L0_970_1198$1.class(20, null);
           tmp6.tail = tmp6.tail.next;
           return tmp6
         }
@@ -1041,7 +884,7 @@ treejoin1 = class treejoin {
     };
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$readInt$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_897_1161$1.class(14, null);
+      stackDelayRes.tail.next = new Cont$func$readInt$treejoin$_mls_L0_951_1215$1.class(14, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -1049,9 +892,9 @@ treejoin1 = class treejoin {
     return readInt_(0, s)
   } 
   static join(t11, t2, j) {
-    let param0, param1, param2, k2, l, r, param01, param11, k3, first2, first1, first0, a, b, c2, scrut, param02, first21, first11, first01, d, e1, f, tmp, curDepth, tmp1, tmp2, tmp3, tmp4, stackDelayRes, Cont$func$join$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1167_1405$1;
-    Cont$func$join$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1167_1405$1 = function Cont$func$join$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1167_1405$(pc1, next1) { return new Cont$func$join$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1167_1405$.class(pc1, next1); };
-    Cont$func$join$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1167_1405$1.class = class Cont$func$join$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1167_1405$ extends runtime.Cont.class {
+    let param0, param1, param2, k2, l, r, param01, param11, k3, first2, first1, first0, a, b, c2, scrut, param02, first21, first11, first01, d, e1, f, tmp, curDepth, tmp1, tmp2, tmp3, tmp4, stackDelayRes, Cont$func$join$treejoin$_mls_L0_1221_1459$1;
+    Cont$func$join$treejoin$_mls_L0_1221_1459$1 = function Cont$func$join$treejoin$_mls_L0_1221_1459$(pc1, next1) { return new Cont$func$join$treejoin$_mls_L0_1221_1459$.class(pc1, next1); };
+    Cont$func$join$treejoin$_mls_L0_1221_1459$1.class = class Cont$func$join$treejoin$_mls_L0_1221_1459$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp5;
         tmp5 = super(next, false);
@@ -1222,12 +1065,12 @@ treejoin1 = class treejoin {
           break;
         }
       }
-      toString() { return "Cont$func$join$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1167_1405$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$join$treejoin$_mls_L0_1221_1459$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$join$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1167_1405$1.class(22, null);
+      stackDelayRes.tail.next = new Cont$func$join$treejoin$_mls_L0_1221_1459$1.class(22, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -1251,7 +1094,7 @@ treejoin1 = class treejoin {
             runtime.stackDepth = runtime.stackDepth + 1;
             scrut = treejoin.lookupT(c2, t2);
             if (scrut instanceof runtime.EffectSig.class) {
-              scrut.tail.next = new Cont$func$join$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1167_1405$1.class(23, null);
+              scrut.tail.next = new Cont$func$join$treejoin$_mls_L0_1221_1459$1.class(23, null);
               scrut.tail = scrut.tail.next;
               return scrut
             }
@@ -1279,7 +1122,7 @@ treejoin1 = class treejoin {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 tmp1 = new globalThis.Error("match error");
                 if (tmp1 instanceof runtime.EffectSig.class) {
-                  tmp1.tail.next = new Cont$func$join$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1167_1405$1.class(24, null);
+                  tmp1.tail.next = new Cont$func$join$treejoin$_mls_L0_1221_1459$1.class(24, null);
                   tmp1.tail = tmp1.tail.next;
                   return tmp1
                 }
@@ -1290,7 +1133,7 @@ treejoin1 = class treejoin {
               runtime.stackDepth = runtime.stackDepth + 1;
               tmp2 = new globalThis.Error("match error");
               if (tmp2 instanceof runtime.EffectSig.class) {
-                tmp2.tail.next = new Cont$func$join$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1167_1405$1.class(25, null);
+                tmp2.tail.next = new Cont$func$join$treejoin$_mls_L0_1221_1459$1.class(25, null);
                 tmp2.tail = tmp2.tail.next;
                 return tmp2
               }
@@ -1301,7 +1144,7 @@ treejoin1 = class treejoin {
             runtime.stackDepth = runtime.stackDepth + 1;
             tmp3 = new globalThis.Error("match error");
             if (tmp3 instanceof runtime.EffectSig.class) {
-              tmp3.tail.next = new Cont$func$join$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1167_1405$1.class(26, null);
+              tmp3.tail.next = new Cont$func$join$treejoin$_mls_L0_1221_1459$1.class(26, null);
               tmp3.tail = tmp3.tail.next;
               return tmp3
             }
@@ -1318,7 +1161,7 @@ treejoin1 = class treejoin {
           runtime.stackDepth = runtime.stackDepth + 1;
           tmp = treejoin.join(r, t2, j);
           if (tmp instanceof runtime.EffectSig.class) {
-            tmp.tail.next = new Cont$func$join$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1167_1405$1.class(27, null);
+            tmp.tail.next = new Cont$func$join$treejoin$_mls_L0_1221_1459$1.class(27, null);
             tmp.tail = tmp.tail.next;
             return tmp
           }
@@ -1329,7 +1172,7 @@ treejoin1 = class treejoin {
           runtime.stackDepth = runtime.stackDepth + 1;
           tmp4 = new globalThis.Error("match error");
           if (tmp4 instanceof runtime.EffectSig.class) {
-            tmp4.tail.next = new Cont$func$join$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1167_1405$1.class(28, null);
+            tmp4.tail.next = new Cont$func$join$treejoin$_mls_L0_1221_1459$1.class(28, null);
             tmp4.tail = tmp4.tail.next;
             return tmp4
           }
@@ -1340,9 +1183,9 @@ treejoin1 = class treejoin {
     }
   } 
   static readTree(fk, s1, t3) {
-    let scrut, first1, first0, f, s_, scrut1, first11, first01, g, s__, scrut2, first12, first02, h, s___, e1, k2, tmp, tmp1, curDepth, tmp2, tmp3, tmp4, stackDelayRes, Cont$func$readTree$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1411_1642$1;
-    Cont$func$readTree$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1411_1642$1 = function Cont$func$readTree$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1411_1642$(pc1, next1) { return new Cont$func$readTree$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1411_1642$.class(pc1, next1); };
-    Cont$func$readTree$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1411_1642$1.class = class Cont$func$readTree$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1411_1642$ extends runtime.Cont.class {
+    let scrut, first1, first0, f, s_, scrut1, first11, first01, g, s__, scrut2, first12, first02, h, s___, e1, k2, tmp, tmp1, curDepth, tmp2, tmp3, tmp4, stackDelayRes, Cont$func$readTree$treejoin$_mls_L0_1465_1696$1;
+    Cont$func$readTree$treejoin$_mls_L0_1465_1696$1 = function Cont$func$readTree$treejoin$_mls_L0_1465_1696$(pc1, next1) { return new Cont$func$readTree$treejoin$_mls_L0_1465_1696$.class(pc1, next1); };
+    Cont$func$readTree$treejoin$_mls_L0_1465_1696$1.class = class Cont$func$readTree$treejoin$_mls_L0_1465_1696$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp5;
         tmp5 = super(next, false);
@@ -1503,12 +1346,12 @@ treejoin1 = class treejoin {
           break;
         }
       }
-      toString() { return "Cont$func$readTree$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1411_1642$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$readTree$treejoin$_mls_L0_1465_1696$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$readTree$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1411_1642$1.class(30, null);
+      stackDelayRes.tail.next = new Cont$func$readTree$treejoin$_mls_L0_1465_1696$1.class(30, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -1518,7 +1361,7 @@ treejoin1 = class treejoin {
       runtime.stackDepth = runtime.stackDepth + 1;
       scrut = treejoin.readInt(s1);
       if (scrut instanceof runtime.EffectSig.class) {
-        scrut.tail.next = new Cont$func$readTree$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1411_1642$1.class(31, null);
+        scrut.tail.next = new Cont$func$readTree$treejoin$_mls_L0_1465_1696$1.class(31, null);
         scrut.tail = scrut.tail.next;
         return scrut
       }
@@ -1531,7 +1374,7 @@ treejoin1 = class treejoin {
         runtime.stackDepth = runtime.stackDepth + 1;
         scrut1 = treejoin.readInt(s_);
         if (scrut1 instanceof runtime.EffectSig.class) {
-          scrut1.tail.next = new Cont$func$readTree$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1411_1642$1.class(32, null);
+          scrut1.tail.next = new Cont$func$readTree$treejoin$_mls_L0_1465_1696$1.class(32, null);
           scrut1.tail = scrut1.tail.next;
           return scrut1
         }
@@ -1544,7 +1387,7 @@ treejoin1 = class treejoin {
           runtime.stackDepth = runtime.stackDepth + 1;
           scrut2 = treejoin.readInt(s__);
           if (scrut2 instanceof runtime.EffectSig.class) {
-            scrut2.tail.next = new Cont$func$readTree$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1411_1642$1.class(33, null);
+            scrut2.tail.next = new Cont$func$readTree$treejoin$_mls_L0_1465_1696$1.class(33, null);
             scrut2.tail = scrut2.tail.next;
             return scrut2
           }
@@ -1562,7 +1405,7 @@ treejoin1 = class treejoin {
             runtime.stackDepth = runtime.stackDepth + 1;
             tmp = runtime.safeCall(fk(e1));
             if (tmp instanceof runtime.EffectSig.class) {
-              tmp.tail.next = new Cont$func$readTree$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1411_1642$1.class(34, null);
+              tmp.tail.next = new Cont$func$readTree$treejoin$_mls_L0_1465_1696$1.class(34, null);
               tmp.tail = tmp.tail.next;
               return tmp
             }
@@ -1571,7 +1414,7 @@ treejoin1 = class treejoin {
             runtime.stackDepth = runtime.stackDepth + 1;
             tmp1 = treejoin.insertT(k2, e1, t3);
             if (tmp1 instanceof runtime.EffectSig.class) {
-              tmp1.tail.next = new Cont$func$readTree$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1411_1642$1.class(35, null);
+              tmp1.tail.next = new Cont$func$readTree$treejoin$_mls_L0_1465_1696$1.class(35, null);
               tmp1.tail = tmp1.tail.next;
               return tmp1
             }
@@ -1582,7 +1425,7 @@ treejoin1 = class treejoin {
             runtime.stackDepth = runtime.stackDepth + 1;
             tmp2 = new globalThis.Error("match error");
             if (tmp2 instanceof runtime.EffectSig.class) {
-              tmp2.tail.next = new Cont$func$readTree$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1411_1642$1.class(36, null);
+              tmp2.tail.next = new Cont$func$readTree$treejoin$_mls_L0_1465_1696$1.class(36, null);
               tmp2.tail = tmp2.tail.next;
               return tmp2
             }
@@ -1593,7 +1436,7 @@ treejoin1 = class treejoin {
           runtime.stackDepth = runtime.stackDepth + 1;
           tmp3 = new globalThis.Error("match error");
           if (tmp3 instanceof runtime.EffectSig.class) {
-            tmp3.tail.next = new Cont$func$readTree$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1411_1642$1.class(37, null);
+            tmp3.tail.next = new Cont$func$readTree$treejoin$_mls_L0_1465_1696$1.class(37, null);
             tmp3.tail = tmp3.tail.next;
             return tmp3
           }
@@ -1604,7 +1447,7 @@ treejoin1 = class treejoin {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp4 = new globalThis.Error("match error");
         if (tmp4 instanceof runtime.EffectSig.class) {
-          tmp4.tail.next = new Cont$func$readTree$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1411_1642$1.class(38, null);
+          tmp4.tail.next = new Cont$func$readTree$treejoin$_mls_L0_1465_1696$1.class(38, null);
           tmp4.tail = tmp4.tail.next;
           return tmp4
         }
@@ -1614,9 +1457,9 @@ treejoin1 = class treejoin {
     }
   } 
   static testTreejoin_nofib(n) {
-    let c11, c2, a, b, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, curDepth, stackDelayRes, Cont$func$testTreejoin_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1649_2034$1;
-    Cont$func$testTreejoin_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1649_2034$1 = function Cont$func$testTreejoin_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1649_2034$(pc1, next1) { return new Cont$func$testTreejoin_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1649_2034$.class(pc1, next1); };
-    Cont$func$testTreejoin_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1649_2034$1.class = class Cont$func$testTreejoin_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1649_2034$ extends runtime.Cont.class {
+    let c11, c2, a, b, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, curDepth, stackDelayRes, Cont$func$testTreejoin_nofib$treejoin$_mls_L0_1703_2088$1;
+    Cont$func$testTreejoin_nofib$treejoin$_mls_L0_1703_2088$1 = function Cont$func$testTreejoin_nofib$treejoin$_mls_L0_1703_2088$(pc1, next1) { return new Cont$func$testTreejoin_nofib$treejoin$_mls_L0_1703_2088$.class(pc1, next1); };
+    Cont$func$testTreejoin_nofib$treejoin$_mls_L0_1703_2088$1.class = class Cont$func$testTreejoin_nofib$treejoin$_mls_L0_1703_2088$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp10;
         tmp10 = super(next, false);
@@ -1708,9 +1551,9 @@ treejoin1 = class treejoin {
             tmp5 = runtime.resetDepth(tmp5, curDepth);
             c2 = tmp5;
             tmp6 = (caseScrut) => {
-              let first2, first1, first0, xx, tmp10, curDepth1, stackDelayRes1, Cont$lambda$1;
-              Cont$lambda$1 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-              Cont$lambda$1.class = class Cont$lambda$2 extends runtime.Cont.class {
+              let first2, first1, first0, xx, tmp10, curDepth1, stackDelayRes1, Cont$lambda$2;
+              Cont$lambda$2 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+              Cont$lambda$2.class = class Cont$lambda$3 extends runtime.Cont.class {
                 constructor(pc1, next1) {
                   let tmp11;
                   tmp11 = super(next1, false);
@@ -1758,7 +1601,7 @@ treejoin1 = class treejoin {
               curDepth1 = runtime.stackDepth;
               stackDelayRes1 = runtime.checkDepth();
               if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-                stackDelayRes1.tail.next = new Cont$lambda$1.class(47, null);
+                stackDelayRes1.tail.next = new Cont$lambda$2.class(47, null);
                 stackDelayRes1.tail = stackDelayRes1.tail.next;
                 return stackDelayRes1
               }
@@ -1772,7 +1615,7 @@ treejoin1 = class treejoin {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 tmp10 = new globalThis.Error("match error");
                 if (tmp10 instanceof runtime.EffectSig.class) {
-                  tmp10.tail.next = new Cont$lambda$1.class(48, null);
+                  tmp10.tail.next = new Cont$lambda$2.class(48, null);
                   tmp10.tail = tmp10.tail.next;
                   return tmp10
                 }
@@ -1792,9 +1635,9 @@ treejoin1 = class treejoin {
             tmp7 = runtime.resetDepth(tmp7, curDepth);
             a = tmp7;
             tmp8 = (caseScrut) => {
-              let first2, first1, first0, xx, tmp10, curDepth1, stackDelayRes1, Cont$lambda$1;
-              Cont$lambda$1 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-              Cont$lambda$1.class = class Cont$lambda$ extends runtime.Cont.class {
+              let first2, first1, first0, xx, tmp10, curDepth1, stackDelayRes1, Cont$lambda$2;
+              Cont$lambda$2 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+              Cont$lambda$2.class = class Cont$lambda$1 extends runtime.Cont.class {
                 constructor(pc1, next1) {
                   let tmp11;
                   tmp11 = super(next1, false);
@@ -1842,7 +1685,7 @@ treejoin1 = class treejoin {
               curDepth1 = runtime.stackDepth;
               stackDelayRes1 = runtime.checkDepth();
               if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-                stackDelayRes1.tail.next = new Cont$lambda$1.class(51, null);
+                stackDelayRes1.tail.next = new Cont$lambda$2.class(51, null);
                 stackDelayRes1.tail = stackDelayRes1.tail.next;
                 return stackDelayRes1
               }
@@ -1856,7 +1699,7 @@ treejoin1 = class treejoin {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 tmp10 = new globalThis.Error("match error");
                 if (tmp10 instanceof runtime.EffectSig.class) {
-                  tmp10.tail.next = new Cont$lambda$1.class(52, null);
+                  tmp10.tail.next = new Cont$lambda$2.class(52, null);
                   tmp10.tail = tmp10.tail.next;
                   return tmp10
                 }
@@ -1882,19 +1725,19 @@ treejoin1 = class treejoin {
           break;
         }
       }
-      toString() { return "Cont$func$testTreejoin_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1649_2034$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$testTreejoin_nofib$treejoin$_mls_L0_1703_2088$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$testTreejoin_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1649_2034$1.class(40, null);
+      stackDelayRes.tail.next = new Cont$func$testTreejoin_nofib$treejoin$_mls_L0_1703_2088$1.class(40, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp = runtime.safeCall(fs.readFileSync("hkmc2/shared/src/test/mlscript/nofib/input/1500.1"));
     if (tmp instanceof runtime.EffectSig.class) {
-      tmp.tail.next = new Cont$func$testTreejoin_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1649_2034$1.class(41, null);
+      tmp.tail.next = new Cont$func$testTreejoin_nofib$treejoin$_mls_L0_1703_2088$1.class(41, null);
       tmp.tail = tmp.tail.next;
       return tmp
     }
@@ -1902,7 +1745,7 @@ treejoin1 = class treejoin {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp1 = runtime.safeCall(tmp.toString());
     if (tmp1 instanceof runtime.EffectSig.class) {
-      tmp1.tail.next = new Cont$func$testTreejoin_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1649_2034$1.class(42, null);
+      tmp1.tail.next = new Cont$func$testTreejoin_nofib$treejoin$_mls_L0_1703_2088$1.class(42, null);
       tmp1.tail = tmp1.tail.next;
       return tmp1
     }
@@ -1910,7 +1753,7 @@ treejoin1 = class treejoin {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp2 = NofibPrelude.nofibStringToList(tmp1);
     if (tmp2 instanceof runtime.EffectSig.class) {
-      tmp2.tail.next = new Cont$func$testTreejoin_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1649_2034$1.class(43, null);
+      tmp2.tail.next = new Cont$func$testTreejoin_nofib$treejoin$_mls_L0_1703_2088$1.class(43, null);
       tmp2.tail = tmp2.tail.next;
       return tmp2
     }
@@ -1919,7 +1762,7 @@ treejoin1 = class treejoin {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp3 = runtime.safeCall(fs.readFileSync("hkmc2/shared/src/test/mlscript/nofib/input/1500.2"));
     if (tmp3 instanceof runtime.EffectSig.class) {
-      tmp3.tail.next = new Cont$func$testTreejoin_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1649_2034$1.class(44, null);
+      tmp3.tail.next = new Cont$func$testTreejoin_nofib$treejoin$_mls_L0_1703_2088$1.class(44, null);
       tmp3.tail = tmp3.tail.next;
       return tmp3
     }
@@ -1927,7 +1770,7 @@ treejoin1 = class treejoin {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp4 = runtime.safeCall(tmp3.toString());
     if (tmp4 instanceof runtime.EffectSig.class) {
-      tmp4.tail.next = new Cont$func$testTreejoin_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1649_2034$1.class(45, null);
+      tmp4.tail.next = new Cont$func$testTreejoin_nofib$treejoin$_mls_L0_1703_2088$1.class(45, null);
       tmp4.tail = tmp4.tail.next;
       return tmp4
     }
@@ -1935,16 +1778,16 @@ treejoin1 = class treejoin {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp5 = NofibPrelude.nofibStringToList(tmp4);
     if (tmp5 instanceof runtime.EffectSig.class) {
-      tmp5.tail.next = new Cont$func$testTreejoin_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1649_2034$1.class(46, null);
+      tmp5.tail.next = new Cont$func$testTreejoin_nofib$treejoin$_mls_L0_1703_2088$1.class(46, null);
       tmp5.tail = tmp5.tail.next;
       return tmp5
     }
     tmp5 = runtime.resetDepth(tmp5, curDepth);
     c2 = tmp5;
     tmp6 = (caseScrut) => {
-      let first2, first1, first0, xx, tmp10, curDepth1, stackDelayRes1, Cont$lambda$1;
-      Cont$lambda$1 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-      Cont$lambda$1.class = class Cont$lambda$2 extends runtime.Cont.class {
+      let first2, first1, first0, xx, tmp10, curDepth1, stackDelayRes1, Cont$lambda$2;
+      Cont$lambda$2 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+      Cont$lambda$2.class = class Cont$lambda$3 extends runtime.Cont.class {
         constructor(pc, next) {
           let tmp11;
           tmp11 = super(next, false);
@@ -1992,7 +1835,7 @@ treejoin1 = class treejoin {
       curDepth1 = runtime.stackDepth;
       stackDelayRes1 = runtime.checkDepth();
       if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-        stackDelayRes1.tail.next = new Cont$lambda$1.class(47, null);
+        stackDelayRes1.tail.next = new Cont$lambda$2.class(47, null);
         stackDelayRes1.tail = stackDelayRes1.tail.next;
         return stackDelayRes1
       }
@@ -2006,7 +1849,7 @@ treejoin1 = class treejoin {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp10 = new globalThis.Error("match error");
         if (tmp10 instanceof runtime.EffectSig.class) {
-          tmp10.tail.next = new Cont$lambda$1.class(48, null);
+          tmp10.tail.next = new Cont$lambda$2.class(48, null);
           tmp10.tail = tmp10.tail.next;
           return tmp10
         }
@@ -2017,16 +1860,16 @@ treejoin1 = class treejoin {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp7 = treejoin.readTree(tmp6, c11, treejoin.Empty);
     if (tmp7 instanceof runtime.EffectSig.class) {
-      tmp7.tail.next = new Cont$func$testTreejoin_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1649_2034$1.class(50, null);
+      tmp7.tail.next = new Cont$func$testTreejoin_nofib$treejoin$_mls_L0_1703_2088$1.class(50, null);
       tmp7.tail = tmp7.tail.next;
       return tmp7
     }
     tmp7 = runtime.resetDepth(tmp7, curDepth);
     a = tmp7;
     tmp8 = (caseScrut) => {
-      let first2, first1, first0, xx, tmp10, curDepth1, stackDelayRes1, Cont$lambda$1;
-      Cont$lambda$1 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-      Cont$lambda$1.class = class Cont$lambda$ extends runtime.Cont.class {
+      let first2, first1, first0, xx, tmp10, curDepth1, stackDelayRes1, Cont$lambda$2;
+      Cont$lambda$2 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+      Cont$lambda$2.class = class Cont$lambda$1 extends runtime.Cont.class {
         constructor(pc, next) {
           let tmp11;
           tmp11 = super(next, false);
@@ -2074,7 +1917,7 @@ treejoin1 = class treejoin {
       curDepth1 = runtime.stackDepth;
       stackDelayRes1 = runtime.checkDepth();
       if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-        stackDelayRes1.tail.next = new Cont$lambda$1.class(51, null);
+        stackDelayRes1.tail.next = new Cont$lambda$2.class(51, null);
         stackDelayRes1.tail = stackDelayRes1.tail.next;
         return stackDelayRes1
       }
@@ -2088,7 +1931,7 @@ treejoin1 = class treejoin {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp10 = new globalThis.Error("match error");
         if (tmp10 instanceof runtime.EffectSig.class) {
-          tmp10.tail.next = new Cont$lambda$1.class(52, null);
+          tmp10.tail.next = new Cont$lambda$2.class(52, null);
           tmp10.tail = tmp10.tail.next;
           return tmp10
         }
@@ -2099,7 +1942,7 @@ treejoin1 = class treejoin {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp9 = treejoin.readTree(tmp8, c2, treejoin.Empty);
     if (tmp9 instanceof runtime.EffectSig.class) {
-      tmp9.tail.next = new Cont$func$testTreejoin_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_treejoin$_mls_L0_1649_2034$1.class(54, null);
+      tmp9.tail.next = new Cont$func$testTreejoin_nofib$treejoin$_mls_L0_1703_2088$1.class(54, null);
       tmp9.tail = tmp9.tail.next;
       return tmp9
     }

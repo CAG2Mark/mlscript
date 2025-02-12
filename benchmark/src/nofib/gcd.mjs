@@ -1,146 +1,41 @@
 import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.mjs";
 import NofibPrelude from "./NofibPrelude.mjs";
+import BenchmarkPrelude from "./BenchmarkPrelude.mjs";
 let gcd1;
 gcd1 = class gcd {
   static {
-    let tmp, res, handleBlock$, handleBlock$1;
-    handleBlock$1 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$2, StackDelay$2;
-      StackDelay$2 = class StackDelay$ extends runtime.StackDelay {
-        constructor() {
-          let tmp1;
-          tmp1 = super();
-        }
-        perform() {
-          return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$2;
-            Cont$handler$stackHandler$2 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$2.class = class Cont$handler$stackHandler$ extends runtime.Cont.class {
-              constructor(pc, next) {
-                let tmp1;
-                tmp1 = super(next, false);
-                this.pc = pc;
-                this.next = next;
-              }
-              resume(value$) {
-                if (this.pc === 43) {
-                  res2 = value$;
-                }
-                contLoop: while (true) {
-                  if (this.pc === 43) {
-                    if (res2 instanceof runtime.Return.class) {
-                      this.completed = true;
-                      return res2
-                    }
-                    this.pc = 44;
-                    continue contLoop;
-                  } else if (this.pc === 44) {
-                    this.completed = true;
-                    return res2
-                  }
-                  break;
-                }
-              }
-              toString() { return "Cont$handler$stackHandler$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
-            };
-            runtime.stackOffset = runtime.stackDepth;
-            res2 = resume();
-            if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$2.class(43, handleBlock.contHead.next);
-              if (handleBlock.lastHandlerCont === null) {
-                handleBlock.lastHandlerCont = handleBlock.contHead.next;
-              }
-              return res2
-            }
-            if (res2 instanceof runtime.Return.class) {
-              return res2
-            }
-            return res2
-          })
-        }
-        toString() { return "StackDelay$"; }
-      };
-      stackHandler = new StackDelay$2();
-      Cont$handleBlock$stackHandler$2 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$2.class = class Cont$handleBlock$stackHandler$ extends runtime.Cont.class {
-        constructor(pc, next) {
-          let tmp1;
-          tmp1 = super(next, false);
-          this.pc = pc;
-          this.next = next;
-        }
-        resume(value$) {
-          if (this.pc === 41) {
-            res1 = value$;
-          }
-          contLoop: while (true) {
-            if (this.pc === 41) {
-              if (res1 instanceof runtime.Return.class) {
-                this.completed = true;
-                return res1
-              }
-              this.pc = 42;
-              continue contLoop;
-            } else if (this.pc === 42) {
-              this.completed = true;
-              return res1
-            }
-            break;
-          }
-        }
-        toString() { return "Cont$handleBlock$stackHandler$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
-      };
-      runtime.stackLimit = 500;
-      runtime.stackOffset = 0;
-      runtime.stackDepth = 1;
-      runtime.stackHandler = stackHandler;
-      res1 = gcd.testGcd_nofib(400);
-      if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$2(41, null);
-        return runtime.handleBlockImpl(res1, stackHandler)
-      }
-      if (res1 instanceof runtime.Return.class) {
-        return res1
-      }
-      return res1
-    };
-    tmp = handleBlock$1();
-    if (tmp instanceof runtime.EffectSig.class) {
-      throw new globalThis.Error("Unhandled effects");
-    }
-    runtime.stackDepth = 0;
-    runtime.stackHandler = null;
+    let res, handleBlock$;
     handleBlock$ = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$2, StackDelay$2;
-      StackDelay$2 = class StackDelay$1 extends runtime.StackDelay {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$1, StackDelay$1;
+      StackDelay$1 = class StackDelay$ extends runtime.StackDelay {
         constructor() {
-          let tmp1;
-          tmp1 = super();
+          let tmp;
+          tmp = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$2;
-            Cont$handler$stackHandler$2 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$2.class = class Cont$handler$stackHandler$1 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$1;
+            Cont$handler$stackHandler$1 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$1.class = class Cont$handler$stackHandler$ extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp1;
-                tmp1 = super(next, false);
+                let tmp;
+                tmp = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 38) {
+                if (this.pc === 39) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 38) {
+                  if (this.pc === 39) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 39;
+                    this.pc = 40;
                     continue contLoop;
-                  } else if (this.pc === 39) {
+                  } else if (this.pc === 40) {
                     this.completed = true;
                     return res2
                   }
@@ -152,7 +47,7 @@ gcd1 = class gcd {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$2.class(38, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$1.class(39, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -166,28 +61,28 @@ gcd1 = class gcd {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$2();
-      Cont$handleBlock$stackHandler$2 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$2.class = class Cont$handleBlock$stackHandler$1 extends runtime.Cont.class {
+      stackHandler = new StackDelay$1();
+      Cont$handleBlock$stackHandler$1 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$1.class = class Cont$handleBlock$stackHandler$ extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp1;
-          tmp1 = super(next, false);
+          let tmp;
+          tmp = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 36) {
+          if (this.pc === 37) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 36) {
+            if (this.pc === 37) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 37;
+              this.pc = 38;
               continue contLoop;
-            } else if (this.pc === 37) {
+            } else if (this.pc === 38) {
               this.completed = true;
               return res1
             }
@@ -200,9 +95,42 @@ gcd1 = class gcd {
       runtime.stackOffset = 0;
       runtime.stackDepth = 1;
       runtime.stackHandler = stackHandler;
-      res1 = NofibPrelude.print(tmp);
+      res1 = BenchmarkPrelude.benchmark(() => {
+        let stackDelayRes, Cont$lambda$2;
+        Cont$lambda$2 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+        Cont$lambda$2.class = class Cont$lambda$ extends runtime.Cont.class {
+          constructor(pc, next) {
+            let tmp;
+            tmp = super(next, false);
+            this.pc = pc;
+            this.next = next;
+          }
+          resume(value$) {
+            if (this.pc === 36) {
+              stackDelayRes = value$;
+            }
+            contLoop: while (true) {
+              if (this.pc === 36) {
+                runtime.stackDepth = runtime.stackDepth + 1;
+                this.completed = true;
+                return gcd.testGcd_nofib(400)
+              }
+              break;
+            }
+          }
+          toString() { return "Cont$lambda$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+        };
+        stackDelayRes = runtime.checkDepth();
+        if (stackDelayRes instanceof runtime.EffectSig.class) {
+          stackDelayRes.tail.next = new Cont$lambda$2.class(36, null);
+          stackDelayRes.tail = stackDelayRes.tail.next;
+          return stackDelayRes
+        }
+        runtime.stackDepth = runtime.stackDepth + 1;
+        return gcd.testGcd_nofib(400)
+      });
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$2(36, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$1(37, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -219,9 +147,9 @@ gcd1 = class gcd {
     res
   }
   static g(u1u2u3, v1v2v3) {
-    let first2, first1, first0, u1, u2, u3, first21, first11, first01, v1, v2, v3, scrut, first12, first02, q, r, scrut1, tmp, tmp1, tmp2, tmp3, curDepth, tmp4, tmp5, tmp6, stackDelayRes, Cont$func$g$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_72_292$1;
-    Cont$func$g$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_72_292$1 = function Cont$func$g$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_72_292$(pc1, next1) { return new Cont$func$g$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_72_292$.class(pc1, next1); };
-    Cont$func$g$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_72_292$1.class = class Cont$func$g$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_72_292$ extends runtime.Cont.class {
+    let first2, first1, first0, u1, u2, u3, first21, first11, first01, v1, v2, v3, scrut, first12, first02, q, r, scrut1, tmp, tmp1, tmp2, tmp3, curDepth, tmp4, tmp5, tmp6, stackDelayRes, Cont$func$g$gcd$_mls_L0_126_346$1;
+    Cont$func$g$gcd$_mls_L0_126_346$1 = function Cont$func$g$gcd$_mls_L0_126_346$(pc1, next1) { return new Cont$func$g$gcd$_mls_L0_126_346$.class(pc1, next1); };
+    Cont$func$g$gcd$_mls_L0_126_346$1.class = class Cont$func$g$gcd$_mls_L0_126_346$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp7;
         tmp7 = super(next, false);
@@ -349,12 +277,12 @@ gcd1 = class gcd {
           break;
         }
       }
-      toString() { return "Cont$func$g$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_72_292$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$g$gcd$_mls_L0_126_346$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$g$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_72_292$1.class(0, null);
+      stackDelayRes.tail.next = new Cont$func$g$gcd$_mls_L0_126_346$1.class(0, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -383,7 +311,7 @@ gcd1 = class gcd {
           runtime.stackDepth = runtime.stackDepth + 1;
           scrut = NofibPrelude.quotRem(u3, v3);
           if (scrut instanceof runtime.EffectSig.class) {
-            scrut.tail.next = new Cont$func$g$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_72_292$1.class(1, null);
+            scrut.tail.next = new Cont$func$g$gcd$_mls_L0_126_346$1.class(1, null);
             scrut.tail = scrut.tail.next;
             return scrut
           }
@@ -411,7 +339,7 @@ gcd1 = class gcd {
             runtime.stackDepth = runtime.stackDepth + 1;
             tmp4 = new globalThis.Error("match error");
             if (tmp4 instanceof runtime.EffectSig.class) {
-              tmp4.tail.next = new Cont$func$g$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_72_292$1.class(2, null);
+              tmp4.tail.next = new Cont$func$g$gcd$_mls_L0_126_346$1.class(2, null);
               tmp4.tail = tmp4.tail.next;
               return tmp4
             }
@@ -423,7 +351,7 @@ gcd1 = class gcd {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp5 = new globalThis.Error("match error");
         if (tmp5 instanceof runtime.EffectSig.class) {
-          tmp5.tail.next = new Cont$func$g$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_72_292$1.class(3, null);
+          tmp5.tail.next = new Cont$func$g$gcd$_mls_L0_126_346$1.class(3, null);
           tmp5.tail = tmp5.tail.next;
           return tmp5
         }
@@ -434,7 +362,7 @@ gcd1 = class gcd {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp6 = new globalThis.Error("match error");
       if (tmp6 instanceof runtime.EffectSig.class) {
-        tmp6.tail.next = new Cont$func$g$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_72_292$1.class(4, null);
+        tmp6.tail.next = new Cont$func$g$gcd$_mls_L0_126_346$1.class(4, null);
         tmp6.tail = tmp6.tail.next;
         return tmp6
       }
@@ -443,9 +371,9 @@ gcd1 = class gcd {
     }
   } 
   static gcdE(x, y) {
-    let scrut, stackDelayRes, Cont$func$gcdE$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_298_369$1;
-    Cont$func$gcdE$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_298_369$1 = function Cont$func$gcdE$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_298_369$(pc1, next1) { return new Cont$func$gcdE$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_298_369$.class(pc1, next1); };
-    Cont$func$gcdE$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_298_369$1.class = class Cont$func$gcdE$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_298_369$ extends runtime.Cont.class {
+    let scrut, stackDelayRes, Cont$func$gcdE$gcd$_mls_L0_352_423$1;
+    Cont$func$gcdE$gcd$_mls_L0_352_423$1 = function Cont$func$gcdE$gcd$_mls_L0_352_423$(pc1, next1) { return new Cont$func$gcdE$gcd$_mls_L0_352_423$.class(pc1, next1); };
+    Cont$func$gcdE$gcd$_mls_L0_352_423$1.class = class Cont$func$gcdE$gcd$_mls_L0_352_423$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp;
         tmp = super(next, false);
@@ -487,11 +415,11 @@ gcd1 = class gcd {
           break;
         }
       }
-      toString() { return "Cont$func$gcdE$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_298_369$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$gcdE$gcd$_mls_L0_352_423$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$gcdE$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_298_369$1.class(6, null);
+      stackDelayRes.tail.next = new Cont$func$gcdE$gcd$_mls_L0_352_423$1.class(6, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -516,9 +444,9 @@ gcd1 = class gcd {
     }
   } 
   static max_(ls) {
-    let param0, param1, x1, param01, param11, y1, xs, scrut, x2, tmp, tmp1, curDepth, tmp2, tmp3, stackDelayRes, Cont$func$max_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_375_479$1;
-    Cont$func$max_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_375_479$1 = function Cont$func$max_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_375_479$(pc1, next1) { return new Cont$func$max_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_375_479$.class(pc1, next1); };
-    Cont$func$max_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_375_479$1.class = class Cont$func$max_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_375_479$ extends runtime.Cont.class {
+    let param0, param1, x1, param01, param11, y1, xs, scrut, x2, tmp, tmp1, curDepth, tmp2, tmp3, stackDelayRes, Cont$func$max_$gcd$_mls_L0_429_533$1;
+    Cont$func$max_$gcd$_mls_L0_429_533$1 = function Cont$func$max_$gcd$_mls_L0_429_533$(pc1, next1) { return new Cont$func$max_$gcd$_mls_L0_429_533$.class(pc1, next1); };
+    Cont$func$max_$gcd$_mls_L0_429_533$1.class = class Cont$func$max_$gcd$_mls_L0_429_533$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp4;
         tmp4 = super(next, false);
@@ -622,12 +550,12 @@ gcd1 = class gcd {
           break;
         }
       }
-      toString() { return "Cont$func$max_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_375_479$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$max_$gcd$_mls_L0_429_533$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$max_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_375_479$1.class(8, null);
+      stackDelayRes.tail.next = new Cont$func$max_$gcd$_mls_L0_429_533$1.class(8, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -648,7 +576,7 @@ gcd1 = class gcd {
           runtime.stackDepth = runtime.stackDepth + 1;
           tmp = NofibPrelude.Cons(y1, xs);
           if (tmp instanceof runtime.EffectSig.class) {
-            tmp.tail.next = new Cont$func$max_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_375_479$1.class(9, null);
+            tmp.tail.next = new Cont$func$max_$gcd$_mls_L0_429_533$1.class(9, null);
             tmp.tail = tmp.tail.next;
             return tmp
           }
@@ -659,7 +587,7 @@ gcd1 = class gcd {
           runtime.stackDepth = runtime.stackDepth + 1;
           tmp1 = NofibPrelude.Cons(x1, xs);
           if (tmp1 instanceof runtime.EffectSig.class) {
-            tmp1.tail.next = new Cont$func$max_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_375_479$1.class(10, null);
+            tmp1.tail.next = new Cont$func$max_$gcd$_mls_L0_429_533$1.class(10, null);
             tmp1.tail = tmp1.tail.next;
             return tmp1
           }
@@ -671,7 +599,7 @@ gcd1 = class gcd {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp2 = new globalThis.Error("match error");
         if (tmp2 instanceof runtime.EffectSig.class) {
-          tmp2.tail.next = new Cont$func$max_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_375_479$1.class(11, null);
+          tmp2.tail.next = new Cont$func$max_$gcd$_mls_L0_429_533$1.class(11, null);
           tmp2.tail = tmp2.tail.next;
           return tmp2
         }
@@ -682,7 +610,7 @@ gcd1 = class gcd {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp3 = new globalThis.Error("match error");
       if (tmp3 instanceof runtime.EffectSig.class) {
-        tmp3.tail.next = new Cont$func$max_$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_375_479$1.class(12, null);
+        tmp3.tail.next = new Cont$func$max_$gcd$_mls_L0_429_533$1.class(12, null);
         tmp3.tail = tmp3.tail.next;
         return tmp3
       }
@@ -691,9 +619,9 @@ gcd1 = class gcd {
     }
   } 
   static test(d) {
-    let lscomp1, ns, ms, tripls, rs, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, curDepth, stackDelayRes, Cont$func$test$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_485_940$1;
-    Cont$func$test$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_485_940$1 = function Cont$func$test$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_485_940$(pc1, next1) { return new Cont$func$test$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_485_940$.class(pc1, next1); };
-    Cont$func$test$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_485_940$1.class = class Cont$func$test$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_485_940$ extends runtime.Cont.class {
+    let lscomp1, ns, ms, tripls, rs, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, curDepth, stackDelayRes, Cont$func$test$gcd$_mls_L0_539_994$1;
+    Cont$func$test$gcd$_mls_L0_539_994$1 = function Cont$func$test$gcd$_mls_L0_539_994$(pc1, next1) { return new Cont$func$test$gcd$_mls_L0_539_994$.class(pc1, next1); };
+    Cont$func$test$gcd$_mls_L0_539_994$1.class = class Cont$func$test$gcd$_mls_L0_539_994$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp9;
         tmp9 = super(next, false);
@@ -741,9 +669,9 @@ gcd1 = class gcd {
             tmp3 = runtime.resetDepth(tmp3, curDepth);
             ms = tmp3;
             tmp4 = (caseScrut) => {
-              let first1, first0, x1, y1, tmp9, curDepth1, tmp10, stackDelayRes1, Cont$lambda$1;
-              Cont$lambda$1 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-              Cont$lambda$1.class = class Cont$lambda$2 extends runtime.Cont.class {
+              let first1, first0, x1, y1, tmp9, curDepth1, tmp10, stackDelayRes1, Cont$lambda$2;
+              Cont$lambda$2 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+              Cont$lambda$2.class = class Cont$lambda$3 extends runtime.Cont.class {
                 constructor(pc1, next1) {
                   let tmp11;
                   tmp11 = super(next1, false);
@@ -807,7 +735,7 @@ gcd1 = class gcd {
               curDepth1 = runtime.stackDepth;
               stackDelayRes1 = runtime.checkDepth();
               if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-                stackDelayRes1.tail.next = new Cont$lambda$1.class(24, null);
+                stackDelayRes1.tail.next = new Cont$lambda$2.class(24, null);
                 stackDelayRes1.tail = stackDelayRes1.tail.next;
                 return stackDelayRes1
               }
@@ -819,7 +747,7 @@ gcd1 = class gcd {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 tmp9 = gcd.gcdE(x1, y1);
                 if (tmp9 instanceof runtime.EffectSig.class) {
-                  tmp9.tail.next = new Cont$lambda$1.class(25, null);
+                  tmp9.tail.next = new Cont$lambda$2.class(25, null);
                   tmp9.tail = tmp9.tail.next;
                   return tmp9
                 }
@@ -833,7 +761,7 @@ gcd1 = class gcd {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 tmp10 = new globalThis.Error("match error");
                 if (tmp10 instanceof runtime.EffectSig.class) {
-                  tmp10.tail.next = new Cont$lambda$1.class(26, null);
+                  tmp10.tail.next = new Cont$lambda$2.class(26, null);
                   tmp10.tail = tmp10.tail.next;
                   return tmp10
                 }
@@ -863,9 +791,9 @@ gcd1 = class gcd {
             tmp6 = runtime.resetDepth(tmp6, curDepth);
             tripls = tmp6;
             tmp7 = (caseScrut) => {
-              let first2, first1, first0, d1, d2, first21, first11, first01, gg, u, v, tmp9, tmp10, tmp11, curDepth1, tmp12, stackDelayRes1, Cont$lambda$1;
-              Cont$lambda$1 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-              Cont$lambda$1.class = class Cont$lambda$ extends runtime.Cont.class {
+              let first2, first1, first0, d1, d2, first21, first11, first01, gg, u, v, tmp9, tmp10, tmp11, curDepth1, tmp12, stackDelayRes1, Cont$lambda$2;
+              Cont$lambda$2 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+              Cont$lambda$2.class = class Cont$lambda$1 extends runtime.Cont.class {
                 constructor(pc1, next1) {
                   let tmp13;
                   tmp13 = super(next1, false);
@@ -941,7 +869,7 @@ gcd1 = class gcd {
               curDepth1 = runtime.stackDepth;
               stackDelayRes1 = runtime.checkDepth();
               if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-                stackDelayRes1.tail.next = new Cont$lambda$1.class(30, null);
+                stackDelayRes1.tail.next = new Cont$lambda$2.class(30, null);
                 stackDelayRes1.tail = stackDelayRes1.tail.next;
                 return stackDelayRes1
               }
@@ -966,7 +894,7 @@ gcd1 = class gcd {
                   runtime.stackDepth = runtime.stackDepth + 1;
                   tmp11 = new globalThis.Error("match error");
                   if (tmp11 instanceof runtime.EffectSig.class) {
-                    tmp11.tail.next = new Cont$lambda$1.class(31, null);
+                    tmp11.tail.next = new Cont$lambda$2.class(31, null);
                     tmp11.tail = tmp11.tail.next;
                     return tmp11
                   }
@@ -977,7 +905,7 @@ gcd1 = class gcd {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 tmp12 = new globalThis.Error("match error");
                 if (tmp12 instanceof runtime.EffectSig.class) {
-                  tmp12.tail.next = new Cont$lambda$1.class(32, null);
+                  tmp12.tail.next = new Cont$lambda$2.class(32, null);
                   tmp12.tail = tmp12.tail.next;
                   return tmp12
                 }
@@ -1003,12 +931,12 @@ gcd1 = class gcd {
           break;
         }
       }
-      toString() { return "Cont$func$test$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_485_940$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$test$gcd$_mls_L0_539_994$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     lscomp1 = function lscomp1(p1) {
-      let lscomp2, param0, param1, h1, t1, tmp9, curDepth1, stackDelayRes1, Cont$func$lscomp1$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_585_768$1;
-      Cont$func$lscomp1$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_585_768$1 = function Cont$func$lscomp1$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_585_768$(pc1, next1) { return new Cont$func$lscomp1$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_585_768$.class(pc1, next1); };
-      Cont$func$lscomp1$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_585_768$1.class = class Cont$func$lscomp1$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_585_768$ extends runtime.Cont.class {
+      let lscomp2, param0, param1, h1, t1, tmp9, curDepth1, stackDelayRes1, Cont$func$lscomp1$gcd$_mls_L0_639_822$1;
+      Cont$func$lscomp1$gcd$_mls_L0_639_822$1 = function Cont$func$lscomp1$gcd$_mls_L0_639_822$(pc1, next1) { return new Cont$func$lscomp1$gcd$_mls_L0_639_822$.class(pc1, next1); };
+      Cont$func$lscomp1$gcd$_mls_L0_639_822$1.class = class Cont$func$lscomp1$gcd$_mls_L0_639_822$ extends runtime.Cont.class {
         constructor(pc, next) {
           let tmp10;
           tmp10 = super(next, false);
@@ -1057,12 +985,12 @@ gcd1 = class gcd {
             break;
           }
         }
-        toString() { return "Cont$func$lscomp1$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_585_768$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+        toString() { return "Cont$func$lscomp1$gcd$_mls_L0_639_822$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
       };
       lscomp2 = function lscomp2(p2) {
-        let param01, param11, h2, t2, tmp10, curDepth2, tmp11, stackDelayRes2, Cont$func$lscomp2$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_653_750$1;
-        Cont$func$lscomp2$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_653_750$1 = function Cont$func$lscomp2$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_653_750$(pc1, next1) { return new Cont$func$lscomp2$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_653_750$.class(pc1, next1); };
-        Cont$func$lscomp2$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_653_750$1.class = class Cont$func$lscomp2$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_653_750$ extends runtime.Cont.class {
+        let param01, param11, h2, t2, tmp10, curDepth2, tmp11, stackDelayRes2, Cont$func$lscomp2$gcd$_mls_L0_707_804$1;
+        Cont$func$lscomp2$gcd$_mls_L0_707_804$1 = function Cont$func$lscomp2$gcd$_mls_L0_707_804$(pc1, next1) { return new Cont$func$lscomp2$gcd$_mls_L0_707_804$.class(pc1, next1); };
+        Cont$func$lscomp2$gcd$_mls_L0_707_804$1.class = class Cont$func$lscomp2$gcd$_mls_L0_707_804$ extends runtime.Cont.class {
           constructor(pc, next) {
             let tmp12;
             tmp12 = super(next, false);
@@ -1127,12 +1055,12 @@ gcd1 = class gcd {
               break;
             }
           }
-          toString() { return "Cont$func$lscomp2$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_653_750$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+          toString() { return "Cont$func$lscomp2$gcd$_mls_L0_707_804$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
         };
         curDepth2 = runtime.stackDepth;
         stackDelayRes2 = runtime.checkDepth();
         if (stackDelayRes2 instanceof runtime.EffectSig.class) {
-          stackDelayRes2.tail.next = new Cont$func$lscomp2$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_653_750$1.class(16, null);
+          stackDelayRes2.tail.next = new Cont$func$lscomp2$gcd$_mls_L0_707_804$1.class(16, null);
           stackDelayRes2.tail = stackDelayRes2.tail.next;
           return stackDelayRes2
         }
@@ -1147,7 +1075,7 @@ gcd1 = class gcd {
           runtime.stackDepth = runtime.stackDepth + 1;
           tmp10 = lscomp2(t2);
           if (tmp10 instanceof runtime.EffectSig.class) {
-            tmp10.tail.next = new Cont$func$lscomp2$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_653_750$1.class(17, null);
+            tmp10.tail.next = new Cont$func$lscomp2$gcd$_mls_L0_707_804$1.class(17, null);
             tmp10.tail = tmp10.tail.next;
             return tmp10
           }
@@ -1161,7 +1089,7 @@ gcd1 = class gcd {
           runtime.stackDepth = runtime.stackDepth + 1;
           tmp11 = new globalThis.Error("match error");
           if (tmp11 instanceof runtime.EffectSig.class) {
-            tmp11.tail.next = new Cont$func$lscomp2$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_653_750$1.class(18, null);
+            tmp11.tail.next = new Cont$func$lscomp2$gcd$_mls_L0_707_804$1.class(18, null);
             tmp11.tail = tmp11.tail.next;
             return tmp11
           }
@@ -1172,7 +1100,7 @@ gcd1 = class gcd {
       curDepth1 = runtime.stackDepth;
       stackDelayRes1 = runtime.checkDepth();
       if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-        stackDelayRes1.tail.next = new Cont$func$lscomp1$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_585_768$1.class(15, null);
+        stackDelayRes1.tail.next = new Cont$func$lscomp1$gcd$_mls_L0_639_822$1.class(15, null);
         stackDelayRes1.tail = stackDelayRes1.tail.next;
         return stackDelayRes1
       }
@@ -1189,7 +1117,7 @@ gcd1 = class gcd {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp9 = new globalThis.Error("match error");
         if (tmp9 instanceof runtime.EffectSig.class) {
-          tmp9.tail.next = new Cont$func$lscomp1$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_585_768$1.class(20, null);
+          tmp9.tail.next = new Cont$func$lscomp1$gcd$_mls_L0_639_822$1.class(20, null);
           tmp9.tail = tmp9.tail.next;
           return tmp9
         }
@@ -1200,7 +1128,7 @@ gcd1 = class gcd {
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$test$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_485_940$1.class(14, null);
+      stackDelayRes.tail.next = new Cont$func$test$gcd$_mls_L0_539_994$1.class(14, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -1208,7 +1136,7 @@ gcd1 = class gcd {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp1 = NofibPrelude.enumFromTo(5000, tmp);
     if (tmp1 instanceof runtime.EffectSig.class) {
-      tmp1.tail.next = new Cont$func$test$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_485_940$1.class(22, null);
+      tmp1.tail.next = new Cont$func$test$gcd$_mls_L0_539_994$1.class(22, null);
       tmp1.tail = tmp1.tail.next;
       return tmp1
     }
@@ -1218,16 +1146,16 @@ gcd1 = class gcd {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp3 = NofibPrelude.enumFromTo(10000, tmp2);
     if (tmp3 instanceof runtime.EffectSig.class) {
-      tmp3.tail.next = new Cont$func$test$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_485_940$1.class(23, null);
+      tmp3.tail.next = new Cont$func$test$gcd$_mls_L0_539_994$1.class(23, null);
       tmp3.tail = tmp3.tail.next;
       return tmp3
     }
     tmp3 = runtime.resetDepth(tmp3, curDepth);
     ms = tmp3;
     tmp4 = (caseScrut) => {
-      let first1, first0, x1, y1, tmp9, curDepth1, tmp10, stackDelayRes1, Cont$lambda$1;
-      Cont$lambda$1 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-      Cont$lambda$1.class = class Cont$lambda$2 extends runtime.Cont.class {
+      let first1, first0, x1, y1, tmp9, curDepth1, tmp10, stackDelayRes1, Cont$lambda$2;
+      Cont$lambda$2 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+      Cont$lambda$2.class = class Cont$lambda$3 extends runtime.Cont.class {
         constructor(pc, next) {
           let tmp11;
           tmp11 = super(next, false);
@@ -1291,7 +1219,7 @@ gcd1 = class gcd {
       curDepth1 = runtime.stackDepth;
       stackDelayRes1 = runtime.checkDepth();
       if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-        stackDelayRes1.tail.next = new Cont$lambda$1.class(24, null);
+        stackDelayRes1.tail.next = new Cont$lambda$2.class(24, null);
         stackDelayRes1.tail = stackDelayRes1.tail.next;
         return stackDelayRes1
       }
@@ -1303,7 +1231,7 @@ gcd1 = class gcd {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp9 = gcd.gcdE(x1, y1);
         if (tmp9 instanceof runtime.EffectSig.class) {
-          tmp9.tail.next = new Cont$lambda$1.class(25, null);
+          tmp9.tail.next = new Cont$lambda$2.class(25, null);
           tmp9.tail = tmp9.tail.next;
           return tmp9
         }
@@ -1317,7 +1245,7 @@ gcd1 = class gcd {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp10 = new globalThis.Error("match error");
         if (tmp10 instanceof runtime.EffectSig.class) {
-          tmp10.tail.next = new Cont$lambda$1.class(26, null);
+          tmp10.tail.next = new Cont$lambda$2.class(26, null);
           tmp10.tail = tmp10.tail.next;
           return tmp10
         }
@@ -1328,7 +1256,7 @@ gcd1 = class gcd {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp5 = lscomp1(ns);
     if (tmp5 instanceof runtime.EffectSig.class) {
-      tmp5.tail.next = new Cont$func$test$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_485_940$1.class(28, null);
+      tmp5.tail.next = new Cont$func$test$gcd$_mls_L0_539_994$1.class(28, null);
       tmp5.tail = tmp5.tail.next;
       return tmp5
     }
@@ -1336,16 +1264,16 @@ gcd1 = class gcd {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp6 = NofibPrelude.map(tmp4, tmp5);
     if (tmp6 instanceof runtime.EffectSig.class) {
-      tmp6.tail.next = new Cont$func$test$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_485_940$1.class(29, null);
+      tmp6.tail.next = new Cont$func$test$gcd$_mls_L0_539_994$1.class(29, null);
       tmp6.tail = tmp6.tail.next;
       return tmp6
     }
     tmp6 = runtime.resetDepth(tmp6, curDepth);
     tripls = tmp6;
     tmp7 = (caseScrut) => {
-      let first2, first1, first0, d1, d2, first21, first11, first01, gg, u, v, tmp9, tmp10, tmp11, curDepth1, tmp12, stackDelayRes1, Cont$lambda$1;
-      Cont$lambda$1 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-      Cont$lambda$1.class = class Cont$lambda$ extends runtime.Cont.class {
+      let first2, first1, first0, d1, d2, first21, first11, first01, gg, u, v, tmp9, tmp10, tmp11, curDepth1, tmp12, stackDelayRes1, Cont$lambda$2;
+      Cont$lambda$2 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+      Cont$lambda$2.class = class Cont$lambda$1 extends runtime.Cont.class {
         constructor(pc, next) {
           let tmp13;
           tmp13 = super(next, false);
@@ -1421,7 +1349,7 @@ gcd1 = class gcd {
       curDepth1 = runtime.stackDepth;
       stackDelayRes1 = runtime.checkDepth();
       if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-        stackDelayRes1.tail.next = new Cont$lambda$1.class(30, null);
+        stackDelayRes1.tail.next = new Cont$lambda$2.class(30, null);
         stackDelayRes1.tail = stackDelayRes1.tail.next;
         return stackDelayRes1
       }
@@ -1446,7 +1374,7 @@ gcd1 = class gcd {
           runtime.stackDepth = runtime.stackDepth + 1;
           tmp11 = new globalThis.Error("match error");
           if (tmp11 instanceof runtime.EffectSig.class) {
-            tmp11.tail.next = new Cont$lambda$1.class(31, null);
+            tmp11.tail.next = new Cont$lambda$2.class(31, null);
             tmp11.tail = tmp11.tail.next;
             return tmp11
           }
@@ -1457,7 +1385,7 @@ gcd1 = class gcd {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp12 = new globalThis.Error("match error");
         if (tmp12 instanceof runtime.EffectSig.class) {
-          tmp12.tail.next = new Cont$lambda$1.class(32, null);
+          tmp12.tail.next = new Cont$lambda$2.class(32, null);
           tmp12.tail = tmp12.tail.next;
           return tmp12
         }
@@ -1468,7 +1396,7 @@ gcd1 = class gcd {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp8 = NofibPrelude.map(tmp7, tripls);
     if (tmp8 instanceof runtime.EffectSig.class) {
-      tmp8.tail.next = new Cont$func$test$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_485_940$1.class(34, null);
+      tmp8.tail.next = new Cont$func$test$gcd$_mls_L0_539_994$1.class(34, null);
       tmp8.tail = tmp8.tail.next;
       return tmp8
     }
@@ -1478,9 +1406,9 @@ gcd1 = class gcd {
     return gcd.max_(rs)
   } 
   static testGcd_nofib(x1) {
-    let stackDelayRes, Cont$func$testGcd_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_947_973$1;
-    Cont$func$testGcd_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_947_973$1 = function Cont$func$testGcd_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_947_973$(pc1, next1) { return new Cont$func$testGcd_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_947_973$.class(pc1, next1); };
-    Cont$func$testGcd_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_947_973$1.class = class Cont$func$testGcd_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_947_973$ extends runtime.Cont.class {
+    let stackDelayRes, Cont$func$testGcd_nofib$gcd$_mls_L0_1001_1027$1;
+    Cont$func$testGcd_nofib$gcd$_mls_L0_1001_1027$1 = function Cont$func$testGcd_nofib$gcd$_mls_L0_1001_1027$(pc1, next1) { return new Cont$func$testGcd_nofib$gcd$_mls_L0_1001_1027$.class(pc1, next1); };
+    Cont$func$testGcd_nofib$gcd$_mls_L0_1001_1027$1.class = class Cont$func$testGcd_nofib$gcd$_mls_L0_1001_1027$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp;
         tmp = super(next, false);
@@ -1500,11 +1428,11 @@ gcd1 = class gcd {
           break;
         }
       }
-      toString() { return "Cont$func$testGcd_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_947_973$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$testGcd_nofib$gcd$_mls_L0_1001_1027$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$testGcd_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_gcd$_mls_L0_947_973$1.class(35, null);
+      stackDelayRes.tail.next = new Cont$func$testGcd_nofib$gcd$_mls_L0_1001_1027$1.class(35, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }

@@ -1,0 +1,41 @@
+import "../../../hkmc2/shared/src/test/mlscript-compile/Runtime.mls"
+import "../../../hkmc2/shared/src/test/mlscript-compile/Predef.mls"
+import "./NofibPrelude.mls"
+import "benchmark"
+open Predef
+open NofibPrelude
+
+let b = benchmark
+
+module BenchmarkPrelude with ...
+
+fun print(s) = Predef.print(s)
+
+fun helper(f) =
+  let res
+  handle h = Runtime.StackDelay with
+    fun perform()(k) =
+      set Runtime.stackOffset = Runtime.stackDepth
+      k(())
+  in
+    set
+      Runtime.stackLimit = 500
+      Runtime.stackOffset = 0
+      Runtime.stackDepth = 1
+      Runtime.stackHandler = h
+    set res = f()
+  set
+    Runtime.stackDepth = 0
+    Runtime.stackHandler = null
+  res
+
+fun benchmark(fn) =
+  // print(helper(fn))
+  print("benchmarking...")
+  let suite = new b.Suite()
+  suite.add("main", () => helper(fn))
+  let settings = {}
+  set settings.async = false
+  suite.on("cycle", (event) => print(String(event.target))).run(settings)
+
+set globalThis.Predef = Predef

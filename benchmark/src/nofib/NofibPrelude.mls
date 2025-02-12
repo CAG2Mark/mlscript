@@ -365,25 +365,3 @@ fun nofibStringToList(s) =
 fun nofibListToString(ls) = if ls is
   Nil then ""
   h :: t then h + nofibListToString(t)
-fun print(s) = Predef.print(s)
-
-fun helper(f) =
-  let rt = globalThis.eval("runtime")
-  let res
-  handle h = rt.StackDelay with
-    fun perform()(k) =
-      set rt.__stackOffset = rt.__stackDepth
-      k(())
-  in
-    set
-      rt.__stackLimit = 500
-      rt.__stackOffset = 0
-      rt.__stackDepth = 1
-      rt.__stackHandler = h
-    set res = f()
-  set
-    rt.__stackDepth = 0
-    rt.__stackHandler = null
-  res
-
-set globalThis.Predef = Predef

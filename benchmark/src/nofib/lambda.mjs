@@ -1,5 +1,6 @@
 import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.mjs";
 import NofibPrelude from "./NofibPrelude.mjs";
+import BenchmarkPrelude from "./BenchmarkPrelude.mjs";
 let lambda1;
 lambda1 = class lambda {
   static #myGet;
@@ -10,7 +11,7 @@ lambda1 = class lambda {
   static #partialSum0;
   static #sum0;
   static {
-    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, res, handleBlock$, handleBlock$1, handleBlock$2, handleBlock$3, handleBlock$4, handleBlock$5, handleBlock$6, handleBlock$7, handleBlock$8, handleBlock$9, handleBlock$10, handleBlock$11, handleBlock$12, handleBlock$13, handleBlock$14, handleBlock$15, handleBlock$16, handleBlock$17, handleBlock$18, handleBlock$19, handleBlock$20, handleBlock$21, handleBlock$22, handleBlock$23, handleBlock$24, handleBlock$25, handleBlock$26, handleBlock$27, handleBlock$28, handleBlock$29, handleBlock$30, handleBlock$31, handleBlock$32, handleBlock$33, handleBlock$34, handleBlock$35, handleBlock$36;
+    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, res, handleBlock$, handleBlock$1, handleBlock$2, handleBlock$3, handleBlock$4, handleBlock$5, handleBlock$6, handleBlock$7, handleBlock$8, handleBlock$9, handleBlock$10, handleBlock$11, handleBlock$12, handleBlock$13, handleBlock$14, handleBlock$15, handleBlock$16, handleBlock$17, handleBlock$18, handleBlock$19, handleBlock$20, handleBlock$21, handleBlock$22, handleBlock$23, handleBlock$24, handleBlock$25, handleBlock$26, handleBlock$27, handleBlock$28, handleBlock$29, handleBlock$30, handleBlock$31, handleBlock$32, handleBlock$33, handleBlock$34;
     this.MyState = function MyState(r1) { return new MyState.class(r1); };
     this.MyState.class = class MyState {
       constructor(r) {
@@ -18,37 +19,37 @@ lambda1 = class lambda {
       }
       toString() { return "MyState(" + globalThis.Predef.render(this.r) + ")"; }
     };
-    handleBlock$36 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$ extends runtime.StackDelay {
+    handleBlock$34 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$ extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$ extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$ extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 384) {
+                if (this.pc === 376) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 384) {
+                  if (this.pc === 376) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 385;
+                    this.pc = 377;
                     continue contLoop;
-                  } else if (this.pc === 385) {
+                  } else if (this.pc === 377) {
                     this.completed = true;
                     return res2
                   }
@@ -60,7 +61,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(384, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(376, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -74,28 +75,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$ extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$ extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 382) {
+          if (this.pc === 374) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 382) {
+            if (this.pc === 374) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 383;
+              this.pc = 375;
               continue contLoop;
-            } else if (this.pc === 383) {
+            } else if (this.pc === 375) {
               this.completed = true;
               return res1
             }
@@ -115,7 +116,7 @@ lambda1 = class lambda {
         ]
       });
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(382, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(374, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -123,7 +124,7 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp = handleBlock$36();
+    tmp = handleBlock$34();
     if (tmp instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
@@ -210,37 +211,37 @@ lambda1 = class lambda {
     };
     this.Unit = new Unit$class;
     this.Unit.class = Unit$class;
-    handleBlock$35 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$1 extends runtime.StackDelay {
+    handleBlock$33 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$1 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$1 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$1 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 379) {
+                if (this.pc === 371) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 379) {
+                  if (this.pc === 371) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 380;
+                    this.pc = 372;
                     continue contLoop;
-                  } else if (this.pc === 380) {
+                  } else if (this.pc === 372) {
                     this.completed = true;
                     return res2
                   }
@@ -252,7 +253,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(379, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(371, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -266,28 +267,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$1 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$1 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 377) {
+          if (this.pc === 369) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 377) {
+            if (this.pc === 369) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 378;
+              this.pc = 370;
               continue contLoop;
-            } else if (this.pc === 378) {
+            } else if (this.pc === 370) {
               this.completed = true;
               return res1
             }
@@ -302,7 +303,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.myReturn(lambda.Unit);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(377, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(369, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -310,44 +311,44 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp1 = handleBlock$35();
+    tmp1 = handleBlock$33();
     if (tmp1 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
     lambda.#incr = tmp1;
-    handleBlock$34 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$2 extends runtime.StackDelay {
+    handleBlock$32 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$2 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$2 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$2 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 374) {
+                if (this.pc === 366) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 374) {
+                  if (this.pc === 366) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 375;
+                    this.pc = 367;
                     continue contLoop;
-                  } else if (this.pc === 375) {
+                  } else if (this.pc === 367) {
                     this.completed = true;
                     return res2
                   }
@@ -359,7 +360,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(374, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(366, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -373,28 +374,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$2 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$2 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 372) {
+          if (this.pc === 364) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 372) {
+            if (this.pc === 364) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 373;
+              this.pc = 365;
               continue contLoop;
-            } else if (this.pc === 373) {
+            } else if (this.pc === 365) {
               this.completed = true;
               return res1
             }
@@ -409,7 +410,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = NofibPrelude.nofibStringToList("x");
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(372, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(364, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -417,43 +418,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp2 = handleBlock$34();
+    tmp2 = handleBlock$32();
     if (tmp2 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$33 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$3 extends runtime.StackDelay {
+    handleBlock$31 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$3 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$3 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$3 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 369) {
+                if (this.pc === 361) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 369) {
+                  if (this.pc === 361) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 370;
+                    this.pc = 362;
                     continue contLoop;
-                  } else if (this.pc === 370) {
+                  } else if (this.pc === 362) {
                     this.completed = true;
                     return res2
                   }
@@ -465,7 +466,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(369, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(361, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -479,28 +480,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$3 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$3 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 367) {
+          if (this.pc === 359) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 367) {
+            if (this.pc === 359) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 368;
+              this.pc = 360;
               continue contLoop;
-            } else if (this.pc === 368) {
+            } else if (this.pc === 360) {
               this.completed = true;
               return res1
             }
@@ -515,7 +516,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = NofibPrelude.nofibStringToList("F");
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(367, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(359, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -523,43 +524,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp3 = handleBlock$33();
+    tmp3 = handleBlock$31();
     if (tmp3 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$32 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$4 extends runtime.StackDelay {
+    handleBlock$30 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$4 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$4 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$4 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 364) {
+                if (this.pc === 356) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 364) {
+                  if (this.pc === 356) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 365;
+                    this.pc = 357;
                     continue contLoop;
-                  } else if (this.pc === 365) {
+                  } else if (this.pc === 357) {
                     this.completed = true;
                     return res2
                   }
@@ -571,7 +572,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(364, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(356, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -585,28 +586,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$4 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$4 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 362) {
+          if (this.pc === 354) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 362) {
+            if (this.pc === 354) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 363;
+              this.pc = 355;
               continue contLoop;
-            } else if (this.pc === 363) {
+            } else if (this.pc === 355) {
               this.completed = true;
               return res1
             }
@@ -621,7 +622,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.Var(tmp3);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(362, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(354, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -629,43 +630,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp4 = handleBlock$32();
+    tmp4 = handleBlock$30();
     if (tmp4 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$31 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$5 extends runtime.StackDelay {
+    handleBlock$29 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$5 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$5 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$5 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 359) {
+                if (this.pc === 351) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 359) {
+                  if (this.pc === 351) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 360;
+                    this.pc = 352;
                     continue contLoop;
-                  } else if (this.pc === 360) {
+                  } else if (this.pc === 352) {
                     this.completed = true;
                     return res2
                   }
@@ -677,7 +678,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(359, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(351, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -691,28 +692,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$5 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$5 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 357) {
+          if (this.pc === 349) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 357) {
+            if (this.pc === 349) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 358;
+              this.pc = 350;
               continue contLoop;
-            } else if (this.pc === 358) {
+            } else if (this.pc === 350) {
               this.completed = true;
               return res1
             }
@@ -727,7 +728,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = NofibPrelude.nofibStringToList("x");
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(357, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(349, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -735,43 +736,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp5 = handleBlock$31();
+    tmp5 = handleBlock$29();
     if (tmp5 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$30 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$6 extends runtime.StackDelay {
+    handleBlock$28 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$6 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$6 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$6 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 354) {
+                if (this.pc === 346) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 354) {
+                  if (this.pc === 346) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 355;
+                    this.pc = 347;
                     continue contLoop;
-                  } else if (this.pc === 355) {
+                  } else if (this.pc === 347) {
                     this.completed = true;
                     return res2
                   }
@@ -783,7 +784,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(354, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(346, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -797,28 +798,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$6 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$6 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 352) {
+          if (this.pc === 344) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 352) {
+            if (this.pc === 344) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 353;
+              this.pc = 345;
               continue contLoop;
-            } else if (this.pc === 353) {
+            } else if (this.pc === 345) {
               this.completed = true;
               return res1
             }
@@ -833,7 +834,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.Var(tmp5);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(352, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(344, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -841,43 +842,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp6 = handleBlock$30();
+    tmp6 = handleBlock$28();
     if (tmp6 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$29 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$7 extends runtime.StackDelay {
+    handleBlock$27 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$7 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$7 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$7 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 349) {
+                if (this.pc === 341) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 349) {
+                  if (this.pc === 341) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 350;
+                    this.pc = 342;
                     continue contLoop;
-                  } else if (this.pc === 350) {
+                  } else if (this.pc === 342) {
                     this.completed = true;
                     return res2
                   }
@@ -889,7 +890,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(349, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(341, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -903,28 +904,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$7 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$7 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 347) {
+          if (this.pc === 339) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 347) {
+            if (this.pc === 339) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 348;
+              this.pc = 340;
               continue contLoop;
-            } else if (this.pc === 348) {
+            } else if (this.pc === 340) {
               this.completed = true;
               return res1
             }
@@ -939,7 +940,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = NofibPrelude.nofibStringToList("x");
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(347, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(339, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -947,43 +948,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp7 = handleBlock$29();
+    tmp7 = handleBlock$27();
     if (tmp7 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$28 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$8 extends runtime.StackDelay {
+    handleBlock$26 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$8 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$8 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$8 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 344) {
+                if (this.pc === 336) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 344) {
+                  if (this.pc === 336) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 345;
+                    this.pc = 337;
                     continue contLoop;
-                  } else if (this.pc === 345) {
+                  } else if (this.pc === 337) {
                     this.completed = true;
                     return res2
                   }
@@ -995,7 +996,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(344, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(336, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -1009,28 +1010,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$8 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$8 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 342) {
+          if (this.pc === 334) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 342) {
+            if (this.pc === 334) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 343;
+              this.pc = 335;
               continue contLoop;
-            } else if (this.pc === 343) {
+            } else if (this.pc === 335) {
               this.completed = true;
               return res1
             }
@@ -1045,7 +1046,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.Var(tmp7);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(342, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(334, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -1053,43 +1054,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp8 = handleBlock$28();
+    tmp8 = handleBlock$26();
     if (tmp8 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$27 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$9 extends runtime.StackDelay {
+    handleBlock$25 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$9 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$9 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$9 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 339) {
+                if (this.pc === 331) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 339) {
+                  if (this.pc === 331) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 340;
+                    this.pc = 332;
                     continue contLoop;
-                  } else if (this.pc === 340) {
+                  } else if (this.pc === 332) {
                     this.completed = true;
                     return res2
                   }
@@ -1101,7 +1102,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(339, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(331, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -1115,28 +1116,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$9 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$9 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 337) {
+          if (this.pc === 329) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 337) {
+            if (this.pc === 329) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 338;
+              this.pc = 330;
               continue contLoop;
-            } else if (this.pc === 338) {
+            } else if (this.pc === 330) {
               this.completed = true;
               return res1
             }
@@ -1151,7 +1152,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.App(tmp6, tmp8);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(337, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(329, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -1159,43 +1160,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp9 = handleBlock$27();
+    tmp9 = handleBlock$25();
     if (tmp9 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$26 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$10 extends runtime.StackDelay {
+    handleBlock$24 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$10 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$10 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$10 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 334) {
+                if (this.pc === 326) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 334) {
+                  if (this.pc === 326) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 335;
+                    this.pc = 327;
                     continue contLoop;
-                  } else if (this.pc === 335) {
+                  } else if (this.pc === 327) {
                     this.completed = true;
                     return res2
                   }
@@ -1207,7 +1208,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(334, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(326, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -1221,28 +1222,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$10 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$10 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 332) {
+          if (this.pc === 324) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 332) {
+            if (this.pc === 324) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 333;
+              this.pc = 325;
               continue contLoop;
-            } else if (this.pc === 333) {
+            } else if (this.pc === 325) {
               this.completed = true;
               return res1
             }
@@ -1257,7 +1258,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.App(tmp4, tmp9);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(332, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(324, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -1265,43 +1266,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp10 = handleBlock$26();
+    tmp10 = handleBlock$24();
     if (tmp10 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$25 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$11 extends runtime.StackDelay {
+    handleBlock$23 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$11 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$11 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$11 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 329) {
+                if (this.pc === 321) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 329) {
+                  if (this.pc === 321) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 330;
+                    this.pc = 322;
                     continue contLoop;
-                  } else if (this.pc === 330) {
+                  } else if (this.pc === 322) {
                     this.completed = true;
                     return res2
                   }
@@ -1313,7 +1314,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(329, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(321, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -1327,28 +1328,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$11 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$11 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 327) {
+          if (this.pc === 319) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 327) {
+            if (this.pc === 319) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 328;
+              this.pc = 320;
               continue contLoop;
-            } else if (this.pc === 328) {
+            } else if (this.pc === 320) {
               this.completed = true;
               return res1
             }
@@ -1363,7 +1364,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.Lam(tmp2, tmp10);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(327, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(319, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -1371,44 +1372,44 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp11 = handleBlock$25();
+    tmp11 = handleBlock$23();
     if (tmp11 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
     lambda.#lfxx = tmp11;
-    handleBlock$24 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$12 extends runtime.StackDelay {
+    handleBlock$22 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$12 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$12 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$12 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 324) {
+                if (this.pc === 316) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 324) {
+                  if (this.pc === 316) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 325;
+                    this.pc = 317;
                     continue contLoop;
-                  } else if (this.pc === 325) {
+                  } else if (this.pc === 317) {
                     this.completed = true;
                     return res2
                   }
@@ -1420,7 +1421,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(324, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(316, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -1434,28 +1435,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$12 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$12 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 322) {
+          if (this.pc === 314) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 322) {
+            if (this.pc === 314) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 323;
+              this.pc = 315;
               continue contLoop;
-            } else if (this.pc === 323) {
+            } else if (this.pc === 315) {
               this.completed = true;
               return res1
             }
@@ -1470,7 +1471,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = NofibPrelude.nofibStringToList("F");
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(322, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(314, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -1478,43 +1479,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp12 = handleBlock$24();
+    tmp12 = handleBlock$22();
     if (tmp12 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$23 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$13 extends runtime.StackDelay {
+    handleBlock$21 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$13 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$13 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$13 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 319) {
+                if (this.pc === 311) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 319) {
+                  if (this.pc === 311) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 320;
+                    this.pc = 312;
                     continue contLoop;
-                  } else if (this.pc === 320) {
+                  } else if (this.pc === 312) {
                     this.completed = true;
                     return res2
                   }
@@ -1526,7 +1527,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(319, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(311, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -1540,28 +1541,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$13 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$13 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 317) {
+          if (this.pc === 309) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 317) {
+            if (this.pc === 309) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 318;
+              this.pc = 310;
               continue contLoop;
-            } else if (this.pc === 318) {
+            } else if (this.pc === 310) {
               this.completed = true;
               return res1
             }
@@ -1576,7 +1577,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.App(lambda.#lfxx, lambda.#lfxx);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(317, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(309, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -1584,43 +1585,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp13 = handleBlock$23();
+    tmp13 = handleBlock$21();
     if (tmp13 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$22 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$14 extends runtime.StackDelay {
+    handleBlock$20 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$14 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$14 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$14 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 314) {
+                if (this.pc === 306) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 314) {
+                  if (this.pc === 306) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 315;
+                    this.pc = 307;
                     continue contLoop;
-                  } else if (this.pc === 315) {
+                  } else if (this.pc === 307) {
                     this.completed = true;
                     return res2
                   }
@@ -1632,7 +1633,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(314, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(306, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -1646,28 +1647,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$14 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$14 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 312) {
+          if (this.pc === 304) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 312) {
+            if (this.pc === 304) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 313;
+              this.pc = 305;
               continue contLoop;
-            } else if (this.pc === 313) {
+            } else if (this.pc === 305) {
               this.completed = true;
               return res1
             }
@@ -1682,7 +1683,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.Lam(tmp12, tmp13);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(312, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(304, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -1690,44 +1691,44 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp14 = handleBlock$22();
+    tmp14 = handleBlock$20();
     if (tmp14 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
     lambda.#fix = tmp14;
-    handleBlock$21 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$15 extends runtime.StackDelay {
+    handleBlock$19 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$15 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$15 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$15 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 309) {
+                if (this.pc === 301) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 309) {
+                  if (this.pc === 301) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 310;
+                    this.pc = 302;
                     continue contLoop;
-                  } else if (this.pc === 310) {
+                  } else if (this.pc === 302) {
                     this.completed = true;
                     return res2
                   }
@@ -1739,7 +1740,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(309, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(301, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -1753,28 +1754,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$15 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$15 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 307) {
+          if (this.pc === 299) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 307) {
+            if (this.pc === 299) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 308;
+              this.pc = 300;
               continue contLoop;
-            } else if (this.pc === 308) {
+            } else if (this.pc === 300) {
               this.completed = true;
               return res1
             }
@@ -1789,7 +1790,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = NofibPrelude.nofibStringToList("n");
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(307, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(299, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -1797,43 +1798,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp15 = handleBlock$21();
+    tmp15 = handleBlock$19();
     if (tmp15 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$20 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$16 extends runtime.StackDelay {
+    handleBlock$18 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$16 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$16 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$16 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 304) {
+                if (this.pc === 296) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 304) {
+                  if (this.pc === 296) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 305;
+                    this.pc = 297;
                     continue contLoop;
-                  } else if (this.pc === 305) {
+                  } else if (this.pc === 297) {
                     this.completed = true;
                     return res2
                   }
@@ -1845,7 +1846,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(304, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(296, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -1859,28 +1860,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$16 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$16 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 302) {
+          if (this.pc === 294) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 302) {
+            if (this.pc === 294) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 303;
+              this.pc = 295;
               continue contLoop;
-            } else if (this.pc === 303) {
+            } else if (this.pc === 295) {
               this.completed = true;
               return res1
             }
@@ -1895,7 +1896,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.Var(tmp15);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(302, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(294, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -1903,44 +1904,44 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp16 = handleBlock$20();
+    tmp16 = handleBlock$18();
     if (tmp16 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
     tmp17 = - 1;
-    handleBlock$19 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$17 extends runtime.StackDelay {
+    handleBlock$17 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$17 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$17 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$17 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 299) {
+                if (this.pc === 291) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 299) {
+                  if (this.pc === 291) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 300;
+                    this.pc = 292;
                     continue contLoop;
-                  } else if (this.pc === 300) {
+                  } else if (this.pc === 292) {
                     this.completed = true;
                     return res2
                   }
@@ -1952,7 +1953,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(299, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(291, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -1966,28 +1967,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$17 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$17 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 297) {
+          if (this.pc === 289) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 297) {
+            if (this.pc === 289) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 298;
+              this.pc = 290;
               continue contLoop;
-            } else if (this.pc === 298) {
+            } else if (this.pc === 290) {
               this.completed = true;
               return res1
             }
@@ -2002,7 +2003,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.Con(tmp17);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(297, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(289, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -2010,43 +2011,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp18 = handleBlock$19();
+    tmp18 = handleBlock$17();
     if (tmp18 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$18 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$18 extends runtime.StackDelay {
+    handleBlock$16 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$18 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$18 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$18 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 294) {
+                if (this.pc === 286) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 294) {
+                  if (this.pc === 286) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 295;
+                    this.pc = 287;
                     continue contLoop;
-                  } else if (this.pc === 295) {
+                  } else if (this.pc === 287) {
                     this.completed = true;
                     return res2
                   }
@@ -2058,7 +2059,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(294, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(286, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -2072,28 +2073,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$18 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$18 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 292) {
+          if (this.pc === 284) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 292) {
+            if (this.pc === 284) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 293;
+              this.pc = 285;
               continue contLoop;
-            } else if (this.pc === 293) {
+            } else if (this.pc === 285) {
               this.completed = true;
               return res1
             }
@@ -2108,7 +2109,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.Add(tmp16, tmp18);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(292, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(284, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -2116,44 +2117,44 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp19 = handleBlock$18();
+    tmp19 = handleBlock$16();
     if (tmp19 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
     lambda.#nMinus1 = tmp19;
-    handleBlock$17 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$19 extends runtime.StackDelay {
+    handleBlock$15 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$19 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$19 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$19 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 289) {
+                if (this.pc === 281) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 289) {
+                  if (this.pc === 281) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 290;
+                    this.pc = 282;
                     continue contLoop;
-                  } else if (this.pc === 290) {
+                  } else if (this.pc === 282) {
                     this.completed = true;
                     return res2
                   }
@@ -2165,7 +2166,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(289, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(281, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -2179,28 +2180,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$19 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$19 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 287) {
+          if (this.pc === 279) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 287) {
+            if (this.pc === 279) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 288;
+              this.pc = 280;
               continue contLoop;
-            } else if (this.pc === 288) {
+            } else if (this.pc === 280) {
               this.completed = true;
               return res1
             }
@@ -2215,7 +2216,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = NofibPrelude.nofibStringToList("sum");
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(287, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(279, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -2223,43 +2224,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp20 = handleBlock$17();
+    tmp20 = handleBlock$15();
     if (tmp20 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$16 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$20 extends runtime.StackDelay {
+    handleBlock$14 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$20 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$20 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$20 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 284) {
+                if (this.pc === 276) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 284) {
+                  if (this.pc === 276) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 285;
+                    this.pc = 277;
                     continue contLoop;
-                  } else if (this.pc === 285) {
+                  } else if (this.pc === 277) {
                     this.completed = true;
                     return res2
                   }
@@ -2271,7 +2272,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(284, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(276, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -2285,28 +2286,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$20 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$20 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 282) {
+          if (this.pc === 274) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 282) {
+            if (this.pc === 274) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 283;
+              this.pc = 275;
               continue contLoop;
-            } else if (this.pc === 283) {
+            } else if (this.pc === 275) {
               this.completed = true;
               return res1
             }
@@ -2321,7 +2322,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = NofibPrelude.nofibStringToList("n");
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(282, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(274, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -2329,43 +2330,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp21 = handleBlock$16();
+    tmp21 = handleBlock$14();
     if (tmp21 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$15 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$21 extends runtime.StackDelay {
+    handleBlock$13 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$21 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$21 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$21 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 279) {
+                if (this.pc === 271) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 279) {
+                  if (this.pc === 271) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 280;
+                    this.pc = 272;
                     continue contLoop;
-                  } else if (this.pc === 280) {
+                  } else if (this.pc === 272) {
                     this.completed = true;
                     return res2
                   }
@@ -2377,7 +2378,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(279, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(271, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -2391,28 +2392,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$21 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$21 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 277) {
+          if (this.pc === 269) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 277) {
+            if (this.pc === 269) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 278;
+              this.pc = 270;
               continue contLoop;
-            } else if (this.pc === 278) {
+            } else if (this.pc === 270) {
               this.completed = true;
               return res1
             }
@@ -2427,7 +2428,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = NofibPrelude.nofibStringToList("n");
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(277, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(269, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -2435,43 +2436,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp22 = handleBlock$15();
+    tmp22 = handleBlock$13();
     if (tmp22 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$14 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$22 extends runtime.StackDelay {
+    handleBlock$12 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$22 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$22 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$22 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 274) {
+                if (this.pc === 266) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 274) {
+                  if (this.pc === 266) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 275;
+                    this.pc = 267;
                     continue contLoop;
-                  } else if (this.pc === 275) {
+                  } else if (this.pc === 267) {
                     this.completed = true;
                     return res2
                   }
@@ -2483,7 +2484,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(274, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(266, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -2497,28 +2498,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$22 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$22 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 272) {
+          if (this.pc === 264) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 272) {
+            if (this.pc === 264) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 273;
+              this.pc = 265;
               continue contLoop;
-            } else if (this.pc === 273) {
+            } else if (this.pc === 265) {
               this.completed = true;
               return res1
             }
@@ -2533,7 +2534,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.Var(tmp22);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(272, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(264, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -2541,43 +2542,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp23 = handleBlock$14();
+    tmp23 = handleBlock$12();
     if (tmp23 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$13 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$23 extends runtime.StackDelay {
+    handleBlock$11 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$23 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$23 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$23 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 269) {
+                if (this.pc === 261) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 269) {
+                  if (this.pc === 261) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 270;
+                    this.pc = 262;
                     continue contLoop;
-                  } else if (this.pc === 270) {
+                  } else if (this.pc === 262) {
                     this.completed = true;
                     return res2
                   }
@@ -2589,7 +2590,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(269, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(261, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -2603,28 +2604,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$23 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$23 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 267) {
+          if (this.pc === 259) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 267) {
+            if (this.pc === 259) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 268;
+              this.pc = 260;
               continue contLoop;
-            } else if (this.pc === 268) {
+            } else if (this.pc === 260) {
               this.completed = true;
               return res1
             }
@@ -2639,7 +2640,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.Con(0);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(267, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(259, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -2647,43 +2648,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp24 = handleBlock$13();
+    tmp24 = handleBlock$11();
     if (tmp24 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$12 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$24 extends runtime.StackDelay {
+    handleBlock$10 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$24 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$24 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$24 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 264) {
+                if (this.pc === 256) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 264) {
+                  if (this.pc === 256) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 265;
+                    this.pc = 257;
                     continue contLoop;
-                  } else if (this.pc === 265) {
+                  } else if (this.pc === 257) {
                     this.completed = true;
                     return res2
                   }
@@ -2695,7 +2696,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(264, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(256, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -2709,28 +2710,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$24 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$24 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 262) {
+          if (this.pc === 254) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 262) {
+            if (this.pc === 254) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 263;
+              this.pc = 255;
               continue contLoop;
-            } else if (this.pc === 263) {
+            } else if (this.pc === 255) {
               this.completed = true;
               return res1
             }
@@ -2745,7 +2746,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = NofibPrelude.nofibStringToList("n");
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(262, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(254, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -2753,43 +2754,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp25 = handleBlock$12();
+    tmp25 = handleBlock$10();
     if (tmp25 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$11 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$25 extends runtime.StackDelay {
+    handleBlock$9 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$25 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$25 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$25 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 259) {
+                if (this.pc === 251) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 259) {
+                  if (this.pc === 251) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 260;
+                    this.pc = 252;
                     continue contLoop;
-                  } else if (this.pc === 260) {
+                  } else if (this.pc === 252) {
                     this.completed = true;
                     return res2
                   }
@@ -2801,7 +2802,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(259, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(251, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -2815,28 +2816,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$25 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$25 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 257) {
+          if (this.pc === 249) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 257) {
+            if (this.pc === 249) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 258;
+              this.pc = 250;
               continue contLoop;
-            } else if (this.pc === 258) {
+            } else if (this.pc === 250) {
               this.completed = true;
               return res1
             }
@@ -2851,7 +2852,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.Var(tmp25);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(257, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(249, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -2859,43 +2860,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp26 = handleBlock$11();
+    tmp26 = handleBlock$9();
     if (tmp26 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$10 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$26 extends runtime.StackDelay {
+    handleBlock$8 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$26 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$26 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$26 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 254) {
+                if (this.pc === 246) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 254) {
+                  if (this.pc === 246) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 255;
+                    this.pc = 247;
                     continue contLoop;
-                  } else if (this.pc === 255) {
+                  } else if (this.pc === 247) {
                     this.completed = true;
                     return res2
                   }
@@ -2907,7 +2908,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(254, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(246, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -2921,28 +2922,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$26 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$26 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 252) {
+          if (this.pc === 244) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 252) {
+            if (this.pc === 244) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 253;
+              this.pc = 245;
               continue contLoop;
-            } else if (this.pc === 253) {
+            } else if (this.pc === 245) {
               this.completed = true;
               return res1
             }
@@ -2957,7 +2958,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = NofibPrelude.nofibStringToList("sum");
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(252, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(244, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -2965,43 +2966,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp27 = handleBlock$10();
+    tmp27 = handleBlock$8();
     if (tmp27 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$9 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$27 extends runtime.StackDelay {
+    handleBlock$7 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$27 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$27 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$27 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 249) {
+                if (this.pc === 241) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 249) {
+                  if (this.pc === 241) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 250;
+                    this.pc = 242;
                     continue contLoop;
-                  } else if (this.pc === 250) {
+                  } else if (this.pc === 242) {
                     this.completed = true;
                     return res2
                   }
@@ -3013,7 +3014,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(249, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(241, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -3027,28 +3028,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$27 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$27 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 247) {
+          if (this.pc === 239) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 247) {
+            if (this.pc === 239) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 248;
+              this.pc = 240;
               continue contLoop;
-            } else if (this.pc === 248) {
+            } else if (this.pc === 240) {
               this.completed = true;
               return res1
             }
@@ -3063,7 +3064,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.Var(tmp27);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(247, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(239, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -3071,43 +3072,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp28 = handleBlock$9();
+    tmp28 = handleBlock$7();
     if (tmp28 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$8 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$28 extends runtime.StackDelay {
+    handleBlock$6 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$28 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$28 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$28 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 244) {
+                if (this.pc === 236) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 244) {
+                  if (this.pc === 236) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 245;
+                    this.pc = 237;
                     continue contLoop;
-                  } else if (this.pc === 245) {
+                  } else if (this.pc === 237) {
                     this.completed = true;
                     return res2
                   }
@@ -3119,7 +3120,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(244, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(236, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -3133,28 +3134,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$28 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$28 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 242) {
+          if (this.pc === 234) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 242) {
+            if (this.pc === 234) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 243;
+              this.pc = 235;
               continue contLoop;
-            } else if (this.pc === 243) {
+            } else if (this.pc === 235) {
               this.completed = true;
               return res1
             }
@@ -3169,7 +3170,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.App(tmp28, lambda.#nMinus1);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(242, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(234, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -3177,43 +3178,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp29 = handleBlock$8();
+    tmp29 = handleBlock$6();
     if (tmp29 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$7 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$29 extends runtime.StackDelay {
+    handleBlock$5 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$29 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$29 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$29 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 239) {
+                if (this.pc === 231) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 239) {
+                  if (this.pc === 231) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 240;
+                    this.pc = 232;
                     continue contLoop;
-                  } else if (this.pc === 240) {
+                  } else if (this.pc === 232) {
                     this.completed = true;
                     return res2
                   }
@@ -3225,7 +3226,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(239, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(231, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -3239,28 +3240,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$29 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$29 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 237) {
+          if (this.pc === 229) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 237) {
+            if (this.pc === 229) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 238;
+              this.pc = 230;
               continue contLoop;
-            } else if (this.pc === 238) {
+            } else if (this.pc === 230) {
               this.completed = true;
               return res1
             }
@@ -3275,7 +3276,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.Add(tmp26, tmp29);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(237, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(229, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -3283,43 +3284,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp30 = handleBlock$7();
+    tmp30 = handleBlock$5();
     if (tmp30 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$6 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$30 extends runtime.StackDelay {
+    handleBlock$4 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$30 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$30 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$30 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 234) {
+                if (this.pc === 226) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 234) {
+                  if (this.pc === 226) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 235;
+                    this.pc = 227;
                     continue contLoop;
-                  } else if (this.pc === 235) {
+                  } else if (this.pc === 227) {
                     this.completed = true;
                     return res2
                   }
@@ -3331,7 +3332,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(234, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(226, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -3345,28 +3346,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$30 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$30 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 232) {
+          if (this.pc === 224) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 232) {
+            if (this.pc === 224) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 233;
+              this.pc = 225;
               continue contLoop;
-            } else if (this.pc === 233) {
+            } else if (this.pc === 225) {
               this.completed = true;
               return res1
             }
@@ -3381,7 +3382,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.IfZero(tmp23, tmp24, tmp30);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(232, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(224, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -3389,43 +3390,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp31 = handleBlock$6();
+    tmp31 = handleBlock$4();
     if (tmp31 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$5 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$31 extends runtime.StackDelay {
+    handleBlock$3 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$31 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$31 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$31 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 229) {
+                if (this.pc === 221) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 229) {
+                  if (this.pc === 221) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 230;
+                    this.pc = 222;
                     continue contLoop;
-                  } else if (this.pc === 230) {
+                  } else if (this.pc === 222) {
                     this.completed = true;
                     return res2
                   }
@@ -3437,7 +3438,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(229, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(221, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -3451,28 +3452,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$31 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$31 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 227) {
+          if (this.pc === 219) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 227) {
+            if (this.pc === 219) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 228;
+              this.pc = 220;
               continue contLoop;
-            } else if (this.pc === 228) {
+            } else if (this.pc === 220) {
               this.completed = true;
               return res1
             }
@@ -3487,7 +3488,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.Lam(tmp21, tmp31);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(227, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(219, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -3495,43 +3496,43 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp32 = handleBlock$5();
+    tmp32 = handleBlock$3();
     if (tmp32 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
-    handleBlock$4 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$32 extends runtime.StackDelay {
+    handleBlock$2 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$32 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$32 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$32 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 224) {
+                if (this.pc === 216) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 224) {
+                  if (this.pc === 216) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 225;
+                    this.pc = 217;
                     continue contLoop;
-                  } else if (this.pc === 225) {
+                  } else if (this.pc === 217) {
                     this.completed = true;
                     return res2
                   }
@@ -3543,7 +3544,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(224, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(216, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -3557,28 +3558,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$32 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$32 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 222) {
+          if (this.pc === 214) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 222) {
+            if (this.pc === 214) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 223;
+              this.pc = 215;
               continue contLoop;
-            } else if (this.pc === 223) {
+            } else if (this.pc === 215) {
               this.completed = true;
               return res1
             }
@@ -3593,7 +3594,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.Lam(tmp20, tmp32);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(222, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(214, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -3601,44 +3602,44 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp33 = handleBlock$4();
+    tmp33 = handleBlock$2();
     if (tmp33 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
     lambda.#partialSum0 = tmp33;
-    handleBlock$3 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$33 extends runtime.StackDelay {
+    handleBlock$1 = function handleBlock$() {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$33 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$33 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$33 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 219) {
+                if (this.pc === 211) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 219) {
+                  if (this.pc === 211) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 220;
+                    this.pc = 212;
                     continue contLoop;
-                  } else if (this.pc === 220) {
+                  } else if (this.pc === 212) {
                     this.completed = true;
                     return res2
                   }
@@ -3650,7 +3651,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(219, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(211, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -3664,28 +3665,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$33 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$33 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 217) {
+          if (this.pc === 209) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 217) {
+            if (this.pc === 209) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 218;
+              this.pc = 210;
               continue contLoop;
-            } else if (this.pc === 218) {
+            } else if (this.pc === 210) {
               this.completed = true;
               return res1
             }
@@ -3700,7 +3701,7 @@ lambda1 = class lambda {
       runtime.stackHandler = stackHandler;
       res1 = lambda.App(lambda.#fix, lambda.#partialSum0);
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(217, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(209, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -3708,256 +3709,44 @@ lambda1 = class lambda {
       }
       return res1
     };
-    tmp34 = handleBlock$3();
+    tmp34 = handleBlock$1();
     if (tmp34 instanceof runtime.EffectSig.class) {
       throw new globalThis.Error("Unhandled effects");
     }
     runtime.stackDepth = 0;
     runtime.stackHandler = null;
     lambda.#sum0 = tmp34;
-    handleBlock$2 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$34 extends runtime.StackDelay {
-        constructor() {
-          let tmp37;
-          tmp37 = super();
-        }
-        perform() {
-          return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$34 extends runtime.Cont.class {
-              constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
-                this.pc = pc;
-                this.next = next;
-              }
-              resume(value$) {
-                if (this.pc === 214) {
-                  res2 = value$;
-                }
-                contLoop: while (true) {
-                  if (this.pc === 214) {
-                    if (res2 instanceof runtime.Return.class) {
-                      this.completed = true;
-                      return res2
-                    }
-                    this.pc = 215;
-                    continue contLoop;
-                  } else if (this.pc === 215) {
-                    this.completed = true;
-                    return res2
-                  }
-                  break;
-                }
-              }
-              toString() { return "Cont$handler$stackHandler$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
-            };
-            runtime.stackOffset = runtime.stackDepth;
-            res2 = resume();
-            if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(214, handleBlock.contHead.next);
-              if (handleBlock.lastHandlerCont === null) {
-                handleBlock.lastHandlerCont = handleBlock.contHead.next;
-              }
-              return res2
-            }
-            if (res2 instanceof runtime.Return.class) {
-              return res2
-            }
-            return res2
-          })
-        }
-        toString() { return "StackDelay$"; }
-      };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$34 extends runtime.Cont.class {
-        constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
-          this.pc = pc;
-          this.next = next;
-        }
-        resume(value$) {
-          if (this.pc === 212) {
-            res1 = value$;
-          }
-          contLoop: while (true) {
-            if (this.pc === 212) {
-              if (res1 instanceof runtime.Return.class) {
-                this.completed = true;
-                return res1
-              }
-              this.pc = 213;
-              continue contLoop;
-            } else if (this.pc === 213) {
-              this.completed = true;
-              return res1
-            }
-            break;
-          }
-        }
-        toString() { return "Cont$handleBlock$stackHandler$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
-      };
-      runtime.stackLimit = 500;
-      runtime.stackOffset = 0;
-      runtime.stackDepth = 1;
-      runtime.stackHandler = stackHandler;
-      res1 = lambda.testLambda_nofib(80);
-      if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(212, null);
-        return runtime.handleBlockImpl(res1, stackHandler)
-      }
-      if (res1 instanceof runtime.Return.class) {
-        return res1
-      }
-      return res1
-    };
-    tmp35 = handleBlock$2();
-    if (tmp35 instanceof runtime.EffectSig.class) {
-      throw new globalThis.Error("Unhandled effects");
-    }
-    runtime.stackDepth = 0;
-    runtime.stackHandler = null;
-    handleBlock$1 = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$35 extends runtime.StackDelay {
-        constructor() {
-          let tmp37;
-          tmp37 = super();
-        }
-        perform() {
-          return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$35 extends runtime.Cont.class {
-              constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
-                this.pc = pc;
-                this.next = next;
-              }
-              resume(value$) {
-                if (this.pc === 209) {
-                  res2 = value$;
-                }
-                contLoop: while (true) {
-                  if (this.pc === 209) {
-                    if (res2 instanceof runtime.Return.class) {
-                      this.completed = true;
-                      return res2
-                    }
-                    this.pc = 210;
-                    continue contLoop;
-                  } else if (this.pc === 210) {
-                    this.completed = true;
-                    return res2
-                  }
-                  break;
-                }
-              }
-              toString() { return "Cont$handler$stackHandler$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
-            };
-            runtime.stackOffset = runtime.stackDepth;
-            res2 = resume();
-            if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(209, handleBlock.contHead.next);
-              if (handleBlock.lastHandlerCont === null) {
-                handleBlock.lastHandlerCont = handleBlock.contHead.next;
-              }
-              return res2
-            }
-            if (res2 instanceof runtime.Return.class) {
-              return res2
-            }
-            return res2
-          })
-        }
-        toString() { return "StackDelay$"; }
-      };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$35 extends runtime.Cont.class {
-        constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
-          this.pc = pc;
-          this.next = next;
-        }
-        resume(value$) {
-          if (this.pc === 207) {
-            res1 = value$;
-          }
-          contLoop: while (true) {
-            if (this.pc === 207) {
-              if (res1 instanceof runtime.Return.class) {
-                this.completed = true;
-                return res1
-              }
-              this.pc = 208;
-              continue contLoop;
-            } else if (this.pc === 208) {
-              this.completed = true;
-              return res1
-            }
-            break;
-          }
-        }
-        toString() { return "Cont$handleBlock$stackHandler$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
-      };
-      runtime.stackLimit = 500;
-      runtime.stackOffset = 0;
-      runtime.stackDepth = 1;
-      runtime.stackHandler = stackHandler;
-      res1 = runtime.safeCall(tmp35.toString());
-      if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(207, null);
-        return runtime.handleBlockImpl(res1, stackHandler)
-      }
-      if (res1 instanceof runtime.Return.class) {
-        return res1
-      }
-      return res1
-    };
-    tmp36 = handleBlock$1();
-    if (tmp36 instanceof runtime.EffectSig.class) {
-      throw new globalThis.Error("Unhandled effects");
-    }
-    runtime.stackDepth = 0;
-    runtime.stackHandler = null;
     handleBlock$ = function handleBlock$() {
-      let stackHandler, res1, Cont$handleBlock$stackHandler$37, StackDelay$37;
-      StackDelay$37 = class StackDelay$36 extends runtime.StackDelay {
+      let stackHandler, res1, Cont$handleBlock$stackHandler$35, StackDelay$35;
+      StackDelay$35 = class StackDelay$34 extends runtime.StackDelay {
         constructor() {
-          let tmp37;
-          tmp37 = super();
+          let tmp35;
+          tmp35 = super();
         }
         perform() {
           return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-            let res2, Cont$handler$stackHandler$37;
-            Cont$handler$stackHandler$37 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-            Cont$handler$stackHandler$37.class = class Cont$handler$stackHandler$36 extends runtime.Cont.class {
+            let res2, Cont$handler$stackHandler$35;
+            Cont$handler$stackHandler$35 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
+            Cont$handler$stackHandler$35.class = class Cont$handler$stackHandler$34 extends runtime.Cont.class {
               constructor(pc, next) {
-                let tmp37;
-                tmp37 = super(next, false);
+                let tmp35;
+                tmp35 = super(next, false);
                 this.pc = pc;
                 this.next = next;
               }
               resume(value$) {
-                if (this.pc === 204) {
+                if (this.pc === 206) {
                   res2 = value$;
                 }
                 contLoop: while (true) {
-                  if (this.pc === 204) {
+                  if (this.pc === 206) {
                     if (res2 instanceof runtime.Return.class) {
                       this.completed = true;
                       return res2
                     }
-                    this.pc = 205;
+                    this.pc = 207;
                     continue contLoop;
-                  } else if (this.pc === 205) {
+                  } else if (this.pc === 207) {
                     this.completed = true;
                     return res2
                   }
@@ -3969,7 +3758,7 @@ lambda1 = class lambda {
             runtime.stackOffset = runtime.stackDepth;
             res2 = resume();
             if (res2 instanceof runtime.EffectSig.class) {
-              handleBlock.contHead.next = new Cont$handler$stackHandler$37.class(204, handleBlock.contHead.next);
+              handleBlock.contHead.next = new Cont$handler$stackHandler$35.class(206, handleBlock.contHead.next);
               if (handleBlock.lastHandlerCont === null) {
                 handleBlock.lastHandlerCont = handleBlock.contHead.next;
               }
@@ -3983,28 +3772,28 @@ lambda1 = class lambda {
         }
         toString() { return "StackDelay$"; }
       };
-      stackHandler = new StackDelay$37();
-      Cont$handleBlock$stackHandler$37 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-      Cont$handleBlock$stackHandler$37.class = class Cont$handleBlock$stackHandler$36 extends runtime.Cont.class {
+      stackHandler = new StackDelay$35();
+      Cont$handleBlock$stackHandler$35 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
+      Cont$handleBlock$stackHandler$35.class = class Cont$handleBlock$stackHandler$34 extends runtime.Cont.class {
         constructor(pc, next) {
-          let tmp37;
-          tmp37 = super(next, false);
+          let tmp35;
+          tmp35 = super(next, false);
           this.pc = pc;
           this.next = next;
         }
         resume(value$) {
-          if (this.pc === 202) {
+          if (this.pc === 204) {
             res1 = value$;
           }
           contLoop: while (true) {
-            if (this.pc === 202) {
+            if (this.pc === 204) {
               if (res1 instanceof runtime.Return.class) {
                 this.completed = true;
                 return res1
               }
-              this.pc = 203;
+              this.pc = 205;
               continue contLoop;
-            } else if (this.pc === 203) {
+            } else if (this.pc === 205) {
               this.completed = true;
               return res1
             }
@@ -4017,9 +3806,63 @@ lambda1 = class lambda {
       runtime.stackOffset = 0;
       runtime.stackDepth = 1;
       runtime.stackHandler = stackHandler;
-      res1 = NofibPrelude.print(tmp36);
+      res1 = BenchmarkPrelude.benchmark(() => {
+        let tmp35, curDepth, stackDelayRes, Cont$lambda$10;
+        Cont$lambda$10 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+        Cont$lambda$10.class = class Cont$lambda$ extends runtime.Cont.class {
+          constructor(pc, next) {
+            let tmp36;
+            tmp36 = super(next, false);
+            this.pc = pc;
+            this.next = next;
+          }
+          resume(value$) {
+            if (this.pc === 202) {
+              stackDelayRes = value$;
+            } else if (this.pc === 203) {
+              tmp35 = value$;
+            }
+            contLoop: while (true) {
+              if (this.pc === 202) {
+                runtime.stackDepth = runtime.stackDepth + 1;
+                tmp35 = lambda.testLambda_nofib(80);
+                if (tmp35 instanceof runtime.EffectSig.class) {
+                  this.pc = 203;
+                  return tmp35
+                }
+                this.pc = 203;
+                continue contLoop;
+              } else if (this.pc === 203) {
+                tmp35 = runtime.resetDepth(tmp35, curDepth);
+                runtime.stackDepth = runtime.stackDepth + 1;
+                this.completed = true;
+                return runtime.safeCall(tmp35.toString())
+              }
+              break;
+            }
+          }
+          toString() { return "Cont$lambda$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+        };
+        curDepth = runtime.stackDepth;
+        stackDelayRes = runtime.checkDepth();
+        if (stackDelayRes instanceof runtime.EffectSig.class) {
+          stackDelayRes.tail.next = new Cont$lambda$10.class(202, null);
+          stackDelayRes.tail = stackDelayRes.tail.next;
+          return stackDelayRes
+        }
+        runtime.stackDepth = runtime.stackDepth + 1;
+        tmp35 = lambda.testLambda_nofib(80);
+        if (tmp35 instanceof runtime.EffectSig.class) {
+          tmp35.tail.next = new Cont$lambda$10.class(203, null);
+          tmp35.tail = tmp35.tail.next;
+          return tmp35
+        }
+        tmp35 = runtime.resetDepth(tmp35, curDepth);
+        runtime.stackDepth = runtime.stackDepth + 1;
+        return runtime.safeCall(tmp35.toString())
+      });
       if (res1 instanceof runtime.EffectSig.class) {
-        res1.tail.next = new Cont$handleBlock$stackHandler$37(202, null);
+        res1.tail.next = new Cont$handleBlock$stackHandler$35(204, null);
         return runtime.handleBlockImpl(res1, stackHandler)
       }
       if (res1 instanceof runtime.Return.class) {
@@ -4036,9 +3879,9 @@ lambda1 = class lambda {
     res
   }
   static lookup(k, t) {
-    let param0, param1, first1, first0, x, v, t1, scrut, curDepth, tmp, tmp1, stackDelayRes, Cont$func$lookup$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_76_180$1;
-    Cont$func$lookup$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_76_180$1 = function Cont$func$lookup$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_76_180$(pc1, next1) { return new Cont$func$lookup$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_76_180$.class(pc1, next1); };
-    Cont$func$lookup$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_76_180$1.class = class Cont$func$lookup$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_76_180$ extends runtime.Cont.class {
+    let param0, param1, first1, first0, x, v, t1, scrut, curDepth, tmp, tmp1, stackDelayRes, Cont$func$lookup$lambda$_mls_L0_130_234$1;
+    Cont$func$lookup$lambda$_mls_L0_130_234$1 = function Cont$func$lookup$lambda$_mls_L0_130_234$(pc1, next1) { return new Cont$func$lookup$lambda$_mls_L0_130_234$.class(pc1, next1); };
+    Cont$func$lookup$lambda$_mls_L0_130_234$1.class = class Cont$func$lookup$lambda$_mls_L0_130_234$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp2;
         tmp2 = super(next, false);
@@ -4128,12 +3971,12 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$lookup$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_76_180$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$lookup$lambda$_mls_L0_130_234$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$lookup$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_76_180$1.class(0, null);
+      stackDelayRes.tail.next = new Cont$func$lookup$lambda$_mls_L0_130_234$1.class(0, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -4151,7 +3994,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         scrut = NofibPrelude.listEq(k, x);
         if (scrut instanceof runtime.EffectSig.class) {
-          scrut.tail.next = new Cont$func$lookup$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_76_180$1.class(1, null);
+          scrut.tail.next = new Cont$func$lookup$lambda$_mls_L0_130_234$1.class(1, null);
           scrut.tail = scrut.tail.next;
           return scrut
         }
@@ -4167,7 +4010,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp = new globalThis.Error("match error");
         if (tmp instanceof runtime.EffectSig.class) {
-          tmp.tail.next = new Cont$func$lookup$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_76_180$1.class(2, null);
+          tmp.tail.next = new Cont$func$lookup$lambda$_mls_L0_130_234$1.class(2, null);
           tmp.tail = tmp.tail.next;
           return tmp
         }
@@ -4178,7 +4021,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp1 = new globalThis.Error("match error");
       if (tmp1 instanceof runtime.EffectSig.class) {
-        tmp1.tail.next = new Cont$func$lookup$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_76_180$1.class(3, null);
+        tmp1.tail.next = new Cont$func$lookup$lambda$_mls_L0_130_234$1.class(3, null);
         tmp1.tail = tmp1.tail.next;
         return tmp1
       }
@@ -4187,9 +4030,9 @@ lambda1 = class lambda {
     }
   } 
   static myRunState(m, s) {
-    let param0, f, tmp, curDepth, stackDelayRes, Cont$func$myRunState$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_223_270$1;
-    Cont$func$myRunState$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_223_270$1 = function Cont$func$myRunState$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_223_270$(pc1, next1) { return new Cont$func$myRunState$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_223_270$.class(pc1, next1); };
-    Cont$func$myRunState$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_223_270$1.class = class Cont$func$myRunState$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_223_270$ extends runtime.Cont.class {
+    let param0, f, tmp, curDepth, stackDelayRes, Cont$func$myRunState$lambda$_mls_L0_277_324$1;
+    Cont$func$myRunState$lambda$_mls_L0_277_324$1 = function Cont$func$myRunState$lambda$_mls_L0_277_324$(pc1, next1) { return new Cont$func$myRunState$lambda$_mls_L0_277_324$.class(pc1, next1); };
+    Cont$func$myRunState$lambda$_mls_L0_277_324$1.class = class Cont$func$myRunState$lambda$_mls_L0_277_324$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp1;
         tmp1 = super(next, false);
@@ -4231,12 +4074,12 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$myRunState$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_223_270$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$myRunState$lambda$_mls_L0_277_324$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$myRunState$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_223_270$1.class(5, null);
+      stackDelayRes.tail.next = new Cont$func$myRunState$lambda$_mls_L0_277_324$1.class(5, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -4249,7 +4092,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp = new globalThis.Error("match error");
       if (tmp instanceof runtime.EffectSig.class) {
-        tmp.tail.next = new Cont$func$myRunState$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_223_270$1.class(6, null);
+        tmp.tail.next = new Cont$func$myRunState$lambda$_mls_L0_277_324$1.class(6, null);
         tmp.tail = tmp.tail.next;
         return tmp
       }
@@ -4258,9 +4101,9 @@ lambda1 = class lambda {
     }
   } 
   static myBind(m1, f) {
-    let tmp, stackDelayRes, Cont$func$myBind$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_276_361$1;
-    Cont$func$myBind$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_276_361$1 = function Cont$func$myBind$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_276_361$(pc1, next1) { return new Cont$func$myBind$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_276_361$.class(pc1, next1); };
-    Cont$func$myBind$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_276_361$1.class = class Cont$func$myBind$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_276_361$ extends runtime.Cont.class {
+    let tmp, stackDelayRes, Cont$func$myBind$lambda$_mls_L0_330_415$1;
+    Cont$func$myBind$lambda$_mls_L0_330_415$1 = function Cont$func$myBind$lambda$_mls_L0_330_415$(pc1, next1) { return new Cont$func$myBind$lambda$_mls_L0_330_415$.class(pc1, next1); };
+    Cont$func$myBind$lambda$_mls_L0_330_415$1.class = class Cont$func$myBind$lambda$_mls_L0_330_415$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp1;
         tmp1 = super(next, false);
@@ -4274,9 +4117,9 @@ lambda1 = class lambda {
         contLoop: while (true) {
           if (this.pc === 8) {
             tmp = (s1) => {
-              let scrut, first1, first0, s_, a, tmp1, curDepth, tmp2, stackDelayRes1, Cont$lambda$9;
-              Cont$lambda$9 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-              Cont$lambda$9.class = class Cont$lambda$1 extends runtime.Cont.class {
+              let scrut, first1, first0, s_, a, tmp1, curDepth, tmp2, stackDelayRes1, Cont$lambda$10;
+              Cont$lambda$10 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+              Cont$lambda$10.class = class Cont$lambda$2 extends runtime.Cont.class {
                 constructor(pc1, next1) {
                   let tmp3;
                   tmp3 = super(next1, false);
@@ -4349,14 +4192,14 @@ lambda1 = class lambda {
               curDepth = runtime.stackDepth;
               stackDelayRes1 = runtime.checkDepth();
               if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-                stackDelayRes1.tail.next = new Cont$lambda$9.class(9, null);
+                stackDelayRes1.tail.next = new Cont$lambda$10.class(9, null);
                 stackDelayRes1.tail = stackDelayRes1.tail.next;
                 return stackDelayRes1
               }
               runtime.stackDepth = runtime.stackDepth + 1;
               scrut = lambda.myRunState(m1, s1);
               if (scrut instanceof runtime.EffectSig.class) {
-                scrut.tail.next = new Cont$lambda$9.class(10, null);
+                scrut.tail.next = new Cont$lambda$10.class(10, null);
                 scrut.tail = scrut.tail.next;
                 return scrut
               }
@@ -4369,7 +4212,7 @@ lambda1 = class lambda {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 tmp1 = runtime.safeCall(f(a));
                 if (tmp1 instanceof runtime.EffectSig.class) {
-                  tmp1.tail.next = new Cont$lambda$9.class(11, null);
+                  tmp1.tail.next = new Cont$lambda$10.class(11, null);
                   tmp1.tail = tmp1.tail.next;
                   return tmp1
                 }
@@ -4380,7 +4223,7 @@ lambda1 = class lambda {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 tmp2 = new globalThis.Error("match error");
                 if (tmp2 instanceof runtime.EffectSig.class) {
-                  tmp2.tail.next = new Cont$lambda$9.class(12, null);
+                  tmp2.tail.next = new Cont$lambda$10.class(12, null);
                   tmp2.tail = tmp2.tail.next;
                   return tmp2
                 }
@@ -4395,18 +4238,18 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$myBind$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_276_361$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$myBind$lambda$_mls_L0_330_415$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$myBind$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_276_361$1.class(8, null);
+      stackDelayRes.tail.next = new Cont$func$myBind$lambda$_mls_L0_330_415$1.class(8, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
     tmp = (s1) => {
-      let scrut, first1, first0, s_, a, tmp1, curDepth, tmp2, stackDelayRes1, Cont$lambda$9;
-      Cont$lambda$9 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-      Cont$lambda$9.class = class Cont$lambda$1 extends runtime.Cont.class {
+      let scrut, first1, first0, s_, a, tmp1, curDepth, tmp2, stackDelayRes1, Cont$lambda$10;
+      Cont$lambda$10 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+      Cont$lambda$10.class = class Cont$lambda$2 extends runtime.Cont.class {
         constructor(pc, next) {
           let tmp3;
           tmp3 = super(next, false);
@@ -4479,14 +4322,14 @@ lambda1 = class lambda {
       curDepth = runtime.stackDepth;
       stackDelayRes1 = runtime.checkDepth();
       if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-        stackDelayRes1.tail.next = new Cont$lambda$9.class(9, null);
+        stackDelayRes1.tail.next = new Cont$lambda$10.class(9, null);
         stackDelayRes1.tail = stackDelayRes1.tail.next;
         return stackDelayRes1
       }
       runtime.stackDepth = runtime.stackDepth + 1;
       scrut = lambda.myRunState(m1, s1);
       if (scrut instanceof runtime.EffectSig.class) {
-        scrut.tail.next = new Cont$lambda$9.class(10, null);
+        scrut.tail.next = new Cont$lambda$10.class(10, null);
         scrut.tail = scrut.tail.next;
         return scrut
       }
@@ -4499,7 +4342,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp1 = runtime.safeCall(f(a));
         if (tmp1 instanceof runtime.EffectSig.class) {
-          tmp1.tail.next = new Cont$lambda$9.class(11, null);
+          tmp1.tail.next = new Cont$lambda$10.class(11, null);
           tmp1.tail = tmp1.tail.next;
           return tmp1
         }
@@ -4510,7 +4353,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp2 = new globalThis.Error("match error");
         if (tmp2 instanceof runtime.EffectSig.class) {
-          tmp2.tail.next = new Cont$lambda$9.class(12, null);
+          tmp2.tail.next = new Cont$lambda$10.class(12, null);
           tmp2.tail = tmp2.tail.next;
           return tmp2
         }
@@ -4522,9 +4365,9 @@ lambda1 = class lambda {
     return lambda.MyState(tmp)
   } 
   static myReturn(a) {
-    let stackDelayRes, Cont$func$myReturn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_367_401$1;
-    Cont$func$myReturn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_367_401$1 = function Cont$func$myReturn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_367_401$(pc1, next1) { return new Cont$func$myReturn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_367_401$.class(pc1, next1); };
-    Cont$func$myReturn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_367_401$1.class = class Cont$func$myReturn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_367_401$ extends runtime.Cont.class {
+    let stackDelayRes, Cont$func$myReturn$lambda$_mls_L0_421_455$1;
+    Cont$func$myReturn$lambda$_mls_L0_421_455$1 = function Cont$func$myReturn$lambda$_mls_L0_421_455$(pc1, next1) { return new Cont$func$myReturn$lambda$_mls_L0_421_455$.class(pc1, next1); };
+    Cont$func$myReturn$lambda$_mls_L0_421_455$1.class = class Cont$func$myReturn$lambda$_mls_L0_421_455$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp;
         tmp = super(next, false);
@@ -4549,11 +4392,11 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$myReturn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_367_401$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$myReturn$lambda$_mls_L0_421_455$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$myReturn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_367_401$1.class(14, null);
+      stackDelayRes.tail.next = new Cont$func$myReturn$lambda$_mls_L0_421_455$1.class(14, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -4566,9 +4409,9 @@ lambda1 = class lambda {
     })
   } 
   static myEvalState(m2, s1) {
-    let scrut, first1, first0, s_, a1, curDepth, tmp, stackDelayRes, Cont$func$myEvalState$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_473_530$1;
-    Cont$func$myEvalState$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_473_530$1 = function Cont$func$myEvalState$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_473_530$(pc1, next1) { return new Cont$func$myEvalState$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_473_530$.class(pc1, next1); };
-    Cont$func$myEvalState$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_473_530$1.class = class Cont$func$myEvalState$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_473_530$ extends runtime.Cont.class {
+    let scrut, first1, first0, s_, a1, curDepth, tmp, stackDelayRes, Cont$func$myEvalState$lambda$_mls_L0_527_584$1;
+    Cont$func$myEvalState$lambda$_mls_L0_527_584$1 = function Cont$func$myEvalState$lambda$_mls_L0_527_584$(pc1, next1) { return new Cont$func$myEvalState$lambda$_mls_L0_527_584$.class(pc1, next1); };
+    Cont$func$myEvalState$lambda$_mls_L0_527_584$1.class = class Cont$func$myEvalState$lambda$_mls_L0_527_584$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp1;
         tmp1 = super(next, false);
@@ -4623,19 +4466,19 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$myEvalState$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_473_530$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$myEvalState$lambda$_mls_L0_527_584$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$myEvalState$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_473_530$1.class(15, null);
+      stackDelayRes.tail.next = new Cont$func$myEvalState$lambda$_mls_L0_527_584$1.class(15, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
     runtime.stackDepth = runtime.stackDepth + 1;
     scrut = lambda.myRunState(m2, s1);
     if (scrut instanceof runtime.EffectSig.class) {
-      scrut.tail.next = new Cont$func$myEvalState$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_473_530$1.class(16, null);
+      scrut.tail.next = new Cont$func$myEvalState$lambda$_mls_L0_527_584$1.class(16, null);
       scrut.tail = scrut.tail.next;
       return scrut
     }
@@ -4650,7 +4493,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp = new globalThis.Error("match error");
       if (tmp instanceof runtime.EffectSig.class) {
-        tmp.tail.next = new Cont$func$myEvalState$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_473_530$1.class(17, null);
+        tmp.tail.next = new Cont$func$myEvalState$lambda$_mls_L0_527_584$1.class(17, null);
         tmp.tail = tmp.tail.next;
         return tmp
       }
@@ -4659,9 +4502,9 @@ lambda1 = class lambda {
     }
   } 
   static eqEnv(a1, b) {
-    let param0, param1, first1, first0, s11, t1, b1, param01, param11, first11, first01, s2, t2, d, scrut, scrut1, curDepth, stackDelayRes, Cont$func$eqEnv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_931_1079$1;
-    Cont$func$eqEnv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_931_1079$1 = function Cont$func$eqEnv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_931_1079$(pc1, next1) { return new Cont$func$eqEnv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_931_1079$.class(pc1, next1); };
-    Cont$func$eqEnv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_931_1079$1.class = class Cont$func$eqEnv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_931_1079$ extends runtime.Cont.class {
+    let param0, param1, first1, first0, s11, t1, b1, param01, param11, first11, first01, s2, t2, d, scrut, scrut1, curDepth, stackDelayRes, Cont$func$eqEnv$lambda$_mls_L0_985_1133$1;
+    Cont$func$eqEnv$lambda$_mls_L0_985_1133$1 = function Cont$func$eqEnv$lambda$_mls_L0_985_1133$(pc1, next1) { return new Cont$func$eqEnv$lambda$_mls_L0_985_1133$.class(pc1, next1); };
+    Cont$func$eqEnv$lambda$_mls_L0_985_1133$1.class = class Cont$func$eqEnv$lambda$_mls_L0_985_1133$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp;
         tmp = super(next, false);
@@ -4775,12 +4618,12 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$eqEnv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_931_1079$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$eqEnv$lambda$_mls_L0_985_1133$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$eqEnv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_931_1079$1.class(19, null);
+      stackDelayRes.tail.next = new Cont$func$eqEnv$lambda$_mls_L0_985_1133$1.class(19, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -4811,7 +4654,7 @@ lambda1 = class lambda {
             runtime.stackDepth = runtime.stackDepth + 1;
             scrut = NofibPrelude.listEq(s11, s2);
             if (scrut instanceof runtime.EffectSig.class) {
-              scrut.tail.next = new Cont$func$eqEnv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_931_1079$1.class(20, null);
+              scrut.tail.next = new Cont$func$eqEnv$lambda$_mls_L0_985_1133$1.class(20, null);
               scrut.tail = scrut.tail.next;
               return scrut
             }
@@ -4820,7 +4663,7 @@ lambda1 = class lambda {
               runtime.stackDepth = runtime.stackDepth + 1;
               scrut1 = lambda.eqTerm(t1, t2);
               if (scrut1 instanceof runtime.EffectSig.class) {
-                scrut1.tail.next = new Cont$func$eqEnv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_931_1079$1.class(21, null);
+                scrut1.tail.next = new Cont$func$eqEnv$lambda$_mls_L0_985_1133$1.class(21, null);
                 scrut1.tail = scrut1.tail.next;
                 return scrut1
               }
@@ -4848,9 +4691,9 @@ lambda1 = class lambda {
     }
   } 
   static eqTerm(a2, b1) {
-    let param0, param1, a3, b2, param01, param11, c, d, param02, param12, param2, a4, b3, c1, param03, param13, param21, d1, e, f1, param04, param14, a5, b4, param05, param15, c2, d2, param06, param16, a6, b5, param07, param17, c3, d3, param08, param18, a7, b6, param09, param19, c4, d4, param010, a8, param011, b7, param012, a9, param013, b8, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, curDepth, stackDelayRes, Cont$func$eqTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1113_1603$1;
-    Cont$func$eqTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1113_1603$1 = function Cont$func$eqTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1113_1603$(pc1, next1) { return new Cont$func$eqTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1113_1603$.class(pc1, next1); };
-    Cont$func$eqTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1113_1603$1.class = class Cont$func$eqTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1113_1603$ extends runtime.Cont.class {
+    let param0, param1, a3, b2, param01, param11, c, d, param02, param12, param2, a4, b3, c1, param03, param13, param21, d1, e, f1, param04, param14, a5, b4, param05, param15, c2, d2, param06, param16, a6, b5, param07, param17, c3, d3, param08, param18, a7, b6, param09, param19, c4, d4, param010, a8, param011, b7, param012, a9, param013, b8, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, curDepth, stackDelayRes, Cont$func$eqTerm$lambda$_mls_L0_1167_1657$1;
+    Cont$func$eqTerm$lambda$_mls_L0_1167_1657$1 = function Cont$func$eqTerm$lambda$_mls_L0_1167_1657$(pc1, next1) { return new Cont$func$eqTerm$lambda$_mls_L0_1167_1657$.class(pc1, next1); };
+    Cont$func$eqTerm$lambda$_mls_L0_1167_1657$1.class = class Cont$func$eqTerm$lambda$_mls_L0_1167_1657$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp12;
         tmp12 = super(next, false);
@@ -5171,12 +5014,12 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$eqTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1113_1603$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$eqTerm$lambda$_mls_L0_1167_1657$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$eqTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1113_1603$1.class(23, null);
+      stackDelayRes.tail.next = new Cont$func$eqTerm$lambda$_mls_L0_1167_1657$1.class(23, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -5220,7 +5063,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp = lambda.eqTerm(a7, c4);
         if (tmp instanceof runtime.EffectSig.class) {
-          tmp.tail.next = new Cont$func$eqTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1113_1603$1.class(24, null);
+          tmp.tail.next = new Cont$func$eqTerm$lambda$_mls_L0_1167_1657$1.class(24, null);
           tmp.tail = tmp.tail.next;
           return tmp
         }
@@ -5228,7 +5071,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp1 = lambda.eqTerm(b6, d4);
         if (tmp1 instanceof runtime.EffectSig.class) {
-          tmp1.tail.next = new Cont$func$eqTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1113_1603$1.class(25, null);
+          tmp1.tail.next = new Cont$func$eqTerm$lambda$_mls_L0_1167_1657$1.class(25, null);
           tmp1.tail = tmp1.tail.next;
           return tmp1
         }
@@ -5250,7 +5093,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp2 = NofibPrelude.listEq(a6, c3);
         if (tmp2 instanceof runtime.EffectSig.class) {
-          tmp2.tail.next = new Cont$func$eqTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1113_1603$1.class(26, null);
+          tmp2.tail.next = new Cont$func$eqTerm$lambda$_mls_L0_1167_1657$1.class(26, null);
           tmp2.tail = tmp2.tail.next;
           return tmp2
         }
@@ -5258,7 +5101,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp3 = lambda.eqTerm(b5, d3);
         if (tmp3 instanceof runtime.EffectSig.class) {
-          tmp3.tail.next = new Cont$func$eqTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1113_1603$1.class(27, null);
+          tmp3.tail.next = new Cont$func$eqTerm$lambda$_mls_L0_1167_1657$1.class(27, null);
           tmp3.tail = tmp3.tail.next;
           return tmp3
         }
@@ -5280,7 +5123,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp4 = lambda.eqTerm(a5, c2);
         if (tmp4 instanceof runtime.EffectSig.class) {
-          tmp4.tail.next = new Cont$func$eqTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1113_1603$1.class(28, null);
+          tmp4.tail.next = new Cont$func$eqTerm$lambda$_mls_L0_1167_1657$1.class(28, null);
           tmp4.tail = tmp4.tail.next;
           return tmp4
         }
@@ -5288,7 +5131,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp5 = lambda.eqTerm(b4, d2);
         if (tmp5 instanceof runtime.EffectSig.class) {
-          tmp5.tail.next = new Cont$func$eqTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1113_1603$1.class(29, null);
+          tmp5.tail.next = new Cont$func$eqTerm$lambda$_mls_L0_1167_1657$1.class(29, null);
           tmp5.tail = tmp5.tail.next;
           return tmp5
         }
@@ -5314,7 +5157,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp6 = lambda.eqTerm(a4, d1);
         if (tmp6 instanceof runtime.EffectSig.class) {
-          tmp6.tail.next = new Cont$func$eqTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1113_1603$1.class(30, null);
+          tmp6.tail.next = new Cont$func$eqTerm$lambda$_mls_L0_1167_1657$1.class(30, null);
           tmp6.tail = tmp6.tail.next;
           return tmp6
         }
@@ -5322,7 +5165,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp7 = lambda.eqTerm(b3, e);
         if (tmp7 instanceof runtime.EffectSig.class) {
-          tmp7.tail.next = new Cont$func$eqTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1113_1603$1.class(31, null);
+          tmp7.tail.next = new Cont$func$eqTerm$lambda$_mls_L0_1167_1657$1.class(31, null);
           tmp7.tail = tmp7.tail.next;
           return tmp7
         }
@@ -5331,7 +5174,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp9 = lambda.eqTerm(c1, f1);
         if (tmp9 instanceof runtime.EffectSig.class) {
-          tmp9.tail.next = new Cont$func$eqTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1113_1603$1.class(32, null);
+          tmp9.tail.next = new Cont$func$eqTerm$lambda$_mls_L0_1167_1657$1.class(32, null);
           tmp9.tail = tmp9.tail.next;
           return tmp9
         }
@@ -5353,7 +5196,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp10 = lambda.eqTerm(a3, c);
         if (tmp10 instanceof runtime.EffectSig.class) {
-          tmp10.tail.next = new Cont$func$eqTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1113_1603$1.class(33, null);
+          tmp10.tail.next = new Cont$func$eqTerm$lambda$_mls_L0_1167_1657$1.class(33, null);
           tmp10.tail = tmp10.tail.next;
           return tmp10
         }
@@ -5361,7 +5204,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp11 = lambda.eqEnv(b2, d);
         if (tmp11 instanceof runtime.EffectSig.class) {
-          tmp11.tail.next = new Cont$func$eqTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1113_1603$1.class(34, null);
+          tmp11.tail.next = new Cont$func$eqTerm$lambda$_mls_L0_1167_1657$1.class(34, null);
           tmp11.tail = tmp11.tail.next;
           return tmp11
         }
@@ -5375,9 +5218,9 @@ lambda1 = class lambda {
     }
   } 
   static myMaybe(d, f1, x) {
-    let param0, x1, tmp, curDepth, stackDelayRes, Cont$func$myMaybe$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1622_1666$1;
-    Cont$func$myMaybe$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1622_1666$1 = function Cont$func$myMaybe$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1622_1666$(pc1, next1) { return new Cont$func$myMaybe$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1622_1666$.class(pc1, next1); };
-    Cont$func$myMaybe$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1622_1666$1.class = class Cont$func$myMaybe$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1622_1666$ extends runtime.Cont.class {
+    let param0, x1, tmp, curDepth, stackDelayRes, Cont$func$myMaybe$lambda$_mls_L0_1676_1720$1;
+    Cont$func$myMaybe$lambda$_mls_L0_1676_1720$1 = function Cont$func$myMaybe$lambda$_mls_L0_1676_1720$(pc1, next1) { return new Cont$func$myMaybe$lambda$_mls_L0_1676_1720$.class(pc1, next1); };
+    Cont$func$myMaybe$lambda$_mls_L0_1676_1720$1.class = class Cont$func$myMaybe$lambda$_mls_L0_1676_1720$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp1;
         tmp1 = super(next, false);
@@ -5419,12 +5262,12 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$myMaybe$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1622_1666$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$myMaybe$lambda$_mls_L0_1676_1720$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$myMaybe$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1622_1666$1.class(36, null);
+      stackDelayRes.tail.next = new Cont$func$myMaybe$lambda$_mls_L0_1676_1720$1.class(36, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -5437,7 +5280,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp = new globalThis.Error("match error");
       if (tmp instanceof runtime.EffectSig.class) {
-        tmp.tail.next = new Cont$func$myMaybe$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1622_1666$1.class(37, null);
+        tmp.tail.next = new Cont$func$myMaybe$lambda$_mls_L0_1676_1720$1.class(37, null);
         tmp.tail = tmp.tail.next;
         return tmp
       }
@@ -5446,9 +5289,9 @@ lambda1 = class lambda {
     }
   } 
   static lookupVar(v) {
-    let lookup2, stackDelayRes, Cont$func$lookupVar$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1730_1879$1;
-    Cont$func$lookupVar$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1730_1879$1 = function Cont$func$lookupVar$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1730_1879$(pc1, next1) { return new Cont$func$lookupVar$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1730_1879$.class(pc1, next1); };
-    Cont$func$lookupVar$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1730_1879$1.class = class Cont$func$lookupVar$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1730_1879$ extends runtime.Cont.class {
+    let lookup2, stackDelayRes, Cont$func$lookupVar$lambda$_mls_L0_1784_1933$1;
+    Cont$func$lookupVar$lambda$_mls_L0_1784_1933$1 = function Cont$func$lookupVar$lambda$_mls_L0_1784_1933$(pc1, next1) { return new Cont$func$lookupVar$lambda$_mls_L0_1784_1933$.class(pc1, next1); };
+    Cont$func$lookupVar$lambda$_mls_L0_1784_1933$1.class = class Cont$func$lookupVar$lambda$_mls_L0_1784_1933$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp;
         tmp = super(next, false);
@@ -5464,9 +5307,9 @@ lambda1 = class lambda {
             runtime.stackDepth = runtime.stackDepth + 1;
             this.completed = true;
             return lambda.myBind(lambda.#myGet, (env) => {
-              let tmp, curDepth, stackDelayRes1, Cont$lambda$9;
-              Cont$lambda$9 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-              Cont$lambda$9.class = class Cont$lambda$2 extends runtime.Cont.class {
+              let tmp, curDepth, stackDelayRes1, Cont$lambda$10;
+              Cont$lambda$10 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+              Cont$lambda$10.class = class Cont$lambda$3 extends runtime.Cont.class {
                 constructor(pc1, next1) {
                   let tmp1;
                   tmp1 = super(next1, false);
@@ -5503,14 +5346,14 @@ lambda1 = class lambda {
               curDepth = runtime.stackDepth;
               stackDelayRes1 = runtime.checkDepth();
               if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-                stackDelayRes1.tail.next = new Cont$lambda$9.class(44, null);
+                stackDelayRes1.tail.next = new Cont$lambda$10.class(44, null);
                 stackDelayRes1.tail = stackDelayRes1.tail.next;
                 return stackDelayRes1
               }
               runtime.stackDepth = runtime.stackDepth + 1;
               tmp = lookup2(env);
               if (tmp instanceof runtime.EffectSig.class) {
-                tmp.tail.next = new Cont$lambda$9.class(45, null);
+                tmp.tail.next = new Cont$lambda$10.class(45, null);
                 tmp.tail = tmp.tail.next;
                 return tmp
               }
@@ -5522,12 +5365,12 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$lookupVar$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1730_1879$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$lookupVar$lambda$_mls_L0_1784_1933$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     lookup2 = function lookup2(env) {
-      let tmp, curDepth, stackDelayRes1, Cont$func$lookup2$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1751_1832$1;
-      Cont$func$lookup2$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1751_1832$1 = function Cont$func$lookup2$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1751_1832$(pc1, next1) { return new Cont$func$lookup2$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1751_1832$.class(pc1, next1); };
-      Cont$func$lookup2$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1751_1832$1.class = class Cont$func$lookup2$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1751_1832$ extends runtime.Cont.class {
+      let tmp, curDepth, stackDelayRes1, Cont$func$lookup2$lambda$_mls_L0_1805_1886$1;
+      Cont$func$lookup2$lambda$_mls_L0_1805_1886$1 = function Cont$func$lookup2$lambda$_mls_L0_1805_1886$(pc1, next1) { return new Cont$func$lookup2$lambda$_mls_L0_1805_1886$.class(pc1, next1); };
+      Cont$func$lookup2$lambda$_mls_L0_1805_1886$1.class = class Cont$func$lookup2$lambda$_mls_L0_1805_1886$ extends runtime.Cont.class {
         constructor(pc, next) {
           let tmp1;
           tmp1 = super(next, false);
@@ -5555,9 +5398,9 @@ lambda1 = class lambda {
               runtime.stackDepth = runtime.stackDepth + 1;
               this.completed = true;
               return lambda.myMaybe((dummy) => {
-                let tmp1, curDepth1, stackDelayRes2, Cont$lambda$9;
-                Cont$lambda$9 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-                Cont$lambda$9.class = class Cont$lambda$3 extends runtime.Cont.class {
+                let tmp1, curDepth1, stackDelayRes2, Cont$lambda$10;
+                Cont$lambda$10 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+                Cont$lambda$10.class = class Cont$lambda$4 extends runtime.Cont.class {
                   constructor(pc1, next1) {
                     let tmp2;
                     tmp2 = super(next1, false);
@@ -5592,14 +5435,14 @@ lambda1 = class lambda {
                 curDepth1 = runtime.stackDepth;
                 stackDelayRes2 = runtime.checkDepth();
                 if (stackDelayRes2 instanceof runtime.EffectSig.class) {
-                  stackDelayRes2.tail.next = new Cont$lambda$9.class(42, null);
+                  stackDelayRes2.tail.next = new Cont$lambda$10.class(42, null);
                   stackDelayRes2.tail = stackDelayRes2.tail.next;
                   return stackDelayRes2
                 }
                 runtime.stackDepth = runtime.stackDepth + 1;
                 tmp1 = globalThis.Error("undefined");
                 if (tmp1 instanceof runtime.EffectSig.class) {
-                  tmp1.tail.next = new Cont$lambda$9.class(43, null);
+                  tmp1.tail.next = new Cont$lambda$10.class(43, null);
                   tmp1.tail = tmp1.tail.next;
                   return tmp1
                 }
@@ -5612,28 +5455,28 @@ lambda1 = class lambda {
             break;
           }
         }
-        toString() { return "Cont$func$lookup2$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1751_1832$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+        toString() { return "Cont$func$lookup2$lambda$_mls_L0_1805_1886$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
       };
       curDepth = runtime.stackDepth;
       stackDelayRes1 = runtime.checkDepth();
       if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-        stackDelayRes1.tail.next = new Cont$func$lookup2$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1751_1832$1.class(40, null);
+        stackDelayRes1.tail.next = new Cont$func$lookup2$lambda$_mls_L0_1805_1886$1.class(40, null);
         stackDelayRes1.tail = stackDelayRes1.tail.next;
         return stackDelayRes1
       }
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp = lambda.lookup(v, env);
       if (tmp instanceof runtime.EffectSig.class) {
-        tmp.tail.next = new Cont$func$lookup2$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1751_1832$1.class(41, null);
+        tmp.tail.next = new Cont$func$lookup2$lambda$_mls_L0_1805_1886$1.class(41, null);
         tmp.tail = tmp.tail.next;
         return tmp
       }
       tmp = runtime.resetDepth(tmp, curDepth);
       runtime.stackDepth = runtime.stackDepth + 1;
       return lambda.myMaybe((dummy) => {
-        let tmp1, curDepth1, stackDelayRes2, Cont$lambda$9;
-        Cont$lambda$9 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-        Cont$lambda$9.class = class Cont$lambda$3 extends runtime.Cont.class {
+        let tmp1, curDepth1, stackDelayRes2, Cont$lambda$10;
+        Cont$lambda$10 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+        Cont$lambda$10.class = class Cont$lambda$4 extends runtime.Cont.class {
           constructor(pc, next) {
             let tmp2;
             tmp2 = super(next, false);
@@ -5668,14 +5511,14 @@ lambda1 = class lambda {
         curDepth1 = runtime.stackDepth;
         stackDelayRes2 = runtime.checkDepth();
         if (stackDelayRes2 instanceof runtime.EffectSig.class) {
-          stackDelayRes2.tail.next = new Cont$lambda$9.class(42, null);
+          stackDelayRes2.tail.next = new Cont$lambda$10.class(42, null);
           stackDelayRes2.tail = stackDelayRes2.tail.next;
           return stackDelayRes2
         }
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp1 = globalThis.Error("undefined");
         if (tmp1 instanceof runtime.EffectSig.class) {
-          tmp1.tail.next = new Cont$lambda$9.class(43, null);
+          tmp1.tail.next = new Cont$lambda$10.class(43, null);
           tmp1.tail = tmp1.tail.next;
           return tmp1
         }
@@ -5687,15 +5530,15 @@ lambda1 = class lambda {
     };
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$lookupVar$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1730_1879$1.class(39, null);
+      stackDelayRes.tail.next = new Cont$func$lookupVar$lambda$_mls_L0_1784_1933$1.class(39, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
     runtime.stackDepth = runtime.stackDepth + 1;
     return lambda.myBind(lambda.#myGet, (env) => {
-      let tmp, curDepth, stackDelayRes1, Cont$lambda$9;
-      Cont$lambda$9 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-      Cont$lambda$9.class = class Cont$lambda$2 extends runtime.Cont.class {
+      let tmp, curDepth, stackDelayRes1, Cont$lambda$10;
+      Cont$lambda$10 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+      Cont$lambda$10.class = class Cont$lambda$3 extends runtime.Cont.class {
         constructor(pc, next) {
           let tmp1;
           tmp1 = super(next, false);
@@ -5732,14 +5575,14 @@ lambda1 = class lambda {
       curDepth = runtime.stackDepth;
       stackDelayRes1 = runtime.checkDepth();
       if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-        stackDelayRes1.tail.next = new Cont$lambda$9.class(44, null);
+        stackDelayRes1.tail.next = new Cont$lambda$10.class(44, null);
         stackDelayRes1.tail = stackDelayRes1.tail.next;
         return stackDelayRes1
       }
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp = lookup2(env);
       if (tmp instanceof runtime.EffectSig.class) {
-        tmp.tail.next = new Cont$lambda$9.class(45, null);
+        tmp.tail.next = new Cont$lambda$10.class(45, null);
         tmp.tail = tmp.tail.next;
         return tmp
       }
@@ -5749,9 +5592,9 @@ lambda1 = class lambda {
     })
   } 
   static withEnv(tmp, m3) {
-    let tmp1, curDepth, stackDelayRes, Cont$func$withEnv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1885_1932$1;
-    Cont$func$withEnv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1885_1932$1 = function Cont$func$withEnv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1885_1932$(pc1, next1) { return new Cont$func$withEnv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1885_1932$.class(pc1, next1); };
-    Cont$func$withEnv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1885_1932$1.class = class Cont$func$withEnv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1885_1932$ extends runtime.Cont.class {
+    let tmp1, curDepth, stackDelayRes, Cont$func$withEnv$lambda$_mls_L0_1939_1986$1;
+    Cont$func$withEnv$lambda$_mls_L0_1939_1986$1 = function Cont$func$withEnv$lambda$_mls_L0_1939_1986$(pc1, next1) { return new Cont$func$withEnv$lambda$_mls_L0_1939_1986$.class(pc1, next1); };
+    Cont$func$withEnv$lambda$_mls_L0_1939_1986$1.class = class Cont$func$withEnv$lambda$_mls_L0_1939_1986$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp2;
         tmp2 = super(next, false);
@@ -5783,19 +5626,19 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$withEnv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1885_1932$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$withEnv$lambda$_mls_L0_1939_1986$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$withEnv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1885_1932$1.class(46, null);
+      stackDelayRes.tail.next = new Cont$func$withEnv$lambda$_mls_L0_1939_1986$1.class(46, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp1 = lambda.myEvalState(m3, tmp);
     if (tmp1 instanceof runtime.EffectSig.class) {
-      tmp1.tail.next = new Cont$func$withEnv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1885_1932$1.class(47, null);
+      tmp1.tail.next = new Cont$func$withEnv$lambda$_mls_L0_1939_1986$1.class(47, null);
       tmp1.tail = tmp1.tail.next;
       return tmp1
     }
@@ -5804,9 +5647,9 @@ lambda1 = class lambda {
     return lambda.myReturn(tmp1)
   } 
   static pushVar(v1, t1, m4) {
-    let stackDelayRes, Cont$func$pushVar$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1938_2004$1;
-    Cont$func$pushVar$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1938_2004$1 = function Cont$func$pushVar$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1938_2004$(pc1, next1) { return new Cont$func$pushVar$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1938_2004$.class(pc1, next1); };
-    Cont$func$pushVar$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1938_2004$1.class = class Cont$func$pushVar$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1938_2004$ extends runtime.Cont.class {
+    let stackDelayRes, Cont$func$pushVar$lambda$_mls_L0_1992_2058$1;
+    Cont$func$pushVar$lambda$_mls_L0_1992_2058$1 = function Cont$func$pushVar$lambda$_mls_L0_1992_2058$(pc1, next1) { return new Cont$func$pushVar$lambda$_mls_L0_1992_2058$.class(pc1, next1); };
+    Cont$func$pushVar$lambda$_mls_L0_1992_2058$1.class = class Cont$func$pushVar$lambda$_mls_L0_1992_2058$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp1;
         tmp1 = super(next, false);
@@ -5822,9 +5665,9 @@ lambda1 = class lambda {
             runtime.stackDepth = runtime.stackDepth + 1;
             this.completed = true;
             return lambda.myBind(lambda.#myGet, (env) => {
-              let tmp1, curDepth, stackDelayRes1, Cont$lambda$9;
-              Cont$lambda$9 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-              Cont$lambda$9.class = class Cont$lambda$4 extends runtime.Cont.class {
+              let tmp1, curDepth, stackDelayRes1, Cont$lambda$10;
+              Cont$lambda$10 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+              Cont$lambda$10.class = class Cont$lambda$5 extends runtime.Cont.class {
                 constructor(pc1, next1) {
                   let tmp2;
                   tmp2 = super(next1, false);
@@ -5864,7 +5707,7 @@ lambda1 = class lambda {
               curDepth = runtime.stackDepth;
               stackDelayRes1 = runtime.checkDepth();
               if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-                stackDelayRes1.tail.next = new Cont$lambda$9.class(49, null);
+                stackDelayRes1.tail.next = new Cont$lambda$10.class(49, null);
                 stackDelayRes1.tail = stackDelayRes1.tail.next;
                 return stackDelayRes1
               }
@@ -5874,7 +5717,7 @@ lambda1 = class lambda {
                 t1
               ], env);
               if (tmp1 instanceof runtime.EffectSig.class) {
-                tmp1.tail.next = new Cont$lambda$9.class(50, null);
+                tmp1.tail.next = new Cont$lambda$10.class(50, null);
                 tmp1.tail = tmp1.tail.next;
                 return tmp1
               }
@@ -5886,19 +5729,19 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$pushVar$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1938_2004$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$pushVar$lambda$_mls_L0_1992_2058$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$pushVar$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_1938_2004$1.class(48, null);
+      stackDelayRes.tail.next = new Cont$func$pushVar$lambda$_mls_L0_1992_2058$1.class(48, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
     runtime.stackDepth = runtime.stackDepth + 1;
     return lambda.myBind(lambda.#myGet, (env) => {
-      let tmp1, curDepth, stackDelayRes1, Cont$lambda$9;
-      Cont$lambda$9 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-      Cont$lambda$9.class = class Cont$lambda$4 extends runtime.Cont.class {
+      let tmp1, curDepth, stackDelayRes1, Cont$lambda$10;
+      Cont$lambda$10 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+      Cont$lambda$10.class = class Cont$lambda$5 extends runtime.Cont.class {
         constructor(pc, next) {
           let tmp2;
           tmp2 = super(next, false);
@@ -5938,7 +5781,7 @@ lambda1 = class lambda {
       curDepth = runtime.stackDepth;
       stackDelayRes1 = runtime.checkDepth();
       if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-        stackDelayRes1.tail.next = new Cont$lambda$9.class(49, null);
+        stackDelayRes1.tail.next = new Cont$lambda$10.class(49, null);
         stackDelayRes1.tail = stackDelayRes1.tail.next;
         return stackDelayRes1
       }
@@ -5948,7 +5791,7 @@ lambda1 = class lambda {
         t1
       ], env);
       if (tmp1 instanceof runtime.EffectSig.class) {
-        tmp1.tail.next = new Cont$lambda$9.class(50, null);
+        tmp1.tail.next = new Cont$lambda$10.class(50, null);
         tmp1.tail = tmp1.tail.next;
         return tmp1
       }
@@ -5958,9 +5801,9 @@ lambda1 = class lambda {
     })
   } 
   static traverseTerm(t2) {
-    let stackDelayRes, Cont$func$traverseTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2010_2035$1;
-    Cont$func$traverseTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2010_2035$1 = function Cont$func$traverseTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2010_2035$(pc1, next1) { return new Cont$func$traverseTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2010_2035$.class(pc1, next1); };
-    Cont$func$traverseTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2010_2035$1.class = class Cont$func$traverseTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2010_2035$ extends runtime.Cont.class {
+    let stackDelayRes, Cont$func$traverseTerm$lambda$_mls_L0_2064_2089$1;
+    Cont$func$traverseTerm$lambda$_mls_L0_2064_2089$1 = function Cont$func$traverseTerm$lambda$_mls_L0_2064_2089$(pc1, next1) { return new Cont$func$traverseTerm$lambda$_mls_L0_2064_2089$.class(pc1, next1); };
+    Cont$func$traverseTerm$lambda$_mls_L0_2064_2089$1.class = class Cont$func$traverseTerm$lambda$_mls_L0_2064_2089$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp1;
         tmp1 = super(next, false);
@@ -5980,11 +5823,11 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$traverseTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2010_2035$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$traverseTerm$lambda$_mls_L0_2064_2089$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$traverseTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2010_2035$1.class(51, null);
+      stackDelayRes.tail.next = new Cont$func$traverseTerm$lambda$_mls_L0_2064_2089$1.class(51, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -5992,9 +5835,9 @@ lambda1 = class lambda {
     return lambda.eval(t2)
   } 
   static traverseCon(t3) {
-    let tmp1, tmp2, curDepth, stackDelayRes, Cont$func$traverseCon$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2041_2165$1;
-    Cont$func$traverseCon$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2041_2165$1 = function Cont$func$traverseCon$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2041_2165$(pc1, next1) { return new Cont$func$traverseCon$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2041_2165$.class(pc1, next1); };
-    Cont$func$traverseCon$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2041_2165$1.class = class Cont$func$traverseCon$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2041_2165$ extends runtime.Cont.class {
+    let tmp1, tmp2, curDepth, stackDelayRes, Cont$func$traverseCon$lambda$_mls_L0_2095_2219$1;
+    Cont$func$traverseCon$lambda$_mls_L0_2095_2219$1 = function Cont$func$traverseCon$lambda$_mls_L0_2095_2219$(pc1, next1) { return new Cont$func$traverseCon$lambda$_mls_L0_2095_2219$.class(pc1, next1); };
+    Cont$func$traverseCon$lambda$_mls_L0_2095_2219$1.class = class Cont$func$traverseCon$lambda$_mls_L0_2095_2219$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp3;
         tmp3 = super(next, false);
@@ -6020,9 +5863,9 @@ lambda1 = class lambda {
           } else if (this.pc === 53) {
             tmp1 = runtime.resetDepth(tmp1, curDepth);
             tmp2 = (_t) => {
-              let param0, c, tmp3, curDepth1, stackDelayRes1, Cont$lambda$9;
-              Cont$lambda$9 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-              Cont$lambda$9.class = class Cont$lambda$5 extends runtime.Cont.class {
+              let param0, c, tmp3, curDepth1, stackDelayRes1, Cont$lambda$10;
+              Cont$lambda$10 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+              Cont$lambda$10.class = class Cont$lambda$6 extends runtime.Cont.class {
                 constructor(pc1, next1) {
                   let tmp4;
                   tmp4 = super(next1, false);
@@ -6069,7 +5912,7 @@ lambda1 = class lambda {
               curDepth1 = runtime.stackDepth;
               stackDelayRes1 = runtime.checkDepth();
               if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-                stackDelayRes1.tail.next = new Cont$lambda$9.class(54, null);
+                stackDelayRes1.tail.next = new Cont$lambda$10.class(54, null);
                 stackDelayRes1.tail = stackDelayRes1.tail.next;
                 return stackDelayRes1
               }
@@ -6082,7 +5925,7 @@ lambda1 = class lambda {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 tmp3 = globalThis.Error("Not a Con");
                 if (tmp3 instanceof runtime.EffectSig.class) {
-                  tmp3.tail.next = new Cont$lambda$9.class(55, null);
+                  tmp3.tail.next = new Cont$lambda$10.class(55, null);
                   tmp3.tail = tmp3.tail.next;
                   return tmp3
                 }
@@ -6097,27 +5940,27 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$traverseCon$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2041_2165$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$traverseCon$lambda$_mls_L0_2095_2219$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$traverseCon$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2041_2165$1.class(52, null);
+      stackDelayRes.tail.next = new Cont$func$traverseCon$lambda$_mls_L0_2095_2219$1.class(52, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp1 = lambda.traverseTerm(t3);
     if (tmp1 instanceof runtime.EffectSig.class) {
-      tmp1.tail.next = new Cont$func$traverseCon$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2041_2165$1.class(53, null);
+      tmp1.tail.next = new Cont$func$traverseCon$lambda$_mls_L0_2095_2219$1.class(53, null);
       tmp1.tail = tmp1.tail.next;
       return tmp1
     }
     tmp1 = runtime.resetDepth(tmp1, curDepth);
     tmp2 = (_t) => {
-      let param0, c, tmp3, curDepth1, stackDelayRes1, Cont$lambda$9;
-      Cont$lambda$9 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-      Cont$lambda$9.class = class Cont$lambda$5 extends runtime.Cont.class {
+      let param0, c, tmp3, curDepth1, stackDelayRes1, Cont$lambda$10;
+      Cont$lambda$10 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+      Cont$lambda$10.class = class Cont$lambda$6 extends runtime.Cont.class {
         constructor(pc, next) {
           let tmp4;
           tmp4 = super(next, false);
@@ -6164,7 +6007,7 @@ lambda1 = class lambda {
       curDepth1 = runtime.stackDepth;
       stackDelayRes1 = runtime.checkDepth();
       if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-        stackDelayRes1.tail.next = new Cont$lambda$9.class(54, null);
+        stackDelayRes1.tail.next = new Cont$lambda$10.class(54, null);
         stackDelayRes1.tail = stackDelayRes1.tail.next;
         return stackDelayRes1
       }
@@ -6177,7 +6020,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp3 = globalThis.Error("Not a Con");
         if (tmp3 instanceof runtime.EffectSig.class) {
-          tmp3.tail.next = new Cont$lambda$9.class(55, null);
+          tmp3.tail.next = new Cont$lambda$10.class(55, null);
           tmp3.tail = tmp3.tail.next;
           return tmp3
         }
@@ -6189,9 +6032,9 @@ lambda1 = class lambda {
     return lambda.myBind(tmp1, tmp2)
   } 
   static apply(t4, a3) {
-    let param0, param1, param01, param11, x1, b2, e, tmp1, curDepth, tmp2, stackDelayRes, Cont$func$apply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2171_2310$1;
-    Cont$func$apply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2171_2310$1 = function Cont$func$apply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2171_2310$(pc1, next1) { return new Cont$func$apply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2171_2310$.class(pc1, next1); };
-    Cont$func$apply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2171_2310$1.class = class Cont$func$apply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2171_2310$ extends runtime.Cont.class {
+    let param0, param1, param01, param11, x1, b2, e, tmp1, curDepth, tmp2, stackDelayRes, Cont$func$apply$lambda$_mls_L0_2225_2364$1;
+    Cont$func$apply$lambda$_mls_L0_2225_2364$1 = function Cont$func$apply$lambda$_mls_L0_2225_2364$(pc1, next1) { return new Cont$func$apply$lambda$_mls_L0_2225_2364$.class(pc1, next1); };
+    Cont$func$apply$lambda$_mls_L0_2225_2364$1.class = class Cont$func$apply$lambda$_mls_L0_2225_2364$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp3;
         tmp3 = super(next, false);
@@ -6220,9 +6063,9 @@ lambda1 = class lambda {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 this.completed = true;
                 return lambda.myBind(lambda.#myGet, (orig) => {
-                  let tmp3, tmp4, tmp5, curDepth1, stackDelayRes1, Cont$lambda$9;
-                  Cont$lambda$9 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-                  Cont$lambda$9.class = class Cont$lambda$6 extends runtime.Cont.class {
+                  let tmp3, tmp4, tmp5, curDepth1, stackDelayRes1, Cont$lambda$10;
+                  Cont$lambda$10 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+                  Cont$lambda$10.class = class Cont$lambda$7 extends runtime.Cont.class {
                     constructor(pc1, next1) {
                       let tmp6;
                       tmp6 = super(next1, false);
@@ -6283,14 +6126,14 @@ lambda1 = class lambda {
                   curDepth1 = runtime.stackDepth;
                   stackDelayRes1 = runtime.checkDepth();
                   if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-                    stackDelayRes1.tail.next = new Cont$lambda$9.class(58, null);
+                    stackDelayRes1.tail.next = new Cont$lambda$10.class(58, null);
                     stackDelayRes1.tail = stackDelayRes1.tail.next;
                     return stackDelayRes1
                   }
                   runtime.stackDepth = runtime.stackDepth + 1;
                   tmp3 = lambda.Thunk(a3, orig);
                   if (tmp3 instanceof runtime.EffectSig.class) {
-                    tmp3.tail.next = new Cont$lambda$9.class(59, null);
+                    tmp3.tail.next = new Cont$lambda$10.class(59, null);
                     tmp3.tail = tmp3.tail.next;
                     return tmp3
                   }
@@ -6298,7 +6141,7 @@ lambda1 = class lambda {
                   runtime.stackDepth = runtime.stackDepth + 1;
                   tmp4 = lambda.traverseTerm(b2);
                   if (tmp4 instanceof runtime.EffectSig.class) {
-                    tmp4.tail.next = new Cont$lambda$9.class(60, null);
+                    tmp4.tail.next = new Cont$lambda$10.class(60, null);
                     tmp4.tail = tmp4.tail.next;
                     return tmp4
                   }
@@ -6306,7 +6149,7 @@ lambda1 = class lambda {
                   runtime.stackDepth = runtime.stackDepth + 1;
                   tmp5 = lambda.pushVar(x1, tmp3, tmp4);
                   if (tmp5 instanceof runtime.EffectSig.class) {
-                    tmp5.tail.next = new Cont$lambda$9.class(61, null);
+                    tmp5.tail.next = new Cont$lambda$10.class(61, null);
                     tmp5.tail = tmp5.tail.next;
                     return tmp5
                   }
@@ -6350,12 +6193,12 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$apply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2171_2310$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$apply$lambda$_mls_L0_2225_2364$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$apply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2171_2310$1.class(57, null);
+      stackDelayRes.tail.next = new Cont$func$apply$lambda$_mls_L0_2225_2364$1.class(57, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -6370,9 +6213,9 @@ lambda1 = class lambda {
         e = param1;
         runtime.stackDepth = runtime.stackDepth + 1;
         return lambda.myBind(lambda.#myGet, (orig) => {
-          let tmp3, tmp4, tmp5, curDepth1, stackDelayRes1, Cont$lambda$9;
-          Cont$lambda$9 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-          Cont$lambda$9.class = class Cont$lambda$6 extends runtime.Cont.class {
+          let tmp3, tmp4, tmp5, curDepth1, stackDelayRes1, Cont$lambda$10;
+          Cont$lambda$10 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+          Cont$lambda$10.class = class Cont$lambda$7 extends runtime.Cont.class {
             constructor(pc, next) {
               let tmp6;
               tmp6 = super(next, false);
@@ -6433,14 +6276,14 @@ lambda1 = class lambda {
           curDepth1 = runtime.stackDepth;
           stackDelayRes1 = runtime.checkDepth();
           if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-            stackDelayRes1.tail.next = new Cont$lambda$9.class(58, null);
+            stackDelayRes1.tail.next = new Cont$lambda$10.class(58, null);
             stackDelayRes1.tail = stackDelayRes1.tail.next;
             return stackDelayRes1
           }
           runtime.stackDepth = runtime.stackDepth + 1;
           tmp3 = lambda.Thunk(a3, orig);
           if (tmp3 instanceof runtime.EffectSig.class) {
-            tmp3.tail.next = new Cont$lambda$9.class(59, null);
+            tmp3.tail.next = new Cont$lambda$10.class(59, null);
             tmp3.tail = tmp3.tail.next;
             return tmp3
           }
@@ -6448,7 +6291,7 @@ lambda1 = class lambda {
           runtime.stackDepth = runtime.stackDepth + 1;
           tmp4 = lambda.traverseTerm(b2);
           if (tmp4 instanceof runtime.EffectSig.class) {
-            tmp4.tail.next = new Cont$lambda$9.class(60, null);
+            tmp4.tail.next = new Cont$lambda$10.class(60, null);
             tmp4.tail = tmp4.tail.next;
             return tmp4
           }
@@ -6456,7 +6299,7 @@ lambda1 = class lambda {
           runtime.stackDepth = runtime.stackDepth + 1;
           tmp5 = lambda.pushVar(x1, tmp3, tmp4);
           if (tmp5 instanceof runtime.EffectSig.class) {
-            tmp5.tail.next = new Cont$lambda$9.class(61, null);
+            tmp5.tail.next = new Cont$lambda$10.class(61, null);
             tmp5.tail = tmp5.tail.next;
             return tmp5
           }
@@ -6468,7 +6311,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp1 = new globalThis.Error("match error");
         if (tmp1 instanceof runtime.EffectSig.class) {
-          tmp1.tail.next = new Cont$func$apply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2171_2310$1.class(62, null);
+          tmp1.tail.next = new Cont$func$apply$lambda$_mls_L0_2225_2364$1.class(62, null);
           tmp1.tail = tmp1.tail.next;
           return tmp1
         }
@@ -6479,7 +6322,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp2 = new globalThis.Error("match error");
       if (tmp2 instanceof runtime.EffectSig.class) {
-        tmp2.tail.next = new Cont$func$apply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2171_2310$1.class(63, null);
+        tmp2.tail.next = new Cont$func$apply$lambda$_mls_L0_2225_2364$1.class(63, null);
         tmp2.tail = tmp2.tail.next;
         return tmp2
       }
@@ -6488,9 +6331,9 @@ lambda1 = class lambda {
     }
   } 
   static eval(ter) {
-    let param0, i, param01, param1, param2, c, a4, b2, param02, param11, u, v2, param03, param12, x1, b3, param04, param13, t5, e, param05, param14, u1, v3, param06, x2, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, curDepth, tmp7, stackDelayRes, Cont$func$eval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2316_2950$1;
-    Cont$func$eval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2316_2950$1 = function Cont$func$eval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2316_2950$(pc1, next1) { return new Cont$func$eval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2316_2950$.class(pc1, next1); };
-    Cont$func$eval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2316_2950$1.class = class Cont$func$eval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2316_2950$ extends runtime.Cont.class {
+    let param0, i, param01, param1, param2, c, a4, b2, param02, param11, u, v2, param03, param12, x1, b3, param04, param13, t5, e, param05, param14, u1, v3, param06, x2, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, curDepth, tmp7, stackDelayRes, Cont$func$eval$lambda$_mls_L0_2370_3004$1;
+    Cont$func$eval$lambda$_mls_L0_2370_3004$1 = function Cont$func$eval$lambda$_mls_L0_2370_3004$(pc1, next1) { return new Cont$func$eval$lambda$_mls_L0_2370_3004$.class(pc1, next1); };
+    Cont$func$eval$lambda$_mls_L0_2370_3004$1.class = class Cont$func$eval$lambda$_mls_L0_2370_3004$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp8;
         tmp8 = super(next, false);
@@ -6521,9 +6364,9 @@ lambda1 = class lambda {
               runtime.stackDepth = runtime.stackDepth + 1;
               this.completed = true;
               return lambda.myBind(lambda.#myGet, (e1) => {
-                let tmp8, curDepth1, stackDelayRes1, Cont$lambda$9;
-                Cont$lambda$9 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-                Cont$lambda$9.class = class Cont$lambda$13 extends runtime.Cont.class {
+                let tmp8, curDepth1, stackDelayRes1, Cont$lambda$10;
+                Cont$lambda$10 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+                Cont$lambda$10.class = class Cont$lambda$14 extends runtime.Cont.class {
                   constructor(pc1, next1) {
                     let tmp9;
                     tmp9 = super(next1, false);
@@ -6551,9 +6394,9 @@ lambda1 = class lambda {
                         runtime.stackDepth = runtime.stackDepth + 1;
                         this.completed = true;
                         return lambda.myBind(tmp8, (t6) => {
-                          let stackDelayRes2, Cont$lambda$17;
-                          Cont$lambda$17 = function Cont$lambda$(pc3, next3) { return new Cont$lambda$.class(pc3, next3); };
-                          Cont$lambda$17.class = class Cont$lambda$8 extends runtime.Cont.class {
+                          let stackDelayRes2, Cont$lambda$18;
+                          Cont$lambda$18 = function Cont$lambda$(pc3, next3) { return new Cont$lambda$.class(pc3, next3); };
+                          Cont$lambda$18.class = class Cont$lambda$9 extends runtime.Cont.class {
                             constructor(pc2, next2) {
                               let tmp9;
                               tmp9 = super(next2, false);
@@ -6577,7 +6420,7 @@ lambda1 = class lambda {
                           };
                           stackDelayRes2 = runtime.checkDepth();
                           if (stackDelayRes2 instanceof runtime.EffectSig.class) {
-                            stackDelayRes2.tail.next = new Cont$lambda$17.class(68, null);
+                            stackDelayRes2.tail.next = new Cont$lambda$18.class(68, null);
                             stackDelayRes2.tail = stackDelayRes2.tail.next;
                             return stackDelayRes2
                           }
@@ -6593,23 +6436,23 @@ lambda1 = class lambda {
                 curDepth1 = runtime.stackDepth;
                 stackDelayRes1 = runtime.checkDepth();
                 if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-                  stackDelayRes1.tail.next = new Cont$lambda$9.class(66, null);
+                  stackDelayRes1.tail.next = new Cont$lambda$10.class(66, null);
                   stackDelayRes1.tail = stackDelayRes1.tail.next;
                   return stackDelayRes1
                 }
                 runtime.stackDepth = runtime.stackDepth + 1;
                 tmp8 = lambda.lookupVar(x2);
                 if (tmp8 instanceof runtime.EffectSig.class) {
-                  tmp8.tail.next = new Cont$lambda$9.class(67, null);
+                  tmp8.tail.next = new Cont$lambda$10.class(67, null);
                   tmp8.tail = tmp8.tail.next;
                   return tmp8
                 }
                 tmp8 = runtime.resetDepth(tmp8, curDepth1);
                 runtime.stackDepth = runtime.stackDepth + 1;
                 return lambda.myBind(tmp8, (t6) => {
-                  let stackDelayRes2, Cont$lambda$17;
-                  Cont$lambda$17 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-                  Cont$lambda$17.class = class Cont$lambda$8 extends runtime.Cont.class {
+                  let stackDelayRes2, Cont$lambda$18;
+                  Cont$lambda$18 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+                  Cont$lambda$18.class = class Cont$lambda$9 extends runtime.Cont.class {
                     constructor(pc1, next1) {
                       let tmp9;
                       tmp9 = super(next1, false);
@@ -6633,7 +6476,7 @@ lambda1 = class lambda {
                   };
                   stackDelayRes2 = runtime.checkDepth();
                   if (stackDelayRes2 instanceof runtime.EffectSig.class) {
-                    stackDelayRes2.tail.next = new Cont$lambda$17.class(68, null);
+                    stackDelayRes2.tail.next = new Cont$lambda$18.class(68, null);
                     stackDelayRes2.tail = stackDelayRes2.tail.next;
                     return stackDelayRes2
                   }
@@ -6682,9 +6525,9 @@ lambda1 = class lambda {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 this.completed = true;
                 return lambda.myBind(lambda.#myGet, (env) => {
-                  let tmp8, tmp9, curDepth1, stackDelayRes1, Cont$lambda$9;
-                  Cont$lambda$9 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-                  Cont$lambda$9.class = class Cont$lambda$12 extends runtime.Cont.class {
+                  let tmp8, tmp9, curDepth1, stackDelayRes1, Cont$lambda$10;
+                  Cont$lambda$10 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+                  Cont$lambda$10.class = class Cont$lambda$13 extends runtime.Cont.class {
                     constructor(pc1, next1) {
                       let tmp10;
                       tmp10 = super(next1, false);
@@ -6733,14 +6576,14 @@ lambda1 = class lambda {
                   curDepth1 = runtime.stackDepth;
                   stackDelayRes1 = runtime.checkDepth();
                   if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-                    stackDelayRes1.tail.next = new Cont$lambda$9.class(75, null);
+                    stackDelayRes1.tail.next = new Cont$lambda$10.class(75, null);
                     stackDelayRes1.tail = stackDelayRes1.tail.next;
                     return stackDelayRes1
                   }
                   runtime.stackDepth = runtime.stackDepth + 1;
                   tmp8 = lambda.Lam(x1, b3);
                   if (tmp8 instanceof runtime.EffectSig.class) {
-                    tmp8.tail.next = new Cont$lambda$9.class(76, null);
+                    tmp8.tail.next = new Cont$lambda$10.class(76, null);
                     tmp8.tail = tmp8.tail.next;
                     return tmp8
                   }
@@ -6748,7 +6591,7 @@ lambda1 = class lambda {
                   runtime.stackDepth = runtime.stackDepth + 1;
                   tmp9 = lambda.Thunk(tmp8, env);
                   if (tmp9 instanceof runtime.EffectSig.class) {
-                    tmp9.tail.next = new Cont$lambda$9.class(77, null);
+                    tmp9.tail.next = new Cont$lambda$10.class(77, null);
                     tmp9.tail = tmp9.tail.next;
                     return tmp9
                   }
@@ -6811,9 +6654,9 @@ lambda1 = class lambda {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 this.completed = true;
                 return lambda.myBind(lambda.#incr, (_dummy) => {
-                  let tmp8, curDepth1, stackDelayRes1, Cont$lambda$9;
-                  Cont$lambda$9 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-                  Cont$lambda$9.class = class Cont$lambda$10 extends runtime.Cont.class {
+                  let tmp8, curDepth1, stackDelayRes1, Cont$lambda$10;
+                  Cont$lambda$10 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+                  Cont$lambda$10.class = class Cont$lambda$11 extends runtime.Cont.class {
                     constructor(pc1, next1) {
                       let tmp9;
                       tmp9 = super(next1, false);
@@ -6850,14 +6693,14 @@ lambda1 = class lambda {
                   curDepth1 = runtime.stackDepth;
                   stackDelayRes1 = runtime.checkDepth();
                   if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-                    stackDelayRes1.tail.next = new Cont$lambda$9.class(86, null);
+                    stackDelayRes1.tail.next = new Cont$lambda$10.class(86, null);
                     stackDelayRes1.tail = stackDelayRes1.tail.next;
                     return stackDelayRes1
                   }
                   runtime.stackDepth = runtime.stackDepth + 1;
                   tmp8 = lambda.Con(0);
                   if (tmp8 instanceof runtime.EffectSig.class) {
-                    tmp8.tail.next = new Cont$lambda$9.class(87, null);
+                    tmp8.tail.next = new Cont$lambda$10.class(87, null);
                     tmp8.tail = tmp8.tail.next;
                     return tmp8
                   }
@@ -6901,9 +6744,9 @@ lambda1 = class lambda {
           } else if (this.pc === 80) {
             tmp4 = runtime.resetDepth(tmp4, curDepth);
             tmp5 = (vall) => {
-              let scrut, tmp8, curDepth1, stackDelayRes1, Cont$lambda$9;
-              Cont$lambda$9 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-              Cont$lambda$9.class = class Cont$lambda$11 extends runtime.Cont.class {
+              let scrut, tmp8, curDepth1, stackDelayRes1, Cont$lambda$10;
+              Cont$lambda$10 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+              Cont$lambda$10.class = class Cont$lambda$12 extends runtime.Cont.class {
                 constructor(pc1, next1) {
                   let tmp9;
                   tmp9 = super(next1, false);
@@ -6962,14 +6805,14 @@ lambda1 = class lambda {
               curDepth1 = runtime.stackDepth;
               stackDelayRes1 = runtime.checkDepth();
               if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-                stackDelayRes1.tail.next = new Cont$lambda$9.class(81, null);
+                stackDelayRes1.tail.next = new Cont$lambda$10.class(81, null);
                 stackDelayRes1.tail = stackDelayRes1.tail.next;
                 return stackDelayRes1
               }
               runtime.stackDepth = runtime.stackDepth + 1;
               tmp8 = lambda.Con(0);
               if (tmp8 instanceof runtime.EffectSig.class) {
-                tmp8.tail.next = new Cont$lambda$9.class(82, null);
+                tmp8.tail.next = new Cont$lambda$10.class(82, null);
                 tmp8.tail = tmp8.tail.next;
                 return tmp8
               }
@@ -6977,7 +6820,7 @@ lambda1 = class lambda {
               runtime.stackDepth = runtime.stackDepth + 1;
               scrut = lambda.eqTerm(vall, tmp8);
               if (scrut instanceof runtime.EffectSig.class) {
-                scrut.tail.next = new Cont$lambda$9.class(83, null);
+                scrut.tail.next = new Cont$lambda$10.class(83, null);
                 scrut.tail = scrut.tail.next;
                 return scrut
               }
@@ -6998,9 +6841,9 @@ lambda1 = class lambda {
             runtime.stackDepth = runtime.stackDepth + 1;
             this.completed = true;
             return lambda.myBind(tmp3, (u_) => {
-              let stackDelayRes1, Cont$lambda$9;
-              Cont$lambda$9 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-              Cont$lambda$9.class = class Cont$lambda$7 extends runtime.Cont.class {
+              let stackDelayRes1, Cont$lambda$10;
+              Cont$lambda$10 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+              Cont$lambda$10.class = class Cont$lambda$8 extends runtime.Cont.class {
                 constructor(pc1, next1) {
                   let tmp8;
                   tmp8 = super(next1, false);
@@ -7024,7 +6867,7 @@ lambda1 = class lambda {
               };
               stackDelayRes1 = runtime.checkDepth();
               if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-                stackDelayRes1.tail.next = new Cont$lambda$9.class(79, null);
+                stackDelayRes1.tail.next = new Cont$lambda$10.class(79, null);
                 stackDelayRes1.tail = stackDelayRes1.tail.next;
                 return stackDelayRes1
               }
@@ -7041,9 +6884,9 @@ lambda1 = class lambda {
             runtime.stackDepth = runtime.stackDepth + 1;
             this.completed = true;
             return lambda.myBind(tmp1, (u_) => {
-              let tmp8, curDepth1, stackDelayRes1, Cont$lambda$9;
-              Cont$lambda$9 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-              Cont$lambda$9.class = class Cont$lambda$ extends runtime.Cont.class {
+              let tmp8, curDepth1, stackDelayRes1, Cont$lambda$10;
+              Cont$lambda$10 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+              Cont$lambda$10.class = class Cont$lambda$1 extends runtime.Cont.class {
                 constructor(pc1, next1) {
                   let tmp9;
                   tmp9 = super(next1, false);
@@ -7071,9 +6914,9 @@ lambda1 = class lambda {
                       runtime.stackDepth = runtime.stackDepth + 1;
                       this.completed = true;
                       return lambda.myBind(tmp8, (v_) => {
-                        let tmp9, tmp10, curDepth2, stackDelayRes2, Cont$lambda$17;
-                        Cont$lambda$17 = function Cont$lambda$(pc3, next3) { return new Cont$lambda$.class(pc3, next3); };
-                        Cont$lambda$17.class = class Cont$lambda$14 extends runtime.Cont.class {
+                        let tmp9, tmp10, curDepth2, stackDelayRes2, Cont$lambda$18;
+                        Cont$lambda$18 = function Cont$lambda$(pc3, next3) { return new Cont$lambda$.class(pc3, next3); };
+                        Cont$lambda$18.class = class Cont$lambda$15 extends runtime.Cont.class {
                           constructor(pc2, next2) {
                             let tmp11;
                             tmp11 = super(next2, false);
@@ -7111,7 +6954,7 @@ lambda1 = class lambda {
                         curDepth2 = runtime.stackDepth;
                         stackDelayRes2 = runtime.checkDepth();
                         if (stackDelayRes2 instanceof runtime.EffectSig.class) {
-                          stackDelayRes2.tail.next = new Cont$lambda$17.class(72, null);
+                          stackDelayRes2.tail.next = new Cont$lambda$18.class(72, null);
                           stackDelayRes2.tail = stackDelayRes2.tail.next;
                           return stackDelayRes2
                         }
@@ -7119,7 +6962,7 @@ lambda1 = class lambda {
                         runtime.stackDepth = runtime.stackDepth + 1;
                         tmp10 = lambda.Con(tmp9);
                         if (tmp10 instanceof runtime.EffectSig.class) {
-                          tmp10.tail.next = new Cont$lambda$17.class(73, null);
+                          tmp10.tail.next = new Cont$lambda$18.class(73, null);
                           tmp10.tail = tmp10.tail.next;
                           return tmp10
                         }
@@ -7136,23 +6979,23 @@ lambda1 = class lambda {
               curDepth1 = runtime.stackDepth;
               stackDelayRes1 = runtime.checkDepth();
               if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-                stackDelayRes1.tail.next = new Cont$lambda$9.class(70, null);
+                stackDelayRes1.tail.next = new Cont$lambda$10.class(70, null);
                 stackDelayRes1.tail = stackDelayRes1.tail.next;
                 return stackDelayRes1
               }
               runtime.stackDepth = runtime.stackDepth + 1;
               tmp8 = lambda.traverseCon(v3);
               if (tmp8 instanceof runtime.EffectSig.class) {
-                tmp8.tail.next = new Cont$lambda$9.class(71, null);
+                tmp8.tail.next = new Cont$lambda$10.class(71, null);
                 tmp8.tail = tmp8.tail.next;
                 return tmp8
               }
               tmp8 = runtime.resetDepth(tmp8, curDepth1);
               runtime.stackDepth = runtime.stackDepth + 1;
               return lambda.myBind(tmp8, (v_) => {
-                let tmp9, tmp10, curDepth2, stackDelayRes2, Cont$lambda$17;
-                Cont$lambda$17 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-                Cont$lambda$17.class = class Cont$lambda$14 extends runtime.Cont.class {
+                let tmp9, tmp10, curDepth2, stackDelayRes2, Cont$lambda$18;
+                Cont$lambda$18 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+                Cont$lambda$18.class = class Cont$lambda$15 extends runtime.Cont.class {
                   constructor(pc1, next1) {
                     let tmp11;
                     tmp11 = super(next1, false);
@@ -7190,7 +7033,7 @@ lambda1 = class lambda {
                 curDepth2 = runtime.stackDepth;
                 stackDelayRes2 = runtime.checkDepth();
                 if (stackDelayRes2 instanceof runtime.EffectSig.class) {
-                  stackDelayRes2.tail.next = new Cont$lambda$17.class(72, null);
+                  stackDelayRes2.tail.next = new Cont$lambda$18.class(72, null);
                   stackDelayRes2.tail = stackDelayRes2.tail.next;
                   return stackDelayRes2
                 }
@@ -7198,7 +7041,7 @@ lambda1 = class lambda {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 tmp10 = lambda.Con(tmp9);
                 if (tmp10 instanceof runtime.EffectSig.class) {
-                  tmp10.tail.next = new Cont$lambda$17.class(73, null);
+                  tmp10.tail.next = new Cont$lambda$18.class(73, null);
                   tmp10.tail = tmp10.tail.next;
                   return tmp10
                 }
@@ -7211,12 +7054,12 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$eval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2316_2950$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$eval$lambda$_mls_L0_2370_3004$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$eval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2316_2950$1.class(65, null);
+      stackDelayRes.tail.next = new Cont$func$eval$lambda$_mls_L0_2370_3004$1.class(65, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -7225,9 +7068,9 @@ lambda1 = class lambda {
       x2 = param06;
       runtime.stackDepth = runtime.stackDepth + 1;
       return lambda.myBind(lambda.#myGet, (e1) => {
-        let tmp8, curDepth1, stackDelayRes1, Cont$lambda$9;
-        Cont$lambda$9 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-        Cont$lambda$9.class = class Cont$lambda$13 extends runtime.Cont.class {
+        let tmp8, curDepth1, stackDelayRes1, Cont$lambda$10;
+        Cont$lambda$10 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+        Cont$lambda$10.class = class Cont$lambda$14 extends runtime.Cont.class {
           constructor(pc, next) {
             let tmp9;
             tmp9 = super(next, false);
@@ -7255,9 +7098,9 @@ lambda1 = class lambda {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 this.completed = true;
                 return lambda.myBind(tmp8, (t6) => {
-                  let stackDelayRes2, Cont$lambda$17;
-                  Cont$lambda$17 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-                  Cont$lambda$17.class = class Cont$lambda$8 extends runtime.Cont.class {
+                  let stackDelayRes2, Cont$lambda$18;
+                  Cont$lambda$18 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+                  Cont$lambda$18.class = class Cont$lambda$9 extends runtime.Cont.class {
                     constructor(pc1, next1) {
                       let tmp9;
                       tmp9 = super(next1, false);
@@ -7281,7 +7124,7 @@ lambda1 = class lambda {
                   };
                   stackDelayRes2 = runtime.checkDepth();
                   if (stackDelayRes2 instanceof runtime.EffectSig.class) {
-                    stackDelayRes2.tail.next = new Cont$lambda$17.class(68, null);
+                    stackDelayRes2.tail.next = new Cont$lambda$18.class(68, null);
                     stackDelayRes2.tail = stackDelayRes2.tail.next;
                     return stackDelayRes2
                   }
@@ -7297,23 +7140,23 @@ lambda1 = class lambda {
         curDepth1 = runtime.stackDepth;
         stackDelayRes1 = runtime.checkDepth();
         if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-          stackDelayRes1.tail.next = new Cont$lambda$9.class(66, null);
+          stackDelayRes1.tail.next = new Cont$lambda$10.class(66, null);
           stackDelayRes1.tail = stackDelayRes1.tail.next;
           return stackDelayRes1
         }
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp8 = lambda.lookupVar(x2);
         if (tmp8 instanceof runtime.EffectSig.class) {
-          tmp8.tail.next = new Cont$lambda$9.class(67, null);
+          tmp8.tail.next = new Cont$lambda$10.class(67, null);
           tmp8.tail = tmp8.tail.next;
           return tmp8
         }
         tmp8 = runtime.resetDepth(tmp8, curDepth1);
         runtime.stackDepth = runtime.stackDepth + 1;
         return lambda.myBind(tmp8, (t6) => {
-          let stackDelayRes2, Cont$lambda$17;
-          Cont$lambda$17 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-          Cont$lambda$17.class = class Cont$lambda$8 extends runtime.Cont.class {
+          let stackDelayRes2, Cont$lambda$18;
+          Cont$lambda$18 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+          Cont$lambda$18.class = class Cont$lambda$9 extends runtime.Cont.class {
             constructor(pc, next) {
               let tmp9;
               tmp9 = super(next, false);
@@ -7337,7 +7180,7 @@ lambda1 = class lambda {
           };
           stackDelayRes2 = runtime.checkDepth();
           if (stackDelayRes2 instanceof runtime.EffectSig.class) {
-            stackDelayRes2.tail.next = new Cont$lambda$17.class(68, null);
+            stackDelayRes2.tail.next = new Cont$lambda$18.class(68, null);
             stackDelayRes2.tail = stackDelayRes2.tail.next;
             return stackDelayRes2
           }
@@ -7353,16 +7196,16 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp1 = lambda.traverseCon(u1);
       if (tmp1 instanceof runtime.EffectSig.class) {
-        tmp1.tail.next = new Cont$func$eval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2316_2950$1.class(69, null);
+        tmp1.tail.next = new Cont$func$eval$lambda$_mls_L0_2370_3004$1.class(69, null);
         tmp1.tail = tmp1.tail.next;
         return tmp1
       }
       tmp1 = runtime.resetDepth(tmp1, curDepth);
       runtime.stackDepth = runtime.stackDepth + 1;
       return lambda.myBind(tmp1, (u_) => {
-        let tmp8, curDepth1, stackDelayRes1, Cont$lambda$9;
-        Cont$lambda$9 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-        Cont$lambda$9.class = class Cont$lambda$ extends runtime.Cont.class {
+        let tmp8, curDepth1, stackDelayRes1, Cont$lambda$10;
+        Cont$lambda$10 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+        Cont$lambda$10.class = class Cont$lambda$1 extends runtime.Cont.class {
           constructor(pc, next) {
             let tmp9;
             tmp9 = super(next, false);
@@ -7390,9 +7233,9 @@ lambda1 = class lambda {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 this.completed = true;
                 return lambda.myBind(tmp8, (v_) => {
-                  let tmp9, tmp10, curDepth2, stackDelayRes2, Cont$lambda$17;
-                  Cont$lambda$17 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-                  Cont$lambda$17.class = class Cont$lambda$14 extends runtime.Cont.class {
+                  let tmp9, tmp10, curDepth2, stackDelayRes2, Cont$lambda$18;
+                  Cont$lambda$18 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+                  Cont$lambda$18.class = class Cont$lambda$15 extends runtime.Cont.class {
                     constructor(pc1, next1) {
                       let tmp11;
                       tmp11 = super(next1, false);
@@ -7430,7 +7273,7 @@ lambda1 = class lambda {
                   curDepth2 = runtime.stackDepth;
                   stackDelayRes2 = runtime.checkDepth();
                   if (stackDelayRes2 instanceof runtime.EffectSig.class) {
-                    stackDelayRes2.tail.next = new Cont$lambda$17.class(72, null);
+                    stackDelayRes2.tail.next = new Cont$lambda$18.class(72, null);
                     stackDelayRes2.tail = stackDelayRes2.tail.next;
                     return stackDelayRes2
                   }
@@ -7438,7 +7281,7 @@ lambda1 = class lambda {
                   runtime.stackDepth = runtime.stackDepth + 1;
                   tmp10 = lambda.Con(tmp9);
                   if (tmp10 instanceof runtime.EffectSig.class) {
-                    tmp10.tail.next = new Cont$lambda$17.class(73, null);
+                    tmp10.tail.next = new Cont$lambda$18.class(73, null);
                     tmp10.tail = tmp10.tail.next;
                     return tmp10
                   }
@@ -7455,23 +7298,23 @@ lambda1 = class lambda {
         curDepth1 = runtime.stackDepth;
         stackDelayRes1 = runtime.checkDepth();
         if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-          stackDelayRes1.tail.next = new Cont$lambda$9.class(70, null);
+          stackDelayRes1.tail.next = new Cont$lambda$10.class(70, null);
           stackDelayRes1.tail = stackDelayRes1.tail.next;
           return stackDelayRes1
         }
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp8 = lambda.traverseCon(v3);
         if (tmp8 instanceof runtime.EffectSig.class) {
-          tmp8.tail.next = new Cont$lambda$9.class(71, null);
+          tmp8.tail.next = new Cont$lambda$10.class(71, null);
           tmp8.tail = tmp8.tail.next;
           return tmp8
         }
         tmp8 = runtime.resetDepth(tmp8, curDepth1);
         runtime.stackDepth = runtime.stackDepth + 1;
         return lambda.myBind(tmp8, (v_) => {
-          let tmp9, tmp10, curDepth2, stackDelayRes2, Cont$lambda$17;
-          Cont$lambda$17 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-          Cont$lambda$17.class = class Cont$lambda$14 extends runtime.Cont.class {
+          let tmp9, tmp10, curDepth2, stackDelayRes2, Cont$lambda$18;
+          Cont$lambda$18 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+          Cont$lambda$18.class = class Cont$lambda$15 extends runtime.Cont.class {
             constructor(pc, next) {
               let tmp11;
               tmp11 = super(next, false);
@@ -7509,7 +7352,7 @@ lambda1 = class lambda {
           curDepth2 = runtime.stackDepth;
           stackDelayRes2 = runtime.checkDepth();
           if (stackDelayRes2 instanceof runtime.EffectSig.class) {
-            stackDelayRes2.tail.next = new Cont$lambda$17.class(72, null);
+            stackDelayRes2.tail.next = new Cont$lambda$18.class(72, null);
             stackDelayRes2.tail = stackDelayRes2.tail.next;
             return stackDelayRes2
           }
@@ -7517,7 +7360,7 @@ lambda1 = class lambda {
           runtime.stackDepth = runtime.stackDepth + 1;
           tmp10 = lambda.Con(tmp9);
           if (tmp10 instanceof runtime.EffectSig.class) {
-            tmp10.tail.next = new Cont$lambda$17.class(73, null);
+            tmp10.tail.next = new Cont$lambda$18.class(73, null);
             tmp10.tail = tmp10.tail.next;
             return tmp10
           }
@@ -7534,7 +7377,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp2 = lambda.traverseTerm(t5);
       if (tmp2 instanceof runtime.EffectSig.class) {
-        tmp2.tail.next = new Cont$func$eval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2316_2950$1.class(74, null);
+        tmp2.tail.next = new Cont$func$eval$lambda$_mls_L0_2370_3004$1.class(74, null);
         tmp2.tail = tmp2.tail.next;
         return tmp2
       }
@@ -7548,9 +7391,9 @@ lambda1 = class lambda {
       b3 = param12;
       runtime.stackDepth = runtime.stackDepth + 1;
       return lambda.myBind(lambda.#myGet, (env) => {
-        let tmp8, tmp9, curDepth1, stackDelayRes1, Cont$lambda$9;
-        Cont$lambda$9 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-        Cont$lambda$9.class = class Cont$lambda$12 extends runtime.Cont.class {
+        let tmp8, tmp9, curDepth1, stackDelayRes1, Cont$lambda$10;
+        Cont$lambda$10 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+        Cont$lambda$10.class = class Cont$lambda$13 extends runtime.Cont.class {
           constructor(pc, next) {
             let tmp10;
             tmp10 = super(next, false);
@@ -7599,14 +7442,14 @@ lambda1 = class lambda {
         curDepth1 = runtime.stackDepth;
         stackDelayRes1 = runtime.checkDepth();
         if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-          stackDelayRes1.tail.next = new Cont$lambda$9.class(75, null);
+          stackDelayRes1.tail.next = new Cont$lambda$10.class(75, null);
           stackDelayRes1.tail = stackDelayRes1.tail.next;
           return stackDelayRes1
         }
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp8 = lambda.Lam(x1, b3);
         if (tmp8 instanceof runtime.EffectSig.class) {
-          tmp8.tail.next = new Cont$lambda$9.class(76, null);
+          tmp8.tail.next = new Cont$lambda$10.class(76, null);
           tmp8.tail = tmp8.tail.next;
           return tmp8
         }
@@ -7614,7 +7457,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp9 = lambda.Thunk(tmp8, env);
         if (tmp9 instanceof runtime.EffectSig.class) {
-          tmp9.tail.next = new Cont$lambda$9.class(77, null);
+          tmp9.tail.next = new Cont$lambda$10.class(77, null);
           tmp9.tail = tmp9.tail.next;
           return tmp9
         }
@@ -7630,16 +7473,16 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp3 = lambda.traverseTerm(u);
       if (tmp3 instanceof runtime.EffectSig.class) {
-        tmp3.tail.next = new Cont$func$eval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2316_2950$1.class(78, null);
+        tmp3.tail.next = new Cont$func$eval$lambda$_mls_L0_2370_3004$1.class(78, null);
         tmp3.tail = tmp3.tail.next;
         return tmp3
       }
       tmp3 = runtime.resetDepth(tmp3, curDepth);
       runtime.stackDepth = runtime.stackDepth + 1;
       return lambda.myBind(tmp3, (u_) => {
-        let stackDelayRes1, Cont$lambda$9;
-        Cont$lambda$9 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-        Cont$lambda$9.class = class Cont$lambda$7 extends runtime.Cont.class {
+        let stackDelayRes1, Cont$lambda$10;
+        Cont$lambda$10 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+        Cont$lambda$10.class = class Cont$lambda$8 extends runtime.Cont.class {
           constructor(pc, next) {
             let tmp8;
             tmp8 = super(next, false);
@@ -7663,7 +7506,7 @@ lambda1 = class lambda {
         };
         stackDelayRes1 = runtime.checkDepth();
         if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-          stackDelayRes1.tail.next = new Cont$lambda$9.class(79, null);
+          stackDelayRes1.tail.next = new Cont$lambda$10.class(79, null);
           stackDelayRes1.tail = stackDelayRes1.tail.next;
           return stackDelayRes1
         }
@@ -7680,15 +7523,15 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp4 = lambda.traverseTerm(c);
       if (tmp4 instanceof runtime.EffectSig.class) {
-        tmp4.tail.next = new Cont$func$eval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2316_2950$1.class(80, null);
+        tmp4.tail.next = new Cont$func$eval$lambda$_mls_L0_2370_3004$1.class(80, null);
         tmp4.tail = tmp4.tail.next;
         return tmp4
       }
       tmp4 = runtime.resetDepth(tmp4, curDepth);
       tmp5 = (vall) => {
-        let scrut, tmp8, curDepth1, stackDelayRes1, Cont$lambda$9;
-        Cont$lambda$9 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-        Cont$lambda$9.class = class Cont$lambda$11 extends runtime.Cont.class {
+        let scrut, tmp8, curDepth1, stackDelayRes1, Cont$lambda$10;
+        Cont$lambda$10 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+        Cont$lambda$10.class = class Cont$lambda$12 extends runtime.Cont.class {
           constructor(pc, next) {
             let tmp9;
             tmp9 = super(next, false);
@@ -7747,14 +7590,14 @@ lambda1 = class lambda {
         curDepth1 = runtime.stackDepth;
         stackDelayRes1 = runtime.checkDepth();
         if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-          stackDelayRes1.tail.next = new Cont$lambda$9.class(81, null);
+          stackDelayRes1.tail.next = new Cont$lambda$10.class(81, null);
           stackDelayRes1.tail = stackDelayRes1.tail.next;
           return stackDelayRes1
         }
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp8 = lambda.Con(0);
         if (tmp8 instanceof runtime.EffectSig.class) {
-          tmp8.tail.next = new Cont$lambda$9.class(82, null);
+          tmp8.tail.next = new Cont$lambda$10.class(82, null);
           tmp8.tail = tmp8.tail.next;
           return tmp8
         }
@@ -7762,7 +7605,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         scrut = lambda.eqTerm(vall, tmp8);
         if (scrut instanceof runtime.EffectSig.class) {
-          scrut.tail.next = new Cont$lambda$9.class(83, null);
+          scrut.tail.next = new Cont$lambda$10.class(83, null);
           scrut.tail = scrut.tail.next;
           return scrut
         }
@@ -7783,7 +7626,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp6 = lambda.Con(i);
       if (tmp6 instanceof runtime.EffectSig.class) {
-        tmp6.tail.next = new Cont$func$eval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2316_2950$1.class(85, null);
+        tmp6.tail.next = new Cont$func$eval$lambda$_mls_L0_2370_3004$1.class(85, null);
         tmp6.tail = tmp6.tail.next;
         return tmp6
       }
@@ -7793,9 +7636,9 @@ lambda1 = class lambda {
     } else if (ter instanceof lambda.Incr.class) {
       runtime.stackDepth = runtime.stackDepth + 1;
       return lambda.myBind(lambda.#incr, (_dummy) => {
-        let tmp8, curDepth1, stackDelayRes1, Cont$lambda$9;
-        Cont$lambda$9 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-        Cont$lambda$9.class = class Cont$lambda$10 extends runtime.Cont.class {
+        let tmp8, curDepth1, stackDelayRes1, Cont$lambda$10;
+        Cont$lambda$10 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+        Cont$lambda$10.class = class Cont$lambda$11 extends runtime.Cont.class {
           constructor(pc, next) {
             let tmp9;
             tmp9 = super(next, false);
@@ -7832,14 +7675,14 @@ lambda1 = class lambda {
         curDepth1 = runtime.stackDepth;
         stackDelayRes1 = runtime.checkDepth();
         if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-          stackDelayRes1.tail.next = new Cont$lambda$9.class(86, null);
+          stackDelayRes1.tail.next = new Cont$lambda$10.class(86, null);
           stackDelayRes1.tail = stackDelayRes1.tail.next;
           return stackDelayRes1
         }
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp8 = lambda.Con(0);
         if (tmp8 instanceof runtime.EffectSig.class) {
-          tmp8.tail.next = new Cont$lambda$9.class(87, null);
+          tmp8.tail.next = new Cont$lambda$10.class(87, null);
           tmp8.tail = tmp8.tail.next;
           return tmp8
         }
@@ -7851,7 +7694,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp7 = new globalThis.Error("match error");
       if (tmp7 instanceof runtime.EffectSig.class) {
-        tmp7.tail.next = new Cont$func$eval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2316_2950$1.class(88, null);
+        tmp7.tail.next = new Cont$func$eval$lambda$_mls_L0_2370_3004$1.class(88, null);
         tmp7.tail = tmp7.tail.next;
         return tmp7
       }
@@ -7860,9 +7703,9 @@ lambda1 = class lambda {
     }
   } 
   static simpleEval(env, ter1) {
-    let param0, param1, t5, e, param01, param11, param2, c, a4, b2, val_, scrut, param02, param12, u, v2, u_, param03, param13, x1, b3, param04, param14, u1, v3, u_1, v_, param05, e1, param06, v4, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, curDepth, tmp10, stackDelayRes, Cont$func$simpleEval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2956_3543$1;
-    Cont$func$simpleEval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2956_3543$1 = function Cont$func$simpleEval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2956_3543$(pc1, next1) { return new Cont$func$simpleEval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2956_3543$.class(pc1, next1); };
-    Cont$func$simpleEval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2956_3543$1.class = class Cont$func$simpleEval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2956_3543$ extends runtime.Cont.class {
+    let param0, param1, t5, e, param01, param11, param2, c, a4, b2, val_, scrut, param02, param12, u, v2, u_, param03, param13, x1, b3, param04, param14, u1, v3, u_1, v_, param05, e1, param06, v4, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, curDepth, tmp10, stackDelayRes, Cont$func$simpleEval$lambda$_mls_L0_3010_3597$1;
+    Cont$func$simpleEval$lambda$_mls_L0_3010_3597$1 = function Cont$func$simpleEval$lambda$_mls_L0_3010_3597$(pc1, next1) { return new Cont$func$simpleEval$lambda$_mls_L0_3010_3597$.class(pc1, next1); };
+    Cont$func$simpleEval$lambda$_mls_L0_3010_3597$1.class = class Cont$func$simpleEval$lambda$_mls_L0_3010_3597$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp11;
         tmp11 = super(next, false);
@@ -8092,9 +7935,9 @@ lambda1 = class lambda {
             tmp1 = runtime.resetDepth(tmp1, curDepth);
             runtime.stackDepth = runtime.stackDepth + 1;
             tmp2 = lambda.myMaybe((dummy) => {
-              let tmp11, curDepth1, stackDelayRes1, Cont$lambda$9;
-              Cont$lambda$9 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-              Cont$lambda$9.class = class Cont$lambda$15 extends runtime.Cont.class {
+              let tmp11, curDepth1, stackDelayRes1, Cont$lambda$10;
+              Cont$lambda$10 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+              Cont$lambda$10.class = class Cont$lambda$16 extends runtime.Cont.class {
                 constructor(pc1, next1) {
                   let tmp12;
                   tmp12 = super(next1, false);
@@ -8129,14 +7972,14 @@ lambda1 = class lambda {
               curDepth1 = runtime.stackDepth;
               stackDelayRes1 = runtime.checkDepth();
               if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-                stackDelayRes1.tail.next = new Cont$lambda$9.class(92, null);
+                stackDelayRes1.tail.next = new Cont$lambda$10.class(92, null);
                 stackDelayRes1.tail = stackDelayRes1.tail.next;
                 return stackDelayRes1
               }
               runtime.stackDepth = runtime.stackDepth + 1;
               tmp11 = globalThis.Error("undefined var");
               if (tmp11 instanceof runtime.EffectSig.class) {
-                tmp11.tail.next = new Cont$lambda$9.class(93, null);
+                tmp11.tail.next = new Cont$lambda$10.class(93, null);
                 tmp11.tail = tmp11.tail.next;
                 return tmp11
               }
@@ -8160,12 +8003,12 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$simpleEval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2956_3543$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$simpleEval$lambda$_mls_L0_3010_3597$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$simpleEval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2956_3543$1.class(90, null);
+      stackDelayRes.tail.next = new Cont$func$simpleEval$lambda$_mls_L0_3010_3597$1.class(90, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -8175,16 +8018,16 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp1 = lambda.lookup(v4, env);
       if (tmp1 instanceof runtime.EffectSig.class) {
-        tmp1.tail.next = new Cont$func$simpleEval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2956_3543$1.class(91, null);
+        tmp1.tail.next = new Cont$func$simpleEval$lambda$_mls_L0_3010_3597$1.class(91, null);
         tmp1.tail = tmp1.tail.next;
         return tmp1
       }
       tmp1 = runtime.resetDepth(tmp1, curDepth);
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp2 = lambda.myMaybe((dummy) => {
-        let tmp11, curDepth1, stackDelayRes1, Cont$lambda$9;
-        Cont$lambda$9 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-        Cont$lambda$9.class = class Cont$lambda$15 extends runtime.Cont.class {
+        let tmp11, curDepth1, stackDelayRes1, Cont$lambda$10;
+        Cont$lambda$10 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+        Cont$lambda$10.class = class Cont$lambda$16 extends runtime.Cont.class {
           constructor(pc, next) {
             let tmp12;
             tmp12 = super(next, false);
@@ -8219,14 +8062,14 @@ lambda1 = class lambda {
         curDepth1 = runtime.stackDepth;
         stackDelayRes1 = runtime.checkDepth();
         if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-          stackDelayRes1.tail.next = new Cont$lambda$9.class(92, null);
+          stackDelayRes1.tail.next = new Cont$lambda$10.class(92, null);
           stackDelayRes1.tail = stackDelayRes1.tail.next;
           return stackDelayRes1
         }
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp11 = globalThis.Error("undefined var");
         if (tmp11 instanceof runtime.EffectSig.class) {
-          tmp11.tail.next = new Cont$lambda$9.class(93, null);
+          tmp11.tail.next = new Cont$lambda$10.class(93, null);
           tmp11.tail = tmp11.tail.next;
           return tmp11
         }
@@ -8236,7 +8079,7 @@ lambda1 = class lambda {
         return x2
       }, tmp1);
       if (tmp2 instanceof runtime.EffectSig.class) {
-        tmp2.tail.next = new Cont$func$simpleEval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2956_3543$1.class(94, null);
+        tmp2.tail.next = new Cont$func$simpleEval$lambda$_mls_L0_3010_3597$1.class(94, null);
         tmp2.tail = tmp2.tail.next;
         return tmp2
       }
@@ -8259,7 +8102,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp3 = lambda.simpleEvalCon(env, u1);
       if (tmp3 instanceof runtime.EffectSig.class) {
-        tmp3.tail.next = new Cont$func$simpleEval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2956_3543$1.class(95, null);
+        tmp3.tail.next = new Cont$func$simpleEval$lambda$_mls_L0_3010_3597$1.class(95, null);
         tmp3.tail = tmp3.tail.next;
         return tmp3
       }
@@ -8268,7 +8111,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp4 = lambda.simpleEvalCon(env, v3);
       if (tmp4 instanceof runtime.EffectSig.class) {
-        tmp4.tail.next = new Cont$func$simpleEval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2956_3543$1.class(96, null);
+        tmp4.tail.next = new Cont$func$simpleEval$lambda$_mls_L0_3010_3597$1.class(96, null);
         tmp4.tail = tmp4.tail.next;
         return tmp4
       }
@@ -8285,7 +8128,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp6 = lambda.Lam(x1, b3);
       if (tmp6 instanceof runtime.EffectSig.class) {
-        tmp6.tail.next = new Cont$func$simpleEval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2956_3543$1.class(97, null);
+        tmp6.tail.next = new Cont$func$simpleEval$lambda$_mls_L0_3010_3597$1.class(97, null);
         tmp6.tail = tmp6.tail.next;
         return tmp6
       }
@@ -8300,7 +8143,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp7 = lambda.simpleEval(env, u);
       if (tmp7 instanceof runtime.EffectSig.class) {
-        tmp7.tail.next = new Cont$func$simpleEval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2956_3543$1.class(98, null);
+        tmp7.tail.next = new Cont$func$simpleEval$lambda$_mls_L0_3010_3597$1.class(98, null);
         tmp7.tail = tmp7.tail.next;
         return tmp7
       }
@@ -8318,7 +8161,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp8 = lambda.simpleEval(env, c);
       if (tmp8 instanceof runtime.EffectSig.class) {
-        tmp8.tail.next = new Cont$func$simpleEval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2956_3543$1.class(99, null);
+        tmp8.tail.next = new Cont$func$simpleEval$lambda$_mls_L0_3010_3597$1.class(99, null);
         tmp8.tail = tmp8.tail.next;
         return tmp8
       }
@@ -8327,7 +8170,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp9 = lambda.Con(0);
       if (tmp9 instanceof runtime.EffectSig.class) {
-        tmp9.tail.next = new Cont$func$simpleEval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2956_3543$1.class(100, null);
+        tmp9.tail.next = new Cont$func$simpleEval$lambda$_mls_L0_3010_3597$1.class(100, null);
         tmp9.tail = tmp9.tail.next;
         return tmp9
       }
@@ -8335,7 +8178,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       scrut = lambda.eqTerm(val_, tmp9);
       if (scrut instanceof runtime.EffectSig.class) {
-        scrut.tail.next = new Cont$func$simpleEval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2956_3543$1.class(101, null);
+        scrut.tail.next = new Cont$func$simpleEval$lambda$_mls_L0_3010_3597$1.class(101, null);
         scrut.tail = scrut.tail.next;
         return scrut
       }
@@ -8358,7 +8201,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp10 = globalThis.Error(ter1);
       if (tmp10 instanceof runtime.EffectSig.class) {
-        tmp10.tail.next = new Cont$func$simpleEval$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_2956_3543$1.class(102, null);
+        tmp10.tail.next = new Cont$func$simpleEval$lambda$_mls_L0_3010_3597$1.class(102, null);
         tmp10.tail = tmp10.tail.next;
         return tmp10
       }
@@ -8367,9 +8210,9 @@ lambda1 = class lambda {
     }
   } 
   static simpleApply(env1, t5, a4) {
-    let param0, param1, param01, param11, x1, b2, e, tmp1, tmp2, curDepth, tmp3, tmp4, stackDelayRes, Cont$func$simpleApply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3549_3685$1;
-    Cont$func$simpleApply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3549_3685$1 = function Cont$func$simpleApply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3549_3685$(pc1, next1) { return new Cont$func$simpleApply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3549_3685$.class(pc1, next1); };
-    Cont$func$simpleApply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3549_3685$1.class = class Cont$func$simpleApply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3549_3685$ extends runtime.Cont.class {
+    let param0, param1, param01, param11, x1, b2, e, tmp1, tmp2, curDepth, tmp3, tmp4, stackDelayRes, Cont$func$simpleApply$lambda$_mls_L0_3603_3739$1;
+    Cont$func$simpleApply$lambda$_mls_L0_3603_3739$1 = function Cont$func$simpleApply$lambda$_mls_L0_3603_3739$(pc1, next1) { return new Cont$func$simpleApply$lambda$_mls_L0_3603_3739$.class(pc1, next1); };
+    Cont$func$simpleApply$lambda$_mls_L0_3603_3739$1.class = class Cont$func$simpleApply$lambda$_mls_L0_3603_3739$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp5;
         tmp5 = super(next, false);
@@ -8461,12 +8304,12 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$simpleApply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3549_3685$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$simpleApply$lambda$_mls_L0_3603_3739$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$simpleApply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3549_3685$1.class(104, null);
+      stackDelayRes.tail.next = new Cont$func$simpleApply$lambda$_mls_L0_3603_3739$1.class(104, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -8482,7 +8325,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp1 = lambda.Thunk(a4, env1);
         if (tmp1 instanceof runtime.EffectSig.class) {
-          tmp1.tail.next = new Cont$func$simpleApply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3549_3685$1.class(105, null);
+          tmp1.tail.next = new Cont$func$simpleApply$lambda$_mls_L0_3603_3739$1.class(105, null);
           tmp1.tail = tmp1.tail.next;
           return tmp1
         }
@@ -8493,7 +8336,7 @@ lambda1 = class lambda {
           tmp1
         ], e);
         if (tmp2 instanceof runtime.EffectSig.class) {
-          tmp2.tail.next = new Cont$func$simpleApply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3549_3685$1.class(106, null);
+          tmp2.tail.next = new Cont$func$simpleApply$lambda$_mls_L0_3603_3739$1.class(106, null);
           tmp2.tail = tmp2.tail.next;
           return tmp2
         }
@@ -8504,7 +8347,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp3 = globalThis.Error("bad application");
         if (tmp3 instanceof runtime.EffectSig.class) {
-          tmp3.tail.next = new Cont$func$simpleApply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3549_3685$1.class(107, null);
+          tmp3.tail.next = new Cont$func$simpleApply$lambda$_mls_L0_3603_3739$1.class(107, null);
           tmp3.tail = tmp3.tail.next;
           return tmp3
         }
@@ -8515,7 +8358,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp4 = globalThis.Error("bad application");
       if (tmp4 instanceof runtime.EffectSig.class) {
-        tmp4.tail.next = new Cont$func$simpleApply$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3549_3685$1.class(108, null);
+        tmp4.tail.next = new Cont$func$simpleApply$lambda$_mls_L0_3603_3739$1.class(108, null);
         tmp4.tail = tmp4.tail.next;
         return tmp4
       }
@@ -8524,9 +8367,9 @@ lambda1 = class lambda {
     }
   } 
   static simpleEvalCon(env2, e) {
-    let e_, param0, c, tmp1, curDepth, tmp2, stackDelayRes, Cont$func$simpleEvalCon$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3691_3799$1;
-    Cont$func$simpleEvalCon$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3691_3799$1 = function Cont$func$simpleEvalCon$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3691_3799$(pc1, next1) { return new Cont$func$simpleEvalCon$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3691_3799$.class(pc1, next1); };
-    Cont$func$simpleEvalCon$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3691_3799$1.class = class Cont$func$simpleEvalCon$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3691_3799$ extends runtime.Cont.class {
+    let e_, param0, c, tmp1, curDepth, tmp2, stackDelayRes, Cont$func$simpleEvalCon$lambda$_mls_L0_3745_3853$1;
+    Cont$func$simpleEvalCon$lambda$_mls_L0_3745_3853$1 = function Cont$func$simpleEvalCon$lambda$_mls_L0_3745_3853$(pc1, next1) { return new Cont$func$simpleEvalCon$lambda$_mls_L0_3745_3853$.class(pc1, next1); };
+    Cont$func$simpleEvalCon$lambda$_mls_L0_3745_3853$1.class = class Cont$func$simpleEvalCon$lambda$_mls_L0_3745_3853$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp3;
         tmp3 = super(next, false);
@@ -8580,19 +8423,19 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$simpleEvalCon$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3691_3799$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$simpleEvalCon$lambda$_mls_L0_3745_3853$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$simpleEvalCon$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3691_3799$1.class(110, null);
+      stackDelayRes.tail.next = new Cont$func$simpleEvalCon$lambda$_mls_L0_3745_3853$1.class(110, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp1 = lambda.simpleEval(env2, e);
     if (tmp1 instanceof runtime.EffectSig.class) {
-      tmp1.tail.next = new Cont$func$simpleEvalCon$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3691_3799$1.class(111, null);
+      tmp1.tail.next = new Cont$func$simpleEvalCon$lambda$_mls_L0_3745_3853$1.class(111, null);
       tmp1.tail = tmp1.tail.next;
       return tmp1
     }
@@ -8606,7 +8449,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp2 = globalThis.Error("Not a Con");
       if (tmp2 instanceof runtime.EffectSig.class) {
-        tmp2.tail.next = new Cont$func$simpleEvalCon$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3691_3799$1.class(112, null);
+        tmp2.tail.next = new Cont$func$simpleEvalCon$lambda$_mls_L0_3745_3853$1.class(112, null);
         tmp2.tail = tmp2.tail.next;
         return tmp2
       }
@@ -8615,9 +8458,9 @@ lambda1 = class lambda {
     }
   } 
   static bracket(ot, ths, t6) {
-    let scrut, tmp1, tmp2, curDepth, stackDelayRes, Cont$func$bracket$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3805_3888$1;
-    Cont$func$bracket$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3805_3888$1 = function Cont$func$bracket$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3805_3888$(pc1, next1) { return new Cont$func$bracket$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3805_3888$.class(pc1, next1); };
-    Cont$func$bracket$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3805_3888$1.class = class Cont$func$bracket$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3805_3888$ extends runtime.Cont.class {
+    let scrut, tmp1, tmp2, curDepth, stackDelayRes, Cont$func$bracket$lambda$_mls_L0_3859_3942$1;
+    Cont$func$bracket$lambda$_mls_L0_3859_3942$1 = function Cont$func$bracket$lambda$_mls_L0_3859_3942$(pc1, next1) { return new Cont$func$bracket$lambda$_mls_L0_3859_3942$.class(pc1, next1); };
+    Cont$func$bracket$lambda$_mls_L0_3859_3942$1.class = class Cont$func$bracket$lambda$_mls_L0_3859_3942$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp3;
         tmp3 = super(next, false);
@@ -8671,12 +8514,12 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$bracket$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3805_3888$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$bracket$lambda$_mls_L0_3859_3942$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$bracket$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3805_3888$1.class(114, null);
+      stackDelayRes.tail.next = new Cont$func$bracket$lambda$_mls_L0_3859_3942$1.class(114, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -8685,7 +8528,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp1 = NofibPrelude.nofibStringToList(")");
       if (tmp1 instanceof runtime.EffectSig.class) {
-        tmp1.tail.next = new Cont$func$bracket$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3805_3888$1.class(115, null);
+        tmp1.tail.next = new Cont$func$bracket$lambda$_mls_L0_3859_3942$1.class(115, null);
         tmp1.tail = tmp1.tail.next;
         return tmp1
       }
@@ -8693,7 +8536,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp2 = NofibPrelude.append(t6, tmp1);
       if (tmp2 instanceof runtime.EffectSig.class) {
-        tmp2.tail.next = new Cont$func$bracket$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3805_3888$1.class(116, null);
+        tmp2.tail.next = new Cont$func$bracket$lambda$_mls_L0_3859_3942$1.class(116, null);
         tmp2.tail = tmp2.tail.next;
         return tmp2
       }
@@ -8705,9 +8548,9 @@ lambda1 = class lambda {
     }
   } 
   static ppn(n, ter2) {
-    let param0, param1, t7, e1, param01, param11, param2, c, a5, b2, param02, param12, a6, b3, param03, param13, a7, b4, param04, param14, v2, t8, param05, i, param06, v3, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, curDepth, tmp34, stackDelayRes, Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1;
-    Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1 = function Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$(pc1, next1) { return new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$.class(pc1, next1); };
-    Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class = class Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$ extends runtime.Cont.class {
+    let param0, param1, t7, e1, param01, param11, param2, c, a5, b2, param02, param12, a6, b3, param03, param13, a7, b4, param04, param14, v2, t8, param05, i, param06, v3, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, curDepth, tmp34, stackDelayRes, Cont$func$ppn$lambda$_mls_L0_3948_4569$1;
+    Cont$func$ppn$lambda$_mls_L0_3948_4569$1 = function Cont$func$ppn$lambda$_mls_L0_3948_4569$(pc1, next1) { return new Cont$func$ppn$lambda$_mls_L0_3948_4569$.class(pc1, next1); };
+    Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class = class Cont$func$ppn$lambda$_mls_L0_3948_4569$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp35;
         tmp35 = super(next, false);
@@ -9215,12 +9058,12 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$ppn$lambda$_mls_L0_3948_4569$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(118, null);
+      stackDelayRes.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(118, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -9234,7 +9077,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp1 = NofibPrelude.stringOfInt(i);
       if (tmp1 instanceof runtime.EffectSig.class) {
-        tmp1.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(119, null);
+        tmp1.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(119, null);
         tmp1.tail = tmp1.tail.next;
         return tmp1
       }
@@ -9252,7 +9095,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp2 = NofibPrelude.nofibStringToList(". ");
       if (tmp2 instanceof runtime.EffectSig.class) {
-        tmp2.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(120, null);
+        tmp2.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(120, null);
         tmp2.tail = tmp2.tail.next;
         return tmp2
       }
@@ -9261,7 +9104,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp4 = lambda.ppn(tmp3, t8);
       if (tmp4 instanceof runtime.EffectSig.class) {
-        tmp4.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(121, null);
+        tmp4.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(121, null);
         tmp4.tail = tmp4.tail.next;
         return tmp4
       }
@@ -9269,7 +9112,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp5 = NofibPrelude.append(tmp2, tmp4);
       if (tmp5 instanceof runtime.EffectSig.class) {
-        tmp5.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(122, null);
+        tmp5.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(122, null);
         tmp5.tail = tmp5.tail.next;
         return tmp5
       }
@@ -9277,7 +9120,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp6 = NofibPrelude.append(v2, tmp5);
       if (tmp6 instanceof runtime.EffectSig.class) {
-        tmp6.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(123, null);
+        tmp6.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(123, null);
         tmp6.tail = tmp6.tail.next;
         return tmp6
       }
@@ -9285,7 +9128,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp7 = NofibPrelude.Cons("@", tmp6);
       if (tmp7 instanceof runtime.EffectSig.class) {
-        tmp7.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(124, null);
+        tmp7.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(124, null);
         tmp7.tail = tmp7.tail.next;
         return tmp7
       }
@@ -9300,7 +9143,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp8 = lambda.ppn(1, a7);
       if (tmp8 instanceof runtime.EffectSig.class) {
-        tmp8.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(125, null);
+        tmp8.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(125, null);
         tmp8.tail = tmp8.tail.next;
         return tmp8
       }
@@ -9308,7 +9151,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp9 = NofibPrelude.nofibStringToList(" + ");
       if (tmp9 instanceof runtime.EffectSig.class) {
-        tmp9.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(126, null);
+        tmp9.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(126, null);
         tmp9.tail = tmp9.tail.next;
         return tmp9
       }
@@ -9316,7 +9159,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp10 = lambda.ppn(1, b4);
       if (tmp10 instanceof runtime.EffectSig.class) {
-        tmp10.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(127, null);
+        tmp10.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(127, null);
         tmp10.tail = tmp10.tail.next;
         return tmp10
       }
@@ -9324,7 +9167,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp11 = NofibPrelude.append(tmp9, tmp10);
       if (tmp11 instanceof runtime.EffectSig.class) {
-        tmp11.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(128, null);
+        tmp11.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(128, null);
         tmp11.tail = tmp11.tail.next;
         return tmp11
       }
@@ -9332,7 +9175,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp12 = NofibPrelude.append(tmp8, tmp11);
       if (tmp12 instanceof runtime.EffectSig.class) {
-        tmp12.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(129, null);
+        tmp12.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(129, null);
         tmp12.tail = tmp12.tail.next;
         return tmp12
       }
@@ -9347,7 +9190,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp13 = lambda.ppn(2, a6);
       if (tmp13 instanceof runtime.EffectSig.class) {
-        tmp13.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(130, null);
+        tmp13.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(130, null);
         tmp13.tail = tmp13.tail.next;
         return tmp13
       }
@@ -9355,7 +9198,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp14 = NofibPrelude.nofibStringToList(" ");
       if (tmp14 instanceof runtime.EffectSig.class) {
-        tmp14.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(131, null);
+        tmp14.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(131, null);
         tmp14.tail = tmp14.tail.next;
         return tmp14
       }
@@ -9363,7 +9206,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp15 = lambda.ppn(2, b3);
       if (tmp15 instanceof runtime.EffectSig.class) {
-        tmp15.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(132, null);
+        tmp15.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(132, null);
         tmp15.tail = tmp15.tail.next;
         return tmp15
       }
@@ -9371,7 +9214,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp16 = NofibPrelude.append(tmp14, tmp15);
       if (tmp16 instanceof runtime.EffectSig.class) {
-        tmp16.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(133, null);
+        tmp16.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(133, null);
         tmp16.tail = tmp16.tail.next;
         return tmp16
       }
@@ -9379,7 +9222,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp17 = NofibPrelude.append(tmp13, tmp16);
       if (tmp17 instanceof runtime.EffectSig.class) {
-        tmp17.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(134, null);
+        tmp17.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(134, null);
         tmp17.tail = tmp17.tail.next;
         return tmp17
       }
@@ -9396,7 +9239,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp18 = NofibPrelude.nofibStringToList("IF ");
       if (tmp18 instanceof runtime.EffectSig.class) {
-        tmp18.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(135, null);
+        tmp18.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(135, null);
         tmp18.tail = tmp18.tail.next;
         return tmp18
       }
@@ -9404,7 +9247,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp19 = lambda.ppn(0, c);
       if (tmp19 instanceof runtime.EffectSig.class) {
-        tmp19.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(136, null);
+        tmp19.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(136, null);
         tmp19.tail = tmp19.tail.next;
         return tmp19
       }
@@ -9412,7 +9255,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp20 = NofibPrelude.nofibStringToList(" THEN ");
       if (tmp20 instanceof runtime.EffectSig.class) {
-        tmp20.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(137, null);
+        tmp20.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(137, null);
         tmp20.tail = tmp20.tail.next;
         return tmp20
       }
@@ -9420,7 +9263,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp21 = lambda.ppn(0, a5);
       if (tmp21 instanceof runtime.EffectSig.class) {
-        tmp21.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(138, null);
+        tmp21.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(138, null);
         tmp21.tail = tmp21.tail.next;
         return tmp21
       }
@@ -9428,7 +9271,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp22 = NofibPrelude.nofibStringToList(" ELSE ");
       if (tmp22 instanceof runtime.EffectSig.class) {
-        tmp22.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(139, null);
+        tmp22.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(139, null);
         tmp22.tail = tmp22.tail.next;
         return tmp22
       }
@@ -9436,7 +9279,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp23 = lambda.ppn(0, b2);
       if (tmp23 instanceof runtime.EffectSig.class) {
-        tmp23.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(140, null);
+        tmp23.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(140, null);
         tmp23.tail = tmp23.tail.next;
         return tmp23
       }
@@ -9444,7 +9287,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp24 = NofibPrelude.append(tmp22, tmp23);
       if (tmp24 instanceof runtime.EffectSig.class) {
-        tmp24.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(141, null);
+        tmp24.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(141, null);
         tmp24.tail = tmp24.tail.next;
         return tmp24
       }
@@ -9452,7 +9295,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp25 = NofibPrelude.append(tmp21, tmp24);
       if (tmp25 instanceof runtime.EffectSig.class) {
-        tmp25.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(142, null);
+        tmp25.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(142, null);
         tmp25.tail = tmp25.tail.next;
         return tmp25
       }
@@ -9460,7 +9303,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp26 = NofibPrelude.append(tmp20, tmp25);
       if (tmp26 instanceof runtime.EffectSig.class) {
-        tmp26.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(143, null);
+        tmp26.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(143, null);
         tmp26.tail = tmp26.tail.next;
         return tmp26
       }
@@ -9468,7 +9311,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp27 = NofibPrelude.append(tmp19, tmp26);
       if (tmp27 instanceof runtime.EffectSig.class) {
-        tmp27.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(144, null);
+        tmp27.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(144, null);
         tmp27.tail = tmp27.tail.next;
         return tmp27
       }
@@ -9476,7 +9319,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp28 = NofibPrelude.append(tmp18, tmp27);
       if (tmp28 instanceof runtime.EffectSig.class) {
-        tmp28.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(145, null);
+        tmp28.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(145, null);
         tmp28.tail = tmp28.tail.next;
         return tmp28
       }
@@ -9491,7 +9334,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp29 = lambda.ppn(3, t7);
       if (tmp29 instanceof runtime.EffectSig.class) {
-        tmp29.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(146, null);
+        tmp29.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(146, null);
         tmp29.tail = tmp29.tail.next;
         return tmp29
       }
@@ -9499,7 +9342,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp30 = NofibPrelude.nofibStringToList("::");
       if (tmp30 instanceof runtime.EffectSig.class) {
-        tmp30.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(147, null);
+        tmp30.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(147, null);
         tmp30.tail = tmp30.tail.next;
         return tmp30
       }
@@ -9507,7 +9350,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp31 = lambda.ppenv(e1);
       if (tmp31 instanceof runtime.EffectSig.class) {
-        tmp31.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(148, null);
+        tmp31.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(148, null);
         tmp31.tail = tmp31.tail.next;
         return tmp31
       }
@@ -9515,7 +9358,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp32 = NofibPrelude.append(tmp30, tmp31);
       if (tmp32 instanceof runtime.EffectSig.class) {
-        tmp32.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(149, null);
+        tmp32.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(149, null);
         tmp32.tail = tmp32.tail.next;
         return tmp32
       }
@@ -9523,7 +9366,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp33 = NofibPrelude.append(tmp29, tmp32);
       if (tmp33 instanceof runtime.EffectSig.class) {
-        tmp33.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(150, null);
+        tmp33.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(150, null);
         tmp33.tail = tmp33.tail.next;
         return tmp33
       }
@@ -9534,7 +9377,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp34 = new globalThis.Error("match error");
       if (tmp34 instanceof runtime.EffectSig.class) {
-        tmp34.tail.next = new Cont$func$ppn$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_3894_4515$1.class(151, null);
+        tmp34.tail.next = new Cont$func$ppn$lambda$_mls_L0_3948_4569$1.class(151, null);
         tmp34.tail = tmp34.tail.next;
         return tmp34
       }
@@ -9543,9 +9386,9 @@ lambda1 = class lambda {
     }
   } 
   static pp(t7) {
-    let stackDelayRes, Cont$func$pp$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4521_4538$1;
-    Cont$func$pp$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4521_4538$1 = function Cont$func$pp$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4521_4538$(pc1, next1) { return new Cont$func$pp$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4521_4538$.class(pc1, next1); };
-    Cont$func$pp$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4521_4538$1.class = class Cont$func$pp$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4521_4538$ extends runtime.Cont.class {
+    let stackDelayRes, Cont$func$pp$lambda$_mls_L0_4575_4592$1;
+    Cont$func$pp$lambda$_mls_L0_4575_4592$1 = function Cont$func$pp$lambda$_mls_L0_4575_4592$(pc1, next1) { return new Cont$func$pp$lambda$_mls_L0_4575_4592$.class(pc1, next1); };
+    Cont$func$pp$lambda$_mls_L0_4575_4592$1.class = class Cont$func$pp$lambda$_mls_L0_4575_4592$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp1;
         tmp1 = super(next, false);
@@ -9565,11 +9408,11 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$pp$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4521_4538$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$pp$lambda$_mls_L0_4575_4592$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$pp$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4521_4538$1.class(153, null);
+      stackDelayRes.tail.next = new Cont$func$pp$lambda$_mls_L0_4575_4592$1.class(153, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -9577,9 +9420,9 @@ lambda1 = class lambda {
     return lambda.ppn(0, t7)
   } 
   static ppenv(env3) {
-    let tmp1, tmp2, tmp3, tmp4, tmp5, curDepth, stackDelayRes, Cont$func$ppenv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4544_4724$1;
-    Cont$func$ppenv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4544_4724$1 = function Cont$func$ppenv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4544_4724$(pc1, next1) { return new Cont$func$ppenv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4544_4724$.class(pc1, next1); };
-    Cont$func$ppenv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4544_4724$1.class = class Cont$func$ppenv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4544_4724$ extends runtime.Cont.class {
+    let tmp1, tmp2, tmp3, tmp4, tmp5, curDepth, stackDelayRes, Cont$func$ppenv$lambda$_mls_L0_4598_4778$1;
+    Cont$func$ppenv$lambda$_mls_L0_4598_4778$1 = function Cont$func$ppenv$lambda$_mls_L0_4598_4778$(pc1, next1) { return new Cont$func$ppenv$lambda$_mls_L0_4598_4778$.class(pc1, next1); };
+    Cont$func$ppenv$lambda$_mls_L0_4598_4778$1.class = class Cont$func$ppenv$lambda$_mls_L0_4598_4778$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp6;
         tmp6 = super(next, false);
@@ -9611,9 +9454,9 @@ lambda1 = class lambda {
           } else if (this.pc === 155) {
             tmp1 = runtime.resetDepth(tmp1, curDepth);
             tmp2 = (caseScrut) => {
-              let first1, first0, v2, t8, tmp6, tmp7, tmp8, tmp9, tmp10, curDepth1, tmp11, stackDelayRes1, Cont$lambda$9;
-              Cont$lambda$9 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-              Cont$lambda$9.class = class Cont$lambda$16 extends runtime.Cont.class {
+              let first1, first0, v2, t8, tmp6, tmp7, tmp8, tmp9, tmp10, curDepth1, tmp11, stackDelayRes1, Cont$lambda$10;
+              Cont$lambda$10 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
+              Cont$lambda$10.class = class Cont$lambda$17 extends runtime.Cont.class {
                 constructor(pc1, next1) {
                   let tmp12;
                   tmp12 = super(next1, false);
@@ -9722,7 +9565,7 @@ lambda1 = class lambda {
               curDepth1 = runtime.stackDepth;
               stackDelayRes1 = runtime.checkDepth();
               if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-                stackDelayRes1.tail.next = new Cont$lambda$9.class(156, null);
+                stackDelayRes1.tail.next = new Cont$lambda$10.class(156, null);
                 stackDelayRes1.tail = stackDelayRes1.tail.next;
                 return stackDelayRes1
               }
@@ -9734,7 +9577,7 @@ lambda1 = class lambda {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 tmp6 = NofibPrelude.nofibStringToList("=");
                 if (tmp6 instanceof runtime.EffectSig.class) {
-                  tmp6.tail.next = new Cont$lambda$9.class(157, null);
+                  tmp6.tail.next = new Cont$lambda$10.class(157, null);
                   tmp6.tail = tmp6.tail.next;
                   return tmp6
                 }
@@ -9742,7 +9585,7 @@ lambda1 = class lambda {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 tmp7 = lambda.pp(t8);
                 if (tmp7 instanceof runtime.EffectSig.class) {
-                  tmp7.tail.next = new Cont$lambda$9.class(158, null);
+                  tmp7.tail.next = new Cont$lambda$10.class(158, null);
                   tmp7.tail = tmp7.tail.next;
                   return tmp7
                 }
@@ -9750,7 +9593,7 @@ lambda1 = class lambda {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 tmp8 = NofibPrelude.nofibStringToList(", ");
                 if (tmp8 instanceof runtime.EffectSig.class) {
-                  tmp8.tail.next = new Cont$lambda$9.class(159, null);
+                  tmp8.tail.next = new Cont$lambda$10.class(159, null);
                   tmp8.tail = tmp8.tail.next;
                   return tmp8
                 }
@@ -9758,7 +9601,7 @@ lambda1 = class lambda {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 tmp9 = NofibPrelude.append(tmp7, tmp8);
                 if (tmp9 instanceof runtime.EffectSig.class) {
-                  tmp9.tail.next = new Cont$lambda$9.class(160, null);
+                  tmp9.tail.next = new Cont$lambda$10.class(160, null);
                   tmp9.tail = tmp9.tail.next;
                   return tmp9
                 }
@@ -9766,7 +9609,7 @@ lambda1 = class lambda {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 tmp10 = NofibPrelude.append(tmp6, tmp9);
                 if (tmp10 instanceof runtime.EffectSig.class) {
-                  tmp10.tail.next = new Cont$lambda$9.class(161, null);
+                  tmp10.tail.next = new Cont$lambda$10.class(161, null);
                   tmp10.tail = tmp10.tail.next;
                   return tmp10
                 }
@@ -9777,7 +9620,7 @@ lambda1 = class lambda {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 tmp11 = new globalThis.Error("match error");
                 if (tmp11 instanceof runtime.EffectSig.class) {
-                  tmp11.tail.next = new Cont$lambda$9.class(162, null);
+                  tmp11.tail.next = new Cont$lambda$10.class(162, null);
                   tmp11.tail = tmp11.tail.next;
                   return tmp11
                 }
@@ -9822,27 +9665,27 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$ppenv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4544_4724$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$ppenv$lambda$_mls_L0_4598_4778$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$ppenv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4544_4724$1.class(154, null);
+      stackDelayRes.tail.next = new Cont$func$ppenv$lambda$_mls_L0_4598_4778$1.class(154, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp1 = NofibPrelude.nofibStringToList("[");
     if (tmp1 instanceof runtime.EffectSig.class) {
-      tmp1.tail.next = new Cont$func$ppenv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4544_4724$1.class(155, null);
+      tmp1.tail.next = new Cont$func$ppenv$lambda$_mls_L0_4598_4778$1.class(155, null);
       tmp1.tail = tmp1.tail.next;
       return tmp1
     }
     tmp1 = runtime.resetDepth(tmp1, curDepth);
     tmp2 = (caseScrut) => {
-      let first1, first0, v2, t8, tmp6, tmp7, tmp8, tmp9, tmp10, curDepth1, tmp11, stackDelayRes1, Cont$lambda$9;
-      Cont$lambda$9 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-      Cont$lambda$9.class = class Cont$lambda$16 extends runtime.Cont.class {
+      let first1, first0, v2, t8, tmp6, tmp7, tmp8, tmp9, tmp10, curDepth1, tmp11, stackDelayRes1, Cont$lambda$10;
+      Cont$lambda$10 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
+      Cont$lambda$10.class = class Cont$lambda$17 extends runtime.Cont.class {
         constructor(pc, next) {
           let tmp12;
           tmp12 = super(next, false);
@@ -9951,7 +9794,7 @@ lambda1 = class lambda {
       curDepth1 = runtime.stackDepth;
       stackDelayRes1 = runtime.checkDepth();
       if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-        stackDelayRes1.tail.next = new Cont$lambda$9.class(156, null);
+        stackDelayRes1.tail.next = new Cont$lambda$10.class(156, null);
         stackDelayRes1.tail = stackDelayRes1.tail.next;
         return stackDelayRes1
       }
@@ -9963,7 +9806,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp6 = NofibPrelude.nofibStringToList("=");
         if (tmp6 instanceof runtime.EffectSig.class) {
-          tmp6.tail.next = new Cont$lambda$9.class(157, null);
+          tmp6.tail.next = new Cont$lambda$10.class(157, null);
           tmp6.tail = tmp6.tail.next;
           return tmp6
         }
@@ -9971,7 +9814,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp7 = lambda.pp(t8);
         if (tmp7 instanceof runtime.EffectSig.class) {
-          tmp7.tail.next = new Cont$lambda$9.class(158, null);
+          tmp7.tail.next = new Cont$lambda$10.class(158, null);
           tmp7.tail = tmp7.tail.next;
           return tmp7
         }
@@ -9979,7 +9822,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp8 = NofibPrelude.nofibStringToList(", ");
         if (tmp8 instanceof runtime.EffectSig.class) {
-          tmp8.tail.next = new Cont$lambda$9.class(159, null);
+          tmp8.tail.next = new Cont$lambda$10.class(159, null);
           tmp8.tail = tmp8.tail.next;
           return tmp8
         }
@@ -9987,7 +9830,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp9 = NofibPrelude.append(tmp7, tmp8);
         if (tmp9 instanceof runtime.EffectSig.class) {
-          tmp9.tail.next = new Cont$lambda$9.class(160, null);
+          tmp9.tail.next = new Cont$lambda$10.class(160, null);
           tmp9.tail = tmp9.tail.next;
           return tmp9
         }
@@ -9995,7 +9838,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp10 = NofibPrelude.append(tmp6, tmp9);
         if (tmp10 instanceof runtime.EffectSig.class) {
-          tmp10.tail.next = new Cont$lambda$9.class(161, null);
+          tmp10.tail.next = new Cont$lambda$10.class(161, null);
           tmp10.tail = tmp10.tail.next;
           return tmp10
         }
@@ -10006,7 +9849,7 @@ lambda1 = class lambda {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp11 = new globalThis.Error("match error");
         if (tmp11 instanceof runtime.EffectSig.class) {
-          tmp11.tail.next = new Cont$lambda$9.class(162, null);
+          tmp11.tail.next = new Cont$lambda$10.class(162, null);
           tmp11.tail = tmp11.tail.next;
           return tmp11
         }
@@ -10017,7 +9860,7 @@ lambda1 = class lambda {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp3 = NofibPrelude.flatMap(tmp2, env3);
     if (tmp3 instanceof runtime.EffectSig.class) {
-      tmp3.tail.next = new Cont$func$ppenv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4544_4724$1.class(164, null);
+      tmp3.tail.next = new Cont$func$ppenv$lambda$_mls_L0_4598_4778$1.class(164, null);
       tmp3.tail = tmp3.tail.next;
       return tmp3
     }
@@ -10025,7 +9868,7 @@ lambda1 = class lambda {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp4 = NofibPrelude.nofibStringToList("]");
     if (tmp4 instanceof runtime.EffectSig.class) {
-      tmp4.tail.next = new Cont$func$ppenv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4544_4724$1.class(165, null);
+      tmp4.tail.next = new Cont$func$ppenv$lambda$_mls_L0_4598_4778$1.class(165, null);
       tmp4.tail = tmp4.tail.next;
       return tmp4
     }
@@ -10033,7 +9876,7 @@ lambda1 = class lambda {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp5 = NofibPrelude.append(tmp3, tmp4);
     if (tmp5 instanceof runtime.EffectSig.class) {
-      tmp5.tail.next = new Cont$func$ppenv$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_4544_4724$1.class(166, null);
+      tmp5.tail.next = new Cont$func$ppenv$lambda$_mls_L0_4598_4778$1.class(166, null);
       tmp5.tail = tmp5.tail.next;
       return tmp5
     }
@@ -10042,9 +9885,9 @@ lambda1 = class lambda {
     return NofibPrelude.append(tmp1, tmp5)
   } 
   static showTerm(t8) {
-    let param0, a5, tmp1, tmp2, tmp3, curDepth, tmp4, stackDelayRes, Cont$func$showTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5886_5982$1;
-    Cont$func$showTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5886_5982$1 = function Cont$func$showTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5886_5982$(pc1, next1) { return new Cont$func$showTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5886_5982$.class(pc1, next1); };
-    Cont$func$showTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5886_5982$1.class = class Cont$func$showTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5886_5982$ extends runtime.Cont.class {
+    let param0, a5, tmp1, tmp2, tmp3, curDepth, tmp4, stackDelayRes, Cont$func$showTerm$lambda$_mls_L0_5940_6036$1;
+    Cont$func$showTerm$lambda$_mls_L0_5940_6036$1 = function Cont$func$showTerm$lambda$_mls_L0_5940_6036$(pc1, next1) { return new Cont$func$showTerm$lambda$_mls_L0_5940_6036$.class(pc1, next1); };
+    Cont$func$showTerm$lambda$_mls_L0_5940_6036$1.class = class Cont$func$showTerm$lambda$_mls_L0_5940_6036$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp5;
         tmp5 = super(next, false);
@@ -10122,12 +9965,12 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$showTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5886_5982$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$showTerm$lambda$_mls_L0_5940_6036$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$showTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5886_5982$1.class(167, null);
+      stackDelayRes.tail.next = new Cont$func$showTerm$lambda$_mls_L0_5940_6036$1.class(167, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
@@ -10137,7 +9980,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp1 = NofibPrelude.nofibStringToList("Con ");
       if (tmp1 instanceof runtime.EffectSig.class) {
-        tmp1.tail.next = new Cont$func$showTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5886_5982$1.class(168, null);
+        tmp1.tail.next = new Cont$func$showTerm$lambda$_mls_L0_5940_6036$1.class(168, null);
         tmp1.tail = tmp1.tail.next;
         return tmp1
       }
@@ -10145,7 +9988,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp2 = NofibPrelude.stringOfInt(a5);
       if (tmp2 instanceof runtime.EffectSig.class) {
-        tmp2.tail.next = new Cont$func$showTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5886_5982$1.class(169, null);
+        tmp2.tail.next = new Cont$func$showTerm$lambda$_mls_L0_5940_6036$1.class(169, null);
         tmp2.tail = tmp2.tail.next;
         return tmp2
       }
@@ -10153,7 +9996,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp3 = NofibPrelude.nofibStringToList(tmp2);
       if (tmp3 instanceof runtime.EffectSig.class) {
-        tmp3.tail.next = new Cont$func$showTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5886_5982$1.class(170, null);
+        tmp3.tail.next = new Cont$func$showTerm$lambda$_mls_L0_5940_6036$1.class(170, null);
         tmp3.tail = tmp3.tail.next;
         return tmp3
       }
@@ -10164,7 +10007,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp4 = new globalThis.Error("match error");
       if (tmp4 instanceof runtime.EffectSig.class) {
-        tmp4.tail.next = new Cont$func$showTerm$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5886_5982$1.class(171, null);
+        tmp4.tail.next = new Cont$func$showTerm$lambda$_mls_L0_5940_6036$1.class(171, null);
         tmp4.tail = tmp4.tail.next;
         return tmp4
       }
@@ -10173,9 +10016,9 @@ lambda1 = class lambda {
     }
   } 
   static ev(t9) {
-    let envt2, first1, first0, env4, t21, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, curDepth, tmp7, stackDelayRes, Cont$func$ev$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5988_6119$1;
-    Cont$func$ev$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5988_6119$1 = function Cont$func$ev$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5988_6119$(pc1, next1) { return new Cont$func$ev$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5988_6119$.class(pc1, next1); };
-    Cont$func$ev$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5988_6119$1.class = class Cont$func$ev$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5988_6119$ extends runtime.Cont.class {
+    let envt2, first1, first0, env4, t21, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, curDepth, tmp7, stackDelayRes, Cont$func$ev$lambda$_mls_L0_6042_6173$1;
+    Cont$func$ev$lambda$_mls_L0_6042_6173$1 = function Cont$func$ev$lambda$_mls_L0_6042_6173$(pc1, next1) { return new Cont$func$ev$lambda$_mls_L0_6042_6173$.class(pc1, next1); };
+    Cont$func$ev$lambda$_mls_L0_6042_6173$1.class = class Cont$func$ev$lambda$_mls_L0_6042_6173$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp8;
         tmp8 = super(next, false);
@@ -10292,19 +10135,19 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$ev$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5988_6119$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$ev$lambda$_mls_L0_6042_6173$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$ev$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5988_6119$1.class(173, null);
+      stackDelayRes.tail.next = new Cont$func$ev$lambda$_mls_L0_6042_6173$1.class(173, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp1 = lambda.traverseTerm(t9);
     if (tmp1 instanceof runtime.EffectSig.class) {
-      tmp1.tail.next = new Cont$func$ev$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5988_6119$1.class(174, null);
+      tmp1.tail.next = new Cont$func$ev$lambda$_mls_L0_6042_6173$1.class(174, null);
       tmp1.tail = tmp1.tail.next;
       return tmp1
     }
@@ -10312,7 +10155,7 @@ lambda1 = class lambda {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp2 = lambda.myRunState(tmp1, NofibPrelude.Nil);
     if (tmp2 instanceof runtime.EffectSig.class) {
-      tmp2.tail.next = new Cont$func$ev$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5988_6119$1.class(175, null);
+      tmp2.tail.next = new Cont$func$ev$lambda$_mls_L0_6042_6173$1.class(175, null);
       tmp2.tail = tmp2.tail.next;
       return tmp2
     }
@@ -10326,7 +10169,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp3 = lambda.pp(t21);
       if (tmp3 instanceof runtime.EffectSig.class) {
-        tmp3.tail.next = new Cont$func$ev$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5988_6119$1.class(176, null);
+        tmp3.tail.next = new Cont$func$ev$lambda$_mls_L0_6042_6173$1.class(176, null);
         tmp3.tail = tmp3.tail.next;
         return tmp3
       }
@@ -10334,7 +10177,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp4 = NofibPrelude.nofibStringToList("  ");
       if (tmp4 instanceof runtime.EffectSig.class) {
-        tmp4.tail.next = new Cont$func$ev$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5988_6119$1.class(177, null);
+        tmp4.tail.next = new Cont$func$ev$lambda$_mls_L0_6042_6173$1.class(177, null);
         tmp4.tail = tmp4.tail.next;
         return tmp4
       }
@@ -10342,7 +10185,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp5 = lambda.ppenv(env4);
       if (tmp5 instanceof runtime.EffectSig.class) {
-        tmp5.tail.next = new Cont$func$ev$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5988_6119$1.class(178, null);
+        tmp5.tail.next = new Cont$func$ev$lambda$_mls_L0_6042_6173$1.class(178, null);
         tmp5.tail = tmp5.tail.next;
         return tmp5
       }
@@ -10350,7 +10193,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp6 = NofibPrelude.append(tmp4, tmp5);
       if (tmp6 instanceof runtime.EffectSig.class) {
-        tmp6.tail.next = new Cont$func$ev$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5988_6119$1.class(179, null);
+        tmp6.tail.next = new Cont$func$ev$lambda$_mls_L0_6042_6173$1.class(179, null);
         tmp6.tail = tmp6.tail.next;
         return tmp6
       }
@@ -10361,7 +10204,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp7 = new globalThis.Error("match error");
       if (tmp7 instanceof runtime.EffectSig.class) {
-        tmp7.tail.next = new Cont$func$ev$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_5988_6119$1.class(180, null);
+        tmp7.tail.next = new Cont$func$ev$lambda$_mls_L0_6042_6173$1.class(180, null);
         tmp7.tail = tmp7.tail.next;
         return tmp7
       }
@@ -10370,9 +10213,9 @@ lambda1 = class lambda {
     }
   } 
   static mainSimple(args) {
-    let scrut, tmp1, tmp2, tmp3, tmp4, curDepth, tmp5, stackDelayRes, Cont$func$mainSimple$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6125_6269$1;
-    Cont$func$mainSimple$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6125_6269$1 = function Cont$func$mainSimple$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6125_6269$(pc1, next1) { return new Cont$func$mainSimple$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6125_6269$.class(pc1, next1); };
-    Cont$func$mainSimple$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6125_6269$1.class = class Cont$func$mainSimple$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6125_6269$ extends runtime.Cont.class {
+    let scrut, tmp1, tmp2, tmp3, tmp4, curDepth, tmp5, stackDelayRes, Cont$func$mainSimple$lambda$_mls_L0_6179_6323$1;
+    Cont$func$mainSimple$lambda$_mls_L0_6179_6323$1 = function Cont$func$mainSimple$lambda$_mls_L0_6179_6323$(pc1, next1) { return new Cont$func$mainSimple$lambda$_mls_L0_6179_6323$.class(pc1, next1); };
+    Cont$func$mainSimple$lambda$_mls_L0_6179_6323$1.class = class Cont$func$mainSimple$lambda$_mls_L0_6179_6323$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp6;
         tmp6 = super(next, false);
@@ -10472,19 +10315,19 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$mainSimple$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6125_6269$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$mainSimple$lambda$_mls_L0_6179_6323$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$mainSimple$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6125_6269$1.class(182, null);
+      stackDelayRes.tail.next = new Cont$func$mainSimple$lambda$_mls_L0_6179_6323$1.class(182, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
     runtime.stackDepth = runtime.stackDepth + 1;
     scrut = NofibPrelude.null_(args);
     if (scrut instanceof runtime.EffectSig.class) {
-      scrut.tail.next = new Cont$func$mainSimple$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6125_6269$1.class(183, null);
+      scrut.tail.next = new Cont$func$mainSimple$lambda$_mls_L0_6179_6323$1.class(183, null);
       scrut.tail = scrut.tail.next;
       return scrut
     }
@@ -10493,7 +10336,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp5 = globalThis.Error("Args: number-to-sum-up-to");
       if (tmp5 instanceof runtime.EffectSig.class) {
-        tmp5.tail.next = new Cont$func$mainSimple$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6125_6269$1.class(184, null);
+        tmp5.tail.next = new Cont$func$mainSimple$lambda$_mls_L0_6179_6323$1.class(184, null);
         tmp5.tail = tmp5.tail.next;
         return tmp5
       }
@@ -10503,7 +10346,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp1 = NofibPrelude.head(args);
       if (tmp1 instanceof runtime.EffectSig.class) {
-        tmp1.tail.next = new Cont$func$mainSimple$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6125_6269$1.class(185, null);
+        tmp1.tail.next = new Cont$func$mainSimple$lambda$_mls_L0_6179_6323$1.class(185, null);
         tmp1.tail = tmp1.tail.next;
         return tmp1
       }
@@ -10511,7 +10354,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp2 = lambda.Con(tmp1);
       if (tmp2 instanceof runtime.EffectSig.class) {
-        tmp2.tail.next = new Cont$func$mainSimple$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6125_6269$1.class(186, null);
+        tmp2.tail.next = new Cont$func$mainSimple$lambda$_mls_L0_6179_6323$1.class(186, null);
         tmp2.tail = tmp2.tail.next;
         return tmp2
       }
@@ -10519,7 +10362,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp3 = lambda.App(lambda.#sum0, tmp2);
       if (tmp3 instanceof runtime.EffectSig.class) {
-        tmp3.tail.next = new Cont$func$mainSimple$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6125_6269$1.class(187, null);
+        tmp3.tail.next = new Cont$func$mainSimple$lambda$_mls_L0_6179_6323$1.class(187, null);
         tmp3.tail = tmp3.tail.next;
         return tmp3
       }
@@ -10527,7 +10370,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp4 = lambda.simpleEval(NofibPrelude.Nil, tmp3);
       if (tmp4 instanceof runtime.EffectSig.class) {
-        tmp4.tail.next = new Cont$func$mainSimple$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6125_6269$1.class(188, null);
+        tmp4.tail.next = new Cont$func$mainSimple$lambda$_mls_L0_6179_6323$1.class(188, null);
         tmp4.tail = tmp4.tail.next;
         return tmp4
       }
@@ -10537,9 +10380,9 @@ lambda1 = class lambda {
     }
   } 
   static mainMonad(args1) {
-    let scrut, tmp1, tmp2, tmp3, curDepth, tmp4, stackDelayRes, Cont$func$mainMonad$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6275_6395$1;
-    Cont$func$mainMonad$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6275_6395$1 = function Cont$func$mainMonad$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6275_6395$(pc1, next1) { return new Cont$func$mainMonad$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6275_6395$.class(pc1, next1); };
-    Cont$func$mainMonad$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6275_6395$1.class = class Cont$func$mainMonad$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6275_6395$ extends runtime.Cont.class {
+    let scrut, tmp1, tmp2, tmp3, curDepth, tmp4, stackDelayRes, Cont$func$mainMonad$lambda$_mls_L0_6329_6449$1;
+    Cont$func$mainMonad$lambda$_mls_L0_6329_6449$1 = function Cont$func$mainMonad$lambda$_mls_L0_6329_6449$(pc1, next1) { return new Cont$func$mainMonad$lambda$_mls_L0_6329_6449$.class(pc1, next1); };
+    Cont$func$mainMonad$lambda$_mls_L0_6329_6449$1.class = class Cont$func$mainMonad$lambda$_mls_L0_6329_6449$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp5;
         tmp5 = super(next, false);
@@ -10627,19 +10470,19 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$mainMonad$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6275_6395$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$mainMonad$lambda$_mls_L0_6329_6449$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$mainMonad$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6275_6395$1.class(190, null);
+      stackDelayRes.tail.next = new Cont$func$mainMonad$lambda$_mls_L0_6329_6449$1.class(190, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
     runtime.stackDepth = runtime.stackDepth + 1;
     scrut = NofibPrelude.null_(args1);
     if (scrut instanceof runtime.EffectSig.class) {
-      scrut.tail.next = new Cont$func$mainMonad$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6275_6395$1.class(191, null);
+      scrut.tail.next = new Cont$func$mainMonad$lambda$_mls_L0_6329_6449$1.class(191, null);
       scrut.tail = scrut.tail.next;
       return scrut
     }
@@ -10648,7 +10491,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp4 = globalThis.Error("Args: number-to-sum-up-to");
       if (tmp4 instanceof runtime.EffectSig.class) {
-        tmp4.tail.next = new Cont$func$mainMonad$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6275_6395$1.class(192, null);
+        tmp4.tail.next = new Cont$func$mainMonad$lambda$_mls_L0_6329_6449$1.class(192, null);
         tmp4.tail = tmp4.tail.next;
         return tmp4
       }
@@ -10658,7 +10501,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp1 = NofibPrelude.head(args1);
       if (tmp1 instanceof runtime.EffectSig.class) {
-        tmp1.tail.next = new Cont$func$mainMonad$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6275_6395$1.class(193, null);
+        tmp1.tail.next = new Cont$func$mainMonad$lambda$_mls_L0_6329_6449$1.class(193, null);
         tmp1.tail = tmp1.tail.next;
         return tmp1
       }
@@ -10666,7 +10509,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp2 = lambda.Con(tmp1);
       if (tmp2 instanceof runtime.EffectSig.class) {
-        tmp2.tail.next = new Cont$func$mainMonad$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6275_6395$1.class(194, null);
+        tmp2.tail.next = new Cont$func$mainMonad$lambda$_mls_L0_6329_6449$1.class(194, null);
         tmp2.tail = tmp2.tail.next;
         return tmp2
       }
@@ -10674,7 +10517,7 @@ lambda1 = class lambda {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp3 = lambda.App(lambda.#sum0, tmp2);
       if (tmp3 instanceof runtime.EffectSig.class) {
-        tmp3.tail.next = new Cont$func$mainMonad$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6275_6395$1.class(195, null);
+        tmp3.tail.next = new Cont$func$mainMonad$lambda$_mls_L0_6329_6449$1.class(195, null);
         tmp3.tail = tmp3.tail.next;
         return tmp3
       }
@@ -10684,9 +10527,9 @@ lambda1 = class lambda {
     }
   } 
   static testLambda_nofib(n1) {
-    let tmp1, tmp2, tmp3, tmp4, curDepth, stackDelayRes, Cont$func$testLambda_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6401_6466$1;
-    Cont$func$testLambda_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6401_6466$1 = function Cont$func$testLambda_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6401_6466$(pc1, next1) { return new Cont$func$testLambda_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6401_6466$.class(pc1, next1); };
-    Cont$func$testLambda_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6401_6466$1.class = class Cont$func$testLambda_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6401_6466$ extends runtime.Cont.class {
+    let tmp1, tmp2, tmp3, tmp4, curDepth, stackDelayRes, Cont$func$testLambda_nofib$lambda$_mls_L0_6455_6520$1;
+    Cont$func$testLambda_nofib$lambda$_mls_L0_6455_6520$1 = function Cont$func$testLambda_nofib$lambda$_mls_L0_6455_6520$(pc1, next1) { return new Cont$func$testLambda_nofib$lambda$_mls_L0_6455_6520$.class(pc1, next1); };
+    Cont$func$testLambda_nofib$lambda$_mls_L0_6455_6520$1.class = class Cont$func$testLambda_nofib$lambda$_mls_L0_6455_6520$ extends runtime.Cont.class {
       constructor(pc, next) {
         let tmp5;
         tmp5 = super(next, false);
@@ -10756,19 +10599,19 @@ lambda1 = class lambda {
           break;
         }
       }
-      toString() { return "Cont$func$testLambda_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6401_6466$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
+      toString() { return "Cont$func$testLambda_nofib$lambda$_mls_L0_6455_6520$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
     };
     curDepth = runtime.stackDepth;
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$func$testLambda_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6401_6466$1.class(197, null);
+      stackDelayRes.tail.next = new Cont$func$testLambda_nofib$lambda$_mls_L0_6455_6520$1.class(197, null);
       stackDelayRes.tail = stackDelayRes.tail.next;
       return stackDelayRes
     }
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp1 = NofibPrelude.Cons(n1, NofibPrelude.Nil);
     if (tmp1 instanceof runtime.EffectSig.class) {
-      tmp1.tail.next = new Cont$func$testLambda_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6401_6466$1.class(198, null);
+      tmp1.tail.next = new Cont$func$testLambda_nofib$lambda$_mls_L0_6455_6520$1.class(198, null);
       tmp1.tail = tmp1.tail.next;
       return tmp1
     }
@@ -10776,7 +10619,7 @@ lambda1 = class lambda {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp2 = lambda.mainSimple(tmp1);
     if (tmp2 instanceof runtime.EffectSig.class) {
-      tmp2.tail.next = new Cont$func$testLambda_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6401_6466$1.class(199, null);
+      tmp2.tail.next = new Cont$func$testLambda_nofib$lambda$_mls_L0_6455_6520$1.class(199, null);
       tmp2.tail = tmp2.tail.next;
       return tmp2
     }
@@ -10784,7 +10627,7 @@ lambda1 = class lambda {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp3 = NofibPrelude.Cons(n1, NofibPrelude.Nil);
     if (tmp3 instanceof runtime.EffectSig.class) {
-      tmp3.tail.next = new Cont$func$testLambda_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6401_6466$1.class(200, null);
+      tmp3.tail.next = new Cont$func$testLambda_nofib$lambda$_mls_L0_6455_6520$1.class(200, null);
       tmp3.tail = tmp3.tail.next;
       return tmp3
     }
@@ -10792,7 +10635,7 @@ lambda1 = class lambda {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp4 = lambda.mainMonad(tmp3);
     if (tmp4 instanceof runtime.EffectSig.class) {
-      tmp4.tail.next = new Cont$func$testLambda_nofib$$_home$_attempt0$_mlscript$_benchmark$_benchmark$_src$_nofib$_lambda$_mls_L0_6401_6466$1.class(201, null);
+      tmp4.tail.next = new Cont$func$testLambda_nofib$lambda$_mls_L0_6455_6520$1.class(201, null);
       tmp4.tail = tmp4.tail.next;
       return tmp4
     }

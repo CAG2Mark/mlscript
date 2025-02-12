@@ -17,12 +17,14 @@ object Benchmark {
     rtCompiler.compileModule(compileTestDir/"Predef.mls")
     val compiler = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(S(StackSafety.default)))))
     compiler.compileModule(nofibPath/"NofibPrelude.mls")
+    compiler.compileModule(nofibPath/"BenchmarkPrelude.mls")
 
   def main(args: Array[String]) =
 
     println("Precompiling modules")
     precompileModules
-    lazy val nofibFiles = os.list(os.pwd/"benchmark"/"src"/"nofib").filter(_.ext == "mls").filterNot(_.baseName == "NofibPrelude").filterNot(_.baseName == "cryptarithm1")
+    val blacklist = "NofibPrelude" :: "BenchmarkPrelude" :: "cryptarithm1" :: Nil
+    lazy val nofibFiles = os.list(os.pwd/"benchmark"/"src"/"nofib").filter(_.ext == "mls").filterNot(p => blacklist.exists(_ == p.baseName))
     // val nofibFiles = List(nofibPath/"gcd.mls", nofibPath/"lambda.mls", nofibPath/"cryptarithm1.mls") // JS OOM
     // val nofibFiles = List(nofibPath/"treejoin.mls")
 

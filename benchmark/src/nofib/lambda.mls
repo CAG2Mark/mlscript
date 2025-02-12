@@ -1,5 +1,7 @@
 import "./NofibPrelude.mls"
+import "./BenchmarkPrelude.mls"
 open NofibPrelude
+open BenchmarkPrelude
 
 module lambda with ...
 
@@ -182,5 +184,7 @@ fun mainMonad(args) =
 
 fun testLambda_nofib(n) = [mainSimple(n :: Nil), mainMonad(n :: Nil)]
 
-print(testLambda_nofib(80).toString())
+// print(testLambda_nofib(80).toString())
 //│ = "[\"C\",\"o\",\"n\",\" \",\"3\",\"2\",\"4\",\"0\"],[\"3\",\"2\",\"4\",\"0\",\" \",\" \",\"[\",\"]\"]"
+
+benchmark(() => testLambda_nofib(80).toString())
