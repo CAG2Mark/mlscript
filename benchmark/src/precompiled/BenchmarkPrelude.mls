@@ -1,0 +1,23 @@
+import "../../../hkmc2/shared/src/test/mlscript-compile/Runtime.mls"
+import "../../../hkmc2/shared/src/test/mlscript-compile/Predef.mls"
+import "./NofibPrelude.mls"
+import "benchmark"
+open Predef
+open NofibPrelude
+
+let b = benchmark
+
+module BenchmarkPrelude with ...
+
+fun print(s) = Predef.print(s)
+
+fun benchmark(fn) =
+  // print(helper(fn))
+  print("benchmarking...")
+  let suite = new b.Suite()
+  suite.add("main", fn)
+  let settings = {}
+  set settings.async = false
+  suite.on("cycle", (event) => print(String(event.target))).run(settings)
+
+set globalThis.Predef = Predef
