@@ -54,8 +54,10 @@ object Benchmark {
 
     println("Precompiling modules")
     precompileModules
-    val blacklist = "gcd" :: "cryptarithm1" :: Nil
+    val blacklist = "cryptarithm1" :: Nil
+    // val blacklist = Nil
     lazy val nofibFiles = os.list(os.pwd/"benchmark"/"src"/"nofib").filter(_.ext == "mls").filterNot(p => blacklist.exists(_ == p.baseName))
+    // lazy val nofibFiles = List(os.pwd/"benchmark"/"src"/"nofib"/"test.mls")
 
     nofibFiles.foreach: path =>
       def run(compiler: MLsCompiler) =

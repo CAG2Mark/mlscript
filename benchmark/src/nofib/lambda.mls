@@ -3,8 +3,6 @@ import "../precompiled/BenchmarkPrelude.mls"
 open NofibPrelude
 open BenchmarkPrelude
 
-module lambda with ...
-
 
 fun lookup(k, t) = if t is
   Nil then None
@@ -70,7 +68,7 @@ fun withEnv(tmp, m) = myReturn(myEvalState(m, tmp))
 
 fun pushVar(v, t, m) = myBind(myGet, env => withEnv([v, t] :: env, m))
 
-fun traverseTerm(t) = eval(t)
+fun traverseTerm(t) = eval_nofib(t)
 
 fun traverseCon(t) =
   myBind(
@@ -84,7 +82,7 @@ fun apply(t, a) = if t is Thunk(Lam(x, b), e) then
     orig => withEnv(e, pushVar(x, Thunk(a, orig), traverseTerm(b)))
   )
 
-fun eval(ter) = if ter is
+fun eval_nofib(ter) = if ter is
   Var(x) then
     myBind of
       myGet
