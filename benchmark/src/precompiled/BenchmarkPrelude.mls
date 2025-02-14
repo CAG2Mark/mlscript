@@ -11,13 +11,19 @@ module BenchmarkPrelude with ...
 
 fun print(s) = Predef.print(s)
 
+fun helper(f) = js.try_catch(() => f(), (e) => print("Error: " + e))
+
 fun benchmark(fn) =
   // print(helper(fn))
-  print("benchmarking...")
-  let suite = new b.Suite()
-  suite.add("main", fn)
-  let settings = {}
-  set settings.async = false
-  suite.on("cycle", (event) => print(String(event.target))).run(settings)
+  // print("benchmarking...")
+  // let suite = new b.Suite()
+  // suite.add("main", fn)
+  // let settings = {}
+  // set settings.async = false
+  // suite.on("cycle", (event) => print(String(event.target))).run(settings)
+  let start = globalThis.Date.now()
+  let res = helper(fn)
+  let end = globalThis.Date.now()
+  print("Time: " + (end - start) + "ms")
 
 set globalThis.Predef = Predef

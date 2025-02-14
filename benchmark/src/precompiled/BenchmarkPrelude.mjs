@@ -13,20 +13,30 @@ BenchmarkPrelude1 = class BenchmarkPrelude {
   static print(s) {
     return Predef.print(s)
   } 
-  static benchmark(fn) {
-    let suite, settings, tmp, tmp1, tmp2, tmp3;
-    tmp = BenchmarkPrelude.print("benchmarking...");
-    tmp1 = new b.Suite();
-    suite = tmp1;
-    tmp2 = suite.add("main", fn);
-    settings = runtime.Unit;
-    settings.async = false;
-    tmp3 = suite.on("cycle", (event) => {
-      let tmp4;
-      tmp4 = globalThis.String(event.target);
-      return BenchmarkPrelude.print(tmp4)
+  static helper(f) {
+    let lambda, lambda1;
+    lambda = (undefined, function () {
+      return runtime.safeCall(f())
     });
-    return runtime.safeCall(tmp3.run(settings))
+    lambda1 = (undefined, function (e) {
+      let tmp;
+      tmp = "Error: " + e;
+      return BenchmarkPrelude.print(tmp)
+    });
+    return runtime.try_catch(lambda, lambda1)
+  } 
+  static benchmark(fn) {
+    let start, res, end, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
+    tmp = runtime.safeCall(globalThis.Date.now());
+    start = tmp;
+    tmp1 = BenchmarkPrelude.helper(fn);
+    res = tmp1;
+    tmp2 = runtime.safeCall(globalThis.Date.now());
+    end = tmp2;
+    tmp3 = end - start;
+    tmp4 = "Time: " + tmp3;
+    tmp5 = tmp4 + "ms";
+    return BenchmarkPrelude.print(tmp5)
   }
   static toString() { return "BenchmarkPrelude"; }
 };

@@ -7,7 +7,9 @@ NofibPrelude1 = class NofibPrelude {
       constructor() {}
       toString() { return "Option"; }
     };
-    this.Some = function Some(x1) { return new Some.class(x1); };
+    this.Some = function Some(x1) {
+      return new Some.class(x1);
+    };
     this.Some.class = class Some extends NofibPrelude.Option {
       constructor(x) {
         super();
@@ -23,7 +25,9 @@ NofibPrelude1 = class NofibPrelude {
     };
     this.None = new None$class;
     this.None.class = None$class;
-    this.Lazy = function Lazy(init1) { return new Lazy.class(init1); };
+    this.Lazy = function Lazy(init1) {
+      return new Lazy.class(init1);
+    };
     this.Lazy.class = class Lazy {
       constructor(init) {
         this.init = init;
@@ -50,7 +54,9 @@ NofibPrelude1 = class NofibPrelude {
       constructor() {}
       toString() { return "List"; }
     };
-    this.Cons = function Cons(head1, tail1) { return new Cons.class(head1, tail1); };
+    this.Cons = function Cons(head1, tail1) {
+      return new Cons.class(head1, tail1);
+    };
     this.Cons.class = class Cons extends NofibPrelude.List {
       constructor(head, tail) {
         super();
@@ -79,7 +85,9 @@ NofibPrelude1 = class NofibPrelude {
       constructor() {}
       toString() { return "LzList"; }
     };
-    this.LzCons = function LzCons(head1, tail1) { return new LzCons.class(head1, tail1); };
+    this.LzCons = function LzCons(head1, tail1) {
+      return new LzCons.class(head1, tail1);
+    };
     this.LzCons.class = class LzCons extends NofibPrelude.LzList {
       constructor(head, tail) {
         super();
@@ -253,11 +261,13 @@ NofibPrelude1 = class NofibPrelude {
     }
   } 
   static compose(f, g) {
-    return (x2) => {
+    let lambda;
+    lambda = (undefined, function (x2) {
       let tmp;
       tmp = runtime.safeCall(g(x2));
       return runtime.safeCall(f(tmp))
-    }
+    });
+    return lambda
   } 
   static snd(x2) {
     let first1, first0, f1, s1;
@@ -855,7 +865,8 @@ NofibPrelude1 = class NofibPrelude {
     }
   } 
   static maximum(xs8) {
-    return NofibPrelude.foldl1((x9, y1) => {
+    let lambda;
+    lambda = (undefined, function (x9, y1) {
       let scrut;
       scrut = x9 > y1;
       if (scrut === true) {
@@ -863,10 +874,11 @@ NofibPrelude1 = class NofibPrelude {
       } else {
         return y1
       }
-    }, xs8)
+    });
+    return NofibPrelude.foldl1(lambda, xs8)
   } 
   static nubBy(eq, ls16) {
-    let param0, param1, h, t3, tmp, tmp1;
+    let param0, param1, h, t3, tmp, tmp1, lambda;
     if (ls16 instanceof NofibPrelude.Nil.class) {
       return NofibPrelude.Nil
     } else if (ls16 instanceof NofibPrelude.Cons.class) {
@@ -874,11 +886,12 @@ NofibPrelude1 = class NofibPrelude {
       param1 = ls16.tail;
       h = param0;
       t3 = param1;
-      tmp = NofibPrelude.filter((y1) => {
+      lambda = (undefined, function (y1) {
         let tmp2;
         tmp2 = runtime.safeCall(eq(h, y1));
         return Predef.not(tmp2)
-      }, t3);
+      });
+      tmp = NofibPrelude.filter(lambda, t3);
       tmp1 = NofibPrelude.nubBy(eq, tmp);
       return NofibPrelude.Cons(h, tmp1)
     } else {
@@ -928,17 +941,20 @@ NofibPrelude1 = class NofibPrelude {
     }
   } 
   static unionBy(eq2, xs9, ys6) {
-    let tmp, tmp1;
+    let tmp, tmp1, lambda;
     tmp = NofibPrelude.nubBy(eq2, ys6);
-    tmp1 = NofibPrelude.foldl((acc, y1) => {
+    lambda = (undefined, function (acc, y1) {
       return NofibPrelude.deleteBy(eq2, y1, acc)
-    }, tmp, xs9);
+    });
+    tmp1 = NofibPrelude.foldl(lambda, tmp, xs9);
     return NofibPrelude.append(xs9, tmp1)
   } 
   static union(xs10, ys7) {
-    return NofibPrelude.unionBy((x10, y1) => {
+    let lambda;
+    lambda = (undefined, function (x10, y1) {
       return x10 == y1
-    }, xs10, ys7)
+    });
+    return NofibPrelude.unionBy(lambda, xs10, ys7)
   } 
   static atIndex(i1, ls17) {
     let param0, param1, h, t3, scrut, tmp;
@@ -1183,8 +1199,8 @@ NofibPrelude1 = class NofibPrelude {
     }
   } 
   static map_lz(f16, ls21) {
-    let tmp;
-    tmp = () => {
+    let tmp, lambda;
+    lambda = (undefined, function () {
       let scrut, param0, param1, h, t3, tmp1, tmp2;
       scrut = NofibPrelude.force(ls21);
       if (scrut instanceof NofibPrelude.LzNil.class) {
@@ -1200,12 +1216,13 @@ NofibPrelude1 = class NofibPrelude {
       } else {
         throw new globalThis.Error("match error");
       }
-    };
+    });
+    tmp = lambda;
     return NofibPrelude.lazy(tmp)
   } 
   static filter_lz(p4, ls22) {
-    let tmp;
-    tmp = () => {
+    let tmp, lambda;
+    lambda = (undefined, function () {
       let scrut, param0, param1, h, t3, scrut1, tmp1, tmp2;
       scrut = NofibPrelude.force(ls22);
       if (scrut instanceof NofibPrelude.LzNil.class) {
@@ -1226,13 +1243,14 @@ NofibPrelude1 = class NofibPrelude {
       } else {
         throw new globalThis.Error("match error");
       }
-    };
+    });
+    tmp = lambda;
     return NofibPrelude.Lazy(tmp)
   } 
   static nubBy_lz(eq3, ls23) {
-    let tmp;
-    tmp = () => {
-      let scrut, param0, param1, h, t3, tmp1, tmp2;
+    let tmp, lambda;
+    lambda = (undefined, function () {
+      let scrut, param0, param1, h, t3, tmp1, tmp2, lambda1;
       scrut = NofibPrelude.force(ls23);
       if (scrut instanceof NofibPrelude.LzNil.class) {
         return NofibPrelude.LzNil
@@ -1241,23 +1259,27 @@ NofibPrelude1 = class NofibPrelude {
         param1 = scrut.tail;
         h = param0;
         t3 = param1;
-        tmp1 = NofibPrelude.filter_lz((y1) => {
+        lambda1 = (undefined, function (y1) {
           let tmp3;
           tmp3 = runtime.safeCall(eq3(h, y1));
           return Predef.not(tmp3)
-        }, t3);
+        });
+        tmp1 = NofibPrelude.filter_lz(lambda1, t3);
         tmp2 = NofibPrelude.nubBy_lz(eq3, tmp1);
         return NofibPrelude.LzCons(h, tmp2)
       } else {
         throw new globalThis.Error("match error");
       }
-    };
+    });
+    tmp = lambda;
     return NofibPrelude.Lazy(tmp)
   } 
   static nub_lz(ls24) {
-    return NofibPrelude.nubBy_lz((x11, y1) => {
+    let lambda;
+    lambda = (undefined, function (x11, y1) {
       return x11 == y1
-    }, ls24)
+    });
+    return NofibPrelude.nubBy_lz(lambda, ls24)
   } 
   static take_lz(n5, ls25) {
     let scrut, scrut1, param0, param1, h, t3, tmp, tmp1;
@@ -1282,8 +1304,8 @@ NofibPrelude1 = class NofibPrelude {
     }
   } 
   static take_lz_lz(n6, ls26) {
-    let tmp;
-    tmp = () => {
+    let tmp, lambda;
+    lambda = (undefined, function () {
       let scrut, scrut1, param0, param1, h, t3, tmp1, tmp2;
       scrut = n6 > 0;
       if (scrut === true) {
@@ -1304,20 +1326,22 @@ NofibPrelude1 = class NofibPrelude {
       } else {
         return NofibPrelude.LzNil
       }
-    };
+    });
+    tmp = lambda;
     return NofibPrelude.lazy(tmp)
   } 
   static drop_lz(n7, ls27) {
-    let scrut, param0, param1, h, t3, scrut1, tmp;
+    let scrut, param0, param1, h, t3, scrut1, tmp, lambda;
     scrut1 = n7 <= 0;
     if (scrut1 === true) {
       return ls27
     } else {
       scrut = NofibPrelude.force(ls27);
       if (scrut instanceof NofibPrelude.LzNil.class) {
-        return NofibPrelude.lazy(() => {
+        lambda = (undefined, function () {
           return NofibPrelude.LzNil
-        })
+        });
+        return NofibPrelude.lazy(lambda)
       } else if (scrut instanceof NofibPrelude.LzCons.class) {
         param0 = scrut.head;
         param1 = scrut.tail;
@@ -1365,7 +1389,7 @@ NofibPrelude1 = class NofibPrelude {
     }
   } 
   static zip_lz_lz(xs14, ys10) {
-    let scrut, param0, param1, x11, xs15, scrut1, param01, param11, y1, ys11;
+    let scrut, param0, param1, x11, xs15, scrut1, param01, param11, y1, ys11, lambda, lambda1, lambda2;
     scrut = NofibPrelude.force(xs14);
     if (scrut instanceof NofibPrelude.LzCons.class) {
       param0 = scrut.head;
@@ -1378,28 +1402,31 @@ NofibPrelude1 = class NofibPrelude {
         param11 = scrut1.tail;
         y1 = param01;
         ys11 = param11;
-        return NofibPrelude.lazy(() => {
+        lambda = (undefined, function () {
           let tmp;
           tmp = NofibPrelude.zip_lz_lz(xs15, ys11);
           return NofibPrelude.LzCons([
             x11,
             y1
           ], tmp)
-        })
+        });
+        return NofibPrelude.lazy(lambda)
       } else {
-        return NofibPrelude.lazy(() => {
+        lambda1 = (undefined, function () {
           return NofibPrelude.LzNil
-        })
+        });
+        return NofibPrelude.lazy(lambda1)
       }
     } else {
-      return NofibPrelude.lazy(() => {
+      lambda2 = (undefined, function () {
         return NofibPrelude.LzNil
-      })
+      });
+      return NofibPrelude.lazy(lambda2)
     }
   } 
   static zipWith_lz_lz(f17, xss2, yss1) {
-    let tmp;
-    tmp = () => {
+    let tmp, lambda;
+    lambda = (undefined, function () {
       let scrut, param0, param1, x11, xs15, scrut1, param01, param11, y1, ys11, tmp1, tmp2;
       scrut = NofibPrelude.force(xss2);
       if (scrut instanceof NofibPrelude.LzCons.class) {
@@ -1422,7 +1449,8 @@ NofibPrelude1 = class NofibPrelude {
       } else {
         return NofibPrelude.LzNil
       }
-    };
+    });
+    tmp = lambda;
     return NofibPrelude.lazy(tmp)
   } 
   static zipWith_lz_nl(f18, xss3, yss2) {
@@ -1449,15 +1477,18 @@ NofibPrelude1 = class NofibPrelude {
     }
   } 
   static iterate(f19, x11) {
-    return NofibPrelude.lazy(() => {
-      let tmp, tmp1;
-      tmp = runtime.safeCall(f19(x11));
-      tmp1 = NofibPrelude.iterate(f19, tmp);
-      return NofibPrelude.LzCons(x11, tmp1)
-    })
+    let tmp, lambda;
+    lambda = (undefined, function () {
+      let tmp1, tmp2;
+      tmp1 = runtime.safeCall(f19(x11));
+      tmp2 = NofibPrelude.iterate(f19, tmp1);
+      return NofibPrelude.LzCons(x11, tmp2)
+    });
+    tmp = lambda;
+    return NofibPrelude.lazy(tmp)
   } 
   static append_nl_lz(xs15, ys11) {
-    let param0, param1, h, t3;
+    let param0, param1, h, t3, lambda;
     if (xs15 instanceof NofibPrelude.Nil.class) {
       return ys11
     } else if (xs15 instanceof NofibPrelude.Cons.class) {
@@ -1465,18 +1496,19 @@ NofibPrelude1 = class NofibPrelude {
       param1 = xs15.tail;
       h = param0;
       t3 = param1;
-      return NofibPrelude.lazy(() => {
+      lambda = (undefined, function () {
         let tmp;
         tmp = NofibPrelude.append_nl_lz(t3, ys11);
         return NofibPrelude.LzCons(h, tmp)
-      })
+      });
+      return NofibPrelude.lazy(lambda)
     } else {
       throw new globalThis.Error("match error");
     }
   } 
   static append_lz_lz(xs16, ys12) {
-    let tmp;
-    tmp = () => {
+    let tmp, lambda;
+    lambda = (undefined, function () {
       let scrut, param0, param1, h, t3, tmp1;
       scrut = NofibPrelude.force(xs16);
       if (scrut instanceof NofibPrelude.LzNil.class) {
@@ -1491,32 +1523,37 @@ NofibPrelude1 = class NofibPrelude {
       } else {
         throw new globalThis.Error("match error");
       }
-    };
+    });
+    tmp = lambda;
     return NofibPrelude.lazy(tmp)
   } 
   static replicate_lz(n9, x12) {
-    let scrut;
+    let scrut, lambda, lambda1;
     scrut = n9 == 0;
     if (scrut === true) {
-      return NofibPrelude.lazy(() => {
+      lambda = (undefined, function () {
         return NofibPrelude.LzNil
-      })
+      });
+      return NofibPrelude.lazy(lambda)
     } else {
-      return NofibPrelude.lazy(() => {
+      lambda1 = (undefined, function () {
         let tmp, tmp1;
         tmp = n9 - 1;
         tmp1 = NofibPrelude.replicate_lz(tmp, x12);
         return NofibPrelude.LzCons(x12, tmp1)
-      })
+      });
+      return NofibPrelude.lazy(lambda1)
     }
   } 
   static enumFrom(a13) {
-    return NofibPrelude.lazy(() => {
+    let lambda;
+    lambda = (undefined, function () {
       let tmp, tmp1;
       tmp = a13 + 1;
       tmp1 = NofibPrelude.enumFrom(tmp);
       return NofibPrelude.LzCons(a13, tmp1)
-    })
+    });
+    return NofibPrelude.lazy(lambda)
   } 
   static head_lz(ls29) {
     let scrut, param0, param1, h, t3;
@@ -1532,11 +1569,13 @@ NofibPrelude1 = class NofibPrelude {
     }
   } 
   static repeat(x13) {
-    return NofibPrelude.lazy(() => {
+    let lambda;
+    lambda = (undefined, function () {
       let tmp;
       tmp = NofibPrelude.repeat(x13);
       return NofibPrelude.LzCons(x13, tmp)
-    })
+    });
+    return NofibPrelude.lazy(lambda)
   } 
   static stringOfFloat(x14) {
     return x14 + ""

@@ -13,6 +13,7 @@ fun print(s) = Predef.print(s)
 
 fun helper(f) =
   let res
+  let outerHandler = Runtime.stackHandler
   handle h = Runtime.StackDelay with
     fun perform()(k) =
       set Runtime.stackOffset = Runtime.stackDepth
@@ -26,16 +27,20 @@ fun helper(f) =
     set res = f()
   set
     Runtime.stackDepth = 0
-    Runtime.stackHandler = null
+    Runtime.stackHandler = outerHandler
   res
 
 fun benchmark(fn) =
   // print(helper(fn))
-  print("benchmarking...")
-  let suite = new b.Suite()
-  suite.add("main", () => helper(fn))
-  let settings = {}
-  set settings.async = false
-  suite.on("cycle", (event) => print(String(event.target))).run(settings)
+  // print("benchmarking...")
+  // let suite = new b.Suite()
+  // suite.add("main", () => helper(fn))
+  // let settings = {}
+  // set settings.async = false
+  // suite.on("cycle", (event) => print(String(event.target))).run(settings)
+  let start = globalThis.Date.now()
+  let res = helper(fn)
+  let end = globalThis.Date.now()
+  print("Time: " + (end - start) + "ms")
 
 set globalThis.Predef = Predef

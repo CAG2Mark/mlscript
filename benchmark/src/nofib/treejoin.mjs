@@ -2,7 +2,7 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import fs from "fs";
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
-let testTreejoin_nofib, isDigit, readTree, Empty1, isSpace, readInt, join, lookupT, Tree1, Node1, Leaf1, insertT;
+let testTreejoin_nofib, isDigit, readTree, Empty1, isSpace, readInt, join, lookupT, Tree1, Node1, Leaf1, insertT, lambda;
 isSpace = function isSpace(c) {
   let tmp, tmp1;
   tmp = c === " ";
@@ -234,7 +234,7 @@ readTree = function readTree(fk, s, t) {
   }
 };
 testTreejoin_nofib = function testTreejoin_nofib(n) {
-  let c1, c2, a, b, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9;
+  let c1, c2, a, b, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, lambda1, lambda2;
   tmp = runtime.safeCall(fs.readFileSync("hkmc2/shared/src/test/mlscript/nofib/input/1500.1"));
   tmp1 = runtime.safeCall(tmp.toString());
   tmp2 = NofibPrelude.nofibStringToList(tmp1);
@@ -243,7 +243,7 @@ testTreejoin_nofib = function testTreejoin_nofib(n) {
   tmp4 = runtime.safeCall(tmp3.toString());
   tmp5 = NofibPrelude.nofibStringToList(tmp4);
   c2 = tmp5;
-  tmp6 = (caseScrut) => {
+  lambda1 = (undefined, function (caseScrut) {
     let first2, first1, first0, xx;
     if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 3) {
       first0 = caseScrut[0];
@@ -254,10 +254,11 @@ testTreejoin_nofib = function testTreejoin_nofib(n) {
     } else {
       throw new globalThis.Error("match error");
     }
-  };
+  });
+  tmp6 = lambda1;
   tmp7 = readTree(tmp6, c1, Empty1);
   a = tmp7;
-  tmp8 = (caseScrut) => {
+  lambda2 = (undefined, function (caseScrut) {
     let first2, first1, first0, xx;
     if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 3) {
       first0 = caseScrut[0];
@@ -268,7 +269,8 @@ testTreejoin_nofib = function testTreejoin_nofib(n) {
     } else {
       throw new globalThis.Error("match error");
     }
-  };
+  });
+  tmp8 = lambda2;
   tmp9 = readTree(tmp8, c2, Empty1);
   b = tmp9;
   return join(a, b, Empty1)
@@ -277,7 +279,9 @@ Tree1 = class Tree {
   constructor() {}
   toString() { return "Tree"; }
 };
-Node1 = function Node(k1, l1, r1) { return new Node.class(k1, l1, r1); };
+Node1 = function Node(k1, l1, r1) {
+  return new Node.class(k1, l1, r1);
+};
 Node1.class = class Node extends Tree1 {
   constructor(k, l, r) {
     super();
@@ -287,7 +291,9 @@ Node1.class = class Node extends Tree1 {
   }
   toString() { return "Node(" + globalThis.Predef.render(this.k) + ", " + globalThis.Predef.render(this.l) + ", " + globalThis.Predef.render(this.r) + ")"; }
 };
-Leaf1 = function Leaf(k1, e1) { return new Leaf.class(k1, e1); };
+Leaf1 = function Leaf(k1, e1) {
+  return new Leaf.class(k1, e1);
+};
 Leaf1.class = class Leaf extends Tree1 {
   constructor(k, e) {
     super();
@@ -303,8 +309,9 @@ const Empty$class = class Empty extends Tree1 {
   toString() { return "Empty"; }
 }; Empty1 = new Empty$class;
 Empty1.class = Empty$class;
-BenchmarkPrelude.benchmark(() => {
+lambda = (undefined, function () {
   let tmp;
   tmp = testTreejoin_nofib(0);
   return runtime.safeCall(tmp.toString())
-})
+});
+BenchmarkPrelude.benchmark(lambda)

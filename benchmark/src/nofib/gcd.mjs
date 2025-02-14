@@ -1,7 +1,7 @@
 import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.mjs";
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
-let test, gcdE, max_, testGcd_nofib, g;
+let test, gcdE, max_, testGcd_nofib, g, lambda;
 g = function g(u1u2u3, v1v2v3) {
   let first2, first1, first0, u1, u2, u3, first21, first11, first01, v1, v2, v3, scrut, first12, first02, q, r, scrut1, tmp, tmp1, tmp2, tmp3;
   if (globalThis.Array.isArray(u1u2u3) && u1u2u3.length === 3) {
@@ -107,7 +107,7 @@ max_ = function max_(ls) {
   }
 };
 test = function test(d) {
-  let lscomp1, ns, ms, tripls, rs, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8;
+  let lscomp1, ns, ms, tripls, rs, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, lambda1, lambda2;
   lscomp1 = function lscomp1(p1) {
     let lscomp2, param0, param1, h1, t1;
     if (p1 instanceof NofibPrelude.Nil.class) {
@@ -146,7 +146,7 @@ test = function test(d) {
   tmp2 = 10000 + d;
   tmp3 = NofibPrelude.enumFromTo(10000, tmp2);
   ms = tmp3;
-  tmp4 = (caseScrut) => {
+  lambda1 = (undefined, function (caseScrut) {
     let first1, first0, x, y, tmp9;
     if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
       first0 = caseScrut[0];
@@ -162,11 +162,12 @@ test = function test(d) {
     } else {
       throw new globalThis.Error("match error");
     }
-  };
+  });
+  tmp4 = lambda1;
   tmp5 = lscomp1(ns);
   tmp6 = NofibPrelude.map(tmp4, tmp5);
   tripls = tmp6;
-  tmp7 = (caseScrut) => {
+  lambda2 = (undefined, function (caseScrut) {
     let first2, first1, first0, d1, d2, first21, first11, first01, gg, u, v, tmp9, tmp10;
     if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 3) {
       first0 = caseScrut[0];
@@ -190,7 +191,8 @@ test = function test(d) {
     } else {
       throw new globalThis.Error("match error");
     }
-  };
+  });
+  tmp7 = lambda2;
   tmp8 = NofibPrelude.map(tmp7, tripls);
   rs = tmp8;
   return max_(rs)
@@ -198,6 +200,7 @@ test = function test(d) {
 testGcd_nofib = function testGcd_nofib(x) {
   return test(x)
 };
-BenchmarkPrelude.benchmark(() => {
+lambda = (undefined, function () {
   return testGcd_nofib(400)
-})
+});
+BenchmarkPrelude.benchmark(lambda)

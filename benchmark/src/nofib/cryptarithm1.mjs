@@ -18,10 +18,10 @@ expand = function expand(a, b, c, d, e, f) {
 condition = function condition(thirywelvn) {
   let param0, param1, t, param01, param11, h, param02, param12, i, param03, param13, r, param04, param14, y, param05, param15, w, param06, param16, e, param07, param17, l, param08, param18, v, param09, param19, n, tmp, tmp1, tmp2, tmp3, tmp4, curDepth, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, stackDelayRes, Cont$func$condition$cryptarithm1$_mls_L0_221_412$1;
   Cont$func$condition$cryptarithm1$_mls_L0_221_412$1 = function Cont$func$condition$cryptarithm1$_mls_L0_221_412$(pc1, next1) { return new Cont$func$condition$cryptarithm1$_mls_L0_221_412$.class(pc1, next1); };
-  Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class = class Cont$func$condition$cryptarithm1$_mls_L0_221_412$ extends runtime.Cont.class {
+  Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class = class Cont$func$condition$cryptarithm1$_mls_L0_221_412$ extends runtime.FunctionContFrame.class {
     constructor(pc, next) {
       let tmp16;
-      tmp16 = super(next, false);
+      tmp16 = super(next);
       this.pc = pc;
       this.next = next;
     }
@@ -104,6 +104,8 @@ condition = function condition(thirywelvn) {
                                 tmp = expand(t, h, i, r, t, y);
                                 if (tmp instanceof runtime.EffectSig.class) {
                                   this.pc = 1;
+                                  tmp.contTrace.last.next = this;
+                                  tmp.contTrace.last = this;
                                   return tmp
                                 }
                                 this.pc = 1;
@@ -113,6 +115,8 @@ condition = function condition(thirywelvn) {
                                 tmp5 = new globalThis.Error("match error");
                                 if (tmp5 instanceof runtime.EffectSig.class) {
                                   this.pc = 4;
+                                  tmp5.contTrace.last.next = this;
+                                  tmp5.contTrace.last = this;
                                   return tmp5
                                 }
                                 this.pc = 4;
@@ -125,6 +129,8 @@ condition = function condition(thirywelvn) {
                               tmp6 = new globalThis.Error("match error");
                               if (tmp6 instanceof runtime.EffectSig.class) {
                                 this.pc = 5;
+                                tmp6.contTrace.last.next = this;
+                                tmp6.contTrace.last = this;
                                 return tmp6
                               }
                               this.pc = 5;
@@ -137,6 +143,8 @@ condition = function condition(thirywelvn) {
                             tmp7 = new globalThis.Error("match error");
                             if (tmp7 instanceof runtime.EffectSig.class) {
                               this.pc = 6;
+                              tmp7.contTrace.last.next = this;
+                              tmp7.contTrace.last = this;
                               return tmp7
                             }
                             this.pc = 6;
@@ -149,6 +157,8 @@ condition = function condition(thirywelvn) {
                           tmp8 = new globalThis.Error("match error");
                           if (tmp8 instanceof runtime.EffectSig.class) {
                             this.pc = 7;
+                            tmp8.contTrace.last.next = this;
+                            tmp8.contTrace.last = this;
                             return tmp8
                           }
                           this.pc = 7;
@@ -161,6 +171,8 @@ condition = function condition(thirywelvn) {
                         tmp9 = new globalThis.Error("match error");
                         if (tmp9 instanceof runtime.EffectSig.class) {
                           this.pc = 8;
+                          tmp9.contTrace.last.next = this;
+                          tmp9.contTrace.last = this;
                           return tmp9
                         }
                         this.pc = 8;
@@ -173,6 +185,8 @@ condition = function condition(thirywelvn) {
                       tmp10 = new globalThis.Error("match error");
                       if (tmp10 instanceof runtime.EffectSig.class) {
                         this.pc = 9;
+                        tmp10.contTrace.last.next = this;
+                        tmp10.contTrace.last = this;
                         return tmp10
                       }
                       this.pc = 9;
@@ -185,6 +199,8 @@ condition = function condition(thirywelvn) {
                     tmp11 = new globalThis.Error("match error");
                     if (tmp11 instanceof runtime.EffectSig.class) {
                       this.pc = 10;
+                      tmp11.contTrace.last.next = this;
+                      tmp11.contTrace.last = this;
                       return tmp11
                     }
                     this.pc = 10;
@@ -197,6 +213,8 @@ condition = function condition(thirywelvn) {
                   tmp12 = new globalThis.Error("match error");
                   if (tmp12 instanceof runtime.EffectSig.class) {
                     this.pc = 11;
+                    tmp12.contTrace.last.next = this;
+                    tmp12.contTrace.last = this;
                     return tmp12
                   }
                   this.pc = 11;
@@ -209,6 +227,8 @@ condition = function condition(thirywelvn) {
                 tmp13 = new globalThis.Error("match error");
                 if (tmp13 instanceof runtime.EffectSig.class) {
                   this.pc = 12;
+                  tmp13.contTrace.last.next = this;
+                  tmp13.contTrace.last = this;
                   return tmp13
                 }
                 this.pc = 12;
@@ -221,6 +241,8 @@ condition = function condition(thirywelvn) {
               tmp14 = new globalThis.Error("match error");
               if (tmp14 instanceof runtime.EffectSig.class) {
                 this.pc = 13;
+                tmp14.contTrace.last.next = this;
+                tmp14.contTrace.last = this;
                 return tmp14
               }
               this.pc = 13;
@@ -233,6 +255,8 @@ condition = function condition(thirywelvn) {
             tmp15 = new globalThis.Error("match error");
             if (tmp15 instanceof runtime.EffectSig.class) {
               this.pc = 14;
+              tmp15.contTrace.last.next = this;
+              tmp15.contTrace.last = this;
               return tmp15
             }
             this.pc = 14;
@@ -281,6 +305,8 @@ condition = function condition(thirywelvn) {
           tmp1 = expand(t, w, e, l, v, e);
           if (tmp1 instanceof runtime.EffectSig.class) {
             this.pc = 2;
+            tmp1.contTrace.last.next = this;
+            tmp1.contTrace.last = this;
             return tmp1
           }
           this.pc = 2;
@@ -293,13 +319,14 @@ condition = function condition(thirywelvn) {
           tmp4 = expand(n, i, n, e, t, y);
           if (tmp4 instanceof runtime.EffectSig.class) {
             this.pc = 3;
+            tmp4.contTrace.last.next = this;
+            tmp4.contTrace.last = this;
             return tmp4
           }
           this.pc = 3;
           continue contLoop;
         } else if (this.pc === 3) {
           tmp4 = runtime.resetDepth(tmp4, curDepth);
-          this.completed = true;
           return tmp3 == tmp4
         }
         break;
@@ -310,8 +337,8 @@ condition = function condition(thirywelvn) {
   curDepth = runtime.stackDepth;
   stackDelayRes = runtime.checkDepth();
   if (stackDelayRes instanceof runtime.EffectSig.class) {
-    stackDelayRes.tail.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(0, null);
-    stackDelayRes.tail = stackDelayRes.tail.next;
+    stackDelayRes.contTrace.last.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(0, null);
+    stackDelayRes.contTrace.last = stackDelayRes.contTrace.last.next;
     return stackDelayRes
   }
   if (thirywelvn instanceof NofibPrelude.Cons.class) {
@@ -358,16 +385,16 @@ condition = function condition(thirywelvn) {
                         runtime.stackDepth = runtime.stackDepth + 1;
                         tmp = expand(t, h, i, r, t, y);
                         if (tmp instanceof runtime.EffectSig.class) {
-                          tmp.tail.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(1, null);
-                          tmp.tail = tmp.tail.next;
+                          tmp.contTrace.last.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(1, null);
+                          tmp.contTrace.last = tmp.contTrace.last.next;
                           return tmp
                         }
                         tmp = runtime.resetDepth(tmp, curDepth);
                         runtime.stackDepth = runtime.stackDepth + 1;
                         tmp1 = expand(t, w, e, l, v, e);
                         if (tmp1 instanceof runtime.EffectSig.class) {
-                          tmp1.tail.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(2, null);
-                          tmp1.tail = tmp1.tail.next;
+                          tmp1.contTrace.last.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(2, null);
+                          tmp1.contTrace.last = tmp1.contTrace.last.next;
                           return tmp1
                         }
                         tmp1 = runtime.resetDepth(tmp1, curDepth);
@@ -376,8 +403,8 @@ condition = function condition(thirywelvn) {
                         runtime.stackDepth = runtime.stackDepth + 1;
                         tmp4 = expand(n, i, n, e, t, y);
                         if (tmp4 instanceof runtime.EffectSig.class) {
-                          tmp4.tail.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(3, null);
-                          tmp4.tail = tmp4.tail.next;
+                          tmp4.contTrace.last.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(3, null);
+                          tmp4.contTrace.last = tmp4.contTrace.last.next;
                           return tmp4
                         }
                         tmp4 = runtime.resetDepth(tmp4, curDepth);
@@ -386,8 +413,8 @@ condition = function condition(thirywelvn) {
                         runtime.stackDepth = runtime.stackDepth + 1;
                         tmp5 = new globalThis.Error("match error");
                         if (tmp5 instanceof runtime.EffectSig.class) {
-                          tmp5.tail.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(4, null);
-                          tmp5.tail = tmp5.tail.next;
+                          tmp5.contTrace.last.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(4, null);
+                          tmp5.contTrace.last = tmp5.contTrace.last.next;
                           return tmp5
                         }
                         tmp5 = runtime.resetDepth(tmp5, curDepth);
@@ -397,8 +424,8 @@ condition = function condition(thirywelvn) {
                       runtime.stackDepth = runtime.stackDepth + 1;
                       tmp6 = new globalThis.Error("match error");
                       if (tmp6 instanceof runtime.EffectSig.class) {
-                        tmp6.tail.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(5, null);
-                        tmp6.tail = tmp6.tail.next;
+                        tmp6.contTrace.last.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(5, null);
+                        tmp6.contTrace.last = tmp6.contTrace.last.next;
                         return tmp6
                       }
                       tmp6 = runtime.resetDepth(tmp6, curDepth);
@@ -408,8 +435,8 @@ condition = function condition(thirywelvn) {
                     runtime.stackDepth = runtime.stackDepth + 1;
                     tmp7 = new globalThis.Error("match error");
                     if (tmp7 instanceof runtime.EffectSig.class) {
-                      tmp7.tail.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(6, null);
-                      tmp7.tail = tmp7.tail.next;
+                      tmp7.contTrace.last.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(6, null);
+                      tmp7.contTrace.last = tmp7.contTrace.last.next;
                       return tmp7
                     }
                     tmp7 = runtime.resetDepth(tmp7, curDepth);
@@ -419,8 +446,8 @@ condition = function condition(thirywelvn) {
                   runtime.stackDepth = runtime.stackDepth + 1;
                   tmp8 = new globalThis.Error("match error");
                   if (tmp8 instanceof runtime.EffectSig.class) {
-                    tmp8.tail.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(7, null);
-                    tmp8.tail = tmp8.tail.next;
+                    tmp8.contTrace.last.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(7, null);
+                    tmp8.contTrace.last = tmp8.contTrace.last.next;
                     return tmp8
                   }
                   tmp8 = runtime.resetDepth(tmp8, curDepth);
@@ -430,8 +457,8 @@ condition = function condition(thirywelvn) {
                 runtime.stackDepth = runtime.stackDepth + 1;
                 tmp9 = new globalThis.Error("match error");
                 if (tmp9 instanceof runtime.EffectSig.class) {
-                  tmp9.tail.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(8, null);
-                  tmp9.tail = tmp9.tail.next;
+                  tmp9.contTrace.last.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(8, null);
+                  tmp9.contTrace.last = tmp9.contTrace.last.next;
                   return tmp9
                 }
                 tmp9 = runtime.resetDepth(tmp9, curDepth);
@@ -441,8 +468,8 @@ condition = function condition(thirywelvn) {
               runtime.stackDepth = runtime.stackDepth + 1;
               tmp10 = new globalThis.Error("match error");
               if (tmp10 instanceof runtime.EffectSig.class) {
-                tmp10.tail.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(9, null);
-                tmp10.tail = tmp10.tail.next;
+                tmp10.contTrace.last.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(9, null);
+                tmp10.contTrace.last = tmp10.contTrace.last.next;
                 return tmp10
               }
               tmp10 = runtime.resetDepth(tmp10, curDepth);
@@ -452,8 +479,8 @@ condition = function condition(thirywelvn) {
             runtime.stackDepth = runtime.stackDepth + 1;
             tmp11 = new globalThis.Error("match error");
             if (tmp11 instanceof runtime.EffectSig.class) {
-              tmp11.tail.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(10, null);
-              tmp11.tail = tmp11.tail.next;
+              tmp11.contTrace.last.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(10, null);
+              tmp11.contTrace.last = tmp11.contTrace.last.next;
               return tmp11
             }
             tmp11 = runtime.resetDepth(tmp11, curDepth);
@@ -463,8 +490,8 @@ condition = function condition(thirywelvn) {
           runtime.stackDepth = runtime.stackDepth + 1;
           tmp12 = new globalThis.Error("match error");
           if (tmp12 instanceof runtime.EffectSig.class) {
-            tmp12.tail.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(11, null);
-            tmp12.tail = tmp12.tail.next;
+            tmp12.contTrace.last.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(11, null);
+            tmp12.contTrace.last = tmp12.contTrace.last.next;
             return tmp12
           }
           tmp12 = runtime.resetDepth(tmp12, curDepth);
@@ -474,8 +501,8 @@ condition = function condition(thirywelvn) {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp13 = new globalThis.Error("match error");
         if (tmp13 instanceof runtime.EffectSig.class) {
-          tmp13.tail.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(12, null);
-          tmp13.tail = tmp13.tail.next;
+          tmp13.contTrace.last.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(12, null);
+          tmp13.contTrace.last = tmp13.contTrace.last.next;
           return tmp13
         }
         tmp13 = runtime.resetDepth(tmp13, curDepth);
@@ -485,8 +512,8 @@ condition = function condition(thirywelvn) {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp14 = new globalThis.Error("match error");
       if (tmp14 instanceof runtime.EffectSig.class) {
-        tmp14.tail.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(13, null);
-        tmp14.tail = tmp14.tail.next;
+        tmp14.contTrace.last.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(13, null);
+        tmp14.contTrace.last = tmp14.contTrace.last.next;
         return tmp14
       }
       tmp14 = runtime.resetDepth(tmp14, curDepth);
@@ -496,8 +523,8 @@ condition = function condition(thirywelvn) {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp15 = new globalThis.Error("match error");
     if (tmp15 instanceof runtime.EffectSig.class) {
-      tmp15.tail.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(14, null);
-      tmp15.tail = tmp15.tail.next;
+      tmp15.contTrace.last.next = new Cont$func$condition$cryptarithm1$_mls_L0_221_412$1.class(14, null);
+      tmp15.contTrace.last = tmp15.contTrace.last.next;
       return tmp15
     }
     tmp15 = runtime.resetDepth(tmp15, curDepth);
@@ -507,10 +534,10 @@ condition = function condition(thirywelvn) {
 addj = function addj(j, ls) {
   let lscomp, param0, param1, k, ks, tmp, tmp1, tmp2, tmp3, tmp4, curDepth, tmp5, stackDelayRes, Cont$func$addj$cryptarithm1$_mls_L0_418_621$1;
   Cont$func$addj$cryptarithm1$_mls_L0_418_621$1 = function Cont$func$addj$cryptarithm1$_mls_L0_418_621$(pc1, next1) { return new Cont$func$addj$cryptarithm1$_mls_L0_418_621$.class(pc1, next1); };
-  Cont$func$addj$cryptarithm1$_mls_L0_418_621$1.class = class Cont$func$addj$cryptarithm1$_mls_L0_418_621$ extends runtime.Cont.class {
+  Cont$func$addj$cryptarithm1$_mls_L0_418_621$1.class = class Cont$func$addj$cryptarithm1$_mls_L0_418_621$ extends runtime.FunctionContFrame.class {
     constructor(pc, next) {
       let tmp6;
-      tmp6 = super(next, false);
+      tmp6 = super(next);
       this.pc = pc;
       this.next = next;
     }
@@ -537,6 +564,8 @@ addj = function addj(j, ls) {
             tmp = NofibPrelude.Cons(j, NofibPrelude.Nil);
             if (tmp instanceof runtime.EffectSig.class) {
               this.pc = 17;
+              tmp.contTrace.last.next = this;
+              tmp.contTrace.last = this;
               return tmp
             }
             this.pc = 17;
@@ -550,6 +579,8 @@ addj = function addj(j, ls) {
             tmp1 = NofibPrelude.Cons(k, ks);
             if (tmp1 instanceof runtime.EffectSig.class) {
               this.pc = 23;
+              tmp1.contTrace.last.next = this;
+              tmp1.contTrace.last = this;
               return tmp1
             }
             this.pc = 23;
@@ -561,6 +592,8 @@ addj = function addj(j, ls) {
             tmp5 = new globalThis.Error("match error");
             if (tmp5 instanceof runtime.EffectSig.class) {
               this.pc = 27;
+              tmp5.contTrace.last.next = this;
+              tmp5.contTrace.last = this;
               return tmp5
             }
             this.pc = 27;
@@ -579,6 +612,8 @@ addj = function addj(j, ls) {
           tmp2 = NofibPrelude.Cons(j, tmp1);
           if (tmp2 instanceof runtime.EffectSig.class) {
             this.pc = 24;
+            tmp2.contTrace.last.next = this;
+            tmp2.contTrace.last = this;
             return tmp2
           }
           this.pc = 24;
@@ -589,6 +624,8 @@ addj = function addj(j, ls) {
           tmp3 = addj(j, ks);
           if (tmp3 instanceof runtime.EffectSig.class) {
             this.pc = 25;
+            tmp3.contTrace.last.next = this;
+            tmp3.contTrace.last = this;
             return tmp3
           }
           this.pc = 25;
@@ -599,6 +636,8 @@ addj = function addj(j, ls) {
           tmp4 = lscomp(tmp3);
           if (tmp4 instanceof runtime.EffectSig.class) {
             this.pc = 26;
+            tmp4.contTrace.last.next = this;
+            tmp4.contTrace.last = this;
             return tmp4
           }
           this.pc = 26;
@@ -606,12 +645,10 @@ addj = function addj(j, ls) {
         } else if (this.pc === 26) {
           tmp4 = runtime.resetDepth(tmp4, curDepth);
           runtime.stackDepth = runtime.stackDepth + 1;
-          this.completed = true;
           return NofibPrelude.Cons(tmp2, tmp4)
         } else if (this.pc === 17) {
           tmp = runtime.resetDepth(tmp, curDepth);
           runtime.stackDepth = runtime.stackDepth + 1;
-          this.completed = true;
           return NofibPrelude.Cons(tmp, NofibPrelude.Nil)
         }
         break;
@@ -622,10 +659,10 @@ addj = function addj(j, ls) {
   lscomp = function lscomp(p1) {
     let param01, param11, h1, t1, tmp6, tmp7, curDepth1, tmp8, stackDelayRes1, Cont$func$lscomp$cryptarithm1$_mls_L0_493_577$1;
     Cont$func$lscomp$cryptarithm1$_mls_L0_493_577$1 = function Cont$func$lscomp$cryptarithm1$_mls_L0_493_577$(pc1, next1) { return new Cont$func$lscomp$cryptarithm1$_mls_L0_493_577$.class(pc1, next1); };
-    Cont$func$lscomp$cryptarithm1$_mls_L0_493_577$1.class = class Cont$func$lscomp$cryptarithm1$_mls_L0_493_577$ extends runtime.Cont.class {
+    Cont$func$lscomp$cryptarithm1$_mls_L0_493_577$1.class = class Cont$func$lscomp$cryptarithm1$_mls_L0_493_577$ extends runtime.FunctionContFrame.class {
       constructor(pc, next) {
         let tmp9;
-        tmp9 = super(next, false);
+        tmp9 = super(next);
         this.pc = pc;
         this.next = next;
       }
@@ -642,7 +679,6 @@ addj = function addj(j, ls) {
         contLoop: while (true) {
           if (this.pc === 18) {
             if (p1 instanceof NofibPrelude.Nil.class) {
-              this.completed = true;
               return NofibPrelude.Nil
             } else if (p1 instanceof NofibPrelude.Cons.class) {
               param01 = p1.head;
@@ -653,6 +689,8 @@ addj = function addj(j, ls) {
               tmp6 = NofibPrelude.Cons(k, h1);
               if (tmp6 instanceof runtime.EffectSig.class) {
                 this.pc = 19;
+                tmp6.contTrace.last.next = this;
+                tmp6.contTrace.last = this;
                 return tmp6
               }
               this.pc = 19;
@@ -664,6 +702,8 @@ addj = function addj(j, ls) {
               tmp8 = new globalThis.Error("match error");
               if (tmp8 instanceof runtime.EffectSig.class) {
                 this.pc = 21;
+                tmp8.contTrace.last.next = this;
+                tmp8.contTrace.last = this;
                 return tmp8
               }
               this.pc = 21;
@@ -682,6 +722,8 @@ addj = function addj(j, ls) {
             tmp7 = lscomp(t1);
             if (tmp7 instanceof runtime.EffectSig.class) {
               this.pc = 20;
+              tmp7.contTrace.last.next = this;
+              tmp7.contTrace.last = this;
               return tmp7
             }
             this.pc = 20;
@@ -689,7 +731,6 @@ addj = function addj(j, ls) {
           } else if (this.pc === 20) {
             tmp7 = runtime.resetDepth(tmp7, curDepth1);
             runtime.stackDepth = runtime.stackDepth + 1;
-            this.completed = true;
             return NofibPrelude.Cons(tmp6, tmp7)
           }
           break;
@@ -700,8 +741,8 @@ addj = function addj(j, ls) {
     curDepth1 = runtime.stackDepth;
     stackDelayRes1 = runtime.checkDepth();
     if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-      stackDelayRes1.tail.next = new Cont$func$lscomp$cryptarithm1$_mls_L0_493_577$1.class(18, null);
-      stackDelayRes1.tail = stackDelayRes1.tail.next;
+      stackDelayRes1.contTrace.last.next = new Cont$func$lscomp$cryptarithm1$_mls_L0_493_577$1.class(18, null);
+      stackDelayRes1.contTrace.last = stackDelayRes1.contTrace.last.next;
       return stackDelayRes1
     }
     if (p1 instanceof NofibPrelude.Nil.class) {
@@ -714,16 +755,16 @@ addj = function addj(j, ls) {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp6 = NofibPrelude.Cons(k, h1);
       if (tmp6 instanceof runtime.EffectSig.class) {
-        tmp6.tail.next = new Cont$func$lscomp$cryptarithm1$_mls_L0_493_577$1.class(19, null);
-        tmp6.tail = tmp6.tail.next;
+        tmp6.contTrace.last.next = new Cont$func$lscomp$cryptarithm1$_mls_L0_493_577$1.class(19, null);
+        tmp6.contTrace.last = tmp6.contTrace.last.next;
         return tmp6
       }
       tmp6 = runtime.resetDepth(tmp6, curDepth1);
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp7 = lscomp(t1);
       if (tmp7 instanceof runtime.EffectSig.class) {
-        tmp7.tail.next = new Cont$func$lscomp$cryptarithm1$_mls_L0_493_577$1.class(20, null);
-        tmp7.tail = tmp7.tail.next;
+        tmp7.contTrace.last.next = new Cont$func$lscomp$cryptarithm1$_mls_L0_493_577$1.class(20, null);
+        tmp7.contTrace.last = tmp7.contTrace.last.next;
         return tmp7
       }
       tmp7 = runtime.resetDepth(tmp7, curDepth1);
@@ -733,8 +774,8 @@ addj = function addj(j, ls) {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp8 = new globalThis.Error("match error");
       if (tmp8 instanceof runtime.EffectSig.class) {
-        tmp8.tail.next = new Cont$func$lscomp$cryptarithm1$_mls_L0_493_577$1.class(21, null);
-        tmp8.tail = tmp8.tail.next;
+        tmp8.contTrace.last.next = new Cont$func$lscomp$cryptarithm1$_mls_L0_493_577$1.class(21, null);
+        tmp8.contTrace.last = tmp8.contTrace.last.next;
         return tmp8
       }
       tmp8 = runtime.resetDepth(tmp8, curDepth1);
@@ -744,16 +785,16 @@ addj = function addj(j, ls) {
   curDepth = runtime.stackDepth;
   stackDelayRes = runtime.checkDepth();
   if (stackDelayRes instanceof runtime.EffectSig.class) {
-    stackDelayRes.tail.next = new Cont$func$addj$cryptarithm1$_mls_L0_418_621$1.class(16, null);
-    stackDelayRes.tail = stackDelayRes.tail.next;
+    stackDelayRes.contTrace.last.next = new Cont$func$addj$cryptarithm1$_mls_L0_418_621$1.class(16, null);
+    stackDelayRes.contTrace.last = stackDelayRes.contTrace.last.next;
     return stackDelayRes
   }
   if (ls instanceof NofibPrelude.Nil.class) {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp = NofibPrelude.Cons(j, NofibPrelude.Nil);
     if (tmp instanceof runtime.EffectSig.class) {
-      tmp.tail.next = new Cont$func$addj$cryptarithm1$_mls_L0_418_621$1.class(17, null);
-      tmp.tail = tmp.tail.next;
+      tmp.contTrace.last.next = new Cont$func$addj$cryptarithm1$_mls_L0_418_621$1.class(17, null);
+      tmp.contTrace.last = tmp.contTrace.last.next;
       return tmp
     }
     tmp = runtime.resetDepth(tmp, curDepth);
@@ -767,32 +808,32 @@ addj = function addj(j, ls) {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp1 = NofibPrelude.Cons(k, ks);
     if (tmp1 instanceof runtime.EffectSig.class) {
-      tmp1.tail.next = new Cont$func$addj$cryptarithm1$_mls_L0_418_621$1.class(23, null);
-      tmp1.tail = tmp1.tail.next;
+      tmp1.contTrace.last.next = new Cont$func$addj$cryptarithm1$_mls_L0_418_621$1.class(23, null);
+      tmp1.contTrace.last = tmp1.contTrace.last.next;
       return tmp1
     }
     tmp1 = runtime.resetDepth(tmp1, curDepth);
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp2 = NofibPrelude.Cons(j, tmp1);
     if (tmp2 instanceof runtime.EffectSig.class) {
-      tmp2.tail.next = new Cont$func$addj$cryptarithm1$_mls_L0_418_621$1.class(24, null);
-      tmp2.tail = tmp2.tail.next;
+      tmp2.contTrace.last.next = new Cont$func$addj$cryptarithm1$_mls_L0_418_621$1.class(24, null);
+      tmp2.contTrace.last = tmp2.contTrace.last.next;
       return tmp2
     }
     tmp2 = runtime.resetDepth(tmp2, curDepth);
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp3 = addj(j, ks);
     if (tmp3 instanceof runtime.EffectSig.class) {
-      tmp3.tail.next = new Cont$func$addj$cryptarithm1$_mls_L0_418_621$1.class(25, null);
-      tmp3.tail = tmp3.tail.next;
+      tmp3.contTrace.last.next = new Cont$func$addj$cryptarithm1$_mls_L0_418_621$1.class(25, null);
+      tmp3.contTrace.last = tmp3.contTrace.last.next;
       return tmp3
     }
     tmp3 = runtime.resetDepth(tmp3, curDepth);
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp4 = lscomp(tmp3);
     if (tmp4 instanceof runtime.EffectSig.class) {
-      tmp4.tail.next = new Cont$func$addj$cryptarithm1$_mls_L0_418_621$1.class(26, null);
-      tmp4.tail = tmp4.tail.next;
+      tmp4.contTrace.last.next = new Cont$func$addj$cryptarithm1$_mls_L0_418_621$1.class(26, null);
+      tmp4.contTrace.last = tmp4.contTrace.last.next;
       return tmp4
     }
     tmp4 = runtime.resetDepth(tmp4, curDepth);
@@ -802,8 +843,8 @@ addj = function addj(j, ls) {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp5 = new globalThis.Error("match error");
     if (tmp5 instanceof runtime.EffectSig.class) {
-      tmp5.tail.next = new Cont$func$addj$cryptarithm1$_mls_L0_418_621$1.class(27, null);
-      tmp5.tail = tmp5.tail.next;
+      tmp5.contTrace.last.next = new Cont$func$addj$cryptarithm1$_mls_L0_418_621$1.class(27, null);
+      tmp5.contTrace.last = tmp5.contTrace.last.next;
       return tmp5
     }
     tmp5 = runtime.resetDepth(tmp5, curDepth);
@@ -813,10 +854,10 @@ addj = function addj(j, ls) {
 permutations = function permutations(ls) {
   let lscomp1, param0, param1, j, js, tmp, curDepth, tmp1, stackDelayRes, Cont$func$permutations$cryptarithm1$_mls_L0_627_928$1;
   Cont$func$permutations$cryptarithm1$_mls_L0_627_928$1 = function Cont$func$permutations$cryptarithm1$_mls_L0_627_928$(pc1, next1) { return new Cont$func$permutations$cryptarithm1$_mls_L0_627_928$.class(pc1, next1); };
-  Cont$func$permutations$cryptarithm1$_mls_L0_627_928$1.class = class Cont$func$permutations$cryptarithm1$_mls_L0_627_928$ extends runtime.Cont.class {
+  Cont$func$permutations$cryptarithm1$_mls_L0_627_928$1.class = class Cont$func$permutations$cryptarithm1$_mls_L0_627_928$ extends runtime.FunctionContFrame.class {
     constructor(pc, next) {
       let tmp2;
-      tmp2 = super(next, false);
+      tmp2 = super(next);
       this.pc = pc;
       this.next = next;
     }
@@ -832,7 +873,6 @@ permutations = function permutations(ls) {
         if (this.pc === 29) {
           if (ls instanceof NofibPrelude.Nil.class) {
             runtime.stackDepth = runtime.stackDepth + 1;
-            this.completed = true;
             return NofibPrelude.Cons(NofibPrelude.Nil, NofibPrelude.Nil)
           } else if (ls instanceof NofibPrelude.Cons.class) {
             param0 = ls.head;
@@ -843,6 +883,8 @@ permutations = function permutations(ls) {
             tmp = permutations(js);
             if (tmp instanceof runtime.EffectSig.class) {
               this.pc = 38;
+              tmp.contTrace.last.next = this;
+              tmp.contTrace.last = this;
               return tmp
             }
             this.pc = 38;
@@ -854,6 +896,8 @@ permutations = function permutations(ls) {
             tmp1 = new globalThis.Error("match error");
             if (tmp1 instanceof runtime.EffectSig.class) {
               this.pc = 39;
+              tmp1.contTrace.last.next = this;
+              tmp1.contTrace.last = this;
               return tmp1
             }
             this.pc = 39;
@@ -869,7 +913,6 @@ permutations = function permutations(ls) {
         } else if (this.pc === 38) {
           tmp = runtime.resetDepth(tmp, curDepth);
           runtime.stackDepth = runtime.stackDepth + 1;
-          this.completed = true;
           return lscomp1(tmp)
         }
         break;
@@ -880,10 +923,10 @@ permutations = function permutations(ls) {
   lscomp1 = function lscomp1(p1) {
     let lscomp2, param01, param11, pjs, t1, tmp2, curDepth1, tmp3, stackDelayRes1, Cont$func$lscomp1$cryptarithm1$_mls_L0_700_898$1;
     Cont$func$lscomp1$cryptarithm1$_mls_L0_700_898$1 = function Cont$func$lscomp1$cryptarithm1$_mls_L0_700_898$(pc1, next1) { return new Cont$func$lscomp1$cryptarithm1$_mls_L0_700_898$.class(pc1, next1); };
-    Cont$func$lscomp1$cryptarithm1$_mls_L0_700_898$1.class = class Cont$func$lscomp1$cryptarithm1$_mls_L0_700_898$ extends runtime.Cont.class {
+    Cont$func$lscomp1$cryptarithm1$_mls_L0_700_898$1.class = class Cont$func$lscomp1$cryptarithm1$_mls_L0_700_898$ extends runtime.FunctionContFrame.class {
       constructor(pc, next) {
         let tmp4;
-        tmp4 = super(next, false);
+        tmp4 = super(next);
         this.pc = pc;
         this.next = next;
       }
@@ -898,7 +941,6 @@ permutations = function permutations(ls) {
         contLoop: while (true) {
           if (this.pc === 30) {
             if (p1 instanceof NofibPrelude.Nil.class) {
-              this.completed = true;
               return NofibPrelude.Nil
             } else if (p1 instanceof NofibPrelude.Cons.class) {
               param01 = p1.head;
@@ -909,6 +951,8 @@ permutations = function permutations(ls) {
               tmp2 = addj(j, pjs);
               if (tmp2 instanceof runtime.EffectSig.class) {
                 this.pc = 35;
+                tmp2.contTrace.last.next = this;
+                tmp2.contTrace.last = this;
                 return tmp2
               }
               this.pc = 35;
@@ -920,6 +964,8 @@ permutations = function permutations(ls) {
               tmp3 = new globalThis.Error("match error");
               if (tmp3 instanceof runtime.EffectSig.class) {
                 this.pc = 36;
+                tmp3.contTrace.last.next = this;
+                tmp3.contTrace.last = this;
                 return tmp3
               }
               this.pc = 36;
@@ -935,7 +981,6 @@ permutations = function permutations(ls) {
           } else if (this.pc === 35) {
             tmp2 = runtime.resetDepth(tmp2, curDepth1);
             runtime.stackDepth = runtime.stackDepth + 1;
-            this.completed = true;
             return lscomp2(tmp2)
           }
           break;
@@ -946,10 +991,10 @@ permutations = function permutations(ls) {
     lscomp2 = function lscomp2(p2) {
       let param02, param12, r, t2, tmp4, curDepth2, tmp5, stackDelayRes2, Cont$func$lscomp2$cryptarithm1$_mls_L0_775_868$1;
       Cont$func$lscomp2$cryptarithm1$_mls_L0_775_868$1 = function Cont$func$lscomp2$cryptarithm1$_mls_L0_775_868$(pc1, next1) { return new Cont$func$lscomp2$cryptarithm1$_mls_L0_775_868$.class(pc1, next1); };
-      Cont$func$lscomp2$cryptarithm1$_mls_L0_775_868$1.class = class Cont$func$lscomp2$cryptarithm1$_mls_L0_775_868$ extends runtime.Cont.class {
+      Cont$func$lscomp2$cryptarithm1$_mls_L0_775_868$1.class = class Cont$func$lscomp2$cryptarithm1$_mls_L0_775_868$ extends runtime.FunctionContFrame.class {
         constructor(pc, next) {
           let tmp6;
-          tmp6 = super(next, false);
+          tmp6 = super(next);
           this.pc = pc;
           this.next = next;
         }
@@ -965,7 +1010,6 @@ permutations = function permutations(ls) {
             if (this.pc === 31) {
               if (p2 instanceof NofibPrelude.Nil.class) {
                 runtime.stackDepth = runtime.stackDepth + 1;
-                this.completed = true;
                 return lscomp1(t1)
               } else if (p2 instanceof NofibPrelude.Cons.class) {
                 param02 = p2.head;
@@ -976,6 +1020,8 @@ permutations = function permutations(ls) {
                 tmp4 = lscomp2(t2);
                 if (tmp4 instanceof runtime.EffectSig.class) {
                   this.pc = 32;
+                  tmp4.contTrace.last.next = this;
+                  tmp4.contTrace.last = this;
                   return tmp4
                 }
                 this.pc = 32;
@@ -987,6 +1033,8 @@ permutations = function permutations(ls) {
                 tmp5 = new globalThis.Error("match error");
                 if (tmp5 instanceof runtime.EffectSig.class) {
                   this.pc = 33;
+                  tmp5.contTrace.last.next = this;
+                  tmp5.contTrace.last = this;
                   return tmp5
                 }
                 this.pc = 33;
@@ -1002,7 +1050,6 @@ permutations = function permutations(ls) {
             } else if (this.pc === 32) {
               tmp4 = runtime.resetDepth(tmp4, curDepth2);
               runtime.stackDepth = runtime.stackDepth + 1;
-              this.completed = true;
               return NofibPrelude.Cons(r, tmp4)
             }
             break;
@@ -1013,8 +1060,8 @@ permutations = function permutations(ls) {
       curDepth2 = runtime.stackDepth;
       stackDelayRes2 = runtime.checkDepth();
       if (stackDelayRes2 instanceof runtime.EffectSig.class) {
-        stackDelayRes2.tail.next = new Cont$func$lscomp2$cryptarithm1$_mls_L0_775_868$1.class(31, null);
-        stackDelayRes2.tail = stackDelayRes2.tail.next;
+        stackDelayRes2.contTrace.last.next = new Cont$func$lscomp2$cryptarithm1$_mls_L0_775_868$1.class(31, null);
+        stackDelayRes2.contTrace.last = stackDelayRes2.contTrace.last.next;
         return stackDelayRes2
       }
       if (p2 instanceof NofibPrelude.Nil.class) {
@@ -1028,8 +1075,8 @@ permutations = function permutations(ls) {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp4 = lscomp2(t2);
         if (tmp4 instanceof runtime.EffectSig.class) {
-          tmp4.tail.next = new Cont$func$lscomp2$cryptarithm1$_mls_L0_775_868$1.class(32, null);
-          tmp4.tail = tmp4.tail.next;
+          tmp4.contTrace.last.next = new Cont$func$lscomp2$cryptarithm1$_mls_L0_775_868$1.class(32, null);
+          tmp4.contTrace.last = tmp4.contTrace.last.next;
           return tmp4
         }
         tmp4 = runtime.resetDepth(tmp4, curDepth2);
@@ -1039,8 +1086,8 @@ permutations = function permutations(ls) {
         runtime.stackDepth = runtime.stackDepth + 1;
         tmp5 = new globalThis.Error("match error");
         if (tmp5 instanceof runtime.EffectSig.class) {
-          tmp5.tail.next = new Cont$func$lscomp2$cryptarithm1$_mls_L0_775_868$1.class(33, null);
-          tmp5.tail = tmp5.tail.next;
+          tmp5.contTrace.last.next = new Cont$func$lscomp2$cryptarithm1$_mls_L0_775_868$1.class(33, null);
+          tmp5.contTrace.last = tmp5.contTrace.last.next;
           return tmp5
         }
         tmp5 = runtime.resetDepth(tmp5, curDepth2);
@@ -1050,8 +1097,8 @@ permutations = function permutations(ls) {
     curDepth1 = runtime.stackDepth;
     stackDelayRes1 = runtime.checkDepth();
     if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-      stackDelayRes1.tail.next = new Cont$func$lscomp1$cryptarithm1$_mls_L0_700_898$1.class(30, null);
-      stackDelayRes1.tail = stackDelayRes1.tail.next;
+      stackDelayRes1.contTrace.last.next = new Cont$func$lscomp1$cryptarithm1$_mls_L0_700_898$1.class(30, null);
+      stackDelayRes1.contTrace.last = stackDelayRes1.contTrace.last.next;
       return stackDelayRes1
     }
     if (p1 instanceof NofibPrelude.Nil.class) {
@@ -1064,8 +1111,8 @@ permutations = function permutations(ls) {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp2 = addj(j, pjs);
       if (tmp2 instanceof runtime.EffectSig.class) {
-        tmp2.tail.next = new Cont$func$lscomp1$cryptarithm1$_mls_L0_700_898$1.class(35, null);
-        tmp2.tail = tmp2.tail.next;
+        tmp2.contTrace.last.next = new Cont$func$lscomp1$cryptarithm1$_mls_L0_700_898$1.class(35, null);
+        tmp2.contTrace.last = tmp2.contTrace.last.next;
         return tmp2
       }
       tmp2 = runtime.resetDepth(tmp2, curDepth1);
@@ -1075,8 +1122,8 @@ permutations = function permutations(ls) {
       runtime.stackDepth = runtime.stackDepth + 1;
       tmp3 = new globalThis.Error("match error");
       if (tmp3 instanceof runtime.EffectSig.class) {
-        tmp3.tail.next = new Cont$func$lscomp1$cryptarithm1$_mls_L0_700_898$1.class(36, null);
-        tmp3.tail = tmp3.tail.next;
+        tmp3.contTrace.last.next = new Cont$func$lscomp1$cryptarithm1$_mls_L0_700_898$1.class(36, null);
+        tmp3.contTrace.last = tmp3.contTrace.last.next;
         return tmp3
       }
       tmp3 = runtime.resetDepth(tmp3, curDepth1);
@@ -1086,8 +1133,8 @@ permutations = function permutations(ls) {
   curDepth = runtime.stackDepth;
   stackDelayRes = runtime.checkDepth();
   if (stackDelayRes instanceof runtime.EffectSig.class) {
-    stackDelayRes.tail.next = new Cont$func$permutations$cryptarithm1$_mls_L0_627_928$1.class(29, null);
-    stackDelayRes.tail = stackDelayRes.tail.next;
+    stackDelayRes.contTrace.last.next = new Cont$func$permutations$cryptarithm1$_mls_L0_627_928$1.class(29, null);
+    stackDelayRes.contTrace.last = stackDelayRes.contTrace.last.next;
     return stackDelayRes
   }
   if (ls instanceof NofibPrelude.Nil.class) {
@@ -1101,8 +1148,8 @@ permutations = function permutations(ls) {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp = permutations(js);
     if (tmp instanceof runtime.EffectSig.class) {
-      tmp.tail.next = new Cont$func$permutations$cryptarithm1$_mls_L0_627_928$1.class(38, null);
-      tmp.tail = tmp.tail.next;
+      tmp.contTrace.last.next = new Cont$func$permutations$cryptarithm1$_mls_L0_627_928$1.class(38, null);
+      tmp.contTrace.last = tmp.contTrace.last.next;
       return tmp
     }
     tmp = runtime.resetDepth(tmp, curDepth);
@@ -1112,8 +1159,8 @@ permutations = function permutations(ls) {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp1 = new globalThis.Error("match error");
     if (tmp1 instanceof runtime.EffectSig.class) {
-      tmp1.tail.next = new Cont$func$permutations$cryptarithm1$_mls_L0_627_928$1.class(39, null);
-      tmp1.tail = tmp1.tail.next;
+      tmp1.contTrace.last.next = new Cont$func$permutations$cryptarithm1$_mls_L0_627_928$1.class(39, null);
+      tmp1.contTrace.last = tmp1.contTrace.last.next;
       return tmp1
     }
     tmp1 = runtime.resetDepth(tmp1, curDepth);
@@ -1123,10 +1170,10 @@ permutations = function permutations(ls) {
 testCryptarithm_nofib = function testCryptarithm_nofib(n) {
   let tmp, tmp1, curDepth, stackDelayRes, Cont$func$testCryptarithm_nofib$cryptarithm1$_mls_L0_934_1072$1;
   Cont$func$testCryptarithm_nofib$cryptarithm1$_mls_L0_934_1072$1 = function Cont$func$testCryptarithm_nofib$cryptarithm1$_mls_L0_934_1072$(pc1, next1) { return new Cont$func$testCryptarithm_nofib$cryptarithm1$_mls_L0_934_1072$.class(pc1, next1); };
-  Cont$func$testCryptarithm_nofib$cryptarithm1$_mls_L0_934_1072$1.class = class Cont$func$testCryptarithm_nofib$cryptarithm1$_mls_L0_934_1072$ extends runtime.Cont.class {
+  Cont$func$testCryptarithm_nofib$cryptarithm1$_mls_L0_934_1072$1.class = class Cont$func$testCryptarithm_nofib$cryptarithm1$_mls_L0_934_1072$ extends runtime.FunctionContFrame.class {
     constructor(pc, next) {
       let tmp2;
-      tmp2 = super(next, false);
+      tmp2 = super(next);
       this.pc = pc;
       this.next = next;
     }
@@ -1141,10 +1188,10 @@ testCryptarithm_nofib = function testCryptarithm_nofib(n) {
           tmp = (i) => {
             let p0, tmp2, tmp3, tmp4, tmp5, curDepth1, stackDelayRes1, Cont$lambda$2;
             Cont$lambda$2 = function Cont$lambda$(pc2, next2) { return new Cont$lambda$.class(pc2, next2); };
-            Cont$lambda$2.class = class Cont$lambda$1 extends runtime.Cont.class {
+            Cont$lambda$2.class = class Cont$lambda$1 extends runtime.FunctionContFrame.class {
               constructor(pc1, next1) {
                 let tmp6;
-                tmp6 = super(next1, false);
+                tmp6 = super(next1);
                 this.pc = pc1;
                 this.next = next1;
               }
@@ -1165,6 +1212,8 @@ testCryptarithm_nofib = function testCryptarithm_nofib(n) {
                     tmp3 = NofibPrelude.enumFromTo(0, tmp2);
                     if (tmp3 instanceof runtime.EffectSig.class) {
                       this.pc = 43;
+                      tmp3.contTrace.last.next = this;
+                      tmp3.contTrace.last = this;
                       return tmp3
                     }
                     this.pc = 43;
@@ -1175,6 +1224,8 @@ testCryptarithm_nofib = function testCryptarithm_nofib(n) {
                     tmp4 = NofibPrelude.take(10, tmp3);
                     if (tmp4 instanceof runtime.EffectSig.class) {
                       this.pc = 44;
+                      tmp4.contTrace.last.next = this;
+                      tmp4.contTrace.last = this;
                       return tmp4
                     }
                     this.pc = 44;
@@ -1186,6 +1237,8 @@ testCryptarithm_nofib = function testCryptarithm_nofib(n) {
                     tmp5 = permutations(p0);
                     if (tmp5 instanceof runtime.EffectSig.class) {
                       this.pc = 45;
+                      tmp5.contTrace.last.next = this;
+                      tmp5.contTrace.last = this;
                       return tmp5
                     }
                     this.pc = 45;
@@ -1193,7 +1246,6 @@ testCryptarithm_nofib = function testCryptarithm_nofib(n) {
                   } else if (this.pc === 45) {
                     tmp5 = runtime.resetDepth(tmp5, curDepth1);
                     runtime.stackDepth = runtime.stackDepth + 1;
-                    this.completed = true;
                     return NofibPrelude.filter(condition, tmp5)
                   }
                   break;
@@ -1204,24 +1256,24 @@ testCryptarithm_nofib = function testCryptarithm_nofib(n) {
             curDepth1 = runtime.stackDepth;
             stackDelayRes1 = runtime.checkDepth();
             if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-              stackDelayRes1.tail.next = new Cont$lambda$2.class(42, null);
-              stackDelayRes1.tail = stackDelayRes1.tail.next;
+              stackDelayRes1.contTrace.last.next = new Cont$lambda$2.class(42, null);
+              stackDelayRes1.contTrace.last = stackDelayRes1.contTrace.last.next;
               return stackDelayRes1
             }
             tmp2 = 9 + i;
             runtime.stackDepth = runtime.stackDepth + 1;
             tmp3 = NofibPrelude.enumFromTo(0, tmp2);
             if (tmp3 instanceof runtime.EffectSig.class) {
-              tmp3.tail.next = new Cont$lambda$2.class(43, null);
-              tmp3.tail = tmp3.tail.next;
+              tmp3.contTrace.last.next = new Cont$lambda$2.class(43, null);
+              tmp3.contTrace.last = tmp3.contTrace.last.next;
               return tmp3
             }
             tmp3 = runtime.resetDepth(tmp3, curDepth1);
             runtime.stackDepth = runtime.stackDepth + 1;
             tmp4 = NofibPrelude.take(10, tmp3);
             if (tmp4 instanceof runtime.EffectSig.class) {
-              tmp4.tail.next = new Cont$lambda$2.class(44, null);
-              tmp4.tail = tmp4.tail.next;
+              tmp4.contTrace.last.next = new Cont$lambda$2.class(44, null);
+              tmp4.contTrace.last = tmp4.contTrace.last.next;
               return tmp4
             }
             tmp4 = runtime.resetDepth(tmp4, curDepth1);
@@ -1229,8 +1281,8 @@ testCryptarithm_nofib = function testCryptarithm_nofib(n) {
             runtime.stackDepth = runtime.stackDepth + 1;
             tmp5 = permutations(p0);
             if (tmp5 instanceof runtime.EffectSig.class) {
-              tmp5.tail.next = new Cont$lambda$2.class(45, null);
-              tmp5.tail = tmp5.tail.next;
+              tmp5.contTrace.last.next = new Cont$lambda$2.class(45, null);
+              tmp5.contTrace.last = tmp5.contTrace.last.next;
               return tmp5
             }
             tmp5 = runtime.resetDepth(tmp5, curDepth1);
@@ -1241,6 +1293,8 @@ testCryptarithm_nofib = function testCryptarithm_nofib(n) {
           tmp1 = NofibPrelude.enumFromTo(1, n);
           if (tmp1 instanceof runtime.EffectSig.class) {
             this.pc = 46;
+            tmp1.contTrace.last.next = this;
+            tmp1.contTrace.last = this;
             return tmp1
           }
           this.pc = 46;
@@ -1248,7 +1302,6 @@ testCryptarithm_nofib = function testCryptarithm_nofib(n) {
         } else if (this.pc === 46) {
           tmp1 = runtime.resetDepth(tmp1, curDepth);
           runtime.stackDepth = runtime.stackDepth + 1;
-          this.completed = true;
           return NofibPrelude.map(tmp, tmp1)
         }
         break;
@@ -1259,17 +1312,17 @@ testCryptarithm_nofib = function testCryptarithm_nofib(n) {
   curDepth = runtime.stackDepth;
   stackDelayRes = runtime.checkDepth();
   if (stackDelayRes instanceof runtime.EffectSig.class) {
-    stackDelayRes.tail.next = new Cont$func$testCryptarithm_nofib$cryptarithm1$_mls_L0_934_1072$1.class(41, null);
-    stackDelayRes.tail = stackDelayRes.tail.next;
+    stackDelayRes.contTrace.last.next = new Cont$func$testCryptarithm_nofib$cryptarithm1$_mls_L0_934_1072$1.class(41, null);
+    stackDelayRes.contTrace.last = stackDelayRes.contTrace.last.next;
     return stackDelayRes
   }
   tmp = (i) => {
     let p0, tmp2, tmp3, tmp4, tmp5, curDepth1, stackDelayRes1, Cont$lambda$2;
     Cont$lambda$2 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-    Cont$lambda$2.class = class Cont$lambda$1 extends runtime.Cont.class {
+    Cont$lambda$2.class = class Cont$lambda$1 extends runtime.FunctionContFrame.class {
       constructor(pc, next) {
         let tmp6;
-        tmp6 = super(next, false);
+        tmp6 = super(next);
         this.pc = pc;
         this.next = next;
       }
@@ -1290,6 +1343,8 @@ testCryptarithm_nofib = function testCryptarithm_nofib(n) {
             tmp3 = NofibPrelude.enumFromTo(0, tmp2);
             if (tmp3 instanceof runtime.EffectSig.class) {
               this.pc = 43;
+              tmp3.contTrace.last.next = this;
+              tmp3.contTrace.last = this;
               return tmp3
             }
             this.pc = 43;
@@ -1300,6 +1355,8 @@ testCryptarithm_nofib = function testCryptarithm_nofib(n) {
             tmp4 = NofibPrelude.take(10, tmp3);
             if (tmp4 instanceof runtime.EffectSig.class) {
               this.pc = 44;
+              tmp4.contTrace.last.next = this;
+              tmp4.contTrace.last = this;
               return tmp4
             }
             this.pc = 44;
@@ -1311,6 +1368,8 @@ testCryptarithm_nofib = function testCryptarithm_nofib(n) {
             tmp5 = permutations(p0);
             if (tmp5 instanceof runtime.EffectSig.class) {
               this.pc = 45;
+              tmp5.contTrace.last.next = this;
+              tmp5.contTrace.last = this;
               return tmp5
             }
             this.pc = 45;
@@ -1318,7 +1377,6 @@ testCryptarithm_nofib = function testCryptarithm_nofib(n) {
           } else if (this.pc === 45) {
             tmp5 = runtime.resetDepth(tmp5, curDepth1);
             runtime.stackDepth = runtime.stackDepth + 1;
-            this.completed = true;
             return NofibPrelude.filter(condition, tmp5)
           }
           break;
@@ -1329,24 +1387,24 @@ testCryptarithm_nofib = function testCryptarithm_nofib(n) {
     curDepth1 = runtime.stackDepth;
     stackDelayRes1 = runtime.checkDepth();
     if (stackDelayRes1 instanceof runtime.EffectSig.class) {
-      stackDelayRes1.tail.next = new Cont$lambda$2.class(42, null);
-      stackDelayRes1.tail = stackDelayRes1.tail.next;
+      stackDelayRes1.contTrace.last.next = new Cont$lambda$2.class(42, null);
+      stackDelayRes1.contTrace.last = stackDelayRes1.contTrace.last.next;
       return stackDelayRes1
     }
     tmp2 = 9 + i;
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp3 = NofibPrelude.enumFromTo(0, tmp2);
     if (tmp3 instanceof runtime.EffectSig.class) {
-      tmp3.tail.next = new Cont$lambda$2.class(43, null);
-      tmp3.tail = tmp3.tail.next;
+      tmp3.contTrace.last.next = new Cont$lambda$2.class(43, null);
+      tmp3.contTrace.last = tmp3.contTrace.last.next;
       return tmp3
     }
     tmp3 = runtime.resetDepth(tmp3, curDepth1);
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp4 = NofibPrelude.take(10, tmp3);
     if (tmp4 instanceof runtime.EffectSig.class) {
-      tmp4.tail.next = new Cont$lambda$2.class(44, null);
-      tmp4.tail = tmp4.tail.next;
+      tmp4.contTrace.last.next = new Cont$lambda$2.class(44, null);
+      tmp4.contTrace.last = tmp4.contTrace.last.next;
       return tmp4
     }
     tmp4 = runtime.resetDepth(tmp4, curDepth1);
@@ -1354,8 +1412,8 @@ testCryptarithm_nofib = function testCryptarithm_nofib(n) {
     runtime.stackDepth = runtime.stackDepth + 1;
     tmp5 = permutations(p0);
     if (tmp5 instanceof runtime.EffectSig.class) {
-      tmp5.tail.next = new Cont$lambda$2.class(45, null);
-      tmp5.tail = tmp5.tail.next;
+      tmp5.contTrace.last.next = new Cont$lambda$2.class(45, null);
+      tmp5.contTrace.last = tmp5.contTrace.last.next;
       return tmp5
     }
     tmp5 = runtime.resetDepth(tmp5, curDepth1);
@@ -1365,8 +1423,8 @@ testCryptarithm_nofib = function testCryptarithm_nofib(n) {
   runtime.stackDepth = runtime.stackDepth + 1;
   tmp1 = NofibPrelude.enumFromTo(1, n);
   if (tmp1 instanceof runtime.EffectSig.class) {
-    tmp1.tail.next = new Cont$func$testCryptarithm_nofib$cryptarithm1$_mls_L0_934_1072$1.class(46, null);
-    tmp1.tail = tmp1.tail.next;
+    tmp1.contTrace.last.next = new Cont$func$testCryptarithm_nofib$cryptarithm1$_mls_L0_934_1072$1.class(46, null);
+    tmp1.contTrace.last = tmp1.contTrace.last.next;
     return tmp1
   }
   tmp1 = runtime.resetDepth(tmp1, curDepth);
@@ -1381,60 +1439,19 @@ handleBlock$ = function handleBlock$() {
       tmp = super();
     }
     perform() {
-      return runtime.mkEffect(stackHandler, (resume, handleBlock) => {
-        let res2, Cont$handler$stackHandler$1;
-        Cont$handler$stackHandler$1 = function Cont$handler$stackHandler$(pc1, next1) { return new Cont$handler$stackHandler$.class(pc1, next1); };
-        Cont$handler$stackHandler$1.class = class Cont$handler$stackHandler$ extends runtime.Cont.class {
-          constructor(pc, next) {
-            let tmp;
-            tmp = super(next, false);
-            this.pc = pc;
-            this.next = next;
-          }
-          resume(value$) {
-            if (this.pc === 50) {
-              res2 = value$;
-            }
-            contLoop: while (true) {
-              if (this.pc === 50) {
-                if (res2 instanceof runtime.Return.class) {
-                  this.completed = true;
-                  return res2
-                }
-                this.pc = 51;
-                continue contLoop;
-              } else if (this.pc === 51) {
-                this.completed = true;
-                return res2
-              }
-              break;
-            }
-          }
-          toString() { return "Cont$handler$stackHandler$(" + globalThis.Predef.render(this.pc) + ", " + globalThis.Predef.render(this.next) + ")"; }
-        };
+      return runtime.mkEffect(stackHandler, (resume) => {
         runtime.stackOffset = runtime.stackDepth;
-        res2 = resume();
-        if (res2 instanceof runtime.EffectSig.class) {
-          handleBlock.contHead.next = new Cont$handler$stackHandler$1.class(50, handleBlock.contHead.next);
-          if (handleBlock.lastHandlerCont === null) {
-            handleBlock.lastHandlerCont = handleBlock.contHead.next;
-          }
-          return res2
-        }
-        if (res2 instanceof runtime.Return.class) {
-          return res2
-        }
-        return res2
+        return resume()
       })
     }
     toString() { return "StackDelay$"; }
   };
   stackHandler = new StackDelay$1();
   Cont$handleBlock$stackHandler$1 = function Cont$handleBlock$stackHandler$(pc1, next1) { return new Cont$handleBlock$stackHandler$.class(pc1, next1); };
-  Cont$handleBlock$stackHandler$1.class = class Cont$handleBlock$stackHandler$ extends runtime.Cont.class {
+  Cont$handleBlock$stackHandler$1.class = class Cont$handleBlock$stackHandler$ extends runtime.FunctionContFrame.class {
     constructor(pc, next) {
       let tmp;
-      tmp = super(next, false);
+      tmp = super(next);
       this.pc = pc;
       this.next = next;
     }
@@ -1444,14 +1461,6 @@ handleBlock$ = function handleBlock$() {
       }
       contLoop: while (true) {
         if (this.pc === 48) {
-          if (res1 instanceof runtime.Return.class) {
-            this.completed = true;
-            return res1
-          }
-          this.pc = 49;
-          continue contLoop;
-        } else if (this.pc === 49) {
-          this.completed = true;
           return res1
         }
         break;
@@ -1466,10 +1475,10 @@ handleBlock$ = function handleBlock$() {
   res1 = BenchmarkPrelude.benchmark(() => {
     let stackDelayRes, Cont$lambda$2;
     Cont$lambda$2 = function Cont$lambda$(pc1, next1) { return new Cont$lambda$.class(pc1, next1); };
-    Cont$lambda$2.class = class Cont$lambda$ extends runtime.Cont.class {
+    Cont$lambda$2.class = class Cont$lambda$ extends runtime.FunctionContFrame.class {
       constructor(pc, next) {
         let tmp;
-        tmp = super(next, false);
+        tmp = super(next);
         this.pc = pc;
         this.next = next;
       }
@@ -1480,7 +1489,6 @@ handleBlock$ = function handleBlock$() {
         contLoop: while (true) {
           if (this.pc === 47) {
             runtime.stackDepth = runtime.stackDepth + 1;
-            this.completed = true;
             return testCryptarithm_nofib(1)
           }
           break;
@@ -1490,19 +1498,16 @@ handleBlock$ = function handleBlock$() {
     };
     stackDelayRes = runtime.checkDepth();
     if (stackDelayRes instanceof runtime.EffectSig.class) {
-      stackDelayRes.tail.next = new Cont$lambda$2.class(47, null);
-      stackDelayRes.tail = stackDelayRes.tail.next;
+      stackDelayRes.contTrace.last.next = new Cont$lambda$2.class(47, null);
+      stackDelayRes.contTrace.last = stackDelayRes.contTrace.last.next;
       return stackDelayRes
     }
     runtime.stackDepth = runtime.stackDepth + 1;
     return testCryptarithm_nofib(1)
   });
   if (res1 instanceof runtime.EffectSig.class) {
-    res1.tail.next = new Cont$handleBlock$stackHandler$1(48, null);
+    res1.contTrace.last.next = new Cont$handleBlock$stackHandler$1(48, null);
     return runtime.handleBlockImpl(res1, stackHandler)
-  }
-  if (res1 instanceof runtime.Return.class) {
-    return res1
   }
   return res1
 };

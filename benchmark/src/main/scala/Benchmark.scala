@@ -4,6 +4,7 @@ import mlscript.utils.*, shorthands.*
 
 import hkmc2.Config.EffectHandlers
 import hkmc2.Config.StackSafety
+import hkmc2.Config.LiftDefns
 
 object Benchmark {
   val testDir = os.pwd/"hkmc2"/"shared"/"src"/"test"
@@ -12,8 +13,10 @@ object Benchmark {
   val nofibPath = os.pwd/"benchmark"/"src"/"nofib"
   val nofibPrecompilePath = os.pwd/"benchmark"/"src"/"precompiled"
   
-  val compilerNoInstr = MLsCompiler(preludePath, _(println))(using Config(N, N))
-  val compilerStackSafe = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(S(StackSafety.default)))))
+  val compilerNoInstr = MLsCompiler(preludePath, _(println))(using Config(N, N, N))
+  val compilerInstr = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(N)), N))
+  val compilerStackSafe = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(S(StackSafety.default))), N))
+  val compilerStackSafeLifted = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(S(StackSafety.default))), S(LiftDefns())))
 
   def precompileModules =
     compilerNoInstr.compileModule(compileTestDir/"Runtime.mls")
@@ -32,7 +35,7 @@ object Benchmark {
     compileBoth(nofibPrecompilePath/"NofibPrelude.mls")
 
     os.copy(nofibPrecompilePath/"BenchmarkPrelude.instr.mls", nofibPrecompilePath/"BenchmarkPrelude.mls", replaceExisting = true)
-    compilerStackSafe.compileModule(nofibPrecompilePath/"BenchmarkPrelude.mls")
+    compilerInstr.compileModule(nofibPrecompilePath/"BenchmarkPrelude.mls")
     os.copy(nofibPrecompilePath/"BenchmarkPrelude.mjs", nofibPrecompilePath/"BenchmarkPrelude.instr.mjs", replaceExisting = true)
 
     os.copy(nofibPrecompilePath/"BenchmarkPrelude.noinstr.mls", nofibPrecompilePath/"BenchmarkPrelude.mls", replaceExisting = true)
@@ -57,7 +60,8 @@ object Benchmark {
     val blacklist = "cryptarithm1" :: Nil
     // val blacklist = Nil
     lazy val nofibFiles = os.list(os.pwd/"benchmark"/"src"/"nofib").filter(_.ext == "mls").filterNot(p => blacklist.exists(_ == p.baseName))
-    // lazy val nofibFiles = List(os.pwd/"benchmark"/"src"/"nofib"/"test.mls")
+    // lazy val nofibFiles = List(os.pwd/"benchmark"/"src"/"nofib"/"cryptarithm1.mls")
+    // lazy val nofibFiles = List(os.pwd/"benchmark"/"src"/"examples"/"StackSafety.mls")
 
     nofibFiles.foreach: path =>
       def run(compiler: MLsCompiler) =
@@ -68,7 +72,7 @@ object Benchmark {
         os.proc("node", resultPath.toString).call(stdout = os.Inherit, stderr = os.Inherit)
       useStackSafe
       println("Stack safety: on")
-      run(compilerStackSafe)
+      run(compilerStackSafeLifted)
       useNoInstr
       println("Stack safety: off")
       run(compilerNoInstr)

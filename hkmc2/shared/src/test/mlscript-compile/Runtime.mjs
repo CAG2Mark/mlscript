@@ -392,7 +392,7 @@ Runtime1 = class Runtime {
   } 
   static resume(contTrace1) {
     return (value) => {
-      let scrut, tmp;
+      let scrut, cur2, nxt, scrut1, tmp, tmp1, tmp2, tmp3, tmp4;
       scrut = contTrace1.resumed;
       if (scrut === true) {
         throw globalThis.Error("Multiple resumption");
@@ -400,29 +400,48 @@ Runtime1 = class Runtime {
         tmp = runtime.Unit;
       }
       contTrace1.resumed = true;
-      return Runtime.resumeContTrace(contTrace1, value)
+      tmp1 = Runtime.resumeContTrace(contTrace1, value);
+      cur2 = tmp1;
+      tmp5: while (true) {
+        if (cur2 instanceof Runtime.EffectSig.class) {
+          tmp2 = Runtime.handleEffect(cur2);
+          nxt = tmp2;
+          scrut1 = cur2 === nxt;
+          if (scrut1 === true) {
+            return cur2
+          } else {
+            cur2 = nxt;
+            tmp3 = runtime.Unit;
+          }
+          tmp4 = tmp3;
+          continue tmp5;
+        } else {
+          return cur2
+        }
+        break;
+      }
+      return tmp4
     }
   } 
   static resumeContTrace(contTrace2, value) {
-    let cont4, handlerCont, scrut, scrut1, tmp, tmp1, tmp2, tmp3, tmp4;
-    cont4 = contTrace2.next;
-    handlerCont = contTrace2.nextHandler;
+    let scrut, scrut1, scrut2, scrut3, tmp, tmp1, tmp2, tmp3, tmp4;
     tmp5: while (true) {
-      if (cont4 instanceof Runtime.FunctionContFrame.class) {
-        tmp = runtime.safeCall(cont4.resume(value));
+      scrut1 = contTrace2.next;
+      if (scrut1 instanceof Runtime.FunctionContFrame.class) {
+        tmp = runtime.safeCall(contTrace2.next.resume(value));
         value = tmp;
         if (value instanceof Runtime.EffectSig.class) {
-          value.contTrace.last.next = cont4.next;
-          value.contTrace.lastHandler.nextHandler = handlerCont;
-          scrut = contTrace2.last !== cont4;
-          if (scrut === true) {
+          value.contTrace.last.next = contTrace2.next.next;
+          value.contTrace.lastHandler.nextHandler = contTrace2.nextHandler;
+          scrut2 = contTrace2.last !== contTrace2.next;
+          if (scrut2 === true) {
             value.contTrace.last = contTrace2.last;
             tmp1 = runtime.Unit;
           } else {
             tmp1 = runtime.Unit;
           }
-          scrut1 = handlerCont !== null;
-          if (scrut1 === true) {
+          scrut3 = contTrace2.nextHandler !== null;
+          if (scrut3 === true) {
             value.contTrace.lastHandler = contTrace2.lastHandler;
             tmp2 = runtime.Unit;
           } else {
@@ -430,15 +449,16 @@ Runtime1 = class Runtime {
           }
           return value
         } else {
-          cont4 = cont4.next;
+          contTrace2.next = contTrace2.next.next;
           tmp3 = runtime.Unit;
         }
         tmp4 = tmp3;
         continue tmp5;
       } else {
-        if (handlerCont instanceof Runtime.HandlerContFrame.class) {
-          cont4 = handlerCont.next;
-          handlerCont = handlerCont.nextHandler;
+        scrut = contTrace2.nextHandler;
+        if (scrut instanceof Runtime.HandlerContFrame.class) {
+          contTrace2.next = contTrace2.nextHandler.next;
+          contTrace2.nextHandler = contTrace2.nextHandler.nextHandler;
           tmp4 = runtime.Unit;
           continue tmp5;
         } else {
