@@ -1,7 +1,7 @@
 import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.mjs";
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
-let traverseTerm, showTerm, App1, mainMonad, Lam1, MyState1, traverseCon, testLambda_nofib, eqTerm, simpleEvalCon, myRunState, Unit1, pushVar, Thunk1, Term1, lookup, Con1, eval_nofib, myMaybe, myEvalState, ppenv, ev, lookupVar, simpleApply, Var1, ppn, Add1, eqEnv, bracket, myBind, withEnv, simpleEval, myReturn, apply, IfZero1, mainSimple, pp, Incr1, myGet, incr, lfxx, fix, nMinus1, partialSum0, sum0, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, lambda, lambda1;
+let traverseTerm, showTerm, App1, mainMonad, Lam1, MyState1, traverseCon, testLambda_nofib, eqTerm, simpleEvalCon, myRunState, Unit1, pushVar, Thunk1, Term1, Con1, lookup, myMaybe, myEvalState, ppenv, ev, lookupVar, simpleApply, Var1, ppn, eval_, Add1, eqEnv, bracket, myBind, withEnv, simpleEval, myReturn, apply, IfZero1, mainSimple, pp, Incr1, myGet, incr, lfxx, fix, nMinus1, partialSum0, sum0, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, lambda, lambda1;
 lookup = function lookup(k, t) {
   let param0, param1, first1, first0, x, v, t1, scrut;
   if (t instanceof NofibPrelude.Nil.class) {
@@ -296,7 +296,7 @@ pushVar = function pushVar(v, t, m) {
   return myBind(myGet, lambda2)
 };
 traverseTerm = function traverseTerm(t) {
-  return eval_nofib(t)
+  return eval_(t)
 };
 traverseCon = function traverseCon(t) {
   let tmp35, tmp36, lambda2;
@@ -341,7 +341,7 @@ apply = function apply(t, a) {
     throw new globalThis.Error("match error");
   }
 };
-eval_nofib = function eval_nofib(ter) {
+eval_ = function eval_(ter) {
   let param0, i, param01, param1, param2, c, a, b, param02, param11, u, v, param03, param12, x, b1, param04, param13, t, e, param05, param14, u1, v1, param06, x1, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7;
   if (ter instanceof Var1.class) {
     param06 = ter.s;

@@ -201,6 +201,6 @@ testGcd_nofib = function testGcd_nofib(x) {
   return test(x)
 };
 lambda = (undefined, function () {
-  return testGcd_nofib(400)
+  return testGcd_nofib(40)
 });
 BenchmarkPrelude.benchmark(lambda)

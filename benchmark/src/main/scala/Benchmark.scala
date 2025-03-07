@@ -57,9 +57,11 @@ object Benchmark {
 
     println("Precompiling modules")
     precompileModules
-    val blacklist = Nil
-    // lazy val nofibFiles = os.list(os.pwd/"benchmark"/"src"/"nofib").filter(_.ext == "mls").filterNot(p => blacklist.exists(_ == p.baseName))
-    lazy val nofibFiles = List(os.pwd/"benchmark"/"src"/"examples"/"StackSafety.mls")
+    println()
+    // last-piece is pretty weird, calling flip with incorrect number of arg
+    val failing = Set("last-piece", "mandel", "power", "sorting")
+    lazy val nofibFiles = os.list(os.pwd/"benchmark"/"src"/"nofib").filter(_.ext == "mls").filterNot(p => failing.exists(_ == p.baseName))
+    // lazy val nofibFiles = List(os.pwd/"benchmark"/"src"/"examples"/"StackSafety.mls")
 
     nofibFiles.foreach: path =>
       def run(compiler: MLsCompiler) =
@@ -74,5 +76,6 @@ object Benchmark {
       useNoInstr
       println("Stack safety: off")
       run(compilerNoInstr)
+      println()
 
 }

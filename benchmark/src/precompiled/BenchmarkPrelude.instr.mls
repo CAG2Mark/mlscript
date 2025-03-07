@@ -9,9 +9,13 @@ let b = benchmark
 
 module BenchmarkPrelude with ...
 
+fun not(x) = x === false
+
 fun print(s) = Predef.print(s)
 
-fun helper(f) = Runtime.runStackSafe(500, f)
+fun helper(f) =
+  Runtime.runStackSafe(500, f)
+  true
 
 fun benchmark(fn) =
   // print(helper(fn))
@@ -21,9 +25,9 @@ fun benchmark(fn) =
   // let settings = {}
   // set settings.async = false
   // suite.on("cycle", (event) => print(String(event.target))).run(settings)
-  let start = globalThis.Date.now()
+  let start = globalThis.performance.now()
   let res = helper(fn)
-  let end = globalThis.Date.now()
+  let end = globalThis.performance.now()
   print("Time: " + (end - start) + "ms")
 
 set globalThis.Predef = Predef

@@ -9,9 +9,16 @@ let b = benchmark
 
 module BenchmarkPrelude with ...
 
+fun not(x) = x === false
+
 fun print(s) = Predef.print(s)
 
-fun helper(f) = js.try_catch(() => f(), (e) => print("Error: " + e))
+fun helper(f) =
+  let success = true
+  js.try_catch of () => f(), (e) =>
+    set success = false
+    print("Error: " + e)
+  success
 
 fun benchmark(fn) =
   // print(helper(fn))
@@ -21,9 +28,10 @@ fun benchmark(fn) =
   // let settings = {}
   // set settings.async = false
   // suite.on("cycle", (event) => print(String(event.target))).run(settings)
-  let start = globalThis.Date.now()
+  let start = globalThis.performance.now()
   let res = helper(fn)
-  let end = globalThis.Date.now()
-  print("Time: " + (end - start) + "ms")
+  let end = globalThis.performance.now()
+  if res do
+    print("Time: " + (end - start) + "ms")
 
 set globalThis.Predef = Predef

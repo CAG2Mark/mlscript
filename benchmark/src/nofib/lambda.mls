@@ -37,6 +37,8 @@ class
 
 object Unit
 
+// :...
+//│ ————————————————————————————————————————————————————————————————————————————————
 fun eqEnv(a, b) = if a is
   Nil and b is Nil then true
   [s1, t1] :: b and b is [s2, t2] :: d and
@@ -54,6 +56,7 @@ fun eqTerm(a, b) = if a is
   IfZero(a, b, c) and b is IfZero(d, e, f) then eqTerm(a, d) && eqTerm(b, e) && eqTerm(c, f)
   Thunk(a, b) and b is Thunk(c, d) then eqTerm(a, c) && eqEnv(b, d)
   else false
+//│ ————————————————————————————————————————————————————————————————————————————————
 
 fun myMaybe(d, f, x) = if x is Some(x) then f(x)
 
@@ -68,7 +71,9 @@ fun withEnv(tmp, m) = myReturn(myEvalState(m, tmp))
 
 fun pushVar(v, t, m) = myBind(myGet, env => withEnv([v, t] :: env, m))
 
-fun traverseTerm(t) = eval_nofib(t)
+// :...
+//│ ————————————————————————————————————————————————————————————————————————————————
+fun traverseTerm(t) = eval_(t)
 
 fun traverseCon(t) =
   myBind(
@@ -82,7 +87,7 @@ fun apply(t, a) = if t is Thunk(Lam(x, b), e) then
     orig => withEnv(e, pushVar(x, Thunk(a, orig), traverseTerm(b)))
   )
 
-fun eval_nofib(ter) = if ter is
+fun eval_(ter) = if ter is
   Var(x) then
     myBind of
       myGet
@@ -100,7 +105,10 @@ fun eval_nofib(ter) = if ter is
       vall => if eqTerm(vall, Con(0)) then traverseTerm(a) else traverseTerm(b)
   Con(i) then myReturn(Con(i))
   Incr then myBind(incr, _dummy => myReturn(Con(0)))
+//│ ————————————————————————————————————————————————————————————————————————————————
 
+// :...
+//│ ————————————————————————————————————————————————————————————————————————————————
 fun simpleEval(env, ter) = if ter is
   Var(v) then simpleEval(env, myMaybe(dummy => throw Error("undefined var"), x => x, lookup(v, env)))
   Con(e) then Con(e)
@@ -126,9 +134,12 @@ fun simpleApply(env, t, a) = if t is
 fun simpleEvalCon(env, e) =
   let e_ = simpleEval(env, e)
   if e_ is Con(c) then c else throw Error("Not a Con")
+//│ ————————————————————————————————————————————————————————————————————————————————
 
 fun bracket(ot, ths, t) = if ths <= ot then "(" :: (t +: nofibStringToList(")")) else t
 
+// :...
+//│ ————————————————————————————————————————————————————————————————————————————————
 fun ppn(n, ter) = if ter is
   Var(v) then v
   Con(i) then nofibStringToList(stringOfInt(i))
@@ -148,6 +159,7 @@ fun ppenv(env) =
     env
   ) +:
   nofibStringToList("]")
+//│ ————————————————————————————————————————————————————————————————————————————————
 
 let lfxx = Lam(nofibStringToList("x"), App(Var(nofibStringToList("F")), App(Var(nofibStringToList("x")), Var(nofibStringToList("x")))))
 //│ lfxx = Lam(["x"], App(Var(["F"]), App(Var(["x"]), Var(["x"]))))
@@ -182,7 +194,5 @@ fun mainMonad(args) =
 
 fun testLambda_nofib(n) = [mainSimple(n :: Nil), mainMonad(n :: Nil)]
 
-// print(testLambda_nofib(80).toString())
+benchmark of () => testLambda_nofib(80).toString()
 //│ = "[\"C\",\"o\",\"n\",\" \",\"3\",\"2\",\"4\",\"0\"],[\"3\",\"2\",\"4\",\"0\",\" \",\" \",\"[\",\"]\"]"
-
-benchmark(() => testLambda_nofib(80).toString())

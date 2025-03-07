@@ -1,7 +1,7 @@
 import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.mjs";
-import fs from "fs";
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
+import fs from "fs";
 let testTreejoin_nofib, isDigit, readTree, Empty1, isSpace, readInt, join, lookupT, Tree1, Node1, Leaf1, insertT, lambda;
 isSpace = function isSpace(c) {
   let tmp, tmp1;
