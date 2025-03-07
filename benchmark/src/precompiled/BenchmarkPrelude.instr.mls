@@ -11,24 +11,7 @@ module BenchmarkPrelude with ...
 
 fun print(s) = Predef.print(s)
 
-fun helper(f) =
-  let res
-  let outerHandler = Runtime.stackHandler
-  handle h = Runtime.StackDelay with
-    fun perform()(k) =
-      set Runtime.stackOffset = Runtime.stackDepth
-      k(())
-  in
-    set
-      Runtime.stackLimit = 500
-      Runtime.stackOffset = 0
-      Runtime.stackDepth = 1
-      Runtime.stackHandler = h
-    set res = f()
-  set
-    Runtime.stackDepth = 0
-    Runtime.stackHandler = outerHandler
-  res
+fun helper(f) = Runtime.runStackSafe(500, f)
 
 fun benchmark(fn) =
   // print(helper(fn))

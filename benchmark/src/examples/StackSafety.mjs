@@ -4,7 +4,7 @@ import Stack from "./../../../hkmc2/shared/src/test/mlscript-compile/Stack.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 import benchmark from "benchmark";
-let map, main, fill, toString, sum, do_benchmark, lambda, lambda1, lambda2, lambda3, res, Cont$func$sum$StackSafety$_mls_L0_296_343$1, Cont$func$fill$StackSafety$_mls_L0_349_417$1, Cont$func$map$StackSafety$_mls_L0_423_504$1, Cont$func$toString$StackSafety$_mls_L0_510_749$1, Cont$func$main$StackSafety$_mls_L0_755_799$1, Cont$func$lambda$$4, Cont$func$lambda$$5, Cont$func$do_benchmark$StackSafety$_mls_L0_805_1364$1, Cont$func$lambda$$6, Cont$func$lambda$$7, handleBlock$, Cont$handleBlock$stackHandler$1, StackDelay$1, lambda4, Cont$func$sum$StackSafety$_mls_L0_296_343$$ctor, Cont$func$sum$StackSafety$_mls_L0_296_343$$, Cont$func$fill$StackSafety$_mls_L0_349_417$$ctor, Cont$func$fill$StackSafety$_mls_L0_349_417$$, Cont$func$map$StackSafety$_mls_L0_423_504$$ctor, Cont$func$map$StackSafety$_mls_L0_423_504$$, Cont$func$toString$StackSafety$_mls_L0_510_749$$ctor, Cont$func$toString$StackSafety$_mls_L0_510_749$$, Cont$func$main$StackSafety$_mls_L0_755_799$$ctor, Cont$func$main$StackSafety$_mls_L0_755_799$$, lambda$, Cont$func$lambda$$$ctor, Cont$func$lambda$$$, lambda$1, Cont$func$lambda$$$ctor1, Cont$func$lambda$$$1, Cont$func$do_benchmark$StackSafety$_mls_L0_805_1364$$ctor, Cont$func$do_benchmark$StackSafety$_mls_L0_805_1364$$, lambda$2, Cont$func$lambda$$$ctor2, Cont$func$lambda$$$2, Cont$func$lambda$$$ctor3, Cont$func$lambda$$$3, Cont$handleBlock$stackHandler$$ctor, Cont$handleBlock$stackHandler$$, lambda$3;
+let map, main, fill, toString, sum, do_benchmark, lambda, lambda1, lambda2, lambda3, res, Cont$func$sum$StackSafety$_mls_L0_296_343$1, Cont$func$fill$StackSafety$_mls_L0_349_417$1, Cont$func$map$StackSafety$_mls_L0_423_504$1, Cont$func$toString$StackSafety$_mls_L0_510_749$1, Cont$func$main$StackSafety$_mls_L0_755_799$1, Cont$func$lambda$$4, Cont$func$lambda$$5, Cont$func$do_benchmark$StackSafety$_mls_L0_805_1364$1, Cont$func$lambda$$6, Cont$func$lambda$$7, lambda4, Cont$func$sum$StackSafety$_mls_L0_296_343$$ctor, Cont$func$sum$StackSafety$_mls_L0_296_343$$, Cont$func$fill$StackSafety$_mls_L0_349_417$$ctor, Cont$func$fill$StackSafety$_mls_L0_349_417$$, Cont$func$map$StackSafety$_mls_L0_423_504$$ctor, Cont$func$map$StackSafety$_mls_L0_423_504$$, Cont$func$toString$StackSafety$_mls_L0_510_749$$ctor, Cont$func$toString$StackSafety$_mls_L0_510_749$$, Cont$func$main$StackSafety$_mls_L0_755_799$$ctor, Cont$func$main$StackSafety$_mls_L0_755_799$$, lambda$, Cont$func$lambda$$$ctor, Cont$func$lambda$$$, lambda$1, Cont$func$lambda$$$ctor1, Cont$func$lambda$$$1, Cont$func$do_benchmark$StackSafety$_mls_L0_805_1364$$ctor, Cont$func$do_benchmark$StackSafety$_mls_L0_805_1364$$, lambda$2, Cont$func$lambda$$$ctor2, Cont$func$lambda$$$2, Cont$func$lambda$$$ctor3, Cont$func$lambda$$$3;
 Cont$func$sum$StackSafety$_mls_L0_296_343$$ = function Cont$func$sum$StackSafety$_mls_L0_296_343$$(n$0, scrut$1, tmp$2, tmp$3, curDepth$4, stackDelayRes$5, pc) {
   let tmp;
   tmp = new Cont$func$sum$StackSafety$_mls_L0_296_343$1.class(pc);
@@ -1323,85 +1323,11 @@ lambda2 = (undefined, function (x) {
   lambda$this = runtime.safeCall(lambda3(x));
   return BenchmarkPrelude.helper(lambda$this)
 });
-lambda$3 = function lambda$(StackDelay$$instance, resume) {
-  runtime.stackOffset = runtime.stackDepth;
-  return resume()
-};
-lambda4 = (undefined, function (StackDelay$$instance) {
-  return (resume) => {
-    return lambda$3(StackDelay$$instance, resume)
-  }
+lambda4 = (undefined, function () {
+  return do_benchmark(lambda2)
 });
-StackDelay$1 = class StackDelay$ extends runtime.StackDelay {
-  constructor() {
-    let tmp;
-    tmp = super();
-  }
-  perform() {
-    let lambda$this;
-    lambda$this = runtime.safeCall(lambda4(this));
-    return runtime.mkEffect(this, lambda$this)
-  }
-  toString() { return "StackDelay$"; }
-};
-Cont$handleBlock$stackHandler$$ = function Cont$handleBlock$stackHandler$$(res$0, pc) {
-  let tmp;
-  tmp = new Cont$handleBlock$stackHandler$1.class(pc);
-  return tmp(res$0)
-};
-Cont$handleBlock$stackHandler$$ctor = function Cont$handleBlock$stackHandler$$ctor(res$0) {
-  return (pc) => {
-    let tmp;
-    tmp = new Cont$handleBlock$stackHandler$1.class(pc);
-    return tmp(res$0)
-  }
-};
-Cont$handleBlock$stackHandler$1 = function Cont$handleBlock$stackHandler$(pc1) {
-  return (res$01) => {
-    return new Cont$handleBlock$stackHandler$.class(pc1)(res$01);
-  }
-};
-Cont$handleBlock$stackHandler$1.class = class Cont$handleBlock$stackHandler$ extends runtime.FunctionContFrame.class {
-  constructor(pc) {
-    return (res$0) => {
-      let tmp;
-      tmp = super(null);
-      this.pc = pc;
-      this.res$0 = res$0;
-      return this;
-    }
-  }
-  resume(value$) {
-    if (this.pc === 64) {
-      this.res$0 = value$;
-    }
-    contLoop: while (true) {
-      if (this.pc === 64) {
-        return this.res$0
-      }
-      break;
-    }
-  }
-  toString() { return "Cont$handleBlock$stackHandler$(" + globalThis.Predef.render(this.pc) + ")"; }
-};
-handleBlock$ = function handleBlock$() {
-  let stackHandler, res1;
-  stackHandler = new StackDelay$1();
-  runtime.stackLimit = 500;
-  runtime.stackOffset = 0;
-  runtime.stackDepth = 1;
-  runtime.stackHandler = stackHandler;
-  res1 = do_benchmark(lambda2);
-  if (res1 instanceof runtime.EffectSig.class) {
-    res1.contTrace.last.next = Cont$handleBlock$stackHandler$$(res1, 64);
-    return runtime.handleBlockImpl(res1, stackHandler)
-  }
-  return res1
-};
-res = handleBlock$();
+res = runtime.runStackSafe(500, lambda4);
 if (res instanceof runtime.EffectSig.class) {
   throw new this.Error("Unhandled effects");
 }
-runtime.stackDepth = 0;
-runtime.stackHandler = null;
 res
