@@ -1,15 +1,23 @@
 import "../precompiled/NofibPrelude.mls"
 import "../precompiled/BenchmarkPrelude.mls"
+import "fs"
 open NofibPrelude
 open BenchmarkPrelude
+
+module mandel2 with ...
+// :js
+
+// :silent
+// :import NofibPrelude.mls
 
 
 abstract class MandTree: NS | EW | Leaf
 
-class
-  NS(l: MandTree, r: MandTree) extends MandTree
-  EW(l: MandTree, r: MandTree) extends MandTree
-  Leaf(colour: Int) extends MandTree
+data
+  class
+    NS(l: MandTree, r: MandTree) extends MandTree
+    EW(l: MandTree, r: MandTree) extends MandTree
+    Leaf(colour: Int) extends MandTree
 
 let size = 200
 let pmn = -2.25

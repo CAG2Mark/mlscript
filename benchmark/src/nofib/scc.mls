@@ -1,7 +1,14 @@
 import "../precompiled/NofibPrelude.mls"
 import "../precompiled/BenchmarkPrelude.mls"
+import "fs"
 open NofibPrelude
 open BenchmarkPrelude
+
+module scc with ...
+// :js
+
+// :silent
+// :import NofibPrelude.mls
 
 
 fun dfs(r, vsns, xs) = if vsns is [vs, ns] and
@@ -9,7 +16,7 @@ fun dfs(r, vsns, xs) = if vsns is [vs, ns] and
     Nil then [vs, ns]
     x :: xs and
       inList(x, vs) then dfs(r, [vs, ns], xs)
-      dfs(r, [x :: vs, Nil], r(x)) is [vs1, ns1] then dfs(r, [vs1, (x :: ns1) +: ns], xs)
+      dfs(r, [x :: vs, Nil], r(x)) is [vs', ns'] then dfs(r, [vs', (x :: ns') +: ns], xs)
 
 fun stronglyConnComp(es, vs) =
   fun swap(a) = if a is [f, s] then [s, f]
@@ -25,7 +32,7 @@ fun stronglyConnComp(es, vs) =
       Nil then [vs, ns]
       x :: xs and
         inList(x, vs) then span_tree(r, [vs, ns], xs)
-        dfs(r, [x :: vs, Nil], r(x)) is [vs1, ns1] then span_tree(r, [vs1, (x :: ns1) :: ns], xs)
+        dfs(r, [x :: vs, Nil], r(x)) is [vs', ns'] then span_tree(r, [vs', (x :: ns') :: ns], xs)
   
   snd of span_tree of
     x => new_range(map(swap, es), x)

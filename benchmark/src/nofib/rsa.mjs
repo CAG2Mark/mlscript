@@ -2,175 +2,188 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let z_add, unlines, encrypt, testRsa_nofib, hash, string_of_z, z_of_int, power_, z_mul, z_sqr, size, and_, z_sub, z_div, z_mod, code, even, int_if_char, z_equal, collect, const0, const31, const1, const2, const128, intput, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, lambda;
-z_of_int = function z_of_int(x) {
-  return runtime.safeCall(globalThis.BigInt(x))
-};
-string_of_z = function string_of_z(x) {
-  let tmp8;
-  tmp8 = x + "";
-  return NofibPrelude.nofibStringToList(tmp8)
-};
-z_add = function z_add(x, y) {
-  return x + y
-};
-z_mul = function z_mul(x, y) {
-  return x * y
-};
-z_sub = function z_sub(x, y) {
-  return x - y
-};
-z_div = function z_div(x, y) {
-  return x / y
-};
-z_mod = function z_mod(x, y) {
-  return x % y
-};
-z_equal = function z_equal(x, y) {
-  return x === y
-};
-z_sqr = function z_sqr(x) {
-  return x * x
-};
-int_if_char = function int_if_char(c) {
-  return runtime.safeCall(c.codePointAt(0))
-};
-hash = function hash(str) {
-  let tmp8, lambda1;
-  lambda1 = (undefined, function (acc, c) {
-    let tmp9, tmp10, tmp11;
-    tmp9 = int_if_char(c);
-    tmp10 = z_of_int(tmp9);
-    tmp11 = z_mul(acc, const31);
-    return z_add(tmp10, tmp11)
-  });
-  tmp8 = lambda1;
-  return NofibPrelude.foldl(tmp8, const0, str)
-};
-and_ = function and_(ls) {
-  let param0, param1, h, t;
-  if (ls instanceof NofibPrelude.Nil.class) {
-    return true
-  } else if (ls instanceof NofibPrelude.Cons.class) {
-    param0 = ls.head;
-    param1 = ls.tail;
-    h = param0;
-    t = param1;
-    if (h === true) {
-      return and_(t)
-    } else {
-      return false
-    }
-  } else {
-    throw new globalThis.Error("match error");
+let rsa1;
+rsa1 = class rsa {
+  static #const0;
+  static #const31;
+  static #const1;
+  static #const2;
+  static #const128;
+  static #intput;
+  static {
+    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, lambda;
+    tmp = rsa.z_of_int(0);
+    rsa.#const0 = tmp;
+    tmp1 = rsa.z_of_int(31);
+    rsa.#const31 = tmp1;
+    tmp2 = rsa.z_of_int(1);
+    rsa.#const1 = tmp2;
+    tmp3 = rsa.z_of_int(2);
+    rsa.#const2 = tmp3;
+    tmp4 = rsa.z_of_int(128);
+    rsa.#const128 = tmp4;
+    tmp5 = runtime.safeCall(fs.readFileSync("hkmc2/shared/src/test/mlscript/nofib/input/rsa.faststdin"));
+    tmp6 = runtime.safeCall(tmp5.toString());
+    tmp7 = NofibPrelude.nofibStringToList(tmp6);
+    rsa.#intput = tmp7;
+    lambda = (undefined, function () {
+      return rsa.testRsa_nofib(0)
+    });
+    BenchmarkPrelude.benchmark(lambda)
   }
-};
-unlines = function unlines(ls) {
-  let tmp8, lambda1;
-  lambda1 = (undefined, function (l) {
-    let tmp9;
-    tmp9 = NofibPrelude.Cons("\n", NofibPrelude.Nil);
-    return NofibPrelude.append(l, tmp9)
-  });
-  tmp8 = NofibPrelude.map(lambda1, ls);
-  return NofibPrelude.concat(tmp8)
-};
-even = function even(a) {
-  let tmp8;
-  tmp8 = z_mod(a, const2);
-  return tmp8 === const0
-};
-code = function code(ls) {
-  let tmp8, lambda1;
-  lambda1 = (undefined, function (x, y) {
-    let tmp9, tmp10, tmp11;
-    tmp9 = z_mul(const128, x);
-    tmp10 = int_if_char(y);
-    tmp11 = z_of_int(tmp10);
-    return z_add(tmp9, tmp11)
-  });
-  tmp8 = lambda1;
-  return NofibPrelude.foldl(tmp8, const0, ls)
-};
-collect = function collect(n, xs) {
-  let scrut, tmp8, tmp9, tmp10;
-  scrut = n === 0;
-  if (scrut === true) {
-    return NofibPrelude.Nil
-  } else {
-    if (xs instanceof NofibPrelude.Nil.class) {
+  static z_of_int(x) {
+    return runtime.safeCall(globalThis.BigInt(x))
+  } 
+  static string_of_z(x1) {
+    let tmp;
+    tmp = x1 + "";
+    return NofibPrelude.nofibStringToList(tmp)
+  } 
+  static z_add(x2, y) {
+    return x2 + y
+  } 
+  static z_mul(x3, y1) {
+    return x3 * y1
+  } 
+  static z_sub(x4, y2) {
+    return x4 - y2
+  } 
+  static z_div(x5, y3) {
+    return x5 / y3
+  } 
+  static z_mod(x6, y4) {
+    return x6 % y4
+  } 
+  static z_equal(x7, y5) {
+    return x7 === y5
+  } 
+  static z_sqr(x8) {
+    return x8 * x8
+  } 
+  static int_if_char(c) {
+    return runtime.safeCall(c.codePointAt(0))
+  } 
+  static hash(str) {
+    let tmp, lambda;
+    lambda = (undefined, function (acc, c1) {
+      let tmp1, tmp2, tmp3;
+      tmp1 = rsa.int_if_char(c1);
+      tmp2 = rsa.z_of_int(tmp1);
+      tmp3 = rsa.z_mul(acc, rsa.#const31);
+      return rsa.z_add(tmp2, tmp3)
+    });
+    tmp = lambda;
+    return NofibPrelude.foldl(tmp, rsa.#const0, str)
+  } 
+  static and_(ls) {
+    let param0, param1, h, t;
+    if (ls instanceof NofibPrelude.Nil.class) {
+      return true
+    } else if (ls instanceof NofibPrelude.Cons.class) {
+      param0 = ls.head;
+      param1 = ls.tail;
+      h = param0;
+      t = param1;
+      if (h === true) {
+        return rsa.and_(t)
+      } else {
+        return false
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } 
+  static unlines(ls1) {
+    let tmp, lambda;
+    lambda = (undefined, function (l) {
+      let tmp1;
+      tmp1 = NofibPrelude.Cons("\n", NofibPrelude.Nil);
+      return NofibPrelude.append(l, tmp1)
+    });
+    tmp = NofibPrelude.map(lambda, ls1);
+    return NofibPrelude.concat(tmp)
+  } 
+  static even(a) {
+    let tmp;
+    tmp = rsa.z_mod(a, rsa.#const2);
+    return tmp === rsa.#const0
+  } 
+  static code(ls2) {
+    let tmp, lambda;
+    lambda = (undefined, function (x9, y6) {
+      let tmp1, tmp2, tmp3;
+      tmp1 = rsa.z_mul(rsa.#const128, x9);
+      tmp2 = rsa.int_if_char(y6);
+      tmp3 = rsa.z_of_int(tmp2);
+      return rsa.z_add(tmp1, tmp3)
+    });
+    tmp = lambda;
+    return NofibPrelude.foldl(tmp, rsa.#const0, ls2)
+  } 
+  static collect(n, xs) {
+    let scrut, tmp, tmp1, tmp2;
+    scrut = n === 0;
+    if (scrut === true) {
       return NofibPrelude.Nil
     } else {
-      tmp8 = NofibPrelude.take(n, xs);
-      tmp9 = NofibPrelude.drop(n, xs);
-      tmp10 = collect(n, tmp9);
-      return NofibPrelude.Cons(tmp8, tmp10)
+      if (xs instanceof NofibPrelude.Nil.class) {
+        return NofibPrelude.Nil
+      } else {
+        tmp = NofibPrelude.take(n, xs);
+        tmp1 = NofibPrelude.drop(n, xs);
+        tmp2 = rsa.collect(n, tmp1);
+        return NofibPrelude.Cons(tmp, tmp2)
+      }
     }
-  }
-};
-size = function size(n) {
-  let tmp8, tmp9, tmp10;
-  tmp8 = string_of_z(n);
-  tmp9 = NofibPrelude.listLen(tmp8);
-  tmp10 = tmp9 * 47;
-  return NofibPrelude.intDiv(tmp10, 100)
-};
-encrypt = function encrypt(n, e, s) {
-  let tmp8, tmp9, tmp10, tmp11, lambda1;
-  lambda1 = (undefined, function (c) {
-    let tmp12, tmp13;
-    tmp12 = code(c);
-    tmp13 = power_(e, n, tmp12);
-    return string_of_z(tmp13)
-  });
-  tmp8 = lambda1;
-  tmp9 = size(n);
-  tmp10 = collect(tmp9, s);
-  tmp11 = NofibPrelude.map(tmp8, tmp10);
-  return unlines(tmp11)
-};
-power_ = function power_(n, m, x) {
-  let scrut, scrut1, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13;
-  scrut1 = z_equal(n, const0);
-  if (scrut1 === true) {
-    return const1
-  } else {
-    scrut = even(n);
-    if (scrut === true) {
-      tmp8 = z_div(n, const2);
-      tmp9 = power_(tmp8, m, x);
-      tmp10 = z_sqr(tmp9);
-      return z_mod(tmp10, m)
+  } 
+  static size(n1) {
+    let tmp, tmp1, tmp2;
+    tmp = rsa.string_of_z(n1);
+    tmp1 = NofibPrelude.listLen(tmp);
+    tmp2 = tmp1 * 47;
+    return NofibPrelude.intDiv(tmp2, 100)
+  } 
+  static encrypt(n2, e, s) {
+    let tmp, tmp1, tmp2, tmp3, lambda;
+    lambda = (undefined, function (c1) {
+      let tmp4, tmp5;
+      tmp4 = rsa.code(c1);
+      tmp5 = rsa.power(e, n2, tmp4);
+      return rsa.string_of_z(tmp5)
+    });
+    tmp = lambda;
+    tmp1 = rsa.size(n2);
+    tmp2 = rsa.collect(tmp1, s);
+    tmp3 = NofibPrelude.map(tmp, tmp2);
+    return rsa.unlines(tmp3)
+  } 
+  static power(n3, m, x9) {
+    let scrut, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
+    scrut1 = rsa.z_equal(n3, rsa.#const0);
+    if (scrut1 === true) {
+      return rsa.#const1
     } else {
-      tmp11 = z_sub(n, const1);
-      tmp12 = power_(tmp11, m, x);
-      tmp13 = z_mul(x, tmp12);
-      return z_mod(tmp13, m)
+      scrut = rsa.even(n3);
+      if (scrut === true) {
+        tmp = rsa.z_div(n3, rsa.#const2);
+        tmp1 = rsa.power(tmp, m, x9);
+        tmp2 = rsa.z_sqr(tmp1);
+        return rsa.z_mod(tmp2, m)
+      } else {
+        tmp3 = rsa.z_sub(n3, rsa.#const1);
+        tmp4 = rsa.power(tmp3, m, x9);
+        tmp5 = rsa.z_mul(x9, tmp4);
+        return rsa.z_mod(tmp5, m)
+      }
     }
+  } 
+  static testRsa_nofib(_) {
+    let tmp, tmp1, tmp2;
+    tmp = rsa.z_of_int("2036450659413645137870851576872812267542175329986469156678671505255564383842535488743101632280716717779536712424613501441720195827856504007305662157107");
+    tmp1 = rsa.z_of_int("387784473137902876992546516170169092918207676456888779623592396031349415024943784869634893342729620092877891356118467738167515879252473323905128540213");
+    tmp2 = rsa.encrypt(tmp, tmp1, rsa.#intput);
+    return rsa.hash(tmp2)
   }
+  static toString() { return "rsa"; }
 };
-testRsa_nofib = function testRsa_nofib(_) {
-  let tmp8, tmp9, tmp10;
-  tmp8 = z_of_int("2036450659413645137870851576872812267542175329986469156678671505255564383842535488743101632280716717779536712424613501441720195827856504007305662157107");
-  tmp9 = z_of_int("387784473137902876992546516170169092918207676456888779623592396031349415024943784869634893342729620092877891356118467738167515879252473323905128540213");
-  tmp10 = encrypt(tmp8, tmp9, intput);
-  return hash(tmp10)
-};
-tmp = z_of_int(0);
-const0 = tmp;
-tmp1 = z_of_int(31);
-const31 = tmp1;
-tmp2 = z_of_int(1);
-const1 = tmp2;
-tmp3 = z_of_int(2);
-const2 = tmp3;
-tmp4 = z_of_int(128);
-const128 = tmp4;
-tmp5 = runtime.safeCall(fs.readFileSync("hkmc2/shared/src/test/mlscript/nofib/input/rsa.faststdin"));
-tmp6 = runtime.safeCall(tmp5.toString());
-tmp7 = NofibPrelude.nofibStringToList(tmp6);
-intput = tmp7;
-lambda = (undefined, function () {
-  return testRsa_nofib(0)
-});
-BenchmarkPrelude.benchmark(lambda)
+let rsa = rsa1; export default rsa;

@@ -1,7 +1,14 @@
 import "../precompiled/NofibPrelude.mls"
 import "../precompiled/BenchmarkPrelude.mls"
+import "fs"
 open NofibPrelude
 open BenchmarkPrelude
+
+module fish with ...
+// :js
+
+// :silent
+// :import NofibPrelude.mls
 
 fun vec_add(v1, v2) = if v1 is [x1, y1] and v2 is [x2, y2] then [x1 + x2, y1 + y2]
 
@@ -174,8 +181,8 @@ fun testFish_nofib(n) =
     enumFromTo(0, n)
 
 // :silent
-let ls = testFish_nofib(1)
+let ls = benchmark of () => testFish_nofib(1)
 
 // :fixme // FIXME handle cycle
-benchmark of () => ls
+ls
 //│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded

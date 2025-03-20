@@ -9,4 +9,96 @@
 :todo
 
 
+:sjs
+import "../mlscript-compile/Option.mls"
+fun Some(x) = x
+Some
+//│ Elab: ( import member:Option‹553› from /home/attempt0/mlscript/benchmark/hkmc2/shared/src/test/mlscript-compile/Option.mjs; ‹› fun member:Some‹544›(Param(‹›,x‹983›,None), ) = x‹983›#666; member:Some‹544›#666 )
+//│ JS (unsanitized):
+//│ import Option from "./../mlscript-compile/Option.mjs";
+//│ let Some;
+//│ Some = function Some(x) {
+//│   return x
+//│ };
+//│ Some
+//│ = [function Some]
 
+:pt
+open Option
+fun Some(x) = x
+Some
+//│ Parsed tree:
+//│ Open of Ident of "Option"
+//│ TermDef:
+//│   k = Fun
+//│   head = App:
+//│     lhs = Ident of "Some"
+//│     rhs = Tup of Ls of 
+//│       Ident of "x"
+//│   rhs = S of Ident of "x"
+//│ Ident of "Some"
+//│ Elab: ( ‹› fun member:Some‹987›(Param(‹›,x‹989›,None), ) = x‹989›#666; member:Some‹987›#666 )
+//│ = [function Some]
+
+import "../mlscript-compile/Example.mls"
+//│ Elab: ( import member:Example‹998› from /home/attempt0/mlscript/benchmark/hkmc2/shared/src/test/mlscript-compile/Example.mjs; )
+
+:sjs
+open Example
+module M with
+  fun inc() = 1
+  fun test() = inc()
+//│ Elab: ( Mod M ( ‹module› fun member:inc‹1415›() = 1; ‹module› fun member:test‹1414›() = (module:M‹1417›#666.)inc‹member:inc‹1415››(); ); )
+//│ JS (unsanitized):
+//│ let M1;
+//│ M1 = class M {
+//│   static {}
+//│   static inc() {
+//│     return 1
+//│   } 
+//│   static test() {
+//│     return M.inc()
+//│   }
+//│   static toString() { return "M"; }
+//│ };
+
+:sjs
+inc
+//│ Elab: ( (member:Example‹998›#666.)inc‹member:inc‹996›› )
+//│ JS (unsanitized):
+//│ Example.inc
+//│ = [function inc]
+
+
+:sjs
+open Example
+fun inc() = 1
+inc
+//│ Elab: ( ‹› fun member:inc‹1428›() = 1; member:inc‹1428›#666 )
+//│ JS (unsanitized):
+//│ let inc; inc = function inc() { return 1 }; inc
+//│ = [function inc]
+
+:sjs
+inc
+//│ Elab: ( member:inc‹1428›#666 )
+//│ JS (unsanitized):
+//│ inc
+//│ = [function inc]
+
+:sjs
+module A with
+  (() => 1)()
+//│ Elab: ( Mod A ( λ(). 1() ); )
+//│ JS (unsanitized):
+//│ let A1;
+//│ A1 = class A {
+//│   static {
+//│     let lambda;
+//│     lambda = (undefined, function () {
+//│       return 1
+//│     });
+//│     lambda()
+//│   }
+//│   static toString() { return "A"; }
+//│ };

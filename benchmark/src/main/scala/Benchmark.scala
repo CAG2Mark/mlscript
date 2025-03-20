@@ -16,7 +16,7 @@ object Benchmark {
   val compilerNoInstr = MLsCompiler(preludePath, _(println))(using Config(N, N, N))
   val compilerInstr = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(N)), N))
   val compilerStackSafe = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(S(StackSafety.default))), N))
-  val compilerStackSafeLifted = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(S(StackSafety.default))), S(LiftDefns())))
+  val compilerStackSafeLifted = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(S(StackSafety.default))), N))
 
   def precompileModules =
     compilerNoInstr.compileModule(compileTestDir/"Runtime.mls")
@@ -58,8 +58,32 @@ object Benchmark {
     println("Precompiling modules")
     precompileModules
     println()
-    // last-piece is pretty weird, calling flip with incorrect number of arg
-    val failing = Set("last-piece", "mandel", "power", "sorting")
+    // Import nofib
+    val nofibSources = os.list(os.pwd/"hkmc2"/"shared"/"src"/"test"/"mlscript"/"nofib").filter(_.last != "NofibPrelude.mls").filter(_.last != "input")
+    nofibSources.foreach: path =>
+      println(s"Importing ${path.last}")
+      val preludeStr = f"""import "../precompiled/NofibPrelude.mls"
+import "../precompiled/BenchmarkPrelude.mls"
+import "fs"
+open NofibPrelude
+open BenchmarkPrelude
+
+module ${path.baseName.replace("-", "")} with ...
+"""
+      val result = os.read(path).split("\n").map: line =>
+          if line.startsWith(":") || line.startsWith("import ") then
+            f"// $line"
+          else if line.startsWith("prog(6).toStr") || line.startsWith("test") || line.startsWith("nofib") ||
+            line.startsWith("print(test") || line.startsWith("print(nofib") || line.startsWith("print of") ||
+            line.startsWith("map(x => nofib") then
+            f"benchmark of () => $line"
+          else if line.startsWith("let ls = testFish") then
+            "let ls = benchmark of () => testFish_nofib(1)"
+          else
+            line
+        .mkString(preludeStr, "\n", "\n")
+      os.write.over(os.pwd/"benchmark"/"src"/"nofib"/path.last, result)
+    val failing = Set()
     lazy val nofibFiles = os.list(os.pwd/"benchmark"/"src"/"nofib").filter(_.ext == "mls").filterNot(p => failing.exists(_ == p.baseName))
     // lazy val nofibFiles = List(os.pwd/"benchmark"/"src"/"examples"/"StackSafety.mls")
 
@@ -70,9 +94,12 @@ object Benchmark {
         val resultPath = path / os.up / (path.baseName + ".mjs")
         println(s"Running $resultPath")
         os.proc("node", resultPath.toString).call(stdout = os.Inherit, stderr = os.Inherit)
-      useStackSafe
-      println("Stack safety: on")
-      run(compilerStackSafeLifted)
+      if path.last != "cryptarithm1.mls" then
+        useStackSafe
+        println("Stack safety: on")
+        run(compilerStackSafeLifted)
+      else
+        print("Skipping cryptarithm1 as it OOM without lifter")
       useNoInstr
       println("Stack safety: off")
       run(compilerNoInstr)

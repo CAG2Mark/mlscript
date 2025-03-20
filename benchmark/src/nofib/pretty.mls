@@ -1,16 +1,24 @@
 import "../precompiled/NofibPrelude.mls"
 import "../precompiled/BenchmarkPrelude.mls"
+import "fs"
 open NofibPrelude
 open BenchmarkPrelude
+
+module pretty with ...
+// :js
+
+// :silent
+// :import NofibPrelude.mls
 
 
 abstract class CSeq: CNil | CAppend | CIndent | CNewline | CStr | CCh
 
-class
-  CAppend(a: CSeq, b: CSeq) extends CSeq
-  CIndent(a: Int, b: CSeq) extends CSeq
-  CStr(a: List[Char]) extends CSeq
-  CCh(a: Char) extends CSeq
+data
+  class
+    CAppend(a: CSeq, b: CSeq) extends CSeq
+    CIndent(a: Int, b: CSeq) extends CSeq
+    CStr(a: List[Char]) extends CSeq
+    CCh(a: Char) extends CSeq
 
 object
   CNil extends CSeq
@@ -64,7 +72,7 @@ fun flatten(n, nlp, cseq, seqs) = if cseq is
 
 fun cShow(seq) = flatten(0, true, seq, Nil)
 
-class MkPrettyRep(cseq: CSeq, n: Int, b1: Bool, b2: Bool)
+data class MkPrettyRep(cseq: CSeq, n: Int, b1: Bool, b2: Bool)
 
 fun ppShow(width, p) = if p(width, false) is
   MkPrettyRep(seq, ll, emp, sl) then cShow(seq)

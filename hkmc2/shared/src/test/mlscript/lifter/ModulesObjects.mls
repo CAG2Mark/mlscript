@@ -286,3 +286,84 @@ fun foo(x) =
 
 foo(123)
 //│ = [true, [true, false], true]
+
+
+:sjs
+module A with
+  (() => 1)()
+//│ JS (unsanitized):
+//│ let A10;
+//│ A10 = class A9 {
+//│   static {
+//│     let lambda;
+//│     lambda = (undefined, function () {
+//│       return 1
+//│     });
+//│     lambda()
+//│   }
+//│   static toString() { return "A"; }
+//│ };
+
+:sjs
+module A with
+  let lam = id(() => 1)
+  class B with
+    fun f() =
+      class C with
+        lam()
+      new C
+  lam()
+  new B
+//│ JS (unsanitized):
+//│ let C1, A12, C$ctor, C$;
+//│ C$ = function C$(B$instance$0) {
+//│   let tmp7;
+//│   tmp7 = new C1.class();
+//│   return tmp7(B$instance$0)
+//│ };
+//│ C$ctor = function C$ctor(B$instance$0) {
+//│   return () => {
+//│     let tmp7;
+//│     tmp7 = new C1.class();
+//│     return tmp7(B$instance$0)
+//│   }
+//│ };
+//│ C1 = function C(B$instance$01) {
+//│   return new C.class()(B$instance$01);
+//│ };
+//│ C1.class = class C {
+//│   constructor() {
+//│     return (B$instance$0) => {
+//│       this.B$instance$0 = B$instance$0;
+//│       runtime.safeCall(A12.lam())
+//│       return this;
+//│     }
+//│   }
+//│   toString() { return "C"; }
+//│ };
+//│ A12 = class A11 {
+//│   static #lam;
+//│   static {
+//│     let tmp7, tmp8, lambda;
+//│     lambda = (undefined, function () {
+//│       return 1
+//│     });
+//│     tmp7 = Predef.id(lambda);
+//│     A11.#lam = tmp7;
+//│     this.B = class B4 {
+//│       constructor() {}
+//│       f() {
+//│         return C$(this)
+//│       }
+//│       toString() { return "B"; }
+//│     };
+//│     tmp8 = runtime.safeCall(A11.#lam());
+//│     new A11.B()
+//│   }
+//│   static toString() { return "A"; }
+//│ };
+//│ > let C1, A12, C$ctor, C$;try { C$ = function C$(...args) {   globalThis.Predef.checkArgs("C$", 1, true, args.length);   let B$instance$0 = args[0];   let tmp7;   tmp7 = new C1.class();   return runtime.checkCall(tmp7(B$instance$0)) }; C$ctor = function C$ctor(...args) {   globalThis.Predef.checkArgs("C$ctor", 1, true, args.length);   let B$instance$0 = args[0];   return (...args1) => {     globalThis.Predef.checkArgs("", 0, true, args1.length);     let tmp7;     tmp7 = new C1.class();     return runtime.checkCall(tmp7(B$instance$0))   } }; C1 = function C(...args) {   return new C.class()(...args); }; C1.class = class C {   constructor() {     return (B$instance$0) => {       this.B$instance$0 = B$instance$0;       runtime.safeCall(A12.lam())       return this;     }   }   toString() { return "C"; } }; A12 = class A11 {   static #lam1;   static {     let tmp7, tmp8, lambda;     lambda = (undefined, function (...args) {       globalThis.Predef.checkArgs("", 0, true, args.length);       return 1     });     tmp7 = runtime.checkCall(Predef.id(lambda));     A11.#lam1 = tmp7;     this.B = class B4 {       constructor() {}       get f$__checkNotMethod() { runtime.deboundMethod("f", "B"); }       f(...args) {         globalThis.Predef.checkArgs("f", 0, true, args.length);         return runtime.checkCall(C$(this))       }       toString() { return "B"; }     };     tmp8 = runtime.safeCall(A11.#lam1());     new A11.B()   }   static toString() { return "A"; } }; block$res18 = undefined; } catch (e) { console.log('\u200B' + e.stack + '\u200B'); }
+//│ >                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:141)
+//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Unexpected token 'return'

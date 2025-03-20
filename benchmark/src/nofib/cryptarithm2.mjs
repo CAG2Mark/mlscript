@@ -1,492 +1,503 @@
 import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.mjs";
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
-let lookup, listDiff, mapM, puzzle, select, execStateT, put, lift, digitEnv, delete_, return_, solve, Digits1, permute, StateT1, rest, digits, unlines, bind, testCryptarithm2_nofib, guard, runStateT, Unit1, get, tmp, lambda, lambda1;
-unlines = function unlines(ls) {
-  let tmp1, lambda2;
-  lambda2 = (undefined, function (x) {
-    let tmp2;
-    tmp2 = NofibPrelude.Cons("\n", NofibPrelude.Nil);
-    return NofibPrelude.append(x, tmp2)
-  });
-  tmp1 = NofibPrelude.map(lambda2, ls);
-  return NofibPrelude.concat(tmp1)
-};
-lookup = function lookup(k, t) {
-  let param0, param1, first1, first0, x, v, t1, scrut;
-  if (t instanceof NofibPrelude.Nil.class) {
-    return NofibPrelude.None
-  } else if (t instanceof NofibPrelude.Cons.class) {
-    param0 = t.head;
-    param1 = t.tail;
-    if (globalThis.Array.isArray(param0) && param0.length === 2) {
-      first0 = param0[0];
-      first1 = param0[1];
-      x = first0;
-      v = first1;
-      t1 = param1;
-      scrut = k === x;
-      if (scrut === true) {
-        return NofibPrelude.Some(v)
-      } else {
-        return lookup(k, t1)
+import fs from "fs";
+let cryptarithm21;
+cryptarithm21 = class cryptarithm2 {
+  static #get;
+  static {
+    let tmp, lambda, lambda1;
+    const Unit$class = class Unit {
+      constructor() {}
+      toString() { return "Unit"; }
+    };
+    this.Unit = new Unit$class;
+    this.Unit.class = Unit$class;
+    this.StateT = function StateT(run1) {
+      return new StateT.class(run1);
+    };
+    this.StateT.class = class StateT {
+      constructor(run) {
+        this.run = run;
       }
-    } else {
-      throw new globalThis.Error("match error");
-    }
-  } else {
-    throw new globalThis.Error("match error");
-  }
-};
-delete_ = function delete_(xs, e) {
-  let lambda2;
-  lambda2 = (undefined, function (x, y) {
-    return x === y
-  });
-  return NofibPrelude.deleteBy(lambda2, e, xs)
-};
-listDiff = function listDiff(a, ls) {
-  return NofibPrelude.foldl(delete_, a, ls)
-};
-runStateT = function runStateT(m, s) {
-  let param0, run;
-  if (m instanceof StateT1.class) {
-    param0 = m.run;
-    run = param0;
-    return runtime.safeCall(run(s))
-  } else {
-    throw new globalThis.Error("match error");
-  }
-};
-bind = function bind(m, f) {
-  let tmp1, lambda2;
-  lambda2 = (undefined, function (s) {
-    let tmp2, tmp3, tmp4, lambda3;
-    lambda3 = (undefined, function (caseScrut) {
-      let first1, first0, a, ss, tmp5;
-      if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-        first0 = caseScrut[0];
-        first1 = caseScrut[1];
-        a = first0;
-        ss = first1;
-        tmp5 = runtime.safeCall(f(a));
-        return runStateT(tmp5, ss)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    tmp2 = lambda3;
-    tmp3 = runStateT(m, s);
-    tmp4 = NofibPrelude.map(tmp2, tmp3);
-    return NofibPrelude.concat(tmp4)
-  });
-  tmp1 = lambda2;
-  return StateT1(tmp1)
-};
-return_ = function return_(a) {
-  let lambda2;
-  lambda2 = (undefined, function (s) {
-    return NofibPrelude.Cons([
-      a,
-      s
-    ], NofibPrelude.Nil)
-  });
-  return StateT1(lambda2)
-};
-mapM = function mapM(f, ls) {
-  let tmp1, lambda2;
-  tmp1 = return_(NofibPrelude.Nil);
-  lambda2 = (undefined, function (a, r) {
-    let tmp2, lambda3;
-    tmp2 = runtime.safeCall(f(a));
-    lambda3 = (undefined, function (x) {
-      let lambda4;
-      lambda4 = (undefined, function (xs) {
-        let tmp3;
-        tmp3 = NofibPrelude.Cons(x, xs);
-        return return_(tmp3)
-      });
-      return bind(r, lambda4)
-    });
-    return bind(tmp2, lambda3)
-  });
-  return NofibPrelude.foldr(lambda2, tmp1, ls)
-};
-lift = function lift(ls) {
-  let lambda2;
-  lambda2 = (undefined, function (s) {
-    let tmp1, lambda3;
-    lambda3 = (undefined, function (x) {
+      toString() { return "StateT(" + globalThis.Predef.render(this.run) + ")"; }
+    };
+    lambda = (undefined, function (s) {
       return NofibPrelude.Cons([
-        x,
+        s,
         s
       ], NofibPrelude.Nil)
     });
-    tmp1 = NofibPrelude.map(lambda3, ls);
-    return NofibPrelude.concat(tmp1)
-  });
-  return StateT1(lambda2)
-};
-execStateT = function execStateT(m, s) {
-  let tmp1, tmp2, tmp3, lambda2;
-  lambda2 = (undefined, function (caseScrut) {
-    let first1, first0, a, s1;
-    if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-      first0 = caseScrut[0];
-      first1 = caseScrut[1];
-      a = first0;
-      s1 = first1;
-      return NofibPrelude.Cons(s1, NofibPrelude.Nil)
-    } else {
-      throw new globalThis.Error("match error");
-    }
-  });
-  tmp1 = lambda2;
-  tmp2 = runStateT(m, s);
-  tmp3 = NofibPrelude.map(tmp1, tmp2);
-  return NofibPrelude.concat(tmp3)
-};
-guard = function guard(b) {
-  let lambda2, lambda3;
-  if (b === true) {
-    lambda2 = (undefined, function (s) {
-      return NofibPrelude.Cons([
-        Unit1,
-        s
-      ], NofibPrelude.Nil)
+    tmp = cryptarithm2.StateT(lambda);
+    cryptarithm2.#get = tmp;
+    this.Digits = function Digits(i1, c1) {
+      return new Digits.class(i1, c1);
+    };
+    this.Digits.class = class Digits {
+      constructor(i, c) {
+        this.i = i;
+        this.c = c;
+      }
+      toString() { return "Digits(" + globalThis.Predef.render(this.i) + ", " + globalThis.Predef.render(this.c) + ")"; }
+    };
+    lambda1 = (undefined, function () {
+      let tmp1;
+      tmp1 = cryptarithm2.testCryptarithm2_nofib(1);
+      return runtime.safeCall(tmp1.toString())
     });
-    return StateT1(lambda2)
-  } else {
-    lambda3 = (undefined, function (s) {
-      return NofibPrelude.Nil
+    BenchmarkPrelude.benchmark(lambda1)
+  }
+  static unlines(ls) {
+    let tmp, lambda;
+    lambda = (undefined, function (x) {
+      let tmp1;
+      tmp1 = NofibPrelude.Cons("\n", NofibPrelude.Nil);
+      return NofibPrelude.append(x, tmp1)
     });
-    return StateT1(lambda3)
-  }
-};
-put = function put(s) {
-  let lambda2;
-  lambda2 = (undefined, function (x) {
-    return NofibPrelude.Cons([
-      Unit1,
-      s
-    ], NofibPrelude.Nil)
-  });
-  return StateT1(lambda2)
-};
-digits = function digits(d) {
-  let param0, param1, a, b;
-  if (d instanceof Digits1.class) {
-    param0 = d.i;
-    param1 = d.c;
-    a = param0;
-    b = param1;
-    return a
-  } else {
-    throw new globalThis.Error("match error");
-  }
-};
-digitEnv = function digitEnv(d) {
-  let param0, param1, a, b;
-  if (d instanceof Digits1.class) {
-    param0 = d.i;
-    param1 = d.c;
-    a = param0;
-    b = param1;
-    return b
-  } else {
-    throw new globalThis.Error("match error");
-  }
-};
-permute = function permute(c) {
-  let tmp1, lambda2;
-  lambda2 = (undefined, function (st) {
-    let xs, tmp2, tmp3, tmp4, tmp5, lambda3, lambda4;
-    tmp2 = digits(st);
-    xs = tmp2;
-    lambda3 = (undefined, function (x) {
-      let tmp6, tmp7;
-      tmp6 = NofibPrelude.Cons(x, NofibPrelude.Nil);
-      tmp7 = listDiff(xs, tmp6);
-      return [
-        x,
-        tmp7
-      ]
-    });
-    tmp3 = NofibPrelude.map(lambda3, xs);
-    tmp4 = lift(tmp3);
-    lambda4 = (undefined, function (iis) {
-      let first1, first0, i, iss, tmp6, tmp7, tmp8, tmp9, lambda5;
-      if (globalThis.Array.isArray(iis) && iis.length === 2) {
-        first0 = iis[0];
-        first1 = iis[1];
-        i = first0;
-        iss = first1;
-        tmp6 = digitEnv(st);
-        tmp7 = NofibPrelude.Cons([
-          c,
-          i
-        ], tmp6);
-        tmp8 = Digits1(iss, tmp7);
-        tmp9 = put(tmp8);
-        lambda5 = (undefined, function (_p) {
-          return return_(i)
-        });
-        return bind(tmp9, lambda5)
+    tmp = NofibPrelude.map(lambda, ls);
+    return NofibPrelude.concat(tmp)
+  } 
+  static lookup(k, t) {
+    let param0, param1, first1, first0, x, v, t1, scrut;
+    if (t instanceof NofibPrelude.Nil.class) {
+      return NofibPrelude.None
+    } else if (t instanceof NofibPrelude.Cons.class) {
+      param0 = t.head;
+      param1 = t.tail;
+      if (globalThis.Array.isArray(param0) && param0.length === 2) {
+        first0 = param0[0];
+        first1 = param0[1];
+        x = first0;
+        v = first1;
+        t1 = param1;
+        scrut = k === x;
+        if (scrut === true) {
+          return NofibPrelude.Some(v)
+        } else {
+          return cryptarithm2.lookup(k, t1)
+        }
       } else {
         throw new globalThis.Error("match error");
       }
-    });
-    tmp5 = lambda4;
-    return bind(tmp4, tmp5)
-  });
-  tmp1 = lambda2;
-  return bind(get, tmp1)
-};
-select = function select(c) {
-  let tmp1, lambda2;
-  lambda2 = (undefined, function (st) {
-    let scrut, param0, r, tmp2;
-    tmp2 = digitEnv(st);
-    scrut = lookup(c, tmp2);
-    if (scrut instanceof NofibPrelude.Some.class) {
-      param0 = scrut.x;
-      r = param0;
-      return return_(r)
-    } else if (scrut instanceof NofibPrelude.None.class) {
-      return permute(c)
     } else {
       throw new globalThis.Error("match error");
     }
-  });
-  tmp1 = lambda2;
-  return bind(get, tmp1)
-};
-rest = function rest(ls) {
-  let param0, param1, x, xs;
-  if (ls instanceof NofibPrelude.Nil.class) {
-    return NofibPrelude.Nil
-  } else if (ls instanceof NofibPrelude.Cons.class) {
-    param0 = ls.head;
-    param1 = ls.tail;
-    x = param0;
-    xs = param1;
-    return xs
-  } else {
-    throw new globalThis.Error("match error");
-  }
-};
-solve = function solve(tops, bots, carry) {
-  let scrut, param0, param1, bot, botss, param01, param11, top, tmp1, tmp2, lambda2, lambda3, lambda4, lambda5, lambda6;
-  if (bots instanceof NofibPrelude.Cons.class) {
-    param0 = bots.head;
-    param1 = bots.tail;
-    bot = param0;
-    botss = param1;
-    if (tops instanceof NofibPrelude.Nil.class) {
-      tmp1 = return_(carry);
-    } else if (tops instanceof NofibPrelude.Cons.class) {
-      param01 = tops.head;
-      param11 = tops.tail;
-      top = param01;
-      tmp2 = mapM(select, top);
-      lambda2 = (undefined, function (topNS) {
-        let tmp3, tmp4;
-        tmp3 = NofibPrelude.sum(topNS);
-        tmp4 = tmp3 + carry;
-        return return_(tmp4)
-      });
-      tmp1 = bind(tmp2, lambda2);
+  } 
+  static delete_(xs, e) {
+    let lambda;
+    lambda = (undefined, function (x, y) {
+      return x === y
+    });
+    return NofibPrelude.deleteBy(lambda, e, xs)
+  } 
+  static listDiff(a, ls1) {
+    return NofibPrelude.foldl(cryptarithm2.delete_, a, ls1)
+  } 
+  static runStateT(m, s) {
+    let param0, run;
+    if (m instanceof cryptarithm2.StateT.class) {
+      param0 = m.run;
+      run = param0;
+      return runtime.safeCall(run(s))
     } else {
       throw new globalThis.Error("match error");
     }
-    lambda3 = (undefined, function (topN) {
-      let tmp3, tmp4, lambda7;
-      tmp3 = select(bot);
-      lambda7 = (undefined, function (botN) {
-        let tmp5, tmp6, tmp7, tmp8, lambda8;
-        tmp5 = NofibPrelude.intMod(topN, 10);
-        tmp6 = tmp5 === botN;
-        tmp7 = guard(tmp6);
-        lambda8 = (undefined, function (_s) {
-          let tmp9, tmp10;
-          tmp9 = rest(tops);
-          tmp10 = NofibPrelude.intDiv(topN, 10);
-          return solve(tmp9, botss, tmp10)
-        });
-        tmp8 = lambda8;
-        return bind(tmp7, tmp8)
-      });
-      tmp4 = lambda7;
-      return bind(tmp3, tmp4)
-    });
-    return bind(tmp1, lambda3)
-  } else if (bots instanceof NofibPrelude.Nil.class) {
-    if (tops instanceof NofibPrelude.Nil.class) {
-      scrut = carry === 0;
-      if (scrut === true) {
-        return return_(Unit1)
-      } else {
-        lambda4 = (undefined, function (_p) {
-          return NofibPrelude.Nil
-        });
-        return StateT1(lambda4)
-      }
-    } else {
-      lambda5 = (undefined, function (_p) {
-        return NofibPrelude.Nil
-      });
-      return StateT1(lambda5)
-    }
-  } else {
-    lambda6 = (undefined, function (_p) {
-      return NofibPrelude.Nil
-    });
-    return StateT1(lambda6)
-  }
-};
-puzzle = function puzzle(top, bot) {
-  let solution, answer, scrut, param0, param1, a, env, look, expand, topVal, botVal, scrut1, scrut2, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, look1, expand1, lambda2, lambda3, lambda4;
-  tmp1 = NofibPrelude.map(NofibPrelude.reverse, top);
-  tmp2 = NofibPrelude.transpose(tmp1);
-  tmp3 = NofibPrelude.reverse(bot);
-  tmp4 = solve(tmp2, tmp3, 0);
-  solution = tmp4;
-  tmp5 = NofibPrelude.enumFromTo(0, 9);
-  tmp6 = Digits1(tmp5, NofibPrelude.Nil);
-  scrut = execStateT(solution, tmp6);
-  if (scrut instanceof NofibPrelude.Cons.class) {
-    param0 = scrut.head;
-    param1 = scrut.tail;
-    a = param0;
-    tmp7 = a;
-  } else {
-    throw new globalThis.Error("match error");
-  }
-  answer = tmp7;
-  tmp8 = digitEnv(answer);
-  env = tmp8;
-  look1 = function look(c) {
-    let tmp18;
-    tmp18 = lookup(c, env);
-    return NofibPrelude.fromSome(tmp18)
-  };
-  look = look1;
-  expand1 = function expand(ls) {
-    let lambda5;
-    lambda5 = (undefined, function (a1, b) {
-      let tmp18, tmp19;
-      tmp18 = a1 * 10;
-      tmp19 = runtime.safeCall(look(b));
-      return tmp18 + tmp19
-    });
-    return NofibPrelude.foldl(lambda5, 0, ls)
-  };
-  expand = expand1;
-  lambda2 = (undefined, function (xs) {
-    return runtime.safeCall(expand(xs))
-  });
-  tmp9 = NofibPrelude.map(lambda2, top);
-  tmp10 = NofibPrelude.sum(tmp9);
-  topVal = tmp10;
-  tmp11 = runtime.safeCall(expand(bot));
-  botVal = tmp11;
-  tmp12 = NofibPrelude.concat(top);
-  tmp13 = NofibPrelude.append(tmp12, bot);
-  lambda3 = (undefined, function (x, y) {
-    return x === y
-  });
-  tmp14 = NofibPrelude.nubBy(lambda3, tmp13);
-  tmp15 = NofibPrelude.listLen(tmp14);
-  scrut2 = tmp15 > 10;
-  if (scrut2 === true) {
-    throw globalThis.Error("error");
-  } else {
-    scrut1 = topVal != botVal;
-    if (scrut1 === true) {
-      throw globalThis.Error("error");
-    } else {
-      lambda4 = (undefined, function (caseScrut) {
-        let first1, first0, c, i, tmp18, tmp19, tmp20, tmp21;
+  } 
+  static bind(m1, f) {
+    let tmp, lambda;
+    lambda = (undefined, function (s1) {
+      let tmp1, tmp2, tmp3, lambda1;
+      lambda1 = (undefined, function (caseScrut) {
+        let first1, first0, a1, ss, tmp4;
         if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
           first0 = caseScrut[0];
           first1 = caseScrut[1];
-          c = first0;
-          i = first1;
-          tmp18 = NofibPrelude.nofibStringToList(" => ");
-          tmp19 = NofibPrelude.stringOfInt(i);
-          tmp20 = NofibPrelude.nofibStringToList(tmp19);
-          tmp21 = NofibPrelude.append(tmp18, tmp20);
-          return NofibPrelude.Cons(c, tmp21)
+          a1 = first0;
+          ss = first1;
+          tmp4 = runtime.safeCall(f(a1));
+          return cryptarithm2.runStateT(tmp4, ss)
         } else {
           throw new globalThis.Error("match error");
         }
       });
-      tmp16 = lambda4;
-      tmp17 = NofibPrelude.map(tmp16, env);
-      return unlines(tmp17)
+      tmp1 = lambda1;
+      tmp2 = cryptarithm2.runStateT(m1, s1);
+      tmp3 = NofibPrelude.map(tmp1, tmp2);
+      return NofibPrelude.concat(tmp3)
+    });
+    tmp = lambda;
+    return cryptarithm2.StateT(tmp)
+  } 
+  static return_(a1) {
+    let lambda;
+    lambda = (undefined, function (s1) {
+      return NofibPrelude.Cons([
+        a1,
+        s1
+      ], NofibPrelude.Nil)
+    });
+    return cryptarithm2.StateT(lambda)
+  } 
+  static mapM(f1, ls2) {
+    let tmp, lambda;
+    tmp = cryptarithm2.return_(NofibPrelude.Nil);
+    lambda = (undefined, function (a2, r) {
+      let tmp1, lambda1;
+      tmp1 = runtime.safeCall(f1(a2));
+      lambda1 = (undefined, function (x) {
+        let lambda2;
+        lambda2 = (undefined, function (xs1) {
+          let tmp2;
+          tmp2 = NofibPrelude.Cons(x, xs1);
+          return cryptarithm2.return_(tmp2)
+        });
+        return cryptarithm2.bind(r, lambda2)
+      });
+      return cryptarithm2.bind(tmp1, lambda1)
+    });
+    return NofibPrelude.foldr(lambda, tmp, ls2)
+  } 
+  static lift(ls3) {
+    let lambda;
+    lambda = (undefined, function (s1) {
+      let tmp, lambda1;
+      lambda1 = (undefined, function (x) {
+        return NofibPrelude.Cons([
+          x,
+          s1
+        ], NofibPrelude.Nil)
+      });
+      tmp = NofibPrelude.map(lambda1, ls3);
+      return NofibPrelude.concat(tmp)
+    });
+    return cryptarithm2.StateT(lambda)
+  } 
+  static execStateT(m2, s1) {
+    let tmp, tmp1, tmp2, lambda;
+    lambda = (undefined, function (caseScrut) {
+      let first1, first0, a2, s2;
+      if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+        first0 = caseScrut[0];
+        first1 = caseScrut[1];
+        a2 = first0;
+        s2 = first1;
+        return NofibPrelude.Cons(s2, NofibPrelude.Nil)
+      } else {
+        throw new globalThis.Error("match error");
+      }
+    });
+    tmp = lambda;
+    tmp1 = cryptarithm2.runStateT(m2, s1);
+    tmp2 = NofibPrelude.map(tmp, tmp1);
+    return NofibPrelude.concat(tmp2)
+  } 
+  static guard(b) {
+    let lambda, lambda1;
+    if (b === true) {
+      lambda = (undefined, function (s2) {
+        return NofibPrelude.Cons([
+          cryptarithm2.Unit,
+          s2
+        ], NofibPrelude.Nil)
+      });
+      return cryptarithm2.StateT(lambda)
+    } else {
+      lambda1 = (undefined, function (s2) {
+        return NofibPrelude.Nil
+      });
+      return cryptarithm2.StateT(lambda1)
     }
+  } 
+  static put(s2) {
+    let lambda;
+    lambda = (undefined, function (x) {
+      return NofibPrelude.Cons([
+        cryptarithm2.Unit,
+        s2
+      ], NofibPrelude.Nil)
+    });
+    return cryptarithm2.StateT(lambda)
+  } 
+  static digits(d) {
+    let param0, param1, a2, b1;
+    if (d instanceof cryptarithm2.Digits.class) {
+      param0 = d.i;
+      param1 = d.c;
+      a2 = param0;
+      b1 = param1;
+      return a2
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } 
+  static digitEnv(d1) {
+    let param0, param1, a2, b1;
+    if (d1 instanceof cryptarithm2.Digits.class) {
+      param0 = d1.i;
+      param1 = d1.c;
+      a2 = param0;
+      b1 = param1;
+      return b1
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } 
+  static permute(c) {
+    let tmp, lambda;
+    lambda = (undefined, function (st) {
+      let xs1, tmp1, tmp2, tmp3, tmp4, tmp5, lambda1, lambda2;
+      tmp1 = cryptarithm2.digits(st);
+      xs1 = tmp1;
+      lambda1 = (undefined, function (x) {
+        let tmp6, tmp7;
+        tmp6 = NofibPrelude.Cons(x, NofibPrelude.Nil);
+        tmp7 = cryptarithm2.listDiff(xs1, tmp6);
+        return [
+          x,
+          tmp7
+        ]
+      });
+      tmp2 = lambda1;
+      tmp3 = NofibPrelude.map(tmp2, xs1);
+      tmp4 = cryptarithm2.lift(tmp3);
+      lambda2 = (undefined, function (iis) {
+        let first1, first0, i, iss, tmp6, tmp7, tmp8, tmp9, lambda3;
+        if (globalThis.Array.isArray(iis) && iis.length === 2) {
+          first0 = iis[0];
+          first1 = iis[1];
+          i = first0;
+          iss = first1;
+          tmp6 = cryptarithm2.digitEnv(st);
+          tmp7 = NofibPrelude.Cons([
+            c,
+            i
+          ], tmp6);
+          tmp8 = cryptarithm2.Digits(iss, tmp7);
+          tmp9 = cryptarithm2.put(tmp8);
+          lambda3 = (undefined, function (_p) {
+            return cryptarithm2.return_(i)
+          });
+          return cryptarithm2.bind(tmp9, lambda3)
+        } else {
+          throw new globalThis.Error("match error");
+        }
+      });
+      tmp5 = lambda2;
+      return cryptarithm2.bind(tmp4, tmp5)
+    });
+    tmp = lambda;
+    return cryptarithm2.bind(cryptarithm2.#get, tmp)
+  } 
+  static select(c1) {
+    let tmp, lambda;
+    lambda = (undefined, function (st) {
+      let scrut, param0, r, tmp1;
+      tmp1 = cryptarithm2.digitEnv(st);
+      scrut = cryptarithm2.lookup(c1, tmp1);
+      if (scrut instanceof NofibPrelude.Some.class) {
+        param0 = scrut.x;
+        r = param0;
+        return cryptarithm2.return_(r)
+      } else if (scrut instanceof NofibPrelude.None.class) {
+        return cryptarithm2.permute(c1)
+      } else {
+        throw new globalThis.Error("match error");
+      }
+    });
+    tmp = lambda;
+    return cryptarithm2.bind(cryptarithm2.#get, tmp)
+  } 
+  static rest(ls4) {
+    let param0, param1, x, xs1;
+    if (ls4 instanceof NofibPrelude.Nil.class) {
+      return NofibPrelude.Nil
+    } else if (ls4 instanceof NofibPrelude.Cons.class) {
+      param0 = ls4.head;
+      param1 = ls4.tail;
+      x = param0;
+      xs1 = param1;
+      return xs1
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } 
+  static solve(tops, bots, carry) {
+    let scrut, param0, param1, bot, botss, param01, param11, top, tmp, tmp1, lambda, lambda1, lambda2, lambda3, lambda4;
+    if (bots instanceof NofibPrelude.Cons.class) {
+      param0 = bots.head;
+      param1 = bots.tail;
+      bot = param0;
+      botss = param1;
+      if (tops instanceof NofibPrelude.Nil.class) {
+        tmp = cryptarithm2.return_(carry);
+      } else if (tops instanceof NofibPrelude.Cons.class) {
+        param01 = tops.head;
+        param11 = tops.tail;
+        top = param01;
+        tmp1 = cryptarithm2.mapM(cryptarithm2.select, top);
+        lambda = (undefined, function (topNS) {
+          let tmp2, tmp3;
+          tmp2 = NofibPrelude.sum(topNS);
+          tmp3 = tmp2 + carry;
+          return cryptarithm2.return_(tmp3)
+        });
+        tmp = cryptarithm2.bind(tmp1, lambda);
+      } else {
+        throw new globalThis.Error("match error");
+      }
+      lambda1 = (undefined, function (topN) {
+        let tmp2, tmp3, lambda5;
+        tmp2 = cryptarithm2.select(bot);
+        lambda5 = (undefined, function (botN) {
+          let tmp4, tmp5, tmp6, tmp7, lambda6;
+          tmp4 = NofibPrelude.intMod(topN, 10);
+          tmp5 = tmp4 === botN;
+          tmp6 = cryptarithm2.guard(tmp5);
+          lambda6 = (undefined, function (_s) {
+            let tmp8, tmp9;
+            tmp8 = cryptarithm2.rest(tops);
+            tmp9 = NofibPrelude.intDiv(topN, 10);
+            return cryptarithm2.solve(tmp8, botss, tmp9)
+          });
+          tmp7 = lambda6;
+          return cryptarithm2.bind(tmp6, tmp7)
+        });
+        tmp3 = lambda5;
+        return cryptarithm2.bind(tmp2, tmp3)
+      });
+      return cryptarithm2.bind(tmp, lambda1)
+    } else if (bots instanceof NofibPrelude.Nil.class) {
+      if (tops instanceof NofibPrelude.Nil.class) {
+        scrut = carry === 0;
+        if (scrut === true) {
+          return cryptarithm2.return_(cryptarithm2.Unit)
+        } else {
+          lambda2 = (undefined, function (_p) {
+            return NofibPrelude.Nil
+          });
+          return cryptarithm2.StateT(lambda2)
+        }
+      } else {
+        lambda3 = (undefined, function (_p) {
+          return NofibPrelude.Nil
+        });
+        return cryptarithm2.StateT(lambda3)
+      }
+    } else {
+      lambda4 = (undefined, function (_p) {
+        return NofibPrelude.Nil
+      });
+      return cryptarithm2.StateT(lambda4)
+    }
+  } 
+  static puzzle(top, bot) {
+    let solution, answer, scrut, param0, param1, a2, env, look, expand, topVal, botVal, scrut1, scrut2, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, look1, expand1, lambda, lambda1, lambda2;
+    tmp = NofibPrelude.map(NofibPrelude.reverse, top);
+    tmp1 = NofibPrelude.transpose(tmp);
+    tmp2 = NofibPrelude.reverse(bot);
+    tmp3 = cryptarithm2.solve(tmp1, tmp2, 0);
+    solution = tmp3;
+    tmp4 = NofibPrelude.enumFromTo(0, 9);
+    tmp5 = cryptarithm2.Digits(tmp4, NofibPrelude.Nil);
+    scrut = cryptarithm2.execStateT(solution, tmp5);
+    if (scrut instanceof NofibPrelude.Cons.class) {
+      param0 = scrut.head;
+      param1 = scrut.tail;
+      a2 = param0;
+      tmp6 = a2;
+    } else {
+      throw new globalThis.Error("match error");
+    }
+    answer = tmp6;
+    tmp7 = cryptarithm2.digitEnv(answer);
+    env = tmp7;
+    look1 = function look(c2) {
+      let tmp17;
+      tmp17 = cryptarithm2.lookup(c2, env);
+      return NofibPrelude.fromSome(tmp17)
+    };
+    look = look1;
+    expand1 = function expand(ls5) {
+      let lambda3;
+      lambda3 = (undefined, function (a3, b1) {
+        let tmp17, tmp18;
+        tmp17 = a3 * 10;
+        tmp18 = runtime.safeCall(look(b1));
+        return tmp17 + tmp18
+      });
+      return NofibPrelude.foldl(lambda3, 0, ls5)
+    };
+    expand = expand1;
+    lambda = (undefined, function (xs1) {
+      return runtime.safeCall(expand(xs1))
+    });
+    tmp8 = NofibPrelude.map(lambda, top);
+    tmp9 = NofibPrelude.sum(tmp8);
+    topVal = tmp9;
+    tmp10 = runtime.safeCall(expand(bot));
+    botVal = tmp10;
+    tmp11 = NofibPrelude.concat(top);
+    tmp12 = NofibPrelude.append(tmp11, bot);
+    lambda1 = (undefined, function (x, y) {
+      return x === y
+    });
+    tmp13 = NofibPrelude.nubBy(lambda1, tmp12);
+    tmp14 = NofibPrelude.listLen(tmp13);
+    scrut2 = tmp14 > 10;
+    if (scrut2 === true) {
+      throw globalThis.Error("error");
+    } else {
+      scrut1 = topVal != botVal;
+      if (scrut1 === true) {
+        throw globalThis.Error("error");
+      } else {
+        lambda2 = (undefined, function (caseScrut) {
+          let first1, first0, c2, i, tmp17, tmp18, tmp19, tmp20;
+          if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+            first0 = caseScrut[0];
+            first1 = caseScrut[1];
+            c2 = first0;
+            i = first1;
+            tmp17 = NofibPrelude.nofibStringToList(" => ");
+            tmp18 = NofibPrelude.stringOfInt(i);
+            tmp19 = NofibPrelude.nofibStringToList(tmp18);
+            tmp20 = NofibPrelude.append(tmp17, tmp19);
+            return NofibPrelude.Cons(c2, tmp20)
+          } else {
+            throw new globalThis.Error("match error");
+          }
+        });
+        tmp15 = lambda2;
+        tmp16 = NofibPrelude.map(tmp15, env);
+        return cryptarithm2.unlines(tmp16)
+      }
+    }
+  } 
+  static testCryptarithm2_nofib(n) {
+    let args, scrut, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14;
+    tmp = NofibPrelude.nofibStringToList("THIRTY");
+    tmp1 = NofibPrelude.nofibStringToList("TWELVE");
+    tmp2 = NofibPrelude.nofibStringToList("TWELVE");
+    tmp3 = NofibPrelude.nofibStringToList("TWELVE");
+    tmp4 = NofibPrelude.nofibStringToList("TWELVE");
+    tmp5 = NofibPrelude.nofibStringToList("TWELVE");
+    scrut = n > 999999;
+    if (scrut === true) {
+      tmp6 = NofibPrelude.nofibStringToList("1");
+    } else {
+      tmp6 = NofibPrelude.Nil;
+    }
+    tmp7 = NofibPrelude.append(tmp5, tmp6);
+    tmp8 = NofibPrelude.Cons(tmp7, NofibPrelude.Nil);
+    tmp9 = NofibPrelude.Cons(tmp4, tmp8);
+    tmp10 = NofibPrelude.Cons(tmp3, tmp9);
+    tmp11 = NofibPrelude.Cons(tmp2, tmp10);
+    tmp12 = NofibPrelude.Cons(tmp1, tmp11);
+    tmp13 = NofibPrelude.Cons(tmp, tmp12);
+    args = tmp13;
+    tmp14 = NofibPrelude.nofibStringToList("NINETY");
+    return cryptarithm2.puzzle(args, tmp14)
   }
+  static toString() { return "cryptarithm2"; }
 };
-testCryptarithm2_nofib = function testCryptarithm2_nofib(n) {
-  let args, scrut, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15;
-  tmp1 = NofibPrelude.nofibStringToList("THIRTY");
-  tmp2 = NofibPrelude.nofibStringToList("TWELVE");
-  tmp3 = NofibPrelude.nofibStringToList("TWELVE");
-  tmp4 = NofibPrelude.nofibStringToList("TWELVE");
-  tmp5 = NofibPrelude.nofibStringToList("TWELVE");
-  tmp6 = NofibPrelude.nofibStringToList("TWELVE");
-  scrut = n > 999999;
-  if (scrut === true) {
-    tmp7 = NofibPrelude.nofibStringToList("1");
-  } else {
-    tmp7 = NofibPrelude.Nil;
-  }
-  tmp8 = NofibPrelude.append(tmp6, tmp7);
-  tmp9 = NofibPrelude.Cons(tmp8, NofibPrelude.Nil);
-  tmp10 = NofibPrelude.Cons(tmp5, tmp9);
-  tmp11 = NofibPrelude.Cons(tmp4, tmp10);
-  tmp12 = NofibPrelude.Cons(tmp3, tmp11);
-  tmp13 = NofibPrelude.Cons(tmp2, tmp12);
-  tmp14 = NofibPrelude.Cons(tmp1, tmp13);
-  args = tmp14;
-  tmp15 = NofibPrelude.nofibStringToList("NINETY");
-  return puzzle(args, tmp15)
-};
-const Unit$class = class Unit {
-  constructor() {}
-  toString() { return "Unit"; }
-}; Unit1 = new Unit$class;
-Unit1.class = Unit$class;
-StateT1 = function StateT(run1) {
-  return new StateT.class(run1);
-};
-StateT1.class = class StateT {
-  constructor(run) {
-    this.run = run;
-  }
-  toString() { return "StateT(" + globalThis.Predef.render(this.run) + ")"; }
-};
-lambda = (undefined, function (s) {
-  return NofibPrelude.Cons([
-    s,
-    s
-  ], NofibPrelude.Nil)
-});
-tmp = StateT1(lambda);
-get = tmp;
-Digits1 = function Digits(i1, c1) {
-  return new Digits.class(i1, c1);
-};
-Digits1.class = class Digits {
-  constructor(i, c) {
-    this.i = i;
-    this.c = c;
-  }
-  toString() { return "Digits(" + globalThis.Predef.render(this.i) + ", " + globalThis.Predef.render(this.c) + ")"; }
-};
-lambda1 = (undefined, function () {
-  let tmp1;
-  tmp1 = testCryptarithm2_nofib(1);
-  return runtime.safeCall(tmp1.toString())
-});
-BenchmarkPrelude.benchmark(lambda1)
+let cryptarithm2 = cryptarithm21; export default cryptarithm2;

@@ -1,7 +1,14 @@
 import "../precompiled/NofibPrelude.mls"
 import "../precompiled/BenchmarkPrelude.mls"
+import "fs"
 open NofibPrelude
 open BenchmarkPrelude
+
+module minimax with ...
+// :js
+
+// :silent
+// :import NofibPrelude.mls
 
 fun andd(ls) = if ls is
   Nil then true
@@ -26,7 +33,7 @@ object
   XWin extends Evaluation
   OWin extends Evaluation
 
-class Score(i: Int) extends Evaluation
+data class Score(i: Int) extends Evaluation
 
 fun evaluationEq(x, y) = if x is
   XWin and y is XWin then true
@@ -34,7 +41,7 @@ fun evaluationEq(x, y) = if x is
   Score(i) and y is Score(j) and i === j then true
   else false
 
-class Branch[A](a: A, cs: List[Branch[A]])
+data class Branch[A](a: A, cs: List[Branch[A]])
 
 fun showEvaluation(e) = if e is
   XWin then nofibStringToList("XWin")
@@ -152,7 +159,7 @@ fun newPositions(piece, board) =
 let initialBoard = replicate(3, replicate(3, Empty))
 //│ initialBoard = [[Empty,Empty,Empty],[Empty,Empty,Empty],[Empty,Empty,Empty]]
 
-fun eval_(x) = if x ===
+fun eval(x) = if x ===
   3 then XWin
   -3 then OWin
   else Score(x)
@@ -174,11 +181,11 @@ fun map2(f, xs, ys) = if xs is
     ys is y :: ys then f(x, y) :: map2(f, xs, ys)
     Nil then Nil
 
-fun score(board, win) = eval_ of sum of map of
+fun score(board, win) = eval of sum of map of
   sum
   map2((x, y) => map2(scorePiece, x, y), board, win)
 
-fun static_(board) = interpret(0, map(x => score(board, x), wins))
+fun static(board) = interpret(0, map(x => score(board, x), wins))
 
 fun repTree(f, g, a) = Branch(a, map(x => repTree(g, f, x), f(a)))
 
@@ -241,19 +248,19 @@ fun cropTree(t) = if t is
   Branch(x, l) then Branch(x, Nil)
 
 fun bestMove(p, f, g, b) =
-  mise(f, g, cropTree(mapTree(static_, searchTree(p, b))))
+  mise(f, g, cropTree(mapTree(static, searchTree(p, b))))
 
 
 fun alternate(player, f, g, board) = if
   fullBoard(board) then Nil
-  evaluationEq(static_(board), XWin) then Nil
-  evaluationEq(static_(board), OWin) then Nil
+  evaluationEq(static(board), XWin) then Nil
+  evaluationEq(static(board), OWin) then Nil
   let opposition = opposite(player)
   let possibles = newPositions(player, board)
   let scores = map(x => bestMove(opposition, g, f, x), possibles)
   let boardd_eval = best(f, possibles, scores)
-  boardd_eval is [boardd, eval_] then
-    [boardd, eval_] :: alternate(opposition, g, f, boardd)
+  boardd_eval is [boardd, eval] then
+    [boardd, eval] :: alternate(opposition, g, f, boardd)
 
 fun prog(input) =
   let testBoard =

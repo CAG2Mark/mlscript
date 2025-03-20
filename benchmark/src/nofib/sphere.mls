@@ -1,10 +1,17 @@
 import "../precompiled/NofibPrelude.mls"
 import "../precompiled/BenchmarkPrelude.mls"
+import "fs"
 open NofibPrelude
 open BenchmarkPrelude
 
+module sphere with ...
+// :js
 
-let pi = (() => globalThis.Math.PI)()
+// :silent
+// :import NofibPrelude.mls
+
+
+let pi = globalThis.Math.PI
 let epsilon  = 0.000001
 let infinity = 100000000.0
 //│ epsilon = 0.000001
@@ -40,9 +47,10 @@ fun is_zerovector(x) = if x is [x, y, z] then (x < epsilon) && (y < epsilon) && 
 
 abstract class Light: Directional | Point
 
-class
-  Directional(x: [Num, Num, Num], y: [Num, Num, Num]) extends Light
-  Point(x: [Num, Num, Num], y: [Num, Num, Num]) extends Light
+data
+  class
+    Directional(x: [Num, Num, Num], y: [Num, Num, Num]) extends Light
+    Point(x: [Num, Num, Num], y: [Num, Num, Num]) extends Light
 
 fun lightpos(p) = if p is Point(pos, col) then pos
 
@@ -54,15 +62,16 @@ fun lightcolour(x) = if x is
 
 abstract class Surfspec: Ambient | Diffuse | Specular | Specpow | Reflect | Transmit | Refract | Body
 
-class
-  Ambient(v: [Num, Num, Num]) extends Surfspec
-  Diffuse(v: [Num, Num, Num]) extends Surfspec
-  Specular(v: [Num, Num, Num]) extends Surfspec
-  Specpow(v: Num) extends Surfspec
-  Reflect(v: Num) extends Surfspec
-  Transmit(v: Num) extends Surfspec
-  Refract(v: Num) extends Surfspec
-  Body(v: [Num, Num, Num]) extends Surfspec
+data
+  class
+    Ambient(v: [Num, Num, Num]) extends Surfspec
+    Diffuse(v: [Num, Num, Num]) extends Surfspec
+    Specular(v: [Num, Num, Num]) extends Surfspec
+    Specpow(v: Num) extends Surfspec
+    Reflect(v: Num) extends Surfspec
+    Transmit(v: Num) extends Surfspec
+    Refract(v: Num) extends Surfspec
+    Body(v: [Num, Num, Num]) extends Surfspec
 
 fun ambientsurf(ss) =
   fun lscomp(ls) = if ls is
@@ -144,7 +153,7 @@ fun bodysurf(ss) =
   head(append(lscomp(ss), ([1.0, 1.0, 1.0] :: Nil)))
 
 
-class Sphere(pos: [Num, Num, Num], radius: Num, surface: List[Surfspec])
+data class Sphere(pos: [Num, Num, Num], radius: Num, surface: List[Surfspec])
 
 fun spheresurf(s) = if s is Sphere(pos, rad, surf) then surf
 

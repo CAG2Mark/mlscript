@@ -1,7 +1,14 @@
 import "../precompiled/NofibPrelude.mls"
 import "../precompiled/BenchmarkPrelude.mls"
+import "fs"
 open NofibPrelude
 open BenchmarkPrelude
+
+module cryptarithm1 with ...
+// :js
+
+// :silent
+// :import NofibPrelude.mls
 
 
 fun expand(a, b, c, d, e, f) = f + (e*10) + (d*100) + (c*1000) + (b*10000) + (a*100000)
@@ -36,5 +43,6 @@ fun testCryptarithm_nofib(n) =
   map((i => let p0 = take(10, enumFromTo(0, 9 + i)) in filter(condition, permutations(p0))), enumFromTo(1, n))
 
 
-// print(testCryptarithm_nofib(1))
-benchmark of () => testCryptarithm_nofib(1)
+// :re
+benchmark of () => print(testCryptarithm_nofib(1))
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded

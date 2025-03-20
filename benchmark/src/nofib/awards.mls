@@ -1,7 +1,14 @@
 import "../precompiled/NofibPrelude.mls"
 import "../precompiled/BenchmarkPrelude.mls"
+import "fs"
 open NofibPrelude
 open BenchmarkPrelude
+
+module awards with ...
+// :js
+
+// :silent
+// :import NofibPrelude.mls
 
 
 fun delete_(xs, e) = deleteBy((x, y) => x == y, e, xs)
@@ -40,7 +47,7 @@ fun perms(m, nns) = if
   m == 1 then map(x => x :: Nil, nns)
   nns is n :: ns then map(x => n :: x, perms(m-1, ns)) +: perms(m, ns)
 
-fun awards_(scores) =
+fun awards(scores) =
   let sumscores = map(p => [sum(p), p], perms(3, scores))
   
   fun atleast(threshold) =
@@ -51,7 +58,7 @@ fun awards_(scores) =
   
   award(["Gold", 70]) +: award(["Silver", 60]) +: award(["Bronze", 50])
 
-fun findawards(scores) = if awards_(scores) is
+fun findawards(scores) = if awards(scores) is
   Nil then Nil
   head_ :: tail_ and head_ is [award, [sum_, perm]] then
     [award, [sum_, perm]] :: findawards(listDiff(scores, perm))

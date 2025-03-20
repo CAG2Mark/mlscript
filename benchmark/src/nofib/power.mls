@@ -1,14 +1,21 @@
 import "../precompiled/NofibPrelude.mls"
 import "../precompiled/BenchmarkPrelude.mls"
+import "fs"
 open NofibPrelude
 open BenchmarkPrelude
+
+module power with ...
+// :js
+
+// :silent
+// :import NofibPrelude.mls
 
 
 abstract class Pss[T]: Pz | Pc[T]
 
 type Ps[T] = Lazy[Pss[T]]
 
-class Pc[T](f: T, s: Ps[T]) extends Pss[T]
+data class Pc[T](f: T, s: Ps[T]) extends Pss[T]
 
 object Pz extends Pss
 
@@ -145,4 +152,3 @@ fun testPower_nofib(p) =
 // :expect "[0,1,1,2,5,14,42,132,429,1430,4862,16796,58786,208012]"
 benchmark of () => testPower_nofib(14).toString()
 //│ = "[0,1,1,2,5,14,42,132,429,1430,4862,16796,58786,208012]"
-

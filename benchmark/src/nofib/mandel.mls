@@ -1,14 +1,21 @@
 import "../precompiled/NofibPrelude.mls"
 import "../precompiled/BenchmarkPrelude.mls"
+import "fs"
 open NofibPrelude
 open BenchmarkPrelude
 
+module mandel with ...
+// :js
 
-class Pixmap(a: Int, b: Int, c: Int, d:List[[Int, Int, Int]])
+// :silent
+// :import NofibPrelude.mls
+
+
+data class Pixmap(a: Int, b: Int, c: Int, d:List[[Int, Int, Int]])
 
 fun createPixmap(width, height, max, colours) = Pixmap(width, height, max, colours)
 
-class Complex(r: Num, i: Num)
+data class Complex(r: Num, i: Num)
 
 fun comp_magnitude(c) = if c is Complex(a, b) then sqrt(a * a + b * b)
 
@@ -18,7 +25,7 @@ fun comp_times(x, y) = if
 fun comp_plus(x, y) = if
   x is Complex(a, b) and y is Complex(c, d) then Complex(a + c, b + d)
 
-fun mandel_(c) =
+fun mandel(c) =
   fun infiniteMandel() = lazy of () =>
     LzCons(c, map_lz((z => comp_plus(comp_times(z, z), c)), infiniteMandel()))
   infiniteMandel()
@@ -33,7 +40,7 @@ fun whenDiverge(limit, radius, c) =
       diverge(x, radius) then 0
       else 1 + walkIt(xs)
   
-  walkIt(take_lz_lz(limit, mandel_(c)))
+  walkIt(take_lz_lz(limit, mandel(c)))
 
 fun parallelMandel(mat, limit, radius) = map(c => whenDiverge(limit, radius, c), mat)
 
