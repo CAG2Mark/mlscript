@@ -16,7 +16,7 @@ object Benchmark {
   val compilerNoInstr = MLsCompiler(preludePath, _(println))(using Config(N, N, N))
   val compilerInstr = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(N)), N))
   val compilerStackSafe = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(S(StackSafety.default))), N))
-  val compilerStackSafeLifted = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(S(StackSafety.default))), N))
+  val compilerStackSafeLifted = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(S(StackSafety.default))), S(LiftDefns())))
 
   def precompileModules =
     compilerNoInstr.compileModule(compileTestDir/"Runtime.mls")

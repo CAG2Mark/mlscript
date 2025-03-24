@@ -3,6 +3,7 @@ import Predef from "./Predef.mjs";
 let Option1;
 Option1 = class Option {
   static {
+    Option1 = Option;
     this.Some = function Some(value1) {
       return new Some.class(value1);
     };

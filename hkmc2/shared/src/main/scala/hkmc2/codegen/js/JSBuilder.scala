@@ -219,10 +219,12 @@ class JSBuilder(using TL, State, Ctx) extends CodeBuilder:
             val preCtorCode = ctorAuxParams.flatMap(ps => ps).foldLeft(body(preCtor, endSemi = true)):
               case (acc, (sym, nme)) =>
                 doc"$acc # this.${sym.name} = $nme;"
-            val ctorCode = doc"$preCtorCode${body(ctor, endSemi = false)}"
+            val ctorCode = doc"$preCtorCode${body(ctor, endSemi = auxParams.length > 0)}"
+
+            val modulePreassignment = if isModule && ownr.isEmpty then doc" # ${getVar(sym)} = ${scope.lookup_!(isym)};" else doc""
 
             val ctorBod = if auxParams.isEmpty then
-              doc"${braced(ctorCode)}"
+              doc"${braced(doc"$modulePreassignment$ctorCode")}"
             else
               val pss = ctorAuxParams.map(_.map(_._2))
               val newCtorCode = doc"$ctorCode # return this;"
@@ -230,7 +232,7 @@ class JSBuilder(using TL, State, Ctx) extends CodeBuilder:
               val funBod = pss.foldRight(ctorBraced):
                 case (psDoc, doc) => doc"(${psDoc.mkDocument(", ")}) => $doc"
 
-              doc"${ braced(doc" # return $funBod") }"
+              doc"${ braced(doc"$modulePreassignment # return $funBod") }"
             
             val ctorOrStatic = if isModule
               then doc"static"
