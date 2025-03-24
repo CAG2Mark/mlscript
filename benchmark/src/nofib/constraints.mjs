@@ -5,6 +5,7 @@ import fs from "fs";
 let constraints1;
 constraints1 = class constraints {
   static {
+    constraints1 = constraints;
     let lambda;
     this.Assign = function Assign(varr1, value1) {
       return new Assign.class(varr1, value1);

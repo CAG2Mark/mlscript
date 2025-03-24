@@ -26,7 +26,7 @@ object Benchmark {
       val noinstrName = os.SubPath(file.baseName + ".noinstr.mjs")
       val instrName = os.SubPath(file.baseName + ".instr.mjs")
       println(file)
-      compilerStackSafe.compileModule(file)
+      compilerStackSafeLifted.compileModule(file)
       os.copy(origName, nofibPrecompilePath/instrName, replaceExisting = true)
       compilerNoInstr.compileModule(file)
       os.copy(origName, nofibPrecompilePath/noinstrName, replaceExisting = true)
@@ -35,7 +35,7 @@ object Benchmark {
     compileBoth(nofibPrecompilePath/"NofibPrelude.mls")
 
     os.copy(nofibPrecompilePath/"BenchmarkPrelude.instr.mls", nofibPrecompilePath/"BenchmarkPrelude.mls", replaceExisting = true)
-    compilerInstr.compileModule(nofibPrecompilePath/"BenchmarkPrelude.mls")
+    compilerStackSafeLifted.compileModule(nofibPrecompilePath/"BenchmarkPrelude.mls")
     os.copy(nofibPrecompilePath/"BenchmarkPrelude.mjs", nofibPrecompilePath/"BenchmarkPrelude.instr.mjs", replaceExisting = true)
 
     os.copy(nofibPrecompilePath/"BenchmarkPrelude.noinstr.mls", nofibPrecompilePath/"BenchmarkPrelude.mls", replaceExisting = true)
@@ -59,32 +59,36 @@ object Benchmark {
     precompileModules
     println()
     // Import nofib
-    val nofibSources = os.list(os.pwd/"hkmc2"/"shared"/"src"/"test"/"mlscript"/"nofib").filter(_.last != "NofibPrelude.mls").filter(_.last != "input")
-    nofibSources.foreach: path =>
-      println(s"Importing ${path.last}")
-      val preludeStr = f"""import "../precompiled/NofibPrelude.mls"
-import "../precompiled/BenchmarkPrelude.mls"
-import "fs"
-open NofibPrelude
-open BenchmarkPrelude
+//     val nofibSources = os.list(os.pwd/"hkmc2"/"shared"/"src"/"test"/"mlscript"/"nofib").filter(_.last != "NofibPrelude.mls").filter(_.last != "input")
+//     nofibSources.foreach: path =>
+//       println(s"Importing ${path.last}")
+//       val preludeStr = f"""import "../precompiled/NofibPrelude.mls"
+// import "../precompiled/BenchmarkPrelude.mls"
+// import "fs"
+// open NofibPrelude
+// open BenchmarkPrelude
 
-module ${path.baseName.replace("-", "")} with ...
-"""
-      val result = os.read(path).split("\n").map: line =>
-          if line.startsWith(":") || line.startsWith("import ") then
-            f"// $line"
-          else if line.startsWith("prog(6).toStr") || line.startsWith("test") || line.startsWith("nofib") ||
-            line.startsWith("print(test") || line.startsWith("print(nofib") || line.startsWith("print of") ||
-            line.startsWith("map(x => nofib") then
-            f"benchmark of () => $line"
-          else if line.startsWith("let ls = testFish") then
-            "let ls = benchmark of () => testFish_nofib(1)"
-          else
-            line
-        .mkString(preludeStr, "\n", "\n")
-      os.write.over(os.pwd/"benchmark"/"src"/"nofib"/path.last, result)
+// module ${path.baseName.replace("-", "")} with ...
+// """
+//       val result = os.read(path).split("\n").map: line =>
+//           if line.startsWith(":") || line.startsWith("import ") then
+//             f"// $line"
+//           else if line.startsWith("prog(6).toStr") || line.startsWith("test") || line.startsWith("nofib") ||
+//             line.startsWith("print(test") || line.startsWith("print(nofib") || line.startsWith("print of") ||
+//             line.startsWith("map(x => nofib") then
+//             f"benchmark of () => $line"
+//           else if line.startsWith("let ls = testFish") then
+//             "let ls = benchmark of () => testFish_nofib(1)"
+//           else if line.startsWith("let ") then
+//             // convert private variables away
+//             "val " + line.drop(4)
+//           else
+//             line
+//         .mkString(preludeStr, "\n", "\n")
+//       os.write.over(os.pwd/"benchmark"/"src"/"nofib"/path.last, result)
     val failing = Set()
     lazy val nofibFiles = os.list(os.pwd/"benchmark"/"src"/"nofib").filter(_.ext == "mls").filterNot(p => failing.exists(_ == p.baseName))
+      .dropWhile(_.last != "ansi.mls")
     // lazy val nofibFiles = List(os.pwd/"benchmark"/"src"/"examples"/"StackSafety.mls")
 
     nofibFiles.foreach: path =>
@@ -94,12 +98,15 @@ module ${path.baseName.replace("-", "")} with ...
         val resultPath = path / os.up / (path.baseName + ".mjs")
         println(s"Running $resultPath")
         os.proc("node", resultPath.toString).call(stdout = os.Inherit, stderr = os.Inherit)
-      if path.last != "cryptarithm1.mls" then
-        useStackSafe
-        println("Stack safety: on")
-        run(compilerStackSafeLifted)
-      else
-        print("Skipping cryptarithm1 as it OOM without lifter")
+      // if path.last != "cryptarithm1.mls" then
+      //   useStackSafe
+      //   println("Stack safety: on")
+      //   run(compilerStackSafe)
+      // else
+      //   print("Skipping cryptarithm1 as it OOM without lifter")
+      useStackSafe
+      println("Stack safety: on, Lift: on")
+      run(compilerStackSafeLifted)
       useNoInstr
       println("Stack safety: off")
       run(compilerNoInstr)

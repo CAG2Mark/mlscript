@@ -5,6 +5,7 @@ import fs from "fs";
 let treejoin1;
 treejoin1 = class treejoin {
   static {
+    treejoin1 = treejoin;
     let lambda;
     this.Tree = class Tree {
       constructor() {}

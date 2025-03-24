@@ -4,26 +4,8 @@ import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 let lastpiece1;
 lastpiece1 = class lastpiece {
-  static #maxRow;
-  static #maxCol;
-  static #emptyBoard;
-  static #nPiece;
-  static #mPiece;
-  static #lPiece;
-  static #kPiece;
-  static #jPiece;
-  static #iPiece;
-  static #hPiece;
-  static #gPiece;
-  static #fPiece;
-  static #ePiece;
-  static #dPiece;
-  static #cPiece;
-  static #bPiece;
-  static #initialPieces;
-  static #spaceText;
-  static #nlText;
   static {
+    lastpiece1 = lastpiece;
     let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66, tmp67, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74, tmp75, tmp76, tmp77, tmp78, tmp79, tmp80, tmp81, tmp82, tmp83, tmp84, tmp85, tmp86, tmp87, tmp88, tmp89, tmp90, tmp91, tmp92, tmp93, tmp94, tmp95, tmp96, tmp97, tmp98, tmp99, tmp100, tmp101, tmp102, tmp103, tmp104, tmp105, tmp106, tmp107, tmp108, tmp109, tmp110, tmp111, tmp112, tmp113, tmp114, tmp115, tmp116, tmp117, tmp118, tmp119, tmp120, tmp121, tmp122, tmp123, tmp124, tmp125, tmp126, tmp127, tmp128, tmp129, tmp130, tmp131, tmp132, tmp133, tmp134, tmp135, tmp136, tmp137, tmp138, tmp139, tmp140, tmp141, tmp142, tmp143, tmp144, tmp145, tmp146, tmp147, tmp148, tmp149, tmp150, tmp151, tmp152, tmp153, tmp154, tmp155, tmp156, tmp157, tmp158, tmp159, tmp160, tmp161, tmp162, tmp163, tmp164, tmp165, tmp166, tmp167, tmp168, tmp169, tmp170, tmp171, tmp172, tmp173, tmp174, tmp175, tmp176, tmp177, tmp178, tmp179, tmp180, tmp181, tmp182, tmp183, tmp184, tmp185, tmp186, tmp187, tmp188, tmp189, tmp190, tmp191, tmp192, tmp193, tmp194, tmp195, tmp196, tmp197, tmp198, tmp199, tmp200, tmp201, tmp202, tmp203, tmp204, tmp205, tmp206, tmp207, tmp208, tmp209, tmp210, tmp211, tmp212, tmp213, tmp214, tmp215, tmp216, tmp217, tmp218, tmp219, tmp220, tmp221, tmp222, tmp223, tmp224, tmp225, tmp226, tmp227, tmp228, tmp229, tmp230, tmp231, tmp232, tmp233, tmp234, tmp235, tmp236, tmp237, tmp238, tmp239, tmp240, tmp241, tmp242, tmp243, tmp244, tmp245, tmp246, tmp247, tmp248, tmp249, tmp250, tmp251, tmp252, tmp253, tmp254, tmp255, tmp256, tmp257, tmp258, tmp259, tmp260, tmp261, tmp262, tmp263, tmp264, tmp265, tmp266, tmp267, tmp268, tmp269, tmp270, tmp271, tmp272, tmp273, tmp274, tmp275, tmp276, tmp277, tmp278, tmp279, tmp280, lambda;
     const GT$class = class GT {
       constructor() {}
@@ -135,9 +117,9 @@ lastpiece1 = class lastpiece {
       }
       toString() { return "Fail(" + globalThis.Predef.render(this.b) + ", " + globalThis.Predef.render(this.s) + ")"; }
     };
-    lastpiece.#maxRow = 8;
-    lastpiece.#maxCol = 8;
-    lastpiece.#emptyBoard = lastpiece.Tip;
+    this.maxRow = 8;
+    this.maxCol = 8;
+    this.emptyBoard = lastpiece.Tip;
     tmp = NofibPrelude.Cons([
       2,
       2
@@ -176,7 +158,7 @@ lastpiece1 = class lastpiece {
     tmp11 = NofibPrelude.Cons(tmp10, NofibPrelude.Nil);
     tmp12 = NofibPrelude.Cons(tmp3, tmp11);
     tmp13 = lastpiece.P("n", tmp12, NofibPrelude.Nil);
-    lastpiece.#nPiece = tmp13;
+    this.nPiece = tmp13;
     tmp14 = NofibPrelude.Cons([
       3,
       0
@@ -230,7 +212,7 @@ lastpiece1 = class lastpiece {
     tmp28 = NofibPrelude.Cons(tmp27, NofibPrelude.Nil);
     tmp29 = NofibPrelude.Cons(tmp22, tmp28);
     tmp30 = lastpiece.P("m", tmp18, tmp29);
-    lastpiece.#mPiece = tmp30;
+    this.mPiece = tmp30;
     tmp31 = NofibPrelude.Cons([
       1,
       2
@@ -302,7 +284,7 @@ lastpiece1 = class lastpiece {
     tmp51 = NofibPrelude.Cons(tmp50, NofibPrelude.Nil);
     tmp52 = NofibPrelude.Cons(tmp46, tmp51);
     tmp53 = lastpiece.P("l", tmp41, tmp52);
-    lastpiece.#lPiece = tmp53;
+    this.lPiece = tmp53;
     tmp54 = - 1;
     tmp55 = NofibPrelude.Cons([
       2,
@@ -339,7 +321,7 @@ lastpiece1 = class lastpiece {
     ], tmp62);
     tmp64 = NofibPrelude.Cons(tmp63, NofibPrelude.Nil);
     tmp65 = lastpiece.P("k", tmp59, tmp64);
-    lastpiece.#kPiece = tmp65;
+    this.kPiece = tmp65;
     tmp66 = NofibPrelude.Cons([
       1,
       1
@@ -412,7 +394,7 @@ lastpiece1 = class lastpiece {
     ], tmp86);
     tmp88 = NofibPrelude.Cons(tmp87, NofibPrelude.Nil);
     tmp89 = lastpiece.P("j", tmp83, tmp88);
-    lastpiece.#jPiece = tmp89;
+    this.jPiece = tmp89;
     tmp90 = NofibPrelude.Cons([
       3,
       1
@@ -485,7 +467,7 @@ lastpiece1 = class lastpiece {
     ], tmp110);
     tmp112 = NofibPrelude.Cons(tmp111, NofibPrelude.Nil);
     tmp113 = lastpiece.P("i", tmp105, tmp112);
-    lastpiece.#iPiece = tmp113;
+    this.iPiece = tmp113;
     tmp114 = NofibPrelude.Cons([
       2,
       2
@@ -560,7 +542,7 @@ lastpiece1 = class lastpiece {
     ], tmp136);
     tmp138 = NofibPrelude.Cons(tmp137, NofibPrelude.Nil);
     tmp139 = lastpiece.P("h", tmp131, tmp138);
-    lastpiece.#hPiece = tmp139;
+    this.hPiece = tmp139;
     tmp140 = NofibPrelude.Cons([
       1,
       3
@@ -635,7 +617,7 @@ lastpiece1 = class lastpiece {
     tmp163 = NofibPrelude.Cons(tmp150, tmp162);
     tmp164 = NofibPrelude.Cons(tmp143, tmp163);
     tmp165 = lastpiece.P("g", NofibPrelude.Nil, tmp164);
-    lastpiece.#gPiece = tmp165;
+    this.gPiece = tmp165;
     tmp166 = NofibPrelude.Cons([
       3,
       1
@@ -708,7 +690,7 @@ lastpiece1 = class lastpiece {
     ], tmp186);
     tmp188 = NofibPrelude.Cons(tmp187, NofibPrelude.Nil);
     tmp189 = lastpiece.P("f", tmp183, tmp188);
-    lastpiece.#fPiece = tmp189;
+    this.fPiece = tmp189;
     tmp190 = NofibPrelude.Cons([
       1,
       2
@@ -766,7 +748,7 @@ lastpiece1 = class lastpiece {
     tmp208 = NofibPrelude.Cons(tmp207, NofibPrelude.Nil);
     tmp209 = NofibPrelude.Cons(tmp202, tmp208);
     tmp210 = lastpiece.P("e", tmp199, tmp209);
-    lastpiece.#ePiece = tmp210;
+    this.ePiece = tmp210;
     tmp211 = NofibPrelude.Cons([
       2,
       1
@@ -809,7 +791,7 @@ lastpiece1 = class lastpiece {
     ], tmp222);
     tmp224 = NofibPrelude.Cons(tmp223, NofibPrelude.Nil);
     tmp225 = lastpiece.P("d", tmp220, tmp224);
-    lastpiece.#dPiece = tmp225;
+    this.dPiece = tmp225;
     tmp226 = NofibPrelude.Cons([
       1,
       1
@@ -865,7 +847,7 @@ lastpiece1 = class lastpiece {
     tmp242 = NofibPrelude.Cons(tmp232, tmp241);
     tmp243 = NofibPrelude.Cons(tmp228, tmp242);
     tmp244 = lastpiece.P("c", NofibPrelude.Nil, tmp243);
-    lastpiece.#cPiece = tmp244;
+    this.cPiece = tmp244;
     tmp245 = NofibPrelude.Cons([
       1,
       2
@@ -920,21 +902,21 @@ lastpiece1 = class lastpiece {
     ], tmp259);
     tmp261 = NofibPrelude.Cons(tmp260, NofibPrelude.Nil);
     tmp262 = lastpiece.P("b", tmp257, tmp261);
-    lastpiece.#bPiece = tmp262;
-    tmp263 = NofibPrelude.Cons(lastpiece.#nPiece, NofibPrelude.Nil);
-    tmp264 = NofibPrelude.Cons(lastpiece.#mPiece, tmp263);
-    tmp265 = NofibPrelude.Cons(lastpiece.#lPiece, tmp264);
-    tmp266 = NofibPrelude.Cons(lastpiece.#kPiece, tmp265);
-    tmp267 = NofibPrelude.Cons(lastpiece.#jPiece, tmp266);
-    tmp268 = NofibPrelude.Cons(lastpiece.#iPiece, tmp267);
-    tmp269 = NofibPrelude.Cons(lastpiece.#hPiece, tmp268);
-    tmp270 = NofibPrelude.Cons(lastpiece.#gPiece, tmp269);
-    tmp271 = NofibPrelude.Cons(lastpiece.#fPiece, tmp270);
-    tmp272 = NofibPrelude.Cons(lastpiece.#ePiece, tmp271);
-    tmp273 = NofibPrelude.Cons(lastpiece.#dPiece, tmp272);
-    tmp274 = NofibPrelude.Cons(lastpiece.#cPiece, tmp273);
-    tmp275 = NofibPrelude.Cons(lastpiece.#bPiece, tmp274);
-    lastpiece.#initialPieces = tmp275;
+    this.bPiece = tmp262;
+    tmp263 = NofibPrelude.Cons(lastpiece.nPiece, NofibPrelude.Nil);
+    tmp264 = NofibPrelude.Cons(lastpiece.mPiece, tmp263);
+    tmp265 = NofibPrelude.Cons(lastpiece.lPiece, tmp264);
+    tmp266 = NofibPrelude.Cons(lastpiece.kPiece, tmp265);
+    tmp267 = NofibPrelude.Cons(lastpiece.jPiece, tmp266);
+    tmp268 = NofibPrelude.Cons(lastpiece.iPiece, tmp267);
+    tmp269 = NofibPrelude.Cons(lastpiece.hPiece, tmp268);
+    tmp270 = NofibPrelude.Cons(lastpiece.gPiece, tmp269);
+    tmp271 = NofibPrelude.Cons(lastpiece.fPiece, tmp270);
+    tmp272 = NofibPrelude.Cons(lastpiece.ePiece, tmp271);
+    tmp273 = NofibPrelude.Cons(lastpiece.dPiece, tmp272);
+    tmp274 = NofibPrelude.Cons(lastpiece.cPiece, tmp273);
+    tmp275 = NofibPrelude.Cons(lastpiece.bPiece, tmp274);
+    this.initialPieces = tmp275;
     this.Mode = class Mode {
       constructor() {}
       toString() { return "Mode"; }
@@ -1145,10 +1127,10 @@ lastpiece1 = class lastpiece {
     };
     tmp276 = lastpiece.Chr(" ");
     tmp277 = lastpiece.NoAnnot(tmp276, 1);
-    lastpiece.#spaceText = tmp277;
+    this.spaceText = tmp277;
     tmp278 = lastpiece.Chr("\n");
     tmp279 = lastpiece.NoAnnot(tmp278, 1);
-    lastpiece.#nlText = tmp279;
+    this.nlText = tmp279;
     lambda = (undefined, function () {
       let tmp281, tmp282;
       tmp281 = lastpiece.testLastPiece_nofib();
@@ -1559,10 +1541,10 @@ lastpiece1 = class lastpiece {
       first1 = sq2[1];
       row = first0;
       col = first1;
-      tmp = row > lastpiece.#maxRow;
+      tmp = row > lastpiece.maxRow;
       tmp1 = col < 1;
       tmp2 = tmp || tmp1;
-      tmp3 = col > lastpiece.#maxCol;
+      tmp3 = col > lastpiece.maxCol;
       scrut1 = tmp2 || tmp3;
       if (scrut1 === true) {
         return NofibPrelude.None
@@ -1674,7 +1656,7 @@ lastpiece1 = class lastpiece {
       if (ps instanceof NofibPrelude.Nil.class) {
         return lastpiece.Soln(bd5)
       } else {
-        tmp = lastpiece.#maxCol + 1;
+        tmp = lastpiece.maxCol + 1;
         scrut2 = col === tmp;
         if (scrut2 === true) {
           tmp1 = row + 1;
@@ -1830,14 +1812,14 @@ lastpiece1 = class lastpiece {
     };
     row = function row(n1) {
       let tmp4, tmp5, lambda;
-      tmp4 = NofibPrelude.enumFromTo(1, lastpiece.#maxCol);
+      tmp4 = NofibPrelude.enumFromTo(1, lastpiece.maxCol);
       lambda = (undefined, function (col) {
         return sq5(n1, col)
       });
       tmp5 = NofibPrelude.map(lambda, tmp4);
       return lastpiece.hcat(tmp5)
     };
-    tmp = NofibPrelude.enumFromTo(1, lastpiece.#maxCol);
+    tmp = NofibPrelude.enumFromTo(1, lastpiece.maxCol);
     tmp1 = NofibPrelude.map(row, tmp);
     tmp2 = lastpiece.vcat(tmp1);
     tmp3 = lastpiece.text(NofibPrelude.Nil);
@@ -2106,7 +2088,7 @@ lastpiece1 = class lastpiece {
       return lastpiece.nilBeside(g4, p11)
     } else {
       if (g4 === true) {
-        return lastpiece.TextBeside(lastpiece.#spaceText, p9)
+        return lastpiece.TextBeside(lastpiece.spaceText, p9)
       } else {
         return p9
       }
@@ -2247,10 +2229,10 @@ lastpiece1 = class lastpiece {
       lambda = (undefined, function (a1, b1) {
         return b1
       });
-      return lastpiece.easyDisplay(lastpiece.#spaceText, lambda, txt1, rest, tmp)
+      return lastpiece.easyDisplay(lastpiece.spaceText, lambda, txt1, rest, tmp)
     } else if (m3 instanceof lastpiece.LeftMode.class) {
       tmp1 = lastpiece.reduceDoc(doc2);
-      return lastpiece.easyDisplay(lastpiece.#nlText, lastpiece.first, txt1, rest, tmp1)
+      return lastpiece.easyDisplay(lastpiece.nlText, lastpiece.first, txt1, rest, tmp1)
     } else {
       tmp2 = lineLen / ribbons;
       tmp3 = lastpiece.ceiling(tmp2);
@@ -2325,7 +2307,7 @@ lastpiece1 = class lastpiece {
           param05 = param.d;
           p16 = param05;
           tmp18 = lay(k10, p16);
-          return runtime.safeCall(txt3(lastpiece.#nlText, tmp18))
+          return runtime.safeCall(txt3(lastpiece.nlText, tmp18))
         } else if (param instanceof lastpiece.TextBeside.class) {
           param04 = param.a;
           param13 = param.d;
@@ -2371,7 +2353,7 @@ lastpiece1 = class lastpiece {
         param01 = docc.d;
         p12 = param01;
         tmp3 = lay(k9, p12);
-        return runtime.safeCall(txt3(lastpiece.#nlText, tmp3))
+        return runtime.safeCall(txt3(lastpiece.nlText, tmp3))
       } else if (docc instanceof lastpiece.TextBeside.class) {
         param0 = docc.a;
         param1 = docc.d;
@@ -2385,9 +2367,9 @@ lastpiece1 = class lastpiece {
             tmp6 = lastpiece.NoAnnot(tmp5, shift);
             tmp7 = k9 - shift;
             tmp8 = lay1(tmp7, s3, p11);
-            tmp9 = runtime.safeCall(txt3(lastpiece.#nlText, tmp8));
+            tmp9 = runtime.safeCall(txt3(lastpiece.nlText, tmp8));
             tmp10 = runtime.safeCall(txt3(tmp6, tmp9));
-            return runtime.safeCall(txt3(lastpiece.#nlText, tmp10))
+            return runtime.safeCall(txt3(lastpiece.nlText, tmp10))
           } else {
             scrut = k9 < 0;
             if (scrut === true) {
@@ -2396,9 +2378,9 @@ lastpiece1 = class lastpiece {
               tmp13 = lastpiece.NoAnnot(tmp12, shift);
               tmp14 = k9 + shift;
               tmp15 = lay1(tmp14, s3, p11);
-              tmp16 = runtime.safeCall(txt3(lastpiece.#nlText, tmp15));
+              tmp16 = runtime.safeCall(txt3(lastpiece.nlText, tmp15));
               tmp17 = runtime.safeCall(txt3(tmp13, tmp16));
-              return runtime.safeCall(txt3(lastpiece.#nlText, tmp17))
+              return runtime.safeCall(txt3(lastpiece.nlText, tmp17))
             } else {
               return lay1(k9, s3, p11)
             }
@@ -2631,7 +2613,7 @@ lastpiece1 = class lastpiece {
       1,
       0
     ], tmp);
-    tmp2 = lastpiece.fit(lastpiece.#emptyBoard, [
+    tmp2 = lastpiece.fit(lastpiece.emptyBoard, [
       1,
       1
     ], "a", tmp1);
@@ -2640,7 +2622,7 @@ lastpiece1 = class lastpiece {
     tmp4 = lastpiece.search([
       1,
       2
-    ], lastpiece.Female, initialBoard, lastpiece.#initialPieces);
+    ], lastpiece.Female, initialBoard, lastpiece.initialPieces);
     solutions = tmp4;
     tmp5 = lastpiece.display(solutions);
     return lastpiece.printDoc(tmp5)

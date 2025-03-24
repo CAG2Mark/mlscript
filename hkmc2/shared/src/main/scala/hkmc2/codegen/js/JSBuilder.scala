@@ -65,7 +65,7 @@ class JSBuilder(using TL, State, Ctx) extends CodeBuilder:
         doc"${getVar(owner)}.${
           if (ts.k is syntax.LetBind) && !owner.isInstanceOf[semantics.TopLevelSymbol]
           then "#" + owner.privatesScope.lookup_!(ts)
-          else ts.id.name
+          else Scope.replaceInvalidCharacters(ts.id.name)
         }"
       case N => summon[Scope].lookup_!(ts)
     case ts: semantics.InnerSymbol =>
@@ -218,7 +218,7 @@ class JSBuilder(using TL, State, Ctx) extends CodeBuilder:
                 .mkDocument(doc"")
             val preCtorCode = ctorAuxParams.flatMap(ps => ps).foldLeft(body(preCtor, endSemi = true)):
               case (acc, (sym, nme)) =>
-                doc"$acc # this.${sym.name} = $nme;"
+                doc"$acc # this.${Scope.replaceInvalidCharacters(sym.name)} = $nme;"
             val ctorCode = doc"$preCtorCode${body(ctor, endSemi = auxParams.length > 0)}"
 
             val modulePreassignment = if isModule && ownr.isEmpty then doc" # ${getVar(sym)} = ${scope.lookup_!(isym)};" else doc""

@@ -4,8 +4,8 @@ import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 let cryptarithm21;
 cryptarithm21 = class cryptarithm2 {
-  static #get;
   static {
+    cryptarithm21 = cryptarithm2;
     let tmp, lambda, lambda1;
     const Unit$class = class Unit {
       constructor() {}
@@ -29,7 +29,7 @@ cryptarithm21 = class cryptarithm2 {
       ], NofibPrelude.Nil)
     });
     tmp = cryptarithm2.StateT(lambda);
-    cryptarithm2.#get = tmp;
+    this.get = tmp;
     this.Digits = function Digits(i1, c1) {
       return new Digits.class(i1, c1);
     };
@@ -286,7 +286,7 @@ cryptarithm21 = class cryptarithm2 {
       return cryptarithm2.bind(tmp4, tmp5)
     });
     tmp = lambda;
-    return cryptarithm2.bind(cryptarithm2.#get, tmp)
+    return cryptarithm2.bind(cryptarithm2.get, tmp)
   } 
   static select(c1) {
     let tmp, lambda;
@@ -305,7 +305,7 @@ cryptarithm21 = class cryptarithm2 {
       }
     });
     tmp = lambda;
-    return cryptarithm2.bind(cryptarithm2.#get, tmp)
+    return cryptarithm2.bind(cryptarithm2.get, tmp)
   } 
   static rest(ls4) {
     let param0, param1, x, xs1;

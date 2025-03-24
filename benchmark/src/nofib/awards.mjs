@@ -5,6 +5,7 @@ import fs from "fs";
 let awards1;
 awards1 = class awards {
   static {
+    awards1 = awards;
     let lambda;
     lambda = (undefined, function () {
       return awards.testAwards_nofib(100)

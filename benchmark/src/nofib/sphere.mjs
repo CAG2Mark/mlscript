@@ -4,22 +4,12 @@ import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 let sphere1;
 sphere1 = class sphere {
-  static #pi;
-  static #epsilon;
-  static #infinity;
-  static #lookat;
-  static #vup;
-  static #fov;
-  static #s2;
-  static #testspheres;
-  static #testlights;
-  static #lookfrom;
-  static #background;
   static {
+    sphere1 = sphere;
     let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, lambda;
-    sphere.#pi = globalThis.Math.PI;
-    sphere.#epsilon = 0.000001;
-    sphere.#infinity = 100000000.0;
+    this.pi = globalThis.Math.PI;
+    this.epsilon = 0.000001;
+    this.infinity = 100000000.0;
     this.Light = class Light {
       constructor() {}
       toString() { return "Light"; }
@@ -141,17 +131,17 @@ sphere1 = class sphere {
       }
       toString() { return "Sphere(" + globalThis.Predef.render(this.pos) + ", " + globalThis.Predef.render(this.radius) + ", " + globalThis.Predef.render(this.surface) + ")"; }
     };
-    sphere.#lookat = [
+    this.lookat = [
       0.0,
       0.0,
       0.0
     ];
-    sphere.#vup = [
+    this.vup = [
       0.0,
       0.0,
       1.0
     ];
-    sphere.#fov = 45.0;
+    this.fov = 45.0;
     tmp = sphere.Ambient([
       0.035,
       0.0325,
@@ -174,65 +164,65 @@ sphere1 = class sphere {
     tmp7 = NofibPrelude.Cons(tmp2, tmp6);
     tmp8 = NofibPrelude.Cons(tmp1, tmp7);
     tmp9 = NofibPrelude.Cons(tmp, tmp8);
-    sphere.#s2 = tmp9;
+    this.s2 = tmp9;
     tmp10 = sphere.Sphere([
       0.0,
       0.0,
       0.0
-    ], 0.5, sphere.#s2);
+    ], 0.5, sphere.s2);
     tmp11 = sphere.Sphere([
       0.272166,
       0.272166,
       0.544331
-    ], 0.166667, sphere.#s2);
+    ], 0.166667, sphere.s2);
     tmp12 = sphere.Sphere([
       0.643951,
       0.172546,
       0.0
-    ], 0.166667, sphere.#s2);
+    ], 0.166667, sphere.s2);
     tmp13 = sphere.Sphere([
       0.172546,
       0.643951,
       0.0
-    ], 0.166667, sphere.#s2);
+    ], 0.166667, sphere.s2);
     tmp14 = - 0.371785;
     tmp15 = sphere.Sphere([
       tmp14,
       0.0996195,
       0.544331
-    ], 0.166667, sphere.#s2);
+    ], 0.166667, sphere.s2);
     tmp16 = - 0.471405;
     tmp17 = sphere.Sphere([
       tmp16,
       0.471405,
       0.0
-    ], 0.166667, sphere.#s2);
+    ], 0.166667, sphere.s2);
     tmp18 = - 0.643951;
     tmp19 = - 0.172546;
     tmp20 = sphere.Sphere([
       tmp18,
       tmp19,
       0.0
-    ], 0.166667, sphere.#s2);
+    ], 0.166667, sphere.s2);
     tmp21 = - 0.371785;
     tmp22 = sphere.Sphere([
       0.0996195,
       tmp21,
       0.544331
-    ], 0.166667, sphere.#s2);
+    ], 0.166667, sphere.s2);
     tmp23 = - 0.172546;
     tmp24 = - 0.643951;
     tmp25 = sphere.Sphere([
       tmp23,
       tmp24,
       0.0
-    ], 0.166667, sphere.#s2);
+    ], 0.166667, sphere.s2);
     tmp26 = - 0.471405;
     tmp27 = sphere.Sphere([
       0.471405,
       tmp26,
       0.0
-    ], 0.166667, sphere.#s2);
+    ], 0.166667, sphere.s2);
     tmp28 = NofibPrelude.Cons(tmp27, NofibPrelude.Nil);
     tmp29 = NofibPrelude.Cons(tmp25, tmp28);
     tmp30 = NofibPrelude.Cons(tmp22, tmp29);
@@ -243,7 +233,7 @@ sphere1 = class sphere {
     tmp35 = NofibPrelude.Cons(tmp12, tmp34);
     tmp36 = NofibPrelude.Cons(tmp11, tmp35);
     tmp37 = NofibPrelude.Cons(tmp10, tmp36);
-    sphere.#testspheres = tmp37;
+    this.testspheres = tmp37;
     tmp38 = sphere.Point([
       4.0,
       3.0,
@@ -276,13 +266,13 @@ sphere1 = class sphere {
     tmp43 = NofibPrelude.Cons(tmp42, NofibPrelude.Nil);
     tmp44 = NofibPrelude.Cons(tmp40, tmp43);
     tmp45 = NofibPrelude.Cons(tmp38, tmp44);
-    sphere.#testlights = tmp45;
-    sphere.#lookfrom = [
+    this.testlights = tmp45;
+    this.lookfrom = [
       2.1,
       1.3,
       1.7
     ];
-    sphere.#background = [
+    this.background = [
       0.078,
       0.361,
       0.753
@@ -518,10 +508,10 @@ sphere1 = class sphere {
       x3 = first0;
       y = first1;
       z = first2;
-      tmp = x3 < sphere.#epsilon;
-      tmp1 = y < sphere.#epsilon;
+      tmp = x3 < sphere.epsilon;
+      tmp1 = y < sphere.epsilon;
       tmp2 = tmp && tmp1;
-      tmp3 = z < sphere.#epsilon;
+      tmp3 = z < sphere.epsilon;
       return tmp2 && tmp3
     } else {
       throw new globalThis.Error("match error");
@@ -841,7 +831,7 @@ sphere1 = class sphere {
   } 
   static dtor(x4) {
     let tmp;
-    tmp = x4 * sphere.#pi;
+    tmp = x4 * sphere.pi;
     return tmp / 180.0
   } 
   static camparams(lookfrom, lookat, vup, fov, winsize) {
@@ -1040,7 +1030,7 @@ sphere1 = class sphere {
       tmp1 = NofibPrelude.head(spheres);
       return [
         false,
-        sphere.#infinity,
+        sphere.infinity,
         tmp1
       ]
     } else {
@@ -1137,7 +1127,7 @@ sphere1 = class sphere {
       tmp1 = NofibPrelude.fst(tmp);
       return [
         tmp1,
-        sphere.#infinity
+        sphere.infinity
       ]
     } else if (l instanceof sphere.Point.class) {
       param0 = l.x;
@@ -1152,9 +1142,9 @@ sphere1 = class sphere {
   } 
   static shadowed(pos3, dir2, lcolour) {
     let scrut, first2, first1, first0, is_hit, dist, sp2, scrut1, tmp, tmp1;
-    tmp = sphere.vecscale(dir2, sphere.#epsilon);
+    tmp = sphere.vecscale(dir2, sphere.epsilon);
     tmp1 = sphere.vecadd(pos3, tmp);
-    scrut = sphere.trace(sphere.#testspheres, tmp1, dir2);
+    scrut = sphere.trace(sphere.testspheres, tmp1, dir2);
     if (globalThis.Array.isArray(scrut) && scrut.length === 3) {
       first0 = scrut[0];
       first1 = scrut[1];
@@ -1293,7 +1283,7 @@ sphere1 = class sphere {
     tmp15 = sphere.bodysurf(surf1);
     tmp16 = sphere.vecscale(tmp15, transmitted);
     trintensity = tmp16;
-    scrut = transmitted < sphere.#epsilon;
+    scrut = transmitted < sphere.epsilon;
     if (scrut === true) {
       tmp17 = [
         false,
@@ -1341,10 +1331,10 @@ sphere1 = class sphere {
       first1 = scrut[1];
       is_tir = first0;
       newdir = first1;
-      tmp1 = sphere.vecscale(newdir, sphere.#epsilon);
+      tmp1 = sphere.vecscale(newdir, sphere.epsilon);
       tmp2 = sphere.vecadd(pos5, tmp1);
       nearpos = tmp2;
-      scrut1 = sphere.trace(sphere.#testspheres, nearpos, newdir);
+      scrut1 = sphere.trace(sphere.testspheres, nearpos, newdir);
       if (globalThis.Array.isArray(scrut1) && scrut1.length === 3) {
         first01 = scrut1[0];
         first11 = scrut1[1];
@@ -1355,7 +1345,7 @@ sphere1 = class sphere {
         if (is_hit === true) {
           tmp3 = sphere.shade(lights1, sp3, nearpos, newdir, dist1, newcontrib);
         } else {
-          tmp3 = sphere.#background;
+          tmp3 = sphere.background;
         }
         newcol = tmp3;
         scrut2 = sphere.is_zerovector(newcontrib);
@@ -1383,10 +1373,10 @@ sphere1 = class sphere {
     let newcontrib, nearpos, scrut, first2, first1, first0, is_hit, dist1, sp3, newcol, scrut1, tmp, tmp1, tmp2, tmp3, tmp4;
     tmp = sphere.vecmult(intens1, contrib2);
     newcontrib = tmp;
-    tmp1 = sphere.vecscale(newdir, sphere.#epsilon);
+    tmp1 = sphere.vecscale(newdir, sphere.epsilon);
     tmp2 = sphere.vecadd(pos6, tmp1);
     nearpos = tmp2;
-    scrut = sphere.trace(sphere.#testspheres, nearpos, newdir);
+    scrut = sphere.trace(sphere.testspheres, nearpos, newdir);
     if (globalThis.Array.isArray(scrut) && scrut.length === 3) {
       first0 = scrut[0];
       first1 = scrut[1];
@@ -1397,7 +1387,7 @@ sphere1 = class sphere {
       if (is_hit === true) {
         tmp3 = sphere.shade(lights2, sp3, nearpos, newdir, dist1, newcontrib);
       } else {
-        tmp3 = sphere.#background;
+        tmp3 = sphere.background;
       }
       newcol = tmp3;
       scrut1 = sphere.is_zerovector(newcontrib);
@@ -1413,7 +1403,7 @@ sphere1 = class sphere {
   } 
   static tracepixel(spheres1, lights3, x5, y, firstray, scrnx, scrny) {
     let pos7, scrut, first1, first0, dir5, tracepixel_Tup2_1, scrut1, first2, first11, first01, hit, dist1, sp3, tmp, tmp1, tmp2, tmp3;
-    pos7 = sphere.#lookfrom;
+    pos7 = sphere.lookfrom;
     tmp = sphere.vecscale(scrnx, x5);
     tmp1 = sphere.vecadd(firstray, tmp);
     tmp2 = sphere.vecscale(scrny, y);
@@ -1439,7 +1429,7 @@ sphere1 = class sphere {
             1.0
           ])
         } else {
-          return sphere.#background
+          return sphere.background
         }
       } else {
         throw new globalThis.Error("match error");
@@ -1490,8 +1480,8 @@ sphere1 = class sphere {
   } 
   static ray(winsize1) {
     let f, lscomp1, lights4, scrut, first2, first1, first0, firstray1, scrnx1, scrny1, tmp, tmp1;
-    lights4 = sphere.#testlights;
-    scrut = sphere.camparams(sphere.#lookfrom, sphere.#lookat, sphere.#vup, sphere.#fov, winsize1);
+    lights4 = sphere.testlights;
+    scrut = sphere.camparams(sphere.lookfrom, sphere.lookat, sphere.vup, sphere.fov, winsize1);
     if (globalThis.Array.isArray(scrut) && scrut.length === 3) {
       first0 = scrut[0];
       first1 = scrut[1];
@@ -1500,7 +1490,7 @@ sphere1 = class sphere {
       scrnx1 = first1;
       scrny1 = first2;
       f = function f(i, j) {
-        return sphere.tracepixel(sphere.#testspheres, lights4, i, j, firstray1, scrnx1, scrny1)
+        return sphere.tracepixel(sphere.testspheres, lights4, i, j, firstray1, scrnx1, scrny1)
       };
       lscomp1 = function lscomp1(ls1) {
         let lscomp2, param0, param11, i, t1, tmp2, tmp3;

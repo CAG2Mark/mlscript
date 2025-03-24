@@ -5,6 +5,7 @@ import fs from "fs";
 let mandel1;
 mandel1 = class mandel {
   static {
+    mandel1 = mandel;
     let lambda;
     this.Pixmap = function Pixmap(a1, b1, c1, d1) {
       return new Pixmap.class(a1, b1, c1, d1);

@@ -4,20 +4,8 @@ import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 let mandel21;
 mandel21 = class mandel2 {
-  static #size;
-  static #pmn;
-  static #pmx;
-  static #qmn;
-  static #qmx;
-  static #m;
-  static #num_cols;
-  static #delta_p;
-  static #delta_q;
-  static #up;
-  static #down;
-  static #left;
-  static #right;
   static {
+    mandel21 = mandel2;
     let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, lambda;
     this.MandTree = class MandTree {
       constructor() {}
@@ -55,38 +43,38 @@ mandel21 = class mandel2 {
       }
       toString() { return "Leaf(" + globalThis.Predef.render(this.colour) + ")"; }
     };
-    mandel2.#size = 200;
+    this.size = 200;
     tmp = - 2.25;
-    mandel2.#pmn = tmp;
-    mandel2.#pmx = 0.75;
+    this.pmn = tmp;
+    this.pmx = 0.75;
     tmp1 = - 1.5;
-    mandel2.#qmn = tmp1;
-    mandel2.#qmx = 1.5;
-    mandel2.#m = 20;
-    mandel2.#num_cols = 26;
-    tmp2 = mandel2.#pmx - mandel2.#pmn;
-    tmp3 = mandel2.#size - 1;
+    this.qmn = tmp1;
+    this.qmx = 1.5;
+    this.m = 20;
+    this.num_cols = 26;
+    tmp2 = mandel2.pmx - mandel2.pmn;
+    tmp3 = mandel2.size - 1;
     tmp4 = tmp2 / tmp3;
-    mandel2.#delta_p = tmp4;
-    tmp5 = mandel2.#qmx - mandel2.#qmn;
-    tmp6 = mandel2.#size - 1;
+    this.delta_p = tmp4;
+    tmp5 = mandel2.qmx - mandel2.qmn;
+    tmp6 = mandel2.size - 1;
     tmp7 = tmp5 / tmp6;
-    mandel2.#delta_q = tmp7;
+    this.delta_q = tmp7;
     tmp8 = - 1;
-    mandel2.#up = [
+    this.up = [
       0,
       tmp8
     ];
-    mandel2.#down = [
+    this.down = [
       0,
       1
     ];
     tmp9 = - 1;
-    mandel2.#left = [
+    this.left = [
       tmp9,
       0
     ];
-    mandel2.#right = [
+    this.right = [
       1,
       0
     ];
@@ -127,13 +115,13 @@ mandel21 = class mandel2 {
   } 
   static np(x) {
     let tmp;
-    tmp = x * mandel2.#delta_p;
-    return mandel2.#pmn + tmp
+    tmp = x * mandel2.delta_p;
+    return mandel2.pmn + tmp
   } 
   static nq(y) {
     let tmp;
-    tmp = y * mandel2.#delta_q;
-    return mandel2.#qmn + tmp
+    tmp = y * mandel2.delta_q;
+    return mandel2.qmn + tmp
   } 
   static radius(x1, y1) {
     let tmp, tmp1;
@@ -206,11 +194,11 @@ mandel21 = class mandel2 {
     r = tmp2;
     tmp3 = k + 1;
     kp = tmp3;
-    scrut1 = kp == mandel2.#num_cols;
+    scrut1 = kp == mandel2.num_cols;
     if (scrut1 === true) {
       return 0
     } else {
-      scrut = r > mandel2.#m;
+      scrut = r > mandel2.m;
       if (scrut === true) {
         return kp
       } else {
@@ -258,15 +246,15 @@ mandel21 = class mandel2 {
               first13 = xdyd[1];
               xd = first03;
               yd = first13;
-              scrut10 = mandel2.equalp(xdyd, mandel2.#right);
+              scrut10 = mandel2.equalp(xdyd, mandel2.right);
               if (scrut10 === true) {
                 tmp6 = xc >= x21;
               } else {
-                scrut9 = mandel2.equalp(xdyd, mandel2.#down);
+                scrut9 = mandel2.equalp(xdyd, mandel2.down);
                 if (scrut9 === true) {
                   tmp6 = yc <= y21;
                 } else {
-                  scrut8 = mandel2.equalp(xdyd, mandel2.#left);
+                  scrut8 = mandel2.equalp(xdyd, mandel2.left);
                   if (scrut8 === true) {
                     tmp6 = xc <= x11;
                   } else {
@@ -339,25 +327,25 @@ mandel21 = class mandel2 {
             scrut3 = check_line([
               tmp2,
               y11
-            ], mandel2.#right);
+            ], mandel2.right);
             if (scrut3 === true) {
               tmp3 = y11 + 1;
               scrut4 = check_line([
                 x21,
                 tmp3
-              ], mandel2.#down);
+              ], mandel2.down);
               if (scrut4 === true) {
                 tmp4 = x21 - 1;
                 scrut5 = check_line([
                   tmp4,
                   y21
-                ], mandel2.#left);
+                ], mandel2.left);
                 if (scrut5 === true) {
                   tmp5 = y21 - 1;
                   scrut6 = check_line([
                     x11,
                     tmp5
-                  ], mandel2.#up);
+                  ], mandel2.up);
                   if (scrut6 === true) {
                     return col1
                   } else {
@@ -456,12 +444,12 @@ mandel21 = class mandel2 {
   } 
   static testMandel2_nofib(n) {
     let tmp, tmp1;
-    tmp = NofibPrelude.intDiv(mandel2.#size, 2);
+    tmp = NofibPrelude.intDiv(mandel2.size, 2);
     tmp1 = mandel2.build_tree([
       0,
       0
     ], [
-      mandel2.#size,
+      mandel2.size,
       tmp
     ]);
     return mandel2.finite(tmp1)

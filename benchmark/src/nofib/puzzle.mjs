@@ -4,9 +4,8 @@ import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 let puzzle1;
 puzzle1 = class puzzle {
-  static #initialState;
-  static #finalState;
   static {
+    puzzle1 = puzzle;
     let tmp, tmp1, tmp2, lambda;
     this.ItemType = class ItemType {
       constructor() {}
@@ -77,9 +76,9 @@ puzzle1 = class puzzle {
       toString() { return "State(" + globalThis.Predef.render(this.b) + ", " + globalThis.Predef.render(this.e) + ", " + globalThis.Predef.render(this.l) + ", " + globalThis.Predef.render(this.a) + ")"; }
     };
     tmp = puzzle.State(puzzle.LeftBank, puzzle.LeftBank, puzzle.LeftBank, puzzle.LeftBank);
-    puzzle.#initialState = tmp;
+    this.initialState = tmp;
     tmp1 = puzzle.State(puzzle.RightBank, puzzle.RightBank, puzzle.RightBank, puzzle.RightBank);
-    puzzle.#finalState = tmp1;
+    this.finalState = tmp1;
     lambda = (undefined, function () {
       let tmp3, tmp4, tmp5;
       tmp3 = NofibPrelude.Cons(2, NofibPrelude.Nil);
@@ -654,7 +653,7 @@ puzzle1 = class puzzle {
       throw globalThis.Error("puzzle expects exactly one argument");
     }
     time = tmp1;
-    tmp2 = puzzle.transfer(puzzle.#initialState, puzzle.#finalState, puzzle.RightBank, time, NofibPrelude.Nil);
+    tmp2 = puzzle.transfer(puzzle.initialState, puzzle.finalState, puzzle.RightBank, time, NofibPrelude.Nil);
     solutions1 = tmp2;
     tmp3 = puzzle.minSolutions(solutions1);
     mins = tmp3;

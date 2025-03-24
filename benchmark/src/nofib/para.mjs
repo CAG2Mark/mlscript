@@ -4,15 +4,12 @@ import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 let para1;
 para1 = class para {
-  static #maxw;
-  static #optw;
-  static #nil_;
-  static #test;
   static {
+    para1 = para;
     let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, lambda;
-    para.#maxw = 70;
-    para.#optw = 63;
-    para.#nil_ = [
+    this.maxw = 70;
+    this.optw = 63;
+    this.nil_ = [
       NofibPrelude.Nil,
       NofibPrelude.Nil
     ];
@@ -37,7 +34,7 @@ para1 = class para {
     tmp18 = NofibPrelude.Cons(tmp1, tmp17);
     tmp19 = NofibPrelude.Cons(tmp, tmp18);
     tmp20 = NofibPrelude.concat(tmp19);
-    para.#test = tmp20;
+    this.test = tmp20;
     lambda = (undefined, function () {
       let tmp21;
       tmp21 = para.testPara_nofib();
@@ -329,7 +326,7 @@ para1 = class para {
   static fits(xs7) {
     let tmp;
     tmp = para.width(xs7);
-    return tmp <= para.#maxw
+    return tmp <= para.maxw
   } 
   static feasible(a) {
     return para.all(para.fits, a)
@@ -339,7 +336,7 @@ para1 = class para {
     linc = function linc(l) {
       let a1, tmp, tmp1;
       tmp = para.width(l);
-      tmp1 = para.#optw - tmp;
+      tmp1 = para.optw - tmp;
       a1 = tmp1;
       return a1 * a1
     };
@@ -747,13 +744,13 @@ para1 = class para {
   } 
   static startr(a5) {
     let scrut, tmp;
-    scrut = a5 <= para.#maxw;
+    scrut = a5 <= para.maxw;
     if (scrut === true) {
       tmp = para.cons_([
         0,
         0,
         0
-      ], para.#nil_);
+      ], para.nil_);
       return [
         tmp,
         a5,
@@ -813,7 +810,7 @@ para1 = class para {
         } else {
           tmp8 = para.cost_tl(p2);
           tmp9 = width_hd(p2);
-          tmp10 = para.#optw - tmp9;
+          tmp10 = para.optw - tmp9;
           a6 = tmp10;
           tmp11 = a6 * a6;
           return tmp8 + tmp11
@@ -842,7 +839,7 @@ para1 = class para {
         } else {
           tmp8 = para.cost_tl(p2);
           tmp9 = old_width_hd(p2);
-          tmp10 = para.#optw - tmp9;
+          tmp10 = para.optw - tmp9;
           x2 = tmp10;
           tmp11 = x2 * x2;
           tmp12 = tmp8 + tmp11;
@@ -885,7 +882,7 @@ para1 = class para {
         } else {
           tmp8 = para.last_(ps_p);
           tmp9 = width_hd(tmp8);
-          scrut = tmp9 > para.#maxw;
+          scrut = tmp9 > para.maxw;
           if (scrut === true) {
             tmp10 = para.init_(ps_p);
             return drop_nofit(tmp10)
@@ -898,7 +895,7 @@ para1 = class para {
         let wqh, rqh, scrut, scrut1, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22;
         tmp8 = width_hd(q);
         wqh = tmp8;
-        tmp9 = para.#maxw - wqh;
+        tmp9 = para.maxw - wqh;
         tmp10 = tmp9 + 1;
         rqh = tmp10;
         tmp11 = single(q);
@@ -907,7 +904,7 @@ para1 = class para {
         scrut1 = tmp11 && tmp13;
         if (scrut1 === true) {
           tmp14 = width_hd(p2);
-          tmp15 = para.#optw - tmp14;
+          tmp15 = para.optw - tmp14;
           return NofibPrelude.min(tmp15, rqh)
         } else {
           scrut = single(q);
@@ -994,11 +991,11 @@ para1 = class para {
   } 
   static testPara_nofib() {
     let scrut;
-    scrut = NofibPrelude.null_(para.#test);
+    scrut = NofibPrelude.null_(para.test);
     if (scrut === true) {
       return NofibPrelude.Nil
     } else {
-      return para.fmt(para.#test)
+      return para.fmt(para.test)
     }
   }
   static toString() { return "para"; }

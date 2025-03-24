@@ -4,10 +4,10 @@ import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 let knights1;
 knights1 = class knights {
-  static #createQueue;
   static {
+    knights1 = knights;
     let tmp, lambda;
-    knights.#createQueue = NofibPrelude.Nil;
+    this.createQueue = NofibPrelude.Nil;
     this.Board = function Board(a1, b1, c1, d1) {
       return new Board.class(a1, b1, c1, d1);
     };

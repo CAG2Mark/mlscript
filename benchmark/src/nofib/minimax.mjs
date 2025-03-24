@@ -4,17 +4,8 @@ import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 let minimax1;
 minimax1 = class minimax {
-  static #win1;
-  static #win2;
-  static #win3;
-  static #win4;
-  static #win5;
-  static #win6;
-  static #win7;
-  static #win8;
-  static #wins;
-  static #initialBoard;
   static {
+    minimax1 = minimax;
     let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66, tmp67, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74, tmp75, tmp76, tmp77, tmp78, tmp79, tmp80, tmp81, tmp82, tmp83, tmp84, tmp85, tmp86, tmp87, tmp88, tmp89, tmp90, tmp91, tmp92, tmp93, tmp94, tmp95, tmp96, tmp97, tmp98, tmp99, tmp100, tmp101, tmp102, tmp103, tmp104, tmp105, tmp106, lambda;
     this.Piece = class Piece {
       constructor() {}
@@ -96,7 +87,7 @@ minimax1 = class minimax {
     tmp9 = NofibPrelude.Cons(tmp8, NofibPrelude.Nil);
     tmp10 = NofibPrelude.Cons(tmp5, tmp9);
     tmp11 = NofibPrelude.Cons(tmp2, tmp10);
-    minimax.#win1 = tmp11;
+    this.win1 = tmp11;
     tmp12 = NofibPrelude.Cons(0, NofibPrelude.Nil);
     tmp13 = NofibPrelude.Cons(0, tmp12);
     tmp14 = NofibPrelude.Cons(0, tmp13);
@@ -109,7 +100,7 @@ minimax1 = class minimax {
     tmp21 = NofibPrelude.Cons(tmp20, NofibPrelude.Nil);
     tmp22 = NofibPrelude.Cons(tmp17, tmp21);
     tmp23 = NofibPrelude.Cons(tmp14, tmp22);
-    minimax.#win2 = tmp23;
+    this.win2 = tmp23;
     tmp24 = NofibPrelude.Cons(0, NofibPrelude.Nil);
     tmp25 = NofibPrelude.Cons(0, tmp24);
     tmp26 = NofibPrelude.Cons(0, tmp25);
@@ -122,7 +113,7 @@ minimax1 = class minimax {
     tmp33 = NofibPrelude.Cons(tmp32, NofibPrelude.Nil);
     tmp34 = NofibPrelude.Cons(tmp29, tmp33);
     tmp35 = NofibPrelude.Cons(tmp26, tmp34);
-    minimax.#win3 = tmp35;
+    this.win3 = tmp35;
     tmp36 = NofibPrelude.Cons(0, NofibPrelude.Nil);
     tmp37 = NofibPrelude.Cons(0, tmp36);
     tmp38 = NofibPrelude.Cons(1, tmp37);
@@ -135,7 +126,7 @@ minimax1 = class minimax {
     tmp45 = NofibPrelude.Cons(tmp44, NofibPrelude.Nil);
     tmp46 = NofibPrelude.Cons(tmp41, tmp45);
     tmp47 = NofibPrelude.Cons(tmp38, tmp46);
-    minimax.#win4 = tmp47;
+    this.win4 = tmp47;
     tmp48 = NofibPrelude.Cons(0, NofibPrelude.Nil);
     tmp49 = NofibPrelude.Cons(1, tmp48);
     tmp50 = NofibPrelude.Cons(0, tmp49);
@@ -148,7 +139,7 @@ minimax1 = class minimax {
     tmp57 = NofibPrelude.Cons(tmp56, NofibPrelude.Nil);
     tmp58 = NofibPrelude.Cons(tmp53, tmp57);
     tmp59 = NofibPrelude.Cons(tmp50, tmp58);
-    minimax.#win5 = tmp59;
+    this.win5 = tmp59;
     tmp60 = NofibPrelude.Cons(1, NofibPrelude.Nil);
     tmp61 = NofibPrelude.Cons(0, tmp60);
     tmp62 = NofibPrelude.Cons(0, tmp61);
@@ -161,7 +152,7 @@ minimax1 = class minimax {
     tmp69 = NofibPrelude.Cons(tmp68, NofibPrelude.Nil);
     tmp70 = NofibPrelude.Cons(tmp65, tmp69);
     tmp71 = NofibPrelude.Cons(tmp62, tmp70);
-    minimax.#win6 = tmp71;
+    this.win6 = tmp71;
     tmp72 = NofibPrelude.Cons(0, NofibPrelude.Nil);
     tmp73 = NofibPrelude.Cons(0, tmp72);
     tmp74 = NofibPrelude.Cons(1, tmp73);
@@ -174,7 +165,7 @@ minimax1 = class minimax {
     tmp81 = NofibPrelude.Cons(tmp80, NofibPrelude.Nil);
     tmp82 = NofibPrelude.Cons(tmp77, tmp81);
     tmp83 = NofibPrelude.Cons(tmp74, tmp82);
-    minimax.#win7 = tmp83;
+    this.win7 = tmp83;
     tmp84 = NofibPrelude.Cons(1, NofibPrelude.Nil);
     tmp85 = NofibPrelude.Cons(0, tmp84);
     tmp86 = NofibPrelude.Cons(0, tmp85);
@@ -187,19 +178,19 @@ minimax1 = class minimax {
     tmp93 = NofibPrelude.Cons(tmp92, NofibPrelude.Nil);
     tmp94 = NofibPrelude.Cons(tmp89, tmp93);
     tmp95 = NofibPrelude.Cons(tmp86, tmp94);
-    minimax.#win8 = tmp95;
-    tmp96 = NofibPrelude.Cons(minimax.#win8, NofibPrelude.Nil);
-    tmp97 = NofibPrelude.Cons(minimax.#win7, tmp96);
-    tmp98 = NofibPrelude.Cons(minimax.#win6, tmp97);
-    tmp99 = NofibPrelude.Cons(minimax.#win5, tmp98);
-    tmp100 = NofibPrelude.Cons(minimax.#win4, tmp99);
-    tmp101 = NofibPrelude.Cons(minimax.#win3, tmp100);
-    tmp102 = NofibPrelude.Cons(minimax.#win2, tmp101);
-    tmp103 = NofibPrelude.Cons(minimax.#win1, tmp102);
-    minimax.#wins = tmp103;
+    this.win8 = tmp95;
+    tmp96 = NofibPrelude.Cons(minimax.win8, NofibPrelude.Nil);
+    tmp97 = NofibPrelude.Cons(minimax.win7, tmp96);
+    tmp98 = NofibPrelude.Cons(minimax.win6, tmp97);
+    tmp99 = NofibPrelude.Cons(minimax.win5, tmp98);
+    tmp100 = NofibPrelude.Cons(minimax.win4, tmp99);
+    tmp101 = NofibPrelude.Cons(minimax.win3, tmp100);
+    tmp102 = NofibPrelude.Cons(minimax.win2, tmp101);
+    tmp103 = NofibPrelude.Cons(minimax.win1, tmp102);
+    this.wins = tmp103;
     tmp104 = NofibPrelude.replicate(3, minimax.Empty);
     tmp105 = NofibPrelude.replicate(3, tmp104);
-    minimax.#initialBoard = tmp105;
+    this.initialBoard = tmp105;
     lambda = (undefined, function () {
       let tmp107, tmp108;
       tmp107 = minimax.prog("180000");
@@ -1014,7 +1005,7 @@ minimax1 = class minimax {
     lambda = (undefined, function (x4) {
       return minimax.score(board4, x4)
     });
-    tmp = NofibPrelude.map(lambda, minimax.#wins);
+    tmp = NofibPrelude.map(lambda, minimax.wins);
     return minimax.interpret(0, tmp)
   } 
   static repTree(f1, g, a) {

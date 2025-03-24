@@ -4,8 +4,8 @@ import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 let life1;
 life1 = class life {
-  static #start;
   static {
+    life1 = life;
     let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55, tmp56, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, lambda11, lambda12, lambda13, lambda14;
     lambda = (undefined, function () {
       return NofibPrelude.LzNil
@@ -106,7 +106,7 @@ life1 = class life {
     tmp54 = NofibPrelude.Cons(tmp2, tmp53);
     tmp55 = NofibPrelude.Cons(tmp1, tmp54);
     tmp56 = NofibPrelude.Cons(tmp, tmp55);
-    life.#start = tmp56;
+    this.start = tmp56;
     lambda14 = (undefined, function () {
       return life.testLife_nofib(15)
     });
@@ -468,7 +468,7 @@ life1 = class life {
     tmp2 = lambda1;
     tmp3 = life.copy_lz(sz, 0);
     tmp4 = life.copy_lz(sz, tmp3);
-    tmp5 = NofibPrelude.append_nl_lz(life.#start, tmp4);
+    tmp5 = NofibPrelude.append_nl_lz(life.start, tmp4);
     tmp6 = NofibPrelude.map_lz(tmp2, tmp5);
     tmp7 = NofibPrelude.take_lz(sz, tmp6);
     lambda2 = (undefined, function (b) {

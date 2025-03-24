@@ -5,6 +5,7 @@ import fs from "fs";
 let scc1;
 scc1 = class scc {
   static {
+    scc1 = scc;
     let lambda;
     lambda = (undefined, function () {
       let tmp;

@@ -3,6 +3,7 @@ import Predef from "./../../../hkmc2/shared/src/test/mlscript-compile/Predef.mjs
 let NofibPrelude1;
 NofibPrelude1 = class NofibPrelude {
   static {
+    NofibPrelude1 = NofibPrelude;
     this.Option = class Option {
       constructor() {}
       toString() { return "Option"; }

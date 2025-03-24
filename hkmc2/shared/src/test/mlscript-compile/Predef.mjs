@@ -51,8 +51,6 @@ Predef1 = class Predef {
     };
     this.Test = class Test {
       constructor() {
-        let tmp;
-        tmp = Predef.print("Test");
         this.y = 1;
       }
       toString() { return "Test"; }

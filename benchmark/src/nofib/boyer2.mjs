@@ -4,10 +4,8 @@ import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 let boyer21;
 boyer21 = class boyer2 {
-  static #statement;
-  static #rules;
-  static #lemmas;
   static {
+    boyer21 = boyer2;
     let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66, tmp67, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74, tmp75, tmp76, tmp77, tmp78, tmp79, tmp80, tmp81, tmp82, tmp83, tmp84, tmp85, tmp86, tmp87, tmp88, tmp89, tmp90, tmp91, tmp92, tmp93, tmp94, tmp95, tmp96, tmp97, tmp98, tmp99, tmp100, tmp101, tmp102, tmp103, tmp104, tmp105, tmp106, tmp107, tmp108, tmp109, tmp110, tmp111, tmp112, tmp113, tmp114, tmp115, tmp116, tmp117, tmp118, tmp119, tmp120, tmp121, tmp122, tmp123, tmp124, tmp125, tmp126, tmp127, tmp128, tmp129, tmp130, tmp131, tmp132, tmp133, tmp134, tmp135, tmp136, tmp137, tmp138, tmp139, tmp140, tmp141, tmp142, tmp143, tmp144, tmp145, tmp146, tmp147, tmp148, tmp149, tmp150, tmp151, tmp152, tmp153, tmp154, tmp155, tmp156, tmp157, tmp158, tmp159, tmp160, tmp161, tmp162, tmp163, tmp164, tmp165, tmp166, tmp167, tmp168, tmp169, tmp170, tmp171, tmp172, tmp173, tmp174, tmp175, tmp176, tmp177, tmp178, tmp179, tmp180, tmp181, tmp182, tmp183, tmp184, tmp185, tmp186, tmp187, tmp188, tmp189, tmp190, tmp191, tmp192, tmp193, tmp194, tmp195, tmp196, tmp197, tmp198, tmp199, tmp200, tmp201, tmp202, tmp203, tmp204, tmp205, tmp206, tmp207, tmp208, tmp209, tmp210, tmp211, tmp212, tmp213, tmp214, tmp215, tmp216, lambda;
     this.Lisplist = class Lisplist {
       constructor() {}
@@ -66,7 +64,7 @@ boyer21 = class boyer2 {
     tmp = NofibPrelude.nofibStringToList("( implies ( and ( implies x y )( and ( implies y z )( and ( implies z u )( implies u w ) ) ) )( implies x w ) )");
     tmp1 = boyer2.strToToken(tmp);
     tmp2 = boyer2.mkLispList(tmp1);
-    boyer2.#statement = tmp2;
+    this.statement = tmp2;
     tmp3 = NofibPrelude.nofibStringToList("(equal (compile form)(reverse (codegen (optimize form) (Nill) ) ) )");
     tmp4 = NofibPrelude.nofibStringToList("(equal (eqp x y)(equal (fix x)(fix y) ) )");
     tmp5 = NofibPrelude.nofibStringToList("(equal (greaterp x y)(lessp y x) )");
@@ -279,10 +277,10 @@ boyer21 = class boyer2 {
     tmp212 = NofibPrelude.Cons(tmp5, tmp211);
     tmp213 = NofibPrelude.Cons(tmp4, tmp212);
     tmp214 = NofibPrelude.Cons(tmp3, tmp213);
-    boyer2.#rules = tmp214;
-    tmp215 = boyer2.makelemmas(boyer2.#rules);
+    this.rules = tmp214;
+    tmp215 = boyer2.makelemmas(boyer2.rules);
     tmp216 = boyer2.addlemmalst(tmp215, boyer2.Empty);
-    boyer2.#lemmas = tmp216;
+    this.lemmas = tmp216;
     lambda = (undefined, function () {
       return boyer2.testBoyer2_nofib(3)
     });
@@ -1651,7 +1649,7 @@ boyer21 = class boyer2 {
   } 
   static tautp(term5) {
     let tmp;
-    tmp = boyer2.rewrite(term5, boyer2.#lemmas);
+    tmp = boyer2.rewrite(term5, boyer2.lemmas);
     return boyer2.tautologyp([
       tmp,
       boyer2.Nill,
@@ -1661,7 +1659,7 @@ boyer21 = class boyer2 {
   static teststatement(i1) {
     let tmp;
     tmp = boyer2.subterm(i1);
-    return boyer2.applysubst(tmp, boyer2.#statement)
+    return boyer2.applysubst(tmp, boyer2.statement)
   } 
   static testresult(i2) {
     let tmp;

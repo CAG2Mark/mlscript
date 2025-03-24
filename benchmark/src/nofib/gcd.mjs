@@ -5,6 +5,7 @@ import fs from "fs";
 let gcd1;
 gcd1 = class gcd {
   static {
+    gcd1 = gcd;
     let lambda;
     lambda = (undefined, function () {
       return gcd.testGcd_nofib(40)

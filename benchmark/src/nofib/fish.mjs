@@ -4,12 +4,9 @@ import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 let fish1;
 fish1 = class fish {
-  static #p_tile;
-  static #q_tile;
-  static #r_tile;
-  static #s_tile;
   static #ls;
   static {
+    fish1 = fish;
     let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66, tmp67, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74, tmp75, tmp76, tmp77, tmp78, tmp79, tmp80, tmp81, tmp82, tmp83, tmp84, tmp85, tmp86, tmp87, tmp88, tmp89, tmp90, tmp91, tmp92, tmp93, tmp94, tmp95, tmp96, tmp97, tmp98, tmp99, tmp100, tmp101, tmp102, tmp103, tmp104, tmp105, tmp106, tmp107, tmp108, tmp109, tmp110, tmp111, tmp112, tmp113, tmp114, tmp115, tmp116, tmp117, tmp118, tmp119, tmp120, lambda;
     tmp = NofibPrelude.Cons([
       14,
@@ -191,7 +188,7 @@ fish1 = class fish {
       3,
       4
     ], tmp28);
-    fish.#p_tile = tmp29;
+    this.p_tile = tmp29;
     tmp30 = NofibPrelude.Cons([
       0,
       12,
@@ -414,7 +411,7 @@ fish1 = class fish {
       4,
       7
     ], tmp65);
-    fish.#q_tile = tmp66;
+    this.q_tile = tmp66;
     tmp67 = NofibPrelude.Cons([
       15,
       15,
@@ -565,7 +562,7 @@ fish1 = class fish {
       8,
       8
     ], tmp90);
-    fish.#r_tile = tmp91;
+    this.r_tile = tmp91;
     tmp92 = NofibPrelude.Cons([
       15,
       8,
@@ -734,7 +731,7 @@ fish1 = class fish {
       4,
       2
     ], tmp118);
-    fish.#s_tile = tmp119;
+    this.s_tile = tmp119;
     lambda = (undefined, function () {
       return fish.testFish_nofib(1)
     });
@@ -917,16 +914,16 @@ fish1 = class fish {
     return fish.grid(16, 16, arg, arg2, arg3, arg4)
   } 
   static p(arg1, q6, q7) {
-    return fish.tile_to_grid(fish.#p_tile, arg1, q6, q7)
+    return fish.tile_to_grid(fish.p_tile, arg1, q6, q7)
   } 
   static q(arg5, q61, q71) {
-    return fish.tile_to_grid(fish.#q_tile, arg5, q61, q71)
+    return fish.tile_to_grid(fish.q_tile, arg5, q61, q71)
   } 
   static r(arg6, q62, q72) {
-    return fish.tile_to_grid(fish.#r_tile, arg6, q62, q72)
+    return fish.tile_to_grid(fish.r_tile, arg6, q62, q72)
   } 
   static s(arg7, q63, q73) {
-    return fish.tile_to_grid(fish.#s_tile, arg7, q63, q73)
+    return fish.tile_to_grid(fish.s_tile, arg7, q63, q73)
   } 
   static quartet(a6, b6, c5, d, arg8, a61, a7) {
     let lambda, lambda1;

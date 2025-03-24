@@ -5,6 +5,7 @@ import fs from "fs";
 let lcss1;
 lcss1 = class lcss {
   static {
+    lcss1 = lcss;
     let lambda;
     lambda = (undefined, function () {
       let tmp;

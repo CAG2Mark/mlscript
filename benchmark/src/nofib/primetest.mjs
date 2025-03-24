@@ -5,6 +5,7 @@ import fs from "fs";
 let primetest1;
 primetest1 = class primetest {
   static {
+    primetest1 = primetest;
     let lambda;
     lambda = (undefined, function () {
       let tmp;

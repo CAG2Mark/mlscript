@@ -4,9 +4,8 @@ import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 let pretty1;
 pretty1 = class pretty {
-  static #cNil;
-  static #cNL;
   static {
+    pretty1 = pretty;
     let lambda;
     this.CSeq = class CSeq {
       constructor() {}
@@ -106,8 +105,8 @@ pretty1 = class pretty {
     };
     this.PprInterface = new PprInterface$class;
     this.PprInterface.class = PprInterface$class;
-    pretty.#cNil = pretty.CNil;
-    pretty.#cNL = pretty.CNewline;
+    this.cNil = pretty.CNil;
+    this.cNL = pretty.CNewline;
     this.MkPrettyRep = function MkPrettyRep(cseq1, n1, b11, b21) {
       return new MkPrettyRep.class(cseq1, n1, b11, b21);
     };
@@ -268,7 +267,7 @@ pretty1 = class pretty {
   static ppNil(width1, is_vert) {
     let tmp;
     tmp = width1 >= 0;
-    return pretty.MkPrettyRep(pretty.#cNil, 0, true, tmp)
+    return pretty.MkPrettyRep(pretty.cNil, 0, true, tmp)
   } 
   static ppStr(s2, width2, is_vert1) {
     let ls, tmp, tmp1, tmp2;
@@ -420,7 +419,7 @@ pretty1 = class pretty {
         wi = tmp2;
         scrut2 = pretty.orL(emp1, emp2);
         if (scrut2 === true) {
-          tmp3 = pretty.#cNil;
+          tmp3 = pretty.cNil;
         } else {
           tmp3 = pretty.cCh(" ");
         }
@@ -480,9 +479,9 @@ pretty1 = class pretty {
         sl2 = param31;
         scrut2 = pretty.orL(emp1, emp2);
         if (scrut2 === true) {
-          tmp = pretty.#cNil;
+          tmp = pretty.cNil;
         } else {
-          tmp = pretty.#cNL;
+          tmp = pretty.cNL;
         }
         nl = tmp;
         tmp1 = pretty.cAppend(nl, seq2);
@@ -588,7 +587,7 @@ pretty1 = class pretty {
               return pretty.MkPrettyRep(tmp8, tmp10, false, tmp11)
             } else {
               tmp12 = pretty.cIndent(n5, seq2_);
-              tmp13 = pretty.cAppend(pretty.#cNL, tmp12);
+              tmp13 = pretty.cAppend(pretty.cNL, tmp12);
               tmp14 = pretty.cAppend(seq1, tmp13);
               return pretty.MkPrettyRep(tmp14, ll2_, false, false)
             }

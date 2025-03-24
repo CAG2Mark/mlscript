@@ -4,8 +4,8 @@ import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 let calendar1;
 calendar1 = class calendar {
-  static #monthNames;
   static {
+    calendar1 = calendar;
     let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, lambda;
     tmp = NofibPrelude.nofibStringToList("January");
     tmp1 = NofibPrelude.nofibStringToList("February");
@@ -31,7 +31,7 @@ calendar1 = class calendar {
     tmp21 = NofibPrelude.Cons(tmp2, tmp20);
     tmp22 = NofibPrelude.Cons(tmp1, tmp21);
     tmp23 = NofibPrelude.Cons(tmp, tmp22);
-    calendar.#monthNames = tmp23;
+    this.monthNames = tmp23;
     lambda = (undefined, function () {
       let tmp25, tmp26, tmp27;
       tmp25 = calendar.testCalendar_nofib(0);
@@ -321,7 +321,7 @@ calendar1 = class calendar {
       let tmp7, tmp8;
       tmp7 = calendar.firstDays(yer);
       tmp8 = calendar.monthLengths(yer);
-      return NofibPrelude.zip3(calendar.#monthNames, tmp7, tmp8)
+      return NofibPrelude.zip3(calendar.monthNames, tmp7, tmp8)
     };
     tmp = calendar.emptyPic([
       8,

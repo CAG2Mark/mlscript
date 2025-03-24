@@ -4,8 +4,8 @@ import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 let mate1;
 mate1 = class mate {
-  static #emptyBoard;
   static {
+    mate1 = mate;
     let tmp, tmp1, lambda;
     this.Kind = class Kind {
       constructor() {}
@@ -122,7 +122,7 @@ mate1 = class mate {
       toString() { return "Solution(" + globalThis.Predef.render(this.a) + ", " + globalThis.Predef.render(this.b) + ")"; }
     };
     tmp = mate.Board(NofibPrelude.Nil, NofibPrelude.Nil);
-    mate.#emptyBoard = tmp;
+    this.emptyBoard = tmp;
     this.Soln = function Soln(a1, b1) {
       return new Soln.class(a1, b1);
     };
@@ -1995,7 +1995,7 @@ mate1 = class mate {
     tmp1 = NofibPrelude.reverse(tmp);
     tmp2 = NofibPrelude.zipWith(mate.parseRank, tmp1, ls4);
     tmp3 = NofibPrelude.concat(tmp2);
-    return NofibPrelude.foldr(addPiece, mate.#emptyBoard, tmp3)
+    return NofibPrelude.foldr(addPiece, mate.emptyBoard, tmp3)
   } 
   static parseProblem(s4) {
     let bdtxt_gltxt, first1, first0, bdtxt, gltxt, bd19, gl, tmp, tmp1, tmp2, tmp3, lambda;

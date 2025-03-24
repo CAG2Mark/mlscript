@@ -5,6 +5,7 @@ import fs from "fs";
 let power1;
 power1 = class power {
   static {
+    power1 = power;
     let lambda;
     this.Pss = class Pss {
       constructor() {}

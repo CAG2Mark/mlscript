@@ -5,6 +5,7 @@ import fs from "fs";
 let boyer1;
 boyer1 = class boyer {
   static {
+    boyer1 = boyer;
     let lambda;
     this.Id = class Id {
       constructor() {}

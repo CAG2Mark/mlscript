@@ -4,11 +4,8 @@ import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 let cichelli1;
 cichelli1 = class cichelli {
-  static #keys;
-  static #numberofkeys;
-  static #freqtab;
-  static #maxval;
   static {
+    cichelli1 = cichelli;
     let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, lambda;
     tmp = NofibPrelude.nofibStringToList("case");
     tmp1 = NofibPrelude.nofibStringToList("class");
@@ -54,7 +51,7 @@ cichelli1 = class cichelli {
     tmp41 = NofibPrelude.Cons(tmp2, tmp40);
     tmp42 = NofibPrelude.Cons(tmp1, tmp41);
     tmp43 = NofibPrelude.Cons(tmp, tmp42);
-    cichelli.#keys = tmp43;
+    this.keys = tmp43;
     this.K = function K(s1, c11, c21, i1) {
       return new K.class(s1, c11, c21, i1);
     };
@@ -78,15 +75,15 @@ cichelli1 = class cichelli {
       }
       toString() { return "H(" + globalThis.Predef.render(this.f) + ", " + globalThis.Predef.render(this.s) + ", " + globalThis.Predef.render(this.ls) + ")"; }
     };
-    tmp44 = NofibPrelude.listLen(cichelli.#keys);
-    cichelli.#numberofkeys = tmp44;
-    tmp45 = cichelli.attribkeys(cichelli.#keys);
+    tmp44 = NofibPrelude.listLen(cichelli.keys);
+    this.numberofkeys = tmp44;
+    tmp45 = cichelli.attribkeys(cichelli.keys);
     tmp46 = NofibPrelude.map(cichelli.ends, tmp45);
     tmp47 = NofibPrelude.concat(tmp46);
     tmp48 = cichelli.histo(tmp47);
-    cichelli.#freqtab = tmp48;
-    tmp49 = NofibPrelude.listLen(cichelli.#freqtab);
-    cichelli.#maxval = tmp49;
+    this.freqtab = tmp48;
+    tmp49 = NofibPrelude.listLen(cichelli.freqtab);
+    this.maxval = tmp49;
     this.Status = class Status {
       constructor() {}
       toString() { return "Status"; }
@@ -442,7 +439,7 @@ cichelli1 = class cichelli {
       tmp2 = NofibPrelude.inList(h, hs);
       tmp3 = 1 + hi_;
       tmp4 = tmp3 - lo_;
-      tmp5 = tmp4 > cichelli.#numberofkeys;
+      tmp5 = tmp4 > cichelli.numberofkeys;
       scrut = tmp2 || tmp5;
       if (scrut === true) {
         return NofibPrelude.None
@@ -538,7 +535,7 @@ cichelli1 = class cichelli {
             if (first1 instanceof NofibPrelude.None.class) {
               scrut1 = a1 === z;
               if (scrut1 === true) {
-                tmp2 = cichelli.enumFromTo_lz(0, cichelli.#maxval);
+                tmp2 = cichelli.enumFromTo_lz(0, cichelli.maxval);
                 lambda = (undefined, function (m) {
                   let tmp8;
                   tmp8 = NofibPrelude.Cons([
@@ -584,7 +581,7 @@ cichelli1 = class cichelli {
                           throw new globalThis.Error("match error");
                         }
                       };
-                      tmp9 = cichelli.enumFromTo_lz(0, cichelli.#maxval);
+                      tmp9 = cichelli.enumFromTo_lz(0, cichelli.maxval);
                       tmp10 = lscomp2(tmp9);
                       return NofibPrelude.force(tmp10)
                     } else {
@@ -615,14 +612,14 @@ cichelli1 = class cichelli {
                   }
                 });
                 tmp3 = lambda1;
-                tmp4 = cichelli.enumFromTo_lz(0, cichelli.#maxval);
+                tmp4 = cichelli.enumFromTo_lz(0, cichelli.maxval);
                 tmp5 = lscomp1(tmp4);
                 return cichelli.firstSuccess(tmp3, tmp5)
               }
             } else if (first1 instanceof NofibPrelude.Some.class) {
               param03 = first1.x;
               zc1 = param03;
-              tmp6 = cichelli.enumFromTo_lz(0, cichelli.#maxval);
+              tmp6 = cichelli.enumFromTo_lz(0, cichelli.maxval);
               lambda2 = (undefined, function (m) {
                 let tmp8;
                 tmp8 = NofibPrelude.Cons([
@@ -640,7 +637,7 @@ cichelli1 = class cichelli {
             ac1 = param02;
             ac = param02;
             if (first1 instanceof NofibPrelude.None.class) {
-              tmp7 = cichelli.enumFromTo_lz(0, cichelli.#maxval);
+              tmp7 = cichelli.enumFromTo_lz(0, cichelli.maxval);
               lambda3 = (undefined, function (n1) {
                 let tmp8;
                 tmp8 = NofibPrelude.Cons([
@@ -676,7 +673,7 @@ cichelli1 = class cichelli {
     return cichelli.findhash_(tmp, NofibPrelude.Nil, keys)
   } 
   static freq(c) {
-    return cichelli.assoc(c, cichelli.#freqtab)
+    return cichelli.assoc(c, cichelli.freqtab)
   } 
   static morefreq(k11, k21) {
     let param0, param1, param2, param3, a1, x7, param01, param11, param21, param31, b1, y2, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
@@ -711,8 +708,8 @@ cichelli1 = class cichelli {
   static cichelli(n) {
     let attribkeys_, hashkeys, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
     tmp = NofibPrelude.intMod(n, 2);
-    tmp1 = NofibPrelude.take(tmp, cichelli.#keys);
-    tmp2 = NofibPrelude.append(cichelli.#keys, tmp1);
+    tmp1 = NofibPrelude.take(tmp, cichelli.keys);
+    tmp2 = NofibPrelude.append(cichelli.keys, tmp1);
     tmp3 = cichelli.attribkeys(tmp2);
     attribkeys_ = tmp3;
     tmp4 = cichelli.freqsorted(attribkeys_);

@@ -5,6 +5,7 @@ import fs from "fs";
 let sorting1;
 sorting1 = class sorting {
   static {
+    sorting1 = sorting;
     let lambda;
     const EQ$class = class EQ {
       constructor() {}

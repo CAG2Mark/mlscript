@@ -5,6 +5,7 @@ import fs from "fs";
 let integer1;
 integer1 = class integer {
   static {
+    integer1 = integer;
     let lambda;
     lambda = (undefined, function () {
       let tmp;

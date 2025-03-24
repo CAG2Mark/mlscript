@@ -4,25 +4,14 @@ import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 let cse1;
 cse1 = class cse {
-  static #incr;
-  static #zerO;
-  static #a;
-  static #b;
-  static #c;
-  static #d;
-  static #example0;
-  static #example1;
-  static #example2;
-  static #example3;
-  static #example4;
-  static #example5;
   static {
+    cse1 = cse;
     let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, lambda, lambda1;
     lambda = (undefined, function (x) {
       return x + 1
     });
     tmp = cse.update(lambda);
-    cse.#incr = tmp;
+    this.incr = tmp;
     this.Node = function Node(a1, b1) {
       return new Node.class(a1, b1);
     };
@@ -34,41 +23,41 @@ cse1 = class cse {
       toString() { return "Node(" + globalThis.Predef.render(this.a) + ", " + globalThis.Predef.render(this.b) + ")"; }
     };
     tmp1 = cse.Node("0", NofibPrelude.Nil);
-    cse.#zerO = tmp1;
+    this.zerO = tmp1;
     tmp2 = cse.Node("a", NofibPrelude.Nil);
-    cse.#a = tmp2;
+    this.a = tmp2;
     tmp3 = cse.Node("b", NofibPrelude.Nil);
-    cse.#b = tmp3;
+    this.b = tmp3;
     tmp4 = cse.Node("c", NofibPrelude.Nil);
-    cse.#c = tmp4;
+    this.c = tmp4;
     tmp5 = cse.Node("d", NofibPrelude.Nil);
-    cse.#d = tmp5;
-    cse.#example0 = cse.#a;
-    tmp6 = cse.plus_(cse.#a, cse.#a);
-    cse.#example1 = tmp6;
-    tmp7 = cse.mult_(cse.#a, cse.#b);
-    tmp8 = cse.mult_(cse.#a, cse.#b);
+    this.d = tmp5;
+    this.example0 = cse.a;
+    tmp6 = cse.plus_(cse.a, cse.a);
+    this.example1 = tmp6;
+    tmp7 = cse.mult_(cse.a, cse.b);
+    tmp8 = cse.mult_(cse.a, cse.b);
     tmp9 = cse.plus_(tmp7, tmp8);
-    cse.#example2 = tmp9;
-    tmp10 = cse.plus_(cse.#a, cse.#b);
-    tmp11 = cse.mult_(tmp10, cse.#c);
-    tmp12 = cse.plus_(cse.#a, cse.#b);
+    this.example2 = tmp9;
+    tmp10 = cse.plus_(cse.a, cse.b);
+    tmp11 = cse.mult_(tmp10, cse.c);
+    tmp12 = cse.plus_(cse.a, cse.b);
     tmp13 = cse.plus_(tmp11, tmp12);
-    cse.#example3 = tmp13;
-    tmp14 = NofibPrelude.Cons(cse.#d, NofibPrelude.Nil);
-    tmp15 = NofibPrelude.Cons(cse.#c, tmp14);
-    tmp16 = NofibPrelude.Cons(cse.#b, tmp15);
-    tmp17 = NofibPrelude.Cons(cse.#a, tmp16);
-    tmp18 = NofibPrelude.scanl(cse.plus_, cse.#zerO, tmp17);
+    this.example3 = tmp13;
+    tmp14 = NofibPrelude.Cons(cse.d, NofibPrelude.Nil);
+    tmp15 = NofibPrelude.Cons(cse.c, tmp14);
+    tmp16 = NofibPrelude.Cons(cse.b, tmp15);
+    tmp17 = NofibPrelude.Cons(cse.a, tmp16);
+    tmp18 = NofibPrelude.scanl(cse.plus_, cse.zerO, tmp17);
     tmp19 = cse.prod(tmp18);
-    cse.#example4 = tmp19;
-    tmp20 = NofibPrelude.Cons(cse.#d, NofibPrelude.Nil);
-    tmp21 = NofibPrelude.Cons(cse.#c, tmp20);
-    tmp22 = NofibPrelude.Cons(cse.#b, tmp21);
-    tmp23 = NofibPrelude.Cons(cse.#a, tmp22);
-    tmp24 = NofibPrelude.scanr(cse.plus_, cse.#zerO, tmp23);
+    this.example4 = tmp19;
+    tmp20 = NofibPrelude.Cons(cse.d, NofibPrelude.Nil);
+    tmp21 = NofibPrelude.Cons(cse.c, tmp20);
+    tmp22 = NofibPrelude.Cons(cse.b, tmp21);
+    tmp23 = NofibPrelude.Cons(cse.a, tmp22);
+    tmp24 = NofibPrelude.scanr(cse.plus_, cse.zerO, tmp23);
     tmp25 = cse.prod(tmp24);
-    cse.#example5 = tmp25;
+    this.example5 = tmp25;
     lambda1 = (undefined, function () {
       let tmp26;
       tmp26 = cse.testCse_nofib(6);
@@ -314,7 +303,7 @@ cse1 = class cse {
           });
           return cse.bind(tmp1, lambda1)
         });
-        return cse.bind(cse.#incr, lambda)
+        return cse.bind(cse.incr, lambda)
       } else {
         throw new globalThis.Error("match error");
       }
@@ -522,12 +511,12 @@ cse1 = class cse {
     lambda = (undefined, function (i) {
       let tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9;
       tmp2 = NofibPrelude.intMod(i, 6);
-      tmp3 = NofibPrelude.Cons(cse.#example5, NofibPrelude.Nil);
-      tmp4 = NofibPrelude.Cons(cse.#example4, tmp3);
-      tmp5 = NofibPrelude.Cons(cse.#example3, tmp4);
-      tmp6 = NofibPrelude.Cons(cse.#example2, tmp5);
-      tmp7 = NofibPrelude.Cons(cse.#example1, tmp6);
-      tmp8 = NofibPrelude.Cons(cse.#example0, tmp7);
+      tmp3 = NofibPrelude.Cons(cse.example5, NofibPrelude.Nil);
+      tmp4 = NofibPrelude.Cons(cse.example4, tmp3);
+      tmp5 = NofibPrelude.Cons(cse.example3, tmp4);
+      tmp6 = NofibPrelude.Cons(cse.example2, tmp5);
+      tmp7 = NofibPrelude.Cons(cse.example1, tmp6);
+      tmp8 = NofibPrelude.Cons(cse.example0, tmp7);
       tmp9 = NofibPrelude.take(tmp2, tmp8);
       return NofibPrelude.map(cse.cse, tmp9)
     });

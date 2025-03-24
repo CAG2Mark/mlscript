@@ -11,7 +11,7 @@ module cichelli with ...
 // :import NofibPrelude.mls
 
 
-let keys = 
+val keys = 
   nofibStringToList("case") :: nofibStringToList("class") :: nofibStringToList("data") :: nofibStringToList("default") :: nofibStringToList("deriving") :: nofibStringToList("else") ::
   nofibStringToList("hiding") ::  nofibStringToList("if") :: nofibStringToList("import") :: nofibStringToList("in") :: nofibStringToList("infix") :: nofibStringToList("infixl") :: nofibStringToList("instance") ::
   nofibStringToList("interface") :: nofibStringToList("let") :: nofibStringToList("module") :: nofibStringToList("of") :: nofibStringToList("renaming") :: nofibStringToList("then") :: nofibStringToList("to") ::
@@ -61,7 +61,7 @@ fun union(xs, ys) =
 
 fun attribkeys(ks) = map(k => K(k, head(k), last(k), listLen(k)), ks)
 
-let numberofkeys = listLen(keys)
+val numberofkeys = listLen(keys)
 //│ numberofkeys = 22
 
 fun minm(x, y) = if x is
@@ -91,10 +91,10 @@ fun blocked_(ds, ls) = if ls is
 
 fun blocked(ls) = blocked_(Nil, ls)
 
-let freqtab = histo(concat(map(ends, attribkeys(keys))))
+val freqtab = histo(concat(map(ends, attribkeys(keys))))
 //│ freqtab = [["e", 8],["w", 1],["t", 6],["o", 2],["n", 2],["g", 3],["r", 1],["f", 2],["m", 1],["l", 2],["i", 7],["x", 1],["h", 1],["d", 3],["a", 1],["s", 1],["c", 2]]
 
-let maxval = listLen(freqtab)
+val maxval = listLen(freqtab)
 //│ maxval = 17
 
 abstract class Status[T]: NotEver | YesIts[T]

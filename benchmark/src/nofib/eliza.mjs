@@ -4,11 +4,8 @@ import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 let eliza1;
 eliza1 = class eliza {
-  static #repeatMsgs;
-  static #respMsgs;
-  static #initial;
-  static #conjugates;
   static {
+    eliza1 = eliza;
     let lscomp, prepare, lscomp1, canYou, canI, youAre, iDont, iFeel, whyDont, whyCant, areYou, iCant, iAm, you, yes, no, computer, iWant, question, name, because, sorry, dream, hello, maybe, your, always, think, alike, friend, nokeyMsgs, oneways, bothways, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66, tmp67, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74, tmp75, tmp76, tmp77, tmp78, tmp79, tmp80, tmp81, tmp82, tmp83, tmp84, tmp85, tmp86, tmp87, tmp88, tmp89, tmp90, tmp91, tmp92, tmp93, tmp94, tmp95, tmp96, tmp97, tmp98, tmp99, tmp100, tmp101, tmp102, tmp103, tmp104, tmp105, tmp106, tmp107, tmp108, tmp109, tmp110, tmp111, tmp112, tmp113, tmp114, tmp115, tmp116, tmp117, tmp118, tmp119, tmp120, tmp121, tmp122, tmp123, tmp124, tmp125, tmp126, tmp127, tmp128, tmp129, tmp130, tmp131, tmp132, tmp133, tmp134, tmp135, tmp136, tmp137, tmp138, tmp139, tmp140, tmp141, tmp142, tmp143, tmp144, tmp145, tmp146, tmp147, tmp148, tmp149, tmp150, tmp151, tmp152, tmp153, tmp154, tmp155, tmp156, tmp157, tmp158, tmp159, tmp160, tmp161, tmp162, tmp163, tmp164, tmp165, tmp166, tmp167, tmp168, tmp169, tmp170, tmp171, tmp172, tmp173, tmp174, tmp175, tmp176, tmp177, tmp178, tmp179, tmp180, tmp181, tmp182, tmp183, tmp184, tmp185, tmp186, tmp187, tmp188, tmp189, tmp190, tmp191, tmp192, tmp193, tmp194, tmp195, tmp196, tmp197, tmp198, tmp199, tmp200, tmp201, tmp202, tmp203, tmp204, tmp205, tmp206, tmp207, tmp208, tmp209, tmp210, tmp211, tmp212, tmp213, tmp214, tmp215, tmp216, tmp217, tmp218, tmp219, tmp220, tmp221, tmp222, tmp223, tmp224, tmp225, tmp226, tmp227, tmp228, tmp229, tmp230, tmp231, tmp232, tmp233, tmp234, tmp235, tmp236, tmp237, tmp238, tmp239, tmp240, tmp241, tmp242, tmp243, tmp244, tmp245, tmp246, tmp247, tmp248, tmp249, tmp250, tmp251, tmp252, tmp253, tmp254, tmp255, tmp256, tmp257, tmp258, tmp259, tmp260, tmp261, tmp262, tmp263, tmp264, tmp265, tmp266, tmp267, tmp268, tmp269, tmp270, tmp271, tmp272, tmp273, tmp274, tmp275, tmp276, tmp277, tmp278, tmp279, tmp280, tmp281, tmp282, tmp283, tmp284, tmp285, tmp286, tmp287, tmp288, tmp289, tmp290, tmp291, tmp292, tmp293, tmp294, tmp295, tmp296, tmp297, tmp298, tmp299, tmp300, tmp301, tmp302, tmp303, tmp304, tmp305, tmp306, tmp307, tmp308, tmp309, tmp310, tmp311, tmp312, tmp313, tmp314, tmp315, tmp316, tmp317, tmp318, tmp319, tmp320, tmp321, tmp322, tmp323, tmp324, tmp325, tmp326, tmp327, tmp328, tmp329, tmp330, tmp331, tmp332, tmp333, tmp334, lambda;
     tmp = NofibPrelude.nofibStringToList("Why did you repeat yourself?");
     tmp1 = NofibPrelude.nofibStringToList("Do you expect a different answer by repeating yourself?");
@@ -18,7 +15,7 @@ eliza1 = class eliza {
     tmp5 = NofibPrelude.Cons(tmp2, tmp4);
     tmp6 = NofibPrelude.Cons(tmp1, tmp5);
     tmp7 = NofibPrelude.Cons(tmp, tmp6);
-    eliza.#repeatMsgs = tmp7;
+    this.repeatMsgs = tmp7;
     tmp8 = NofibPrelude.nofibStringToList("?Don_t you believe that I can");
     tmp9 = NofibPrelude.nofibStringToList("?Perhaps you would like to be able to");
     tmp10 = NofibPrelude.nofibStringToList("?You want me to be able to");
@@ -466,7 +463,7 @@ eliza1 = class eliza {
       tmp228,
       canYou
     ], tmp305);
-    eliza.#respMsgs = tmp306;
+    this.respMsgs = tmp306;
     lscomp = function lscomp(ls) {
       let param0, param1, first1, first0, k, rs, t, tmp335, tmp336, tmp337;
       if (ls instanceof NofibPrelude.Nil.class) {
@@ -494,9 +491,9 @@ eliza1 = class eliza {
         throw new globalThis.Error("match error");
       }
     };
-    tmp307 = lscomp(eliza.#respMsgs);
-    tmp308 = eliza.cycle(eliza.#repeatMsgs);
-    eliza.#initial = [
+    tmp307 = lscomp(eliza.respMsgs);
+    tmp308 = eliza.cycle(eliza.repeatMsgs);
+    this.initial = [
       tmp307,
       tmp308
     ];
@@ -599,7 +596,7 @@ eliza1 = class eliza {
     tmp331 = NofibPrelude.concat(tmp330);
     tmp332 = NofibPrelude.append(oneways, tmp331);
     tmp333 = prepare(tmp332);
-    eliza.#conjugates = tmp333;
+    this.conjugates = tmp333;
     lambda = (undefined, function () {
       let tmp335, tmp336, lambda1;
       tmp335 = eliza.testEliza_nofib(20);
@@ -928,7 +925,7 @@ eliza1 = class eliza {
           throw new globalThis.Error("match error");
         }
       };
-      tmp3 = lscomp(eliza.#conjugates);
+      tmp3 = lscomp(eliza.conjugates);
       tmp4 = NofibPrelude.Cons(w1, NofibPrelude.Nil);
       tmp5 = NofibPrelude.append(tmp3, tmp4);
       return NofibPrelude.head(tmp5)
@@ -1134,7 +1131,7 @@ eliza1 = class eliza {
         return BenchmarkPrelude.not(tmp34)
       });
       tmp33 = NofibPrelude.filter(lambda2, tmp32);
-      return eliza.session(eliza.#initial, NofibPrelude.Nil, tmp33)
+      return eliza.session(eliza.initial, NofibPrelude.Nil, tmp33)
     });
     tmp28 = lambda;
     tmp29 = NofibPrelude.enumFromTo(1, n);

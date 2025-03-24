@@ -5,6 +5,7 @@ import fs from "fs";
 let clausify1;
 clausify1 = class clausify {
   static {
+    clausify1 = clausify;
     let lambda;
     this.Formula = class Formula {
       constructor() {}

@@ -3,6 +3,7 @@ import Runtime from "./Runtime.mjs";
 let Predef1;
 Predef1 = class Predef {
   static {
+    Predef1 = Predef;
     this.assert = globalThis.console.assert;
     this.foldl = Predef.fold;
     this.TraceLogger = class TraceLogger {
@@ -50,8 +51,6 @@ Predef1 = class Predef {
     };
     this.Test = class Test {
       constructor() {
-        let tmp;
-        tmp = Predef.print("Test");
         this.y = 1;
       }
       toString() { return "Test"; }

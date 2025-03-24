@@ -5,6 +5,7 @@ import fs from "fs";
 let secretary1;
 secretary1 = class secretary {
   static {
+    secretary1 = secretary;
     let lambda;
     lambda = (undefined, function () {
       let tmp;

@@ -5,6 +5,7 @@ import fs from "fs";
 let cryptarithm11;
 cryptarithm11 = class cryptarithm1 {
   static {
+    cryptarithm11 = cryptarithm1;
     let lambda;
     lambda = (undefined, function () {
       let tmp;

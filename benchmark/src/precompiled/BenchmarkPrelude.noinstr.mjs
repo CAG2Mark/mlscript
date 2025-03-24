@@ -7,6 +7,7 @@ let BenchmarkPrelude1, b;
 b = benchmark;
 BenchmarkPrelude1 = class BenchmarkPrelude {
   static {
+    BenchmarkPrelude1 = BenchmarkPrelude;
     globalThis.Predef = Predef;
     runtime.Unit
   }

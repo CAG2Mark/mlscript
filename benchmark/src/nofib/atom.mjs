@@ -5,6 +5,7 @@ import fs from "fs";
 let atom1;
 atom1 = class atom {
   static {
+    atom1 = atom;
     let lambda;
     this.State = function State(position1, velocity1) {
       return new State.class(position1, velocity1);

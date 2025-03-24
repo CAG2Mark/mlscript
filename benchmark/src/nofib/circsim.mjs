@@ -4,9 +4,8 @@ import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 let circsim1;
 circsim1 = class circsim {
-  static #emptyState;
-  static #emptyPacket;
   static {
+    circsim1 = circsim;
     let tmp, tmp1, tmp2, tmp3, tmp4, lambda;
     this.BinTree = class BinTree {
       constructor() {}
@@ -144,10 +143,10 @@ circsim1 = class circsim {
     tmp = - 1;
     tmp1 = - 1;
     tmp2 = circsim.PS(tmp, circsim.None_, tmp1, NofibPrelude.Nil, NofibPrelude.Nil);
-    circsim.#emptyState = tmp2;
+    this.emptyState = tmp2;
     tmp3 = - 1;
     tmp4 = - 1;
-    circsim.#emptyPacket = [
+    this.emptyPacket = [
       tmp3,
       tmp4,
       circsim.F,
@@ -543,7 +542,7 @@ circsim1 = class circsim {
       states = first3;
       tmp = circsim.nearest_power_of_two(size);
       p21 = tmp;
-      tmp1 = NofibPrelude.replicate_lz(p21, circsim.#emptyState);
+      tmp1 = NofibPrelude.replicate_lz(p21, circsim.emptyState);
       tmp2 = NofibPrelude.append_nl_lz(states, tmp1);
       states_ = tmp2;
       tmp3 = NofibPrelude.take_lz(p21, states_);
@@ -753,7 +752,7 @@ circsim1 = class circsim {
     }
   } 
   static send(xs4) {
-    return circsim.scanlr(circsim.send_right, circsim.send_left, circsim.#emptyPacket, circsim.#emptyPacket, xs4)
+    return circsim.scanlr(circsim.send_right, circsim.send_left, circsim.emptyPacket, circsim.emptyPacket, xs4)
   } 
   static update_outports(state, value) {
     let lscomp, tmp, tmp1;
@@ -1215,7 +1214,7 @@ circsim1 = class circsim {
       tmp = NofibPrelude.map(lambda1, pss);
       tmp1 = NofibPrelude.maximum(tmp);
       max_ps = tmp1;
-      tmp2 = NofibPrelude.replicate_lz(max_ps, circsim.#emptyPacket);
+      tmp2 = NofibPrelude.replicate_lz(max_ps, circsim.emptyPacket);
       tmp3 = NofibPrelude.append_nl_lz(xs5, tmp2);
       return NofibPrelude.take_lz(max_ps, tmp3)
     };

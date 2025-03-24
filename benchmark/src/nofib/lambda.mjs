@@ -4,14 +4,8 @@ import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
 let lambda1;
 lambda1 = class lambda {
-  static #myGet;
-  static #incr;
-  static #lfxx;
-  static #fix;
-  static #nMinus1;
-  static #partialSum0;
-  static #sum0;
   static {
+    lambda1 = lambda;
     let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, lambda2, lambda3;
     this.MyState = function MyState(r1) {
       return new MyState.class(r1);
@@ -29,7 +23,7 @@ lambda1 = class lambda {
       ]
     });
     tmp = lambda.MyState(lambda2);
-    lambda.#myGet = tmp;
+    this.myGet = tmp;
     this.Term = class Term {
       constructor() {}
       toString() { return "Term"; }
@@ -125,7 +119,7 @@ lambda1 = class lambda {
     this.Unit = new Unit$class;
     this.Unit.class = Unit$class;
     tmp1 = lambda.myReturn(lambda.Unit);
-    lambda.#incr = tmp1;
+    this.incr = tmp1;
     tmp2 = NofibPrelude.nofibStringToList("x");
     tmp3 = NofibPrelude.nofibStringToList("F");
     tmp4 = lambda.Var(tmp3);
@@ -136,17 +130,17 @@ lambda1 = class lambda {
     tmp9 = lambda.App(tmp6, tmp8);
     tmp10 = lambda.App(tmp4, tmp9);
     tmp11 = lambda.Lam(tmp2, tmp10);
-    lambda.#lfxx = tmp11;
+    this.lfxx = tmp11;
     tmp12 = NofibPrelude.nofibStringToList("F");
-    tmp13 = lambda.App(lambda.#lfxx, lambda.#lfxx);
+    tmp13 = lambda.App(lambda.lfxx, lambda.lfxx);
     tmp14 = lambda.Lam(tmp12, tmp13);
-    lambda.#fix = tmp14;
+    this.fix = tmp14;
     tmp15 = NofibPrelude.nofibStringToList("n");
     tmp16 = lambda.Var(tmp15);
     tmp17 = - 1;
     tmp18 = lambda.Con(tmp17);
     tmp19 = lambda.Add(tmp16, tmp18);
-    lambda.#nMinus1 = tmp19;
+    this.nMinus1 = tmp19;
     tmp20 = NofibPrelude.nofibStringToList("sum");
     tmp21 = NofibPrelude.nofibStringToList("n");
     tmp22 = NofibPrelude.nofibStringToList("n");
@@ -156,14 +150,14 @@ lambda1 = class lambda {
     tmp26 = lambda.Var(tmp25);
     tmp27 = NofibPrelude.nofibStringToList("sum");
     tmp28 = lambda.Var(tmp27);
-    tmp29 = lambda.App(tmp28, lambda.#nMinus1);
+    tmp29 = lambda.App(tmp28, lambda.nMinus1);
     tmp30 = lambda.Add(tmp26, tmp29);
     tmp31 = lambda.IfZero(tmp23, tmp24, tmp30);
     tmp32 = lambda.Lam(tmp21, tmp31);
     tmp33 = lambda.Lam(tmp20, tmp32);
-    lambda.#partialSum0 = tmp33;
-    tmp34 = lambda.App(lambda.#fix, lambda.#partialSum0);
-    lambda.#sum0 = tmp34;
+    this.partialSum0 = tmp33;
+    tmp34 = lambda.App(lambda.fix, lambda.partialSum0);
+    this.sum0 = tmp34;
     lambda3 = (undefined, function () {
       let tmp35;
       tmp35 = lambda.testLambda_nofib(80);
@@ -445,7 +439,7 @@ lambda1 = class lambda {
       tmp = lookup2(env);
       return lambda.myReturn(tmp)
     });
-    return lambda.myBind(lambda.#myGet, lambda2)
+    return lambda.myBind(lambda.myGet, lambda2)
   } 
   static withEnv(tmp, m3) {
     let tmp1;
@@ -462,7 +456,7 @@ lambda1 = class lambda {
       ], env);
       return lambda.withEnv(tmp1, m4)
     });
-    return lambda.myBind(lambda.#myGet, lambda2)
+    return lambda.myBind(lambda.myGet, lambda2)
   } 
   static traverseTerm(t2) {
     return lambda.eval(t2)
@@ -502,7 +496,7 @@ lambda1 = class lambda {
           return lambda.withEnv(e, tmp4)
         });
         tmp1 = lambda2;
-        return lambda.myBind(lambda.#myGet, tmp1)
+        return lambda.myBind(lambda.myGet, tmp1)
       } else {
         throw new globalThis.Error("match error");
       }
@@ -523,7 +517,7 @@ lambda1 = class lambda {
         });
         return lambda.myBind(tmp8, lambda8)
       });
-      return lambda.myBind(lambda.#myGet, lambda2)
+      return lambda.myBind(lambda.myGet, lambda2)
     } else if (ter instanceof lambda.Add.class) {
       param05 = ter.a;
       param14 = ter.b;
@@ -561,7 +555,7 @@ lambda1 = class lambda {
         return lambda.myReturn(tmp9)
       });
       tmp3 = lambda4;
-      return lambda.myBind(lambda.#myGet, tmp3)
+      return lambda.myBind(lambda.myGet, tmp3)
     } else if (ter instanceof lambda.App.class) {
       param02 = ter.a;
       param11 = ter.b;
@@ -603,7 +597,7 @@ lambda1 = class lambda {
         tmp8 = lambda.Con(0);
         return lambda.myReturn(tmp8)
       });
-      return lambda.myBind(lambda.#incr, lambda7)
+      return lambda.myBind(lambda.incr, lambda7)
     } else {
       throw new globalThis.Error("match error");
     }
@@ -877,7 +871,7 @@ lambda1 = class lambda {
     } else {
       tmp1 = NofibPrelude.head(args);
       tmp2 = lambda.Con(tmp1);
-      tmp3 = lambda.App(lambda.#sum0, tmp2);
+      tmp3 = lambda.App(lambda.sum0, tmp2);
       tmp4 = lambda.simpleEval(NofibPrelude.Nil, tmp3);
       return lambda.showTerm(tmp4)
     }
@@ -890,7 +884,7 @@ lambda1 = class lambda {
     } else {
       tmp1 = NofibPrelude.head(args1);
       tmp2 = lambda.Con(tmp1);
-      tmp3 = lambda.App(lambda.#sum0, tmp2);
+      tmp3 = lambda.App(lambda.sum0, tmp2);
       return lambda.ev(tmp3)
     }
   } 
