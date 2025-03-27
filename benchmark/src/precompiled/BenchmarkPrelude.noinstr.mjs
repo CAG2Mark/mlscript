@@ -55,15 +55,16 @@ BenchmarkPrelude1 = class BenchmarkPrelude {
     return capture.success0$
   } 
   static benchmark(fn) {
-    let start, res, end, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
-    tmp = runtime.safeCall(globalThis.performance.now());
-    start = tmp;
-    tmp1 = BenchmarkPrelude.helper(fn);
-    res = tmp1;
-    tmp2 = runtime.safeCall(globalThis.performance.now());
-    end = tmp2;
-    if (res === true) {
-      tmp3 = end - start;
+    let suite, settings, scrut, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
+    tmp = new b.Suite();
+    suite = tmp;
+    tmp1 = suite.add("main", fn);
+    settings = runtime.Unit;
+    settings.async = false;
+    tmp2 = runtime.safeCall(suite.run(settings));
+    scrut = suite[0].stats.sample.length > 0;
+    if (scrut === true) {
+      tmp3 = suite[0].stats.mean * 1000;
       tmp4 = "Time: " + tmp3;
       tmp5 = tmp4 + "ms";
       return Predef.print(tmp5)

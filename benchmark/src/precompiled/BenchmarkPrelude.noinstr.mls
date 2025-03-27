@@ -23,15 +23,14 @@ fun helper(f) =
 fun benchmark(fn) =
   // print(helper(fn))
   // print("benchmarking...")
-  // let suite = new b.Suite()
-  // suite.add("main", fn)
-  // let settings = {}
-  // set settings.async = false
-  // suite.on("cycle", (event) => print(String(event.target))).run(settings)
-  let start = globalThis.performance.now()
-  let res = helper(fn)
-  let end = globalThis.performance.now()
-  if res do
-    Predef.print("Time: " + (end - start) + "ms")
+  let suite = new b.Suite()
+  suite.add("main", fn)
+  let settings = {}
+  set settings.async = false
+  suite.run(settings)
+  if suite.0.stats.sample.length > 0 do
+    Predef.print("Time: " + suite.0.stats.mean * 1000 + "ms")
+  // if res do
+  //   Predef.print("Time: " + (end - start) + "ms")
 
 set globalThis.Predef = Predef

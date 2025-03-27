@@ -88,7 +88,7 @@ object Benchmark {
 //       os.write.over(os.pwd/"benchmark"/"src"/"nofib"/path.last, result)
     val failing = Set()
     lazy val nofibFiles = os.list(os.pwd/"benchmark"/"src"/"nofib").filter(_.ext == "mls").filterNot(p => failing.exists(_ == p.baseName))
-      .dropWhile(_.last != "ansi.mls")
+      .dropWhile(_.last != "cryptarithm1.mls")
     // lazy val nofibFiles = List(os.pwd/"benchmark"/"src"/"examples"/"StackSafety.mls")
 
     val results = nofibFiles.map: path =>
