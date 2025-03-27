@@ -88,7 +88,7 @@ object Benchmark {
 //       os.write.over(os.pwd/"benchmark"/"src"/"nofib"/path.last, result)
     val failing = Set()
     lazy val nofibFiles = os.list(os.pwd/"benchmark"/"src"/"nofib").filter(_.ext == "mls").filterNot(p => failing.exists(_ == p.baseName))
-      .dropWhile(_.last != "cryptarithm1.mls")
+      // .dropWhile(_.last != "ansi.mls")
     // lazy val nofibFiles = List(os.pwd/"benchmark"/"src"/"examples"/"StackSafety.mls")
 
     val results = nofibFiles.map: path =>
@@ -124,7 +124,10 @@ object Benchmark {
           val s2 = 1 / t2
           println(f"Speed compared with stack safety off: ${s1 / s2 * 100}%.3f%%")
           path.last -> S(s1 / s2)
+        case (S(_), N) =>
+          path.last -> N
         case _ =>
+          println("Stack safe version failed")
           path.last -> N
     results.foreach: (path, result) =>
       result match
