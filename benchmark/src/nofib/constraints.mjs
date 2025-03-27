@@ -2,11 +2,610 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let constraints1;
+let lscomp2, lscomp1, g, lscomp21, lscomp11, f1, lscomp12, next, f2, f3, lscomp22, lscomp13, lscomp23, f4, lscomp14, f5, f7, f6, lscomp15, f8, constraints1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, lambda11, lambda12, lambda13, lscomp1$, lscomp2$, lscomp1$1, lscomp2$1, lambda$, lambda$1, f1$, lambda$2, lambda$3, lambda$4, next$, lscomp1$2, lambda$5, f2$, lambda$6, f3$, lscomp1$3, lambda$7, lscomp1$4, lscomp2$2, f4$, lambda$8, lambda$9, lambda$10;
+lambda$10 = function lambda$(n, x) {
+  return constraints1.try_(n, x)
+};
+lambda13 = (undefined, function (n) {
+  return (x) => {
+    return lambda$10(n, x)
+  }
+});
+lscomp15 = function lscomp1(ls) {
+  let param0, param1, vs, t1, scrut, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    vs = param0;
+    t1 = param1;
+    scrut = NofibPrelude.all(constraints1.knownConflict, vs);
+    if (scrut === true) {
+      tmp = lscomp15(t1);
+      return NofibPrelude.Cons(vs, tmp)
+    } else {
+      return lscomp15(t1)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+f8 = function f8(tp2) {
+  let first1, first0, first11, first01, as_, cs, tbl, wipedDomains, cs_, scrut, tmp, tmp1, tmp2, tmp3;
+  if (globalThis.Array.isArray(tp2) && tp2.length === 2) {
+    first0 = tp2[0];
+    first1 = tp2[1];
+    if (globalThis.Array.isArray(first0) && first0.length === 2) {
+      first01 = first0[0];
+      first11 = first0[1];
+      as_ = first01;
+      cs = first11;
+      tbl = first1;
+      tmp = lscomp15(tbl);
+      wipedDomains = tmp;
+      scrut = NofibPrelude.null_(wipedDomains);
+      if (scrut === true) {
+        tmp1 = cs;
+      } else {
+        tmp2 = NofibPrelude.head(wipedDomains);
+        tmp3 = constraints1.collect(tmp2);
+        tmp1 = constraints1.Known(tmp3);
+      }
+      cs_ = tmp1;
+      return [
+        as_,
+        cs_
+      ]
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+f6 = function f6(tp2, chs) {
+  let first1, first0, a, a1, param0, cs, tmp, tmp1, tmp2, tmp3;
+  if (globalThis.Array.isArray(tp2) && tp2.length === 2) {
+    first0 = tp2[0];
+    first1 = tp2[1];
+    a1 = first0;
+    a = first0;
+    if (first1 instanceof constraints1.Known.class) {
+      param0 = first1.vs;
+      cs = param0;
+      tmp = constraints1.Known(cs);
+      return constraints1.Node([
+        a1,
+        tmp
+      ], chs)
+    } else if (first1 instanceof constraints1.Unknown.class) {
+      tmp1 = NofibPrelude.map(constraints1.label, chs);
+      tmp2 = constraints1.combine(tmp1, NofibPrelude.Nil);
+      tmp3 = constraints1.Known(tmp2);
+      return constraints1.Node([
+        a,
+        tmp3
+      ], chs)
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+f7 = function f7(tp2, chs) {
+  let first1, first0, a, cs_, scrut, a1, param0, cs, tmp, tmp1, tmp2;
+  if (globalThis.Array.isArray(tp2) && tp2.length === 2) {
+    first0 = tp2[0];
+    first1 = tp2[1];
+    a1 = first0;
+    a = first0;
+    if (first1 instanceof constraints1.Known.class) {
+      param0 = first1.vs;
+      cs = param0;
+      tmp = constraints1.Known(cs);
+      return constraints1.Node([
+        a1,
+        tmp
+      ], chs)
+    } else if (first1 instanceof constraints1.Unknown.class) {
+      tmp1 = NofibPrelude.map(constraints1.label, chs);
+      tmp2 = constraints1.combine(tmp1, NofibPrelude.Nil);
+      cs_ = constraints1.Known(tmp2);
+      scrut = constraints1.knownConflict(cs_);
+      if (scrut === true) {
+        return constraints1.Node([
+          a,
+          cs_
+        ], NofibPrelude.Nil)
+      } else {
+        return constraints1.Node([
+          a,
+          cs_
+        ], chs)
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda$9 = function lambda$(csp, tbl, s, x) {
+  let tmp, tmp1;
+  tmp = NofibPrelude.tail(tbl);
+  tmp1 = constraints1.fillTable(s, csp, tmp);
+  return constraints1.cacheChecks(csp, tmp1, x)
+};
+lambda12 = (undefined, function (csp, tbl, s) {
+  return (x) => {
+    return lambda$9(csp, tbl, s, x)
+  }
+});
+f5 = function f5(csp, tp) {
+  let first1, first0, param0, param1, a, as_, tbl, tableEntry, cs, scrut, tbl1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
+  if (globalThis.Array.isArray(tp) && tp.length === 2) {
+    first0 = tp[0];
+    first1 = tp[1];
+    if (first0 instanceof NofibPrelude.Nil.class) {
+      tbl1 = first1;
+      return [
+        [
+          NofibPrelude.Nil,
+          constraints1.Unknown
+        ],
+        tbl1
+      ]
+    } else if (first0 instanceof NofibPrelude.Cons.class) {
+      param0 = first0.head;
+      param1 = first0.tail;
+      a = param0;
+      as_ = param1;
+      tbl = first1;
+      tmp = constraints1.value(a);
+      tmp1 = tmp - 1;
+      tmp2 = NofibPrelude.head(tbl);
+      tmp3 = NofibPrelude.atIndex(tmp1, tmp2);
+      tableEntry = tmp3;
+      scrut = tableEntry === constraints1.Unknown;
+      if (scrut === true) {
+        tmp4 = NofibPrelude.Cons(a, as_);
+        tmp5 = constraints1.checkComplete(csp, tmp4);
+      } else {
+        tmp5 = tableEntry;
+      }
+      cs = tmp5;
+      tmp6 = NofibPrelude.Cons(a, as_);
+      return [
+        [
+          tmp6,
+          cs
+        ],
+        tbl
+      ]
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda$8 = function lambda$(csp, x) {
+  return f5(csp, x)
+};
+lambda11 = (undefined, function (csp) {
+  return (x) => {
+    return lambda$8(csp, x)
+  }
+});
+f4$ = function f4$(var_, val_, rel, cs, varval) {
+  let first1, first0, varr, vall, scrut, scrut1, tmp, tmp1, tmp2, tmp3, tmp4;
+  if (globalThis.Array.isArray(varval) && varval.length === 2) {
+    first0 = varval[0];
+    first1 = varval[1];
+    varr = first0;
+    vall = first1;
+    scrut = cs === constraints1.Unknown;
+    if (scrut === true) {
+      tmp = constraints1.Assign(var_, val_);
+      tmp1 = constraints1.Assign(varr, vall);
+      tmp2 = runtime.safeCall(rel(tmp, tmp1));
+      scrut1 = BenchmarkPrelude.not(tmp2);
+      if (scrut1 === true) {
+        tmp3 = NofibPrelude.Cons(varr, NofibPrelude.Nil);
+        tmp4 = NofibPrelude.Cons(var_, tmp3);
+        return constraints1.Known(tmp4)
+      } else {
+        return cs
+      }
+    } else {
+      return cs
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+f4 = function f4(var_, val_, rel) {
+  return (cs, varval) => {
+    return f4$(var_, val_, rel, cs, varval)
+  }
+};
+lscomp2$2 = function lscomp2$(varrr, ls) {
+  let param0, param1, valll, t2, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    valll = param0;
+    t2 = param1;
+    tmp = lscomp2$2(varrr, t2);
+    return NofibPrelude.Cons([
+      varrr,
+      valll
+    ], tmp)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp23 = function lscomp2(varrr) {
+  return (ls) => {
+    return lscomp2$2(varrr, ls)
+  }
+};
+lscomp1$4 = function lscomp1$(vals, ls) {
+  let param0, param1, varrr, t1, tmp, tmp1, tmp2;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    varrr = param0;
+    t1 = param1;
+    tmp = NofibPrelude.enumFromTo(1, vals);
+    tmp1 = lscomp2$2(varrr, tmp);
+    tmp2 = lscomp1$4(vals, t1);
+    return NofibPrelude.Cons(tmp1, tmp2)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp14 = function lscomp1(vals) {
+  return (ls) => {
+    return lscomp1$4(vals, ls)
+  }
+};
+lambda$7 = function lambda$(var_, val_, rel, x, y) {
+  let f4$this;
+  f4$this = runtime.safeCall(f4(var_, val_, rel));
+  return NofibPrelude.zipWith(f4$this, x, y)
+};
+lambda10 = (undefined, function (var_, val_, rel) {
+  return (x, y) => {
+    return lambda$7(var_, val_, rel, x, y)
+  }
+});
+lscomp22 = function lscomp2(ls) {
+  let param0, param1, m, t2, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    m = param0;
+    t2 = param1;
+    tmp = lscomp22(t2);
+    return NofibPrelude.Cons(constraints1.Unknown, tmp)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp1$3 = function lscomp1$(vals, ls) {
+  let param0, param1, n, t1, tmp, tmp1, tmp2;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    n = param0;
+    t1 = param1;
+    tmp = NofibPrelude.enumFromTo(1, vals);
+    tmp1 = lscomp22(tmp);
+    tmp2 = lscomp1$3(vals, t1);
+    return NofibPrelude.Cons(tmp1, tmp2)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp13 = function lscomp1(vals) {
+  return (ls) => {
+    return lscomp1$3(vals, ls)
+  }
+};
+f3$ = function f3$(csp, s) {
+  let scrut, param0, first1, first0, a, b, tmp, tmp1, tmp2;
+  scrut = constraints1.earliestInconsistency(csp, s);
+  if (scrut instanceof NofibPrelude.Some.class) {
+    param0 = scrut.x;
+    if (globalThis.Array.isArray(param0) && param0.length === 2) {
+      first0 = param0[0];
+      first1 = param0[1];
+      a = first0;
+      b = first1;
+      tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+      tmp1 = NofibPrelude.Cons(a, tmp);
+      tmp2 = constraints1.Known(tmp1);
+    } else {
+      tmp2 = constraints1.checkComplete(csp, s);
+    }
+  } else {
+    tmp2 = constraints1.checkComplete(csp, s);
+  }
+  return [
+    s,
+    tmp2
+  ]
+};
+f3 = function f3(csp) {
+  return (s) => {
+    return f3$(csp, s)
+  }
+};
+lambda8 = (undefined, function (x) {
+  let tmp;
+  tmp = NofibPrelude.snd(x);
+  return constraints1.knownConflict(tmp)
+});
+lambda9 = (undefined, function (x) {
+  let tmp;
+  tmp = NofibPrelude.snd(x);
+  return constraints1.knownSolution(tmp)
+});
+lambda6 = (undefined, function (x) {
+  let tmp, tmp1;
+  tmp = NofibPrelude.snd(x);
+  tmp1 = tmp === NofibPrelude.None;
+  return BenchmarkPrelude.not(tmp1)
+});
+lambda$6 = function lambda$(csp, x) {
+  return constraints1.complete(csp, x)
+};
+lambda7 = (undefined, function (csp) {
+  return (x) => {
+    return lambda$6(csp, x)
+  }
+});
+f2$ = function f2$(csp, s) {
+  let tmp;
+  tmp = constraints1.earliestInconsistency(csp, s);
+  return [
+    s,
+    tmp
+  ]
+};
+f2 = function f2(csp) {
+  return (s) => {
+    return f2$(csp, s)
+  }
+};
+lambda$5 = function lambda$(rel, a, x) {
+  let tmp;
+  tmp = runtime.safeCall(rel(a, x));
+  return BenchmarkPrelude.not(tmp)
+};
+lambda5 = (undefined, function (rel, a) {
+  return (x) => {
+    return lambda$5(rel, a, x)
+  }
+});
+lscomp1$2 = function lscomp1$(ss, ls) {
+  let param0, param1, j, t1, tmp, tmp1, tmp2, tmp3, tmp4;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    j = param0;
+    t1 = param1;
+    tmp = constraints1.maxLevel(ss);
+    tmp1 = tmp + 1;
+    tmp2 = constraints1.Assign(tmp1, j);
+    tmp3 = NofibPrelude.Cons(tmp2, ss);
+    tmp4 = lscomp1$2(ss, t1);
+    return NofibPrelude.Cons(tmp3, tmp4)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp12 = function lscomp1(ss) {
+  return (ls) => {
+    return lscomp1$2(ss, ls)
+  }
+};
+next$ = function next$(vars, vals, ss) {
+  let scrut, tmp, tmp1;
+  tmp = constraints1.maxLevel(ss);
+  scrut = tmp < vars;
+  if (scrut === true) {
+    tmp1 = NofibPrelude.enumFromTo(1, vals);
+    return lscomp1$2(ss, tmp1)
+  } else {
+    return NofibPrelude.Nil
+  }
+};
+next = function next(vars, vals) {
+  return (ss) => {
+    return next$(vars, vals, ss)
+  }
+};
+lambda$4 = function lambda$(f, y) {
+  return constraints1.initTree(f, y)
+};
+lambda4 = (undefined, function (f) {
+  return (y) => {
+    return lambda$4(f, y)
+  }
+});
+lambda$3 = function lambda$(p, x) {
+  let tmp;
+  tmp = runtime.safeCall(p(x));
+  return BenchmarkPrelude.not(tmp)
+};
+lambda3 = (undefined, function (p) {
+  return (x) => {
+    return lambda$3(p, x)
+  }
+});
+lambda$2 = function lambda$(p, x) {
+  let tmp;
+  tmp = constraints1.label(x);
+  return runtime.safeCall(p(tmp))
+};
+lambda2 = (undefined, function (p) {
+  return (x) => {
+    return lambda$2(p, x)
+  }
+});
+f1$ = function f1$(p, a, cs) {
+  let tmp, lambda$this;
+  lambda$this = runtime.safeCall(lambda2(p));
+  tmp = NofibPrelude.filter(lambda$this, cs);
+  return constraints1.Node(a, tmp)
+};
+f1 = function f1(p) {
+  return (a, cs) => {
+    return f1$(p, a, cs)
+  }
+};
+lambda$1 = function lambda$(f, x) {
+  return constraints1.foldTree(f, x)
+};
+lambda1 = (undefined, function (f) {
+  return (x) => {
+    return lambda$1(f, x)
+  }
+});
+lambda$ = function lambda$(f, x) {
+  return constraints1.mapTree(f, x)
+};
+lambda = (undefined, function (f) {
+  return (x) => {
+    return lambda$(f, x)
+  }
+});
+lscomp2$1 = function lscomp2$(as_, rel, a, t1, ls) {
+  let param0, param1, b, t2, scrut, scrut1, tmp, tmp1, tmp2;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return lscomp1$1(as_, rel, t1)
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    b = param0;
+    t2 = param1;
+    scrut = a > b;
+    if (scrut === true) {
+      tmp = runtime.safeCall(rel(a, b));
+      scrut1 = BenchmarkPrelude.not(tmp);
+      if (scrut1 === true) {
+        tmp1 = constraints1.level(a);
+        tmp2 = lscomp2$1(as_, rel, a, t1, t2);
+        return NofibPrelude.Cons([
+          tmp1,
+          b
+        ], tmp2)
+      } else {
+        return lscomp2$1(as_, rel, a, t1, t2)
+      }
+    } else {
+      return lscomp2$1(as_, rel, a, t1, t2)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp21 = function lscomp2(as_, rel, a, t1) {
+  return (ls) => {
+    return lscomp2$1(as_, rel, a, t1, ls)
+  }
+};
+lscomp1$1 = function lscomp1$(as_, rel, ls) {
+  let param0, param1, a, t1, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    a = param0;
+    t1 = param1;
+    tmp = NofibPrelude.reverse(as_);
+    return lscomp2$1(as_, rel, a, t1, tmp)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp11 = function lscomp1(as_, rel) {
+  return (ls) => {
+    return lscomp1$1(as_, rel, ls)
+  }
+};
+lscomp2$ = function lscomp2$(vals, var_, val_, t1, ls) {
+  let param0, param1, st, t2, tmp, tmp1, tmp2;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return lscomp1$(vals, var_, t1)
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    st = param0;
+    t2 = param1;
+    tmp = constraints1.Assign(var_, val_);
+    tmp1 = NofibPrelude.Cons(tmp, st);
+    tmp2 = lscomp2$(vals, var_, val_, t1, t2);
+    return NofibPrelude.Cons(tmp1, tmp2)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp2 = function lscomp2(vals, var_, val_, t1) {
+  return (ls) => {
+    return lscomp2$(vals, var_, val_, t1, ls)
+  }
+};
+lscomp1$ = function lscomp1$(vals, var_, ls) {
+  let param0, param1, val_, t1, tmp, tmp1;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    val_ = param0;
+    t1 = param1;
+    tmp = var_ - 1;
+    tmp1 = g(vals, tmp);
+    return lscomp2$(vals, var_, val_, t1, tmp1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp1 = function lscomp1(vals, var_) {
+  return (ls) => {
+    return lscomp1$(vals, var_, ls)
+  }
+};
+g = function g(vals, var_) {
+  let scrut, tmp;
+  scrut = var_ == 0;
+  if (scrut === true) {
+    return NofibPrelude.Cons(NofibPrelude.Nil, NofibPrelude.Nil)
+  } else {
+    tmp = NofibPrelude.enumFromTo(1, vals);
+    return lscomp1$(vals, var_, tmp)
+  }
+};
 constraints1 = class constraints {
   static {
     constraints1 = constraints;
-    let lambda;
+    let lambda14;
     this.Assign = function Assign(varr1, value1) {
       return new Assign.class(varr1, value1);
     };
@@ -60,12 +659,12 @@ constraints1 = class constraints {
     };
     this.Unknown = new Unknown$class;
     this.Unknown.class = Unknown$class;
-    lambda = (undefined, function () {
+    lambda14 = (undefined, function () {
       let tmp;
       tmp = constraints.testConstraints_nofib(6);
       return runtime.safeCall(tmp.toString())
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda14)
   }
   static qsort(le, ls, r) {
     let param0, param1, x, xs, x1;
@@ -207,50 +806,7 @@ constraints1 = class constraints {
     }
   } 
   static generate(csp1) {
-    let g, param0, param1, param2, vars, vals, rel;
-    g = function g(vals1, var_) {
-      let lscomp1, scrut, tmp;
-      lscomp1 = function lscomp1(ls5) {
-        let lscomp2, param01, param11, val_, t1, tmp1, tmp2;
-        if (ls5 instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Nil
-        } else if (ls5 instanceof NofibPrelude.Cons.class) {
-          param01 = ls5.head;
-          param11 = ls5.tail;
-          val_ = param01;
-          t1 = param11;
-          lscomp2 = function lscomp2(ls6) {
-            let param02, param12, st, t2, tmp3, tmp4, tmp5;
-            if (ls6 instanceof NofibPrelude.Nil.class) {
-              return lscomp1(t1)
-            } else if (ls6 instanceof NofibPrelude.Cons.class) {
-              param02 = ls6.head;
-              param12 = ls6.tail;
-              st = param02;
-              t2 = param12;
-              tmp3 = constraints.Assign(var_, val_);
-              tmp4 = NofibPrelude.Cons(tmp3, st);
-              tmp5 = lscomp2(t2);
-              return NofibPrelude.Cons(tmp4, tmp5)
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          };
-          tmp1 = var_ - 1;
-          tmp2 = g(vals1, tmp1);
-          return lscomp2(tmp2)
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      scrut = var_ == 0;
-      if (scrut === true) {
-        return NofibPrelude.Cons(NofibPrelude.Nil, NofibPrelude.Nil)
-      } else {
-        tmp = NofibPrelude.enumFromTo(1, vals1);
-        return lscomp1(tmp)
-      }
-    };
+    let param0, param1, param2, vars, vals, rel;
     if (csp1 instanceof constraints.CSP.class) {
       param0 = csp1.vars;
       param1 = csp1.vals;
@@ -264,7 +820,7 @@ constraints1 = class constraints {
     }
   } 
   static inconsistencies(csp2, as_) {
-    let lscomp1, param0, param1, param2, vars, vals, rel;
+    let param0, param1, param2, vars, vals, rel;
     if (csp2 instanceof constraints.CSP.class) {
       param0 = csp2.vars;
       param1 = csp2.vals;
@@ -272,52 +828,7 @@ constraints1 = class constraints {
       vars = param0;
       vals = param1;
       rel = param2;
-      lscomp1 = function lscomp1(ls5) {
-        let lscomp2, param01, param11, a2, t1, tmp;
-        if (ls5 instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Nil
-        } else if (ls5 instanceof NofibPrelude.Cons.class) {
-          param01 = ls5.head;
-          param11 = ls5.tail;
-          a2 = param01;
-          t1 = param11;
-          lscomp2 = function lscomp2(ls6) {
-            let param02, param12, b, t2, scrut, scrut1, tmp1, tmp2, tmp3;
-            if (ls6 instanceof NofibPrelude.Nil.class) {
-              return lscomp1(t1)
-            } else if (ls6 instanceof NofibPrelude.Cons.class) {
-              param02 = ls6.head;
-              param12 = ls6.tail;
-              b = param02;
-              t2 = param12;
-              scrut = a2 > b;
-              if (scrut === true) {
-                tmp1 = runtime.safeCall(rel(a2, b));
-                scrut1 = BenchmarkPrelude.not(tmp1);
-                if (scrut1 === true) {
-                  tmp2 = constraints.level(a2);
-                  tmp3 = lscomp2(t2);
-                  return NofibPrelude.Cons([
-                    tmp2,
-                    b
-                  ], tmp3)
-                } else {
-                  return lscomp2(t2)
-                }
-              } else {
-                return lscomp2(t2)
-              }
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          };
-          tmp = NofibPrelude.reverse(as_);
-          return lscomp2(tmp)
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      return lscomp1(as_)
+      return lscomp1$1(as_, rel, as_)
     } else {
       throw new globalThis.Error("match error");
     }
@@ -388,60 +899,43 @@ constraints1 = class constraints {
     }
   } 
   static mapTree(f, n2) {
-    let param0, param1, l, c, tmp, tmp1, lambda;
+    let param0, param1, l, c, tmp, tmp1, lambda$this;
     if (n2 instanceof constraints.Node.class) {
       param0 = n2.lab;
       param1 = n2.children;
       l = param0;
       c = param1;
       tmp = runtime.safeCall(f(l));
-      lambda = (undefined, function (x3) {
-        return constraints.mapTree(f, x3)
-      });
-      tmp1 = NofibPrelude.map(lambda, c);
+      lambda$this = runtime.safeCall(lambda(f));
+      tmp1 = NofibPrelude.map(lambda$this, c);
       return constraints.Node(tmp, tmp1)
     } else {
       throw new globalThis.Error("match error");
     }
   } 
-  static foldTree(f1, n3) {
-    let param0, param1, l, c, tmp, lambda;
+  static foldTree(f9, n3) {
+    let param0, param1, l, c, tmp, lambda$this;
     if (n3 instanceof constraints.Node.class) {
       param0 = n3.lab;
       param1 = n3.children;
       l = param0;
       c = param1;
-      lambda = (undefined, function (x3) {
-        return constraints.foldTree(f1, x3)
-      });
-      tmp = NofibPrelude.map(lambda, c);
-      return runtime.safeCall(f1(l, tmp))
+      lambda$this = runtime.safeCall(lambda1(f9));
+      tmp = NofibPrelude.map(lambda$this, c);
+      return runtime.safeCall(f9(l, tmp))
     } else {
       throw new globalThis.Error("match error");
     }
   } 
   static filterTree(p, t) {
-    let f11;
-    f11 = function f1(a2, cs) {
-      let tmp, lambda;
-      lambda = (undefined, function (x3) {
-        let tmp1;
-        tmp1 = constraints.label(x3);
-        return runtime.safeCall(p(tmp1))
-      });
-      tmp = NofibPrelude.filter(lambda, cs);
-      return constraints.Node(a2, tmp)
-    };
-    return constraints.foldTree(f11, t)
+    let f1$this;
+    f1$this = runtime.safeCall(f1(p));
+    return constraints.foldTree(f1$this, t)
   } 
   static prune(p1, t1) {
-    let lambda;
-    lambda = (undefined, function (x3) {
-      let tmp;
-      tmp = runtime.safeCall(p1(x3));
-      return BenchmarkPrelude.not(tmp)
-    });
-    return constraints.filterTree(lambda, t1)
+    let lambda$this;
+    lambda$this = runtime.safeCall(lambda3(p1));
+    return constraints.filterTree(lambda$this, t1)
   } 
   static leaves(t2) {
     let param0, param1, cs, leaf, tmp;
@@ -460,17 +954,15 @@ constraints1 = class constraints {
       throw new globalThis.Error("match error");
     }
   } 
-  static initTree(f2, x3) {
-    let tmp, tmp1, lambda;
-    tmp = runtime.safeCall(f2(x3));
-    lambda = (undefined, function (y) {
-      return constraints.initTree(f2, y)
-    });
-    tmp1 = NofibPrelude.map(lambda, tmp);
+  static initTree(f10, x3) {
+    let tmp, tmp1, lambda$this;
+    tmp = runtime.safeCall(f10(x3));
+    lambda$this = runtime.safeCall(lambda4(f10));
+    tmp1 = NofibPrelude.map(lambda$this, tmp);
     return constraints.Node(x3, tmp1)
   } 
   static mkTree(csp6) {
-    let next, param0, param1, param2, vars, vals, rel;
+    let param0, param1, param2, vars, vals, rel, next$this;
     if (csp6 instanceof constraints.CSP.class) {
       param0 = csp6.vars;
       param1 = csp6.vals;
@@ -478,43 +970,14 @@ constraints1 = class constraints {
       vars = param0;
       vals = param1;
       rel = param2;
-      next = function next(ss) {
-        let lscomp1, scrut, tmp, tmp1;
-        tmp = constraints.maxLevel(ss);
-        scrut = tmp < vars;
-        if (scrut === true) {
-          lscomp1 = function lscomp1(ls5) {
-            let param01, param11, j, t11, tmp2, tmp3, tmp4, tmp5, tmp6;
-            if (ls5 instanceof NofibPrelude.Nil.class) {
-              return NofibPrelude.Nil
-            } else if (ls5 instanceof NofibPrelude.Cons.class) {
-              param01 = ls5.head;
-              param11 = ls5.tail;
-              j = param01;
-              t11 = param11;
-              tmp2 = constraints.maxLevel(ss);
-              tmp3 = tmp2 + 1;
-              tmp4 = constraints.Assign(tmp3, j);
-              tmp5 = NofibPrelude.Cons(tmp4, ss);
-              tmp6 = lscomp1(t11);
-              return NofibPrelude.Cons(tmp5, tmp6)
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          };
-          tmp1 = NofibPrelude.enumFromTo(1, vals);
-          return lscomp1(tmp1)
-        } else {
-          return NofibPrelude.Nil
-        }
-      };
-      return constraints.initTree(next, NofibPrelude.Nil)
+      next$this = runtime.safeCall(next(vars, vals));
+      return constraints.initTree(next$this, NofibPrelude.Nil)
     } else {
       throw new globalThis.Error("match error");
     }
   } 
   static earliestInconsistency(csp7, aas) {
-    let param0, param1, param2, vars, vals, rel, param01, param11, a2, as_1, scrut, param02, param12, b, tmp, tmp1, tmp2, lambda;
+    let param0, param1, param2, vars, vals, rel, param01, param11, a2, as_1, scrut, param02, param12, b, tmp, tmp1, tmp2, lambda$this;
     if (csp7 instanceof constraints.CSP.class) {
       param0 = csp7.vars;
       param1 = csp7.vals;
@@ -530,12 +993,8 @@ constraints1 = class constraints {
         a2 = param01;
         as_1 = param11;
         tmp = NofibPrelude.reverse(as_1);
-        lambda = (undefined, function (x4) {
-          let tmp3;
-          tmp3 = runtime.safeCall(rel(a2, x4));
-          return BenchmarkPrelude.not(tmp3)
-        });
-        scrut = NofibPrelude.filter(lambda, tmp);
+        lambda$this = runtime.safeCall(lambda5(rel, a2));
+        scrut = NofibPrelude.filter(lambda$this, tmp);
         if (scrut instanceof NofibPrelude.Nil.class) {
           return NofibPrelude.None
         } else if (scrut instanceof NofibPrelude.Cons.class) {
@@ -559,34 +1018,19 @@ constraints1 = class constraints {
     }
   } 
   static labelInconsistencies(csp8, t3) {
-    let f21;
-    f21 = function f2(s1) {
-      let tmp;
-      tmp = constraints.earliestInconsistency(csp8, s1);
-      return [
-        s1,
-        tmp
-      ]
-    };
-    return constraints.mapTree(f21, t3)
+    let f2$this;
+    f2$this = runtime.safeCall(f2(csp8));
+    return constraints.mapTree(f2$this, t3)
   } 
   static btsolver0(csp9) {
-    let tmp, tmp1, tmp2, tmp3, tmp4, lambda, lambda1;
+    let tmp, tmp1, tmp2, tmp3, tmp4, lambda$this;
     tmp = constraints.mkTree(csp9);
     tmp1 = constraints.labelInconsistencies(csp9, tmp);
-    lambda = (undefined, function (x4) {
-      let tmp5, tmp6;
-      tmp5 = NofibPrelude.snd(x4);
-      tmp6 = tmp5 === NofibPrelude.None;
-      return BenchmarkPrelude.not(tmp6)
-    });
-    tmp2 = constraints.prune(lambda, tmp1);
+    tmp2 = constraints.prune(lambda6, tmp1);
     tmp3 = constraints.mapTree(NofibPrelude.fst, tmp2);
     tmp4 = constraints.leaves(tmp3);
-    lambda1 = (undefined, function (x4) {
-      return constraints.complete(csp9, x4)
-    });
-    return NofibPrelude.filter(lambda1, tmp4)
+    lambda$this = runtime.safeCall(lambda7(csp9));
+    return NofibPrelude.filter(lambda$this, tmp4)
   } 
   static knownConflict(c) {
     let param0, param01, param1, a2, as_1;
@@ -628,54 +1072,21 @@ constraints1 = class constraints {
     }
   } 
   static search(labeler, csp11) {
-    let tmp, tmp1, tmp2, tmp3, tmp4, lambda, lambda1;
+    let tmp, tmp1, tmp2, tmp3, tmp4;
     tmp = constraints.mkTree(csp11);
     tmp1 = runtime.safeCall(labeler(csp11, tmp));
-    lambda = (undefined, function (x4) {
-      let tmp5;
-      tmp5 = NofibPrelude.snd(x4);
-      return constraints.knownConflict(tmp5)
-    });
-    tmp2 = constraints.prune(lambda, tmp1);
+    tmp2 = constraints.prune(lambda8, tmp1);
     tmp3 = constraints.leaves(tmp2);
-    lambda1 = (undefined, function (x4) {
-      let tmp5;
-      tmp5 = NofibPrelude.snd(x4);
-      return constraints.knownSolution(tmp5)
-    });
-    tmp4 = NofibPrelude.filter(lambda1, tmp3);
+    tmp4 = NofibPrelude.filter(lambda9, tmp3);
     return NofibPrelude.map(NofibPrelude.fst, tmp4)
   } 
   static bt(csp12, t4) {
-    let f3;
-    f3 = function f3(s2) {
-      let scrut, param0, first1, first0, a2, b, tmp, tmp1, tmp2;
-      scrut = constraints.earliestInconsistency(csp12, s2);
-      if (scrut instanceof NofibPrelude.Some.class) {
-        param0 = scrut.x;
-        if (globalThis.Array.isArray(param0) && param0.length === 2) {
-          first0 = param0[0];
-          first1 = param0[1];
-          a2 = first0;
-          b = first1;
-          tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
-          tmp1 = NofibPrelude.Cons(a2, tmp);
-          tmp2 = constraints.Known(tmp1);
-        } else {
-          tmp2 = constraints.checkComplete(csp12, s2);
-        }
-      } else {
-        tmp2 = constraints.checkComplete(csp12, s2);
-      }
-      return [
-        s2,
-        tmp2
-      ]
-    };
-    return constraints.mapTree(f3, t4)
+    let f3$this;
+    f3$this = runtime.safeCall(f3(csp12));
+    return constraints.mapTree(f3$this, t4)
   } 
   static emptyTable(csp13) {
-    let lscomp1, param0, param1, param2, vars, vals, rel, tmp, tmp1;
+    let param0, param1, param2, vars, vals, rel, tmp, tmp1;
     if (csp13 instanceof constraints.CSP.class) {
       param0 = csp13.vars;
       param1 = csp13.vals;
@@ -683,47 +1094,15 @@ constraints1 = class constraints {
       vars = param0;
       vals = param1;
       rel = param2;
-      lscomp1 = function lscomp1(ls5) {
-        let lscomp2, param01, param11, n4, t11, tmp2, tmp3, tmp4;
-        if (ls5 instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Nil
-        } else if (ls5 instanceof NofibPrelude.Cons.class) {
-          param01 = ls5.head;
-          param11 = ls5.tail;
-          n4 = param01;
-          t11 = param11;
-          lscomp2 = function lscomp2(ls6) {
-            let param02, param12, m, t21, tmp5;
-            if (ls6 instanceof NofibPrelude.Nil.class) {
-              return NofibPrelude.Nil
-            } else if (ls6 instanceof NofibPrelude.Cons.class) {
-              param02 = ls6.head;
-              param12 = ls6.tail;
-              m = param02;
-              t21 = param12;
-              tmp5 = lscomp2(t21);
-              return NofibPrelude.Cons(constraints.Unknown, tmp5)
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          };
-          tmp2 = NofibPrelude.enumFromTo(1, vals);
-          tmp3 = lscomp2(tmp2);
-          tmp4 = lscomp1(t11);
-          return NofibPrelude.Cons(tmp3, tmp4)
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
       tmp = NofibPrelude.enumFromTo(1, vars);
-      tmp1 = lscomp1(tmp);
+      tmp1 = lscomp1$3(vals, tmp);
       return NofibPrelude.Cons(NofibPrelude.Nil, tmp1)
     } else {
       throw new globalThis.Error("match error");
     }
   } 
   static fillTable(s2, csp14, tbl) {
-    let f4, lscomp1, param0, param1, param01, param11, var_, val_, as_1, param02, param12, param2, vars, vals, rel, tmp, tmp1, tmp2, lambda;
+    let param0, param1, param01, param11, var_, val_, as_1, param02, param12, param2, vars, vals, rel, tmp, tmp1, tmp2, lambda$this;
     if (s2 instanceof NofibPrelude.Nil.class) {
       return tbl
     } else if (s2 instanceof NofibPrelude.Cons.class) {
@@ -742,75 +1121,11 @@ constraints1 = class constraints {
           vars = param02;
           vals = param12;
           rel = param2;
-          f4 = function f4(cs, varval) {
-            let first1, first0, varr, vall, scrut, scrut1, tmp3, tmp4, tmp5, tmp6, tmp7;
-            if (globalThis.Array.isArray(varval) && varval.length === 2) {
-              first0 = varval[0];
-              first1 = varval[1];
-              varr = first0;
-              vall = first1;
-              scrut = cs === constraints.Unknown;
-              if (scrut === true) {
-                tmp3 = constraints.Assign(var_, val_);
-                tmp4 = constraints.Assign(varr, vall);
-                tmp5 = runtime.safeCall(rel(tmp3, tmp4));
-                scrut1 = BenchmarkPrelude.not(tmp5);
-                if (scrut1 === true) {
-                  tmp6 = NofibPrelude.Cons(varr, NofibPrelude.Nil);
-                  tmp7 = NofibPrelude.Cons(var_, tmp6);
-                  return constraints.Known(tmp7)
-                } else {
-                  return cs
-                }
-              } else {
-                return cs
-              }
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          };
-          lscomp1 = function lscomp1(ls5) {
-            let lscomp2, param03, param13, varrr, t11, tmp3, tmp4, tmp5;
-            if (ls5 instanceof NofibPrelude.Nil.class) {
-              return NofibPrelude.Nil
-            } else if (ls5 instanceof NofibPrelude.Cons.class) {
-              param03 = ls5.head;
-              param13 = ls5.tail;
-              varrr = param03;
-              t11 = param13;
-              lscomp2 = function lscomp2(ls6) {
-                let param04, param14, valll, t21, tmp6;
-                if (ls6 instanceof NofibPrelude.Nil.class) {
-                  return NofibPrelude.Nil
-                } else if (ls6 instanceof NofibPrelude.Cons.class) {
-                  param04 = ls6.head;
-                  param14 = ls6.tail;
-                  valll = param04;
-                  t21 = param14;
-                  tmp6 = lscomp2(t21);
-                  return NofibPrelude.Cons([
-                    varrr,
-                    valll
-                  ], tmp6)
-                } else {
-                  throw new globalThis.Error("match error");
-                }
-              };
-              tmp3 = NofibPrelude.enumFromTo(1, vals);
-              tmp4 = lscomp2(tmp3);
-              tmp5 = lscomp1(t11);
-              return NofibPrelude.Cons(tmp4, tmp5)
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          };
           tmp = var_ + 1;
           tmp1 = NofibPrelude.enumFromTo(tmp, vars);
-          tmp2 = lscomp1(tmp1);
-          lambda = (undefined, function (x4, y) {
-            return NofibPrelude.zipWith(f4, x4, y)
-          });
-          return NofibPrelude.zipWith(lambda, tbl, tmp2)
+          tmp2 = lscomp1$4(vals, tmp1);
+          lambda$this = runtime.safeCall(lambda10(var_, val_, rel));
+          return NofibPrelude.zipWith(lambda$this, tbl, tmp2)
         } else {
           throw new globalThis.Error("match error");
         }
@@ -822,74 +1137,18 @@ constraints1 = class constraints {
     }
   } 
   static lookupCache(csp15, t5) {
-    let f5, lambda;
-    f5 = function f5(csp16, tp) {
-      let first1, first0, param0, param1, a2, as_1, tbl1, tableEntry, cs, scrut, tbl2, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
-      if (globalThis.Array.isArray(tp) && tp.length === 2) {
-        first0 = tp[0];
-        first1 = tp[1];
-        if (first0 instanceof NofibPrelude.Nil.class) {
-          tbl2 = first1;
-          return [
-            [
-              NofibPrelude.Nil,
-              constraints.Unknown
-            ],
-            tbl2
-          ]
-        } else if (first0 instanceof NofibPrelude.Cons.class) {
-          param0 = first0.head;
-          param1 = first0.tail;
-          a2 = param0;
-          as_1 = param1;
-          tbl1 = first1;
-          tmp = constraints.value(a2);
-          tmp1 = tmp - 1;
-          tmp2 = NofibPrelude.head(tbl1);
-          tmp3 = NofibPrelude.atIndex(tmp1, tmp2);
-          tableEntry = tmp3;
-          scrut = tableEntry === constraints.Unknown;
-          if (scrut === true) {
-            tmp4 = NofibPrelude.Cons(a2, as_1);
-            tmp5 = constraints.checkComplete(csp16, tmp4);
-          } else {
-            tmp5 = tableEntry;
-          }
-          cs = tmp5;
-          tmp6 = NofibPrelude.Cons(a2, as_1);
-          return [
-            [
-              tmp6,
-              cs
-            ],
-            tbl1
-          ]
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    lambda = (undefined, function (x4) {
-      return f5(csp15, x4)
-    });
-    return constraints.mapTree(lambda, t5)
+    let lambda$this;
+    lambda$this = runtime.safeCall(lambda11(csp15));
+    return constraints.mapTree(lambda$this, t5)
   } 
   static cacheChecks(csp16, tbl1, n4) {
-    let param0, param1, s3, cs, tmp, tmp1, lambda;
+    let param0, param1, s3, cs, tmp, tmp1;
     if (n4 instanceof constraints.Node.class) {
       param0 = n4.lab;
       param1 = n4.children;
       s3 = param0;
       cs = param1;
-      lambda = (undefined, function (x4) {
-        let tmp2, tmp3;
-        tmp2 = NofibPrelude.tail(tbl1);
-        tmp3 = constraints.fillTable(s3, csp16, tmp2);
-        return constraints.cacheChecks(csp16, tmp3, x4)
-      });
-      tmp = lambda;
+      tmp = runtime.safeCall(lambda12(csp16, tbl1, s3));
       tmp1 = NofibPrelude.map(tmp, cs);
       return constraints.Node([
         s3,
@@ -940,79 +1199,9 @@ constraints1 = class constraints {
     }
   } 
   static bj_(csp18, t7) {
-    let f7;
-    f7 = function f7(tp2, chs) {
-      let first1, first0, a2, cs_, scrut, a3, param0, cs, tmp, tmp1, tmp2;
-      if (globalThis.Array.isArray(tp2) && tp2.length === 2) {
-        first0 = tp2[0];
-        first1 = tp2[1];
-        a3 = first0;
-        a2 = first0;
-        if (first1 instanceof constraints.Known.class) {
-          param0 = first1.vs;
-          cs = param0;
-          tmp = constraints.Known(cs);
-          return constraints.Node([
-            a3,
-            tmp
-          ], chs)
-        } else if (first1 instanceof constraints.Unknown.class) {
-          tmp1 = NofibPrelude.map(constraints.label, chs);
-          tmp2 = constraints.combine(tmp1, NofibPrelude.Nil);
-          cs_ = constraints.Known(tmp2);
-          scrut = constraints.knownConflict(cs_);
-          if (scrut === true) {
-            return constraints.Node([
-              a2,
-              cs_
-            ], NofibPrelude.Nil)
-          } else {
-            return constraints.Node([
-              a2,
-              cs_
-            ], chs)
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
     return constraints.foldTree(f7, t7)
   } 
   static bj(csp19, t8) {
-    let f6;
-    f6 = function f6(tp2, chs) {
-      let first1, first0, a2, a3, param0, cs, tmp, tmp1, tmp2, tmp3;
-      if (globalThis.Array.isArray(tp2) && tp2.length === 2) {
-        first0 = tp2[0];
-        first1 = tp2[1];
-        a3 = first0;
-        a2 = first0;
-        if (first1 instanceof constraints.Known.class) {
-          param0 = first1.vs;
-          cs = param0;
-          tmp = constraints.Known(cs);
-          return constraints.Node([
-            a3,
-            tmp
-          ], chs)
-        } else if (first1 instanceof constraints.Unknown.class) {
-          tmp1 = NofibPrelude.map(constraints.label, chs);
-          tmp2 = constraints.combine(tmp1, NofibPrelude.Nil);
-          tmp3 = constraints.Known(tmp2);
-          return constraints.Node([
-            a2,
-            tmp3
-          ], chs)
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
     return constraints.foldTree(f6, t8)
   } 
   static bjbt(csp20, t9) {
@@ -1046,7 +1235,7 @@ constraints1 = class constraints {
     }
   } 
   static domainWipeout(csp22, t11) {
-    let f8, param0, param1, param2, vars, vals, rel;
+    let param0, param1, param2, vars, vals, rel;
     if (csp22 instanceof constraints.CSP.class) {
       param0 = csp22.vars;
       param1 = csp22.vals;
@@ -1054,59 +1243,6 @@ constraints1 = class constraints {
       vars = param0;
       vals = param1;
       rel = param2;
-      f8 = function f8(tp2) {
-        let lscomp1, first1, first0, first11, first01, as_1, cs, tbl2, wipedDomains, cs_, scrut, tmp, tmp1, tmp2, tmp3;
-        if (globalThis.Array.isArray(tp2) && tp2.length === 2) {
-          first0 = tp2[0];
-          first1 = tp2[1];
-          if (globalThis.Array.isArray(first0) && first0.length === 2) {
-            first01 = first0[0];
-            first11 = first0[1];
-            as_1 = first01;
-            cs = first11;
-            tbl2 = first1;
-            lscomp1 = function lscomp1(ls7) {
-              let param01, param11, vs, t12, scrut1, tmp4;
-              if (ls7 instanceof NofibPrelude.Nil.class) {
-                return NofibPrelude.Nil
-              } else if (ls7 instanceof NofibPrelude.Cons.class) {
-                param01 = ls7.head;
-                param11 = ls7.tail;
-                vs = param01;
-                t12 = param11;
-                scrut1 = NofibPrelude.all(constraints.knownConflict, vs);
-                if (scrut1 === true) {
-                  tmp4 = lscomp1(t12);
-                  return NofibPrelude.Cons(vs, tmp4)
-                } else {
-                  return lscomp1(t12)
-                }
-              } else {
-                throw new globalThis.Error("match error");
-              }
-            };
-            tmp = lscomp1(tbl2);
-            wipedDomains = tmp;
-            scrut = NofibPrelude.null_(wipedDomains);
-            if (scrut === true) {
-              tmp1 = cs;
-            } else {
-              tmp2 = NofibPrelude.head(wipedDomains);
-              tmp3 = constraints.collect(tmp2);
-              tmp1 = constraints.Known(tmp3);
-            }
-            cs_ = tmp1;
-            return [
-              as_1,
-              cs_
-            ]
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
       return constraints.mapTree(f8, t11)
     } else {
       throw new globalThis.Error("match error");
@@ -1126,16 +1262,14 @@ constraints1 = class constraints {
     return NofibPrelude.listLen(tmp1)
   } 
   static testConstraints_nofib(n6) {
-    let tmp, tmp1, tmp2, tmp3, tmp4, lambda;
+    let tmp, tmp1, tmp2, tmp3, tmp4, lambda$this;
     tmp = NofibPrelude.Cons(constraints.fc, NofibPrelude.Nil);
     tmp1 = NofibPrelude.Cons(constraints.bjbt_, tmp);
     tmp2 = NofibPrelude.Cons(constraints.bjbt, tmp1);
     tmp3 = NofibPrelude.Cons(constraints.bm, tmp2);
     tmp4 = NofibPrelude.Cons(constraints.bt, tmp3);
-    lambda = (undefined, function (x4) {
-      return constraints.try_(n6, x4)
-    });
-    return NofibPrelude.map(lambda, tmp4)
+    lambda$this = runtime.safeCall(lambda13(n6));
+    return NofibPrelude.map(lambda$this, tmp4)
   }
   static toString() { return "constraints"; }
 };

@@ -2,11 +2,41 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let clausify1;
+let lscomp, clausify1, lambda, lscomp$;
+lscomp$ = function lscomp$(a, ls) {
+  let param0, param1, h, t, scrut, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    h = param0;
+    t = param1;
+    scrut = NofibPrelude.inList(h, a);
+    if (scrut === true) {
+      tmp = lscomp$(a, t);
+      return NofibPrelude.Cons(h, tmp)
+    } else {
+      return lscomp$(a, t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp = function lscomp(a) {
+  return (ls) => {
+    return lscomp$(a, ls)
+  }
+};
+lambda = (undefined, function (s) {
+  let tmp;
+  tmp = clausify1.spri(s);
+  return tmp != 0
+});
 clausify1 = class clausify {
   static {
     clausify1 = clausify;
-    let lambda;
+    let lambda1;
     this.Formula = class Formula {
       constructor() {}
       toString() { return "Formula"; }
@@ -99,12 +129,12 @@ clausify1 = class clausify {
       }
       toString() { return "Lex(" + globalThis.Predef.render(this.s) + ")"; }
     };
-    lambda = (undefined, function () {
+    lambda1 = (undefined, function () {
       let tmp;
       tmp = clausify.testClausify_nofib(10);
       return NofibPrelude.nofibListToString(tmp)
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda1)
   }
   static charLt(a, b) {
     return a < b
@@ -582,12 +612,6 @@ clausify1 = class clausify {
     }
   } 
   static redstar(s2) {
-    let lambda;
-    lambda = (undefined, function (s3) {
-      let tmp;
-      tmp = clausify.spri(s3);
-      return tmp != 0
-    });
     return NofibPrelude.while_(lambda, clausify.red, s2)
   } 
   static spaces(n) {
@@ -796,33 +820,13 @@ clausify1 = class clausify {
     return clausify.splitHelper(p7, NofibPrelude.Nil)
   } 
   static tautclause(c_a) {
-    let lscomp, first1, first0, c1, a5, tmp;
+    let first1, first0, c1, a5, tmp;
     if (globalThis.Array.isArray(c_a) && c_a.length === 2) {
       first0 = c_a[0];
       first1 = c_a[1];
       c1 = first0;
       a5 = first1;
-      lscomp = function lscomp(ls) {
-        let param0, param1, h, t2, scrut, tmp1;
-        if (ls instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Nil
-        } else if (ls instanceof NofibPrelude.Cons.class) {
-          param0 = ls.head;
-          param1 = ls.tail;
-          h = param0;
-          t2 = param1;
-          scrut = NofibPrelude.inList(h, a5);
-          if (scrut === true) {
-            tmp1 = lscomp(t2);
-            return NofibPrelude.Cons(h, tmp1)
-          } else {
-            return lscomp(t2)
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      tmp = lscomp(c1);
+      tmp = lscomp$(a5, c1);
       return NofibPrelude.listNeq(tmp, NofibPrelude.Nil)
     } else {
       throw new globalThis.Error("match error");

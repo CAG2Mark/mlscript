@@ -2,11 +2,247 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let cichelli1;
+let go, lscomp, lscomp2, lscomp1, tryy, cichelli1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, lambda$, lambda$1, lscomp$, lambda$2, lambda$3, lambda$4, lambda$5, lambda$6, lambda$7, lscomp2$, lambda$8, lambda$9, tryy$;
+tryy$ = function tryy$(keyHashSet, charAssocs, s, a, z, n, ks, newAssocs) {
+  let newCharAssocs, scrut, param0, newKeyHashSet, tmp, tmp1, tmp2;
+  tmp = NofibPrelude.append(newAssocs, charAssocs);
+  newCharAssocs = tmp;
+  tmp1 = cichelli1.K(s, a, z, n);
+  tmp2 = cichelli1.hash(newCharAssocs, tmp1);
+  scrut = cichelli1.hinsert(tmp2, keyHashSet);
+  if (scrut instanceof NofibPrelude.None.class) {
+    return cichelli1.NotEver(1)
+  } else if (scrut instanceof NofibPrelude.Some.class) {
+    param0 = scrut.x;
+    newKeyHashSet = param0;
+    return cichelli1.findhash_(newKeyHashSet, newCharAssocs, ks)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+tryy = function tryy(keyHashSet, charAssocs, s, a, z, n, ks) {
+  return (newAssocs) => {
+    return tryy$(keyHashSet, charAssocs, s, a, z, n, ks, newAssocs)
+  }
+};
+lambda$9 = function lambda$(keyHashSet, charAssocs, s, a, z, n, ks, m) {
+  let tmp;
+  tmp = NofibPrelude.Cons([
+    a,
+    m
+  ], NofibPrelude.Nil);
+  return tryy$(keyHashSet, charAssocs, s, a, z, n, ks, tmp)
+};
+lambda5 = (undefined, function (keyHashSet, charAssocs, s, a, z, n, ks) {
+  return (m) => {
+    return lambda$9(keyHashSet, charAssocs, s, a, z, n, ks, m)
+  }
+});
+lambda$8 = function lambda$(ls1, m, ms, n, ns) {
+  let tmp;
+  tmp = lscomp2$(ls1, m, ms, ns);
+  return NofibPrelude.LzCons([
+    m,
+    n
+  ], tmp)
+};
+lambda7 = (undefined, function (ls1, m, ms, n, ns) {
+  return () => {
+    return lambda$8(ls1, m, ms, n, ns)
+  }
+});
+lscomp2$ = function lscomp2$(ls1, m, ms, ls2) {
+  let scrut, param0, param1, n, ns, lambda$this;
+  scrut = NofibPrelude.force(ls2);
+  if (scrut instanceof NofibPrelude.LzNil.class) {
+    return lscomp1(ms)
+  } else if (scrut instanceof NofibPrelude.LzCons.class) {
+    param0 = scrut.head;
+    param1 = scrut.tail;
+    n = param0;
+    ns = param1;
+    lambda$this = runtime.safeCall(lambda7(ls1, m, ms, n, ns));
+    return NofibPrelude.lazy(lambda$this)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp2 = function lscomp2(ls1, m, ms) {
+  return (ls2) => {
+    return lscomp2$(ls1, m, ms, ls2)
+  }
+};
+lambda$7 = function lambda$(ls1) {
+  let scrut, param0, param1, m, ms, tmp, tmp1;
+  scrut = NofibPrelude.force(ls1);
+  if (scrut instanceof NofibPrelude.LzNil.class) {
+    return NofibPrelude.LzNil
+  } else if (scrut instanceof NofibPrelude.LzCons.class) {
+    param0 = scrut.head;
+    param1 = scrut.tail;
+    m = param0;
+    ms = param1;
+    tmp = cichelli1.enumFromTo_lz(0, cichelli1.maxval);
+    tmp1 = lscomp2$(ls1, m, ms, tmp);
+    return NofibPrelude.force(tmp1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda6 = (undefined, function (ls1) {
+  return () => {
+    return lambda$7(ls1)
+  }
+});
+lscomp1 = function lscomp1(ls1) {
+  let tmp;
+  tmp = runtime.safeCall(lambda6(ls1));
+  return NofibPrelude.lazy(tmp)
+};
+lambda$6 = function lambda$(keyHashSet, charAssocs, s, a, z, n, ks, caseScrut) {
+  let first1, first0, m, n1, tmp, tmp1;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    m = first0;
+    n1 = first1;
+    tmp = NofibPrelude.Cons([
+      z,
+      n1
+    ], NofibPrelude.Nil);
+    tmp1 = NofibPrelude.Cons([
+      a,
+      m
+    ], tmp);
+    return tryy$(keyHashSet, charAssocs, s, a, z, n, ks, tmp1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda8 = (undefined, function (keyHashSet, charAssocs, s, a, z, n, ks) {
+  return (caseScrut) => {
+    return lambda$6(keyHashSet, charAssocs, s, a, z, n, ks, caseScrut)
+  }
+});
+lambda$5 = function lambda$(keyHashSet, charAssocs, s, a, z, n, ks, m) {
+  let tmp;
+  tmp = NofibPrelude.Cons([
+    a,
+    m
+  ], NofibPrelude.Nil);
+  return tryy$(keyHashSet, charAssocs, s, a, z, n, ks, tmp)
+};
+lambda9 = (undefined, function (keyHashSet, charAssocs, s, a, z, n, ks) {
+  return (m) => {
+    return lambda$5(keyHashSet, charAssocs, s, a, z, n, ks, m)
+  }
+});
+lambda$4 = function lambda$(keyHashSet, charAssocs, s, a, z, n, ks, n1) {
+  let tmp;
+  tmp = NofibPrelude.Cons([
+    z,
+    n1
+  ], NofibPrelude.Nil);
+  return tryy$(keyHashSet, charAssocs, s, a, z, n, ks, tmp)
+};
+lambda10 = (undefined, function (keyHashSet, charAssocs, s, a, z, n, ks) {
+  return (n1) => {
+    return lambda$4(keyHashSet, charAssocs, s, a, z, n, ks, n1)
+  }
+});
+lambda$3 = function lambda$(ds_, x) {
+  let tmp;
+  tmp = cichelli1.ends(x);
+  return cichelli1.subset(tmp, ds_)
+};
+lambda4 = (undefined, function (ds_) {
+  return (x) => {
+    return lambda$3(ds_, x)
+  }
+});
+lambda$2 = function lambda$(p, x, y) {
+  return cichelli1.select(p, x, y)
+};
+lambda3 = (undefined, function (p) {
+  return (x, y) => {
+    return lambda$2(p, x, y)
+  }
+});
+lambda2 = (undefined, function (k) {
+  let tmp, tmp1, tmp2;
+  tmp = NofibPrelude.head(k);
+  tmp1 = cichelli1.last(k);
+  tmp2 = NofibPrelude.listLen(k);
+  return cichelli1.K(k, tmp, tmp1, tmp2)
+});
+lscomp$ = function lscomp$(xs, ls) {
+  let param0, param1, h, t, scrut, tmp, tmp1;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    h = param0;
+    t = param1;
+    tmp = NofibPrelude.inList(h, xs);
+    scrut = BenchmarkPrelude.not(tmp);
+    if (scrut === true) {
+      tmp1 = lscomp$(xs, t);
+      return NofibPrelude.Cons(h, tmp1)
+    } else {
+      return lscomp$(xs, t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp = function lscomp(xs) {
+  return (ls) => {
+    return lscomp$(xs, ls)
+  }
+};
+lambda$1 = function lambda$(ys, x) {
+  return NofibPrelude.inList(x, ys)
+};
+lambda1 = (undefined, function (ys) {
+  return (x) => {
+    return lambda$1(ys, x)
+  }
+});
+go = function go(h, t) {
+  let param0, param1, head, t1;
+  if (t instanceof NofibPrelude.Nil.class) {
+    return h
+  } else if (t instanceof NofibPrelude.Cons.class) {
+    param0 = t.head;
+    param1 = t.tail;
+    head = param0;
+    t1 = param1;
+    return go(head, t1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda$ = function lambda$(a, b) {
+  let scrut, tmp, tmp1;
+  scrut = a <= b;
+  if (scrut === true) {
+    tmp = a + 1;
+    tmp1 = cichelli1.enumFromTo_lz(tmp, b);
+    return NofibPrelude.LzCons(a, tmp1)
+  } else {
+    return NofibPrelude.LzNil
+  }
+};
+lambda = (undefined, function (a, b) {
+  return () => {
+    return lambda$(a, b)
+  }
+});
 cichelli1 = class cichelli {
   static {
     cichelli1 = cichelli;
-    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, lambda;
+    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, lambda11;
     tmp = NofibPrelude.nofibStringToList("case");
     tmp1 = NofibPrelude.nofibStringToList("class");
     tmp2 = NofibPrelude.nofibStringToList("data");
@@ -109,45 +345,20 @@ cichelli1 = class cichelli {
       }
       toString() { return "YesIts(" + globalThis.Predef.render(this.i) + ", " + globalThis.Predef.render(this.t) + ")"; }
     };
-    lambda = (undefined, function () {
+    lambda11 = (undefined, function () {
       let tmp50;
       tmp50 = cichelli.prog(6);
       return runtime.safeCall(tmp50.toString())
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda11)
   }
   static enumFromTo_lz(a, b) {
-    let tmp, lambda;
-    lambda = (undefined, function () {
-      let scrut, tmp1, tmp2;
-      scrut = a <= b;
-      if (scrut === true) {
-        tmp1 = a + 1;
-        tmp2 = cichelli.enumFromTo_lz(tmp1, b);
-        return NofibPrelude.LzCons(a, tmp2)
-      } else {
-        return NofibPrelude.LzNil
-      }
-    });
-    tmp = lambda;
+    let tmp;
+    tmp = runtime.safeCall(lambda(a, b));
     return NofibPrelude.lazy(tmp)
   } 
   static last(ls) {
-    let go, param0, param1, h, t;
-    go = function go(h1, t1) {
-      let param01, param11, head, t2;
-      if (t1 instanceof NofibPrelude.Nil.class) {
-        return h1
-      } else if (t1 instanceof NofibPrelude.Cons.class) {
-        param01 = t1.head;
-        param11 = t1.tail;
-        head = param01;
-        t2 = param11;
-        return go(head, t2)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let param0, param1, h, t;
     if (ls instanceof NofibPrelude.Cons.class) {
       param0 = ls.head;
       param1 = ls.tail;
@@ -263,48 +474,18 @@ cichelli1 = class cichelli {
     return NofibPrelude.foldr(cichelli.histins, NofibPrelude.Nil, ls1)
   } 
   static subset(xs, ys) {
-    let lambda;
-    lambda = (undefined, function (x3) {
-      return NofibPrelude.inList(x3, ys)
-    });
-    return NofibPrelude.all(lambda, xs)
+    let lambda$this;
+    lambda$this = runtime.safeCall(lambda1(ys));
+    return NofibPrelude.all(lambda$this, xs)
   } 
   static union(xs1, ys1) {
-    let lscomp, tmp;
-    lscomp = function lscomp(ls2) {
-      let param0, param1, h, t, scrut, tmp1, tmp2;
-      if (ls2 instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (ls2 instanceof NofibPrelude.Cons.class) {
-        param0 = ls2.head;
-        param1 = ls2.tail;
-        h = param0;
-        t = param1;
-        tmp1 = NofibPrelude.inList(h, xs1);
-        scrut = BenchmarkPrelude.not(tmp1);
-        if (scrut === true) {
-          tmp2 = lscomp(t);
-          return NofibPrelude.Cons(h, tmp2)
-        } else {
-          return lscomp(t)
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    tmp = lscomp(ys1);
+    let tmp;
+    tmp = lscomp$(xs1, ys1);
     return NofibPrelude.append(xs1, tmp)
   } 
   static attribkeys(ks) {
-    let tmp, lambda;
-    lambda = (undefined, function (k1) {
-      let tmp1, tmp2, tmp3;
-      tmp1 = NofibPrelude.head(k1);
-      tmp2 = cichelli.last(k1);
-      tmp3 = NofibPrelude.listLen(k1);
-      return cichelli.K(k1, tmp1, tmp2, tmp3)
-    });
-    tmp = lambda;
+    let tmp;
+    tmp = lambda2;
     return NofibPrelude.map(tmp, ks)
   } 
   static minm(x3, y) {
@@ -375,11 +556,9 @@ cichelli1 = class cichelli {
     }
   } 
   static partition_(p1, ls2) {
-    let lambda;
-    lambda = (undefined, function (x6, y2) {
-      return cichelli.select(p1, x6, y2)
-    });
-    return NofibPrelude.foldr(lambda, [
+    let lambda$this;
+    lambda$this = runtime.safeCall(lambda3(p1));
+    return NofibPrelude.foldr(lambda$this, [
       NofibPrelude.Nil,
       NofibPrelude.Nil
     ], ls2)
@@ -388,7 +567,7 @@ cichelli1 = class cichelli {
     return x6
   } 
   static blocked_(ds, ls3) {
-    let param0, param1, k2, ks1, ds_, scrut, first1, first0, det, rest, tmp, tmp1, tmp2, tmp3, lambda;
+    let param0, param1, k2, ks1, ds_, scrut, first1, first0, det, rest, tmp, tmp1, tmp2, tmp3, lambda$this;
     if (ls3 instanceof NofibPrelude.Nil.class) {
       return NofibPrelude.Nil
     } else if (ls3 instanceof NofibPrelude.Cons.class) {
@@ -399,12 +578,8 @@ cichelli1 = class cichelli {
       tmp = cichelli.ends(k2);
       tmp1 = cichelli.union(ds, tmp);
       ds_ = tmp1;
-      lambda = (undefined, function (x7) {
-        let tmp4;
-        tmp4 = cichelli.ends(x7);
-        return cichelli.subset(tmp4, ds_)
-      });
-      scrut = cichelli.partition_(lambda, ks1);
+      lambda$this = runtime.safeCall(lambda4(ds_));
+      scrut = cichelli.partition_(lambda$this, ks1);
       if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
         first0 = scrut[0];
         first1 = scrut[1];
@@ -489,7 +664,7 @@ cichelli1 = class cichelli {
     return cichelli.first(0, tmp)
   } 
   static findhash_(keyHashSet, charAssocs, ks1) {
-    let lscomp1, tryy, param0, param1, param01, param11, param2, param3, s, a1, z, n, ks2, scrut, first1, first0, param02, ac, param03, zc, ac1, zc1, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, lambda, lambda1, lambda2, lambda3;
+    let param0, param1, param01, param11, param2, param3, s, a1, z, n, ks2, scrut, first1, first0, param02, ac, param03, zc, ac1, zc1, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, lambda$this, lambda$this1, lambda$this2;
     if (ks1 instanceof NofibPrelude.Nil.class) {
       return cichelli.YesIts(1, charAssocs)
     } else if (ks1 instanceof NofibPrelude.Cons.class) {
@@ -505,23 +680,6 @@ cichelli1 = class cichelli {
         z = param2;
         n = param3;
         ks2 = param1;
-        tryy = function tryy(newAssocs) {
-          let newCharAssocs, scrut2, param04, newKeyHashSet, tmp8, tmp9, tmp10;
-          tmp8 = NofibPrelude.append(newAssocs, charAssocs);
-          newCharAssocs = tmp8;
-          tmp9 = cichelli.K(s, a1, z, n);
-          tmp10 = cichelli.hash(newCharAssocs, tmp9);
-          scrut2 = cichelli.hinsert(tmp10, keyHashSet);
-          if (scrut2 instanceof NofibPrelude.None.class) {
-            return cichelli.NotEver(1)
-          } else if (scrut2 instanceof NofibPrelude.Some.class) {
-            param04 = scrut2.x;
-            newKeyHashSet = param04;
-            return cichelli.findhash_(newKeyHashSet, newCharAssocs, ks2)
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        };
         tmp = cichelli.assocm(a1, charAssocs);
         tmp1 = cichelli.assocm(z, charAssocs);
         scrut = [
@@ -536,82 +694,10 @@ cichelli1 = class cichelli {
               scrut1 = a1 === z;
               if (scrut1 === true) {
                 tmp2 = cichelli.enumFromTo_lz(0, cichelli.maxval);
-                lambda = (undefined, function (m) {
-                  let tmp8;
-                  tmp8 = NofibPrelude.Cons([
-                    a1,
-                    m
-                  ], NofibPrelude.Nil);
-                  return tryy(tmp8)
-                });
-                return cichelli.firstSuccess(lambda, tmp2)
+                lambda$this = runtime.safeCall(lambda5(keyHashSet, charAssocs, s, a1, z, n, ks2));
+                return cichelli.firstSuccess(lambda$this, tmp2)
               } else {
-                lscomp1 = function lscomp1(ls11) {
-                  let tmp8, lambda4;
-                  lambda4 = (undefined, function () {
-                    let lscomp2, scrut2, param04, param12, m, ms, tmp9, tmp10;
-                    scrut2 = NofibPrelude.force(ls11);
-                    if (scrut2 instanceof NofibPrelude.LzNil.class) {
-                      return NofibPrelude.LzNil
-                    } else if (scrut2 instanceof NofibPrelude.LzCons.class) {
-                      param04 = scrut2.head;
-                      param12 = scrut2.tail;
-                      m = param04;
-                      ms = param12;
-                      lscomp2 = function lscomp2(ls21) {
-                        let scrut3, param05, param13, n1, ns, lambda5;
-                        scrut3 = NofibPrelude.force(ls21);
-                        if (scrut3 instanceof NofibPrelude.LzNil.class) {
-                          return lscomp1(ms)
-                        } else if (scrut3 instanceof NofibPrelude.LzCons.class) {
-                          param05 = scrut3.head;
-                          param13 = scrut3.tail;
-                          n1 = param05;
-                          ns = param13;
-                          lambda5 = (undefined, function () {
-                            let tmp11;
-                            tmp11 = lscomp2(ns);
-                            return NofibPrelude.LzCons([
-                              m,
-                              n1
-                            ], tmp11)
-                          });
-                          return NofibPrelude.lazy(lambda5)
-                        } else {
-                          throw new globalThis.Error("match error");
-                        }
-                      };
-                      tmp9 = cichelli.enumFromTo_lz(0, cichelli.maxval);
-                      tmp10 = lscomp2(tmp9);
-                      return NofibPrelude.force(tmp10)
-                    } else {
-                      throw new globalThis.Error("match error");
-                    }
-                  });
-                  tmp8 = lambda4;
-                  return NofibPrelude.lazy(tmp8)
-                };
-                lambda1 = (undefined, function (caseScrut) {
-                  let first11, first01, m, n1, tmp8, tmp9;
-                  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-                    first01 = caseScrut[0];
-                    first11 = caseScrut[1];
-                    m = first01;
-                    n1 = first11;
-                    tmp8 = NofibPrelude.Cons([
-                      z,
-                      n1
-                    ], NofibPrelude.Nil);
-                    tmp9 = NofibPrelude.Cons([
-                      a1,
-                      m
-                    ], tmp8);
-                    return tryy(tmp9)
-                  } else {
-                    throw new globalThis.Error("match error");
-                  }
-                });
-                tmp3 = lambda1;
+                tmp3 = runtime.safeCall(lambda8(keyHashSet, charAssocs, s, a1, z, n, ks2));
                 tmp4 = cichelli.enumFromTo_lz(0, cichelli.maxval);
                 tmp5 = lscomp1(tmp4);
                 return cichelli.firstSuccess(tmp3, tmp5)
@@ -620,15 +706,8 @@ cichelli1 = class cichelli {
               param03 = first1.x;
               zc1 = param03;
               tmp6 = cichelli.enumFromTo_lz(0, cichelli.maxval);
-              lambda2 = (undefined, function (m) {
-                let tmp8;
-                tmp8 = NofibPrelude.Cons([
-                  a1,
-                  m
-                ], NofibPrelude.Nil);
-                return tryy(tmp8)
-              });
-              return cichelli.firstSuccess(lambda2, tmp6)
+              lambda$this1 = runtime.safeCall(lambda9(keyHashSet, charAssocs, s, a1, z, n, ks2));
+              return cichelli.firstSuccess(lambda$this1, tmp6)
             } else {
               throw new globalThis.Error("match error");
             }
@@ -638,19 +717,12 @@ cichelli1 = class cichelli {
             ac = param02;
             if (first1 instanceof NofibPrelude.None.class) {
               tmp7 = cichelli.enumFromTo_lz(0, cichelli.maxval);
-              lambda3 = (undefined, function (n1) {
-                let tmp8;
-                tmp8 = NofibPrelude.Cons([
-                  z,
-                  n1
-                ], NofibPrelude.Nil);
-                return tryy(tmp8)
-              });
-              return cichelli.firstSuccess(lambda3, tmp7)
+              lambda$this2 = runtime.safeCall(lambda10(keyHashSet, charAssocs, s, a1, z, n, ks2));
+              return cichelli.firstSuccess(lambda$this2, tmp7)
             } else if (first1 instanceof NofibPrelude.Some.class) {
               param03 = first1.x;
               zc = param03;
-              return tryy(NofibPrelude.Nil)
+              return tryy$(keyHashSet, charAssocs, s, a1, z, n, ks2, NofibPrelude.Nil)
             } else {
               throw new globalThis.Error("match error");
             }

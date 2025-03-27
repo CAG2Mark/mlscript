@@ -2,12 +2,240 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let fish1;
+let lscomp, showl, fish1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, lambda11, lambda12, lambda13, lambda14, lambda15, lambda16, lambda17, lambda18, lambda19, lambda20, lambda21, lscomp$, lambda$, lambda$1, lambda$2, lambda$3, lambda$4, lambda$5, lambda$6, lambda$7, lambda$8, lambda$9, lambda$10, lambda$11, lambda$12, lambda$13, lambda$14;
+lambda21 = (undefined, function (i) {
+  let n, tmp, tmp1, tmp2;
+  tmp = NofibPrelude.min(0, i);
+  n = tmp;
+  tmp1 = 640 + n;
+  tmp2 = 640 + n;
+  return fish1.pseudolimit([
+    0,
+    0
+  ], [
+    tmp1,
+    0
+  ], [
+    0,
+    tmp2
+  ])
+});
+showl = function showl(ls, s) {
+  let param0, param1, x, xs, tmp, tmp1, tmp2, tmp3;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Cons("]", s)
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    x = param0;
+    xs = param1;
+    tmp = NofibPrelude.nofibStringToList(",|");
+    tmp1 = fish1.showFourTupleofInt(x);
+    tmp2 = showl(xs, s);
+    tmp3 = NofibPrelude.append(tmp1, tmp2);
+    return NofibPrelude.append(tmp, tmp3)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda$14 = function lambda$(p2, p3, b5, b6, b7) {
+  return fish1.beside(1, 1, p2, p3, b5, b6, b7)
+};
+lambda16 = (undefined, function (p2, p3) {
+  return (b5, b6, b7) => {
+    return lambda$14(p2, p3, b5, b6, b7)
+  }
+});
+lambda$13 = function lambda$(p1, p2, p3, b5, b6, b7) {
+  let lambda$this;
+  lambda$this = runtime.safeCall(lambda16(p2, p3));
+  return fish1.beside(1, 2, p1, lambda$this, b5, b6, b7)
+};
+lambda14 = (undefined, function (p1, p2, p3) {
+  return (b5, b6, b7) => {
+    return lambda$13(p1, p2, p3, b5, b6, b7)
+  }
+});
+lambda$12 = function lambda$(p5, p6, b5, b6, b7) {
+  return fish1.beside(1, 1, p5, p6, b5, b6, b7)
+};
+lambda19 = (undefined, function (p5, p6) {
+  return (b5, b6, b7) => {
+    return lambda$12(p5, p6, b5, b6, b7)
+  }
+});
+lambda$11 = function lambda$(p4, p5, p6, b5, b6, b7) {
+  let lambda$this;
+  lambda$this = runtime.safeCall(lambda19(p5, p6));
+  return fish1.beside(1, 2, p4, lambda$this, b5, b6, b7)
+};
+lambda17 = (undefined, function (p4, p5, p6) {
+  return (b5, b6, b7) => {
+    return lambda$11(p4, p5, p6, b5, b6, b7)
+  }
+});
+lambda$10 = function lambda$(p8, p9, b5, b6, b7) {
+  return fish1.beside(1, 1, p8, p9, b5, b6, b7)
+};
+lambda20 = (undefined, function (p8, p9) {
+  return (b5, b6, b7) => {
+    return lambda$10(p8, p9, b5, b6, b7)
+  }
+});
+lambda$9 = function lambda$(p7, p8, p9, b5, b6, b7) {
+  let lambda$this;
+  lambda$this = runtime.safeCall(lambda20(p8, p9));
+  return fish1.beside(1, 2, p7, lambda$this, b5, b6, b7)
+};
+lambda18 = (undefined, function (p7, p8, p9) {
+  return (b5, b6, b7) => {
+    return lambda$9(p7, p8, p9, b5, b6, b7)
+  }
+});
+lambda$8 = function lambda$(p4, p5, p6, p7, p8, p9, a1, a2, a3) {
+  let lambda$this, lambda$this1;
+  lambda$this = runtime.safeCall(lambda17(p4, p5, p6));
+  lambda$this1 = runtime.safeCall(lambda18(p7, p8, p9));
+  return fish1.above(1, 1, lambda$this, lambda$this1, a1, a2, a3)
+};
+lambda15 = (undefined, function (p4, p5, p6, p7, p8, p9) {
+  return (a1, a2, a3) => {
+    return lambda$8(p4, p5, p6, p7, p8, p9, a1, a2, a3)
+  }
+});
+lambda12 = (undefined, function (a, b, c) {
+  return fish1.rot(fish1.side2, a, b, c)
+});
+lambda13 = (undefined, function (a, b, c) {
+  return fish1.rot(fish1.t, a, b, c)
+});
+lambda11 = (undefined, function (a, b, c) {
+  return fish1.rot(fish1.side1, a, b, c)
+});
+lambda10 = (undefined, function (a, b, c) {
+  return fish1.rot(fish1.t, a, b, c)
+});
+lambda9 = (undefined, function (a, b, c) {
+  return fish1.rot(fish1.t, a, b, c)
+});
+lambda8 = (undefined, function (a, b, c) {
+  return fish1.rot(fish1.q, a, b, c)
+});
+lambda$7 = function lambda$(p1, a, b, c) {
+  return fish1.rot(p1, a, b, c)
+};
+lambda6 = (undefined, function (p1) {
+  return (a, b, c) => {
+    return lambda$7(p1, a, b, c)
+  }
+});
+lambda$6 = function lambda$(p1, a, b, c) {
+  let lambda$this;
+  lambda$this = runtime.safeCall(lambda6(p1));
+  return fish1.rot(lambda$this, a, b, c)
+};
+lambda5 = (undefined, function (p1) {
+  return (a, b, c) => {
+    return lambda$6(p1, a, b, c)
+  }
+});
+lambda$5 = function lambda$(p1, a, b, c) {
+  let lambda$this;
+  lambda$this = runtime.safeCall(lambda5(p1));
+  return fish1.rot(lambda$this, a, b, c)
+};
+lambda2 = (undefined, function (p1) {
+  return (a, b, c) => {
+    return lambda$5(p1, a, b, c)
+  }
+});
+lambda$4 = function lambda$(p1, a, b, c) {
+  return fish1.rot(p1, a, b, c)
+};
+lambda3 = (undefined, function (p1) {
+  return (a, b, c) => {
+    return lambda$4(p1, a, b, c)
+  }
+});
+lambda$3 = function lambda$(p1, a, b, c) {
+  return fish1.rot(p1, a, b, c)
+};
+lambda7 = (undefined, function (p1) {
+  return (a, b, c) => {
+    return lambda$3(p1, a, b, c)
+  }
+});
+lambda$2 = function lambda$(p1, a, b, c) {
+  let lambda$this;
+  lambda$this = runtime.safeCall(lambda7(p1));
+  return fish1.rot(lambda$this, a, b, c)
+};
+lambda4 = (undefined, function (p1) {
+  return (a, b, c) => {
+    return lambda$2(p1, a, b, c)
+  }
+});
+lambda$1 = function lambda$(a, b, p5, p6, p7) {
+  return fish1.beside(1, 1, a, b, p5, p6, p7)
+};
+lambda = (undefined, function (a, b) {
+  return (p5, p6, p7) => {
+    return lambda$1(a, b, p5, p6, p7)
+  }
+});
+lambda$ = function lambda$(c, d, p5, p6, p7) {
+  return fish1.beside(1, 1, c, d, p5, p6, p7)
+};
+lambda1 = (undefined, function (c, d) {
+  return (p5, p6, p7) => {
+    return lambda$(c, d, p5, p6, p7)
+  }
+});
+lscomp$ = function lscomp$(m, n, a, b, c, ls) {
+  let param0, param1, first3, first2, first1, first0, x0, y0, x1, y1, t, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    if (globalThis.Array.isArray(param0) && param0.length === 4) {
+      first0 = param0[0];
+      first1 = param0[1];
+      first2 = param0[2];
+      first3 = param0[3];
+      x0 = first0;
+      y0 = first1;
+      x1 = first2;
+      y1 = first3;
+      t = param1;
+      tmp = fish1.scale_vec2(b, x0, m);
+      tmp1 = fish1.vec_add(a, tmp);
+      tmp2 = fish1.scale_vec2(c, y0, n);
+      tmp3 = fish1.vec_add(tmp1, tmp2);
+      tmp4 = fish1.scale_vec2(b, x1, m);
+      tmp5 = fish1.vec_add(a, tmp4);
+      tmp6 = fish1.scale_vec2(c, y1, n);
+      tmp7 = fish1.vec_add(tmp5, tmp6);
+      tmp8 = fish1.tup2(tmp3, tmp7);
+      tmp9 = lscomp$(m, n, a, b, c, t);
+      return NofibPrelude.Cons(tmp8, tmp9)
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp = function lscomp(m, n, a, b, c) {
+  return (ls) => {
+    return lscomp$(m, n, a, b, c, ls)
+  }
+};
 fish1 = class fish {
   static #ls;
   static {
     fish1 = fish;
-    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66, tmp67, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74, tmp75, tmp76, tmp77, tmp78, tmp79, tmp80, tmp81, tmp82, tmp83, tmp84, tmp85, tmp86, tmp87, tmp88, tmp89, tmp90, tmp91, tmp92, tmp93, tmp94, tmp95, tmp96, tmp97, tmp98, tmp99, tmp100, tmp101, tmp102, tmp103, tmp104, tmp105, tmp106, tmp107, tmp108, tmp109, tmp110, tmp111, tmp112, tmp113, tmp114, tmp115, tmp116, tmp117, tmp118, tmp119, tmp120, lambda;
+    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66, tmp67, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74, tmp75, tmp76, tmp77, tmp78, tmp79, tmp80, tmp81, tmp82, tmp83, tmp84, tmp85, tmp86, tmp87, tmp88, tmp89, tmp90, tmp91, tmp92, tmp93, tmp94, tmp95, tmp96, tmp97, tmp98, tmp99, tmp100, tmp101, tmp102, tmp103, tmp104, tmp105, tmp106, tmp107, tmp108, tmp109, tmp110, tmp111, tmp112, tmp113, tmp114, tmp115, tmp116, tmp117, tmp118, tmp119, tmp120, lambda22;
     tmp = NofibPrelude.Cons([
       14,
       2,
@@ -732,10 +960,10 @@ fish1 = class fish {
       2
     ], tmp118);
     this.s_tile = tmp119;
-    lambda = (undefined, function () {
+    lambda22 = (undefined, function () {
       return fish.testFish_nofib(1)
     });
-    tmp120 = BenchmarkPrelude.benchmark(lambda);
+    tmp120 = BenchmarkPrelude.benchmark(lambda22);
     fish.#ls = tmp120;
     fish.#ls
   }
@@ -837,43 +1065,7 @@ fish1 = class fish {
     }
   } 
   static grid(m, n, segments, a2, b2, c1) {
-    let lscomp;
-    lscomp = function lscomp(ls) {
-      let param0, param1, first3, first2, first1, first0, x0, y0, x1, y1, t, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9;
-      if (ls instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (ls instanceof NofibPrelude.Cons.class) {
-        param0 = ls.head;
-        param1 = ls.tail;
-        if (globalThis.Array.isArray(param0) && param0.length === 4) {
-          first0 = param0[0];
-          first1 = param0[1];
-          first2 = param0[2];
-          first3 = param0[3];
-          x0 = first0;
-          y0 = first1;
-          x1 = first2;
-          y1 = first3;
-          t = param1;
-          tmp = fish.scale_vec2(b2, x0, m);
-          tmp1 = fish.vec_add(a2, tmp);
-          tmp2 = fish.scale_vec2(c1, y0, n);
-          tmp3 = fish.vec_add(tmp1, tmp2);
-          tmp4 = fish.scale_vec2(b2, x1, m);
-          tmp5 = fish.vec_add(a2, tmp4);
-          tmp6 = fish.scale_vec2(c1, y1, n);
-          tmp7 = fish.vec_add(tmp5, tmp6);
-          tmp8 = fish.tup2(tmp3, tmp7);
-          tmp9 = lscomp(t);
-          return NofibPrelude.Cons(tmp8, tmp9)
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    return lscomp(segments)
+    return lscomp$(m, n, a2, b2, c1, segments)
   } 
   static rot(p, a3, b3, c2) {
     let tmp, tmp1;
@@ -926,115 +1118,47 @@ fish1 = class fish {
     return fish.tile_to_grid(fish.s_tile, arg7, q63, q73)
   } 
   static quartet(a6, b6, c5, d, arg8, a61, a7) {
-    let lambda, lambda1;
-    lambda = (undefined, function (p5, p6, p7) {
-      return fish.beside(1, 1, a6, b6, p5, p6, p7)
-    });
-    lambda1 = (undefined, function (p5, p6, p7) {
-      return fish.beside(1, 1, c5, d, p5, p6, p7)
-    });
-    return fish.above(1, 1, lambda, lambda1, arg8, a61, a7)
+    let lambda$this, lambda$this1;
+    lambda$this = runtime.safeCall(lambda(a6, b6));
+    lambda$this1 = runtime.safeCall(lambda1(c5, d));
+    return fish.above(1, 1, lambda$this, lambda$this1, arg8, a61, a7)
   } 
   static t(arg9, q64, q74) {
     return fish.quartet(fish.p, fish.q, fish.r, fish.s, arg9, q64, q74)
   } 
   static cycle_(p11, arg10, p3, p4) {
-    let lambda, lambda1, lambda2;
-    lambda = (undefined, function (a8, b7, c6) {
-      let lambda3;
-      lambda3 = (undefined, function (a9, b8, c7) {
-        let lambda4;
-        lambda4 = (undefined, function (a10, b9, c8) {
-          return fish.rot(p11, a10, b9, c8)
-        });
-        return fish.rot(lambda4, a9, b8, c7)
-      });
-      return fish.rot(lambda3, a8, b7, c6)
-    });
-    lambda1 = (undefined, function (a8, b7, c6) {
-      return fish.rot(p11, a8, b7, c6)
-    });
-    lambda2 = (undefined, function (a8, b7, c6) {
-      let lambda3;
-      lambda3 = (undefined, function (a9, b8, c7) {
-        return fish.rot(p11, a9, b8, c7)
-      });
-      return fish.rot(lambda3, a8, b7, c6)
-    });
-    return fish.quartet(p11, lambda, lambda1, lambda2, arg10, p3, p4)
+    let lambda$this, lambda$this1, lambda$this2;
+    lambda$this = runtime.safeCall(lambda2(p11));
+    lambda$this1 = runtime.safeCall(lambda3(p11));
+    lambda$this2 = runtime.safeCall(lambda4(p11));
+    return fish.quartet(p11, lambda$this, lambda$this1, lambda$this2, arg10, p3, p4)
   } 
   static u(arg11, p21, p31) {
-    let lambda;
-    lambda = (undefined, function (a8, b7, c6) {
-      return fish.rot(fish.q, a8, b7, c6)
-    });
-    return fish.cycle_(lambda, arg11, p21, p31)
+    return fish.cycle_(lambda8, arg11, p21, p31)
   } 
   static side1(arg12, q65, q75) {
-    let lambda;
-    lambda = (undefined, function (a8, b7, c6) {
-      return fish.rot(fish.t, a8, b7, c6)
-    });
-    return fish.quartet(fish.nil, fish.nil, lambda, fish.t, arg12, q65, q75)
+    return fish.quartet(fish.nil, fish.nil, lambda9, fish.t, arg12, q65, q75)
   } 
   static side2(arg13, q66, q76) {
-    let lambda;
-    lambda = (undefined, function (a8, b7, c6) {
-      return fish.rot(fish.t, a8, b7, c6)
-    });
-    return fish.quartet(fish.side1, fish.side1, lambda, fish.t, arg13, q66, q76)
+    return fish.quartet(fish.side1, fish.side1, lambda10, fish.t, arg13, q66, q76)
   } 
   static corner1(arg14, q67, q77) {
     return fish.quartet(fish.nil, fish.nil, fish.nil, fish.u, arg14, q67, q77)
   } 
   static corner2(arg15, q68, q78) {
-    let lambda;
-    lambda = (undefined, function (a8, b7, c6) {
-      return fish.rot(fish.side1, a8, b7, c6)
-    });
-    return fish.quartet(fish.corner1, fish.side1, lambda, fish.u, arg15, q68, q78)
+    return fish.quartet(fish.corner1, fish.side1, lambda11, fish.u, arg15, q68, q78)
   } 
   static pseudocorner(arg16, q69, q79) {
-    let lambda, lambda1;
-    lambda = (undefined, function (a8, b7, c6) {
-      return fish.rot(fish.side2, a8, b7, c6)
-    });
-    lambda1 = (undefined, function (a8, b7, c6) {
-      return fish.rot(fish.t, a8, b7, c6)
-    });
-    return fish.quartet(fish.corner2, fish.side2, lambda, lambda1, arg16, q69, q79)
+    return fish.quartet(fish.corner2, fish.side2, lambda12, lambda13, arg16, q69, q79)
   } 
   static pseudolimit(arg17, p22, p32) {
     return fish.cycle_(fish.pseudocorner, arg17, p22, p32)
   } 
   static nonet(p12, p23, p33, p41, p5, p6, p7, p8, p9, arg18, arg21) {
-    let lambda, lambda1;
-    lambda = (undefined, function (b51, b61, b7) {
-      let lambda2;
-      lambda2 = (undefined, function (b52, b62, b71) {
-        return fish.beside(1, 1, p23, p33, b52, b62, b71)
-      });
-      return fish.beside(1, 2, p12, lambda2, b51, b61, b7)
-    });
-    lambda1 = (undefined, function (a11, a21, a31) {
-      let lambda2, lambda3;
-      lambda2 = (undefined, function (b51, b61, b7) {
-        let lambda4;
-        lambda4 = (undefined, function (b52, b62, b71) {
-          return fish.beside(1, 1, p5, p6, b52, b62, b71)
-        });
-        return fish.beside(1, 2, p41, lambda4, b51, b61, b7)
-      });
-      lambda3 = (undefined, function (b51, b61, b7) {
-        let lambda4;
-        lambda4 = (undefined, function (b52, b62, b71) {
-          return fish.beside(1, 1, p8, p9, b52, b62, b71)
-        });
-        return fish.beside(1, 2, p7, lambda4, b51, b61, b7)
-      });
-      return fish.above(1, 1, lambda2, lambda3, a11, a21, a31)
-    });
-    return fish.above(1, 2, lambda, lambda1, arg18, arg21)
+    let lambda$this, lambda$this1;
+    lambda$this = runtime.safeCall(lambda14(p12, p23, p33));
+    lambda$this1 = runtime.safeCall(lambda15(p41, p5, p6, p7, p8, p9));
+    return fish.above(1, 2, lambda$this, lambda$this1, arg18, arg21)
   } 
   static showFourTupleofInt(a_b_c_d) {
     let first3, first2, first1, first0, a8, b7, c6, d1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17;
@@ -1071,7 +1195,7 @@ fish1 = class fish {
     }
   } 
   static fmt(ls) {
-    let showl, param0, param1, x, xs, tmp, tmp1, tmp2, tmp3;
+    let param0, param1, x, xs, tmp, tmp1, tmp2, tmp3;
     if (ls instanceof NofibPrelude.Nil.class) {
       return NofibPrelude.nofibStringToList("[]")
     } else if (ls instanceof NofibPrelude.Cons.class) {
@@ -1079,24 +1203,6 @@ fish1 = class fish {
       param1 = ls.tail;
       x = param0;
       xs = param1;
-      showl = function showl(ls1, s) {
-        let param01, param11, x1, xs1, tmp4, tmp5, tmp6, tmp7;
-        if (ls1 instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Cons("]", s)
-        } else if (ls1 instanceof NofibPrelude.Cons.class) {
-          param01 = ls1.head;
-          param11 = ls1.tail;
-          x1 = param01;
-          xs1 = param11;
-          tmp4 = NofibPrelude.nofibStringToList(",|");
-          tmp5 = fish.showFourTupleofInt(x1);
-          tmp6 = showl(xs1, s);
-          tmp7 = NofibPrelude.append(tmp5, tmp6);
-          return NofibPrelude.append(tmp4, tmp7)
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
       tmp = NofibPrelude.nofibStringToList("[|");
       tmp1 = fish.showFourTupleofInt(x);
       tmp2 = showl(xs, "");
@@ -1107,25 +1213,8 @@ fish1 = class fish {
     }
   } 
   static testFish_nofib(n3) {
-    let tmp, tmp1, lambda;
-    lambda = (undefined, function (i) {
-      let n4, tmp2, tmp3, tmp4;
-      tmp2 = NofibPrelude.min(0, i);
-      n4 = tmp2;
-      tmp3 = 640 + n4;
-      tmp4 = 640 + n4;
-      return fish.pseudolimit([
-        0,
-        0
-      ], [
-        tmp3,
-        0
-      ], [
-        0,
-        tmp4
-      ])
-    });
-    tmp = lambda;
+    let tmp, tmp1;
+    tmp = lambda21;
     tmp1 = NofibPrelude.enumFromTo(0, n3);
     return NofibPrelude.map(tmp, tmp1)
   }

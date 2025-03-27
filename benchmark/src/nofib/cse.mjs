@@ -2,15 +2,374 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let cse1;
+let label, labelOf, lscomp, sim, cse1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, lambda11, lambda12, lambda13, lambda14, lambda15, lambda16, lambda17, lambda18, lambda19, lambda20, lambda$, lambda$1, lambda$2, lambda$3, lambda$4, lambda$5, lambda$6, lambda$7, lambda$8, lambda$9, lambda$10, lambda$11, lambda$12, lambda$13, lambda$14, lambda$15, lambda$16, lambda$17, lscomp$;
+lambda20 = (undefined, function (i) {
+  let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+  tmp = NofibPrelude.intMod(i, 6);
+  tmp1 = NofibPrelude.Cons(cse1.example5, NofibPrelude.Nil);
+  tmp2 = NofibPrelude.Cons(cse1.example4, tmp1);
+  tmp3 = NofibPrelude.Cons(cse1.example3, tmp2);
+  tmp4 = NofibPrelude.Cons(cse1.example2, tmp3);
+  tmp5 = NofibPrelude.Cons(cse1.example1, tmp4);
+  tmp6 = NofibPrelude.Cons(cse1.example0, tmp5);
+  tmp7 = NofibPrelude.take(tmp, tmp6);
+  return NofibPrelude.map(cse1.cse, tmp7)
+});
+lscomp$ = function lscomp$(s, rcs, ls) {
+  let param0, param1, first2, first1, first0, m, s_, cs_, t, scrut, scrut1, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    if (globalThis.Array.isArray(param0) && param0.length === 3) {
+      first0 = param0[0];
+      first1 = param0[1];
+      first2 = param0[2];
+      m = first0;
+      s_ = first1;
+      cs_ = first2;
+      t = param1;
+      scrut = s === s_;
+      if (scrut === true) {
+        scrut1 = NofibPrelude.listEq(cs_, rcs);
+        if (scrut1 === true) {
+          tmp = lscomp$(s, rcs, t);
+          return NofibPrelude.Cons(m, tmp)
+        } else {
+          return lscomp$(s, rcs, t)
+        }
+      } else {
+        return lscomp$(s, rcs, t)
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp = function lscomp(s, rcs) {
+  return (ls) => {
+    return lscomp$(s, rcs, ls)
+  }
+};
+lambda$17 = function lambda$(n, r, ms, x) {
+  let tmp;
+  tmp = NofibPrelude.head(ms);
+  return cse1.newlyDefined(n, tmp, r, x)
+};
+lambda18 = (undefined, function (n, r, ms) {
+  return (x) => {
+    return lambda$17(n, r, ms, x)
+  }
+});
+sim = function sim(n_s_cs, r_lg) {
+  let first2, first1, first0, n, s, cs, first11, first01, r, lg, rcs, ms, scrut, tmp, tmp1, tmp2, lambda$this;
+  if (globalThis.Array.isArray(n_s_cs) && n_s_cs.length === 3) {
+    first0 = n_s_cs[0];
+    first1 = n_s_cs[1];
+    first2 = n_s_cs[2];
+    n = first0;
+    s = first1;
+    cs = first2;
+    if (globalThis.Array.isArray(r_lg) && r_lg.length === 2) {
+      first01 = r_lg[0];
+      first11 = r_lg[1];
+      r = first01;
+      lg = first11;
+      tmp = NofibPrelude.map(r, cs);
+      rcs = tmp;
+      tmp1 = lscomp$(s, rcs, lg);
+      ms = tmp1;
+      scrut = NofibPrelude.null_(ms);
+      if (scrut === true) {
+        tmp2 = NofibPrelude.Cons([
+          n,
+          s,
+          rcs
+        ], lg);
+        return [
+          r,
+          tmp2
+        ]
+      } else {
+        lambda$this = runtime.safeCall(lambda18(n, r, ms));
+        return [
+          lambda$this,
+          lg
+        ]
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda19 = (undefined, function (x) {
+  return x
+});
+lambda17 = (undefined, function (_p) {
+  return cse1.retURN(false)
+});
+lambda$16 = function lambda$(n, us) {
+  let scrut, tmp, tmp1;
+  scrut = NofibPrelude.inList(n, us);
+  if (scrut === true) {
+    return cse1.retURN(true)
+  } else {
+    tmp = NofibPrelude.Cons(n, us);
+    tmp1 = cse1.set_(tmp);
+    return cse1.bind(tmp1, lambda17)
+  }
+};
+lambda16 = (undefined, function (n) {
+  return (us) => {
+    return lambda$16(n, us)
+  }
+});
+labelOf = function labelOf(t) {
+  let param0, param1, first1, first0, n, x, xs;
+  if (t instanceof cse1.Node.class) {
+    param0 = t.a;
+    param1 = t.b;
+    if (globalThis.Array.isArray(param0) && param0.length === 2) {
+      first0 = param0[0];
+      first1 = param0[1];
+      n = first0;
+      x = first1;
+      xs = param1;
+      return n
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda$15 = function lambda$(x, n, ts) {
+  let tmp;
+  tmp = cse1.Node([
+    n,
+    x
+  ], ts);
+  return cse1.retURN(tmp)
+};
+lambda15 = (undefined, function (x, n) {
+  return (ts) => {
+    return lambda$15(x, n, ts)
+  }
+});
+lambda$14 = function lambda$(x, xs, n) {
+  let tmp, lambda$this;
+  tmp = cse1.mmapl(label, xs);
+  lambda$this = runtime.safeCall(lambda15(x, n));
+  return cse1.bind(tmp, lambda$this)
+};
+lambda14 = (undefined, function (x, xs) {
+  return (n) => {
+    return lambda$14(x, xs, n)
+  }
+});
+label = function label(t) {
+  let param0, param1, x, xs, lambda$this;
+  if (t instanceof cse1.Node.class) {
+    param0 = t.a;
+    param1 = t.b;
+    x = param0;
+    xs = param1;
+    lambda$this = runtime.safeCall(lambda14(x, xs));
+    return cse1.bind(cse1.incr, lambda$this)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda$13 = function lambda$(s_, s) {
+  return [
+    s_,
+    s
+  ]
+};
+lambda13 = (undefined, function (s_) {
+  return (s) => {
+    return lambda$13(s_, s)
+  }
+});
+lambda$12 = function lambda$(f, s) {
+  let tmp;
+  tmp = runtime.safeCall(f(s));
+  return [
+    tmp,
+    s
+  ]
+};
+lambda12 = (undefined, function (f) {
+  return (s) => {
+    return lambda$12(f, s)
+  }
+});
+lambda$11 = function lambda$(f, s) {
+  let tmp;
+  tmp = runtime.safeCall(f(s));
+  return [
+    s,
+    tmp
+  ]
+};
+lambda11 = (undefined, function (f) {
+  return (s) => {
+    return lambda$11(f, s)
+  }
+});
+lambda$10 = function lambda$(t, f, cond) {
+  if (cond === true) {
+    return t
+  } else {
+    return f
+  }
+};
+lambda10 = (undefined, function (t, f) {
+  return (cond) => {
+    return lambda$10(t, f, cond)
+  }
+});
+lambda$9 = function lambda$(f, x, y) {
+  return runtime.safeCall(f(x, y))
+};
+lambda9 = (undefined, function (f, x) {
+  return (y) => {
+    return lambda$9(f, x, y)
+  }
+});
+lambda$8 = function lambda$(f, xs, fax) {
+  return cse1.mfoldl(f, fax, xs)
+};
+lambda8 = (undefined, function (f, xs) {
+  return (fax) => {
+    return lambda$8(f, xs, fax)
+  }
+});
+lambda$7 = function lambda$(ys, y) {
+  let tmp;
+  tmp = NofibPrelude.Cons(y, ys);
+  return cse1.retURN(tmp)
+};
+lambda7 = (undefined, function (ys) {
+  return (y) => {
+    return lambda$7(ys, y)
+  }
+});
+lambda$6 = function lambda$(f, x, ys) {
+  let tmp, lambda$this;
+  tmp = runtime.safeCall(f(x));
+  lambda$this = runtime.safeCall(lambda7(ys));
+  return cse1.bind(tmp, lambda$this)
+};
+lambda6 = (undefined, function (f, x) {
+  return (ys) => {
+    return lambda$6(f, x, ys)
+  }
+});
+lambda$5 = function lambda$(b, bs) {
+  let tmp;
+  tmp = NofibPrelude.Cons(b, bs);
+  return cse1.retURN(tmp)
+};
+lambda5 = (undefined, function (b) {
+  return (bs) => {
+    return lambda$5(b, bs)
+  }
+});
+lambda$4 = function lambda$(f, as_, b) {
+  let tmp, lambda$this;
+  tmp = cse1.mmapl(f, as_);
+  lambda$this = runtime.safeCall(lambda5(b));
+  return cse1.bind(tmp, lambda$this)
+};
+lambda4 = (undefined, function (f, as_) {
+  return (b) => {
+    return lambda$4(f, as_, b)
+  }
+});
+lambda$3 = function lambda$(f, m, s) {
+  let scrut, first1, first0, s_, a, tmp;
+  scrut = runtime.safeCall(m(s));
+  if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
+    first0 = scrut[0];
+    first1 = scrut[1];
+    s_ = first0;
+    a = first1;
+    tmp = runtime.safeCall(f(a));
+    return [
+      s_,
+      tmp
+    ]
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda3 = (undefined, function (f, m) {
+  return (s) => {
+    return lambda$3(f, m, s)
+  }
+});
+lambda$2 = function lambda$(m, s) {
+  let scrut, first1, first0, s_, ma;
+  scrut = runtime.safeCall(m(s));
+  if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
+    first0 = scrut[0];
+    first1 = scrut[1];
+    s_ = first0;
+    ma = first1;
+    return runtime.safeCall(ma(s_))
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda2 = (undefined, function (m) {
+  return (s) => {
+    return lambda$2(m, s)
+  }
+});
+lambda$1 = function lambda$(m, f, s) {
+  let scrut, first1, first0, s_, a, tmp;
+  scrut = runtime.safeCall(m(s));
+  if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
+    first0 = scrut[0];
+    first1 = scrut[1];
+    s_ = first0;
+    a = first1;
+    tmp = runtime.safeCall(f(a));
+    return runtime.safeCall(tmp(s_))
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda1 = (undefined, function (m, f) {
+  return (s) => {
+    return lambda$1(m, f, s)
+  }
+});
+lambda$ = function lambda$(a, s) {
+  return [
+    s,
+    a
+  ]
+};
+lambda = (undefined, function (a) {
+  return (s) => {
+    return lambda$(a, s)
+  }
+});
 cse1 = class cse {
   static {
     cse1 = cse;
-    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, lambda, lambda1;
-    lambda = (undefined, function (x) {
+    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, lambda21, lambda22;
+    lambda21 = (undefined, function (x) {
       return x + 1
     });
-    tmp = cse.update(lambda);
+    tmp = cse.update(lambda21);
     this.incr = tmp;
     this.Node = function Node(a1, b1) {
       return new Node.class(a1, b1);
@@ -58,81 +417,27 @@ cse1 = class cse {
     tmp24 = NofibPrelude.scanr(cse.plus_, cse.zerO, tmp23);
     tmp25 = cse.prod(tmp24);
     this.example5 = tmp25;
-    lambda1 = (undefined, function () {
+    lambda22 = (undefined, function () {
       let tmp26;
       tmp26 = cse.testCse_nofib(6);
       return runtime.safeCall(tmp26.toString())
     });
-    BenchmarkPrelude.benchmark(lambda1)
+    BenchmarkPrelude.benchmark(lambda22)
   }
   static retURN(a) {
-    let lambda;
-    lambda = (undefined, function (s) {
-      return [
-        s,
-        a
-      ]
-    });
-    return lambda
+    return runtime.safeCall(lambda(a))
   } 
   static bind(m, f) {
-    let lambda;
-    lambda = (undefined, function (s) {
-      let scrut, first1, first0, s_, a1, tmp;
-      scrut = runtime.safeCall(m(s));
-      if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
-        first0 = scrut[0];
-        first1 = scrut[1];
-        s_ = first0;
-        a1 = first1;
-        tmp = runtime.safeCall(f(a1));
-        return runtime.safeCall(tmp(s_))
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    return lambda
+    return runtime.safeCall(lambda1(m, f))
   } 
   static join(m1) {
-    let lambda;
-    lambda = (undefined, function (s) {
-      let scrut, first1, first0, s_, ma;
-      scrut = runtime.safeCall(m1(s));
-      if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
-        first0 = scrut[0];
-        first1 = scrut[1];
-        s_ = first0;
-        ma = first1;
-        return runtime.safeCall(ma(s_))
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    return lambda
+    return runtime.safeCall(lambda2(m1))
   } 
   static mmap(f1, m2) {
-    let lambda;
-    lambda = (undefined, function (s) {
-      let scrut, first1, first0, s_, a1, tmp;
-      scrut = runtime.safeCall(m2(s));
-      if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
-        first0 = scrut[0];
-        first1 = scrut[1];
-        s_ = first0;
-        a1 = first1;
-        tmp = runtime.safeCall(f1(a1));
-        return [
-          s_,
-          tmp
-        ]
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    return lambda
+    return runtime.safeCall(lambda3(f1, m2))
   } 
   static mmapl(f2, aas) {
-    let param0, param1, a1, as_, tmp, lambda;
+    let param0, param1, a1, as_, tmp, lambda$this;
     if (aas instanceof NofibPrelude.Nil.class) {
       return cse.retURN(NofibPrelude.Nil)
     } else if (aas instanceof NofibPrelude.Cons.class) {
@@ -141,23 +446,14 @@ cse1 = class cse {
       a1 = param0;
       as_ = param1;
       tmp = runtime.safeCall(f2(a1));
-      lambda = (undefined, function (b) {
-        let tmp1, lambda1;
-        tmp1 = cse.mmapl(f2, as_);
-        lambda1 = (undefined, function (bs) {
-          let tmp2;
-          tmp2 = NofibPrelude.Cons(b, bs);
-          return cse.retURN(tmp2)
-        });
-        return cse.bind(tmp1, lambda1)
-      });
-      return cse.bind(tmp, lambda)
+      lambda$this = runtime.safeCall(lambda4(f2, as_));
+      return cse.bind(tmp, lambda$this)
     } else {
       throw new globalThis.Error("match error");
     }
   } 
   static mmapr(f3, xs) {
-    let param0, param1, x, xs1, tmp, lambda;
+    let param0, param1, x, xs1, tmp, lambda$this;
     if (xs instanceof NofibPrelude.Nil.class) {
       return cse.retURN(NofibPrelude.Nil)
     } else if (xs instanceof NofibPrelude.Cons.class) {
@@ -166,23 +462,14 @@ cse1 = class cse {
       x = param0;
       xs1 = param1;
       tmp = cse.mmapr(f3, xs1);
-      lambda = (undefined, function (ys) {
-        let tmp1, lambda1;
-        tmp1 = runtime.safeCall(f3(x));
-        lambda1 = (undefined, function (y) {
-          let tmp2;
-          tmp2 = NofibPrelude.Cons(y, ys);
-          return cse.retURN(tmp2)
-        });
-        return cse.bind(tmp1, lambda1)
-      });
-      return cse.bind(tmp, lambda)
+      lambda$this = runtime.safeCall(lambda6(f3, x));
+      return cse.bind(tmp, lambda$this)
     } else {
       throw new globalThis.Error("match error");
     }
   } 
   static mfoldl(f4, a1, xs1) {
-    let param0, param1, x, xs2, tmp, lambda;
+    let param0, param1, x, xs2, tmp, lambda$this;
     if (xs1 instanceof NofibPrelude.Nil.class) {
       return cse.retURN(a1)
     } else if (xs1 instanceof NofibPrelude.Cons.class) {
@@ -191,16 +478,14 @@ cse1 = class cse {
       x = param0;
       xs2 = param1;
       tmp = runtime.safeCall(f4(a1, x));
-      lambda = (undefined, function (fax) {
-        return cse.mfoldl(f4, fax, xs2)
-      });
-      return cse.bind(tmp, lambda)
+      lambda$this = runtime.safeCall(lambda8(f4, xs2));
+      return cse.bind(tmp, lambda$this)
     } else {
       throw new globalThis.Error("match error");
     }
   } 
   static mfoldr(f5, a2, xs2) {
-    let param0, param1, x, xs3, tmp, lambda;
+    let param0, param1, x, xs3, tmp, lambda$this;
     if (xs2 instanceof NofibPrelude.Nil.class) {
       return cse.retURN(a2)
     } else if (xs2 instanceof NofibPrelude.Cons.class) {
@@ -209,24 +494,16 @@ cse1 = class cse {
       x = param0;
       xs3 = param1;
       tmp = cse.mfoldr(f5, a2, xs3);
-      lambda = (undefined, function (y) {
-        return runtime.safeCall(f5(x, y))
-      });
-      return cse.bind(tmp, lambda)
+      lambda$this = runtime.safeCall(lambda9(f5, x));
+      return cse.bind(tmp, lambda$this)
     } else {
       throw new globalThis.Error("match error");
     }
   } 
   static mif(c, t, f6) {
-    let lambda;
-    lambda = (undefined, function (cond) {
-      if (cond === true) {
-        return t
-      } else {
-        return f6
-      }
-    });
-    return cse.bind(c, lambda)
+    let lambda$this;
+    lambda$this = runtime.safeCall(lambda10(t, f6));
+    return cse.bind(c, lambda$this)
   } 
   static startingWith(m3, v) {
     let scrut, first1, first0, final1, answer;
@@ -248,90 +525,21 @@ cse1 = class cse {
     ]
   } 
   static fetchWith(f7) {
-    let lambda;
-    lambda = (undefined, function (s1) {
-      let tmp;
-      tmp = runtime.safeCall(f7(s1));
-      return [
-        s1,
-        tmp
-      ]
-    });
-    return lambda
+    return runtime.safeCall(lambda11(f7))
   } 
   static update(f8) {
-    let lambda;
-    lambda = (undefined, function (s1) {
-      let tmp;
-      tmp = runtime.safeCall(f8(s1));
-      return [
-        tmp,
-        s1
-      ]
-    });
-    return lambda
+    return runtime.safeCall(lambda12(f8))
   } 
   static set_(s_) {
-    let lambda;
-    lambda = (undefined, function (s1) {
-      return [
-        s_,
-        s1
-      ]
-    });
-    return lambda
+    return runtime.safeCall(lambda13(s_))
   } 
   static labelTree(t1) {
-    let label, tmp;
-    label = function label(t2) {
-      let param0, param1, x, xs3, lambda;
-      if (t2 instanceof cse.Node.class) {
-        param0 = t2.a;
-        param1 = t2.b;
-        x = param0;
-        xs3 = param1;
-        lambda = (undefined, function (n) {
-          let tmp1, lambda1;
-          tmp1 = cse.mmapl(label, xs3);
-          lambda1 = (undefined, function (ts) {
-            let tmp2;
-            tmp2 = cse.Node([
-              n,
-              x
-            ], ts);
-            return cse.retURN(tmp2)
-          });
-          return cse.bind(tmp1, lambda1)
-        });
-        return cse.bind(cse.incr, lambda)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let tmp;
     tmp = label(t1);
     return cse.startingWith(tmp, 0)
   } 
   static ltGraph(t2) {
-    let labelOf, param0, param1, first1, first0, n, x, xs3, tmp, tmp1, tmp2;
-    labelOf = function labelOf(t3) {
-      let param01, param11, first11, first01, n1, x1, xs4;
-      if (t3 instanceof cse.Node.class) {
-        param01 = t3.a;
-        param11 = t3.b;
-        if (globalThis.Array.isArray(param01) && param01.length === 2) {
-          first01 = param01[0];
-          first11 = param01[1];
-          n1 = first01;
-          x1 = first11;
-          xs4 = param11;
-          return n1
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let param0, param1, first1, first0, n, x, xs3, tmp, tmp1, tmp2;
     if (t2 instanceof cse.Node.class) {
       param0 = t2.a;
       param1 = t2.b;
@@ -357,22 +565,8 @@ cse1 = class cse {
     }
   } 
   static visited(n) {
-    let tmp, lambda;
-    lambda = (undefined, function (us) {
-      let scrut, tmp1, tmp2, lambda1;
-      scrut = NofibPrelude.inList(n, us);
-      if (scrut === true) {
-        return cse.retURN(true)
-      } else {
-        tmp1 = NofibPrelude.Cons(n, us);
-        tmp2 = cse.set_(tmp1);
-        lambda1 = (undefined, function (_p) {
-          return cse.retURN(false)
-        });
-        return cse.bind(tmp2, lambda1)
-      }
-    });
-    tmp = lambda;
+    let tmp;
+    tmp = runtime.safeCall(lambda16(n));
     return cse.bind(cse.fetch, tmp)
   } 
   static newlyDefined(x, fx, f9, y) {
@@ -385,93 +579,9 @@ cse1 = class cse {
     }
   } 
   static findCommon(ls) {
-    let sim, scrut, first1, first0, a3, b, tmp, lambda;
-    sim = function sim(n_s_cs, r_lg) {
-      let lscomp, first2, first11, first01, n1, s1, cs, first12, first02, r, lg, rcs, ms, scrut1, tmp1, tmp2, tmp3, lambda1;
-      if (globalThis.Array.isArray(n_s_cs) && n_s_cs.length === 3) {
-        first01 = n_s_cs[0];
-        first11 = n_s_cs[1];
-        first2 = n_s_cs[2];
-        n1 = first01;
-        s1 = first11;
-        cs = first2;
-        if (globalThis.Array.isArray(r_lg) && r_lg.length === 2) {
-          first02 = r_lg[0];
-          first12 = r_lg[1];
-          r = first02;
-          lg = first12;
-          lscomp = function lscomp(ls1) {
-            let param0, param1, first21, first13, first03, m4, s_1, cs_, t3, scrut2, scrut3, tmp4;
-            if (ls1 instanceof NofibPrelude.Nil.class) {
-              return NofibPrelude.Nil
-            } else if (ls1 instanceof NofibPrelude.Cons.class) {
-              param0 = ls1.head;
-              param1 = ls1.tail;
-              if (globalThis.Array.isArray(param0) && param0.length === 3) {
-                first03 = param0[0];
-                first13 = param0[1];
-                first21 = param0[2];
-                m4 = first03;
-                s_1 = first13;
-                cs_ = first21;
-                t3 = param1;
-                scrut2 = s1 === s_1;
-                if (scrut2 === true) {
-                  scrut3 = NofibPrelude.listEq(cs_, rcs);
-                  if (scrut3 === true) {
-                    tmp4 = lscomp(t3);
-                    return NofibPrelude.Cons(m4, tmp4)
-                  } else {
-                    return lscomp(t3)
-                  }
-                } else {
-                  return lscomp(t3)
-                }
-              } else {
-                throw new globalThis.Error("match error");
-              }
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          };
-          tmp1 = NofibPrelude.map(r, cs);
-          rcs = tmp1;
-          tmp2 = lscomp(lg);
-          ms = tmp2;
-          scrut1 = NofibPrelude.null_(ms);
-          if (scrut1 === true) {
-            tmp3 = NofibPrelude.Cons([
-              n1,
-              s1,
-              rcs
-            ], lg);
-            return [
-              r,
-              tmp3
-            ]
-          } else {
-            lambda1 = (undefined, function (x1) {
-              let tmp4;
-              tmp4 = NofibPrelude.head(ms);
-              return cse.newlyDefined(n1, tmp4, r, x1)
-            });
-            return [
-              lambda1,
-              lg
-            ]
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    lambda = (undefined, function (x1) {
-      return x1
-    });
+    let scrut, first1, first0, a3, b, tmp;
     scrut = NofibPrelude.foldr(sim, [
-      lambda,
+      lambda19,
       NofibPrelude.Nil
     ], ls);
     if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
@@ -507,20 +617,8 @@ cse1 = class cse {
     return cse.Node("X", xs3)
   } 
   static testCse_nofib(n1) {
-    let tmp, tmp1, lambda;
-    lambda = (undefined, function (i) {
-      let tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9;
-      tmp2 = NofibPrelude.intMod(i, 6);
-      tmp3 = NofibPrelude.Cons(cse.example5, NofibPrelude.Nil);
-      tmp4 = NofibPrelude.Cons(cse.example4, tmp3);
-      tmp5 = NofibPrelude.Cons(cse.example3, tmp4);
-      tmp6 = NofibPrelude.Cons(cse.example2, tmp5);
-      tmp7 = NofibPrelude.Cons(cse.example1, tmp6);
-      tmp8 = NofibPrelude.Cons(cse.example0, tmp7);
-      tmp9 = NofibPrelude.take(tmp2, tmp8);
-      return NofibPrelude.map(cse.cse, tmp9)
-    });
-    tmp = lambda;
+    let tmp, tmp1;
+    tmp = lambda20;
     tmp1 = NofibPrelude.enumFromTo(1, n1);
     return NofibPrelude.map(tmp, tmp1)
   }

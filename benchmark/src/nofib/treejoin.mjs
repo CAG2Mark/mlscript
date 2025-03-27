@@ -2,11 +2,67 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let treejoin1;
+let readInt_, treejoin1, lambda, lambda1;
+lambda = (undefined, function (caseScrut) {
+  let first2, first1, first0, xx;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 3) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    first2 = caseScrut[2];
+    xx = first0;
+    return xx
+  } else {
+    throw new globalThis.Error("match error");
+  }
+});
+lambda1 = (undefined, function (caseScrut) {
+  let first2, first1, first0, xx;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 3) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    first2 = caseScrut[2];
+    xx = first0;
+    return xx
+  } else {
+    throw new globalThis.Error("match error");
+  }
+});
+readInt_ = function readInt_(n, cs) {
+  let s_, param0, param1, c, cs_, s_1, scrut, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
+  if (cs instanceof NofibPrelude.Cons.class) {
+    param0 = cs.head;
+    param1 = cs.tail;
+    c = param0;
+    cs_ = param1;
+    scrut = treejoin1.isDigit(c);
+    if (scrut === true) {
+      tmp = n * 10;
+      tmp1 = runtime.safeCall(c.codePointAt(0));
+      tmp2 = tmp + tmp1;
+      tmp3 = tmp2 - 48;
+      return readInt_(tmp3, cs_)
+    } else {
+      tmp4 = NofibPrelude.Cons(c, cs);
+      tmp5 = NofibPrelude.dropWhile(treejoin1.isSpace, tmp4);
+      s_1 = tmp5;
+      return [
+        n,
+        s_1
+      ]
+    }
+  } else {
+    tmp6 = NofibPrelude.dropWhile(treejoin1.isSpace, cs);
+    s_ = tmp6;
+    return [
+      n,
+      s_
+    ]
+  }
+};
 treejoin1 = class treejoin {
   static {
     treejoin1 = treejoin;
-    let lambda;
+    let lambda2;
     this.Tree = class Tree {
       constructor() {}
       toString() { return "Tree"; }
@@ -42,12 +98,12 @@ treejoin1 = class treejoin {
     };
     this.Empty = new Empty$class;
     this.Empty.class = Empty$class;
-    lambda = (undefined, function () {
+    lambda2 = (undefined, function () {
       let tmp;
       tmp = treejoin.testTreejoin_nofib(0);
       return runtime.safeCall(tmp.toString())
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda2)
   }
   static isSpace(c) {
     let tmp, tmp1;
@@ -139,39 +195,6 @@ treejoin1 = class treejoin {
     }
   } 
   static readInt(s) {
-    let readInt_;
-    readInt_ = function readInt_(n, cs) {
-      let s_, param0, param1, c2, cs_, s_1, scrut, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
-      if (cs instanceof NofibPrelude.Cons.class) {
-        param0 = cs.head;
-        param1 = cs.tail;
-        c2 = param0;
-        cs_ = param1;
-        scrut = treejoin.isDigit(c2);
-        if (scrut === true) {
-          tmp = n * 10;
-          tmp1 = runtime.safeCall(c2.codePointAt(0));
-          tmp2 = tmp + tmp1;
-          tmp3 = tmp2 - 48;
-          return readInt_(tmp3, cs_)
-        } else {
-          tmp4 = NofibPrelude.Cons(c2, cs);
-          tmp5 = NofibPrelude.dropWhile(treejoin.isSpace, tmp4);
-          s_1 = tmp5;
-          return [
-            n,
-            s_1
-          ]
-        }
-      } else {
-        tmp6 = NofibPrelude.dropWhile(treejoin.isSpace, cs);
-        s_ = tmp6;
-        return [
-          n,
-          s_
-        ]
-      }
-    };
     return readInt_(0, s)
   } 
   static join(t11, t2, j) {
@@ -280,7 +303,7 @@ treejoin1 = class treejoin {
     }
   } 
   static testTreejoin_nofib(n) {
-    let c11, c2, a, b, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, lambda, lambda1;
+    let c11, c2, a, b, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9;
     tmp = runtime.safeCall(fs.readFileSync("hkmc2/shared/src/test/mlscript/nofib/input/1500.1"));
     tmp1 = runtime.safeCall(tmp.toString());
     tmp2 = NofibPrelude.nofibStringToList(tmp1);
@@ -289,33 +312,9 @@ treejoin1 = class treejoin {
     tmp4 = runtime.safeCall(tmp3.toString());
     tmp5 = NofibPrelude.nofibStringToList(tmp4);
     c2 = tmp5;
-    lambda = (undefined, function (caseScrut) {
-      let first2, first1, first0, xx;
-      if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 3) {
-        first0 = caseScrut[0];
-        first1 = caseScrut[1];
-        first2 = caseScrut[2];
-        xx = first0;
-        return xx
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
     tmp6 = lambda;
     tmp7 = treejoin.readTree(tmp6, c11, treejoin.Empty);
     a = tmp7;
-    lambda1 = (undefined, function (caseScrut) {
-      let first2, first1, first0, xx;
-      if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 3) {
-        first0 = caseScrut[0];
-        first1 = caseScrut[1];
-        first2 = caseScrut[2];
-        xx = first0;
-        return xx
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
     tmp8 = lambda1;
     tmp9 = treejoin.readTree(tmp8, c2, treejoin.Empty);
     b = tmp9;

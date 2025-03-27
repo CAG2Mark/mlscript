@@ -2,17 +2,129 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let scc1;
+let swap, span_tree, new_range, scc1, lambda, lambda1, lambda$, lambda$1;
+swap = function swap(a) {
+  let first1, first0, f, s;
+  if (globalThis.Array.isArray(a) && a.length === 2) {
+    first0 = a[0];
+    first1 = a[1];
+    f = first0;
+    s = first1;
+    return [
+      s,
+      f
+    ]
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+new_range = function new_range(xys, w) {
+  let param0, param1, first1, first0, x, y, xys1, scrut, tmp;
+  if (xys instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (xys instanceof NofibPrelude.Cons.class) {
+    param0 = xys.head;
+    param1 = xys.tail;
+    if (globalThis.Array.isArray(param0) && param0.length === 2) {
+      first0 = param0[0];
+      first1 = param0[1];
+      x = first0;
+      y = first1;
+      xys1 = param1;
+      scrut = x == w;
+      if (scrut === true) {
+        tmp = new_range(xys1, w);
+        return NofibPrelude.Cons(y, tmp)
+      } else {
+        return new_range(xys1, w)
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+span_tree = function span_tree(r, vsns, xs) {
+  let first1, first0, vs, ns, param0, param1, x, xs1, scrut, first11, first01, vs$_, ns$_, scrut1, tmp, tmp1, tmp2, tmp3;
+  if (globalThis.Array.isArray(vsns) && vsns.length === 2) {
+    first0 = vsns[0];
+    first1 = vsns[1];
+    vs = first0;
+    ns = first1;
+    if (xs instanceof NofibPrelude.Nil.class) {
+      return [
+        vs,
+        ns
+      ]
+    } else if (xs instanceof NofibPrelude.Cons.class) {
+      param0 = xs.head;
+      param1 = xs.tail;
+      x = param0;
+      xs1 = param1;
+      scrut1 = NofibPrelude.inList(x, vs);
+      if (scrut1 === true) {
+        return span_tree(r, [
+          vs,
+          ns
+        ], xs1)
+      } else {
+        tmp = NofibPrelude.Cons(x, vs);
+        tmp1 = runtime.safeCall(r(x));
+        scrut = scc1.dfs(r, [
+          tmp,
+          NofibPrelude.Nil
+        ], tmp1);
+        if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
+          first01 = scrut[0];
+          first11 = scrut[1];
+          vs$_ = first01;
+          ns$_ = first11;
+          tmp2 = NofibPrelude.Cons(x, ns$_);
+          tmp3 = NofibPrelude.Cons(tmp2, ns);
+          return span_tree(r, [
+            vs$_,
+            tmp3
+          ], xs1)
+        } else {
+          throw new globalThis.Error("match error");
+        }
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda$1 = function lambda$(es, x) {
+  return new_range(es, x)
+};
+lambda = (undefined, function (es) {
+  return (x) => {
+    return lambda$1(es, x)
+  }
+});
+lambda$ = function lambda$(es, x) {
+  let tmp;
+  tmp = NofibPrelude.map(swap, es);
+  return new_range(tmp, x)
+};
+lambda1 = (undefined, function (es) {
+  return (x) => {
+    return lambda$(es, x)
+  }
+});
 scc1 = class scc {
   static {
     scc1 = scc;
-    let lambda;
-    lambda = (undefined, function () {
+    let lambda2;
+    lambda2 = (undefined, function () {
       let tmp;
       tmp = scc.testScc_nofib(0);
       return runtime.safeCall(tmp.toString())
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda2)
   }
   static dfs(r, vsns, xs) {
     let first1, first0, vs, ns, param0, param1, x, xs1, scrut, first11, first01, vs$_, ns$_, scrut1, tmp, tmp1, tmp2, tmp3;
@@ -67,115 +179,15 @@ scc1 = class scc {
     }
   } 
   static stronglyConnComp(es, vs) {
-    let swap, span_tree, new_range, tmp, tmp1, tmp2, lambda, lambda1;
-    swap = function swap(a) {
-      let first1, first0, f, s;
-      if (globalThis.Array.isArray(a) && a.length === 2) {
-        first0 = a[0];
-        first1 = a[1];
-        f = first0;
-        s = first1;
-        return [
-          s,
-          f
-        ]
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    new_range = function new_range(xys, w) {
-      let param0, param1, first1, first0, x, y, xys1, scrut, tmp3;
-      if (xys instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (xys instanceof NofibPrelude.Cons.class) {
-        param0 = xys.head;
-        param1 = xys.tail;
-        if (globalThis.Array.isArray(param0) && param0.length === 2) {
-          first0 = param0[0];
-          first1 = param0[1];
-          x = first0;
-          y = first1;
-          xys1 = param1;
-          scrut = x == w;
-          if (scrut === true) {
-            tmp3 = new_range(xys1, w);
-            return NofibPrelude.Cons(y, tmp3)
-          } else {
-            return new_range(xys1, w)
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    span_tree = function span_tree(r1, vsns1, xs1) {
-      let first1, first0, vs1, ns, param0, param1, x, xs2, scrut, first11, first01, vs$_, ns$_, scrut1, tmp3, tmp4, tmp5, tmp6;
-      if (globalThis.Array.isArray(vsns1) && vsns1.length === 2) {
-        first0 = vsns1[0];
-        first1 = vsns1[1];
-        vs1 = first0;
-        ns = first1;
-        if (xs1 instanceof NofibPrelude.Nil.class) {
-          return [
-            vs1,
-            ns
-          ]
-        } else if (xs1 instanceof NofibPrelude.Cons.class) {
-          param0 = xs1.head;
-          param1 = xs1.tail;
-          x = param0;
-          xs2 = param1;
-          scrut1 = NofibPrelude.inList(x, vs1);
-          if (scrut1 === true) {
-            return span_tree(r1, [
-              vs1,
-              ns
-            ], xs2)
-          } else {
-            tmp3 = NofibPrelude.Cons(x, vs1);
-            tmp4 = runtime.safeCall(r1(x));
-            scrut = scc.dfs(r1, [
-              tmp3,
-              NofibPrelude.Nil
-            ], tmp4);
-            if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
-              first01 = scrut[0];
-              first11 = scrut[1];
-              vs$_ = first01;
-              ns$_ = first11;
-              tmp5 = NofibPrelude.Cons(x, ns$_);
-              tmp6 = NofibPrelude.Cons(tmp5, ns);
-              return span_tree(r1, [
-                vs$_,
-                tmp6
-              ], xs2)
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    lambda = (undefined, function (x) {
-      return new_range(es, x)
-    });
-    tmp = scc.dfs(lambda, [
+    let tmp, tmp1, tmp2, lambda$this, lambda$this1;
+    lambda$this = runtime.safeCall(lambda(es));
+    tmp = scc.dfs(lambda$this, [
       NofibPrelude.Nil,
       NofibPrelude.Nil
     ], vs);
     tmp1 = NofibPrelude.snd(tmp);
-    lambda1 = (undefined, function (x) {
-      let tmp3;
-      tmp3 = NofibPrelude.map(swap, es);
-      return new_range(tmp3, x)
-    });
-    tmp2 = span_tree(lambda1, [
+    lambda$this1 = runtime.safeCall(lambda1(es));
+    tmp2 = span_tree(lambda$this1, [
       NofibPrelude.Nil,
       NofibPrelude.Nil
     ], tmp1);

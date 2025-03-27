@@ -2,15 +2,99 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let gcd1;
+let lscomp2, lscomp1, gcd1, lambda, lambda1, lscomp1$, lscomp2$;
+lscomp2$ = function lscomp2$(ms, h1, t1, p2) {
+  let param0, param1, h2, t2, tmp;
+  if (p2 instanceof NofibPrelude.Nil.class) {
+    return lscomp1$(ms, t1)
+  } else if (p2 instanceof NofibPrelude.Cons.class) {
+    param0 = p2.head;
+    param1 = p2.tail;
+    h2 = param0;
+    t2 = param1;
+    tmp = lscomp2$(ms, h1, t1, t2);
+    return NofibPrelude.Cons([
+      h1,
+      h2
+    ], tmp)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp2 = function lscomp2(ms, h1, t1) {
+  return (p2) => {
+    return lscomp2$(ms, h1, t1, p2)
+  }
+};
+lscomp1$ = function lscomp1$(ms, p1) {
+  let param0, param1, h1, t1;
+  if (p1 instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (p1 instanceof NofibPrelude.Cons.class) {
+    param0 = p1.head;
+    param1 = p1.tail;
+    h1 = param0;
+    t1 = param1;
+    return lscomp2$(ms, h1, t1, ms)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp1 = function lscomp1(ms) {
+  return (p1) => {
+    return lscomp1$(ms, p1)
+  }
+};
+lambda = (undefined, function (caseScrut) {
+  let first1, first0, x, y, tmp;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    x = first0;
+    y = first1;
+    tmp = gcd1.gcdE(x, y);
+    return [
+      x,
+      y,
+      tmp
+    ]
+  } else {
+    throw new globalThis.Error("match error");
+  }
+});
+lambda1 = (undefined, function (caseScrut) {
+  let first2, first1, first0, d1, d2, first21, first11, first01, gg, u, v, tmp, tmp1;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 3) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    first2 = caseScrut[2];
+    d1 = first0;
+    d2 = first1;
+    if (globalThis.Array.isArray(first2) && first2.length === 3) {
+      first01 = first2[0];
+      first11 = first2[1];
+      first21 = first2[2];
+      gg = first01;
+      u = first11;
+      v = first21;
+      tmp = gg + u;
+      tmp1 = tmp + v;
+      return NofibPrelude.abs(tmp1)
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+});
 gcd1 = class gcd {
   static {
     gcd1 = gcd;
-    let lambda;
-    lambda = (undefined, function () {
+    let lambda2;
+    lambda2 = (undefined, function () {
       return gcd.testGcd_nofib(40)
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda2)
   }
   static g(u1u2u3, v1v2v3) {
     let first2, first1, first0, u1, u2, u3, first21, first11, first01, v1, v2, v3, scrut, first12, first02, q, r, scrut1, tmp, tmp1, tmp2, tmp3;
@@ -117,91 +201,17 @@ gcd1 = class gcd {
     }
   } 
   static test(d) {
-    let lscomp1, ns, ms, tripls, rs, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, lambda, lambda1;
-    lscomp1 = function lscomp1(p1) {
-      let lscomp2, param0, param1, h1, t1;
-      if (p1 instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (p1 instanceof NofibPrelude.Cons.class) {
-        param0 = p1.head;
-        param1 = p1.tail;
-        h1 = param0;
-        t1 = param1;
-        lscomp2 = function lscomp2(p2) {
-          let param01, param11, h2, t2, tmp9;
-          if (p2 instanceof NofibPrelude.Nil.class) {
-            return lscomp1(t1)
-          } else if (p2 instanceof NofibPrelude.Cons.class) {
-            param01 = p2.head;
-            param11 = p2.tail;
-            h2 = param01;
-            t2 = param11;
-            tmp9 = lscomp2(t2);
-            return NofibPrelude.Cons([
-              h1,
-              h2
-            ], tmp9)
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        };
-        return lscomp2(ms)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let ns, ms, tripls, rs, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8;
     tmp = 5000 + d;
     tmp1 = NofibPrelude.enumFromTo(5000, tmp);
     ns = tmp1;
     tmp2 = 10000 + d;
     tmp3 = NofibPrelude.enumFromTo(10000, tmp2);
     ms = tmp3;
-    lambda = (undefined, function (caseScrut) {
-      let first1, first0, x1, y1, tmp9;
-      if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-        first0 = caseScrut[0];
-        first1 = caseScrut[1];
-        x1 = first0;
-        y1 = first1;
-        tmp9 = gcd.gcdE(x1, y1);
-        return [
-          x1,
-          y1,
-          tmp9
-        ]
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
     tmp4 = lambda;
-    tmp5 = lscomp1(ns);
+    tmp5 = lscomp1$(ms, ns);
     tmp6 = NofibPrelude.map(tmp4, tmp5);
     tripls = tmp6;
-    lambda1 = (undefined, function (caseScrut) {
-      let first2, first1, first0, d1, d2, first21, first11, first01, gg, u, v, tmp9, tmp10;
-      if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 3) {
-        first0 = caseScrut[0];
-        first1 = caseScrut[1];
-        first2 = caseScrut[2];
-        d1 = first0;
-        d2 = first1;
-        if (globalThis.Array.isArray(first2) && first2.length === 3) {
-          first01 = first2[0];
-          first11 = first2[1];
-          first21 = first2[2];
-          gg = first01;
-          u = first11;
-          v = first21;
-          tmp9 = gg + u;
-          tmp10 = tmp9 + v;
-          return NofibPrelude.abs(tmp10)
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
     tmp7 = lambda1;
     tmp8 = NofibPrelude.map(tmp7, tripls);
     rs = tmp8;

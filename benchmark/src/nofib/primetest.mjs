@@ -2,17 +2,234 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let primetest1;
+let f, chop_, g, f1, f2, square, witness, mTest, primetest1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda$, chop_$, f$, g$, lambda$1, lambda$2, witness$, square$, mTest$, lambda$3;
+lambda$3 = function lambda$(ls, state) {
+  return primetest1.doInput(state, ls)
+};
+lambda5 = (undefined, function (ls) {
+  return (state) => {
+    return lambda$3(ls, state)
+  }
+});
+mTest$ = function mTest$(n, k, rs) {
+  let scrut, first1, first0, t, rs_, scrut1, tmp, tmp1;
+  scrut1 = k == 0;
+  if (scrut1 === true) {
+    return [
+      true,
+      rs
+    ]
+  } else {
+    tmp = primetest1.findKQ(n);
+    scrut = primetest1.singleTest(n, tmp, rs);
+    if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
+      first0 = scrut[0];
+      first1 = scrut[1];
+      t = first0;
+      rs_ = first1;
+      if (t === true) {
+        tmp1 = k - 1;
+        return mTest$(n, tmp1, rs_)
+      } else {
+        return [
+          false,
+          rs_
+        ]
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  }
+};
+mTest = function mTest(n) {
+  return (k, rs) => {
+    return mTest$(n, k, rs)
+  }
+};
+square$ = function square$(n, x) {
+  let tmp;
+  tmp = x * x;
+  return NofibPrelude.intMod(tmp, n)
+};
+square = function square(n) {
+  return (x) => {
+    return square$(n, x)
+  }
+};
+witness$ = function witness$(n, ls) {
+  let param0, param1, t, ts, scrut, scrut1, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return false
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    t = param0;
+    ts = param1;
+    tmp = n - 1;
+    scrut1 = t == tmp;
+    if (scrut1 === true) {
+      return true
+    } else {
+      scrut = t == 1;
+      if (scrut === true) {
+        return false
+      } else {
+        return witness$(n, ts)
+      }
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+witness = function witness(n) {
+  return (ls) => {
+    return witness$(n, ls)
+  }
+};
+lambda4 = (undefined, function (x) {
+  return NofibPrelude.intMod(x, 65536)
+});
+f2 = function f(k, q) {
+  let scrut, first1, first0, d, r, scrut1, tmp;
+  scrut = NofibPrelude.divMod(q, 2);
+  if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
+    first0 = scrut[0];
+    first1 = scrut[1];
+    d = first0;
+    r = first1;
+    scrut1 = r == 0;
+    if (scrut1 === true) {
+      tmp = k + 1;
+      return f2(tmp, d)
+    } else {
+      return [
+        k,
+        q
+      ]
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda$2 = function lambda$(s1__, s2__, z) {
+  let tmp, tmp1;
+  tmp = z + 2147483562;
+  tmp1 = primetest1.rands(s1__, s2__);
+  return NofibPrelude.LzCons(tmp, tmp1)
+};
+lambda2 = (undefined, function (s1__, s2__, z) {
+  return () => {
+    return lambda$2(s1__, s2__, z)
+  }
+});
+lambda$1 = function lambda$(s1__, s2__, z) {
+  let tmp;
+  tmp = primetest1.rands(s1__, s2__);
+  return NofibPrelude.LzCons(z, tmp)
+};
+lambda3 = (undefined, function (s1__, s2__, z) {
+  return () => {
+    return lambda$1(s1__, s2__, z)
+  }
+});
+g$ = function g$(m, c, a, b) {
+  let scrut, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
+  scrut = primetest1.even(b);
+  if (scrut === true) {
+    tmp = a * a;
+    tmp1 = NofibPrelude.intMod(tmp, m);
+    tmp2 = NofibPrelude.intDiv(b, 2);
+    return g$(m, c, tmp1, tmp2)
+  } else {
+    tmp3 = b - 1;
+    tmp4 = a * c;
+    tmp5 = NofibPrelude.intMod(tmp4, m);
+    return f$(m, a, tmp3, tmp5)
+  }
+};
+g = function g(m, c) {
+  return (a, b) => {
+    return g$(m, c, a, b)
+  }
+};
+f$ = function f$(m, a, b, c) {
+  let scrut;
+  scrut = b == 0;
+  if (scrut === true) {
+    return c
+  } else {
+    return g$(m, c, a, b)
+  }
+};
+f1 = function f(m) {
+  return (a, b, c) => {
+    return f$(m, a, b, c)
+  }
+};
+chop_$ = function chop_$(b, a, n) {
+  let scrut, first1, first0, q, r, scrut1, tmp;
+  scrut = NofibPrelude.divMod(n, b);
+  if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
+    first0 = scrut[0];
+    first1 = scrut[1];
+    q = first0;
+    r = first1;
+    scrut1 = n == 0;
+    if (scrut1 === true) {
+      return a
+    } else {
+      tmp = NofibPrelude.Cons(r, a);
+      return chop_$(b, tmp, q)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+chop_ = function chop_(b) {
+  return (a, n) => {
+    return chop_$(b, a, n)
+  }
+};
+lambda$ = function lambda$(b, a, x) {
+  let tmp;
+  tmp = a * b;
+  return tmp + x
+};
+lambda1 = (undefined, function (b) {
+  return (a, x) => {
+    return lambda$(b, a, x)
+  }
+});
+lambda = (undefined, function (x) {
+  return x == "|"
+});
+f = function f(l, a) {
+  let param0, param1, h, t, tmp, tmp1, tmp2;
+  if (l instanceof NofibPrelude.Nil.class) {
+    return a
+  } else if (l instanceof NofibPrelude.Cons.class) {
+    param0 = l.head;
+    param1 = l.tail;
+    h = param0;
+    t = param1;
+    tmp = 10 * a;
+    tmp1 = primetest1.int_val_of_char(h);
+    tmp2 = tmp + tmp1;
+    return f(t, tmp2)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
 primetest1 = class primetest {
   static {
     primetest1 = primetest;
-    let lambda;
-    lambda = (undefined, function () {
+    let lambda6;
+    lambda6 = (undefined, function () {
       let tmp;
       tmp = primetest.testPrimetest_nofib(0);
       return runtime.safeCall(tmp.toString())
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda6)
   }
   static even(x) {
     let tmp;
@@ -25,24 +242,6 @@ primetest1 = class primetest {
     return tmp - 48
   } 
   static int_val_of_string(s) {
-    let f;
-    f = function f(l, a) {
-      let param0, param1, h, t, tmp, tmp1, tmp2;
-      if (l instanceof NofibPrelude.Nil.class) {
-        return a
-      } else if (l instanceof NofibPrelude.Cons.class) {
-        param0 = l.head;
-        param1 = l.tail;
-        h = param0;
-        t = param1;
-        tmp = 10 * a;
-        tmp1 = primetest.int_val_of_char(h);
-        tmp2 = tmp + tmp1;
-        return f(t, tmp2)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
     return f(s, 0)
   } 
   static break_(p, ls) {
@@ -85,10 +284,7 @@ primetest1 = class primetest {
     }
   } 
   static lines(s1) {
-    let scrut, first1, first0, l, s_, tt, param0, param1, s__, tmp, lambda;
-    lambda = (undefined, function (x2) {
-      return x2 == "|"
-    });
+    let scrut, first1, first0, l, s_, tt, param0, param1, s__, tmp;
     scrut = primetest.break_(lambda, s1);
     if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
       first0 = scrut[0];
@@ -112,70 +308,22 @@ primetest1 = class primetest {
     }
   } 
   static makeNumber(b, ls1) {
-    let lambda;
-    lambda = (undefined, function (a, x2) {
-      let tmp;
-      tmp = a * b;
-      return tmp + x2
-    });
-    return NofibPrelude.foldl(lambda, 0, ls1)
+    let lambda$this;
+    lambda$this = runtime.safeCall(lambda1(b));
+    return NofibPrelude.foldl(lambda$this, 0, ls1)
   } 
   static chop(b1, n) {
-    let chop_;
-    chop_ = function chop_(a, n1) {
-      let scrut, first1, first0, q, r, scrut1, tmp;
-      scrut = NofibPrelude.divMod(n1, b1);
-      if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
-        first0 = scrut[0];
-        first1 = scrut[1];
-        q = first0;
-        r = first1;
-        scrut1 = n1 == 0;
-        if (scrut1 === true) {
-          return a
-        } else {
-          tmp = NofibPrelude.Cons(r, a);
-          return chop_(tmp, q)
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    return chop_(NofibPrelude.Nil, n)
+    return chop_$(b1, NofibPrelude.Nil, n)
   } 
   static powerMod(a, b2, m) {
-    let f, a_, scrut, tmp;
-    f = function f(a1, b3, c) {
-      let g, scrut1;
-      g = function g(a2, b4) {
-        let scrut2, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
-        scrut2 = primetest.even(b4);
-        if (scrut2 === true) {
-          tmp1 = a2 * a2;
-          tmp2 = NofibPrelude.intMod(tmp1, m);
-          tmp3 = NofibPrelude.intDiv(b4, 2);
-          return g(tmp2, tmp3)
-        } else {
-          tmp4 = b4 - 1;
-          tmp5 = a2 * c;
-          tmp6 = NofibPrelude.intMod(tmp5, m);
-          return f(a2, tmp4, tmp6)
-        }
-      };
-      scrut1 = b3 == 0;
-      if (scrut1 === true) {
-        return c
-      } else {
-        return g(a1, b3)
-      }
-    };
+    let a_, scrut, tmp;
     scrut = b2 == 0;
     if (scrut === true) {
       return 1
     } else {
       a_ = NofibPrelude.intMod(a, m);
       tmp = b2 - 1;
-      return f(a_, tmp, a_)
+      return f$(m, a_, tmp, a_)
     }
   } 
   static log2(x2) {
@@ -184,7 +332,7 @@ primetest1 = class primetest {
     return NofibPrelude.listLen(tmp)
   } 
   static rands(s11, s2) {
-    let k, s1_, s1__, scrut, k_, s2_, s2__, scrut1, z, scrut2, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, lambda, lambda1;
+    let k, s1_, s1__, scrut, k_, s2_, s2__, scrut1, z, scrut2, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, lambda$this, lambda$this1;
     tmp = NofibPrelude.intDiv(s11, 53668);
     k = tmp;
     tmp1 = k * 53668;
@@ -219,20 +367,11 @@ primetest1 = class primetest {
     z = tmp14;
     scrut2 = z < 1;
     if (scrut2 === true) {
-      lambda = (undefined, function () {
-        let tmp15, tmp16;
-        tmp15 = z + 2147483562;
-        tmp16 = primetest.rands(s1__, s2__);
-        return NofibPrelude.LzCons(tmp15, tmp16)
-      });
-      return NofibPrelude.lazy(lambda)
+      lambda$this = runtime.safeCall(lambda2(s1__, s2__, z));
+      return NofibPrelude.lazy(lambda$this)
     } else {
-      lambda1 = (undefined, function () {
-        let tmp15;
-        tmp15 = primetest.rands(s1__, s2__);
-        return NofibPrelude.LzCons(z, tmp15)
-      });
-      return NofibPrelude.lazy(lambda1)
+      lambda$this1 = runtime.safeCall(lambda3(s1__, s2__, z));
+      return NofibPrelude.lazy(lambda$this1)
     }
   } 
   static randomInts(s12, s21) {
@@ -260,34 +399,12 @@ primetest1 = class primetest {
     }
   } 
   static findKQ(n1) {
-    let f, tmp;
-    f = function f(k, q) {
-      let scrut, first1, first0, d, r, scrut1, tmp1;
-      scrut = NofibPrelude.divMod(q, 2);
-      if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
-        first0 = scrut[0];
-        first1 = scrut[1];
-        d = first0;
-        r = first1;
-        scrut1 = r == 0;
-        if (scrut1 === true) {
-          tmp1 = k + 1;
-          return f(tmp1, d)
-        } else {
-          return [
-            k,
-            q
-          ]
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let tmp;
     tmp = n1 - 1;
-    return f(0, tmp)
+    return f2(0, tmp)
   } 
   static uniform(nns, rrs) {
-    let param0, param1, n2, ns, param01, param11, r, rs, t, scrut, n3, r1, rs1, tmp, tmp1, tmp2, tmp3, lambda;
+    let param0, param1, n2, ns, param01, param11, r, rs, t, scrut, n3, r1, rs1, tmp, tmp1, tmp2, tmp3;
     if (nns instanceof NofibPrelude.Cons.class) {
       param0 = nns.head;
       param1 = nns.tail;
@@ -320,10 +437,7 @@ primetest1 = class primetest {
             tmp2 = primetest.uniform(ns, rs);
             return NofibPrelude.Cons(t, tmp2)
           } else {
-            lambda = (undefined, function (x3) {
-              return NofibPrelude.intMod(x3, 65536)
-            });
-            tmp3 = NofibPrelude.map(lambda, rs);
+            tmp3 = NofibPrelude.map(lambda4, rs);
             return NofibPrelude.Cons(t, tmp3)
           }
         } else {
@@ -356,44 +470,15 @@ primetest1 = class primetest {
     }
   } 
   static singleTestX(n3, kq, x3) {
-    let square, witness, first1, first0, k, q, scrut, param0, param1, t, ts, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
-    square = function square(x4) {
-      let tmp7;
-      tmp7 = x4 * x4;
-      return NofibPrelude.intMod(tmp7, n3)
-    };
-    witness = function witness(ls2) {
-      let param01, param11, t1, ts1, scrut1, scrut2, tmp7;
-      if (ls2 instanceof NofibPrelude.Nil.class) {
-        return false
-      } else if (ls2 instanceof NofibPrelude.Cons.class) {
-        param01 = ls2.head;
-        param11 = ls2.tail;
-        t1 = param01;
-        ts1 = param11;
-        tmp7 = n3 - 1;
-        scrut2 = t1 == tmp7;
-        if (scrut2 === true) {
-          return true
-        } else {
-          scrut1 = t1 == 1;
-          if (scrut1 === true) {
-            return false
-          } else {
-            return witness(ts1)
-          }
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let first1, first0, k, q, scrut, param0, param1, t, ts, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, square$this;
     if (globalThis.Array.isArray(kq) && kq.length === 2) {
       first0 = kq[0];
       first1 = kq[1];
       k = first0;
       q = first1;
       tmp = primetest.powerMod(x3, q, n3);
-      tmp1 = NofibPrelude.iterate(square, tmp);
+      square$this = runtime.safeCall(square(n3));
+      tmp1 = NofibPrelude.iterate(square$this, tmp);
       scrut = NofibPrelude.take_lz(k, tmp1);
       if (scrut instanceof NofibPrelude.Cons.class) {
         param0 = scrut.head;
@@ -404,7 +489,7 @@ primetest1 = class primetest {
         tmp3 = n3 - 1;
         tmp4 = t == tmp3;
         tmp5 = tmp2 || tmp4;
-        tmp6 = witness(ts);
+        tmp6 = witness$(n3, ts);
         return tmp5 || tmp6
       } else {
         throw new globalThis.Error("match error");
@@ -433,37 +518,7 @@ primetest1 = class primetest {
     }
   } 
   static multiTest(k, rs2, n5) {
-    let mTest, scrut, tmp, tmp1, tmp2;
-    mTest = function mTest(k1, rs3) {
-      let scrut1, first1, first0, t, rs_, scrut2, tmp3, tmp4;
-      scrut2 = k1 == 0;
-      if (scrut2 === true) {
-        return [
-          true,
-          rs3
-        ]
-      } else {
-        tmp3 = primetest.findKQ(n5);
-        scrut1 = primetest.singleTest(n5, tmp3, rs3);
-        if (globalThis.Array.isArray(scrut1) && scrut1.length === 2) {
-          first0 = scrut1[0];
-          first1 = scrut1[1];
-          t = first0;
-          rs_ = first1;
-          if (t === true) {
-            tmp4 = k1 - 1;
-            return mTest(tmp4, rs_)
-          } else {
-            return [
-              false,
-              rs_
-            ]
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      }
-    };
+    let scrut, tmp, tmp1, tmp2;
     tmp = n5 <= 1;
     tmp1 = primetest.even(n5);
     scrut = tmp || tmp1;
@@ -474,7 +529,7 @@ primetest1 = class primetest {
         rs2
       ]
     } else {
-      return mTest(k, rs2)
+      return mTest$(n5, k, rs2)
     }
   } 
   static doLine(cs, cont, rs3) {
@@ -499,7 +554,7 @@ primetest1 = class primetest {
     }
   } 
   static doInput(state, lls) {
-    let param0, param1, l, ls2, lambda;
+    let param0, param1, l, ls2, lambda$this;
     if (lls instanceof NofibPrelude.Nil.class) {
       return NofibPrelude.Nil
     } else if (lls instanceof NofibPrelude.Cons.class) {
@@ -507,10 +562,8 @@ primetest1 = class primetest {
       param1 = lls.tail;
       l = param0;
       ls2 = param1;
-      lambda = (undefined, function (state1) {
-        return primetest.doInput(state1, ls2)
-      });
-      return primetest.doLine(l, lambda, state)
+      lambda$this = runtime.safeCall(lambda5(ls2));
+      return primetest.doLine(l, lambda$this, state)
     } else {
       throw new globalThis.Error("match error");
     }

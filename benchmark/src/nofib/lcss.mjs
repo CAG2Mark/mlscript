@@ -2,17 +2,49 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let lcss1;
+let listcomp_fun, lcss1, lambda, lambda1, lambda2, lambda$;
+lambda = (undefined, function (x) {
+  return x
+});
+lambda$ = function lambda$(x, t) {
+  return NofibPrelude.Cons(x, t)
+};
+lambda1 = (undefined, function (x) {
+  return (t) => {
+    return lambda$(x, t)
+  }
+});
+lambda2 = (undefined, function (x) {
+  return x
+});
+listcomp_fun = function listcomp_fun(listcomp_fun_para) {
+  let param0, param1, listcomp_fun_ls_h, listcomp_fun_ls_t, tmp;
+  if (listcomp_fun_para instanceof NofibPrelude.Cons.class) {
+    param0 = listcomp_fun_para.head;
+    param1 = listcomp_fun_para.tail;
+    listcomp_fun_ls_h = param0;
+    listcomp_fun_ls_t = param1;
+    tmp = listcomp_fun(listcomp_fun_ls_t);
+    return NofibPrelude.Cons([
+      listcomp_fun_ls_h,
+      0
+    ], tmp)
+  } else if (listcomp_fun_para instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
 lcss1 = class lcss {
   static {
     lcss1 = lcss;
-    let lambda;
-    lambda = (undefined, function () {
+    let lambda3;
+    lambda3 = (undefined, function () {
       let tmp;
       tmp = lcss.testLCSS_nofib(0);
       return runtime.safeCall(tmp.toString())
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda3)
   }
   static algb2(x, k0j1, k1j1, yss) {
     let param0, param1, first1, first0, y, k0j, ys, kjcurr, scrut, tmp, tmp1;
@@ -62,25 +94,7 @@ lcss1 = class lcss {
     }
   } 
   static algb(xs, ys) {
-    let listcomp_fun, tmp, tmp1;
-    listcomp_fun = function listcomp_fun(listcomp_fun_para) {
-      let param0, param1, listcomp_fun_ls_h, listcomp_fun_ls_t, tmp2;
-      if (listcomp_fun_para instanceof NofibPrelude.Cons.class) {
-        param0 = listcomp_fun_para.head;
-        param1 = listcomp_fun_para.tail;
-        listcomp_fun_ls_h = param0;
-        listcomp_fun_ls_t = param1;
-        tmp2 = listcomp_fun(listcomp_fun_ls_t);
-        return NofibPrelude.Cons([
-          listcomp_fun_ls_h,
-          0
-        ], tmp2)
-      } else if (listcomp_fun_para instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let tmp, tmp1;
     tmp = listcomp_fun(ys);
     tmp1 = lcss.algb1(xs, tmp);
     return NofibPrelude.Cons(0, tmp1)
@@ -116,11 +130,8 @@ lcss1 = class lcss {
     }
   } 
   static algc(m1, n, xs1, ys1) {
-    let m2, xs11, xs2, l1, l2, k1, param0, param1, x1, scrut, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, lambda, lambda1, lambda2;
+    let m2, xs11, xs2, l1, l2, k1, param0, param1, x1, scrut, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33;
     if (ys1 instanceof NofibPrelude.Nil.class) {
-      lambda = (undefined, function (x2) {
-        return x2
-      });
       return lambda
     } else {
       if (xs1 instanceof NofibPrelude.Cons.class) {
@@ -130,14 +141,8 @@ lcss1 = class lcss {
         if (param1 instanceof NofibPrelude.Nil.class) {
           scrut = NofibPrelude.inList(x1, ys1);
           if (scrut === true) {
-            lambda1 = (undefined, function (t) {
-              return NofibPrelude.Cons(x1, t)
-            });
-            return lambda1
+            return runtime.safeCall(lambda1(x1))
           } else {
-            lambda2 = (undefined, function (x2) {
-              return x2
-            });
             return lambda2
           }
         } else {

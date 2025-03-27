@@ -2,7 +2,68 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let mandel21;
+let check_line, mandel21, check_line$;
+check_line$ = function check_line$(col1, x1, y1, x2, y2, xcyc, xdyd) {
+  let first1, first0, xc, yc, first11, first01, xd, yd, finished, scrut, scrut1, scrut2, scrut3, tmp, tmp1, tmp2, tmp3, tmp4;
+  if (globalThis.Array.isArray(xcyc) && xcyc.length === 2) {
+    first0 = xcyc[0];
+    first1 = xcyc[1];
+    xc = first0;
+    yc = first1;
+    if (globalThis.Array.isArray(xdyd) && xdyd.length === 2) {
+      first01 = xdyd[0];
+      first11 = xdyd[1];
+      xd = first01;
+      yd = first11;
+      scrut2 = mandel21.equalp(xdyd, mandel21.right);
+      if (scrut2 === true) {
+        tmp = xc >= x2;
+      } else {
+        scrut1 = mandel21.equalp(xdyd, mandel21.down);
+        if (scrut1 === true) {
+          tmp = yc <= y2;
+        } else {
+          scrut = mandel21.equalp(xdyd, mandel21.left);
+          if (scrut === true) {
+            tmp = xc <= x1;
+          } else {
+            tmp = yc >= y1;
+          }
+        }
+      }
+      finished = tmp;
+      if (finished === true) {
+        return true
+      } else {
+        tmp1 = mandel21.point_colour(xcyc);
+        tmp2 = tmp1 == col1;
+        scrut3 = BenchmarkPrelude.not(tmp2);
+        if (scrut3 === true) {
+          return false
+        } else {
+          tmp3 = xc + xd;
+          tmp4 = yc + yd;
+          return check_line$(col1, x1, y1, x2, y2, [
+            tmp3,
+            tmp4
+          ], [
+            xd,
+            yd
+          ])
+        }
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+check_line = function check_line(col1, x1, y1, x2, y2) {
+  return (xcyc, xdyd) => {
+    return check_line$(col1, x1, y1, x2, y2, xcyc, xdyd)
+  }
+};
 mandel21 = class mandel2 {
   static {
     mandel21 = mandel2;
@@ -221,7 +282,7 @@ mandel21 = class mandel2 {
     }
   } 
   static check_perim(x1y1, x2y2) {
-    let check_line, col1, first1, first0, x11, y11, first11, first01, x21, y21, col2, col3, col4, corners_diff, scrut, scrut1, scrut2, scrut3, scrut4, scrut5, scrut6, scrut7, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
+    let col1, first1, first0, x11, y11, first11, first01, x21, y21, col2, col3, col4, corners_diff, scrut, scrut1, scrut2, scrut3, scrut4, scrut5, scrut6, scrut7, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
     tmp = mandel2.point_colour(x1y1);
     col1 = tmp;
     if (globalThis.Array.isArray(x1y1) && x1y1.length === 2) {
@@ -234,62 +295,6 @@ mandel21 = class mandel2 {
         first11 = x2y2[1];
         x21 = first01;
         y21 = first11;
-        check_line = function check_line(xcyc, xdyd) {
-          let first12, first02, xc, yc, first13, first03, xd, yd, finished, scrut8, scrut9, scrut10, scrut11, tmp6, tmp7, tmp8, tmp9, tmp10;
-          if (globalThis.Array.isArray(xcyc) && xcyc.length === 2) {
-            first02 = xcyc[0];
-            first12 = xcyc[1];
-            xc = first02;
-            yc = first12;
-            if (globalThis.Array.isArray(xdyd) && xdyd.length === 2) {
-              first03 = xdyd[0];
-              first13 = xdyd[1];
-              xd = first03;
-              yd = first13;
-              scrut10 = mandel2.equalp(xdyd, mandel2.right);
-              if (scrut10 === true) {
-                tmp6 = xc >= x21;
-              } else {
-                scrut9 = mandel2.equalp(xdyd, mandel2.down);
-                if (scrut9 === true) {
-                  tmp6 = yc <= y21;
-                } else {
-                  scrut8 = mandel2.equalp(xdyd, mandel2.left);
-                  if (scrut8 === true) {
-                    tmp6 = xc <= x11;
-                  } else {
-                    tmp6 = yc >= y11;
-                  }
-                }
-              }
-              finished = tmp6;
-              if (finished === true) {
-                return true
-              } else {
-                tmp7 = mandel2.point_colour(xcyc);
-                tmp8 = tmp7 == col1;
-                scrut11 = BenchmarkPrelude.not(tmp8);
-                if (scrut11 === true) {
-                  return false
-                } else {
-                  tmp9 = xc + xd;
-                  tmp10 = yc + yd;
-                  return check_line([
-                    tmp9,
-                    tmp10
-                  ], [
-                    xd,
-                    yd
-                  ])
-                }
-              }
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        };
         scrut7 = mandel2.equalp(x1y1, x2y2);
         if (scrut7 === true) {
           return col1
@@ -324,25 +329,25 @@ mandel21 = class mandel2 {
             return - 1
           } else {
             tmp2 = x11 + 1;
-            scrut3 = check_line([
+            scrut3 = check_line$(col1, x11, y11, x21, y21, [
               tmp2,
               y11
             ], mandel2.right);
             if (scrut3 === true) {
               tmp3 = y11 + 1;
-              scrut4 = check_line([
+              scrut4 = check_line$(col1, x11, y11, x21, y21, [
                 x21,
                 tmp3
               ], mandel2.down);
               if (scrut4 === true) {
                 tmp4 = x21 - 1;
-                scrut5 = check_line([
+                scrut5 = check_line$(col1, x11, y11, x21, y21, [
                   tmp4,
                   y21
                 ], mandel2.left);
                 if (scrut5 === true) {
                   tmp5 = y21 - 1;
-                  scrut6 = check_line([
+                  scrut6 = check_line$(col1, x11, y11, x21, y21, [
                     x11,
                     tmp5
                   ], mandel2.up);

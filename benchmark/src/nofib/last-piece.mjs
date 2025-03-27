@@ -2,11 +2,460 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let lastpiece1;
+let go, lscomp2, lscomp1, row, sq, put, annTxt, lay, lay2, lay1, lay3, get, get1, lastpiece1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda$, lambda$1, lscomp1$, lscomp2$, row$, lambda$2, sq$, annTxt$, lay$, lay$1, lay1$, lay2$;
+get = function get(r, w, docc) {
+  let param0, param1, param2, param01, param11, param21, param02, param12, p, q, param03, param13, k, p1, param04, param14, s, p2, param05, p3, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
+  if (docc instanceof lastpiece1.Empty.class) {
+    return lastpiece1.Empty
+  } else if (docc instanceof lastpiece1.NoDoc.class) {
+    return lastpiece1.NoDoc
+  } else if (docc instanceof lastpiece1.NilAbove.class) {
+    param05 = docc.d;
+    p3 = param05;
+    tmp = get(r, w, p3);
+    return lastpiece1.NilAbove(tmp)
+  } else if (docc instanceof lastpiece1.TextBeside.class) {
+    param04 = docc.a;
+    param14 = docc.d;
+    s = param04;
+    p2 = param14;
+    tmp1 = lastpiece1.annotSize(s);
+    tmp2 = get1(r, w, tmp1, p2);
+    return lastpiece1.TextBeside(s, tmp2)
+  } else if (docc instanceof lastpiece1.Nest.class) {
+    param03 = docc.i;
+    param13 = docc.d;
+    k = param03;
+    p1 = param13;
+    tmp3 = w - k;
+    tmp4 = get(r, tmp3, p1);
+    return lastpiece1.Nest(k, tmp4)
+  } else if (docc instanceof lastpiece1.Union.class) {
+    param02 = docc.d1;
+    param12 = docc.d2;
+    p = param02;
+    q = param12;
+    tmp5 = get(r, w, p);
+    tmp6 = get(r, w, q);
+    return lastpiece1.nicest(w, r, tmp5, tmp6)
+  } else if (docc instanceof lastpiece1.Above.class) {
+    param01 = docc.d1;
+    param11 = docc.b;
+    param21 = docc.d2;
+    throw globalThis.Error("best get Above");
+  } else if (docc instanceof lastpiece1.Beside.class) {
+    param0 = docc.d1;
+    param1 = docc.b;
+    param2 = docc.d2;
+    throw globalThis.Error("best get Beside");
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+get1 = function get1(r, w, sl, p) {
+  let param0, param1, param2, param01, param11, param21, param02, param12, p1, q, param03, param13, p2, param04, param14, s, p3, param05, p4, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
+  if (p instanceof lastpiece1.Empty.class) {
+    return lastpiece1.Empty
+  } else if (p instanceof lastpiece1.NoDoc.class) {
+    return lastpiece1.NoDoc
+  } else if (p instanceof lastpiece1.NilAbove.class) {
+    param05 = p.d;
+    p4 = param05;
+    tmp = w - sl;
+    tmp1 = get(r, tmp, p4);
+    return lastpiece1.NilAbove(tmp1)
+  } else if (p instanceof lastpiece1.TextBeside.class) {
+    param04 = p.a;
+    param14 = p.d;
+    s = param04;
+    p3 = param14;
+    tmp2 = lastpiece1.annotSize(s);
+    tmp3 = sl + tmp2;
+    tmp4 = get1(r, w, tmp3, p3);
+    return lastpiece1.TextBeside(s, tmp4)
+  } else if (p instanceof lastpiece1.Nest.class) {
+    param03 = p.i;
+    param13 = p.d;
+    p2 = param13;
+    return get1(r, w, sl, p2)
+  } else if (p instanceof lastpiece1.Union.class) {
+    param02 = p.d1;
+    param12 = p.d2;
+    p1 = param02;
+    q = param12;
+    tmp5 = get1(r, w, sl, p1);
+    tmp6 = get1(r, w, sl, q);
+    return lastpiece1.nicest1(w, r, sl, tmp5, tmp6)
+  } else if (p instanceof lastpiece1.Above.class) {
+    param01 = p.d1;
+    param11 = p.b;
+    param21 = p.d2;
+    throw globalThis.Error("best get1 Above");
+  } else if (p instanceof lastpiece1.Beside.class) {
+    param0 = p.d1;
+    param1 = p.b;
+    param2 = p.d2;
+    throw globalThis.Error("best get1 Beside");
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lay2$ = function lay2$(m, txt, end, gapWidth, shift, k, param) {
+  let param0, param1, p, param01, param11, s, p1, param02, p2, tmp, tmp1, tmp2, tmp3;
+  if (param instanceof lastpiece1.NilAbove.class) {
+    param02 = param.d;
+    p2 = param02;
+    tmp = lay$1(m, txt, end, gapWidth, shift, k, p2);
+    return runtime.safeCall(txt(lastpiece1.nlText, tmp))
+  } else if (param instanceof lastpiece1.TextBeside.class) {
+    param01 = param.a;
+    param11 = param.d;
+    s = param01;
+    p1 = param11;
+    tmp1 = lastpiece1.annotSize(s);
+    tmp2 = k + tmp1;
+    tmp3 = lay2$(m, txt, end, gapWidth, shift, tmp2, p1);
+    return runtime.safeCall(txt(s, tmp3))
+  } else if (param instanceof lastpiece1.Nest.class) {
+    param0 = param.i;
+    param1 = param.d;
+    p = param1;
+    return lay2$(m, txt, end, gapWidth, shift, k, p)
+  } else if (param instanceof lastpiece1.Empty.class) {
+    return end
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lay2 = function lay2(m, txt, end, gapWidth, shift) {
+  return (k, param) => {
+    return lay2$(m, txt, end, gapWidth, shift, k, param)
+  }
+};
+lay1$ = function lay1$(m, txt, end, gapWidth, shift, k, s, p) {
+  let r, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
+  tmp = lastpiece1.annotSize(s);
+  tmp1 = k + tmp;
+  r = tmp1;
+  tmp2 = lastpiece1.indent(k);
+  tmp3 = lastpiece1.Str(tmp2);
+  tmp4 = lastpiece1.NoAnnot(tmp3, k);
+  tmp5 = lay2$(m, txt, end, gapWidth, shift, r, p);
+  tmp6 = runtime.safeCall(txt(s, tmp5));
+  return runtime.safeCall(txt(tmp4, tmp6))
+};
+lay1 = function lay1(m, txt, end, gapWidth, shift) {
+  return (k, s, p) => {
+    return lay1$(m, txt, end, gapWidth, shift, k, s, p)
+  }
+};
+lay$1 = function lay$(m, txt, end, gapWidth, shift, k, docc) {
+  let param0, param1, s, p, scrut, scrut1, param01, p1, param02, param11, k1, p2, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15;
+  if (docc instanceof lastpiece1.Nest.class) {
+    param02 = docc.i;
+    param11 = docc.d;
+    k1 = param02;
+    p2 = param11;
+    tmp = k + k1;
+    return lay$1(m, txt, end, gapWidth, shift, tmp, p2)
+  } else if (docc instanceof lastpiece1.Empty.class) {
+    return end
+  } else if (docc instanceof lastpiece1.NilAbove.class) {
+    param01 = docc.d;
+    p1 = param01;
+    tmp1 = lay$1(m, txt, end, gapWidth, shift, k, p1);
+    return runtime.safeCall(txt(lastpiece1.nlText, tmp1))
+  } else if (docc instanceof lastpiece1.TextBeside.class) {
+    param0 = docc.a;
+    param1 = docc.d;
+    s = param0;
+    p = param1;
+    if (m instanceof lastpiece1.ZigZagMode.class) {
+      scrut1 = k >= gapWidth;
+      if (scrut1 === true) {
+        tmp2 = NofibPrelude.replicate(shift, "/");
+        tmp3 = lastpiece1.Str(tmp2);
+        tmp4 = lastpiece1.NoAnnot(tmp3, shift);
+        tmp5 = k - shift;
+        tmp6 = lay1$(m, txt, end, gapWidth, shift, tmp5, s, p);
+        tmp7 = runtime.safeCall(txt(lastpiece1.nlText, tmp6));
+        tmp8 = runtime.safeCall(txt(tmp4, tmp7));
+        return runtime.safeCall(txt(lastpiece1.nlText, tmp8))
+      } else {
+        scrut = k < 0;
+        if (scrut === true) {
+          tmp9 = NofibPrelude.replicate(shift, "|");
+          tmp10 = lastpiece1.Str(tmp9);
+          tmp11 = lastpiece1.NoAnnot(tmp10, shift);
+          tmp12 = k + shift;
+          tmp13 = lay1$(m, txt, end, gapWidth, shift, tmp12, s, p);
+          tmp14 = runtime.safeCall(txt(lastpiece1.nlText, tmp13));
+          tmp15 = runtime.safeCall(txt(tmp11, tmp14));
+          return runtime.safeCall(txt(lastpiece1.nlText, tmp15))
+        } else {
+          return lay1$(m, txt, end, gapWidth, shift, k, s, p)
+        }
+      }
+    } else {
+      return lay1$(m, txt, end, gapWidth, shift, k, s, p)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lay3 = function lay(m, txt, end, gapWidth, shift) {
+  return (k, docc) => {
+    return lay$1(m, txt, end, gapWidth, shift, k, docc)
+  }
+};
+lay$ = function lay$(nlSpaceText, choose, txt, end, x) {
+  let param0, param1, param2, param01, param11, param21, param02, param12, s, p, param03, p1, param04, param13, p2, param05, param14, p3, q, tmp, tmp1, tmp2;
+  if (x instanceof lastpiece1.NoDoc.class) {
+    throw globalThis.Error("easyDisplay: NoDoc");
+  } else if (x instanceof lastpiece1.Union.class) {
+    param05 = x.d1;
+    param14 = x.d2;
+    p3 = param05;
+    q = param14;
+    tmp = runtime.safeCall(choose(p3, q));
+    return lay$(nlSpaceText, choose, txt, end, tmp)
+  } else if (x instanceof lastpiece1.Nest.class) {
+    param04 = x.i;
+    param13 = x.d;
+    p2 = param13;
+    return lay$(nlSpaceText, choose, txt, end, p2)
+  } else if (x instanceof lastpiece1.Empty.class) {
+    return end
+  } else if (x instanceof lastpiece1.NilAbove.class) {
+    param03 = x.d;
+    p1 = param03;
+    tmp1 = lay$(nlSpaceText, choose, txt, end, p1);
+    return runtime.safeCall(txt(nlSpaceText, tmp1))
+  } else if (x instanceof lastpiece1.TextBeside.class) {
+    param02 = x.a;
+    param12 = x.d;
+    s = param02;
+    p = param12;
+    tmp2 = lay$(nlSpaceText, choose, txt, end, p);
+    return runtime.safeCall(txt(s, tmp2))
+  } else if (x instanceof lastpiece1.Above.class) {
+    param01 = x.d1;
+    param11 = x.b;
+    param21 = x.d2;
+    throw globalThis.Error("easyDisplay Above");
+  } else if (x instanceof lastpiece1.Beside.class) {
+    param0 = x.d1;
+    param1 = x.b;
+    param2 = x.d2;
+    throw globalThis.Error("easyDisplay Beside");
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lay = function lay(nlSpaceText, choose, txt, end) {
+  return (x) => {
+    return lay$(nlSpaceText, choose, txt, end, x)
+  }
+};
+lambda8 = (undefined, function (a, b) {
+  return b
+});
+annTxt$ = function annTxt$(txt, p, x) {
+  let param0, param1, s;
+  if (p instanceof lastpiece1.NoAnnot.class) {
+    param0 = p.t;
+    param1 = p.i;
+    s = param0;
+    return runtime.safeCall(txt(s, x))
+  } else {
+    return x
+  }
+};
+annTxt = function annTxt(txt) {
+  return (p, x) => {
+    return annTxt$(txt, p, x)
+  }
+};
+put = function put(k, next) {
+  let param0, s, param01, s1, param02, c;
+  if (k instanceof lastpiece1.Chr.class) {
+    param02 = k.c;
+    c = param02;
+    return NofibPrelude.Cons(c, next)
+  } else if (k instanceof lastpiece1.Str.class) {
+    param01 = k.s;
+    s1 = param01;
+    return NofibPrelude.append(s1, next)
+  } else if (k instanceof lastpiece1.PStr.class) {
+    param0 = k.s;
+    s = param0;
+    return NofibPrelude.append(s, next)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda7 = (undefined, function (p, q) {
+  return lastpiece1.Beside(p, false, q)
+});
+lambda6 = (undefined, function (a, b, c) {
+  return lastpiece1.Beside(a, b, c)
+});
+lambda5 = (undefined, function (p, q) {
+  return lastpiece1.Above(p, false, q)
+});
+lambda4 = (undefined, function (a, b, c) {
+  return lastpiece1.Above(a, b, c)
+});
+sq$ = function sq$(bd, n, col) {
+  let scrut, param0, id;
+  scrut = lastpiece1.check(bd, [
+    n,
+    col
+  ]);
+  if (scrut instanceof NofibPrelude.Some.class) {
+    param0 = scrut.x;
+    id = param0;
+    return lastpiece1.char(id)
+  } else if (scrut instanceof NofibPrelude.None.class) {
+    return lastpiece1.char(".")
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+sq = function sq(bd) {
+  return (n, col) => {
+    return sq$(bd, n, col)
+  }
+};
+lambda$2 = function lambda$(bd, n, col) {
+  return sq$(bd, n, col)
+};
+lambda3 = (undefined, function (bd, n) {
+  return (col) => {
+    return lambda$2(bd, n, col)
+  }
+});
+row$ = function row$(bd, n) {
+  let tmp, tmp1, lambda$this;
+  tmp = NofibPrelude.enumFromTo(1, lastpiece1.maxCol);
+  lambda$this = runtime.safeCall(lambda3(bd, n));
+  tmp1 = NofibPrelude.map(lambda$this, tmp);
+  return lastpiece1.hcat(tmp1)
+};
+row = function row(bd) {
+  return (n) => {
+    return row$(bd, n)
+  }
+};
+lscomp2$ = function lscomp2$(sey, id, ps, ls, ls2) {
+  let param0, param1, os, ls1, tmp;
+  if (ls2 instanceof NofibPrelude.Nil.class) {
+    return lscomp1$(sey, ls)
+  } else if (ls2 instanceof NofibPrelude.Cons.class) {
+    param0 = ls2.head;
+    param1 = ls2.tail;
+    os = param0;
+    ls1 = param1;
+    tmp = lscomp2$(sey, id, ps, ls, ls1);
+    return NofibPrelude.Cons([
+      id,
+      os,
+      ps
+    ], tmp)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp2 = function lscomp2(sey, id, ps, ls) {
+  return (ls2) => {
+    return lscomp2$(sey, id, ps, ls, ls2)
+  }
+};
+lscomp1$ = function lscomp1$(sey, ls) {
+  let param0, param1, first1, first0, param01, param11, param2, id, ms, fs1, ps, ls1, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    if (globalThis.Array.isArray(param0) && param0.length === 2) {
+      first0 = param0[0];
+      first1 = param0[1];
+      if (first0 instanceof lastpiece1.P.class) {
+        param01 = first0.i;
+        param11 = first0.a;
+        param2 = first0.b;
+        id = param01;
+        ms = param11;
+        fs1 = param2;
+        ps = first1;
+        ls1 = param1;
+        if (sey instanceof lastpiece1.Male.class) {
+          tmp = ms;
+        } else {
+          tmp = fs1;
+        }
+        return lscomp2$(sey, id, ps, ls1, tmp)
+      } else {
+        throw new globalThis.Error("match error");
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp1 = function lscomp1(sey) {
+  return (ls) => {
+    return lscomp1$(sey, ls)
+  }
+};
+lambda$1 = function lambda$(row_col, sey, bd, x) {
+  return lastpiece1.tryy(row_col, sey, bd, x)
+};
+lambda2 = (undefined, function (row_col, sey, bd) {
+  return (x) => {
+    return lambda$1(row_col, sey, bd, x)
+  }
+});
+lambda$ = function lambda$(f, x, p) {
+  let tmp;
+  tmp = runtime.safeCall(f(p));
+  return NofibPrelude.Cons(x, tmp)
+};
+lambda = (undefined, function (f, x) {
+  return (p) => {
+    return lambda$(f, x, p)
+  }
+});
+go = function go(f, xs) {
+  let param0, param1, x, xs1, tmp, tmp1, lambda$this;
+  if (xs instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (xs instanceof NofibPrelude.Cons.class) {
+    param0 = xs.head;
+    param1 = xs.tail;
+    x = param0;
+    xs1 = param1;
+    tmp = runtime.safeCall(f(xs1));
+    lambda$this = runtime.safeCall(lambda(f, x));
+    tmp1 = go(lambda$this, xs1);
+    return NofibPrelude.Cons([
+      x,
+      tmp
+    ], tmp1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda1 = (undefined, function (x) {
+  return x
+});
 lastpiece1 = class lastpiece {
   static {
     lastpiece1 = lastpiece;
-    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66, tmp67, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74, tmp75, tmp76, tmp77, tmp78, tmp79, tmp80, tmp81, tmp82, tmp83, tmp84, tmp85, tmp86, tmp87, tmp88, tmp89, tmp90, tmp91, tmp92, tmp93, tmp94, tmp95, tmp96, tmp97, tmp98, tmp99, tmp100, tmp101, tmp102, tmp103, tmp104, tmp105, tmp106, tmp107, tmp108, tmp109, tmp110, tmp111, tmp112, tmp113, tmp114, tmp115, tmp116, tmp117, tmp118, tmp119, tmp120, tmp121, tmp122, tmp123, tmp124, tmp125, tmp126, tmp127, tmp128, tmp129, tmp130, tmp131, tmp132, tmp133, tmp134, tmp135, tmp136, tmp137, tmp138, tmp139, tmp140, tmp141, tmp142, tmp143, tmp144, tmp145, tmp146, tmp147, tmp148, tmp149, tmp150, tmp151, tmp152, tmp153, tmp154, tmp155, tmp156, tmp157, tmp158, tmp159, tmp160, tmp161, tmp162, tmp163, tmp164, tmp165, tmp166, tmp167, tmp168, tmp169, tmp170, tmp171, tmp172, tmp173, tmp174, tmp175, tmp176, tmp177, tmp178, tmp179, tmp180, tmp181, tmp182, tmp183, tmp184, tmp185, tmp186, tmp187, tmp188, tmp189, tmp190, tmp191, tmp192, tmp193, tmp194, tmp195, tmp196, tmp197, tmp198, tmp199, tmp200, tmp201, tmp202, tmp203, tmp204, tmp205, tmp206, tmp207, tmp208, tmp209, tmp210, tmp211, tmp212, tmp213, tmp214, tmp215, tmp216, tmp217, tmp218, tmp219, tmp220, tmp221, tmp222, tmp223, tmp224, tmp225, tmp226, tmp227, tmp228, tmp229, tmp230, tmp231, tmp232, tmp233, tmp234, tmp235, tmp236, tmp237, tmp238, tmp239, tmp240, tmp241, tmp242, tmp243, tmp244, tmp245, tmp246, tmp247, tmp248, tmp249, tmp250, tmp251, tmp252, tmp253, tmp254, tmp255, tmp256, tmp257, tmp258, tmp259, tmp260, tmp261, tmp262, tmp263, tmp264, tmp265, tmp266, tmp267, tmp268, tmp269, tmp270, tmp271, tmp272, tmp273, tmp274, tmp275, tmp276, tmp277, tmp278, tmp279, tmp280, lambda;
+    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66, tmp67, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74, tmp75, tmp76, tmp77, tmp78, tmp79, tmp80, tmp81, tmp82, tmp83, tmp84, tmp85, tmp86, tmp87, tmp88, tmp89, tmp90, tmp91, tmp92, tmp93, tmp94, tmp95, tmp96, tmp97, tmp98, tmp99, tmp100, tmp101, tmp102, tmp103, tmp104, tmp105, tmp106, tmp107, tmp108, tmp109, tmp110, tmp111, tmp112, tmp113, tmp114, tmp115, tmp116, tmp117, tmp118, tmp119, tmp120, tmp121, tmp122, tmp123, tmp124, tmp125, tmp126, tmp127, tmp128, tmp129, tmp130, tmp131, tmp132, tmp133, tmp134, tmp135, tmp136, tmp137, tmp138, tmp139, tmp140, tmp141, tmp142, tmp143, tmp144, tmp145, tmp146, tmp147, tmp148, tmp149, tmp150, tmp151, tmp152, tmp153, tmp154, tmp155, tmp156, tmp157, tmp158, tmp159, tmp160, tmp161, tmp162, tmp163, tmp164, tmp165, tmp166, tmp167, tmp168, tmp169, tmp170, tmp171, tmp172, tmp173, tmp174, tmp175, tmp176, tmp177, tmp178, tmp179, tmp180, tmp181, tmp182, tmp183, tmp184, tmp185, tmp186, tmp187, tmp188, tmp189, tmp190, tmp191, tmp192, tmp193, tmp194, tmp195, tmp196, tmp197, tmp198, tmp199, tmp200, tmp201, tmp202, tmp203, tmp204, tmp205, tmp206, tmp207, tmp208, tmp209, tmp210, tmp211, tmp212, tmp213, tmp214, tmp215, tmp216, tmp217, tmp218, tmp219, tmp220, tmp221, tmp222, tmp223, tmp224, tmp225, tmp226, tmp227, tmp228, tmp229, tmp230, tmp231, tmp232, tmp233, tmp234, tmp235, tmp236, tmp237, tmp238, tmp239, tmp240, tmp241, tmp242, tmp243, tmp244, tmp245, tmp246, tmp247, tmp248, tmp249, tmp250, tmp251, tmp252, tmp253, tmp254, tmp255, tmp256, tmp257, tmp258, tmp259, tmp260, tmp261, tmp262, tmp263, tmp264, tmp265, tmp266, tmp267, tmp268, tmp269, tmp270, tmp271, tmp272, tmp273, tmp274, tmp275, tmp276, tmp277, tmp278, tmp279, tmp280, lambda9;
     const GT$class = class GT {
       constructor() {}
       toString() { return "GT"; }
@@ -1131,13 +1580,13 @@ lastpiece1 = class lastpiece {
     tmp278 = lastpiece.Chr("\n");
     tmp279 = lastpiece.NoAnnot(tmp278, 1);
     this.nlText = tmp279;
-    lambda = (undefined, function () {
+    lambda9 = (undefined, function () {
       let tmp281, tmp282;
       tmp281 = lastpiece.testLastPiece_nofib();
       tmp282 = NofibPrelude.nofibListToString(tmp281);
       return BenchmarkPrelude.print(tmp282)
     });
-    tmp280 = lambda;
+    tmp280 = lambda9;
     BenchmarkPrelude.benchmark(tmp280)
   }
   static isSome(x) {
@@ -1488,18 +1937,18 @@ lastpiece1 = class lastpiece {
     }
   } 
   static addIntInt(row_col, orow_ocol) {
-    let first1, first0, row, col, first11, first01, orow, ocol, tmp, tmp1;
+    let first1, first0, row1, col, first11, first01, orow, ocol, tmp, tmp1;
     if (globalThis.Array.isArray(row_col) && row_col.length === 2) {
       first0 = row_col[0];
       first1 = row_col[1];
-      row = first0;
+      row1 = first0;
       col = first1;
       if (globalThis.Array.isArray(orow_ocol) && orow_ocol.length === 2) {
         first01 = orow_ocol[0];
         first11 = orow_ocol[1];
         orow = first01;
         ocol = first11;
-        tmp = row + orow;
+        tmp = row1 + orow;
         tmp1 = col + ocol;
         return [
           tmp,
@@ -1513,35 +1962,35 @@ lastpiece1 = class lastpiece {
     }
   } 
   static next(row_col1) {
-    let first1, first0, row, col, tmp;
+    let first1, first0, row1, col, tmp;
     if (globalThis.Array.isArray(row_col1) && row_col1.length === 2) {
       first0 = row_col1[0];
       first1 = row_col1[1];
-      row = first0;
+      row1 = first0;
       col = first1;
       tmp = col + 1;
       return [
-        row,
+        row1,
         tmp
       ]
     } else {
       throw new globalThis.Error("match error");
     }
   } 
-  static check(bd, sq) {
-    return lastpiece.mapLookup(sq, bd)
+  static check(bd, sq1) {
+    return lastpiece.mapLookup(sq1, bd)
   } 
-  static extend(bd1, sq1, id) {
-    return lastpiece.insert(sq1, id, bd1)
+  static extend(bd1, sq2, id) {
+    return lastpiece.insert(sq2, id, bd1)
   } 
-  static extend_maybe(bd2, sq2, id1) {
-    let first1, first0, row, col, scrut, param0, scrut1, tmp, tmp1, tmp2, tmp3, tmp4;
-    if (globalThis.Array.isArray(sq2) && sq2.length === 2) {
-      first0 = sq2[0];
-      first1 = sq2[1];
-      row = first0;
+  static extend_maybe(bd2, sq3, id1) {
+    let first1, first0, row1, col, scrut, param0, scrut1, tmp, tmp1, tmp2, tmp3, tmp4;
+    if (globalThis.Array.isArray(sq3) && sq3.length === 2) {
+      first0 = sq3[0];
+      first1 = sq3[1];
+      row1 = first0;
       col = first1;
-      tmp = row > lastpiece.maxRow;
+      tmp = row1 > lastpiece.maxRow;
       tmp1 = col < 1;
       tmp2 = tmp || tmp1;
       tmp3 = col > lastpiece.maxCol;
@@ -1549,12 +1998,12 @@ lastpiece1 = class lastpiece {
       if (scrut1 === true) {
         return NofibPrelude.None
       } else {
-        scrut = lastpiece.check(bd2, sq2);
+        scrut = lastpiece.check(bd2, sq3);
         if (scrut instanceof NofibPrelude.Some.class) {
           param0 = scrut.x;
           return NofibPrelude.None
         } else if (scrut instanceof NofibPrelude.None.class) {
-          tmp4 = lastpiece.extend(bd2, sq2, id1);
+          tmp4 = lastpiece.extend(bd2, sq3, id1);
           return NofibPrelude.Some(tmp4)
         } else {
           throw new globalThis.Error("match error");
@@ -1565,52 +2014,24 @@ lastpiece1 = class lastpiece {
     }
   } 
   static pickOne(xs) {
-    let go, lambda;
-    go = function go(f1, xs1) {
-      let param0, param1, x6, xs2, tmp, tmp1, lambda1;
-      if (xs1 instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (xs1 instanceof NofibPrelude.Cons.class) {
-        param0 = xs1.head;
-        param1 = xs1.tail;
-        x6 = param0;
-        xs2 = param1;
-        tmp = runtime.safeCall(f1(xs2));
-        lambda1 = (undefined, function (p1) {
-          let tmp2;
-          tmp2 = runtime.safeCall(f1(p1));
-          return NofibPrelude.Cons(x6, tmp2)
-        });
-        tmp1 = go(lambda1, xs2);
-        return NofibPrelude.Cons([
-          x6,
-          tmp
-        ], tmp1)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    lambda = (undefined, function (x6) {
-      return x6
-    });
-    return go(lambda, xs)
+    return go(lambda1, xs)
   } 
-  static fit(bd3, sq3, id2, os) {
+  static fit(bd3, sq4, id2, os) {
     let param0, param1, o, os1, scrut, param01, bd11, tmp, tmp1;
     if (os instanceof NofibPrelude.Nil.class) {
-      tmp = lastpiece.extend(bd3, sq3, id2);
+      tmp = lastpiece.extend(bd3, sq4, id2);
       return NofibPrelude.Some(tmp)
     } else if (os instanceof NofibPrelude.Cons.class) {
       param0 = os.head;
       param1 = os.tail;
       o = param0;
       os1 = param1;
-      tmp1 = lastpiece.addIntInt(sq3, o);
+      tmp1 = lastpiece.addIntInt(sq4, o);
       scrut = lastpiece.extend_maybe(bd3, tmp1, id2);
       if (scrut instanceof NofibPrelude.Some.class) {
         param01 = scrut.x;
         bd11 = param01;
-        return lastpiece.fit(bd11, sq3, id2, os1)
+        return lastpiece.fit(bd11, sq4, id2, os1)
       } else if (scrut instanceof NofibPrelude.None.class) {
         return NofibPrelude.None
       } else {
@@ -1620,7 +2041,7 @@ lastpiece1 = class lastpiece {
       throw new globalThis.Error("match error");
     }
   } 
-  static tryy(sq4, se, bd4, id_is_ps) {
+  static tryy(sq5, se, bd4, id_is_ps) {
     let first2, first1, first0, id3, os1, ps, scrut, param0, bd11, tmp, tmp1, tmp2;
     if (globalThis.Array.isArray(id_is_ps) && id_is_ps.length === 3) {
       first0 = id_is_ps[0];
@@ -1629,11 +2050,11 @@ lastpiece1 = class lastpiece {
       id3 = first0;
       os1 = first1;
       ps = first2;
-      scrut = lastpiece.fit(bd4, sq4, id3, os1);
+      scrut = lastpiece.fit(bd4, sq5, id3, os1);
       if (scrut instanceof NofibPrelude.Some.class) {
         param0 = scrut.x;
         bd11 = param0;
-        tmp = lastpiece.next(sq4);
+        tmp = lastpiece.next(sq5);
         tmp1 = lastpiece.flip(se);
         tmp2 = lastpiece.search(tmp, tmp1, bd11, ps);
         return NofibPrelude.Some(tmp2)
@@ -1647,11 +2068,11 @@ lastpiece1 = class lastpiece {
     }
   } 
   static search(row_col2, sey, bd5, ps) {
-    let lscomp1, first1, first0, row, col, choices, scrut, ss, scrut1, param0, scrut2, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, lambda;
+    let first1, first0, row1, col, choices, scrut, ss, scrut1, param0, scrut2, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, lambda$this;
     if (globalThis.Array.isArray(row_col2) && row_col2.length === 2) {
       first0 = row_col2[0];
       first1 = row_col2[1];
-      row = first0;
+      row1 = first0;
       col = first1;
       if (ps instanceof NofibPrelude.Nil.class) {
         return lastpiece.Soln(bd5)
@@ -1659,7 +2080,7 @@ lastpiece1 = class lastpiece {
         tmp = lastpiece.maxCol + 1;
         scrut2 = col === tmp;
         if (scrut2 === true) {
-          tmp1 = row + 1;
+          tmp1 = row1 + 1;
           tmp2 = lastpiece.flip(sey);
           return lastpiece.search([
             tmp1,
@@ -1673,67 +2094,11 @@ lastpiece1 = class lastpiece {
             tmp4 = lastpiece.flip(sey);
             return lastpiece.search(tmp3, tmp4, bd5, ps)
           } else {
-            lscomp1 = function lscomp1(ls1) {
-              let lscomp2, param01, param1, first11, first01, param02, param11, param2, id3, ms, fs1, ps1, ls2, tmp7;
-              if (ls1 instanceof NofibPrelude.Nil.class) {
-                return NofibPrelude.Nil
-              } else if (ls1 instanceof NofibPrelude.Cons.class) {
-                param01 = ls1.head;
-                param1 = ls1.tail;
-                if (globalThis.Array.isArray(param01) && param01.length === 2) {
-                  first01 = param01[0];
-                  first11 = param01[1];
-                  if (first01 instanceof lastpiece.P.class) {
-                    param02 = first01.i;
-                    param11 = first01.a;
-                    param2 = first01.b;
-                    id3 = param02;
-                    ms = param11;
-                    fs1 = param2;
-                    ps1 = first11;
-                    ls2 = param1;
-                    lscomp2 = function lscomp2(ls21) {
-                      let param03, param12, os1, ls3, tmp8;
-                      if (ls21 instanceof NofibPrelude.Nil.class) {
-                        return lscomp1(ls2)
-                      } else if (ls21 instanceof NofibPrelude.Cons.class) {
-                        param03 = ls21.head;
-                        param12 = ls21.tail;
-                        os1 = param03;
-                        ls3 = param12;
-                        tmp8 = lscomp2(ls3);
-                        return NofibPrelude.Cons([
-                          id3,
-                          os1,
-                          ps1
-                        ], tmp8)
-                      } else {
-                        throw new globalThis.Error("match error");
-                      }
-                    };
-                    if (sey instanceof lastpiece.Male.class) {
-                      tmp7 = ms;
-                    } else {
-                      tmp7 = fs1;
-                    }
-                    return lscomp2(tmp7)
-                  } else {
-                    throw new globalThis.Error("match error");
-                  }
-                } else {
-                  throw new globalThis.Error("match error");
-                }
-              } else {
-                throw new globalThis.Error("match error");
-              }
-            };
             tmp5 = lastpiece.pickOne(ps);
-            tmp6 = lscomp1(tmp5);
+            tmp6 = lscomp1$(sey, tmp5);
             choices = tmp6;
-            lambda = (undefined, function (x6) {
-              return lastpiece.tryy(row_col2, sey, bd5, x6)
-            });
-            scrut = lastpiece.mapMaybe(lambda, choices);
+            lambda$this = runtime.safeCall(lambda2(row_col2, sey, bd5));
+            scrut = lastpiece.mapMaybe(lambda$this, choices);
             if (scrut instanceof NofibPrelude.Nil.class) {
               return lastpiece.Fail(bd5, row_col2)
             } else {
@@ -1759,7 +2124,7 @@ lastpiece1 = class lastpiece {
     }
   } 
   static display(s1) {
-    let param0, param1, bd6, first1, first0, row, col, param01, ss, param02, bd7, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
+    let param0, param1, bd6, first1, first0, row1, col, param01, ss, param02, bd7, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
     if (s1 instanceof lastpiece.Soln.class) {
       param02 = s1.b;
       bd7 = param02;
@@ -1782,7 +2147,7 @@ lastpiece1 = class lastpiece {
       if (globalThis.Array.isArray(param1) && param1.length === 2) {
         first0 = param1[0];
         first1 = param1[1];
-        row = first0;
+        row1 = first0;
         col = first1;
         return lastpiece.Empty
       } else {
@@ -1793,34 +2158,10 @@ lastpiece1 = class lastpiece {
     }
   } 
   static displayBoard(bd6) {
-    let row, sq5, tmp, tmp1, tmp2, tmp3;
-    sq5 = function sq(n1, col) {
-      let scrut, param0, id3;
-      scrut = lastpiece.check(bd6, [
-        n1,
-        col
-      ]);
-      if (scrut instanceof NofibPrelude.Some.class) {
-        param0 = scrut.x;
-        id3 = param0;
-        return lastpiece.char(id3)
-      } else if (scrut instanceof NofibPrelude.None.class) {
-        return lastpiece.char(".")
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    row = function row(n1) {
-      let tmp4, tmp5, lambda;
-      tmp4 = NofibPrelude.enumFromTo(1, lastpiece.maxCol);
-      lambda = (undefined, function (col) {
-        return sq5(n1, col)
-      });
-      tmp5 = NofibPrelude.map(lambda, tmp4);
-      return lastpiece.hcat(tmp5)
-    };
+    let tmp, tmp1, tmp2, tmp3, row$this;
     tmp = NofibPrelude.enumFromTo(1, lastpiece.maxCol);
-    tmp1 = NofibPrelude.map(row, tmp);
+    row$this = runtime.safeCall(row(bd6));
+    tmp1 = NofibPrelude.map(row$this, tmp);
     tmp2 = lastpiece.vcat(tmp1);
     tmp3 = lastpiece.text(NofibPrelude.Nil);
     return lastpiece.above_(tmp2, false, tmp3)
@@ -1851,7 +2192,7 @@ lastpiece1 = class lastpiece {
     }
   } 
   static reduceVert(doc) {
-    let param0, param1, param2, p3, g1, q1, tmp, tmp1, tmp2, lambda;
+    let param0, param1, param2, p3, g1, q1, tmp, tmp1, tmp2;
     if (doc instanceof lastpiece.Above.class) {
       param0 = doc.d1;
       param1 = doc.b;
@@ -1862,10 +2203,7 @@ lastpiece1 = class lastpiece {
       tmp = lastpiece.reduceVert(p3);
       tmp1 = NofibPrelude.snd(tmp);
       tmp2 = lastpiece.reduceVert(q1);
-      lambda = (undefined, function (a, b, c) {
-        return lastpiece.Above(a, b, c)
-      });
-      return lastpiece.eliminateEmpty(lambda, tmp1, g1, tmp2)
+      return lastpiece.eliminateEmpty(lambda4, tmp1, g1, tmp2)
     } else {
       return [
         lastpiece.NotEmpty,
@@ -1874,11 +2212,8 @@ lastpiece1 = class lastpiece {
     }
   } 
   static vcat(ls1) {
-    let tmp, tmp1, lambda;
-    lambda = (undefined, function (p3, q1) {
-      return lastpiece.Above(p3, false, q1)
-    });
-    tmp = NofibPrelude.foldr(lambda, lastpiece.Empty, ls1);
+    let tmp, tmp1;
+    tmp = NofibPrelude.foldr(lambda5, lastpiece.Empty, ls1);
     tmp1 = lastpiece.reduceVert(tmp);
     return NofibPrelude.snd(tmp1)
   } 
@@ -1897,7 +2232,7 @@ lastpiece1 = class lastpiece {
     return lastpiece.TextBeside(tmp1, lastpiece.Empty)
   } 
   static reduceHoriz(doc1) {
-    let param0, param1, param2, p3, g1, q1, tmp, tmp1, tmp2, lambda;
+    let param0, param1, param2, p3, g1, q1, tmp, tmp1, tmp2;
     if (doc1 instanceof lastpiece.Beside.class) {
       param0 = doc1.d1;
       param1 = doc1.b;
@@ -1908,10 +2243,7 @@ lastpiece1 = class lastpiece {
       tmp = lastpiece.reduceHoriz(p3);
       tmp1 = NofibPrelude.snd(tmp);
       tmp2 = lastpiece.reduceHoriz(q1);
-      lambda = (undefined, function (a, b, c1) {
-        return lastpiece.Beside(a, b, c1)
-      });
-      return lastpiece.eliminateEmpty(lambda, tmp1, g1, tmp2)
+      return lastpiece.eliminateEmpty(lambda6, tmp1, g1, tmp2)
     } else {
       return [
         lastpiece.NotEmpty,
@@ -1920,11 +2252,8 @@ lastpiece1 = class lastpiece {
     }
   } 
   static hcat(ls2) {
-    let tmp, tmp1, lambda;
-    lambda = (undefined, function (p3, q1) {
-      return lastpiece.Beside(p3, false, q1)
-    });
-    tmp = NofibPrelude.foldr(lambda, lastpiece.Empty, ls2);
+    let tmp, tmp1;
+    tmp = NofibPrelude.foldr(lambda7, lastpiece.Empty, ls2);
     tmp1 = lastpiece.reduceHoriz(tmp);
     return NofibPrelude.snd(tmp1)
   } 
@@ -2181,55 +2510,24 @@ lastpiece1 = class lastpiece {
     }
   } 
   static printDoc(d) {
-    let put, done, tmp;
-    put = function put(k9, next) {
-      let param0, s3, param01, s4, param02, c1;
-      if (k9 instanceof lastpiece.Chr.class) {
-        param02 = k9.c;
-        c1 = param02;
-        return NofibPrelude.Cons(c1, next)
-      } else if (k9 instanceof lastpiece.Str.class) {
-        param01 = k9.s;
-        s4 = param01;
-        return NofibPrelude.append(s4, next)
-      } else if (k9 instanceof lastpiece.PStr.class) {
-        param0 = k9.s;
-        s3 = param0;
-        return NofibPrelude.append(s3, next)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let done, tmp;
     tmp = NofibPrelude.Cons("\n", NofibPrelude.Nil);
     done = tmp;
     return lastpiece.fullRender(lastpiece.ZigZagMode, 200, 1.5, put, done, d)
   } 
   static fullRender(m2, l6, r6, txt, a, b) {
-    let annTxt;
-    annTxt = function annTxt(p11, x6) {
-      let param0, param1, s3;
-      if (p11 instanceof lastpiece.NoAnnot.class) {
-        param0 = p11.t;
-        param1 = p11.i;
-        s3 = param0;
-        return runtime.safeCall(txt(s3, x6))
-      } else {
-        return x6
-      }
-    };
-    return lastpiece.fullRenderAnn(m2, l6, r6, annTxt, a, b)
+    let annTxt$this;
+    annTxt$this = runtime.safeCall(annTxt(txt));
+    return lastpiece.fullRenderAnn(m2, l6, r6, annTxt$this, a, b)
   } 
   static ceiling(x6) {
     return runtime.safeCall(globalThis.Math.ceil(x6))
   } 
   static fullRenderAnn(m3, lineLen, ribbons, txt1, rest, doc2) {
-    let ribbonLen, bestLineLen, doc11, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, lambda;
+    let ribbonLen, bestLineLen, doc11, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
     if (m3 instanceof lastpiece.OneLineMode.class) {
       tmp = lastpiece.reduceDoc(doc2);
-      lambda = (undefined, function (a1, b1) {
-        return b1
-      });
-      return lastpiece.easyDisplay(lastpiece.spaceText, lambda, txt1, rest, tmp)
+      return lastpiece.easyDisplay(lastpiece.spaceText, lambda8, txt1, rest, tmp)
     } else if (m3 instanceof lastpiece.LeftMode.class) {
       tmp1 = lastpiece.reduceDoc(doc2);
       return lastpiece.easyDisplay(lastpiece.nlText, lastpiece.first, txt1, rest, tmp1)
@@ -2250,253 +2548,17 @@ lastpiece1 = class lastpiece {
     }
   } 
   static easyDisplay(nlSpaceText, choose, txt2, end, x7) {
-    let lay;
-    lay = function lay(x8) {
-      let param0, param1, param2, param01, param11, param21, param02, param12, s3, p11, param03, p12, param04, param13, p13, param05, param14, p14, q6, tmp, tmp1, tmp2;
-      if (x8 instanceof lastpiece.NoDoc.class) {
-        throw globalThis.Error("easyDisplay: NoDoc");
-      } else if (x8 instanceof lastpiece.Union.class) {
-        param05 = x8.d1;
-        param14 = x8.d2;
-        p14 = param05;
-        q6 = param14;
-        tmp = runtime.safeCall(choose(p14, q6));
-        return lay(tmp)
-      } else if (x8 instanceof lastpiece.Nest.class) {
-        param04 = x8.i;
-        param13 = x8.d;
-        p13 = param13;
-        return lay(p13)
-      } else if (x8 instanceof lastpiece.Empty.class) {
-        return end
-      } else if (x8 instanceof lastpiece.NilAbove.class) {
-        param03 = x8.d;
-        p12 = param03;
-        tmp1 = lay(p12);
-        return runtime.safeCall(txt2(nlSpaceText, tmp1))
-      } else if (x8 instanceof lastpiece.TextBeside.class) {
-        param02 = x8.a;
-        param12 = x8.d;
-        s3 = param02;
-        p11 = param12;
-        tmp2 = lay(p11);
-        return runtime.safeCall(txt2(s3, tmp2))
-      } else if (x8 instanceof lastpiece.Above.class) {
-        param01 = x8.d1;
-        param11 = x8.b;
-        param21 = x8.d2;
-        throw globalThis.Error("easyDisplay Above");
-      } else if (x8 instanceof lastpiece.Beside.class) {
-        param0 = x8.d1;
-        param1 = x8.b;
-        param2 = x8.d2;
-        throw globalThis.Error("easyDisplay Beside");
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    return lay(x7)
+    return lay$(nlSpaceText, choose, txt2, end, x7)
   } 
   static displayDoc(m4, pageWidth, ribbonWidth, txt3, end1, doc3) {
-    let lay, gapWidth, shift, tmp, tmp1;
-    lay = function lay(k9, docc) {
-      let lay2, lay1, param0, param1, s3, p11, scrut, scrut1, param01, p12, param02, param11, k15, p13, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17;
-      lay2 = function lay2(k10, param) {
-        let param03, param12, p14, param04, param13, s4, p15, param05, p16, tmp18, tmp19, tmp20, tmp21;
-        if (param instanceof lastpiece.NilAbove.class) {
-          param05 = param.d;
-          p16 = param05;
-          tmp18 = lay(k10, p16);
-          return runtime.safeCall(txt3(lastpiece.nlText, tmp18))
-        } else if (param instanceof lastpiece.TextBeside.class) {
-          param04 = param.a;
-          param13 = param.d;
-          s4 = param04;
-          p15 = param13;
-          tmp19 = lastpiece.annotSize(s4);
-          tmp20 = k10 + tmp19;
-          tmp21 = lay2(tmp20, p15);
-          return runtime.safeCall(txt3(s4, tmp21))
-        } else if (param instanceof lastpiece.Nest.class) {
-          param03 = param.i;
-          param12 = param.d;
-          p14 = param12;
-          return lay2(k10, p14)
-        } else if (param instanceof lastpiece.Empty.class) {
-          return end1
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      lay1 = function lay1(k10, s4, p14) {
-        let r7, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24;
-        tmp18 = lastpiece.annotSize(s4);
-        tmp19 = k10 + tmp18;
-        r7 = tmp19;
-        tmp20 = lastpiece.indent(k10);
-        tmp21 = lastpiece.Str(tmp20);
-        tmp22 = lastpiece.NoAnnot(tmp21, k10);
-        tmp23 = lay2(r7, p14);
-        tmp24 = runtime.safeCall(txt3(s4, tmp23));
-        return runtime.safeCall(txt3(tmp22, tmp24))
-      };
-      if (docc instanceof lastpiece.Nest.class) {
-        param02 = docc.i;
-        param11 = docc.d;
-        k15 = param02;
-        p13 = param11;
-        tmp2 = k9 + k15;
-        return lay(tmp2, p13)
-      } else if (docc instanceof lastpiece.Empty.class) {
-        return end1
-      } else if (docc instanceof lastpiece.NilAbove.class) {
-        param01 = docc.d;
-        p12 = param01;
-        tmp3 = lay(k9, p12);
-        return runtime.safeCall(txt3(lastpiece.nlText, tmp3))
-      } else if (docc instanceof lastpiece.TextBeside.class) {
-        param0 = docc.a;
-        param1 = docc.d;
-        s3 = param0;
-        p11 = param1;
-        if (m4 instanceof lastpiece.ZigZagMode.class) {
-          scrut1 = k9 >= gapWidth;
-          if (scrut1 === true) {
-            tmp4 = NofibPrelude.replicate(shift, "/");
-            tmp5 = lastpiece.Str(tmp4);
-            tmp6 = lastpiece.NoAnnot(tmp5, shift);
-            tmp7 = k9 - shift;
-            tmp8 = lay1(tmp7, s3, p11);
-            tmp9 = runtime.safeCall(txt3(lastpiece.nlText, tmp8));
-            tmp10 = runtime.safeCall(txt3(tmp6, tmp9));
-            return runtime.safeCall(txt3(lastpiece.nlText, tmp10))
-          } else {
-            scrut = k9 < 0;
-            if (scrut === true) {
-              tmp11 = NofibPrelude.replicate(shift, "|");
-              tmp12 = lastpiece.Str(tmp11);
-              tmp13 = lastpiece.NoAnnot(tmp12, shift);
-              tmp14 = k9 + shift;
-              tmp15 = lay1(tmp14, s3, p11);
-              tmp16 = runtime.safeCall(txt3(lastpiece.nlText, tmp15));
-              tmp17 = runtime.safeCall(txt3(tmp13, tmp16));
-              return runtime.safeCall(txt3(lastpiece.nlText, tmp17))
-            } else {
-              return lay1(k9, s3, p11)
-            }
-          }
-        } else {
-          return lay1(k9, s3, p11)
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let gapWidth, shift, tmp, tmp1;
     tmp = pageWidth - ribbonWidth;
     gapWidth = tmp;
     tmp1 = NofibPrelude.intDiv(gapWidth, 2);
     shift = tmp1;
-    return lay(0, doc3)
+    return lay$1(m4, txt3, end1, gapWidth, shift, 0, doc3)
   } 
   static best(w0, r7, doc4) {
-    let get, get1;
-    get = function get(r8, w, docc) {
-      let param0, param1, param2, param01, param11, param21, param02, param12, p11, q6, param03, param13, k9, p12, param04, param14, s3, p13, param05, p14, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
-      if (docc instanceof lastpiece.Empty.class) {
-        return lastpiece.Empty
-      } else if (docc instanceof lastpiece.NoDoc.class) {
-        return lastpiece.NoDoc
-      } else if (docc instanceof lastpiece.NilAbove.class) {
-        param05 = docc.d;
-        p14 = param05;
-        tmp = get(r8, w, p14);
-        return lastpiece.NilAbove(tmp)
-      } else if (docc instanceof lastpiece.TextBeside.class) {
-        param04 = docc.a;
-        param14 = docc.d;
-        s3 = param04;
-        p13 = param14;
-        tmp1 = lastpiece.annotSize(s3);
-        tmp2 = get1(r8, w, tmp1, p13);
-        return lastpiece.TextBeside(s3, tmp2)
-      } else if (docc instanceof lastpiece.Nest.class) {
-        param03 = docc.i;
-        param13 = docc.d;
-        k9 = param03;
-        p12 = param13;
-        tmp3 = w - k9;
-        tmp4 = get(r8, tmp3, p12);
-        return lastpiece.Nest(k9, tmp4)
-      } else if (docc instanceof lastpiece.Union.class) {
-        param02 = docc.d1;
-        param12 = docc.d2;
-        p11 = param02;
-        q6 = param12;
-        tmp5 = get(r8, w, p11);
-        tmp6 = get(r8, w, q6);
-        return lastpiece.nicest(w, r8, tmp5, tmp6)
-      } else if (docc instanceof lastpiece.Above.class) {
-        param01 = docc.d1;
-        param11 = docc.b;
-        param21 = docc.d2;
-        throw globalThis.Error("best get Above");
-      } else if (docc instanceof lastpiece.Beside.class) {
-        param0 = docc.d1;
-        param1 = docc.b;
-        param2 = docc.d2;
-        throw globalThis.Error("best get Beside");
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    get1 = function get1(r8, w, sl, p11) {
-      let param0, param1, param2, param01, param11, param21, param02, param12, p12, q6, param03, param13, p13, param04, param14, s3, p14, param05, p15, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
-      if (p11 instanceof lastpiece.Empty.class) {
-        return lastpiece.Empty
-      } else if (p11 instanceof lastpiece.NoDoc.class) {
-        return lastpiece.NoDoc
-      } else if (p11 instanceof lastpiece.NilAbove.class) {
-        param05 = p11.d;
-        p15 = param05;
-        tmp = w - sl;
-        tmp1 = get(r8, tmp, p15);
-        return lastpiece.NilAbove(tmp1)
-      } else if (p11 instanceof lastpiece.TextBeside.class) {
-        param04 = p11.a;
-        param14 = p11.d;
-        s3 = param04;
-        p14 = param14;
-        tmp2 = lastpiece.annotSize(s3);
-        tmp3 = sl + tmp2;
-        tmp4 = get1(r8, w, tmp3, p14);
-        return lastpiece.TextBeside(s3, tmp4)
-      } else if (p11 instanceof lastpiece.Nest.class) {
-        param03 = p11.i;
-        param13 = p11.d;
-        p13 = param13;
-        return get1(r8, w, sl, p13)
-      } else if (p11 instanceof lastpiece.Union.class) {
-        param02 = p11.d1;
-        param12 = p11.d2;
-        p12 = param02;
-        q6 = param12;
-        tmp5 = get1(r8, w, sl, p12);
-        tmp6 = get1(r8, w, sl, q6);
-        return lastpiece.nicest1(w, r8, sl, tmp5, tmp6)
-      } else if (p11 instanceof lastpiece.Above.class) {
-        param01 = p11.d1;
-        param11 = p11.b;
-        param21 = p11.d2;
-        throw globalThis.Error("best get1 Above");
-      } else if (p11 instanceof lastpiece.Beside.class) {
-        param0 = p11.d1;
-        param1 = p11.b;
-        param2 = p11.d2;
-        throw globalThis.Error("best get1 Beside");
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
     return get(r7, w0, doc4)
   } 
   static nonEmptySet(doc5) {

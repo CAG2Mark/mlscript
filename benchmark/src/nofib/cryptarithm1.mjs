@@ -2,17 +2,87 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let cryptarithm11;
+let lscomp, lscomp2, lscomp1, cryptarithm11, lambda, lscomp$, lscomp1$, lscomp2$;
+lambda = (undefined, function (i) {
+  let p0, tmp, tmp1, tmp2, tmp3;
+  tmp = 9 + i;
+  tmp1 = NofibPrelude.enumFromTo(0, tmp);
+  tmp2 = NofibPrelude.take(10, tmp1);
+  p0 = tmp2;
+  tmp3 = cryptarithm11.permutations(p0);
+  return NofibPrelude.filter(cryptarithm11.condition, tmp3)
+});
+lscomp2$ = function lscomp2$(j, t1, p2) {
+  let param0, param1, r, t2, tmp;
+  if (p2 instanceof NofibPrelude.Nil.class) {
+    return lscomp1$(j, t1)
+  } else if (p2 instanceof NofibPrelude.Cons.class) {
+    param0 = p2.head;
+    param1 = p2.tail;
+    r = param0;
+    t2 = param1;
+    tmp = lscomp2$(j, t1, t2);
+    return NofibPrelude.Cons(r, tmp)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp2 = function lscomp2(j, t1) {
+  return (p2) => {
+    return lscomp2$(j, t1, p2)
+  }
+};
+lscomp1$ = function lscomp1$(j, p1) {
+  let param0, param1, pjs, t1, tmp;
+  if (p1 instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (p1 instanceof NofibPrelude.Cons.class) {
+    param0 = p1.head;
+    param1 = p1.tail;
+    pjs = param0;
+    t1 = param1;
+    tmp = cryptarithm11.addj(j, pjs);
+    return lscomp2$(j, t1, tmp)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp1 = function lscomp1(j) {
+  return (p1) => {
+    return lscomp1$(j, p1)
+  }
+};
+lscomp$ = function lscomp$(k, p1) {
+  let param0, param1, h1, t1, tmp, tmp1;
+  if (p1 instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (p1 instanceof NofibPrelude.Cons.class) {
+    param0 = p1.head;
+    param1 = p1.tail;
+    h1 = param0;
+    t1 = param1;
+    tmp = NofibPrelude.Cons(k, h1);
+    tmp1 = lscomp$(k, t1);
+    return NofibPrelude.Cons(tmp, tmp1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp = function lscomp(k) {
+  return (p1) => {
+    return lscomp$(k, p1)
+  }
+};
 cryptarithm11 = class cryptarithm1 {
   static {
     cryptarithm11 = cryptarithm1;
-    let lambda;
-    lambda = (undefined, function () {
+    let lambda1;
+    lambda1 = (undefined, function () {
       let tmp;
       tmp = cryptarithm1.testCryptarithm_nofib(1);
       return BenchmarkPrelude.print(tmp)
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda1)
   }
   static expand(a, b, c, d, e, f) {
     let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8;
@@ -111,7 +181,7 @@ cryptarithm11 = class cryptarithm1 {
     }
   } 
   static addj(j, ls) {
-    let lscomp, param0, param1, k, ks, tmp, tmp1, tmp2, tmp3, tmp4;
+    let param0, param1, k, ks, tmp, tmp1, tmp2, tmp3, tmp4;
     if (ls instanceof NofibPrelude.Nil.class) {
       tmp = NofibPrelude.Cons(j, NofibPrelude.Nil);
       return NofibPrelude.Cons(tmp, NofibPrelude.Nil)
@@ -120,33 +190,17 @@ cryptarithm11 = class cryptarithm1 {
       param1 = ls.tail;
       k = param0;
       ks = param1;
-      lscomp = function lscomp(p1) {
-        let param01, param11, h1, t1, tmp5, tmp6;
-        if (p1 instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Nil
-        } else if (p1 instanceof NofibPrelude.Cons.class) {
-          param01 = p1.head;
-          param11 = p1.tail;
-          h1 = param01;
-          t1 = param11;
-          tmp5 = NofibPrelude.Cons(k, h1);
-          tmp6 = lscomp(t1);
-          return NofibPrelude.Cons(tmp5, tmp6)
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
       tmp1 = NofibPrelude.Cons(k, ks);
       tmp2 = NofibPrelude.Cons(j, tmp1);
       tmp3 = cryptarithm1.addj(j, ks);
-      tmp4 = lscomp(tmp3);
+      tmp4 = lscomp$(k, tmp3);
       return NofibPrelude.Cons(tmp2, tmp4)
     } else {
       throw new globalThis.Error("match error");
     }
   } 
   static permutations(ls1) {
-    let lscomp1, param0, param1, j1, js, tmp;
+    let param0, param1, j1, js, tmp;
     if (ls1 instanceof NofibPrelude.Nil.class) {
       return NofibPrelude.Cons(NofibPrelude.Nil, NofibPrelude.Nil)
     } else if (ls1 instanceof NofibPrelude.Cons.class) {
@@ -154,53 +208,14 @@ cryptarithm11 = class cryptarithm1 {
       param1 = ls1.tail;
       j1 = param0;
       js = param1;
-      lscomp1 = function lscomp1(p1) {
-        let lscomp2, param01, param11, pjs, t1, tmp1;
-        if (p1 instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Nil
-        } else if (p1 instanceof NofibPrelude.Cons.class) {
-          param01 = p1.head;
-          param11 = p1.tail;
-          pjs = param01;
-          t1 = param11;
-          lscomp2 = function lscomp2(p2) {
-            let param02, param12, r, t2, tmp2;
-            if (p2 instanceof NofibPrelude.Nil.class) {
-              return lscomp1(t1)
-            } else if (p2 instanceof NofibPrelude.Cons.class) {
-              param02 = p2.head;
-              param12 = p2.tail;
-              r = param02;
-              t2 = param12;
-              tmp2 = lscomp2(t2);
-              return NofibPrelude.Cons(r, tmp2)
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          };
-          tmp1 = cryptarithm1.addj(j1, pjs);
-          return lscomp2(tmp1)
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
       tmp = cryptarithm1.permutations(js);
-      return lscomp1(tmp)
+      return lscomp1$(j1, tmp)
     } else {
       throw new globalThis.Error("match error");
     }
   } 
   static testCryptarithm_nofib(n) {
-    let tmp, tmp1, lambda;
-    lambda = (undefined, function (i) {
-      let p0, tmp2, tmp3, tmp4, tmp5;
-      tmp2 = 9 + i;
-      tmp3 = NofibPrelude.enumFromTo(0, tmp2);
-      tmp4 = NofibPrelude.take(10, tmp3);
-      p0 = tmp4;
-      tmp5 = cryptarithm1.permutations(p0);
-      return NofibPrelude.filter(cryptarithm1.condition, tmp5)
-    });
+    let tmp, tmp1;
     tmp = lambda;
     tmp1 = NofibPrelude.enumFromTo(1, n);
     return NofibPrelude.map(tmp, tmp1)

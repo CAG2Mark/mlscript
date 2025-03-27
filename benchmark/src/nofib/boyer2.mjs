@@ -2,11 +2,23 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let boyer21;
+let boyer21, lambda, lambda1, lambda2, lambda3;
+lambda2 = (undefined, function (x, y) {
+  return x < y
+});
+lambda3 = (undefined, function (x, y) {
+  return x > y
+});
+lambda = (undefined, function (x, y) {
+  return x < y
+});
+lambda1 = (undefined, function (x, y) {
+  return x > y
+});
 boyer21 = class boyer2 {
   static {
     boyer21 = boyer2;
-    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66, tmp67, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74, tmp75, tmp76, tmp77, tmp78, tmp79, tmp80, tmp81, tmp82, tmp83, tmp84, tmp85, tmp86, tmp87, tmp88, tmp89, tmp90, tmp91, tmp92, tmp93, tmp94, tmp95, tmp96, tmp97, tmp98, tmp99, tmp100, tmp101, tmp102, tmp103, tmp104, tmp105, tmp106, tmp107, tmp108, tmp109, tmp110, tmp111, tmp112, tmp113, tmp114, tmp115, tmp116, tmp117, tmp118, tmp119, tmp120, tmp121, tmp122, tmp123, tmp124, tmp125, tmp126, tmp127, tmp128, tmp129, tmp130, tmp131, tmp132, tmp133, tmp134, tmp135, tmp136, tmp137, tmp138, tmp139, tmp140, tmp141, tmp142, tmp143, tmp144, tmp145, tmp146, tmp147, tmp148, tmp149, tmp150, tmp151, tmp152, tmp153, tmp154, tmp155, tmp156, tmp157, tmp158, tmp159, tmp160, tmp161, tmp162, tmp163, tmp164, tmp165, tmp166, tmp167, tmp168, tmp169, tmp170, tmp171, tmp172, tmp173, tmp174, tmp175, tmp176, tmp177, tmp178, tmp179, tmp180, tmp181, tmp182, tmp183, tmp184, tmp185, tmp186, tmp187, tmp188, tmp189, tmp190, tmp191, tmp192, tmp193, tmp194, tmp195, tmp196, tmp197, tmp198, tmp199, tmp200, tmp201, tmp202, tmp203, tmp204, tmp205, tmp206, tmp207, tmp208, tmp209, tmp210, tmp211, tmp212, tmp213, tmp214, tmp215, tmp216, lambda;
+    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66, tmp67, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74, tmp75, tmp76, tmp77, tmp78, tmp79, tmp80, tmp81, tmp82, tmp83, tmp84, tmp85, tmp86, tmp87, tmp88, tmp89, tmp90, tmp91, tmp92, tmp93, tmp94, tmp95, tmp96, tmp97, tmp98, tmp99, tmp100, tmp101, tmp102, tmp103, tmp104, tmp105, tmp106, tmp107, tmp108, tmp109, tmp110, tmp111, tmp112, tmp113, tmp114, tmp115, tmp116, tmp117, tmp118, tmp119, tmp120, tmp121, tmp122, tmp123, tmp124, tmp125, tmp126, tmp127, tmp128, tmp129, tmp130, tmp131, tmp132, tmp133, tmp134, tmp135, tmp136, tmp137, tmp138, tmp139, tmp140, tmp141, tmp142, tmp143, tmp144, tmp145, tmp146, tmp147, tmp148, tmp149, tmp150, tmp151, tmp152, tmp153, tmp154, tmp155, tmp156, tmp157, tmp158, tmp159, tmp160, tmp161, tmp162, tmp163, tmp164, tmp165, tmp166, tmp167, tmp168, tmp169, tmp170, tmp171, tmp172, tmp173, tmp174, tmp175, tmp176, tmp177, tmp178, tmp179, tmp180, tmp181, tmp182, tmp183, tmp184, tmp185, tmp186, tmp187, tmp188, tmp189, tmp190, tmp191, tmp192, tmp193, tmp194, tmp195, tmp196, tmp197, tmp198, tmp199, tmp200, tmp201, tmp202, tmp203, tmp204, tmp205, tmp206, tmp207, tmp208, tmp209, tmp210, tmp211, tmp212, tmp213, tmp214, tmp215, tmp216, lambda4;
     this.Lisplist = class Lisplist {
       constructor() {}
       toString() { return "Lisplist"; }
@@ -281,10 +293,10 @@ boyer21 = class boyer2 {
     tmp215 = boyer2.makelemmas(boyer2.rules);
     tmp216 = boyer2.addlemmalst(tmp215, boyer2.Empty);
     this.lemmas = tmp216;
-    lambda = (undefined, function () {
+    lambda4 = (undefined, function () {
       return boyer2.testBoyer2_nofib(3)
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda4)
   }
   static lispListEq(x, y) {
     let param0, first1, first0, a, b, param01, first11, first01, c, d, scrut, param02, a1, param03, b1;
@@ -1124,7 +1136,7 @@ boyer21 = class boyer2 {
     }
   } 
   static addtoLUT(k_l_lut) {
-    let first2, first1, first0, k, l, param0, first21, first11, first01, left, first12, first02, k1, kl, right, scrut, scrut1, k2, l1, tmp, tmp1, tmp2, tmp3, lambda, lambda1;
+    let first2, first1, first0, k, l, param0, first21, first11, first01, left, first12, first02, k1, kl, right, scrut, scrut1, k2, l1, tmp, tmp1, tmp2, tmp3;
     if (globalThis.Array.isArray(k_l_lut) && k_l_lut.length === 3) {
       first0 = k_l_lut[0];
       first1 = k_l_lut[1];
@@ -1168,12 +1180,6 @@ boyer21 = class boyer2 {
                 right
               ])
             } else {
-              lambda = (undefined, function (x8, y1) {
-                return x8 < y1
-              });
-              lambda1 = (undefined, function (x8, y1) {
-                return x8 > y1
-              });
               scrut = NofibPrelude.ltList(k, k1, lambda, lambda1);
               if (scrut === true) {
                 tmp2 = boyer2.addtoLUT([
@@ -1219,7 +1225,7 @@ boyer21 = class boyer2 {
     }
   } 
   static getLUT(t_lut) {
-    let first1, first0, t1, param0, first2, first11, first01, left, first12, first02, k, kl, right, scrut, scrut1, t2, lambda, lambda1;
+    let first1, first0, t1, param0, first2, first11, first01, left, first12, first02, k, kl, right, scrut, scrut1, t2;
     if (globalThis.Array.isArray(t_lut) && t_lut.length === 2) {
       first0 = t_lut[0];
       first1 = t_lut[1];
@@ -1244,13 +1250,7 @@ boyer21 = class boyer2 {
             if (scrut1 === true) {
               return kl
             } else {
-              lambda = (undefined, function (x8, y1) {
-                return x8 < y1
-              });
-              lambda1 = (undefined, function (x8, y1) {
-                return x8 > y1
-              });
-              scrut = NofibPrelude.ltList(t1, k, lambda, lambda1);
+              scrut = NofibPrelude.ltList(t1, k, lambda2, lambda3);
               if (scrut === true) {
                 return boyer2.getLUT([
                   t1,

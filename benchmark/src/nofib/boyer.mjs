@@ -2,11 +2,1292 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let boyer1;
+let quotient, if_, sub1, plus, f, implies, times, exp_, gcd_, difference, nlistp, one, remainder, four, and_, reverse_, greaterp, or_, odd_, two, lessp, cons, add1, divides, nilp, listp, consp, lesseqp, equal, append_, greatereqp, member, zerop, not_, iff, length_, even_, boyer1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, lambda11, lambda12, lambda13, lambda14, lambda15, lambda16, lambda17, lambda18, lambda19, lambda20, lambda21, lambda22, lambda23, lambda24, lambda25, lambda26, lambda27, lambda28, lambda29, lambda30, lambda31, lambda32, lambda33, lambda34, lambda35, lambda36, lambda37, lambda38, lambda39, lambda40, lambda41, lambda$, zerop$, lambda$1, times$, lambda$2, sub1$, lambda$3, reverse_$, lambda$4, remainder$, lambda$5, quotient$, lambda$6, plus$, lambda$7, or_$, lambda$8, odd_$, lambda$9, nlistp$, lambda$10, member$, lambda$11, listp$, lambda$12, nilp$, lambda$13, lessp$, lambda$14, lesseqp$, lambda$15, length_$, lambda$16, iff$, lambda$17, implies$, lambda$18, greaterp$, lambda$19, greatereqp$, lambda$20, gcd_$, lambda$21, exp_$, lambda$22, even_$, lambda$23, equal$, lambda$24, divides$, lambda$25, difference$, lambda$26, consp$, lambda$27, append_$, lambda$28, and_$, lambda$29, not_$, lambda$30, if_$, lambda$31, four$, lambda$32, two$, lambda$33, one$, lambda$34;
+lambda$34 = function lambda$(zero) {
+  let tmp, tmp1;
+  tmp = one$(zero);
+  tmp1 = add1(zero);
+  return NofibPrelude.Cons([
+    tmp,
+    tmp1
+  ], NofibPrelude.Nil)
+};
+lambda1 = (undefined, function (zero) {
+  return () => {
+    return lambda$34(zero)
+  }
+});
+one$ = function one$(zero) {
+  let tmp, tmp1;
+  tmp = runtime.safeCall(lambda1(zero));
+  tmp1 = NofibPrelude.lazy(tmp);
+  return boyer1.Fun(boyer1.ONE, NofibPrelude.Nil, tmp1)
+};
+one = function one(zero) {
+  return () => {
+    return one$(zero)
+  }
+};
+lambda$33 = function lambda$(zero) {
+  let tmp, tmp1, tmp2;
+  tmp = two$(zero);
+  tmp1 = one$(zero);
+  tmp2 = add1(tmp1);
+  return NofibPrelude.Cons([
+    tmp,
+    tmp2
+  ], NofibPrelude.Nil)
+};
+lambda2 = (undefined, function (zero) {
+  return () => {
+    return lambda$33(zero)
+  }
+});
+two$ = function two$(zero) {
+  let tmp, tmp1;
+  tmp = runtime.safeCall(lambda2(zero));
+  tmp1 = NofibPrelude.lazy(tmp);
+  return boyer1.Fun(boyer1.TWO, NofibPrelude.Nil, tmp1)
+};
+two = function two(zero) {
+  return () => {
+    return two$(zero)
+  }
+};
+lambda$32 = function lambda$(zero) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = four$(zero);
+  tmp1 = two$(zero);
+  tmp2 = add1(tmp1);
+  tmp3 = add1(tmp2);
+  return NofibPrelude.Cons([
+    tmp,
+    tmp3
+  ], NofibPrelude.Nil)
+};
+lambda3 = (undefined, function (zero) {
+  return () => {
+    return lambda$32(zero)
+  }
+});
+four$ = function four$(zero) {
+  let tmp, tmp1;
+  tmp = runtime.safeCall(lambda3(zero));
+  tmp1 = NofibPrelude.lazy(tmp);
+  return boyer1.Fun(boyer1.FOUR, NofibPrelude.Nil, tmp1)
+};
+four = function four(zero) {
+  return () => {
+    return four$(zero)
+  }
+};
+lambda4 = (undefined, function () {
+  return NofibPrelude.Nil
+});
+add1 = function add1(a) {
+  let tmp, tmp1;
+  tmp = NofibPrelude.Cons(a, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.lazy(lambda4);
+  return boyer1.Fun(boyer1.ADD1, tmp, tmp1)
+};
+lambda$31 = function lambda$(u, w, x, y, z) {
+  let tmp, tmp1, tmp2, tmp3, tmp4;
+  tmp = if_$(u, w, x, y, z, x, y, z);
+  tmp1 = if_$(u, w, x, y, z, tmp, u, w);
+  tmp2 = if_$(u, w, x, y, z, y, u, w);
+  tmp3 = if_$(u, w, x, y, z, z, u, w);
+  tmp4 = if_$(u, w, x, y, z, x, tmp2, tmp3);
+  return NofibPrelude.Cons([
+    tmp1,
+    tmp4
+  ], NofibPrelude.Nil)
+};
+lambda5 = (undefined, function (u, w, x, y, z) {
+  return () => {
+    return lambda$31(u, w, x, y, z)
+  }
+});
+if_$ = function if_$(u, w, x, y, z, a, b, c) {
+  let tmp, tmp1, tmp2, tmp3, tmp4;
+  tmp = NofibPrelude.Cons(c, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(b, tmp);
+  tmp2 = NofibPrelude.Cons(a, tmp1);
+  tmp3 = runtime.safeCall(lambda5(u, w, x, y, z));
+  tmp4 = NofibPrelude.lazy(tmp3);
+  return boyer1.Fun(boyer1.IF, tmp2, tmp4)
+};
+if_ = function if_(u, w, x, y, z) {
+  return (a, b, c) => {
+    return if_$(u, w, x, y, z, a, b, c)
+  }
+};
+lambda$30 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue) {
+  let tmp, tmp1;
+  tmp = not_$(u, w, x, y, z, boyerFalse, boyerTrue, x);
+  tmp1 = if_$(u, w, x, y, z, x, boyerFalse, boyerTrue);
+  return NofibPrelude.Cons([
+    tmp,
+    tmp1
+  ], NofibPrelude.Nil)
+};
+lambda6 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue) {
+  return () => {
+    return lambda$30(u, w, x, y, z, boyerFalse, boyerTrue)
+  }
+});
+not_$ = function not_$(u, w, x, y, z, boyerFalse, boyerTrue, a) {
+  let tmp, tmp1, tmp2;
+  tmp = NofibPrelude.Cons(a, NofibPrelude.Nil);
+  tmp1 = runtime.safeCall(lambda6(u, w, x, y, z, boyerFalse, boyerTrue));
+  tmp2 = NofibPrelude.lazy(tmp1);
+  return boyer1.Fun(boyer1.NOT, tmp, tmp2)
+};
+not_ = function not_(u, w, x, y, z, boyerFalse, boyerTrue) {
+  return (a) => {
+    return not_$(u, w, x, y, z, boyerFalse, boyerTrue, a)
+  }
+};
+lambda$29 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue) {
+  let tmp, tmp1, tmp2;
+  tmp = and_$(u, w, x, y, z, boyerFalse, boyerTrue, x, y);
+  tmp1 = if_$(u, w, x, y, z, y, boyerTrue, boyerFalse);
+  tmp2 = if_$(u, w, x, y, z, x, tmp1, boyerFalse);
+  return NofibPrelude.Cons([
+    tmp,
+    tmp2
+  ], NofibPrelude.Nil)
+};
+lambda7 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue) {
+  return () => {
+    return lambda$29(u, w, x, y, z, boyerFalse, boyerTrue)
+  }
+});
+and_$ = function and_$(u, w, x, y, z, boyerFalse, boyerTrue, a, b) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = runtime.safeCall(lambda7(u, w, x, y, z, boyerFalse, boyerTrue));
+  tmp3 = NofibPrelude.lazy(tmp2);
+  return boyer1.Fun(boyer1.AND, tmp1, tmp3)
+};
+and_ = function and_(u, w, x, y, z, boyerFalse, boyerTrue) {
+  return (a, b) => {
+    return and_$(u, w, x, y, z, boyerFalse, boyerTrue, a, b)
+  }
+};
+lambda$28 = function lambda$(x, y, z) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = append_$(x, y, z, x, y);
+  tmp1 = append_$(x, y, z, tmp, z);
+  tmp2 = append_$(x, y, z, y, z);
+  tmp3 = append_$(x, y, z, x, tmp2);
+  return NofibPrelude.Cons([
+    tmp1,
+    tmp3
+  ], NofibPrelude.Nil)
+};
+lambda8 = (undefined, function (x, y, z) {
+  return () => {
+    return lambda$28(x, y, z)
+  }
+});
+append_$ = function append_$(x, y, z, a, b) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = runtime.safeCall(lambda8(x, y, z));
+  tmp3 = NofibPrelude.lazy(tmp2);
+  return boyer1.Fun(boyer1.APPEND, tmp1, tmp3)
+};
+append_ = function append_(x, y, z) {
+  return (a, b) => {
+    return append_$(x, y, z, a, b)
+  }
+};
+lambda9 = (undefined, function () {
+  return NofibPrelude.Nil
+});
+cons = function cons(a, b) {
+  let tmp, tmp1, tmp2;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = NofibPrelude.lazy(lambda9);
+  return boyer1.Fun(boyer1.CONS, tmp1, tmp2)
+};
+lambda$27 = function lambda$(x, y, boyerTrue) {
+  let tmp, tmp1;
+  tmp = cons(x, y);
+  tmp1 = consp$(x, y, boyerTrue, tmp);
+  return NofibPrelude.Cons([
+    tmp1,
+    boyerTrue
+  ], NofibPrelude.Nil)
+};
+lambda10 = (undefined, function (x, y, boyerTrue) {
+  return () => {
+    return lambda$27(x, y, boyerTrue)
+  }
+});
+consp$ = function consp$(x, y, boyerTrue, a) {
+  let tmp, tmp1, tmp2;
+  tmp = NofibPrelude.Cons(a, NofibPrelude.Nil);
+  tmp1 = runtime.safeCall(lambda10(x, y, boyerTrue));
+  tmp2 = NofibPrelude.lazy(tmp1);
+  return boyer1.Fun(boyer1.CONSP, tmp, tmp2)
+};
+consp = function consp(x, y, boyerTrue) {
+  return (a) => {
+    return consp$(x, y, boyerTrue, a)
+  }
+};
+lambda$26 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26;
+  tmp = difference$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, x);
+  tmp1 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp2 = difference$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp1, x);
+  tmp3 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, x);
+  tmp4 = difference$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp3, x);
+  tmp5 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp6 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, z);
+  tmp7 = difference$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp5, tmp6);
+  tmp8 = difference$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, z);
+  tmp9 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, z);
+  tmp10 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, tmp9);
+  tmp11 = difference$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp10, x);
+  tmp12 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, z);
+  tmp13 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, z);
+  tmp14 = add1(tmp13);
+  tmp15 = difference$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp14, z);
+  tmp16 = add1(y);
+  tmp17 = add1(x);
+  tmp18 = add1(tmp17);
+  tmp19 = two$(zero);
+  tmp20 = difference$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp18, tmp19);
+  tmp21 = NofibPrelude.Cons([
+    tmp20,
+    x
+  ], NofibPrelude.Nil);
+  tmp22 = NofibPrelude.Cons([
+    tmp15,
+    tmp16
+  ], tmp21);
+  tmp23 = NofibPrelude.Cons([
+    tmp11,
+    tmp12
+  ], tmp22);
+  tmp24 = NofibPrelude.Cons([
+    tmp7,
+    tmp8
+  ], tmp23);
+  tmp25 = NofibPrelude.Cons([
+    tmp4,
+    y
+  ], tmp24);
+  tmp26 = NofibPrelude.Cons([
+    tmp2,
+    y
+  ], tmp25);
+  return NofibPrelude.Cons([
+    tmp,
+    zero
+  ], tmp26)
+};
+lambda11 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return () => {
+    return lambda$26(u, w, x, y, z, boyerFalse, boyerTrue, zero)
+  }
+});
+difference$ = function difference$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = runtime.safeCall(lambda11(u, w, x, y, z, boyerFalse, boyerTrue, zero));
+  tmp3 = NofibPrelude.lazy(tmp2);
+  return boyer1.Fun(boyer1.DIFFERENCE, tmp1, tmp3)
+};
+difference = function difference(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return (a, b) => {
+    return difference$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b)
+  }
+};
+lambda$25 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  let tmp, tmp1, tmp2;
+  tmp = divides$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp1 = remainder$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, x);
+  tmp2 = zerop$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp1);
+  return NofibPrelude.Cons([
+    tmp,
+    tmp2
+  ], NofibPrelude.Nil)
+};
+lambda12 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return () => {
+    return lambda$25(u, w, x, y, z, boyerFalse, boyerTrue, zero)
+  }
+});
+divides$ = function divides$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = runtime.safeCall(lambda12(u, w, x, y, z, boyerFalse, boyerTrue, zero));
+  tmp3 = NofibPrelude.lazy(tmp2);
+  return boyer1.Fun(boyer1.DIVIDES, tmp1, tmp3)
+};
+divides = function divides(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return (a, b) => {
+    return divides$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b)
+  }
+};
+lambda$24 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66, tmp67, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74;
+  tmp = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp1 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp, zero);
+  tmp2 = zerop$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x);
+  tmp3 = zerop$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y);
+  tmp4 = and_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp2, tmp3);
+  tmp5 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp6 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, z);
+  tmp7 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp5, tmp6);
+  tmp8 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, z);
+  tmp9 = difference$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp10 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, zero, tmp9);
+  tmp11 = lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, x);
+  tmp12 = not_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp11);
+  tmp13 = difference$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp14 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, tmp13);
+  tmp15 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, zero);
+  tmp16 = zerop$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y);
+  tmp17 = or_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp15, tmp16);
+  tmp18 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp19 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp18, zero);
+  tmp20 = zerop$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x);
+  tmp21 = zerop$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y);
+  tmp22 = or_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp20, tmp21);
+  tmp23 = append_$(x, y, z, x, y);
+  tmp24 = append_$(x, y, z, x, z);
+  tmp25 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp23, tmp24);
+  tmp26 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, z);
+  tmp27 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp28 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, tmp27);
+  tmp29 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, zero);
+  tmp30 = one$(zero);
+  tmp31 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, tmp30);
+  tmp32 = or_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp29, tmp31);
+  tmp33 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp34 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, tmp33);
+  tmp35 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, zero);
+  tmp36 = one$(zero);
+  tmp37 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, tmp36);
+  tmp38 = or_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp35, tmp37);
+  tmp39 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp40 = one$(zero);
+  tmp41 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp39, tmp40);
+  tmp42 = one$(zero);
+  tmp43 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, tmp42);
+  tmp44 = one$(zero);
+  tmp45 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, tmp44);
+  tmp46 = and_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp43, tmp45);
+  tmp47 = difference$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp48 = difference$(u, w, x, y, z, boyerFalse, boyerTrue, zero, z, y);
+  tmp49 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp47, tmp48);
+  tmp50 = lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp51 = lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, z);
+  tmp52 = not_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp51);
+  tmp53 = lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, z, y);
+  tmp54 = lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, x);
+  tmp55 = not_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp54);
+  tmp56 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, z);
+  tmp57 = if_$(u, w, x, y, z, tmp53, tmp55, tmp56);
+  tmp58 = if_$(u, w, x, y, z, tmp50, tmp52, tmp57);
+  tmp59 = lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp60 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp59, z);
+  tmp61 = lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp62 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, boyerTrue, z);
+  tmp63 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, boyerFalse, z);
+  tmp64 = if_$(u, w, x, y, z, tmp61, tmp62, tmp63);
+  tmp65 = NofibPrelude.Cons([
+    tmp60,
+    tmp64
+  ], NofibPrelude.Nil);
+  tmp66 = NofibPrelude.Cons([
+    tmp49,
+    tmp58
+  ], tmp65);
+  tmp67 = NofibPrelude.Cons([
+    tmp41,
+    tmp46
+  ], tmp66);
+  tmp68 = NofibPrelude.Cons([
+    tmp34,
+    tmp38
+  ], tmp67);
+  tmp69 = NofibPrelude.Cons([
+    tmp28,
+    tmp32
+  ], tmp68);
+  tmp70 = NofibPrelude.Cons([
+    tmp25,
+    tmp26
+  ], tmp69);
+  tmp71 = NofibPrelude.Cons([
+    tmp19,
+    tmp22
+  ], tmp70);
+  tmp72 = NofibPrelude.Cons([
+    tmp14,
+    tmp17
+  ], tmp71);
+  tmp73 = NofibPrelude.Cons([
+    tmp10,
+    tmp12
+  ], tmp72);
+  tmp74 = NofibPrelude.Cons([
+    tmp7,
+    tmp8
+  ], tmp73);
+  return NofibPrelude.Cons([
+    tmp1,
+    tmp4
+  ], tmp74)
+};
+lambda13 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return () => {
+    return lambda$24(u, w, x, y, z, boyerFalse, boyerTrue, zero)
+  }
+});
+equal$ = function equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = runtime.safeCall(lambda13(u, w, x, y, z, boyerFalse, boyerTrue, zero));
+  tmp3 = NofibPrelude.lazy(tmp2);
+  return boyer1.Fun(boyer1.EQUAL, tmp1, tmp3)
+};
+equal = function equal(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return (a, b) => {
+    return equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b)
+  }
+};
+lambda$23 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  let tmp, tmp1, tmp2, tmp3, tmp4;
+  tmp = even_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x);
+  tmp1 = zerop$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x);
+  tmp2 = sub1$(x, x);
+  tmp3 = odd_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp2);
+  tmp4 = if_$(u, w, x, y, z, tmp1, boyerTrue, tmp3);
+  return NofibPrelude.Cons([
+    tmp,
+    tmp4
+  ], NofibPrelude.Nil)
+};
+lambda14 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return () => {
+    return lambda$23(u, w, x, y, z, boyerFalse, boyerTrue, zero)
+  }
+});
+even_$ = function even_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a) {
+  let tmp, tmp1, tmp2;
+  tmp = NofibPrelude.Cons(a, NofibPrelude.Nil);
+  tmp1 = runtime.safeCall(lambda14(u, w, x, y, z, boyerFalse, boyerTrue, zero));
+  tmp2 = NofibPrelude.lazy(tmp1);
+  return boyer1.Fun(boyer1.EVEN, tmp, tmp2)
+};
+even_ = function even_(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return (a) => {
+    return even_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a)
+  }
+};
+lambda$22 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9;
+  tmp = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, z);
+  tmp1 = exp_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, tmp);
+  tmp2 = exp_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp3 = exp_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, z);
+  tmp4 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp2, tmp3);
+  tmp5 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, z);
+  tmp6 = exp_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, tmp5);
+  tmp7 = exp_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp8 = exp_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp7, z);
+  tmp9 = NofibPrelude.Cons([
+    tmp6,
+    tmp8
+  ], NofibPrelude.Nil);
+  return NofibPrelude.Cons([
+    tmp1,
+    tmp4
+  ], tmp9)
+};
+lambda15 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return () => {
+    return lambda$22(u, w, x, y, z, boyerFalse, boyerTrue, zero)
+  }
+});
+exp_$ = function exp_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = runtime.safeCall(lambda15(u, w, x, y, z, boyerFalse, boyerTrue, zero));
+  tmp3 = NofibPrelude.lazy(tmp2);
+  return boyer1.Fun(boyer1.EXP, tmp1, tmp3)
+};
+exp_ = function exp_(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return (a, b) => {
+    return exp_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b)
+  }
+};
+lambda16 = (undefined, function () {
+  return NofibPrelude.Nil
+});
+f = function f(a) {
+  let tmp, tmp1;
+  tmp = NofibPrelude.Cons(a, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.lazy(lambda16);
+  return boyer1.Fun(boyer1.F, tmp, tmp1)
+};
+lambda$21 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+  tmp = gcd_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp1 = gcd_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, x);
+  tmp2 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, z);
+  tmp3 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, z);
+  tmp4 = gcd_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp2, tmp3);
+  tmp5 = gcd_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp6 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, z, tmp5);
+  tmp7 = NofibPrelude.Cons([
+    tmp4,
+    tmp6
+  ], NofibPrelude.Nil);
+  return NofibPrelude.Cons([
+    tmp,
+    tmp1
+  ], tmp7)
+};
+lambda17 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return () => {
+    return lambda$21(u, w, x, y, z, boyerFalse, boyerTrue, zero)
+  }
+});
+gcd_$ = function gcd_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = runtime.safeCall(lambda17(u, w, x, y, z, boyerFalse, boyerTrue, zero));
+  tmp3 = NofibPrelude.lazy(tmp2);
+  return boyer1.Fun(boyer1.GCD, tmp1, tmp3)
+};
+gcd_ = function gcd_(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return (a, b) => {
+    return gcd_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b)
+  }
+};
+lambda$20 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  let tmp, tmp1, tmp2;
+  tmp = greatereqp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp1 = lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp2 = not_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp1);
+  return NofibPrelude.Cons([
+    tmp,
+    tmp2
+  ], NofibPrelude.Nil)
+};
+lambda18 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return () => {
+    return lambda$20(u, w, x, y, z, boyerFalse, boyerTrue, zero)
+  }
+});
+greatereqp$ = function greatereqp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = runtime.safeCall(lambda18(u, w, x, y, z, boyerFalse, boyerTrue, zero));
+  tmp3 = NofibPrelude.lazy(tmp2);
+  return boyer1.Fun(boyer1.GREATEREQP, tmp1, tmp3)
+};
+greatereqp = function greatereqp(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return (a, b) => {
+    return greatereqp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b)
+  }
+};
+lambda$19 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  let tmp, tmp1;
+  tmp = greaterp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp1 = lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, x);
+  return NofibPrelude.Cons([
+    tmp,
+    tmp1
+  ], NofibPrelude.Nil)
+};
+lambda19 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return () => {
+    return lambda$19(u, w, x, y, z, boyerFalse, boyerTrue, zero)
+  }
+});
+greaterp$ = function greaterp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = runtime.safeCall(lambda19(u, w, x, y, z, boyerFalse, boyerTrue, zero));
+  tmp3 = NofibPrelude.lazy(tmp2);
+  return boyer1.Fun(boyer1.GREATERP, tmp1, tmp3)
+};
+greaterp = function greaterp(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return (a, b) => {
+    return greaterp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b)
+  }
+};
+lambda$18 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue) {
+  let tmp, tmp1, tmp2;
+  tmp = implies$(u, w, x, y, z, boyerFalse, boyerTrue, x, y);
+  tmp1 = if_$(u, w, x, y, z, y, boyerTrue, boyerFalse);
+  tmp2 = if_$(u, w, x, y, z, x, tmp1, boyerTrue);
+  return NofibPrelude.Cons([
+    tmp,
+    tmp2
+  ], NofibPrelude.Nil)
+};
+lambda20 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue) {
+  return () => {
+    return lambda$18(u, w, x, y, z, boyerFalse, boyerTrue)
+  }
+});
+implies$ = function implies$(u, w, x, y, z, boyerFalse, boyerTrue, a, b) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = runtime.safeCall(lambda20(u, w, x, y, z, boyerFalse, boyerTrue));
+  tmp3 = NofibPrelude.lazy(tmp2);
+  return boyer1.Fun(boyer1.IMPLIES, tmp1, tmp3)
+};
+implies = function implies(u, w, x, y, z, boyerFalse, boyerTrue) {
+  return (a, b) => {
+    return implies$(u, w, x, y, z, boyerFalse, boyerTrue, a, b)
+  }
+};
+lambda$17 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = iff$(u, w, x, y, z, boyerFalse, boyerTrue, x, y);
+  tmp1 = implies$(u, w, x, y, z, boyerFalse, boyerTrue, x, y);
+  tmp2 = implies$(u, w, x, y, z, boyerFalse, boyerTrue, y, x);
+  tmp3 = and_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp1, tmp2);
+  return NofibPrelude.Cons([
+    tmp,
+    tmp3
+  ], NofibPrelude.Nil)
+};
+lambda21 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue) {
+  return () => {
+    return lambda$17(u, w, x, y, z, boyerFalse, boyerTrue)
+  }
+});
+iff$ = function iff$(u, w, x, y, z, boyerFalse, boyerTrue, a, b) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = runtime.safeCall(lambda21(u, w, x, y, z, boyerFalse, boyerTrue));
+  tmp3 = NofibPrelude.lazy(tmp2);
+  return boyer1.Fun(boyer1.IFF, tmp1, tmp3)
+};
+iff = function iff(u, w, x, y, z, boyerFalse, boyerTrue) {
+  return (a, b) => {
+    return iff$(u, w, x, y, z, boyerFalse, boyerTrue, a, b)
+  }
+};
+lambda$16 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11;
+  tmp = reverse_$(x, y, z, x);
+  tmp1 = length_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp);
+  tmp2 = length_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x);
+  tmp3 = cons(u, w);
+  tmp4 = cons(z, tmp3);
+  tmp5 = cons(y, tmp4);
+  tmp6 = cons(x, tmp5);
+  tmp7 = length_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp6);
+  tmp8 = four$(zero);
+  tmp9 = length_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, w);
+  tmp10 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp8, tmp9);
+  tmp11 = NofibPrelude.Cons([
+    tmp7,
+    tmp10
+  ], NofibPrelude.Nil);
+  return NofibPrelude.Cons([
+    tmp1,
+    tmp2
+  ], tmp11)
+};
+lambda22 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return () => {
+    return lambda$16(u, w, x, y, z, boyerFalse, boyerTrue, zero)
+  }
+});
+length_$ = function length_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a) {
+  let tmp, tmp1, tmp2;
+  tmp = NofibPrelude.Cons(a, NofibPrelude.Nil);
+  tmp1 = runtime.safeCall(lambda22(u, w, x, y, z, boyerFalse, boyerTrue, zero));
+  tmp2 = NofibPrelude.lazy(tmp1);
+  return boyer1.Fun(boyer1.LENGTH, tmp, tmp2)
+};
+length_ = function length_(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return (a) => {
+    return length_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a)
+  }
+};
+lambda$15 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  let tmp, tmp1, tmp2;
+  tmp = lesseqp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp1 = lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, x);
+  tmp2 = not_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp1);
+  return NofibPrelude.Cons([
+    tmp,
+    tmp2
+  ], NofibPrelude.Nil)
+};
+lambda23 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return () => {
+    return lambda$15(u, w, x, y, z, boyerFalse, boyerTrue, zero)
+  }
+});
+lesseqp$ = function lesseqp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = runtime.safeCall(lambda23(u, w, x, y, z, boyerFalse, boyerTrue, zero));
+  tmp3 = NofibPrelude.lazy(tmp2);
+  return boyer1.Fun(boyer1.LESSEQP, tmp1, tmp3)
+};
+lesseqp = function lesseqp(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return (a, b) => {
+    return lesseqp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b)
+  }
+};
+lambda$14 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29;
+  tmp = remainder$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp1 = lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp, y);
+  tmp2 = zerop$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y);
+  tmp3 = not_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp2);
+  tmp4 = quotient$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp5 = lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp4, x);
+  tmp6 = zerop$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x);
+  tmp7 = not_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp6);
+  tmp8 = one$(zero);
+  tmp9 = lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp8, y);
+  tmp10 = and_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp7, tmp9);
+  tmp11 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp12 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, z);
+  tmp13 = lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp11, tmp12);
+  tmp14 = lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, z);
+  tmp15 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, z);
+  tmp16 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, z);
+  tmp17 = lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp15, tmp16);
+  tmp18 = zerop$(u, w, x, y, z, boyerFalse, boyerTrue, zero, z);
+  tmp19 = not_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp18);
+  tmp20 = lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp21 = and_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp19, tmp20);
+  tmp22 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp23 = lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, tmp22);
+  tmp24 = zerop$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x);
+  tmp25 = not_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp24);
+  tmp26 = NofibPrelude.Cons([
+    tmp23,
+    tmp25
+  ], NofibPrelude.Nil);
+  tmp27 = NofibPrelude.Cons([
+    tmp17,
+    tmp21
+  ], tmp26);
+  tmp28 = NofibPrelude.Cons([
+    tmp13,
+    tmp14
+  ], tmp27);
+  tmp29 = NofibPrelude.Cons([
+    tmp5,
+    tmp10
+  ], tmp28);
+  return NofibPrelude.Cons([
+    tmp1,
+    tmp3
+  ], tmp29)
+};
+lambda24 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return () => {
+    return lambda$14(u, w, x, y, z, boyerFalse, boyerTrue, zero)
+  }
+});
+lessp$ = function lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = runtime.safeCall(lambda24(u, w, x, y, z, boyerFalse, boyerTrue, zero));
+  tmp3 = NofibPrelude.lazy(tmp2);
+  return boyer1.Fun(boyer1.LESSP, tmp1, tmp3)
+};
+lessp = function lessp(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return (a, b) => {
+    return lessp$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b)
+  }
+};
+lambda$13 = function lambda$(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero) {
+  let tmp, tmp1;
+  tmp = nilp$(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero, x);
+  tmp1 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, nil);
+  return NofibPrelude.Cons([
+    tmp,
+    tmp1
+  ], NofibPrelude.Nil)
+};
+lambda25 = (undefined, function (u, w, x, y, z, boyerFalse, nil, boyerTrue, zero) {
+  return () => {
+    return lambda$13(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero)
+  }
+});
+nilp$ = function nilp$(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero, a) {
+  let tmp, tmp1, tmp2;
+  tmp = NofibPrelude.Cons(a, NofibPrelude.Nil);
+  tmp1 = runtime.safeCall(lambda25(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero));
+  tmp2 = NofibPrelude.lazy(tmp1);
+  return boyer1.Fun(boyer1.NILP, tmp, tmp2)
+};
+nilp = function nilp(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero) {
+  return (a) => {
+    return nilp$(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero, a)
+  }
+};
+lambda$12 = function lambda$(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = listp$(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero, x);
+  tmp1 = nilp$(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero, x);
+  tmp2 = consp$(x, y, boyerTrue, x);
+  tmp3 = or_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp1, tmp2);
+  return NofibPrelude.Cons([
+    tmp,
+    tmp3
+  ], NofibPrelude.Nil)
+};
+lambda26 = (undefined, function (u, w, x, y, z, boyerFalse, nil, boyerTrue, zero) {
+  return () => {
+    return lambda$12(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero)
+  }
+});
+listp$ = function listp$(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero, a) {
+  let tmp, tmp1, tmp2;
+  tmp = NofibPrelude.Cons(a, NofibPrelude.Nil);
+  tmp1 = runtime.safeCall(lambda26(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero));
+  tmp2 = NofibPrelude.lazy(tmp1);
+  return boyer1.Fun(boyer1.LISTP, tmp, tmp2)
+};
+listp = function listp(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero) {
+  return (a) => {
+    return listp$(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero, a)
+  }
+};
+lambda$11 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue) {
+  let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8;
+  tmp = append_$(x, y, z, y, z);
+  tmp1 = member$(u, w, x, y, z, boyerFalse, boyerTrue, x, tmp);
+  tmp2 = member$(u, w, x, y, z, boyerFalse, boyerTrue, x, y);
+  tmp3 = member$(u, w, x, y, z, boyerFalse, boyerTrue, x, z);
+  tmp4 = or_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp2, tmp3);
+  tmp5 = reverse_$(x, y, z, y);
+  tmp6 = member$(u, w, x, y, z, boyerFalse, boyerTrue, x, tmp5);
+  tmp7 = member$(u, w, x, y, z, boyerFalse, boyerTrue, x, y);
+  tmp8 = NofibPrelude.Cons([
+    tmp6,
+    tmp7
+  ], NofibPrelude.Nil);
+  return NofibPrelude.Cons([
+    tmp1,
+    tmp4
+  ], tmp8)
+};
+lambda27 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue) {
+  return () => {
+    return lambda$11(u, w, x, y, z, boyerFalse, boyerTrue)
+  }
+});
+member$ = function member$(u, w, x, y, z, boyerFalse, boyerTrue, a, b) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = runtime.safeCall(lambda27(u, w, x, y, z, boyerFalse, boyerTrue));
+  tmp3 = NofibPrelude.lazy(tmp2);
+  return boyer1.Fun(boyer1.MEMBER, tmp1, tmp3)
+};
+member = function member(u, w, x, y, z, boyerFalse, boyerTrue) {
+  return (a, b) => {
+    return member$(u, w, x, y, z, boyerFalse, boyerTrue, a, b)
+  }
+};
+lambda$10 = function lambda$(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero) {
+  let tmp, tmp1, tmp2;
+  tmp = nlistp$(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero, x);
+  tmp1 = listp$(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero, x);
+  tmp2 = not_$(u, w, x, y, z, boyerFalse, boyerTrue, tmp1);
+  return NofibPrelude.Cons([
+    tmp,
+    tmp2
+  ], NofibPrelude.Nil)
+};
+lambda28 = (undefined, function (u, w, x, y, z, boyerFalse, nil, boyerTrue, zero) {
+  return () => {
+    return lambda$10(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero)
+  }
+});
+nlistp$ = function nlistp$(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero, a) {
+  let tmp, tmp1, tmp2;
+  tmp = NofibPrelude.Cons(a, NofibPrelude.Nil);
+  tmp1 = runtime.safeCall(lambda28(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero));
+  tmp2 = NofibPrelude.lazy(tmp1);
+  return boyer1.Fun(boyer1.NLISTP, tmp, tmp2)
+};
+nlistp = function nlistp(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero) {
+  return (a) => {
+    return nlistp$(u, w, x, y, z, boyerFalse, nil, boyerTrue, zero, a)
+  }
+};
+lambda$9 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  let tmp, tmp1, tmp2;
+  tmp = odd_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x);
+  tmp1 = sub1$(x, x);
+  tmp2 = even_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp1);
+  return NofibPrelude.Cons([
+    tmp,
+    tmp2
+  ], NofibPrelude.Nil)
+};
+lambda29 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return () => {
+    return lambda$9(u, w, x, y, z, boyerFalse, boyerTrue, zero)
+  }
+});
+odd_$ = function odd_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a) {
+  let tmp, tmp1, tmp2;
+  tmp = NofibPrelude.Cons(a, NofibPrelude.Nil);
+  tmp1 = runtime.safeCall(lambda29(u, w, x, y, z, boyerFalse, boyerTrue, zero));
+  tmp2 = NofibPrelude.lazy(tmp1);
+  return boyer1.Fun(boyer1.ODD, tmp, tmp2)
+};
+odd_ = function odd_(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return (a) => {
+    return odd_$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a)
+  }
+};
+lambda$8 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue) {
+  let tmp, tmp1, tmp2;
+  tmp = or_$(u, w, x, y, z, boyerFalse, boyerTrue, x, y);
+  tmp1 = if_$(u, w, x, y, z, y, boyerTrue, boyerFalse);
+  tmp2 = if_$(u, w, x, y, z, x, boyerTrue, tmp1);
+  return NofibPrelude.Cons([
+    tmp,
+    tmp2
+  ], NofibPrelude.Nil)
+};
+lambda30 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue) {
+  return () => {
+    return lambda$8(u, w, x, y, z, boyerFalse, boyerTrue)
+  }
+});
+or_$ = function or_$(u, w, x, y, z, boyerFalse, boyerTrue, a, b) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = runtime.safeCall(lambda30(u, w, x, y, z, boyerFalse, boyerTrue));
+  tmp3 = NofibPrelude.lazy(tmp2);
+  return boyer1.Fun(boyer1.OR, tmp1, tmp3)
+};
+or_ = function or_(u, w, x, y, z, boyerFalse, boyerTrue) {
+  return (a, b) => {
+    return or_$(u, w, x, y, z, boyerFalse, boyerTrue, a, b)
+  }
+};
+lambda$7 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13;
+  tmp = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp1 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp, z);
+  tmp2 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, z);
+  tmp3 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, tmp2);
+  tmp4 = remainder$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp5 = quotient$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp6 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, tmp5);
+  tmp7 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp4, tmp6);
+  tmp8 = add1(y);
+  tmp9 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, tmp8);
+  tmp10 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp11 = add1(tmp10);
+  tmp12 = NofibPrelude.Cons([
+    tmp9,
+    tmp11
+  ], NofibPrelude.Nil);
+  tmp13 = NofibPrelude.Cons([
+    tmp7,
+    x
+  ], tmp12);
+  return NofibPrelude.Cons([
+    tmp1,
+    tmp3
+  ], tmp13)
+};
+lambda31 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return () => {
+    return lambda$7(u, w, x, y, z, boyerFalse, boyerTrue, zero)
+  }
+});
+plus$ = function plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = runtime.safeCall(lambda31(u, w, x, y, z, boyerFalse, boyerTrue, zero));
+  tmp3 = NofibPrelude.lazy(tmp2);
+  return boyer1.Fun(boyer1.PLUS, tmp1, tmp3)
+};
+plus = function plus(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return (a, b) => {
+    return plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b)
+  }
+};
+lambda$6 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11;
+  tmp = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp1 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, tmp);
+  tmp2 = two$(zero);
+  tmp3 = quotient$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp1, tmp2);
+  tmp4 = two$(zero);
+  tmp5 = quotient$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, tmp4);
+  tmp6 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, tmp5);
+  tmp7 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, x);
+  tmp8 = quotient$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp7, y);
+  tmp9 = zerop$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y);
+  tmp10 = if_$(u, w, x, y, z, tmp9, zero, x);
+  tmp11 = NofibPrelude.Cons([
+    tmp8,
+    tmp10
+  ], NofibPrelude.Nil);
+  return NofibPrelude.Cons([
+    tmp3,
+    tmp6
+  ], tmp11)
+};
+lambda32 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return () => {
+    return lambda$6(u, w, x, y, z, boyerFalse, boyerTrue, zero)
+  }
+});
+quotient$ = function quotient$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = runtime.safeCall(lambda32(u, w, x, y, z, boyerFalse, boyerTrue, zero));
+  tmp3 = NofibPrelude.lazy(tmp2);
+  return boyer1.Fun(boyer1.QUOTIENT, tmp1, tmp3)
+};
+quotient = function quotient(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return (a, b) => {
+    return quotient$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b)
+  }
+};
+lambda$5 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9;
+  tmp = one$(zero);
+  tmp1 = remainder$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, tmp);
+  tmp2 = remainder$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, x);
+  tmp3 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp4 = remainder$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp3, x);
+  tmp5 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp6 = remainder$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp5, y);
+  tmp7 = NofibPrelude.Cons([
+    tmp6,
+    zero
+  ], NofibPrelude.Nil);
+  tmp8 = NofibPrelude.Cons([
+    tmp4,
+    zero
+  ], tmp7);
+  tmp9 = NofibPrelude.Cons([
+    tmp2,
+    zero
+  ], tmp8);
+  return NofibPrelude.Cons([
+    tmp1,
+    zero
+  ], tmp9)
+};
+lambda33 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return () => {
+    return lambda$5(u, w, x, y, z, boyerFalse, boyerTrue, zero)
+  }
+});
+remainder$ = function remainder$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = runtime.safeCall(lambda33(u, w, x, y, z, boyerFalse, boyerTrue, zero));
+  tmp3 = NofibPrelude.lazy(tmp2);
+  return boyer1.Fun(boyer1.REMAINDER, tmp1, tmp3)
+};
+remainder = function remainder(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return (a, b) => {
+    return remainder$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b)
+  }
+};
+lambda$4 = function lambda$(x, y, z) {
+  let tmp, tmp1, tmp2, tmp3, tmp4;
+  tmp = append_$(x, y, z, x, y);
+  tmp1 = reverse_$(x, y, z, tmp);
+  tmp2 = reverse_$(x, y, z, y);
+  tmp3 = reverse_$(x, y, z, x);
+  tmp4 = append_$(x, y, z, tmp2, tmp3);
+  return NofibPrelude.Cons([
+    tmp1,
+    tmp4
+  ], NofibPrelude.Nil)
+};
+lambda34 = (undefined, function (x, y, z) {
+  return () => {
+    return lambda$4(x, y, z)
+  }
+});
+reverse_$ = function reverse_$(x, y, z, a) {
+  let tmp, tmp1, tmp2;
+  tmp = NofibPrelude.Cons(a, NofibPrelude.Nil);
+  tmp1 = runtime.safeCall(lambda34(x, y, z));
+  tmp2 = NofibPrelude.lazy(tmp1);
+  return boyer1.Fun(boyer1.REVERSE, tmp, tmp2)
+};
+reverse_ = function reverse_(x, y, z) {
+  return (a) => {
+    return reverse_$(x, y, z, a)
+  }
+};
+lambda$3 = function lambda$(x) {
+  let tmp, tmp1;
+  tmp = add1(x);
+  tmp1 = sub1$(x, tmp);
+  return NofibPrelude.Cons([
+    tmp1,
+    x
+  ], NofibPrelude.Nil)
+};
+lambda35 = (undefined, function (x) {
+  return () => {
+    return lambda$3(x)
+  }
+});
+sub1$ = function sub1$(x, a) {
+  let tmp, tmp1, tmp2;
+  tmp = NofibPrelude.Cons(a, NofibPrelude.Nil);
+  tmp1 = runtime.safeCall(lambda35(x));
+  tmp2 = NofibPrelude.lazy(tmp1);
+  return boyer1.Fun(boyer1.SUB1, tmp, tmp2)
+};
+sub1 = function sub1(x) {
+  return (a) => {
+    return sub1$(x, a)
+  }
+};
+lambda$2 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20;
+  tmp = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, z);
+  tmp1 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, tmp);
+  tmp2 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp3 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, z);
+  tmp4 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp2, tmp3);
+  tmp5 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp6 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp5, z);
+  tmp7 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, z);
+  tmp8 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, tmp7);
+  tmp9 = difference$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, z);
+  tmp10 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, tmp9);
+  tmp11 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, y, x);
+  tmp12 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, z, x);
+  tmp13 = difference$(u, w, x, y, z, boyerFalse, boyerTrue, zero, tmp11, tmp12);
+  tmp14 = add1(y);
+  tmp15 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, tmp14);
+  tmp16 = times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, y);
+  tmp17 = plus$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, tmp16);
+  tmp18 = NofibPrelude.Cons([
+    tmp15,
+    tmp17
+  ], NofibPrelude.Nil);
+  tmp19 = NofibPrelude.Cons([
+    tmp10,
+    tmp13
+  ], tmp18);
+  tmp20 = NofibPrelude.Cons([
+    tmp6,
+    tmp8
+  ], tmp19);
+  return NofibPrelude.Cons([
+    tmp1,
+    tmp4
+  ], tmp20)
+};
+lambda36 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return () => {
+    return lambda$2(u, w, x, y, z, boyerFalse, boyerTrue, zero)
+  }
+});
+times$ = function times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.Cons(b, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(a, tmp);
+  tmp2 = runtime.safeCall(lambda36(u, w, x, y, z, boyerFalse, boyerTrue, zero));
+  tmp3 = NofibPrelude.lazy(tmp2);
+  return boyer1.Fun(boyer1.TIMES, tmp1, tmp3)
+};
+times = function times(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return (a, b) => {
+    return times$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a, b)
+  }
+};
+lambda$1 = function lambda$(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  let tmp, tmp1;
+  tmp = zerop$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x);
+  tmp1 = equal$(u, w, x, y, z, boyerFalse, boyerTrue, zero, x, zero);
+  return NofibPrelude.Cons([
+    tmp,
+    tmp1
+  ], NofibPrelude.Nil)
+};
+lambda37 = (undefined, function (u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return () => {
+    return lambda$1(u, w, x, y, z, boyerFalse, boyerTrue, zero)
+  }
+});
+zerop$ = function zerop$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a) {
+  let tmp, tmp1, tmp2;
+  tmp = NofibPrelude.Cons(a, NofibPrelude.Nil);
+  tmp1 = runtime.safeCall(lambda37(u, w, x, y, z, boyerFalse, boyerTrue, zero));
+  tmp2 = NofibPrelude.lazy(tmp1);
+  return boyer1.Fun(boyer1.ZEROP, tmp, tmp2)
+};
+zerop = function zerop(u, w, x, y, z, boyerFalse, boyerTrue, zero) {
+  return (a) => {
+    return zerop$(u, w, x, y, z, boyerFalse, boyerTrue, zero, a)
+  }
+};
+lambda38 = (undefined, function () {
+  return NofibPrelude.Nil
+});
+lambda39 = (undefined, function () {
+  return NofibPrelude.Nil
+});
+lambda40 = (undefined, function () {
+  return NofibPrelude.Nil
+});
+lambda41 = (undefined, function () {
+  return NofibPrelude.Nil
+});
+lambda$ = function lambda$(subst, x) {
+  return boyer1.apply_subst(subst, x)
+};
+lambda = (undefined, function (subst) {
+  return (x) => {
+    return lambda$(subst, x)
+  }
+});
 boyer1 = class boyer {
   static {
     boyer1 = boyer;
-    let lambda;
+    let lambda42;
     this.Id = class Id {
       constructor() {}
       toString() { return "Id"; }
@@ -445,10 +1726,10 @@ boyer1 = class boyer {
     };
     this.ERROR = new ERROR$class;
     this.ERROR.class = ERROR$class;
-    lambda = (undefined, function () {
+    lambda42 = (undefined, function () {
       return boyer.testBoyer_nofib(5)
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda42)
   }
   static termLsEq(h1t1, h2t2) {
     let param0, param1, h1, t1, param01, param11, h2, t2, scrut;
@@ -727,7 +2008,7 @@ boyer1 = class boyer {
     return boyer.one_way_unify1(term11, term21, NofibPrelude.Nil)
   } 
   static apply_subst(subst2, t) {
-    let param0, param1, param2, f, args, ls1, param01, vid1, scrut, first1, first0, found, value, tmp, lambda;
+    let param0, param1, param2, f1, args, ls1, param01, vid1, scrut, first1, first0, found, value, tmp, lambda$this;
     if (t instanceof boyer.Var.class) {
       param01 = t.i;
       vid1 = param01;
@@ -749,14 +2030,12 @@ boyer1 = class boyer {
       param0 = t.i;
       param1 = t.t;
       param2 = t.l;
-      f = param0;
+      f1 = param0;
       args = param1;
       ls1 = param2;
-      lambda = (undefined, function (x) {
-        return boyer.apply_subst(subst2, x)
-      });
-      tmp = NofibPrelude.map(lambda, args);
-      return boyer.Fun(f, tmp, ls1)
+      lambda$this = runtime.safeCall(lambda(subst2));
+      tmp = NofibPrelude.map(lambda$this, args);
+      return boyer.Fun(f1, tmp, ls1)
     } else {
       throw new globalThis.Error("match error");
     }
@@ -802,7 +2081,7 @@ boyer1 = class boyer {
     return boyer.rewrite_with_lemmas_helper(term4, tmp)
   } 
   static rewrite(t3) {
-    let param0, param1, param2, f, args, lemmas, param01, v, tmp, tmp1;
+    let param0, param1, param2, f1, args, lemmas, param01, v, tmp, tmp1;
     if (t3 instanceof boyer.Var.class) {
       param01 = t3.i;
       v = param01;
@@ -811,11 +2090,11 @@ boyer1 = class boyer {
       param0 = t3.i;
       param1 = t3.t;
       param2 = t3.l;
-      f = param0;
+      f1 = param0;
       args = param1;
       lemmas = param2;
       tmp = NofibPrelude.map(boyer.rewrite, args);
-      tmp1 = boyer.Fun(f, tmp, lemmas);
+      tmp1 = boyer.Fun(f1, tmp, lemmas);
       return boyer.rewrite_with_lemmas(tmp1, lemmas)
     } else {
       throw new globalThis.Error("match error");
@@ -929,928 +2208,7 @@ boyer1 = class boyer {
     return boyer.tautologyp(tmp, NofibPrelude.Nil, NofibPrelude.Nil)
   } 
   static test0(xxxx) {
-    let quotient, if_, sub1, plus, f, implies, times, exp_, gcd_, difference, nlistp, one, remainder, four, and_, reverse_, greaterp, or_, odd_, two, lessp, cons, add1, divides, nilp, listp, consp, lesseqp, equal, append_, greatereqp, member, zerop, not_, iff, length_, even_, a, b, c, d, u, w, x4, y, z, boyerFalse, nil, boyerTrue, zero, subst0, theorem, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, tmp50, lambda, lambda1, lambda2, lambda3;
-    one = function one() {
-      let tmp51, tmp52, lambda4;
-      lambda4 = (undefined, function () {
-        let tmp53, tmp54;
-        tmp53 = one();
-        tmp54 = add1(zero);
-        return NofibPrelude.Cons([
-          tmp53,
-          tmp54
-        ], NofibPrelude.Nil)
-      });
-      tmp51 = lambda4;
-      tmp52 = NofibPrelude.lazy(tmp51);
-      return boyer.Fun(boyer.ONE, NofibPrelude.Nil, tmp52)
-    };
-    two = function two() {
-      let tmp51, tmp52, lambda4;
-      lambda4 = (undefined, function () {
-        let tmp53, tmp54, tmp55;
-        tmp53 = two();
-        tmp54 = one();
-        tmp55 = add1(tmp54);
-        return NofibPrelude.Cons([
-          tmp53,
-          tmp55
-        ], NofibPrelude.Nil)
-      });
-      tmp51 = lambda4;
-      tmp52 = NofibPrelude.lazy(tmp51);
-      return boyer.Fun(boyer.TWO, NofibPrelude.Nil, tmp52)
-    };
-    four = function four() {
-      let tmp51, tmp52, lambda4;
-      lambda4 = (undefined, function () {
-        let tmp53, tmp54, tmp55, tmp56;
-        tmp53 = four();
-        tmp54 = two();
-        tmp55 = add1(tmp54);
-        tmp56 = add1(tmp55);
-        return NofibPrelude.Cons([
-          tmp53,
-          tmp56
-        ], NofibPrelude.Nil)
-      });
-      tmp51 = lambda4;
-      tmp52 = NofibPrelude.lazy(tmp51);
-      return boyer.Fun(boyer.FOUR, NofibPrelude.Nil, tmp52)
-    };
-    add1 = function add1(a1) {
-      let tmp51, tmp52, lambda4;
-      tmp51 = NofibPrelude.Cons(a1, NofibPrelude.Nil);
-      lambda4 = (undefined, function () {
-        return NofibPrelude.Nil
-      });
-      tmp52 = NofibPrelude.lazy(lambda4);
-      return boyer.Fun(boyer.ADD1, tmp51, tmp52)
-    };
-    if_ = function if_(a1, b1, c1) {
-      let tmp51, tmp52, tmp53, tmp54, tmp55, lambda4;
-      tmp51 = NofibPrelude.Cons(c1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(b1, tmp51);
-      tmp53 = NofibPrelude.Cons(a1, tmp52);
-      lambda4 = (undefined, function () {
-        let tmp56, tmp57, tmp58, tmp59, tmp60;
-        tmp56 = if_(x4, y, z);
-        tmp57 = if_(tmp56, u, w);
-        tmp58 = if_(y, u, w);
-        tmp59 = if_(z, u, w);
-        tmp60 = if_(x4, tmp58, tmp59);
-        return NofibPrelude.Cons([
-          tmp57,
-          tmp60
-        ], NofibPrelude.Nil)
-      });
-      tmp54 = lambda4;
-      tmp55 = NofibPrelude.lazy(tmp54);
-      return boyer.Fun(boyer.IF, tmp53, tmp55)
-    };
-    not_ = function not_(a1) {
-      let tmp51, tmp52, tmp53, lambda4;
-      tmp51 = NofibPrelude.Cons(a1, NofibPrelude.Nil);
-      lambda4 = (undefined, function () {
-        let tmp54, tmp55;
-        tmp54 = not_(x4);
-        tmp55 = if_(x4, boyerFalse, boyerTrue);
-        return NofibPrelude.Cons([
-          tmp54,
-          tmp55
-        ], NofibPrelude.Nil)
-      });
-      tmp52 = lambda4;
-      tmp53 = NofibPrelude.lazy(tmp52);
-      return boyer.Fun(boyer.NOT, tmp51, tmp53)
-    };
-    and_ = function and_(a1, b1) {
-      let tmp51, tmp52, tmp53, tmp54, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        let tmp55, tmp56, tmp57;
-        tmp55 = and_(x4, y);
-        tmp56 = if_(y, boyerTrue, boyerFalse);
-        tmp57 = if_(x4, tmp56, boyerFalse);
-        return NofibPrelude.Cons([
-          tmp55,
-          tmp57
-        ], NofibPrelude.Nil)
-      });
-      tmp53 = lambda4;
-      tmp54 = NofibPrelude.lazy(tmp53);
-      return boyer.Fun(boyer.AND, tmp52, tmp54)
-    };
-    append_ = function append_(a1, b1) {
-      let tmp51, tmp52, tmp53, tmp54, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        let tmp55, tmp56, tmp57, tmp58;
-        tmp55 = append_(x4, y);
-        tmp56 = append_(tmp55, z);
-        tmp57 = append_(y, z);
-        tmp58 = append_(x4, tmp57);
-        return NofibPrelude.Cons([
-          tmp56,
-          tmp58
-        ], NofibPrelude.Nil)
-      });
-      tmp53 = lambda4;
-      tmp54 = NofibPrelude.lazy(tmp53);
-      return boyer.Fun(boyer.APPEND, tmp52, tmp54)
-    };
-    cons = function cons(a1, b1) {
-      let tmp51, tmp52, tmp53, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        return NofibPrelude.Nil
-      });
-      tmp53 = NofibPrelude.lazy(lambda4);
-      return boyer.Fun(boyer.CONS, tmp52, tmp53)
-    };
-    consp = function consp(a1) {
-      let tmp51, tmp52, tmp53, lambda4;
-      tmp51 = NofibPrelude.Cons(a1, NofibPrelude.Nil);
-      lambda4 = (undefined, function () {
-        let tmp54, tmp55;
-        tmp54 = cons(x4, y);
-        tmp55 = consp(tmp54);
-        return NofibPrelude.Cons([
-          tmp55,
-          boyerTrue
-        ], NofibPrelude.Nil)
-      });
-      tmp52 = lambda4;
-      tmp53 = NofibPrelude.lazy(tmp52);
-      return boyer.Fun(boyer.CONSP, tmp51, tmp53)
-    };
-    difference = function difference(a1, b1) {
-      let tmp51, tmp52, tmp53, tmp54, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        let tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66, tmp67, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74, tmp75, tmp76, tmp77, tmp78, tmp79, tmp80, tmp81;
-        tmp55 = difference(x4, x4);
-        tmp56 = plus(x4, y);
-        tmp57 = difference(tmp56, x4);
-        tmp58 = plus(y, x4);
-        tmp59 = difference(tmp58, x4);
-        tmp60 = plus(x4, y);
-        tmp61 = plus(x4, z);
-        tmp62 = difference(tmp60, tmp61);
-        tmp63 = difference(y, z);
-        tmp64 = plus(x4, z);
-        tmp65 = plus(y, tmp64);
-        tmp66 = difference(tmp65, x4);
-        tmp67 = plus(y, z);
-        tmp68 = plus(y, z);
-        tmp69 = add1(tmp68);
-        tmp70 = difference(tmp69, z);
-        tmp71 = add1(y);
-        tmp72 = add1(x4);
-        tmp73 = add1(tmp72);
-        tmp74 = two();
-        tmp75 = difference(tmp73, tmp74);
-        tmp76 = NofibPrelude.Cons([
-          tmp75,
-          x4
-        ], NofibPrelude.Nil);
-        tmp77 = NofibPrelude.Cons([
-          tmp70,
-          tmp71
-        ], tmp76);
-        tmp78 = NofibPrelude.Cons([
-          tmp66,
-          tmp67
-        ], tmp77);
-        tmp79 = NofibPrelude.Cons([
-          tmp62,
-          tmp63
-        ], tmp78);
-        tmp80 = NofibPrelude.Cons([
-          tmp59,
-          y
-        ], tmp79);
-        tmp81 = NofibPrelude.Cons([
-          tmp57,
-          y
-        ], tmp80);
-        return NofibPrelude.Cons([
-          tmp55,
-          zero
-        ], tmp81)
-      });
-      tmp53 = lambda4;
-      tmp54 = NofibPrelude.lazy(tmp53);
-      return boyer.Fun(boyer.DIFFERENCE, tmp52, tmp54)
-    };
-    divides = function divides(a1, b1) {
-      let tmp51, tmp52, tmp53, tmp54, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        let tmp55, tmp56, tmp57;
-        tmp55 = divides(x4, y);
-        tmp56 = remainder(y, x4);
-        tmp57 = zerop(tmp56);
-        return NofibPrelude.Cons([
-          tmp55,
-          tmp57
-        ], NofibPrelude.Nil)
-      });
-      tmp53 = lambda4;
-      tmp54 = NofibPrelude.lazy(tmp53);
-      return boyer.Fun(boyer.DIVIDES, tmp52, tmp54)
-    };
-    equal = function equal(a1, b1) {
-      let tmp51, tmp52, tmp53, tmp54, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        let tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66, tmp67, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74, tmp75, tmp76, tmp77, tmp78, tmp79, tmp80, tmp81, tmp82, tmp83, tmp84, tmp85, tmp86, tmp87, tmp88, tmp89, tmp90, tmp91, tmp92, tmp93, tmp94, tmp95, tmp96, tmp97, tmp98, tmp99, tmp100, tmp101, tmp102, tmp103, tmp104, tmp105, tmp106, tmp107, tmp108, tmp109, tmp110, tmp111, tmp112, tmp113, tmp114, tmp115, tmp116, tmp117, tmp118, tmp119, tmp120, tmp121, tmp122, tmp123, tmp124, tmp125, tmp126, tmp127, tmp128, tmp129;
-        tmp55 = plus(x4, y);
-        tmp56 = equal(tmp55, zero);
-        tmp57 = zerop(x4);
-        tmp58 = zerop(y);
-        tmp59 = and_(tmp57, tmp58);
-        tmp60 = plus(x4, y);
-        tmp61 = plus(x4, z);
-        tmp62 = equal(tmp60, tmp61);
-        tmp63 = equal(y, z);
-        tmp64 = difference(x4, y);
-        tmp65 = equal(zero, tmp64);
-        tmp66 = lessp(y, x4);
-        tmp67 = not_(tmp66);
-        tmp68 = difference(x4, y);
-        tmp69 = equal(x4, tmp68);
-        tmp70 = equal(x4, zero);
-        tmp71 = zerop(y);
-        tmp72 = or_(tmp70, tmp71);
-        tmp73 = times(x4, y);
-        tmp74 = equal(tmp73, zero);
-        tmp75 = zerop(x4);
-        tmp76 = zerop(y);
-        tmp77 = or_(tmp75, tmp76);
-        tmp78 = append_(x4, y);
-        tmp79 = append_(x4, z);
-        tmp80 = equal(tmp78, tmp79);
-        tmp81 = equal(y, z);
-        tmp82 = times(x4, y);
-        tmp83 = equal(y, tmp82);
-        tmp84 = equal(y, zero);
-        tmp85 = one();
-        tmp86 = equal(x4, tmp85);
-        tmp87 = or_(tmp84, tmp86);
-        tmp88 = times(x4, y);
-        tmp89 = equal(x4, tmp88);
-        tmp90 = equal(x4, zero);
-        tmp91 = one();
-        tmp92 = equal(y, tmp91);
-        tmp93 = or_(tmp90, tmp92);
-        tmp94 = times(x4, y);
-        tmp95 = one();
-        tmp96 = equal(tmp94, tmp95);
-        tmp97 = one();
-        tmp98 = equal(x4, tmp97);
-        tmp99 = one();
-        tmp100 = equal(y, tmp99);
-        tmp101 = and_(tmp98, tmp100);
-        tmp102 = difference(x4, y);
-        tmp103 = difference(z, y);
-        tmp104 = equal(tmp102, tmp103);
-        tmp105 = lessp(x4, y);
-        tmp106 = lessp(y, z);
-        tmp107 = not_(tmp106);
-        tmp108 = lessp(z, y);
-        tmp109 = lessp(y, x4);
-        tmp110 = not_(tmp109);
-        tmp111 = equal(x4, z);
-        tmp112 = if_(tmp108, tmp110, tmp111);
-        tmp113 = if_(tmp105, tmp107, tmp112);
-        tmp114 = lessp(x4, y);
-        tmp115 = equal(tmp114, z);
-        tmp116 = lessp(x4, y);
-        tmp117 = equal(boyerTrue, z);
-        tmp118 = equal(boyerFalse, z);
-        tmp119 = if_(tmp116, tmp117, tmp118);
-        tmp120 = NofibPrelude.Cons([
-          tmp115,
-          tmp119
-        ], NofibPrelude.Nil);
-        tmp121 = NofibPrelude.Cons([
-          tmp104,
-          tmp113
-        ], tmp120);
-        tmp122 = NofibPrelude.Cons([
-          tmp96,
-          tmp101
-        ], tmp121);
-        tmp123 = NofibPrelude.Cons([
-          tmp89,
-          tmp93
-        ], tmp122);
-        tmp124 = NofibPrelude.Cons([
-          tmp83,
-          tmp87
-        ], tmp123);
-        tmp125 = NofibPrelude.Cons([
-          tmp80,
-          tmp81
-        ], tmp124);
-        tmp126 = NofibPrelude.Cons([
-          tmp74,
-          tmp77
-        ], tmp125);
-        tmp127 = NofibPrelude.Cons([
-          tmp69,
-          tmp72
-        ], tmp126);
-        tmp128 = NofibPrelude.Cons([
-          tmp65,
-          tmp67
-        ], tmp127);
-        tmp129 = NofibPrelude.Cons([
-          tmp62,
-          tmp63
-        ], tmp128);
-        return NofibPrelude.Cons([
-          tmp56,
-          tmp59
-        ], tmp129)
-      });
-      tmp53 = lambda4;
-      tmp54 = NofibPrelude.lazy(tmp53);
-      return boyer.Fun(boyer.EQUAL, tmp52, tmp54)
-    };
-    even_ = function even_(a1) {
-      let tmp51, tmp52, tmp53, lambda4;
-      tmp51 = NofibPrelude.Cons(a1, NofibPrelude.Nil);
-      lambda4 = (undefined, function () {
-        let tmp54, tmp55, tmp56, tmp57, tmp58;
-        tmp54 = even_(x4);
-        tmp55 = zerop(x4);
-        tmp56 = sub1(x4);
-        tmp57 = odd_(tmp56);
-        tmp58 = if_(tmp55, boyerTrue, tmp57);
-        return NofibPrelude.Cons([
-          tmp54,
-          tmp58
-        ], NofibPrelude.Nil)
-      });
-      tmp52 = lambda4;
-      tmp53 = NofibPrelude.lazy(tmp52);
-      return boyer.Fun(boyer.EVEN, tmp51, tmp53)
-    };
-    exp_ = function exp_(a1, b1) {
-      let tmp51, tmp52, tmp53, tmp54, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        let tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64;
-        tmp55 = plus(y, z);
-        tmp56 = exp_(x4, tmp55);
-        tmp57 = exp_(x4, y);
-        tmp58 = exp_(x4, z);
-        tmp59 = times(tmp57, tmp58);
-        tmp60 = times(y, z);
-        tmp61 = exp_(x4, tmp60);
-        tmp62 = exp_(x4, y);
-        tmp63 = exp_(tmp62, z);
-        tmp64 = NofibPrelude.Cons([
-          tmp61,
-          tmp63
-        ], NofibPrelude.Nil);
-        return NofibPrelude.Cons([
-          tmp56,
-          tmp59
-        ], tmp64)
-      });
-      tmp53 = lambda4;
-      tmp54 = NofibPrelude.lazy(tmp53);
-      return boyer.Fun(boyer.EXP, tmp52, tmp54)
-    };
-    f = function f(a1) {
-      let tmp51, tmp52, lambda4;
-      tmp51 = NofibPrelude.Cons(a1, NofibPrelude.Nil);
-      lambda4 = (undefined, function () {
-        return NofibPrelude.Nil
-      });
-      tmp52 = NofibPrelude.lazy(lambda4);
-      return boyer.Fun(boyer.F, tmp51, tmp52)
-    };
-    gcd_ = function gcd_(a1, b1) {
-      let tmp51, tmp52, tmp53, tmp54, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        let tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62;
-        tmp55 = gcd_(x4, y);
-        tmp56 = gcd_(y, x4);
-        tmp57 = times(x4, z);
-        tmp58 = times(y, z);
-        tmp59 = gcd_(tmp57, tmp58);
-        tmp60 = gcd_(x4, y);
-        tmp61 = times(z, tmp60);
-        tmp62 = NofibPrelude.Cons([
-          tmp59,
-          tmp61
-        ], NofibPrelude.Nil);
-        return NofibPrelude.Cons([
-          tmp55,
-          tmp56
-        ], tmp62)
-      });
-      tmp53 = lambda4;
-      tmp54 = NofibPrelude.lazy(tmp53);
-      return boyer.Fun(boyer.GCD, tmp52, tmp54)
-    };
-    greatereqp = function greatereqp(a1, b1) {
-      let tmp51, tmp52, tmp53, tmp54, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        let tmp55, tmp56, tmp57;
-        tmp55 = greatereqp(x4, y);
-        tmp56 = lessp(x4, y);
-        tmp57 = not_(tmp56);
-        return NofibPrelude.Cons([
-          tmp55,
-          tmp57
-        ], NofibPrelude.Nil)
-      });
-      tmp53 = lambda4;
-      tmp54 = NofibPrelude.lazy(tmp53);
-      return boyer.Fun(boyer.GREATEREQP, tmp52, tmp54)
-    };
-    greaterp = function greaterp(a1, b1) {
-      let tmp51, tmp52, tmp53, tmp54, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        let tmp55, tmp56;
-        tmp55 = greaterp(x4, y);
-        tmp56 = lessp(y, x4);
-        return NofibPrelude.Cons([
-          tmp55,
-          tmp56
-        ], NofibPrelude.Nil)
-      });
-      tmp53 = lambda4;
-      tmp54 = NofibPrelude.lazy(tmp53);
-      return boyer.Fun(boyer.GREATERP, tmp52, tmp54)
-    };
-    implies = function implies(a1, b1) {
-      let tmp51, tmp52, tmp53, tmp54, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        let tmp55, tmp56, tmp57;
-        tmp55 = implies(x4, y);
-        tmp56 = if_(y, boyerTrue, boyerFalse);
-        tmp57 = if_(x4, tmp56, boyerTrue);
-        return NofibPrelude.Cons([
-          tmp55,
-          tmp57
-        ], NofibPrelude.Nil)
-      });
-      tmp53 = lambda4;
-      tmp54 = NofibPrelude.lazy(tmp53);
-      return boyer.Fun(boyer.IMPLIES, tmp52, tmp54)
-    };
-    iff = function iff(a1, b1) {
-      let tmp51, tmp52, tmp53, tmp54, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        let tmp55, tmp56, tmp57, tmp58;
-        tmp55 = iff(x4, y);
-        tmp56 = implies(x4, y);
-        tmp57 = implies(y, x4);
-        tmp58 = and_(tmp56, tmp57);
-        return NofibPrelude.Cons([
-          tmp55,
-          tmp58
-        ], NofibPrelude.Nil)
-      });
-      tmp53 = lambda4;
-      tmp54 = NofibPrelude.lazy(tmp53);
-      return boyer.Fun(boyer.IFF, tmp52, tmp54)
-    };
-    length_ = function length_(a1) {
-      let tmp51, tmp52, tmp53, lambda4;
-      tmp51 = NofibPrelude.Cons(a1, NofibPrelude.Nil);
-      lambda4 = (undefined, function () {
-        let tmp54, tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65;
-        tmp54 = reverse_(x4);
-        tmp55 = length_(tmp54);
-        tmp56 = length_(x4);
-        tmp57 = cons(u, w);
-        tmp58 = cons(z, tmp57);
-        tmp59 = cons(y, tmp58);
-        tmp60 = cons(x4, tmp59);
-        tmp61 = length_(tmp60);
-        tmp62 = four();
-        tmp63 = length_(w);
-        tmp64 = plus(tmp62, tmp63);
-        tmp65 = NofibPrelude.Cons([
-          tmp61,
-          tmp64
-        ], NofibPrelude.Nil);
-        return NofibPrelude.Cons([
-          tmp55,
-          tmp56
-        ], tmp65)
-      });
-      tmp52 = lambda4;
-      tmp53 = NofibPrelude.lazy(tmp52);
-      return boyer.Fun(boyer.LENGTH, tmp51, tmp53)
-    };
-    lesseqp = function lesseqp(a1, b1) {
-      let tmp51, tmp52, tmp53, tmp54, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        let tmp55, tmp56, tmp57;
-        tmp55 = lesseqp(x4, y);
-        tmp56 = lessp(y, x4);
-        tmp57 = not_(tmp56);
-        return NofibPrelude.Cons([
-          tmp55,
-          tmp57
-        ], NofibPrelude.Nil)
-      });
-      tmp53 = lambda4;
-      tmp54 = NofibPrelude.lazy(tmp53);
-      return boyer.Fun(boyer.LESSEQP, tmp52, tmp54)
-    };
-    lessp = function lessp(a1, b1) {
-      let tmp51, tmp52, tmp53, tmp54, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        let tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66, tmp67, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74, tmp75, tmp76, tmp77, tmp78, tmp79, tmp80, tmp81, tmp82, tmp83, tmp84;
-        tmp55 = remainder(x4, y);
-        tmp56 = lessp(tmp55, y);
-        tmp57 = zerop(y);
-        tmp58 = not_(tmp57);
-        tmp59 = quotient(x4, y);
-        tmp60 = lessp(tmp59, x4);
-        tmp61 = zerop(x4);
-        tmp62 = not_(tmp61);
-        tmp63 = one();
-        tmp64 = lessp(tmp63, y);
-        tmp65 = and_(tmp62, tmp64);
-        tmp66 = plus(x4, y);
-        tmp67 = plus(x4, z);
-        tmp68 = lessp(tmp66, tmp67);
-        tmp69 = lessp(y, z);
-        tmp70 = times(x4, z);
-        tmp71 = times(y, z);
-        tmp72 = lessp(tmp70, tmp71);
-        tmp73 = zerop(z);
-        tmp74 = not_(tmp73);
-        tmp75 = lessp(x4, y);
-        tmp76 = and_(tmp74, tmp75);
-        tmp77 = plus(x4, y);
-        tmp78 = lessp(y, tmp77);
-        tmp79 = zerop(x4);
-        tmp80 = not_(tmp79);
-        tmp81 = NofibPrelude.Cons([
-          tmp78,
-          tmp80
-        ], NofibPrelude.Nil);
-        tmp82 = NofibPrelude.Cons([
-          tmp72,
-          tmp76
-        ], tmp81);
-        tmp83 = NofibPrelude.Cons([
-          tmp68,
-          tmp69
-        ], tmp82);
-        tmp84 = NofibPrelude.Cons([
-          tmp60,
-          tmp65
-        ], tmp83);
-        return NofibPrelude.Cons([
-          tmp56,
-          tmp58
-        ], tmp84)
-      });
-      tmp53 = lambda4;
-      tmp54 = NofibPrelude.lazy(tmp53);
-      return boyer.Fun(boyer.LESSP, tmp52, tmp54)
-    };
-    nilp = function nilp(a1) {
-      let tmp51, tmp52, tmp53, lambda4;
-      tmp51 = NofibPrelude.Cons(a1, NofibPrelude.Nil);
-      lambda4 = (undefined, function () {
-        let tmp54, tmp55;
-        tmp54 = nilp(x4);
-        tmp55 = equal(x4, nil);
-        return NofibPrelude.Cons([
-          tmp54,
-          tmp55
-        ], NofibPrelude.Nil)
-      });
-      tmp52 = lambda4;
-      tmp53 = NofibPrelude.lazy(tmp52);
-      return boyer.Fun(boyer.NILP, tmp51, tmp53)
-    };
-    listp = function listp(a1) {
-      let tmp51, tmp52, tmp53, lambda4;
-      tmp51 = NofibPrelude.Cons(a1, NofibPrelude.Nil);
-      lambda4 = (undefined, function () {
-        let tmp54, tmp55, tmp56, tmp57;
-        tmp54 = listp(x4);
-        tmp55 = nilp(x4);
-        tmp56 = consp(x4);
-        tmp57 = or_(tmp55, tmp56);
-        return NofibPrelude.Cons([
-          tmp54,
-          tmp57
-        ], NofibPrelude.Nil)
-      });
-      tmp52 = lambda4;
-      tmp53 = NofibPrelude.lazy(tmp52);
-      return boyer.Fun(boyer.LISTP, tmp51, tmp53)
-    };
-    member = function member(a1, b1) {
-      let tmp51, tmp52, tmp53, tmp54, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        let tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63;
-        tmp55 = append_(y, z);
-        tmp56 = member(x4, tmp55);
-        tmp57 = member(x4, y);
-        tmp58 = member(x4, z);
-        tmp59 = or_(tmp57, tmp58);
-        tmp60 = reverse_(y);
-        tmp61 = member(x4, tmp60);
-        tmp62 = member(x4, y);
-        tmp63 = NofibPrelude.Cons([
-          tmp61,
-          tmp62
-        ], NofibPrelude.Nil);
-        return NofibPrelude.Cons([
-          tmp56,
-          tmp59
-        ], tmp63)
-      });
-      tmp53 = lambda4;
-      tmp54 = NofibPrelude.lazy(tmp53);
-      return boyer.Fun(boyer.MEMBER, tmp52, tmp54)
-    };
-    nlistp = function nlistp(a1) {
-      let tmp51, tmp52, tmp53, lambda4;
-      tmp51 = NofibPrelude.Cons(a1, NofibPrelude.Nil);
-      lambda4 = (undefined, function () {
-        let tmp54, tmp55, tmp56;
-        tmp54 = nlistp(x4);
-        tmp55 = listp(x4);
-        tmp56 = not_(tmp55);
-        return NofibPrelude.Cons([
-          tmp54,
-          tmp56
-        ], NofibPrelude.Nil)
-      });
-      tmp52 = lambda4;
-      tmp53 = NofibPrelude.lazy(tmp52);
-      return boyer.Fun(boyer.NLISTP, tmp51, tmp53)
-    };
-    odd_ = function odd_(a1) {
-      let tmp51, tmp52, tmp53, lambda4;
-      tmp51 = NofibPrelude.Cons(a1, NofibPrelude.Nil);
-      lambda4 = (undefined, function () {
-        let tmp54, tmp55, tmp56;
-        tmp54 = odd_(x4);
-        tmp55 = sub1(x4);
-        tmp56 = even_(tmp55);
-        return NofibPrelude.Cons([
-          tmp54,
-          tmp56
-        ], NofibPrelude.Nil)
-      });
-      tmp52 = lambda4;
-      tmp53 = NofibPrelude.lazy(tmp52);
-      return boyer.Fun(boyer.ODD, tmp51, tmp53)
-    };
-    or_ = function or_(a1, b1) {
-      let tmp51, tmp52, tmp53, tmp54, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        let tmp55, tmp56, tmp57;
-        tmp55 = or_(x4, y);
-        tmp56 = if_(y, boyerTrue, boyerFalse);
-        tmp57 = if_(x4, boyerTrue, tmp56);
-        return NofibPrelude.Cons([
-          tmp55,
-          tmp57
-        ], NofibPrelude.Nil)
-      });
-      tmp53 = lambda4;
-      tmp54 = NofibPrelude.lazy(tmp53);
-      return boyer.Fun(boyer.OR, tmp52, tmp54)
-    };
-    plus = function plus(a1, b1) {
-      let tmp51, tmp52, tmp53, tmp54, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        let tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66, tmp67, tmp68;
-        tmp55 = plus(x4, y);
-        tmp56 = plus(tmp55, z);
-        tmp57 = plus(y, z);
-        tmp58 = plus(x4, tmp57);
-        tmp59 = remainder(x4, y);
-        tmp60 = quotient(x4, y);
-        tmp61 = times(y, tmp60);
-        tmp62 = plus(tmp59, tmp61);
-        tmp63 = add1(y);
-        tmp64 = plus(x4, tmp63);
-        tmp65 = plus(x4, y);
-        tmp66 = add1(tmp65);
-        tmp67 = NofibPrelude.Cons([
-          tmp64,
-          tmp66
-        ], NofibPrelude.Nil);
-        tmp68 = NofibPrelude.Cons([
-          tmp62,
-          x4
-        ], tmp67);
-        return NofibPrelude.Cons([
-          tmp56,
-          tmp58
-        ], tmp68)
-      });
-      tmp53 = lambda4;
-      tmp54 = NofibPrelude.lazy(tmp53);
-      return boyer.Fun(boyer.PLUS, tmp52, tmp54)
-    };
-    quotient = function quotient(a1, b1) {
-      let tmp51, tmp52, tmp53, tmp54, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        let tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66;
-        tmp55 = plus(x4, y);
-        tmp56 = plus(x4, tmp55);
-        tmp57 = two();
-        tmp58 = quotient(tmp56, tmp57);
-        tmp59 = two();
-        tmp60 = quotient(y, tmp59);
-        tmp61 = plus(x4, tmp60);
-        tmp62 = times(y, x4);
-        tmp63 = quotient(tmp62, y);
-        tmp64 = zerop(y);
-        tmp65 = if_(tmp64, zero, x4);
-        tmp66 = NofibPrelude.Cons([
-          tmp63,
-          tmp65
-        ], NofibPrelude.Nil);
-        return NofibPrelude.Cons([
-          tmp58,
-          tmp61
-        ], tmp66)
-      });
-      tmp53 = lambda4;
-      tmp54 = NofibPrelude.lazy(tmp53);
-      return boyer.Fun(boyer.QUOTIENT, tmp52, tmp54)
-    };
-    remainder = function remainder(a1, b1) {
-      let tmp51, tmp52, tmp53, tmp54, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        let tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64;
-        tmp55 = one();
-        tmp56 = remainder(x4, tmp55);
-        tmp57 = remainder(x4, x4);
-        tmp58 = times(x4, y);
-        tmp59 = remainder(tmp58, x4);
-        tmp60 = times(x4, y);
-        tmp61 = remainder(tmp60, y);
-        tmp62 = NofibPrelude.Cons([
-          tmp61,
-          zero
-        ], NofibPrelude.Nil);
-        tmp63 = NofibPrelude.Cons([
-          tmp59,
-          zero
-        ], tmp62);
-        tmp64 = NofibPrelude.Cons([
-          tmp57,
-          zero
-        ], tmp63);
-        return NofibPrelude.Cons([
-          tmp56,
-          zero
-        ], tmp64)
-      });
-      tmp53 = lambda4;
-      tmp54 = NofibPrelude.lazy(tmp53);
-      return boyer.Fun(boyer.REMAINDER, tmp52, tmp54)
-    };
-    reverse_ = function reverse_(a1) {
-      let tmp51, tmp52, tmp53, lambda4;
-      tmp51 = NofibPrelude.Cons(a1, NofibPrelude.Nil);
-      lambda4 = (undefined, function () {
-        let tmp54, tmp55, tmp56, tmp57, tmp58;
-        tmp54 = append_(x4, y);
-        tmp55 = reverse_(tmp54);
-        tmp56 = reverse_(y);
-        tmp57 = reverse_(x4);
-        tmp58 = append_(tmp56, tmp57);
-        return NofibPrelude.Cons([
-          tmp55,
-          tmp58
-        ], NofibPrelude.Nil)
-      });
-      tmp52 = lambda4;
-      tmp53 = NofibPrelude.lazy(tmp52);
-      return boyer.Fun(boyer.REVERSE, tmp51, tmp53)
-    };
-    sub1 = function sub1(a1) {
-      let tmp51, tmp52, tmp53, lambda4;
-      tmp51 = NofibPrelude.Cons(a1, NofibPrelude.Nil);
-      lambda4 = (undefined, function () {
-        let tmp54, tmp55;
-        tmp54 = add1(x4);
-        tmp55 = sub1(tmp54);
-        return NofibPrelude.Cons([
-          tmp55,
-          x4
-        ], NofibPrelude.Nil)
-      });
-      tmp52 = lambda4;
-      tmp53 = NofibPrelude.lazy(tmp52);
-      return boyer.Fun(boyer.SUB1, tmp51, tmp53)
-    };
-    times = function times(a1, b1) {
-      let tmp51, tmp52, tmp53, tmp54, lambda4;
-      tmp51 = NofibPrelude.Cons(b1, NofibPrelude.Nil);
-      tmp52 = NofibPrelude.Cons(a1, tmp51);
-      lambda4 = (undefined, function () {
-        let tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66, tmp67, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74, tmp75;
-        tmp55 = plus(y, z);
-        tmp56 = times(x4, tmp55);
-        tmp57 = times(x4, y);
-        tmp58 = times(x4, z);
-        tmp59 = plus(tmp57, tmp58);
-        tmp60 = times(x4, y);
-        tmp61 = times(tmp60, z);
-        tmp62 = times(y, z);
-        tmp63 = times(x4, tmp62);
-        tmp64 = difference(y, z);
-        tmp65 = times(x4, tmp64);
-        tmp66 = times(y, x4);
-        tmp67 = times(z, x4);
-        tmp68 = difference(tmp66, tmp67);
-        tmp69 = add1(y);
-        tmp70 = times(x4, tmp69);
-        tmp71 = times(x4, y);
-        tmp72 = plus(x4, tmp71);
-        tmp73 = NofibPrelude.Cons([
-          tmp70,
-          tmp72
-        ], NofibPrelude.Nil);
-        tmp74 = NofibPrelude.Cons([
-          tmp65,
-          tmp68
-        ], tmp73);
-        tmp75 = NofibPrelude.Cons([
-          tmp61,
-          tmp63
-        ], tmp74);
-        return NofibPrelude.Cons([
-          tmp56,
-          tmp59
-        ], tmp75)
-      });
-      tmp53 = lambda4;
-      tmp54 = NofibPrelude.lazy(tmp53);
-      return boyer.Fun(boyer.TIMES, tmp52, tmp54)
-    };
-    zerop = function zerop(a1) {
-      let tmp51, tmp52, tmp53, lambda4;
-      tmp51 = NofibPrelude.Cons(a1, NofibPrelude.Nil);
-      lambda4 = (undefined, function () {
-        let tmp54, tmp55;
-        tmp54 = zerop(x4);
-        tmp55 = equal(x4, zero);
-        return NofibPrelude.Cons([
-          tmp54,
-          tmp55
-        ], NofibPrelude.Nil)
-      });
-      tmp52 = lambda4;
-      tmp53 = NofibPrelude.lazy(tmp52);
-      return boyer.Fun(boyer.ZEROP, tmp51, tmp53)
-    };
+    let a, b, c, d, u, w, x4, y, z, boyerFalse, nil, boyerTrue, zero, subst0, theorem, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, tmp50;
     tmp = boyer.Var(boyer.A);
     a = tmp;
     tmp1 = boyer.Var(boyer.B);
@@ -1869,49 +2227,37 @@ boyer1 = class boyer {
     y = tmp7;
     tmp8 = boyer.Var(boyer.Z);
     z = tmp8;
-    lambda = (undefined, function () {
-      return NofibPrelude.Nil
-    });
-    tmp9 = NofibPrelude.lazy(lambda);
+    tmp9 = NofibPrelude.lazy(lambda38);
     tmp10 = boyer.Fun(boyer.FALSE, NofibPrelude.Nil, tmp9);
     boyerFalse = tmp10;
-    lambda1 = (undefined, function () {
-      return NofibPrelude.Nil
-    });
-    tmp11 = NofibPrelude.lazy(lambda1);
+    tmp11 = NofibPrelude.lazy(lambda39);
     tmp12 = boyer.Fun(boyer.NIL, NofibPrelude.Nil, tmp11);
     nil = tmp12;
-    lambda2 = (undefined, function () {
-      return NofibPrelude.Nil
-    });
-    tmp13 = NofibPrelude.lazy(lambda2);
+    tmp13 = NofibPrelude.lazy(lambda40);
     tmp14 = boyer.Fun(boyer.TRUE, NofibPrelude.Nil, tmp13);
     boyerTrue = tmp14;
-    lambda3 = (undefined, function () {
-      return NofibPrelude.Nil
-    });
-    tmp15 = NofibPrelude.lazy(lambda3);
+    tmp15 = NofibPrelude.lazy(lambda41);
     tmp16 = boyer.Fun(boyer.ZERO, NofibPrelude.Nil, tmp15);
     zero = tmp16;
-    tmp17 = plus(a, b);
-    tmp18 = plus(c, zero);
-    tmp19 = plus(tmp17, tmp18);
+    tmp17 = plus$(u, w, x4, y, z, boyerFalse, boyerTrue, zero, a, b);
+    tmp18 = plus$(u, w, x4, y, z, boyerFalse, boyerTrue, zero, c, zero);
+    tmp19 = plus$(u, w, x4, y, z, boyerFalse, boyerTrue, zero, tmp17, tmp18);
     tmp20 = f(tmp19);
-    tmp21 = times(a, b);
-    tmp22 = plus(c, d);
-    tmp23 = times(tmp21, tmp22);
+    tmp21 = times$(u, w, x4, y, z, boyerFalse, boyerTrue, zero, a, b);
+    tmp22 = plus$(u, w, x4, y, z, boyerFalse, boyerTrue, zero, c, d);
+    tmp23 = times$(u, w, x4, y, z, boyerFalse, boyerTrue, zero, tmp21, tmp22);
     tmp24 = f(tmp23);
-    tmp25 = append_(a, b);
-    tmp26 = append_(tmp25, nil);
-    tmp27 = reverse_(tmp26);
+    tmp25 = append_$(x4, y, z, a, b);
+    tmp26 = append_$(x4, y, z, tmp25, nil);
+    tmp27 = reverse_$(x4, y, z, tmp26);
     tmp28 = f(tmp27);
-    tmp29 = plus(a, b);
-    tmp30 = difference(x4, y);
-    tmp31 = equal(tmp29, tmp30);
-    tmp32 = remainder(a, b);
-    tmp33 = length_(b);
-    tmp34 = member(a, tmp33);
-    tmp35 = lessp(tmp32, tmp34);
+    tmp29 = plus$(u, w, x4, y, z, boyerFalse, boyerTrue, zero, a, b);
+    tmp30 = difference$(u, w, x4, y, z, boyerFalse, boyerTrue, zero, x4, y);
+    tmp31 = equal$(u, w, x4, y, z, boyerFalse, boyerTrue, zero, tmp29, tmp30);
+    tmp32 = remainder$(u, w, x4, y, z, boyerFalse, boyerTrue, zero, a, b);
+    tmp33 = length_$(u, w, x4, y, z, boyerFalse, boyerTrue, zero, b);
+    tmp34 = member$(u, w, x4, y, z, boyerFalse, boyerTrue, a, tmp33);
+    tmp35 = lessp$(u, w, x4, y, z, boyerFalse, boyerTrue, zero, tmp32, tmp34);
     tmp36 = NofibPrelude.Cons([
       boyer.W,
       tmp35
@@ -1933,15 +2279,15 @@ boyer1 = class boyer {
       tmp20
     ], tmp39);
     subst0 = tmp40;
-    tmp41 = implies(xxxx, y);
-    tmp42 = implies(y, z);
-    tmp43 = implies(z, u);
-    tmp44 = implies(u, w);
-    tmp45 = and_(tmp43, tmp44);
-    tmp46 = and_(tmp42, tmp45);
-    tmp47 = and_(tmp41, tmp46);
-    tmp48 = implies(x4, w);
-    tmp49 = implies(tmp47, tmp48);
+    tmp41 = implies$(u, w, x4, y, z, boyerFalse, boyerTrue, xxxx, y);
+    tmp42 = implies$(u, w, x4, y, z, boyerFalse, boyerTrue, y, z);
+    tmp43 = implies$(u, w, x4, y, z, boyerFalse, boyerTrue, z, u);
+    tmp44 = implies$(u, w, x4, y, z, boyerFalse, boyerTrue, u, w);
+    tmp45 = and_$(u, w, x4, y, z, boyerFalse, boyerTrue, tmp43, tmp44);
+    tmp46 = and_$(u, w, x4, y, z, boyerFalse, boyerTrue, tmp42, tmp45);
+    tmp47 = and_$(u, w, x4, y, z, boyerFalse, boyerTrue, tmp41, tmp46);
+    tmp48 = implies$(u, w, x4, y, z, boyerFalse, boyerTrue, x4, w);
+    tmp49 = implies$(u, w, x4, y, z, boyerFalse, boyerTrue, tmp47, tmp48);
     theorem = tmp49;
     tmp50 = boyer.apply_subst(subst0, theorem);
     return boyer.tautp(tmp50)

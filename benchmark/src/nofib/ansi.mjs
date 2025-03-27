@@ -2,19 +2,132 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let ansi1;
+let ansi1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda$, lambda$1, lambda$2, lambda$3, lambda$4;
+lambda9 = (undefined, function (x) {
+  return x
+});
+lambda8 = (undefined, function (x) {
+  return ansi1.pressAnyKey(ansi1.end, x)
+});
+lambda7 = (undefined, function (y) {
+  let tmp;
+  tmp = NofibPrelude.nofibStringToList("I'm waiting...");
+  return ansi1.writeString(tmp, lambda8, y)
+});
+lambda6 = (undefined, function (name) {
+  let reply, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+  tmp = NofibPrelude.nofibStringToList("Hello ");
+  tmp1 = NofibPrelude.nofibStringToList("!");
+  tmp2 = NofibPrelude.append(name, tmp1);
+  tmp3 = NofibPrelude.append(tmp, tmp2);
+  reply = tmp3;
+  tmp4 = NofibPrelude.listLen(reply);
+  tmp5 = tmp4 / 2;
+  tmp6 = 40 - tmp5;
+  tmp7 = ansi1.moveTo([
+    1,
+    23
+  ], lambda7);
+  return ansi1.writeAt([
+    tmp6,
+    18
+  ], reply, tmp7)
+});
+lambda5 = (undefined, function (x) {
+  let tmp, tmp1, tmp2;
+  tmp = NofibPrelude.nofibStringToList("Please enter your name: ");
+  tmp1 = lambda6;
+  tmp2 = ansi1.promptReadAt([
+    17,
+    15
+  ], 18, tmp, tmp1);
+  return ansi1.pressAnyKey(tmp2, x)
+});
+lambda$4 = function lambda$(n, s, l, consume, c, d) {
+  let scrut, scrut1, scrut2, scrut3, tmp, tmp1, tmp2, tmp3;
+  scrut3 = c == "B";
+  if (scrut3 === true) {
+    return ansi1.deletee(n, s, l, consume)
+  } else {
+    scrut2 = c == "D";
+    if (scrut2 === true) {
+      return ansi1.deletee(n, s, l, consume)
+    } else {
+      scrut1 = c == "`";
+      if (scrut1 === true) {
+        return ansi1.returnn(s, consume)
+      } else {
+        scrut = n < l;
+        if (scrut === true) {
+          tmp = n + 1;
+          tmp1 = NofibPrelude.Cons(c, s);
+          tmp2 = ansi1.loop(tmp, tmp1, l, consume);
+          return ansi1.writeChar(c, tmp2, d)
+        } else {
+          tmp3 = ansi1.loop(n, s, l, consume);
+          return ansi1.ringBell(tmp3, d)
+        }
+      }
+    }
+  }
+};
+lambda4 = (undefined, function (n, s, l, consume) {
+  return (c, d) => {
+    return lambda$4(n, s, l, consume, c, d)
+  }
+});
+lambda$3 = function lambda$(n, s, l, consume, x) {
+  let tmp, tmp1;
+  tmp = ansi1.returnn(s, consume);
+  tmp1 = runtime.safeCall(lambda4(n, s, l, consume));
+  return ansi1.readChar(tmp, tmp1, x)
+};
+lambda3 = (undefined, function (n, s, l, consume) {
+  return (x) => {
+    return lambda$3(n, s, l, consume, x)
+  }
+});
+lambda$2 = function lambda$(a, x, y, p) {
+  let tmp;
+  tmp = ansi1.goto(x, y);
+  return ansi1.writeString(tmp, a, p)
+};
+lambda2 = (undefined, function (a, x, y) {
+  return (p) => {
+    return lambda$2(a, x, y, p)
+  }
+});
+lambda$1 = function lambda$(s, a, x, y, p) {
+  let tmp, tmp1;
+  tmp = ansi1.goto(x, y);
+  tmp1 = NofibPrelude.append(tmp, s);
+  return ansi1.writeString(tmp1, a, p)
+};
+lambda1 = (undefined, function (s, a, x, y) {
+  return (p) => {
+    return lambda$1(s, a, x, y, p)
+  }
+});
+lambda$ = function lambda$(prog, c, x) {
+  return runtime.safeCall(prog(x))
+};
+lambda = (undefined, function (prog) {
+  return (c, x) => {
+    return lambda$(prog, c, x)
+  }
+});
 ansi1 = class ansi {
   static {
     ansi1 = ansi;
-    let tmp, lambda;
+    let tmp, lambda10;
     tmp = NofibPrelude.nofibStringToList("L");
     this.cls = tmp;
-    lambda = (undefined, function () {
+    lambda10 = (undefined, function () {
       let tmp1;
       tmp1 = ansi.testAnsi_nofib(1);
       return NofibPrelude.nofibListToString(tmp1)
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda10)
   }
   static goto(x, y) {
     let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8;
@@ -82,11 +195,9 @@ ansi1 = class ansi {
     }
   } 
   static pressAnyKey(prog, x1) {
-    let lambda;
-    lambda = (undefined, function (c, x2) {
-      return runtime.safeCall(prog(x2))
-    });
-    return ansi.readChar(prog, lambda, x1)
+    let lambda$this;
+    lambda$this = runtime.safeCall(lambda(prog));
+    return ansi.readChar(prog, lambda$this, x1)
   } 
   static unreadChar(c, prog1, cs2) {
     let tmp;
@@ -115,36 +226,25 @@ ansi1 = class ansi {
     return ansi.writeString(ansi.cls, a1, b1)
   } 
   static writeAt(x_y1, s3, a2) {
-    let first1, first0, x2, y1, lambda;
+    let first1, first0, x2, y1;
     if (globalThis.Array.isArray(x_y1) && x_y1.length === 2) {
       first0 = x_y1[0];
       first1 = x_y1[1];
       x2 = first0;
       y1 = first1;
-      lambda = (undefined, function (p) {
-        let tmp, tmp1;
-        tmp = ansi.goto(x2, y1);
-        tmp1 = NofibPrelude.append(tmp, s3);
-        return ansi.writeString(tmp1, a2, p)
-      });
-      return lambda
+      return runtime.safeCall(lambda1(s3, a2, x2, y1))
     } else {
       throw new globalThis.Error("match error");
     }
   } 
   static moveTo(x_y2, a3) {
-    let first1, first0, x2, y1, lambda;
+    let first1, first0, x2, y1;
     if (globalThis.Array.isArray(x_y2) && x_y2.length === 2) {
       first0 = x_y2[0];
       first1 = x_y2[1];
       x2 = first0;
       y1 = first1;
-      lambda = (undefined, function (p) {
-        let tmp;
-        tmp = ansi.goto(x2, y1);
-        return ansi.writeString(tmp, a3, p)
-      });
-      return lambda
+      return runtime.safeCall(lambda2(a3, x2, y1))
     } else {
       throw new globalThis.Error("match error");
     }
@@ -170,42 +270,7 @@ ansi1 = class ansi {
     }
   } 
   static loop(n1, s6, l1, consume4) {
-    let lambda;
-    lambda = (undefined, function (x2) {
-      let tmp, tmp1, lambda1;
-      tmp = ansi.returnn(s6, consume4);
-      lambda1 = (undefined, function (c2, d) {
-        let scrut, scrut1, scrut2, scrut3, tmp2, tmp3, tmp4, tmp5;
-        scrut3 = c2 == "B";
-        if (scrut3 === true) {
-          return ansi.deletee(n1, s6, l1, consume4)
-        } else {
-          scrut2 = c2 == "D";
-          if (scrut2 === true) {
-            return ansi.deletee(n1, s6, l1, consume4)
-          } else {
-            scrut1 = c2 == "`";
-            if (scrut1 === true) {
-              return ansi.returnn(s6, consume4)
-            } else {
-              scrut = n1 < l1;
-              if (scrut === true) {
-                tmp2 = n1 + 1;
-                tmp3 = NofibPrelude.Cons(c2, s6);
-                tmp4 = ansi.loop(tmp2, tmp3, l1, consume4);
-                return ansi.writeChar(c2, tmp4, d)
-              } else {
-                tmp5 = ansi.loop(n1, s6, l1, consume4);
-                return ansi.ringBell(tmp5, d)
-              }
-            }
-          }
-        }
-      });
-      tmp1 = lambda1;
-      return ansi.readChar(tmp, tmp1, x2)
-    });
-    return lambda
+    return runtime.safeCall(lambda3(n1, s6, l1, consume4))
   } 
   static readAt(x_y3, l2, consume5) {
     let tmp, tmp1, tmp2;
@@ -236,7 +301,7 @@ ansi1 = class ansi {
     }
   } 
   static program(input) {
-    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, lambda;
+    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20;
     tmp = NofibPrelude.nofibStringToList("Demonstration program");
     tmp1 = ansi.highlight(tmp);
     tmp2 = ansi.at([
@@ -275,53 +340,13 @@ ansi1 = class ansi {
     tmp17 = NofibPrelude.Cons(tmp4, tmp16);
     tmp18 = NofibPrelude.Cons(tmp2, tmp17);
     tmp19 = NofibPrelude.Cons(ansi.cls, tmp18);
-    lambda = (undefined, function (x2) {
-      let tmp21, tmp22, tmp23, lambda1;
-      tmp21 = NofibPrelude.nofibStringToList("Please enter your name: ");
-      lambda1 = (undefined, function (name) {
-        let reply, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, lambda2;
-        tmp24 = NofibPrelude.nofibStringToList("Hello ");
-        tmp25 = NofibPrelude.nofibStringToList("!");
-        tmp26 = NofibPrelude.append(name, tmp25);
-        tmp27 = NofibPrelude.append(tmp24, tmp26);
-        reply = tmp27;
-        tmp28 = NofibPrelude.listLen(reply);
-        tmp29 = tmp28 / 2;
-        tmp30 = 40 - tmp29;
-        lambda2 = (undefined, function (y1) {
-          let tmp32, lambda3;
-          tmp32 = NofibPrelude.nofibStringToList("I'm waiting...");
-          lambda3 = (undefined, function (x3) {
-            return ansi.pressAnyKey(ansi.end, x3)
-          });
-          return ansi.writeString(tmp32, lambda3, y1)
-        });
-        tmp31 = ansi.moveTo([
-          1,
-          23
-        ], lambda2);
-        return ansi.writeAt([
-          tmp30,
-          18
-        ], reply, tmp31)
-      });
-      tmp22 = lambda1;
-      tmp23 = ansi.promptReadAt([
-        17,
-        15
-      ], 18, tmp21, tmp22);
-      return ansi.pressAnyKey(tmp23, x2)
-    });
-    tmp20 = lambda;
+    tmp20 = lambda5;
     return ansi.writes(tmp19, tmp20, input)
   } 
   static testAnsi_nofib(n2) {
-    let tmp, tmp1, tmp2, lambda;
+    let tmp, tmp1, tmp2;
     tmp = NofibPrelude.replicate(n2, ansi.program);
-    lambda = (undefined, function (x2) {
-      return x2
-    });
-    tmp1 = NofibPrelude.foldr(NofibPrelude.compose, lambda, tmp);
+    tmp1 = NofibPrelude.foldr(NofibPrelude.compose, lambda9, tmp);
     tmp2 = NofibPrelude.nofibStringToList("testtesttest");
     return runtime.safeCall(tmp1(tmp2))
   }

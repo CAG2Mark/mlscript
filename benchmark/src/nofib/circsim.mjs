@@ -2,11 +2,650 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let circsim1;
+let down1, down2, down3, up, lscomp, lscomp1, thrid, get_output, lscomp2, restore_outport, restore, lscomp3, check_requests, check_lr_requests, pad, lscomp4, update_is, update_os, lscomp5, sim_then_send, ilabel, olabel, circsim1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, lambda11, lambda12, lambda13, lambda14, lambda15, lambda16, lambda17, lambda18, lambda19, lambda20, lambda21, lambda22, down1$, down2$, lambda$, lambda$1, lambda$2, lscomp$, lambda$3, lscomp$1, lscomp$2, lscomp$3, lambda$4, lambda$5, pad$, lscomp$4, lambda$6, update_os$, update_is$, lambda$7, lambda$8, lambda$9, lambda$10, lambda$11, lambda$12, lambda$13;
+ilabel = function ilabel(n, pid_) {
+  let tmp, tmp1;
+  tmp = NofibPrelude.stringOfInt(n);
+  tmp1 = NofibPrelude.stringConcat("x", tmp);
+  return [
+    tmp1,
+    pid_
+  ]
+};
+olabel = function olabel(n, pid_) {
+  let tmp, tmp1;
+  tmp = NofibPrelude.stringOfInt(n);
+  tmp1 = NofibPrelude.stringConcat("y", tmp);
+  return [
+    tmp1,
+    pid_
+  ]
+};
+lambda19 = (undefined, function (x) {
+  let tmp;
+  tmp = 7 * x;
+  return tmp + 1
+});
+lambda20 = (undefined, function (x) {
+  let tmp;
+  tmp = 7 * x;
+  return tmp + 7
+});
+lambda21 = (undefined, function (x) {
+  let tmp;
+  tmp = 7 * x;
+  return tmp + 1
+});
+lambda22 = (undefined, function (x) {
+  return circsim1.reg(0, x)
+});
+lambda$13 = function lambda$(size, ins, outs, states, x, y) {
+  let tmp;
+  tmp = circsim1.critical_path_depth([
+    size,
+    ins,
+    outs,
+    states
+  ]);
+  return circsim1.do_cycle(tmp, x, y)
+};
+lambda18 = (undefined, function (size, ins, outs, states) {
+  return (x, y) => {
+    return lambda$13(size, ins, outs, states, x, y)
+  }
+});
+sim_then_send = function sim_then_send(state, d) {
+  let tmp;
+  tmp = circsim1.simulate_components(d, state);
+  return circsim1.do_sends(d, tmp)
+};
+lambda$12 = function lambda$(inputs, ins, s) {
+  let tmp;
+  tmp = NofibPrelude.zip(ins, inputs);
+  return circsim1.store_inputs(tmp, s)
+};
+lambda17 = (undefined, function (inputs, ins) {
+  return (s) => {
+    return lambda$12(inputs, ins, s)
+  }
+});
+lambda$11 = function lambda$(depth, s) {
+  return circsim1.simulate_component(depth, s)
+};
+lambda16 = (undefined, function (depth) {
+  return (s) => {
+    return lambda$11(depth, s)
+  }
+});
+lscomp5 = function lscomp(ls) {
+  let param0, param1, h, t, first2, first1, first0, sig, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    h = param0;
+    t = param1;
+    if (globalThis.Array.isArray(h) && h.length === 3) {
+      first0 = h[0];
+      first1 = h[1];
+      first2 = h[2];
+      sig = first2;
+      tmp = lscomp5(t);
+      return NofibPrelude.Cons(sig, tmp)
+    } else {
+      return lscomp5(t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda$10 = function lambda$(d, s) {
+  return circsim1.acknowledge(d, s)
+};
+lambda14 = (undefined, function (d) {
+  return (s) => {
+    return lambda$10(d, s)
+  }
+});
+lambda$9 = function lambda$(d, x) {
+  return circsim1.do_send(d, x)
+};
+lambda15 = (undefined, function (d) {
+  return (x) => {
+    return lambda$9(d, x)
+  }
+});
+lambda$8 = function lambda$(d, s) {
+  return circsim1.check_depth(d, s)
+};
+lambda11 = (undefined, function (d) {
+  return (s) => {
+    return lambda$8(d, s)
+  }
+});
+lambda12 = (undefined, function (x) {
+  let tmp;
+  tmp = circsim1.send(x);
+  return NofibPrelude.snd(tmp)
+});
+lambda$7 = function lambda$(d, x, y) {
+  return circsim1.update_io(d, x, y)
+};
+lambda13 = (undefined, function (d) {
+  return (x, y) => {
+    return lambda$7(d, x, y)
+  }
+});
+update_is$ = function update_is$(lrps, state) {
+  let tmp, tmp1;
+  tmp = circsim1.inports(state);
+  tmp1 = NofibPrelude.foldr(circsim1.update_i, tmp, lrps);
+  return circsim1.updateInports(state, tmp1)
+};
+update_is = function update_is(lrps) {
+  return (state) => {
+    return update_is$(lrps, state)
+  }
+};
+update_os$ = function update_os$(d, lrps, state) {
+  let scrut, tmp, tmp1, tmp2;
+  tmp = circsim1.pathDepth(state);
+  scrut = tmp == d;
+  if (scrut === true) {
+    tmp1 = circsim1.outports(state);
+    tmp2 = NofibPrelude.zipWith(circsim1.update_o, lrps, tmp1);
+    return circsim1.updateOutports(state, tmp2)
+  } else {
+    return state
+  }
+};
+update_os = function update_os(d, lrps) {
+  return (state) => {
+    return update_os$(d, lrps, state)
+  }
+};
+lambda$6 = function lambda$(i, p, m_, x) {
+  return circsim1.compare_and_update([
+    i,
+    p,
+    m_
+  ], x)
+};
+lambda10 = (undefined, function (i, p, m_) {
+  return (x) => {
+    return lambda$6(i, p, m_, x)
+  }
+});
+lscomp$4 = function lscomp$(state, ls) {
+  let param0, param1, h, t, first5, first4, first3, first2, first1, first0, p, m, ql, dl, qr, dr, tmp, tmp1;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    h = param0;
+    t = param1;
+    if (globalThis.Array.isArray(h) && h.length === 6) {
+      first0 = h[0];
+      first1 = h[1];
+      first2 = h[2];
+      first3 = h[3];
+      first4 = h[4];
+      first5 = h[5];
+      p = first0;
+      m = first1;
+      ql = first2;
+      dl = first3;
+      qr = first4;
+      dr = first5;
+      tmp = circsim1.pid(state);
+      tmp1 = lscomp$4(state, t);
+      return NofibPrelude.Cons([
+        tmp,
+        p,
+        m,
+        ql,
+        dl,
+        qr,
+        dr,
+        1
+      ], tmp1)
+    } else {
+      return lscomp$4(state, t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp4 = function lscomp(state) {
+  return (ls) => {
+    return lscomp$4(state, ls)
+  }
+};
+lambda8 = (undefined, function (x) {
+  return NofibPrelude.listLen(x)
+});
+pad$ = function pad$(pss, xs) {
+  let max_ps, tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.map(lambda8, pss);
+  tmp1 = NofibPrelude.maximum(tmp);
+  max_ps = tmp1;
+  tmp2 = NofibPrelude.replicate_lz(max_ps, circsim1.emptyPacket);
+  tmp3 = NofibPrelude.append_nl_lz(xs, tmp2);
+  return NofibPrelude.take_lz(max_ps, tmp3)
+};
+pad = function pad(pss) {
+  return (xs) => {
+    return pad$(pss, xs)
+  }
+};
+lambda$5 = function lambda$(pss, x) {
+  return pad$(pss, x)
+};
+lambda9 = (undefined, function (pss) {
+  return (x) => {
+    return lambda$5(pss, x)
+  }
+});
+check_requests = function check_requests(xs) {
+  let tmp;
+  tmp = NofibPrelude.map(check_lr_requests, xs);
+  return NofibPrelude.orList(tmp)
+};
+check_lr_requests = function check_lr_requests(pql) {
+  let first5, first4, first3, first2, first1, first0, p, m, ql, dl, qr, dr;
+  if (globalThis.Array.isArray(pql) && pql.length === 6) {
+    first0 = pql[0];
+    first1 = pql[1];
+    first2 = pql[2];
+    first3 = pql[3];
+    first4 = pql[4];
+    first5 = pql[5];
+    p = first0;
+    m = first1;
+    ql = first2;
+    dl = first3;
+    qr = first4;
+    dr = first5;
+    return ql || qr
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda$4 = function lambda$(d, s) {
+  return circsim1.check_depth(d, s)
+};
+lambda6 = (undefined, function (d) {
+  return (s) => {
+    return lambda$4(d, s)
+  }
+});
+lambda7 = (undefined, function (s) {
+  let tmp;
+  tmp = circsim1.outports(s);
+  return check_requests(tmp)
+});
+lscomp$3 = function lscomp$(b, ls) {
+  let param0, param1, h, t, first5, first4, first3, first2, first1, first0, p, m, ql, dl, qr, dr, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    h = param0;
+    t = param1;
+    if (globalThis.Array.isArray(h) && h.length === 6) {
+      first0 = h[0];
+      first1 = h[1];
+      first2 = h[2];
+      first3 = h[3];
+      first4 = h[4];
+      first5 = h[5];
+      p = first0;
+      m = first1;
+      ql = first2;
+      dl = first3;
+      qr = first4;
+      dr = first5;
+      tmp = lscomp$3(b, t);
+      return NofibPrelude.Cons([
+        p,
+        m,
+        b,
+        dl,
+        b,
+        dr
+      ], tmp)
+    } else {
+      return lscomp$3(b, t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp3 = function lscomp(b) {
+  return (ls) => {
+    return lscomp$3(b, ls)
+  }
+};
+restore = function restore(os, ns) {
+  let tmp, tmp1, tmp2;
+  tmp = circsim1.outports(os);
+  tmp1 = circsim1.outports(ns);
+  tmp2 = NofibPrelude.zipWith(restore_outport, tmp, tmp1);
+  return circsim1.updateOutports(ns, tmp2)
+};
+restore_outport = function restore_outport(pql, mdq) {
+  let first5, first4, first3, first2, first1, first0, p, ql, dl, qr, dq, first51, first41, first31, first21, first11, first01, m;
+  if (globalThis.Array.isArray(pql) && pql.length === 6) {
+    first0 = pql[0];
+    first1 = pql[1];
+    first2 = pql[2];
+    first3 = pql[3];
+    first4 = pql[4];
+    first5 = pql[5];
+    p = first0;
+    ql = first2;
+    dl = first3;
+    qr = first4;
+    dq = first5;
+    if (globalThis.Array.isArray(mdq) && mdq.length === 6) {
+      first01 = mdq[0];
+      first11 = mdq[1];
+      first21 = mdq[2];
+      first31 = mdq[3];
+      first41 = mdq[4];
+      first51 = mdq[5];
+      m = first11;
+      return [
+        p,
+        m,
+        ql,
+        dl,
+        qr,
+        dq
+      ]
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp$2 = function lscomp$(state, pid_, ls) {
+  let param0, param1, h, t, first1, first0, first11, first01, label, input_pid, value, scrut, tmp, tmp1;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    h = param0;
+    t = param1;
+    if (globalThis.Array.isArray(h) && h.length === 2) {
+      first0 = h[0];
+      first1 = h[1];
+      if (globalThis.Array.isArray(first0) && first0.length === 2) {
+        first01 = first0[0];
+        first11 = first0[1];
+        label = first01;
+        input_pid = first11;
+        value = first1;
+        scrut = pid_ == input_pid;
+        if (scrut === true) {
+          tmp = circsim1.update_outports(state, value);
+          tmp1 = lscomp$2(state, pid_, t);
+          return NofibPrelude.Cons(tmp, tmp1)
+        } else {
+          return lscomp$2(state, pid_, t)
+        }
+      } else {
+        return lscomp$2(state, pid_, t)
+      }
+    } else {
+      return lscomp$2(state, pid_, t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp2 = function lscomp(state, pid_) {
+  return (ls) => {
+    return lscomp$2(state, pid_, ls)
+  }
+};
+thrid = function thrid(tp3) {
+  let first2, first1, first0, v;
+  if (globalThis.Array.isArray(tp3) && tp3.length === 3) {
+    first0 = tp3[0];
+    first1 = tp3[1];
+    first2 = tp3[2];
+    v = first2;
+    return v
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp$1 = function lscomp$(p, ls) {
+  let param0, param1, s, t, scrut, tmp, tmp1, tmp2, tmp3;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    s = param0;
+    t = param1;
+    tmp = circsim1.pid(s);
+    scrut = p == tmp;
+    if (scrut === true) {
+      tmp1 = circsim1.inports(s);
+      tmp2 = NofibPrelude.head(tmp1);
+      tmp3 = lscomp$1(p, t);
+      return NofibPrelude.Cons(tmp2, tmp3)
+    } else {
+      return lscomp$1(p, t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp1 = function lscomp(p) {
+  return (ls) => {
+    return lscomp$1(p, ls)
+  }
+};
+get_output = function get_output(states, label_p) {
+  let first1, first0, label, p, tmp, tmp1;
+  if (globalThis.Array.isArray(label_p) && label_p.length === 2) {
+    first0 = label_p[0];
+    first1 = label_p[1];
+    label = first0;
+    p = first1;
+    tmp = lscomp$1(p, states);
+    tmp1 = NofibPrelude.head(tmp);
+    return thrid(tmp1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda$3 = function lambda$(states, p) {
+  return get_output(states, p)
+};
+lambda5 = (undefined, function (states) {
+  return (p) => {
+    return lambda$3(states, p)
+  }
+});
+lscomp$ = function lscomp$(value, ls) {
+  let param0, param1, h, t, first5, first4, first3, first2, first1, first0, p, m, ql, dl, qr, dr, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    h = param0;
+    t = param1;
+    if (globalThis.Array.isArray(h) && h.length === 6) {
+      first0 = h[0];
+      first1 = h[1];
+      first2 = h[2];
+      first3 = h[3];
+      first4 = h[4];
+      first5 = h[5];
+      p = first0;
+      m = first1;
+      ql = first2;
+      dl = first3;
+      qr = first4;
+      dr = first5;
+      tmp = lscomp$(value, t);
+      return NofibPrelude.Cons([
+        p,
+        value,
+        ql,
+        dl,
+        qr,
+        dr
+      ], tmp)
+    } else {
+      return lscomp$(value, t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp = function lscomp(value) {
+  return (ls) => {
+    return lscomp$(value, ls)
+  }
+};
+lambda$2 = function lambda$(x, a) {
+  return a >= x
+};
+lambda3 = (undefined, function (x) {
+  return (a) => {
+    return lambda$2(x, a)
+  }
+});
+lambda4 = (undefined, function (a) {
+  return a * 2
+});
+up = function up(f, g, lxly, rxry) {
+  let first1, first0, lx, ly, first11, first01, rx, ry, tmp, tmp1;
+  if (globalThis.Array.isArray(lxly) && lxly.length === 2) {
+    first0 = lxly[0];
+    first1 = lxly[1];
+    lx = first0;
+    ly = first1;
+    if (globalThis.Array.isArray(rxry) && rxry.length === 2) {
+      first01 = rxry[0];
+      first11 = rxry[1];
+      rx = first01;
+      ry = first11;
+      tmp = runtime.safeCall(f(lx, rx));
+      tmp1 = runtime.safeCall(g(ly, ry));
+      return [
+        tmp,
+        tmp1
+      ]
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+down3 = function down3(f, g, lxly, rxry, ab) {
+  let first1, first0, lx, ly, first11, first01, rx, ry, first12, first02, a, b, tmp, tmp1;
+  if (globalThis.Array.isArray(lxly) && lxly.length === 2) {
+    first0 = lxly[0];
+    first1 = lxly[1];
+    lx = first0;
+    ly = first1;
+    if (globalThis.Array.isArray(rxry) && rxry.length === 2) {
+      first01 = rxry[0];
+      first11 = rxry[1];
+      rx = first01;
+      ry = first11;
+      if (globalThis.Array.isArray(ab) && ab.length === 2) {
+        first02 = ab[0];
+        first12 = ab[1];
+        a = first02;
+        b = first12;
+        tmp = runtime.safeCall(g(ry, b));
+        tmp1 = runtime.safeCall(f(a, lx));
+        return [
+          [
+            a,
+            tmp
+          ],
+          [
+            tmp1,
+            b
+          ]
+        ]
+      } else {
+        throw new globalThis.Error("match error");
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda = (undefined, function (x) {
+  return [
+    x,
+    x
+  ]
+});
+lambda$1 = function lambda$(f, g, a, b) {
+  return up(f, g, a, b)
+};
+lambda1 = (undefined, function (f, g) {
+  return (a, b) => {
+    return lambda$1(f, g, a, b)
+  }
+});
+lambda$ = function lambda$(f, g, a, b, c) {
+  return down3(f, g, a, b, c)
+};
+lambda2 = (undefined, function (f, g) {
+  return (a, b, c) => {
+    return lambda$(f, g, a, b, c)
+  }
+});
+down2$ = function down2$(f, l, r, x) {
+  let tmp;
+  tmp = runtime.safeCall(f(r, x));
+  return [
+    tmp,
+    x
+  ]
+};
+down2 = function down2(f) {
+  return (l, r, x) => {
+    return down2$(f, l, r, x)
+  }
+};
+down1$ = function down1$(f, l, r, x) {
+  let tmp;
+  tmp = runtime.safeCall(f(x, l));
+  return [
+    x,
+    tmp
+  ]
+};
+down1 = function down1(f) {
+  return (l, r, x) => {
+    return down1$(f, l, r, x)
+  }
+};
 circsim1 = class circsim {
   static {
     circsim1 = circsim;
-    let tmp, tmp1, tmp2, tmp3, tmp4, lambda;
+    let tmp, tmp1, tmp2, tmp3, tmp4, lambda23;
     this.BinTree = class BinTree {
       constructor() {}
       toString() { return "BinTree"; }
@@ -156,12 +795,12 @@ circsim1 = class circsim {
       0,
       1
     ];
-    lambda = (undefined, function () {
+    lambda23 = (undefined, function () {
       let tmp5;
       tmp5 = circsim.testCircsim_nofib(40);
       return runtime.safeCall(tmp5.toString())
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda23)
   }
   static pid(p) {
     return p.pid
@@ -338,9 +977,9 @@ circsim1 = class circsim {
       throw new globalThis.Error("match error");
     }
   } 
-  static sweep_ud(up, down, u, t3) {
+  static sweep_ud(up1, down, u, t3) {
     let scrut, first1, first0, ans, t_, tmp;
-    scrut = circsim.upsweep(up, t3);
+    scrut = circsim.upsweep(up1, t3);
     if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
       first0 = scrut[0];
       first1 = scrut[1];
@@ -356,17 +995,10 @@ circsim1 = class circsim {
     }
   } 
   static scanL(f1, u1, xs1) {
-    let down1, scrut, first1, first0, up_ans, t_, tmp, tmp1;
-    down1 = function down1(l, r, x) {
-      let tmp2;
-      tmp2 = runtime.safeCall(f1(x, l));
-      return [
-        x,
-        tmp2
-      ]
-    };
+    let scrut, first1, first0, up_ans, t_, tmp, tmp1, down1$this;
     tmp = circsim.put(xs1);
-    scrut = circsim.sweep_ud(f1, down1, u1, tmp);
+    down1$this = runtime.safeCall(down1(f1));
+    scrut = circsim.sweep_ud(f1, down1$this, u1, tmp);
     if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
       first0 = scrut[0];
       first1 = scrut[1];
@@ -382,17 +1014,10 @@ circsim1 = class circsim {
     }
   } 
   static scanR(f2, u2, xs2) {
-    let down2, scrut, first1, first0, up_ans, t_, tmp, tmp1;
-    down2 = function down2(l, r, x) {
-      let tmp2;
-      tmp2 = runtime.safeCall(f2(r, x));
-      return [
-        tmp2,
-        x
-      ]
-    };
+    let scrut, first1, first0, up_ans, t_, tmp, tmp1, down2$this;
     tmp = circsim.put(xs2);
-    scrut = circsim.sweep_ud(f2, down2, u2, tmp);
+    down2$this = runtime.safeCall(down2(f2));
+    scrut = circsim.sweep_ud(f2, down2$this, u2, tmp);
     if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
       first0 = scrut[0];
       first1 = scrut[1];
@@ -408,87 +1033,13 @@ circsim1 = class circsim {
     }
   } 
   static scanlr(f3, g1, lu, ru, xs3) {
-    let down3, up1, xs_, scrut, first1, first0, first11, first01, l_ans, r_ans, t_, ans, tmp, tmp1, tmp2, tmp3, tmp4, lambda, lambda1, lambda2;
-    up1 = function up(f4, g2, lxly, rxry) {
-      let first12, first02, lx, ly, first13, first03, rx, ry, tmp5, tmp6;
-      if (globalThis.Array.isArray(lxly) && lxly.length === 2) {
-        first02 = lxly[0];
-        first12 = lxly[1];
-        lx = first02;
-        ly = first12;
-        if (globalThis.Array.isArray(rxry) && rxry.length === 2) {
-          first03 = rxry[0];
-          first13 = rxry[1];
-          rx = first03;
-          ry = first13;
-          tmp5 = runtime.safeCall(f4(lx, rx));
-          tmp6 = runtime.safeCall(g2(ly, ry));
-          return [
-            tmp5,
-            tmp6
-          ]
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    down3 = function down3(f4, g2, lxly, rxry, ab) {
-      let first12, first02, lx, ly, first13, first03, rx, ry, first14, first04, a, b, tmp5, tmp6;
-      if (globalThis.Array.isArray(lxly) && lxly.length === 2) {
-        first02 = lxly[0];
-        first12 = lxly[1];
-        lx = first02;
-        ly = first12;
-        if (globalThis.Array.isArray(rxry) && rxry.length === 2) {
-          first03 = rxry[0];
-          first13 = rxry[1];
-          rx = first03;
-          ry = first13;
-          if (globalThis.Array.isArray(ab) && ab.length === 2) {
-            first04 = ab[0];
-            first14 = ab[1];
-            a = first04;
-            b = first14;
-            tmp5 = runtime.safeCall(g2(ry, b));
-            tmp6 = runtime.safeCall(f4(a, lx));
-            return [
-              [
-                a,
-                tmp5
-              ],
-              [
-                tmp6,
-                b
-              ]
-            ]
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    lambda = (undefined, function (x) {
-      return [
-        x,
-        x
-      ]
-    });
+    let xs_, scrut, first1, first0, first11, first01, l_ans, r_ans, t_, ans, tmp, tmp1, tmp2, tmp3, tmp4, lambda$this, lambda$this1;
     tmp = NofibPrelude.map(lambda, xs3);
     xs_ = tmp;
     tmp1 = circsim.put(xs_);
-    lambda1 = (undefined, function (a, b) {
-      return up1(f3, g1, a, b)
-    });
-    lambda2 = (undefined, function (a, b, c) {
-      return down3(f3, g1, a, b, c)
-    });
-    scrut = circsim.sweep_ud(lambda1, lambda2, [
+    lambda$this = runtime.safeCall(lambda1(f3, g1));
+    lambda$this1 = runtime.safeCall(lambda2(f3, g1));
+    scrut = circsim.sweep_ud(lambda$this, lambda$this1, [
       lu,
       ru
     ], tmp1);
@@ -520,14 +1071,9 @@ circsim1 = class circsim {
     }
   } 
   static nearest_power_of_two(x) {
-    let lambda, lambda1;
-    lambda = (undefined, function (a) {
-      return a >= x
-    });
-    lambda1 = (undefined, function (a) {
-      return a * 2
-    });
-    return NofibPrelude.until(lambda, lambda1, 1)
+    let lambda$this;
+    lambda$this = runtime.safeCall(lambda3(x));
+    return NofibPrelude.until(lambda$this, lambda4, 1)
   } 
   static pad_circuit(size_ins_outs_states) {
     let first3, first2, first1, first0, size, ins, outs, states, p21, states_, tmp, tmp1, tmp2, tmp3;
@@ -755,47 +1301,9 @@ circsim1 = class circsim {
     return circsim.scanlr(circsim.send_right, circsim.send_left, circsim.emptyPacket, circsim.emptyPacket, xs4)
   } 
   static update_outports(state, value) {
-    let lscomp, tmp, tmp1;
-    lscomp = function lscomp(ls) {
-      let param0, param1, h, t4, first5, first4, first3, first2, first1, first0, p7, m, ql, dl, qr, dr, tmp2;
-      if (ls instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (ls instanceof NofibPrelude.Cons.class) {
-        param0 = ls.head;
-        param1 = ls.tail;
-        h = param0;
-        t4 = param1;
-        if (globalThis.Array.isArray(h) && h.length === 6) {
-          first0 = h[0];
-          first1 = h[1];
-          first2 = h[2];
-          first3 = h[3];
-          first4 = h[4];
-          first5 = h[5];
-          p7 = first0;
-          m = first1;
-          ql = first2;
-          dl = first3;
-          qr = first4;
-          dr = first5;
-          tmp2 = lscomp(t4);
-          return NofibPrelude.Cons([
-            p7,
-            value,
-            ql,
-            dl,
-            qr,
-            dr
-          ], tmp2)
-        } else {
-          return lscomp(t4)
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let tmp, tmp1;
     tmp = circsim.outports(state);
-    tmp1 = lscomp(tmp);
+    tmp1 = lscomp$(value, tmp);
     return circsim.updateOutports(state, tmp1)
   } 
   static critical_path_depth(siot) {
@@ -816,7 +1324,7 @@ circsim1 = class circsim {
     }
   } 
   static collect_outputs(tp4) {
-    let thrid, get_output, first3, first2, first1, first0, size, ins, outs, states, lambda;
+    let first3, first2, first1, first0, size, ins, outs, states, lambda$this;
     if (globalThis.Array.isArray(tp4) && tp4.length === 4) {
       first0 = tp4[0];
       first1 = tp4[1];
@@ -826,65 +1334,14 @@ circsim1 = class circsim {
       ins = first1;
       outs = first2;
       states = first3;
-      thrid = function thrid(tp3) {
-        let first21, first11, first01, v;
-        if (globalThis.Array.isArray(tp3) && tp3.length === 3) {
-          first01 = tp3[0];
-          first11 = tp3[1];
-          first21 = tp3[2];
-          v = first21;
-          return v
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      get_output = function get_output(states1, label_p) {
-        let lscomp, first11, first01, label, p7, tmp, tmp1;
-        if (globalThis.Array.isArray(label_p) && label_p.length === 2) {
-          first01 = label_p[0];
-          first11 = label_p[1];
-          label = first01;
-          p7 = first11;
-          lscomp = function lscomp(ls) {
-            let param0, param1, s, t4, scrut, tmp2, tmp3, tmp4, tmp5;
-            if (ls instanceof NofibPrelude.Nil.class) {
-              return NofibPrelude.Nil
-            } else if (ls instanceof NofibPrelude.Cons.class) {
-              param0 = ls.head;
-              param1 = ls.tail;
-              s = param0;
-              t4 = param1;
-              tmp2 = circsim.pid(s);
-              scrut = p7 == tmp2;
-              if (scrut === true) {
-                tmp3 = circsim.inports(s);
-                tmp4 = NofibPrelude.head(tmp3);
-                tmp5 = lscomp(t4);
-                return NofibPrelude.Cons(tmp4, tmp5)
-              } else {
-                return lscomp(t4)
-              }
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          };
-          tmp = lscomp(states1);
-          tmp1 = NofibPrelude.head(tmp);
-          return thrid(tmp1)
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      lambda = (undefined, function (p7) {
-        return get_output(states, p7)
-      });
-      return NofibPrelude.map(lambda, outs)
+      lambda$this = runtime.safeCall(lambda5(states));
+      return NofibPrelude.map(lambda$this, outs)
     } else {
       throw new globalThis.Error("match error");
     }
   } 
   static store_inputs(label_inputs, state1) {
-    let lscomp, param0, param1, param2, param3, param4, pid_, tmp;
+    let param0, param1, param2, param3, param4, pid_, tmp;
     if (state1 instanceof circsim.PS.class) {
       param0 = state1.pid;
       param1 = state1.compType;
@@ -893,43 +1350,7 @@ circsim1 = class circsim {
       param4 = state1.outports;
       pid_ = param0;
       if (param1 instanceof circsim.Inp.class) {
-        lscomp = function lscomp(ls) {
-          let param01, param11, h, t4, first1, first0, first11, first01, label, input_pid, value1, scrut, tmp1, tmp2;
-          if (ls instanceof NofibPrelude.Nil.class) {
-            return NofibPrelude.Nil
-          } else if (ls instanceof NofibPrelude.Cons.class) {
-            param01 = ls.head;
-            param11 = ls.tail;
-            h = param01;
-            t4 = param11;
-            if (globalThis.Array.isArray(h) && h.length === 2) {
-              first0 = h[0];
-              first1 = h[1];
-              if (globalThis.Array.isArray(first0) && first0.length === 2) {
-                first01 = first0[0];
-                first11 = first0[1];
-                label = first01;
-                input_pid = first11;
-                value1 = first1;
-                scrut = pid_ == input_pid;
-                if (scrut === true) {
-                  tmp1 = circsim.update_outports(state1, value1);
-                  tmp2 = lscomp(t4);
-                  return NofibPrelude.Cons(tmp1, tmp2)
-                } else {
-                  return lscomp(t4)
-                }
-              } else {
-                return lscomp(t4)
-              }
-            } else {
-              return lscomp(t4)
-            }
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        };
-        tmp = lscomp(label_inputs);
+        tmp = lscomp$2(state1, pid_, label_inputs);
         return NofibPrelude.head(tmp)
       } else {
         return state1
@@ -1062,95 +1483,12 @@ circsim1 = class circsim {
     }
   } 
   static restore_requests(old_states, new_states) {
-    let restore_outport, restore;
-    restore = function restore(os, ns) {
-      let tmp, tmp1, tmp2;
-      tmp = circsim.outports(os);
-      tmp1 = circsim.outports(ns);
-      tmp2 = NofibPrelude.zipWith(restore_outport, tmp, tmp1);
-      return circsim.updateOutports(ns, tmp2)
-    };
-    restore_outport = function restore_outport(pql, mdq) {
-      let first5, first4, first3, first2, first1, first0, p7, ql, dl, qr, dq, first51, first41, first31, first21, first11, first01, m;
-      if (globalThis.Array.isArray(pql) && pql.length === 6) {
-        first0 = pql[0];
-        first1 = pql[1];
-        first2 = pql[2];
-        first3 = pql[3];
-        first4 = pql[4];
-        first5 = pql[5];
-        p7 = first0;
-        ql = first2;
-        dl = first3;
-        qr = first4;
-        dq = first5;
-        if (globalThis.Array.isArray(mdq) && mdq.length === 6) {
-          first01 = mdq[0];
-          first11 = mdq[1];
-          first21 = mdq[2];
-          first31 = mdq[3];
-          first41 = mdq[4];
-          first51 = mdq[5];
-          m = first11;
-          return [
-            p7,
-            m,
-            ql,
-            dl,
-            qr,
-            dq
-          ]
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
     return NofibPrelude.zipWith(restore, old_states, new_states)
   } 
   static update_requests(b2, state3) {
-    let lscomp, tmp, tmp1;
-    lscomp = function lscomp(ls) {
-      let param0, param1, h, t4, first5, first4, first3, first2, first1, first0, p7, m, ql, dl, qr, dr, tmp2;
-      if (ls instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (ls instanceof NofibPrelude.Cons.class) {
-        param0 = ls.head;
-        param1 = ls.tail;
-        h = param0;
-        t4 = param1;
-        if (globalThis.Array.isArray(h) && h.length === 6) {
-          first0 = h[0];
-          first1 = h[1];
-          first2 = h[2];
-          first3 = h[3];
-          first4 = h[4];
-          first5 = h[5];
-          p7 = first0;
-          m = first1;
-          ql = first2;
-          dl = first3;
-          qr = first4;
-          dr = first5;
-          tmp2 = lscomp(t4);
-          return NofibPrelude.Cons([
-            p7,
-            m,
-            b2,
-            dl,
-            b2,
-            dr
-          ], tmp2)
-        } else {
-          return lscomp(t4)
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let tmp, tmp1;
     tmp = circsim.outports(state3);
-    tmp1 = lscomp(tmp);
+    tmp1 = lscomp$3(b2, tmp);
     return circsim.updateOutports(state3, tmp1)
   } 
   static check_depth(d1, state4) {
@@ -1164,110 +1502,23 @@ circsim1 = class circsim {
     }
   } 
   static acknowledge(d2, states) {
-    let check_requests, check_lr_requests, states1, tmp, tmp1, tmp2, lambda, lambda1;
-    check_requests = function check_requests(xs5) {
-      let tmp3;
-      tmp3 = NofibPrelude.map(check_lr_requests, xs5);
-      return NofibPrelude.orList(tmp3)
-    };
-    check_lr_requests = function check_lr_requests(pql) {
-      let first5, first4, first3, first2, first1, first0, p7, m, ql, dl, qr, dr;
-      if (globalThis.Array.isArray(pql) && pql.length === 6) {
-        first0 = pql[0];
-        first1 = pql[1];
-        first2 = pql[2];
-        first3 = pql[3];
-        first4 = pql[4];
-        first5 = pql[5];
-        p7 = first0;
-        m = first1;
-        ql = first2;
-        dl = first3;
-        qr = first4;
-        dr = first5;
-        return ql || qr
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    lambda = (undefined, function (s) {
-      return circsim.check_depth(d2, s)
-    });
-    tmp = NofibPrelude.map(lambda, states);
+    let states1, tmp, tmp1, tmp2, lambda$this;
+    lambda$this = runtime.safeCall(lambda6(d2));
+    tmp = NofibPrelude.map(lambda$this, states);
     states1 = tmp;
-    lambda1 = (undefined, function (s) {
-      let tmp3;
-      tmp3 = circsim.outports(s);
-      return check_requests(tmp3)
-    });
-    tmp1 = NofibPrelude.map(lambda1, states1);
+    tmp1 = NofibPrelude.map(lambda7, states1);
     tmp2 = NofibPrelude.orList(tmp1);
     return BenchmarkPrelude.not(tmp2)
   } 
   static pad_packets(pss) {
-    let pad, lambda;
-    pad = function pad(xs5) {
-      let max_ps, tmp, tmp1, tmp2, tmp3, lambda1;
-      lambda1 = (undefined, function (x5) {
-        return NofibPrelude.listLen(x5)
-      });
-      tmp = NofibPrelude.map(lambda1, pss);
-      tmp1 = NofibPrelude.maximum(tmp);
-      max_ps = tmp1;
-      tmp2 = NofibPrelude.replicate_lz(max_ps, circsim.emptyPacket);
-      tmp3 = NofibPrelude.append_nl_lz(xs5, tmp2);
-      return NofibPrelude.take_lz(max_ps, tmp3)
-    };
-    lambda = (undefined, function (x5) {
-      return pad(x5)
-    });
-    return NofibPrelude.map(lambda, pss)
+    let lambda$this;
+    lambda$this = runtime.safeCall(lambda9(pss));
+    return NofibPrelude.map(lambda$this, pss)
   } 
   static make_packet(state5) {
-    let lscomp, tmp;
-    lscomp = function lscomp(ls) {
-      let param0, param1, h, t4, first5, first4, first3, first2, first1, first0, p7, m, ql, dl, qr, dr, tmp1, tmp2;
-      if (ls instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (ls instanceof NofibPrelude.Cons.class) {
-        param0 = ls.head;
-        param1 = ls.tail;
-        h = param0;
-        t4 = param1;
-        if (globalThis.Array.isArray(h) && h.length === 6) {
-          first0 = h[0];
-          first1 = h[1];
-          first2 = h[2];
-          first3 = h[3];
-          first4 = h[4];
-          first5 = h[5];
-          p7 = first0;
-          m = first1;
-          ql = first2;
-          dl = first3;
-          qr = first4;
-          dr = first5;
-          tmp1 = circsim.pid(state5);
-          tmp2 = lscomp(t4);
-          return NofibPrelude.Cons([
-            tmp1,
-            p7,
-            m,
-            ql,
-            dl,
-            qr,
-            dr,
-            1
-          ], tmp2)
-        } else {
-          return lscomp(t4)
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let tmp;
     tmp = circsim.outports(state5);
-    return lscomp(tmp)
+    return lscomp$4(state5, tmp)
   } 
   static compare_and_update(ipm_, pid_port_m) {
     let first2, first1, first0, i, p7, m_, first21, first11, first01, pid_, port, m, scrut;
@@ -1313,7 +1564,7 @@ circsim1 = class circsim {
     }
   } 
   static up_i(ipm_1, ins) {
-    let first7, first6, first5, first4, first3, first2, first1, first0, i, p7, m_, lambda;
+    let first7, first6, first5, first4, first3, first2, first1, first0, i, p7, m_, lambda$this;
     if (globalThis.Array.isArray(ipm_1) && ipm_1.length === 8) {
       first0 = ipm_1[0];
       first1 = ipm_1[1];
@@ -1326,14 +1577,8 @@ circsim1 = class circsim {
       i = first0;
       p7 = first1;
       m_ = first2;
-      lambda = (undefined, function (x5) {
-        return circsim.compare_and_update([
-          i,
-          p7,
-          m_
-        ], x5)
-      });
-      return NofibPrelude.map(lambda, ins)
+      lambda$this = runtime.safeCall(lambda10(i, p7, m_));
+      return NofibPrelude.map(lambda$this, ins)
     } else {
       throw new globalThis.Error("match error");
     }
@@ -1485,89 +1730,35 @@ circsim1 = class circsim {
     }
   } 
   static update_io(d3, lrps, state6) {
-    let update_is, update_os, tmp;
-    update_is = function update_is(state7) {
-      let tmp1, tmp2;
-      tmp1 = circsim.inports(state7);
-      tmp2 = NofibPrelude.foldr(circsim.update_i, tmp1, lrps);
-      return circsim.updateInports(state7, tmp2)
-    };
-    update_os = function update_os(state7) {
-      let scrut, tmp1, tmp2, tmp3;
-      tmp1 = circsim.pathDepth(state7);
-      scrut = tmp1 == d3;
-      if (scrut === true) {
-        tmp2 = circsim.outports(state7);
-        tmp3 = NofibPrelude.zipWith(circsim.update_o, lrps, tmp2);
-        return circsim.updateOutports(state7, tmp3)
-      } else {
-        return state7
-      }
-    };
-    tmp = update_is(state6);
-    return update_os(tmp)
+    let tmp;
+    tmp = update_is$(lrps, state6);
+    return update_os$(d3, lrps, tmp)
   } 
   static do_send(d4, states1) {
-    let states11, send_results, pss_, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, lambda, lambda1, lambda2;
-    lambda = (undefined, function (s) {
-      return circsim.check_depth(d4, s)
-    });
-    tmp = NofibPrelude.map(lambda, states1);
+    let states11, send_results, pss_, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, lambda$this, lambda$this1;
+    lambda$this = runtime.safeCall(lambda11(d4));
+    tmp = NofibPrelude.map(lambda$this, states1);
     states11 = tmp;
     tmp1 = NofibPrelude.map(circsim.make_packet, states11);
     tmp2 = circsim.pad_packets(tmp1);
     tmp3 = NofibPrelude.transpose(tmp2);
-    lambda1 = (undefined, function (x5) {
-      let tmp6;
-      tmp6 = circsim.send(x5);
-      return NofibPrelude.snd(tmp6)
-    });
-    tmp4 = NofibPrelude.map(lambda1, tmp3);
+    tmp4 = NofibPrelude.map(lambda12, tmp3);
     send_results = tmp4;
     tmp5 = NofibPrelude.transpose(send_results);
     pss_ = tmp5;
-    lambda2 = (undefined, function (x5, y3) {
-      return circsim.update_io(d4, x5, y3)
-    });
-    return NofibPrelude.zipWith(lambda2, pss_, states1)
+    lambda$this1 = runtime.safeCall(lambda13(d4));
+    return NofibPrelude.zipWith(lambda$this1, pss_, states1)
   } 
   static do_sends(d5, states2) {
-    let lambda, lambda1;
-    lambda = (undefined, function (s) {
-      return circsim.acknowledge(d5, s)
-    });
-    lambda1 = (undefined, function (x5) {
-      return circsim.do_send(d5, x5)
-    });
-    return NofibPrelude.until(lambda, lambda1, states2)
+    let lambda$this, lambda$this1;
+    lambda$this = runtime.safeCall(lambda14(d5));
+    lambda$this1 = runtime.safeCall(lambda15(d5));
+    return NofibPrelude.until(lambda$this, lambda$this1, states2)
   } 
   static simulate_component(d6, state7) {
-    let lscomp, out_signals, new_value, scrut, scrut1, param0, v, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
-    lscomp = function lscomp(ls) {
-      let param01, param1, h, t4, first2, first1, first0, sig, tmp6;
-      if (ls instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (ls instanceof NofibPrelude.Cons.class) {
-        param01 = ls.head;
-        param1 = ls.tail;
-        h = param01;
-        t4 = param1;
-        if (globalThis.Array.isArray(h) && h.length === 3) {
-          first0 = h[0];
-          first1 = h[1];
-          first2 = h[2];
-          sig = first2;
-          tmp6 = lscomp(t4);
-          return NofibPrelude.Cons(sig, tmp6)
-        } else {
-          return lscomp(t4)
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let out_signals, new_value, scrut, scrut1, param0, v, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
     tmp = circsim.inports(state7);
-    tmp1 = lscomp(tmp);
+    tmp1 = lscomp5(tmp);
     out_signals = tmp1;
     tmp2 = circsim.compType(state7);
     tmp3 = circsim.apply_component(tmp2, out_signals);
@@ -1593,19 +1784,12 @@ circsim1 = class circsim {
     }
   } 
   static simulate_components(depth, states3) {
-    let lambda;
-    lambda = (undefined, function (s) {
-      return circsim.simulate_component(depth, s)
-    });
-    return NofibPrelude.map(lambda, states3)
+    let lambda$this;
+    lambda$this = runtime.safeCall(lambda16(depth));
+    return NofibPrelude.map(lambda$this, states3)
   } 
   static do_cycle(cpd, tp41, inputs) {
-    let sim_then_send, first3, first2, first1, first0, size, ins2, outs, states4, states11, states21, states31, states41, tmp, tmp1, tmp2, tmp3, tmp4, lambda;
-    sim_then_send = function sim_then_send(state8, d7) {
-      let tmp5;
-      tmp5 = circsim.simulate_components(d7, state8);
-      return circsim.do_sends(d7, tmp5)
-    };
+    let first3, first2, first1, first0, size, ins2, outs, states4, states11, states21, states31, states41, tmp, tmp1, tmp2, tmp3, tmp4, lambda$this;
     if (globalThis.Array.isArray(tp41) && tp41.length === 4) {
       first0 = tp41[0];
       first1 = tp41[1];
@@ -1615,12 +1799,8 @@ circsim1 = class circsim {
       ins2 = first1;
       outs = first2;
       states4 = first3;
-      lambda = (undefined, function (s) {
-        let tmp5;
-        tmp5 = NofibPrelude.zip(ins2, inputs);
-        return circsim.store_inputs(tmp5, s)
-      });
-      tmp = NofibPrelude.map(lambda, states4);
+      lambda$this = runtime.safeCall(lambda17(inputs, ins2));
+      tmp = NofibPrelude.map(lambda$this, states4);
       states11 = tmp;
       tmp1 = circsim.do_sends(0, states11);
       states21 = tmp1;
@@ -1640,7 +1820,7 @@ circsim1 = class circsim {
     }
   } 
   static simulate(inputs_list, b5) {
-    let first3, first2, first1, first0, size, ins2, outs, states4, tmp, tmp1, lambda;
+    let first3, first2, first1, first0, size, ins2, outs, states4, tmp, tmp1, lambda$this;
     if (globalThis.Array.isArray(b5) && b5.length === 4) {
       first0 = b5[0];
       first1 = b5[1];
@@ -1651,17 +1831,8 @@ circsim1 = class circsim {
       outs = first2;
       states4 = first3;
       tmp = NofibPrelude.map(circsim.init_dffs, states4);
-      lambda = (undefined, function (x5, y3) {
-        let tmp2;
-        tmp2 = circsim.critical_path_depth([
-          size,
-          ins2,
-          outs,
-          states4
-        ]);
-        return circsim.do_cycle(tmp2, x5, y3)
-      });
-      tmp1 = NofibPrelude.scanl(lambda, [
+      lambda$this = runtime.safeCall(lambda18(size, ins2, outs, states4));
+      tmp1 = NofibPrelude.scanl(lambda$this, [
         size,
         ins2,
         outs,
@@ -1795,34 +1966,11 @@ circsim1 = class circsim {
     return NofibPrelude.Cons(tmp1, tmp39)
   } 
   static regs(bits) {
-    let ilabel, olabel, is_, os, sto1, states4, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, lambda, lambda1, lambda2, lambda3;
-    ilabel = function ilabel(n1, pid_) {
-      let tmp24, tmp25;
-      tmp24 = NofibPrelude.stringOfInt(n1);
-      tmp25 = NofibPrelude.stringConcat("x", tmp24);
-      return [
-        tmp25,
-        pid_
-      ]
-    };
-    olabel = function olabel(n1, pid_) {
-      let tmp24, tmp25;
-      tmp24 = NofibPrelude.stringOfInt(n1);
-      tmp25 = NofibPrelude.stringConcat("y", tmp24);
-      return [
-        tmp25,
-        pid_
-      ]
-    };
+    let is_, os, sto1, states4, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23;
     tmp = NofibPrelude.enumFrom(0);
     tmp1 = bits - 1;
     tmp2 = NofibPrelude.enumFromTo(0, tmp1);
-    lambda = (undefined, function (x5) {
-      let tmp24;
-      tmp24 = 7 * x5;
-      return tmp24 + 1
-    });
-    tmp3 = NofibPrelude.map(lambda, tmp2);
+    tmp3 = NofibPrelude.map(lambda19, tmp2);
     tmp4 = NofibPrelude.zipWith_lz_nl(ilabel, tmp, tmp3);
     tmp5 = NofibPrelude.Cons([
       "sto",
@@ -1832,12 +1980,7 @@ circsim1 = class circsim {
     tmp6 = NofibPrelude.enumFrom(0);
     tmp7 = bits - 1;
     tmp8 = NofibPrelude.enumFromTo(0, tmp7);
-    lambda1 = (undefined, function (x5) {
-      let tmp24;
-      tmp24 = 7 * x5;
-      return tmp24 + 7
-    });
-    tmp9 = NofibPrelude.map(lambda1, tmp8);
+    tmp9 = NofibPrelude.map(lambda20, tmp8);
     tmp10 = NofibPrelude.zipWith_lz_nl(olabel, tmp6, tmp9);
     os = tmp10;
     tmp11 = bits - 1;
@@ -1855,16 +1998,8 @@ circsim1 = class circsim {
     sto1 = tmp15;
     tmp16 = bits - 1;
     tmp17 = NofibPrelude.enumFromTo(0, tmp16);
-    lambda2 = (undefined, function (x5) {
-      let tmp24;
-      tmp24 = 7 * x5;
-      return tmp24 + 1
-    });
-    tmp18 = NofibPrelude.map(lambda2, tmp17);
-    lambda3 = (undefined, function (x5) {
-      return circsim.reg(0, x5)
-    });
-    tmp19 = NofibPrelude.map(lambda3, tmp18);
+    tmp18 = NofibPrelude.map(lambda21, tmp17);
+    tmp19 = NofibPrelude.map(lambda22, tmp18);
     tmp20 = NofibPrelude.concat(tmp19);
     tmp21 = NofibPrelude.Cons(sto1, tmp20);
     states4 = tmp21;

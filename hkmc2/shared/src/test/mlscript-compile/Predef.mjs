@@ -1,6 +1,63 @@
 import runtime from "./Runtime.mjs";
 import Runtime from "./Runtime.mjs";
-let Predef1;
+let Predef1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8;
+lambda8 = (undefined, function (arg1, arg2) {
+  return arg1 + arg2
+});
+lambda7 = (undefined, function (acc, x) {
+  let tmp, tmp1, tmp2;
+  if (typeof x === 'string') {
+    tmp = true;
+  } else {
+    tmp = false;
+  }
+  tmp1 = runtime.safeCall(Predef1.assert(tmp));
+  tmp2 = acc + x;
+  return (tmp1 , tmp2)
+});
+lambda = (undefined, function (arg1, arg2) {
+  return arg1 + arg2
+});
+lambda1 = (undefined, function (arg1, arg2) {
+  return arg1 + arg2
+});
+lambda2 = (undefined, function (arg1, arg2) {
+  return arg1 + arg2
+});
+lambda3 = (undefined, function (arg1, arg2) {
+  return arg1 + arg2
+});
+lambda4 = (undefined, function (caseScrut) {
+  let first1, first0, k, v, tmp, tmp1;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    k = first0;
+    v = first1;
+    tmp = k + ": ";
+    tmp1 = Predef1.render(v);
+    return tmp + tmp1
+  } else {
+    throw new globalThis.Error("match error");
+  }
+});
+lambda5 = (undefined, function (arg1, arg2) {
+  return arg1 + arg2
+});
+lambda6 = (undefined, function (caseScrut) {
+  let first1, first0, k, v, tmp, tmp1;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    k = first0;
+    v = first1;
+    tmp = k + ": ";
+    tmp1 = Predef1.render(v);
+    return tmp + tmp1
+  } else {
+    throw new globalThis.Error("match error");
+  }
+});
 Predef1 = class Predef {
   static {
     Predef1 = Predef;
@@ -186,15 +243,12 @@ Predef1 = class Predef {
     }
   } 
   static render(arg1) {
-    let ts, scrut, es, p, scrut1, scrut2, scrut3, nme, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6;
+    let ts, scrut, es, p, scrut1, scrut2, scrut3, nme, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34;
     if (arg1 === undefined) {
       return "undefined"
     } else if (arg1 === null) {
       return "null"
     } else if (arg1 instanceof globalThis.Array) {
-      lambda = (undefined, function (arg11, arg2) {
-        return arg11 + arg2
-      });
       tmp = Predef.fold(lambda);
       tmp1 = Predef.interleave(", ");
       tmp2 = Predef.map(Predef.render);
@@ -204,9 +258,6 @@ Predef1 = class Predef {
     } else if (typeof arg1 === 'string') {
       return runtime.safeCall(globalThis.JSON.stringify(arg1))
     } else if (arg1 instanceof globalThis.Set) {
-      lambda1 = (undefined, function (arg11, arg2) {
-        return arg11 + arg2
-      });
       tmp5 = Predef.fold(lambda1);
       tmp6 = Predef.interleave(", ");
       tmp7 = Predef.map(Predef.render);
@@ -214,9 +265,6 @@ Predef1 = class Predef {
       tmp9 = runtime.safeCall(tmp6(...tmp8));
       return runtime.safeCall(tmp5("Set{", ...tmp9, "}"))
     } else if (arg1 instanceof globalThis.Map) {
-      lambda2 = (undefined, function (arg11, arg2) {
-        return arg11 + arg2
-      });
       tmp10 = Predef.fold(lambda2);
       tmp11 = Predef.interleave(", ");
       tmp12 = Predef.map(Predef.render);
@@ -256,25 +304,8 @@ Predef1 = class Predef {
         if (scrut === "Object") {
           tmp19 = runtime.safeCall(globalThis.Object.entries(arg1));
           es = tmp19;
-          lambda3 = (undefined, function (arg11, arg2) {
-            return arg11 + arg2
-          });
           tmp20 = Predef.fold(lambda3);
           tmp21 = Predef.interleave(", ");
-          lambda4 = (undefined, function (caseScrut) {
-            let first1, first0, k, v, tmp35, tmp36;
-            if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-              first0 = caseScrut[0];
-              first1 = caseScrut[1];
-              k = first0;
-              v = first1;
-              tmp35 = k + ": ";
-              tmp36 = Predef.render(v);
-              return tmp35 + tmp36
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          });
           tmp22 = lambda4;
           tmp23 = Predef.map(tmp22);
           tmp24 = runtime.safeCall(tmp23(...es));
@@ -289,25 +320,8 @@ Predef1 = class Predef {
       if (scrut === "Object") {
         tmp26 = runtime.safeCall(globalThis.Object.entries(arg1));
         es = tmp26;
-        lambda5 = (undefined, function (arg11, arg2) {
-          return arg11 + arg2
-        });
         tmp27 = Predef.fold(lambda5);
         tmp28 = Predef.interleave(", ");
-        lambda6 = (undefined, function (caseScrut) {
-          let first1, first0, k, v, tmp35, tmp36;
-          if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-            first0 = caseScrut[0];
-            first1 = caseScrut[1];
-            k = first0;
-            v = first1;
-            tmp35 = k + ": ";
-            tmp36 = Predef.render(v);
-            return tmp35 + tmp36
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        });
         tmp29 = lambda6;
         tmp30 = Predef.map(tmp29);
         tmp31 = runtime.safeCall(tmp30(...es));
@@ -408,19 +422,8 @@ Predef1 = class Predef {
     }
   } 
   static mkStr(...xs4) {
-    let tmp, tmp1, lambda;
-    lambda = (undefined, function (acc, x7) {
-      let tmp2, tmp3, tmp4;
-      if (typeof x7 === 'string') {
-        tmp2 = true;
-      } else {
-        tmp2 = false;
-      }
-      tmp3 = runtime.safeCall(Predef.assert(tmp2));
-      tmp4 = acc + x7;
-      return (tmp3 , tmp4)
-    });
-    tmp = lambda;
+    let tmp, tmp1;
+    tmp = lambda7;
     tmp1 = Predef.fold(tmp);
     return runtime.safeCall(tmp1(...xs4))
   } 
@@ -437,7 +440,7 @@ Predef1 = class Predef {
     throw globalThis.Error("unreachable");
   } 
   static checkArgs(functionName, expected, isUB, got) {
-    let scrut, name, scrut1, scrut2, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, lambda;
+    let scrut, name, scrut1, scrut2, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8;
     tmp = got < expected;
     tmp1 = got > expected;
     tmp2 = isUB && tmp1;
@@ -451,10 +454,7 @@ Predef1 = class Predef {
         tmp4 = "";
       }
       name = tmp4;
-      lambda = (undefined, function (arg11, arg2) {
-        return arg11 + arg2
-      });
-      tmp5 = Predef.fold(lambda);
+      tmp5 = Predef.fold(lambda8);
       if (isUB === true) {
         tmp6 = "";
       } else {

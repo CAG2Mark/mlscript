@@ -2,11 +2,133 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let calendar1;
+let body, pad, banner, entries, pic, title, months, table, calendar1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda$, table$, pad$, pic$, body$, lambda$1;
+lambda8 = (undefined, function (x) {
+  return calendar1.cal(x)
+});
+banner = function banner(yr) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.stringOfInt(yr);
+  tmp1 = NofibPrelude.nofibStringToList(tmp);
+  tmp2 = calendar1.cjustify(75, tmp1);
+  tmp3 = calendar1.emptyPic([
+    1,
+    75
+  ]);
+  return NofibPrelude.Cons(tmp2, tmp3)
+};
+lambda$1 = function lambda$(side, end, daynames, x) {
+  let tmp;
+  tmp = pic$(daynames, x);
+  return pad$(side, end, tmp)
+};
+lambda7 = (undefined, function (side, end, daynames) {
+  return (x) => {
+    return lambda$1(side, end, daynames, x)
+  }
+});
+body$ = function body$(side, end, daynames, yr) {
+  let tmp, tmp1, lambda$this;
+  tmp = months(yr);
+  lambda$this = runtime.safeCall(lambda7(side, end, daynames));
+  tmp1 = NofibPrelude.map(lambda$this, tmp);
+  return calendar1.block(3, tmp1)
+};
+body = function body(side, end, daynames) {
+  return (yr) => {
+    return body$(side, end, daynames, yr)
+  }
+};
+pic$ = function pic$(daynames, mnfdml) {
+  let first2, first1, first0, mn, fd, ml, tmp, tmp1;
+  if (globalThis.Array.isArray(mnfdml) && mnfdml.length === 3) {
+    first0 = mnfdml[0];
+    first1 = mnfdml[1];
+    first2 = mnfdml[2];
+    mn = first0;
+    fd = first1;
+    ml = first2;
+    tmp = title(mn);
+    tmp1 = table$(daynames, fd, ml);
+    return NofibPrelude.append(tmp, tmp1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+pic = function pic(daynames) {
+  return (mnfdml) => {
+    return pic$(daynames, mnfdml)
+  }
+};
+pad$ = function pad$(side, end, p) {
+  let tmp, tmp1;
+  tmp = NofibPrelude.zipWith(NofibPrelude.append, side, p);
+  tmp1 = NofibPrelude.zipWith(NofibPrelude.append, tmp, side);
+  return NofibPrelude.append(tmp1, end)
+};
+pad = function pad(side, end) {
+  return (p) => {
+    return pad$(side, end, p)
+  }
+};
+title = function title(mn) {
+  let tmp;
+  tmp = calendar1.cjustify(21, mn);
+  return NofibPrelude.Cons(tmp, NofibPrelude.Nil)
+};
+table$ = function table$(daynames, fd, ml) {
+  let tmp;
+  tmp = entries(fd, ml);
+  return NofibPrelude.append(daynames, tmp)
+};
+table = function table(daynames) {
+  return (fd, ml) => {
+    return table$(daynames, fd, ml)
+  }
+};
+entries = function entries(fd, ml) {
+  let tmp;
+  tmp = calendar1.dates(fd, ml);
+  return calendar1.block(7, tmp)
+};
+months = function months(yer) {
+  let tmp, tmp1;
+  tmp = calendar1.firstDays(yer);
+  tmp1 = calendar1.monthLengths(yer);
+  return NofibPrelude.zip3(calendar1.monthNames, tmp, tmp1)
+};
+lambda$ = function lambda$(ml, d) {
+  return calendar1.date(ml, d)
+};
+lambda6 = (undefined, function (ml) {
+  return (d) => {
+    return lambda$(ml, d)
+  }
+});
+lambda4 = (undefined, function (a, b) {
+  return a + b
+});
+lambda5 = (undefined, function (x) {
+  return NofibPrelude.intMod(x, 7)
+});
+lambda3 = (undefined, function (a, b) {
+  return NofibPrelude.append(a, b)
+});
+lambda2 = (undefined, function (a, b) {
+  return NofibPrelude.zipWith(lambda3, a, b)
+});
+lambda1 = (undefined, function (a, b) {
+  return NofibPrelude.append(a, b)
+});
+lambda = (undefined, function (x) {
+  let tmp;
+  tmp = NofibPrelude.Cons("\n", NofibPrelude.Nil);
+  return NofibPrelude.append(x, tmp)
+});
 calendar1 = class calendar {
   static {
     calendar1 = calendar;
-    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, lambda;
+    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, lambda9;
     tmp = NofibPrelude.nofibStringToList("January");
     tmp1 = NofibPrelude.nofibStringToList("February");
     tmp2 = NofibPrelude.nofibStringToList("March");
@@ -32,23 +154,18 @@ calendar1 = class calendar {
     tmp22 = NofibPrelude.Cons(tmp1, tmp21);
     tmp23 = NofibPrelude.Cons(tmp, tmp22);
     this.monthNames = tmp23;
-    lambda = (undefined, function () {
+    lambda9 = (undefined, function () {
       let tmp25, tmp26, tmp27;
       tmp25 = calendar.testCalendar_nofib(0);
       tmp26 = NofibPrelude.concat(tmp25);
       tmp27 = NofibPrelude.nofibListToString(tmp26);
       return BenchmarkPrelude.print(tmp27)
     });
-    tmp24 = lambda;
+    tmp24 = lambda9;
     BenchmarkPrelude.benchmark(tmp24)
   }
   static unlines(ls) {
-    let tmp, lambda;
-    lambda = (undefined, function (x) {
-      let tmp1;
-      tmp1 = NofibPrelude.Cons("\n", NofibPrelude.Nil);
-      return NofibPrelude.append(x, tmp1)
-    });
+    let tmp;
     tmp = NofibPrelude.map(lambda, ls);
     return NofibPrelude.concat(tmp)
   } 
@@ -61,22 +178,10 @@ calendar1 = class calendar {
     return NofibPrelude.listLen(tmp)
   } 
   static stack(ls1) {
-    let lambda;
-    lambda = (undefined, function (a, b) {
-      return NofibPrelude.append(a, b)
-    });
-    return NofibPrelude.foldr1(lambda, ls1)
+    return NofibPrelude.foldr1(lambda1, ls1)
   } 
   static spread(ls2) {
-    let lambda;
-    lambda = (undefined, function (a, b) {
-      let lambda1;
-      lambda1 = (undefined, function (a1, b1) {
-        return NofibPrelude.append(a1, b1)
-      });
-      return NofibPrelude.zipWith(lambda1, a, b)
-    });
-    return NofibPrelude.foldr1(lambda, ls2)
+    return NofibPrelude.foldr1(lambda2, ls2)
   } 
   static emptyPic(hw) {
     let first1, first0, h, w, tmp;
@@ -188,17 +293,11 @@ calendar1 = class calendar {
     return NofibPrelude.intMod(tmp6, 7)
   } 
   static firstDays(year3) {
-    let tmp, tmp1, tmp2, tmp3, lambda, lambda1;
+    let tmp, tmp1, tmp2, tmp3;
     tmp = calendar.jan1st(year3);
     tmp1 = calendar.monthLengths(year3);
-    lambda = (undefined, function (a, b) {
-      return a + b
-    });
-    tmp2 = NofibPrelude.scanl(lambda, tmp, tmp1);
-    lambda1 = (undefined, function (x) {
-      return NofibPrelude.intMod(x, 7)
-    });
-    tmp3 = NofibPrelude.map(lambda1, tmp2);
+    tmp2 = NofibPrelude.scanl(lambda4, tmp, tmp1);
+    tmp3 = NofibPrelude.map(lambda5, tmp2);
     return NofibPrelude.take(12, tmp3)
   } 
   static space(n3) {
@@ -234,14 +333,12 @@ calendar1 = class calendar {
     }
   } 
   static dates(fd, ml1) {
-    let tmp, tmp1, tmp2, lambda;
+    let tmp, tmp1, tmp2, lambda$this;
     tmp = 1 - fd;
     tmp1 = 42 - fd;
     tmp2 = NofibPrelude.enumFromTo(tmp, tmp1);
-    lambda = (undefined, function (d1) {
-      return calendar.date(ml1, d1)
-    });
-    return NofibPrelude.map(lambda, tmp2)
+    lambda$this = runtime.safeCall(lambda6(ml1));
+    return NofibPrelude.map(lambda$this, tmp2)
   } 
   static cjustify(n6, s2) {
     let m, halfm, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
@@ -257,72 +354,7 @@ calendar1 = class calendar {
     return NofibPrelude.append(tmp3, tmp6)
   } 
   static cal(year4) {
-    let body, pad, banner, entries, pic, title, months, table, side, end, daynames, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
-    banner = function banner(yr) {
-      let tmp7, tmp8, tmp9, tmp10;
-      tmp7 = NofibPrelude.stringOfInt(yr);
-      tmp8 = NofibPrelude.nofibStringToList(tmp7);
-      tmp9 = calendar.cjustify(75, tmp8);
-      tmp10 = calendar.emptyPic([
-        1,
-        75
-      ]);
-      return NofibPrelude.Cons(tmp9, tmp10)
-    };
-    body = function body(yr) {
-      let tmp7, tmp8, lambda;
-      tmp7 = months(yr);
-      lambda = (undefined, function (x) {
-        let tmp9;
-        tmp9 = pic(x);
-        return pad(tmp9)
-      });
-      tmp8 = NofibPrelude.map(lambda, tmp7);
-      return calendar.block(3, tmp8)
-    };
-    pic = function pic(mnfdml) {
-      let first2, first1, first0, mn1, fd1, ml2, tmp7, tmp8;
-      if (globalThis.Array.isArray(mnfdml) && mnfdml.length === 3) {
-        first0 = mnfdml[0];
-        first1 = mnfdml[1];
-        first2 = mnfdml[2];
-        mn1 = first0;
-        fd1 = first1;
-        ml2 = first2;
-        tmp7 = title(mn1);
-        tmp8 = table(fd1, ml2);
-        return NofibPrelude.append(tmp7, tmp8)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    pad = function pad(p3) {
-      let tmp7, tmp8;
-      tmp7 = NofibPrelude.zipWith(NofibPrelude.append, side, p3);
-      tmp8 = NofibPrelude.zipWith(NofibPrelude.append, tmp7, side);
-      return NofibPrelude.append(tmp8, end)
-    };
-    title = function title(mn1) {
-      let tmp7;
-      tmp7 = calendar.cjustify(21, mn1);
-      return NofibPrelude.Cons(tmp7, NofibPrelude.Nil)
-    };
-    table = function table(fd1, ml2) {
-      let tmp7;
-      tmp7 = entries(fd1, ml2);
-      return NofibPrelude.append(daynames, tmp7)
-    };
-    entries = function entries(fd1, ml2) {
-      let tmp7;
-      tmp7 = calendar.dates(fd1, ml2);
-      return calendar.block(7, tmp7)
-    };
-    months = function months(yer) {
-      let tmp7, tmp8;
-      tmp7 = calendar.firstDays(yer);
-      tmp8 = calendar.monthLengths(yer);
-      return NofibPrelude.zip3(calendar.monthNames, tmp7, tmp8)
-    };
+    let side, end, daynames, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
     tmp = calendar.emptyPic([
       8,
       2
@@ -337,18 +369,15 @@ calendar1 = class calendar {
     tmp3 = NofibPrelude.Cons(tmp2, NofibPrelude.Nil);
     daynames = tmp3;
     tmp4 = banner(year4);
-    tmp5 = body(year4);
+    tmp5 = body$(side, end, daynames, year4);
     tmp6 = NofibPrelude.append(tmp4, tmp5);
     return calendar.unlines(tmp6)
   } 
   static testCalendar_nofib(n7) {
-    let tmp, tmp1, lambda;
+    let tmp, tmp1;
     tmp = 1993 + n7;
     tmp1 = NofibPrelude.enumFromTo(1993, tmp);
-    lambda = (undefined, function (x) {
-      return calendar.cal(x)
-    });
-    return NofibPrelude.map(lambda, tmp1)
+    return NofibPrelude.map(lambda8, tmp1)
   }
   static toString() { return "calendar"; }
 };

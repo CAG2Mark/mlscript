@@ -11,13 +11,13 @@ module BenchmarkPrelude with ...
 
 fun not(x) = x === false
 
-fun print(s) = Predef.print(s)
+fun print(s) = s
 
 fun helper(f) =
   let success = true
   js.try_catch of () => f(), (e) =>
     set success = false
-    print("Error: " + e)
+    Predef.print("Error: " + e)
   success
 
 fun benchmark(fn) =
@@ -32,6 +32,6 @@ fun benchmark(fn) =
   let res = helper(fn)
   let end = globalThis.performance.now()
   if res do
-    print("Time: " + (end - start) + "ms")
+    Predef.print("Time: " + (end - start) + "ms")
 
 set globalThis.Predef = Predef

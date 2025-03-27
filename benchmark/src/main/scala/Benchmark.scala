@@ -13,7 +13,7 @@ object Benchmark {
   val nofibPath = os.pwd/"benchmark"/"src"/"nofib"
   val nofibPrecompilePath = os.pwd/"benchmark"/"src"/"precompiled"
   
-  val compilerNoInstr = MLsCompiler(preludePath, _(println))(using Config(N, N, N))
+  val compilerNoInstr = MLsCompiler(preludePath, _(println))(using Config(N, N, S(LiftDefns())))
   val compilerInstr = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(N)), N))
   val compilerStackSafe = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(S(StackSafety.default))), N))
   val compilerStackSafeLifted = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(S(StackSafety.default))), S(LiftDefns())))
@@ -91,13 +91,21 @@ object Benchmark {
       .dropWhile(_.last != "ansi.mls")
     // lazy val nofibFiles = List(os.pwd/"benchmark"/"src"/"examples"/"StackSafety.mls")
 
-    nofibFiles.foreach: path =>
-      def run(compiler: MLsCompiler) =
-        println(s"Compiling $path")
+    val results = nofibFiles.map: path =>
+      def run(compiler: MLsCompiler): Option[Double] =
+        // println(s"Compiling $path")
         compiler.compileModule(path)
         val resultPath = path / os.up / (path.baseName + ".mjs")
         println(s"Running $resultPath")
-        os.proc("node", resultPath.toString).call(stdout = os.Inherit, stderr = os.Inherit)
+        val result = os.proc("node", resultPath.toString).call(stderr = os.Inherit)
+        val resultStr = result.out.bytes.map(_.toChar).mkString
+        if resultStr.startsWith("Time: ") then
+          val time = resultStr.substring(6, resultStr.length - 3).toDouble
+          println(f"Time: $time%.3f")
+          S(time)
+        else
+          println(resultStr)
+          N
       // if path.last != "cryptarithm1.mls" then
       //   useStackSafe
       //   println("Stack safety: on")
@@ -106,10 +114,29 @@ object Benchmark {
       //   print("Skipping cryptarithm1 as it OOM without lifter")
       useStackSafe
       println("Stack safety: on, Lift: on")
-      run(compilerStackSafeLifted)
+      val t1 = run(compilerStackSafeLifted)
       useNoInstr
       println("Stack safety: off")
-      run(compilerNoInstr)
-      println()
-
+      val t2 = run(compilerNoInstr)
+      (t1, t2) match
+        case (S(t1), S(t2)) =>
+          val s1 = 1 / t1
+          val s2 = 1 / t2
+          println(f"Speed compared with stack safety off: ${s1 / s2 * 100}%.3f%%")
+          path.last -> S(s1 / s2)
+        case _ =>
+          path.last -> N
+    results.foreach: (path, result) =>
+      result match
+        case S(speed) =>
+          println(f"$path: ${speed * 100}%.3f%%")
+        case N =>
+          println(s"$path: One of the test failed")
+    val speeds = results.collect { case (_, S(speed)) => speed }
+    val avg = speeds.sum / speeds.length
+    println(f"Average speed ratio: ${avg * 100}%.3f%%")
+    val std = math.sqrt(speeds.map(s => (s - avg) * (s - avg)).sum / speeds.length)
+    println(f"Standard deviation: ${std * 100}%.3f%%")
+    println(f"Min speed ratio: ${speeds.min * 100}%.3f%%")
+    println(f"Max speed ratio: ${speeds.max * 100}%.3f%%")
 }

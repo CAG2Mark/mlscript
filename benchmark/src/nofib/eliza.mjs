@@ -2,11 +2,294 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let eliza1;
+let go, cons, lscomp, cons1, maybe, conj, trailingI, ans, cons2, eliza1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, lambda11, lambda$, lambda$1, lambda$2, lambda$3, lscomp$, lambda$4, lambda$5, lambda$6;
+lambda10 = (undefined, function (caseScrut) {
+  let first1, first0, w, r, tmp;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    w = first0;
+    r = first1;
+    tmp = eliza1.ucase(w);
+    return [
+      tmp,
+      r
+    ]
+  } else {
+    throw new globalThis.Error("match error");
+  }
+});
+lambda11 = (undefined, function (x) {
+  return NofibPrelude.nofibListToString(x)
+});
+lambda8 = (undefined, function (x) {
+  let tmp;
+  tmp = eliza1.trim(x);
+  return eliza1.words(tmp)
+});
+lambda9 = (undefined, function (x) {
+  let tmp;
+  tmp = NofibPrelude.null_(x);
+  return BenchmarkPrelude.not(tmp)
+});
+lambda$6 = function lambda$(input, i) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.intMod(i, 20);
+  tmp1 = NofibPrelude.take(tmp, input);
+  tmp2 = NofibPrelude.map(lambda8, tmp1);
+  tmp3 = NofibPrelude.filter(lambda9, tmp2);
+  return eliza1.session(eliza1.initial, NofibPrelude.Nil, tmp3)
+};
+lambda7 = (undefined, function (input) {
+  return (i) => {
+    return lambda$6(input, i)
+  }
+});
+cons2 = function cons(e, r_es) {
+  let first1, first0, r, es, tmp;
+  if (globalThis.Array.isArray(r_es) && r_es.length === 2) {
+    first0 = r_es[0];
+    first1 = r_es[1];
+    r = first0;
+    es = first1;
+    tmp = NofibPrelude.Cons(e, es);
+    return [
+      r,
+      tmp
+    ]
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+ans = function ans(e_es, l) {
+  let param0, param1, first1, first0, key, a_as, es, scrut, param01, param11, a, as_, rs, scrut1, tmp, tmp1, tmp2, tmp3, tmp4;
+  if (e_es instanceof NofibPrelude.Cons.class) {
+    param0 = e_es.head;
+    param1 = e_es.tail;
+    if (globalThis.Array.isArray(param0) && param0.length === 2) {
+      first0 = param0[0];
+      first1 = param0[1];
+      key = first0;
+      a_as = first1;
+      es = param1;
+      scrut = NofibPrelude.force(a_as);
+      if (scrut instanceof NofibPrelude.LzCons.class) {
+        param01 = scrut.head;
+        param11 = scrut.tail;
+        a = param01;
+        as_ = param11;
+        tmp = eliza1.replies(key, l);
+        rs = tmp;
+        scrut1 = eliza1.null_lz(rs);
+        if (scrut1 === true) {
+          tmp1 = ans(es, l);
+          return cons2([
+            key,
+            a_as
+          ], tmp1)
+        } else {
+          tmp2 = NofibPrelude.head_lz(rs);
+          tmp3 = eliza1.makeResponse(a, tmp2);
+          tmp4 = NofibPrelude.Cons([
+            key,
+            as_
+          ], es);
+          return [
+            tmp3,
+            tmp4
+          ]
+        }
+      } else {
+        throw new globalThis.Error("match error");
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda$5 = function lambda$(key, l, x) {
+  let tmp, tmp1;
+  tmp = NofibPrelude.listLen(key);
+  tmp1 = NofibPrelude.drop(tmp, x);
+  return eliza1.conjug(l, tmp1)
+};
+lambda5 = (undefined, function (key, l) {
+  return (x) => {
+    return lambda$5(key, l, x)
+  }
+});
+lambda$4 = function lambda$(key, ls) {
+  let tmp;
+  tmp = eliza1.lz_map(eliza1.ucase, ls);
+  return eliza1.prefix(key, tmp)
+};
+lambda6 = (undefined, function (key) {
+  return (ls) => {
+    return lambda$4(key, ls)
+  }
+});
+maybe = function maybe(d, xs) {
+  let scrut;
+  scrut = NofibPrelude.null_(xs);
+  if (scrut === true) {
+    return d
+  } else {
+    return xs
+  }
+};
+lscomp$ = function lscomp$(w, ls) {
+  let param0, param1, first1, first0, w_, m, t, scrut, tmp, tmp1;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    if (globalThis.Array.isArray(param0) && param0.length === 2) {
+      first0 = param0[0];
+      first1 = param0[1];
+      w_ = first0;
+      m = first1;
+      t = param1;
+      tmp = eliza1.ucase(w);
+      scrut = NofibPrelude.listEq(tmp, w_);
+      if (scrut === true) {
+        tmp1 = lscomp$(w, t);
+        return NofibPrelude.Cons(m, tmp1)
+      } else {
+        return lscomp$(w, t)
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp = function lscomp(w) {
+  return (ls) => {
+    return lscomp$(w, ls)
+  }
+};
+conj = function conj(w) {
+  let tmp, tmp1, tmp2;
+  tmp = lscomp$(w, eliza1.conjugates);
+  tmp1 = NofibPrelude.Cons(w, NofibPrelude.Nil);
+  tmp2 = NofibPrelude.append(tmp, tmp1);
+  return NofibPrelude.head(tmp2)
+};
+cons1 = function cons(x, xs) {
+  let scrut, tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.nofibStringToList("I");
+  tmp1 = NofibPrelude.listEq(x, tmp);
+  tmp2 = NofibPrelude.null_(xs);
+  scrut = tmp1 && tmp2;
+  if (scrut === true) {
+    tmp3 = NofibPrelude.nofibStringToList("me");
+    return NofibPrelude.Cons(tmp3, NofibPrelude.Nil)
+  } else {
+    return NofibPrelude.Cons(x, xs)
+  }
+};
+trailingI = function trailingI(ls) {
+  return NofibPrelude.foldr(cons1, NofibPrelude.Nil, ls)
+};
+lambda$3 = function lambda$(xs) {
+  let xss, tmp, tmp1;
+  if (xs instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.LzNil
+  } else {
+    xss = xs;
+    tmp = NofibPrelude.tail(xss);
+    tmp1 = eliza1.tails(tmp);
+    return NofibPrelude.LzCons(xss, tmp1)
+  }
+};
+lambda4 = (undefined, function (xs) {
+  return () => {
+    return lambda$3(xs)
+  }
+});
+cons = function cons(x, xs) {
+  let scrut, scrut1, tmp;
+  tmp = NofibPrelude.nofibStringToList(" .!?,");
+  scrut = NofibPrelude.inList(x, tmp);
+  if (scrut === true) {
+    scrut1 = NofibPrelude.null_(xs);
+    if (scrut1 === true) {
+      return NofibPrelude.Nil
+    } else {
+      return NofibPrelude.Cons(x, xs)
+    }
+  } else {
+    return NofibPrelude.Cons(x, xs)
+  }
+};
+lambda3 = (undefined, function (x) {
+  let tmp;
+  tmp = NofibPrelude.nofibStringToList(" .!?,");
+  return NofibPrelude.inList(x, tmp)
+});
+go = function go(ws) {
+  let param0, param1, w, ws1, tmp, tmp1;
+  if (ws instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ws instanceof NofibPrelude.Cons.class) {
+    param0 = ws.head;
+    param1 = ws.tail;
+    w = param0;
+    ws1 = param1;
+    tmp = go(ws1);
+    tmp1 = NofibPrelude.append(w, tmp);
+    return NofibPrelude.Cons(" ", tmp1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda$2 = function lambda$(xs) {
+  return eliza1.cycle(xs)
+};
+lambda2 = (undefined, function (xs) {
+  return () => {
+    return lambda$2(xs)
+  }
+});
+lambda$1 = function lambda$(ys, h, t) {
+  let tmp;
+  tmp = eliza1.append_lz(t, ys);
+  return NofibPrelude.LzCons(h, tmp)
+};
+lambda1 = (undefined, function (ys, h, t) {
+  return () => {
+    return lambda$1(ys, h, t)
+  }
+});
+lambda$ = function lambda$(f, ls) {
+  let param0, param1, h, t, tmp, tmp1;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.LzNil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    h = param0;
+    t = param1;
+    tmp = runtime.safeCall(f(h));
+    tmp1 = eliza1.lz_map(f, t);
+    return NofibPrelude.LzCons(tmp, tmp1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda = (undefined, function (f, ls) {
+  return () => {
+    return lambda$(f, ls)
+  }
+});
 eliza1 = class eliza {
   static {
     eliza1 = eliza;
-    let lscomp, prepare, lscomp1, canYou, canI, youAre, iDont, iFeel, whyDont, whyCant, areYou, iCant, iAm, you, yes, no, computer, iWant, question, name, because, sorry, dream, hello, maybe, your, always, think, alike, friend, nokeyMsgs, oneways, bothways, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66, tmp67, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74, tmp75, tmp76, tmp77, tmp78, tmp79, tmp80, tmp81, tmp82, tmp83, tmp84, tmp85, tmp86, tmp87, tmp88, tmp89, tmp90, tmp91, tmp92, tmp93, tmp94, tmp95, tmp96, tmp97, tmp98, tmp99, tmp100, tmp101, tmp102, tmp103, tmp104, tmp105, tmp106, tmp107, tmp108, tmp109, tmp110, tmp111, tmp112, tmp113, tmp114, tmp115, tmp116, tmp117, tmp118, tmp119, tmp120, tmp121, tmp122, tmp123, tmp124, tmp125, tmp126, tmp127, tmp128, tmp129, tmp130, tmp131, tmp132, tmp133, tmp134, tmp135, tmp136, tmp137, tmp138, tmp139, tmp140, tmp141, tmp142, tmp143, tmp144, tmp145, tmp146, tmp147, tmp148, tmp149, tmp150, tmp151, tmp152, tmp153, tmp154, tmp155, tmp156, tmp157, tmp158, tmp159, tmp160, tmp161, tmp162, tmp163, tmp164, tmp165, tmp166, tmp167, tmp168, tmp169, tmp170, tmp171, tmp172, tmp173, tmp174, tmp175, tmp176, tmp177, tmp178, tmp179, tmp180, tmp181, tmp182, tmp183, tmp184, tmp185, tmp186, tmp187, tmp188, tmp189, tmp190, tmp191, tmp192, tmp193, tmp194, tmp195, tmp196, tmp197, tmp198, tmp199, tmp200, tmp201, tmp202, tmp203, tmp204, tmp205, tmp206, tmp207, tmp208, tmp209, tmp210, tmp211, tmp212, tmp213, tmp214, tmp215, tmp216, tmp217, tmp218, tmp219, tmp220, tmp221, tmp222, tmp223, tmp224, tmp225, tmp226, tmp227, tmp228, tmp229, tmp230, tmp231, tmp232, tmp233, tmp234, tmp235, tmp236, tmp237, tmp238, tmp239, tmp240, tmp241, tmp242, tmp243, tmp244, tmp245, tmp246, tmp247, tmp248, tmp249, tmp250, tmp251, tmp252, tmp253, tmp254, tmp255, tmp256, tmp257, tmp258, tmp259, tmp260, tmp261, tmp262, tmp263, tmp264, tmp265, tmp266, tmp267, tmp268, tmp269, tmp270, tmp271, tmp272, tmp273, tmp274, tmp275, tmp276, tmp277, tmp278, tmp279, tmp280, tmp281, tmp282, tmp283, tmp284, tmp285, tmp286, tmp287, tmp288, tmp289, tmp290, tmp291, tmp292, tmp293, tmp294, tmp295, tmp296, tmp297, tmp298, tmp299, tmp300, tmp301, tmp302, tmp303, tmp304, tmp305, tmp306, tmp307, tmp308, tmp309, tmp310, tmp311, tmp312, tmp313, tmp314, tmp315, tmp316, tmp317, tmp318, tmp319, tmp320, tmp321, tmp322, tmp323, tmp324, tmp325, tmp326, tmp327, tmp328, tmp329, tmp330, tmp331, tmp332, tmp333, tmp334, lambda;
+    let lscomp1, prepare, lscomp2, canYou, canI, youAre, iDont, iFeel, whyDont, whyCant, areYou, iCant, iAm, you, yes, no, computer, iWant, question, name, because, sorry, dream, hello, maybe1, your, always, think, alike, friend, nokeyMsgs, oneways, bothways, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55, tmp56, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65, tmp66, tmp67, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74, tmp75, tmp76, tmp77, tmp78, tmp79, tmp80, tmp81, tmp82, tmp83, tmp84, tmp85, tmp86, tmp87, tmp88, tmp89, tmp90, tmp91, tmp92, tmp93, tmp94, tmp95, tmp96, tmp97, tmp98, tmp99, tmp100, tmp101, tmp102, tmp103, tmp104, tmp105, tmp106, tmp107, tmp108, tmp109, tmp110, tmp111, tmp112, tmp113, tmp114, tmp115, tmp116, tmp117, tmp118, tmp119, tmp120, tmp121, tmp122, tmp123, tmp124, tmp125, tmp126, tmp127, tmp128, tmp129, tmp130, tmp131, tmp132, tmp133, tmp134, tmp135, tmp136, tmp137, tmp138, tmp139, tmp140, tmp141, tmp142, tmp143, tmp144, tmp145, tmp146, tmp147, tmp148, tmp149, tmp150, tmp151, tmp152, tmp153, tmp154, tmp155, tmp156, tmp157, tmp158, tmp159, tmp160, tmp161, tmp162, tmp163, tmp164, tmp165, tmp166, tmp167, tmp168, tmp169, tmp170, tmp171, tmp172, tmp173, tmp174, tmp175, tmp176, tmp177, tmp178, tmp179, tmp180, tmp181, tmp182, tmp183, tmp184, tmp185, tmp186, tmp187, tmp188, tmp189, tmp190, tmp191, tmp192, tmp193, tmp194, tmp195, tmp196, tmp197, tmp198, tmp199, tmp200, tmp201, tmp202, tmp203, tmp204, tmp205, tmp206, tmp207, tmp208, tmp209, tmp210, tmp211, tmp212, tmp213, tmp214, tmp215, tmp216, tmp217, tmp218, tmp219, tmp220, tmp221, tmp222, tmp223, tmp224, tmp225, tmp226, tmp227, tmp228, tmp229, tmp230, tmp231, tmp232, tmp233, tmp234, tmp235, tmp236, tmp237, tmp238, tmp239, tmp240, tmp241, tmp242, tmp243, tmp244, tmp245, tmp246, tmp247, tmp248, tmp249, tmp250, tmp251, tmp252, tmp253, tmp254, tmp255, tmp256, tmp257, tmp258, tmp259, tmp260, tmp261, tmp262, tmp263, tmp264, tmp265, tmp266, tmp267, tmp268, tmp269, tmp270, tmp271, tmp272, tmp273, tmp274, tmp275, tmp276, tmp277, tmp278, tmp279, tmp280, tmp281, tmp282, tmp283, tmp284, tmp285, tmp286, tmp287, tmp288, tmp289, tmp290, tmp291, tmp292, tmp293, tmp294, tmp295, tmp296, tmp297, tmp298, tmp299, tmp300, tmp301, tmp302, tmp303, tmp304, tmp305, tmp306, tmp307, tmp308, tmp309, tmp310, tmp311, tmp312, tmp313, tmp314, tmp315, tmp316, tmp317, tmp318, tmp319, tmp320, tmp321, tmp322, tmp323, tmp324, tmp325, tmp326, tmp327, tmp328, tmp329, tmp330, tmp331, tmp332, tmp333, tmp334, lambda12;
     tmp = NofibPrelude.nofibStringToList("Why did you repeat yourself?");
     tmp1 = NofibPrelude.nofibStringToList("Do you expect a different answer by repeating yourself?");
     tmp2 = NofibPrelude.nofibStringToList("Come, come, elucidate your thoughts.");
@@ -205,7 +488,7 @@ eliza1 = class eliza {
     tmp173 = NofibPrelude.Cons(tmp168, tmp172);
     tmp174 = NofibPrelude.Cons(tmp167, tmp173);
     tmp175 = NofibPrelude.Cons(tmp166, tmp174);
-    maybe = tmp175;
+    maybe1 = tmp175;
     tmp176 = NofibPrelude.nofibStringToList("?Why are you concerned about my");
     tmp177 = NofibPrelude.nofibStringToList("?What about your own");
     tmp178 = NofibPrelude.Cons(tmp177, NofibPrelude.Nil);
@@ -337,7 +620,7 @@ eliza1 = class eliza {
     ], tmp273);
     tmp275 = NofibPrelude.Cons([
       tmp259,
-      maybe
+      maybe1
     ], tmp274);
     tmp276 = NofibPrelude.Cons([
       tmp258,
@@ -464,7 +747,7 @@ eliza1 = class eliza {
       canYou
     ], tmp305);
     this.respMsgs = tmp306;
-    lscomp = function lscomp(ls) {
+    lscomp1 = function lscomp(ls) {
       let param0, param1, first1, first0, k, rs, t, tmp335, tmp336, tmp337;
       if (ls instanceof NofibPrelude.Nil.class) {
         return NofibPrelude.Nil
@@ -479,7 +762,7 @@ eliza1 = class eliza {
           t = param1;
           tmp335 = eliza.words(k);
           tmp336 = eliza.cycle(rs);
-          tmp337 = lscomp(t);
+          tmp337 = lscomp1(t);
           return NofibPrelude.Cons([
             tmp335,
             tmp336
@@ -491,34 +774,18 @@ eliza1 = class eliza {
         throw new globalThis.Error("match error");
       }
     };
-    tmp307 = lscomp(eliza.respMsgs);
+    tmp307 = lscomp1(eliza.respMsgs);
     tmp308 = eliza.cycle(eliza.repeatMsgs);
     this.initial = [
       tmp307,
       tmp308
     ];
     prepare = function prepare(ls) {
-      let tmp335, lambda1;
-      lambda1 = (undefined, function (caseScrut) {
-        let first1, first0, w, r, tmp336;
-        if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-          first0 = caseScrut[0];
-          first1 = caseScrut[1];
-          w = first0;
-          r = first1;
-          tmp336 = eliza.ucase(w);
-          return [
-            tmp336,
-            r
-          ]
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      });
-      tmp335 = lambda1;
+      let tmp335;
+      tmp335 = lambda10;
       return NofibPrelude.map(tmp335, ls)
     };
-    lscomp1 = function lscomp(ls) {
+    lscomp2 = function lscomp(ls) {
       let param0, param1, first1, first0, x, y, t, tmp335, tmp336, tmp337;
       if (ls instanceof NofibPrelude.Nil.class) {
         return NofibPrelude.Nil
@@ -539,7 +806,7 @@ eliza1 = class eliza {
             x,
             y
           ], tmp335);
-          tmp337 = lscomp1(t);
+          tmp337 = lscomp2(t);
           return NofibPrelude.Cons(tmp336, tmp337)
         } else {
           throw new globalThis.Error("match error");
@@ -592,49 +859,30 @@ eliza1 = class eliza {
       tmp313
     ], tmp328);
     bothways = tmp329;
-    tmp330 = lscomp1(bothways);
+    tmp330 = lscomp2(bothways);
     tmp331 = NofibPrelude.concat(tmp330);
     tmp332 = NofibPrelude.append(oneways, tmp331);
     tmp333 = prepare(tmp332);
     this.conjugates = tmp333;
-    lambda = (undefined, function () {
-      let tmp335, tmp336, lambda1;
+    lambda12 = (undefined, function () {
+      let tmp335, tmp336;
       tmp335 = eliza.testEliza_nofib(20);
-      lambda1 = (undefined, function (x) {
-        return NofibPrelude.nofibListToString(x)
-      });
-      tmp336 = NofibPrelude.map(lambda1, tmp335);
+      tmp336 = NofibPrelude.map(lambda11, tmp335);
       return runtime.safeCall(tmp336.toString())
     });
-    tmp334 = lambda;
+    tmp334 = lambda12;
     BenchmarkPrelude.benchmark(tmp334)
   }
   static toUpper(c) {
     return runtime.safeCall(c.toUpperCase())
   } 
   static lz_map(f, ls) {
-    let tmp, lambda;
-    lambda = (undefined, function () {
-      let param0, param1, h, t, tmp1, tmp2;
-      if (ls instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.LzNil
-      } else if (ls instanceof NofibPrelude.Cons.class) {
-        param0 = ls.head;
-        param1 = ls.tail;
-        h = param0;
-        t = param1;
-        tmp1 = runtime.safeCall(f(h));
-        tmp2 = eliza.lz_map(f, t);
-        return NofibPrelude.LzCons(tmp1, tmp2)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    tmp = lambda;
+    let tmp;
+    tmp = runtime.safeCall(lambda(f, ls));
     return NofibPrelude.lazy(tmp)
   } 
   static append_lz(xs, ys) {
-    let param0, param1, h, t, lambda;
+    let param0, param1, h, t, lambda$this;
     if (xs instanceof NofibPrelude.Nil.class) {
       return NofibPrelude.force(ys)
     } else if (xs instanceof NofibPrelude.Cons.class) {
@@ -642,22 +890,16 @@ eliza1 = class eliza {
       param1 = xs.tail;
       h = param0;
       t = param1;
-      lambda = (undefined, function () {
-        let tmp;
-        tmp = eliza.append_lz(t, ys);
-        return NofibPrelude.LzCons(h, tmp)
-      });
-      return NofibPrelude.lazy(lambda)
+      lambda$this = runtime.safeCall(lambda1(ys, h, t));
+      return NofibPrelude.lazy(lambda$this)
     } else {
       throw new globalThis.Error("match error");
     }
   } 
   static cycle(xs1) {
-    let tmp, lambda;
-    lambda = (undefined, function () {
-      return eliza.cycle(xs1)
-    });
-    tmp = NofibPrelude.lazy(lambda);
+    let tmp, lambda$this;
+    lambda$this = runtime.safeCall(lambda2(xs1));
+    tmp = NofibPrelude.lazy(lambda$this);
     return eliza.append_lz(xs1, tmp)
   } 
   static isSpace(c1) {
@@ -690,23 +932,7 @@ eliza1 = class eliza {
     }
   } 
   static unwords(ws) {
-    let go, param0, param1, w, ws1, tmp;
-    go = function go(ws2) {
-      let param01, param11, w1, ws3, tmp1, tmp2;
-      if (ws2 instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (ws2 instanceof NofibPrelude.Cons.class) {
-        param01 = ws2.head;
-        param11 = ws2.tail;
-        w1 = param01;
-        ws3 = param11;
-        tmp1 = go(ws3);
-        tmp2 = NofibPrelude.append(w1, tmp1);
-        return NofibPrelude.Cons(" ", tmp2)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let param0, param1, w, ws1, tmp;
     if (ws instanceof NofibPrelude.Nil.class) {
       return NofibPrelude.Nil
     } else if (ws instanceof NofibPrelude.Cons.class) {
@@ -736,28 +962,8 @@ eliza1 = class eliza {
     }
   } 
   static trim(ls2) {
-    let cons, tmp, lambda;
-    cons = function cons(x, xs2) {
-      let scrut, scrut1, tmp1;
-      tmp1 = NofibPrelude.nofibStringToList(" .!?,");
-      scrut = NofibPrelude.inList(x, tmp1);
-      if (scrut === true) {
-        scrut1 = NofibPrelude.null_(xs2);
-        if (scrut1 === true) {
-          return NofibPrelude.Nil
-        } else {
-          return NofibPrelude.Cons(x, xs2)
-        }
-      } else {
-        return NofibPrelude.Cons(x, xs2)
-      }
-    };
-    lambda = (undefined, function (x) {
-      let tmp1;
-      tmp1 = NofibPrelude.nofibStringToList(" .!?,");
-      return NofibPrelude.inList(x, tmp1)
-    });
-    tmp = NofibPrelude.dropWhile(lambda, ls2);
+    let tmp;
+    tmp = NofibPrelude.dropWhile(lambda3, ls2);
     return NofibPrelude.foldr(cons, NofibPrelude.Nil, tmp)
   } 
   static repeated(kt_rp) {
@@ -866,176 +1072,30 @@ eliza1 = class eliza {
     }
   } 
   static tails(xs2) {
-    let tmp, lambda;
-    lambda = (undefined, function () {
-      let xss, tmp1, tmp2;
-      if (xs2 instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.LzNil
-      } else {
-        xss = xs2;
-        tmp1 = NofibPrelude.tail(xss);
-        tmp2 = eliza.tails(tmp1);
-        return NofibPrelude.LzCons(xss, tmp2)
-      }
-    });
-    tmp = lambda;
+    let tmp;
+    tmp = runtime.safeCall(lambda4(xs2));
     return NofibPrelude.lazy(tmp)
   } 
   static ucase(ls3) {
     return NofibPrelude.map(eliza.toUpper, ls3)
   } 
   static conjug(d, w) {
-    let maybe, conj, trailingI, tmp, tmp1, tmp2;
-    maybe = function maybe(d1, xs3) {
-      let scrut;
-      scrut = NofibPrelude.null_(xs3);
-      if (scrut === true) {
-        return d1
-      } else {
-        return xs3
-      }
-    };
-    conj = function conj(w1) {
-      let lscomp, tmp3, tmp4, tmp5;
-      lscomp = function lscomp(ls4) {
-        let param0, param1, first1, first0, w_, m, t, scrut, tmp6, tmp7;
-        if (ls4 instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Nil
-        } else if (ls4 instanceof NofibPrelude.Cons.class) {
-          param0 = ls4.head;
-          param1 = ls4.tail;
-          if (globalThis.Array.isArray(param0) && param0.length === 2) {
-            first0 = param0[0];
-            first1 = param0[1];
-            w_ = first0;
-            m = first1;
-            t = param1;
-            tmp6 = eliza.ucase(w1);
-            scrut = NofibPrelude.listEq(tmp6, w_);
-            if (scrut === true) {
-              tmp7 = lscomp(t);
-              return NofibPrelude.Cons(m, tmp7)
-            } else {
-              return lscomp(t)
-            }
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      tmp3 = lscomp(eliza.conjugates);
-      tmp4 = NofibPrelude.Cons(w1, NofibPrelude.Nil);
-      tmp5 = NofibPrelude.append(tmp3, tmp4);
-      return NofibPrelude.head(tmp5)
-    };
-    trailingI = function trailingI(ls4) {
-      let cons;
-      cons = function cons(x, xs3) {
-        let scrut, tmp3, tmp4, tmp5, tmp6;
-        tmp3 = NofibPrelude.nofibStringToList("I");
-        tmp4 = NofibPrelude.listEq(x, tmp3);
-        tmp5 = NofibPrelude.null_(xs3);
-        scrut = tmp4 && tmp5;
-        if (scrut === true) {
-          tmp6 = NofibPrelude.nofibStringToList("me");
-          return NofibPrelude.Cons(tmp6, NofibPrelude.Nil)
-        } else {
-          return NofibPrelude.Cons(x, xs3)
-        }
-      };
-      return NofibPrelude.foldr(cons, NofibPrelude.Nil, ls4)
-    };
+    let tmp, tmp1, tmp2;
     tmp = maybe(d, w);
     tmp1 = NofibPrelude.map(conj, tmp);
     tmp2 = trailingI(tmp1);
     return eliza.unwords(tmp2)
   } 
   static replies(key, l) {
-    let tmp, tmp1, tmp2, lambda, lambda1;
-    lambda = (undefined, function (x) {
-      let tmp3, tmp4;
-      tmp3 = NofibPrelude.listLen(key);
-      tmp4 = NofibPrelude.drop(tmp3, x);
-      return eliza.conjug(l, tmp4)
-    });
-    tmp = lambda;
+    let tmp, tmp1, tmp2, lambda$this;
+    tmp = runtime.safeCall(lambda5(key, l));
     tmp1 = eliza.tails(l);
-    lambda1 = (undefined, function (ls4) {
-      let tmp3;
-      tmp3 = eliza.lz_map(eliza.ucase, ls4);
-      return eliza.prefix(key, tmp3)
-    });
-    tmp2 = NofibPrelude.filter_lz(lambda1, tmp1);
+    lambda$this = runtime.safeCall(lambda6(key));
+    tmp2 = NofibPrelude.filter_lz(lambda$this, tmp1);
     return NofibPrelude.map_lz(tmp, tmp2)
   } 
   static answer(st, l1) {
-    let ans, cons, scrut, first1, first0, response, kt, tmp, tmp1;
-    cons = function cons(e, r_es) {
-      let first11, first01, r, es, tmp2;
-      if (globalThis.Array.isArray(r_es) && r_es.length === 2) {
-        first01 = r_es[0];
-        first11 = r_es[1];
-        r = first01;
-        es = first11;
-        tmp2 = NofibPrelude.Cons(e, es);
-        return [
-          r,
-          tmp2
-        ]
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    ans = function ans(e_es, l2) {
-      let param0, param1, first11, first01, key1, a_as, es, scrut1, param01, param11, a, as_, rs, scrut2, tmp2, tmp3, tmp4, tmp5, tmp6;
-      if (e_es instanceof NofibPrelude.Cons.class) {
-        param0 = e_es.head;
-        param1 = e_es.tail;
-        if (globalThis.Array.isArray(param0) && param0.length === 2) {
-          first01 = param0[0];
-          first11 = param0[1];
-          key1 = first01;
-          a_as = first11;
-          es = param1;
-          scrut1 = NofibPrelude.force(a_as);
-          if (scrut1 instanceof NofibPrelude.LzCons.class) {
-            param01 = scrut1.head;
-            param11 = scrut1.tail;
-            a = param01;
-            as_ = param11;
-            tmp2 = eliza.replies(key1, l2);
-            rs = tmp2;
-            scrut2 = eliza.null_lz(rs);
-            if (scrut2 === true) {
-              tmp3 = ans(es, l2);
-              return cons([
-                key1,
-                a_as
-              ], tmp3)
-            } else {
-              tmp4 = NofibPrelude.head_lz(rs);
-              tmp5 = eliza.makeResponse(a, tmp4);
-              tmp6 = NofibPrelude.Cons([
-                key1,
-                as_
-              ], es);
-              return [
-                tmp5,
-                tmp6
-              ]
-            }
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let scrut, first1, first0, response, kt, tmp, tmp1;
     tmp = eliza.keyTabOf(st);
     scrut = ans(tmp, l1);
     if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
@@ -1085,7 +1145,7 @@ eliza1 = class eliza {
     }
   } 
   static testEliza_nofib(n) {
-    let input, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, lambda;
+    let input, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29;
     tmp = NofibPrelude.nofibStringToList("Are we alone?");
     tmp1 = NofibPrelude.nofibStringToList("That the Roswell event was actually an alien encounter. Do you agreed?");
     tmp2 = NofibPrelude.nofibStringToList("But why not talk about you, its more fun.");
@@ -1115,25 +1175,7 @@ eliza1 = class eliza {
     tmp26 = NofibPrelude.Cons(tmp1, tmp25);
     tmp27 = NofibPrelude.Cons(tmp, tmp26);
     input = tmp27;
-    lambda = (undefined, function (i) {
-      let tmp30, tmp31, tmp32, tmp33, lambda1, lambda2;
-      tmp30 = NofibPrelude.intMod(i, 20);
-      tmp31 = NofibPrelude.take(tmp30, input);
-      lambda1 = (undefined, function (x) {
-        let tmp34;
-        tmp34 = eliza.trim(x);
-        return eliza.words(tmp34)
-      });
-      tmp32 = NofibPrelude.map(lambda1, tmp31);
-      lambda2 = (undefined, function (x) {
-        let tmp34;
-        tmp34 = NofibPrelude.null_(x);
-        return BenchmarkPrelude.not(tmp34)
-      });
-      tmp33 = NofibPrelude.filter(lambda2, tmp32);
-      return eliza.session(eliza.initial, NofibPrelude.Nil, tmp33)
-    });
-    tmp28 = lambda;
+    tmp28 = runtime.safeCall(lambda7(input));
     tmp29 = NofibPrelude.enumFromTo(1, n);
     return NofibPrelude.map(tmp28, tmp29)
   }

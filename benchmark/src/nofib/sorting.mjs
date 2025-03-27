@@ -2,11 +2,573 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let sorting1;
+let lscomp2, lscomp1, split, trins, to_tree, mkTree, readTree, to_tree1, mkTree1, readTree1, to_heap, clear, heap, mix, runsplit, merge, merge_lists, sort, sorting1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lscomp2$, lscomp1$, lambda$, lambda$1, lambda$2;
+lambda$2 = function lambda$(f, g, x) {
+  let tmp;
+  tmp = runtime.safeCall(g(x));
+  return runtime.safeCall(f(tmp))
+};
+lambda7 = (undefined, function (f, g) {
+  return (x) => {
+    return lambda$2(f, g, x)
+  }
+});
+lambda5 = (undefined, function (f, g) {
+  return runtime.safeCall(lambda7(f, g))
+});
+lambda6 = (undefined, function (x) {
+  return x
+});
+sort = function sort(param) {
+  let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9;
+  tmp = NofibPrelude.Cons(sorting1.treeSort2, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(sorting1.treeSort, tmp);
+  tmp2 = NofibPrelude.Cons(sorting1.quickerSort, tmp1);
+  tmp3 = NofibPrelude.Cons(sorting1.quickSort2, tmp2);
+  tmp4 = NofibPrelude.Cons(sorting1.quickSort, tmp3);
+  tmp5 = NofibPrelude.Cons(sorting1.mergeSort, tmp4);
+  tmp6 = NofibPrelude.Cons(sorting1.insertSort, tmp5);
+  tmp7 = NofibPrelude.Cons(sorting1.heapSort, tmp6);
+  tmp8 = sorting1.intersperse(NofibPrelude.reverse, tmp7);
+  tmp9 = NofibPrelude.foldr(lambda5, lambda6, tmp8);
+  return runtime.safeCall(tmp9(param))
+};
+runsplit = function runsplit(run, xs) {
+  let param0, param1, r, rs, param01, param11, x, xs_, rs1, scrut, scrut1, scrut2, x1, xs_1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12;
+  if (run instanceof NofibPrelude.Nil.class) {
+    if (xs instanceof NofibPrelude.Nil.class) {
+      return NofibPrelude.Nil
+    } else if (xs instanceof NofibPrelude.Cons.class) {
+      param01 = xs.head;
+      param11 = xs.tail;
+      x1 = param01;
+      xs_1 = param11;
+      tmp = NofibPrelude.Cons(x1, NofibPrelude.Nil);
+      return runsplit(tmp, xs_1)
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    if (xs instanceof NofibPrelude.Nil.class) {
+      return NofibPrelude.Cons(run, NofibPrelude.Nil)
+    } else {
+      if (run instanceof NofibPrelude.Cons.class) {
+        param0 = run.head;
+        param1 = run.tail;
+        r = param0;
+        rs = param1;
+        if (xs instanceof NofibPrelude.Cons.class) {
+          param01 = xs.head;
+          param11 = xs.tail;
+          x = param01;
+          xs_ = param11;
+          if (rs instanceof NofibPrelude.Nil.class) {
+            scrut2 = sorting1.gtList(x, r);
+            if (scrut2 === true) {
+              tmp1 = NofibPrelude.Cons(x, NofibPrelude.Nil);
+              tmp2 = NofibPrelude.Cons(r, tmp1);
+              return runsplit(tmp2, xs_)
+            } else {
+              scrut1 = sorting1.leList(x, r);
+              if (scrut1 === true) {
+                tmp3 = NofibPrelude.Cons(r, rs);
+                tmp4 = NofibPrelude.Cons(x, tmp3);
+                return runsplit(tmp4, xs_)
+              } else {
+                tmp5 = NofibPrelude.Cons(r, rs);
+                tmp6 = NofibPrelude.Cons(x, NofibPrelude.Nil);
+                tmp7 = runsplit(tmp6, xs_);
+                return NofibPrelude.Cons(tmp5, tmp7)
+              }
+            }
+          } else {
+            rs1 = rs;
+            scrut = sorting1.leList(x, r);
+            if (scrut === true) {
+              tmp8 = NofibPrelude.Cons(r, rs1);
+              tmp9 = NofibPrelude.Cons(x, tmp8);
+              return runsplit(tmp9, xs_)
+            } else {
+              tmp10 = NofibPrelude.Cons(r, rs1);
+              tmp11 = NofibPrelude.Cons(x, NofibPrelude.Nil);
+              tmp12 = runsplit(tmp11, xs_);
+              return NofibPrelude.Cons(tmp10, tmp12)
+            }
+          }
+        } else {
+          throw new globalThis.Error("match error");
+        }
+      } else {
+        throw new globalThis.Error("match error");
+      }
+    }
+  }
+};
+merge_lists = function merge_lists(xs) {
+  let param0, param1, x, xs_, tmp;
+  if (xs instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (xs instanceof NofibPrelude.Cons.class) {
+    param0 = xs.head;
+    param1 = xs.tail;
+    x = param0;
+    xs_ = param1;
+    tmp = merge_lists(xs_);
+    return merge(x, tmp)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+merge = function merge(xs, ys) {
+  let param0, param1, x, xs_, param01, param11, y, ys_, scrut, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
+  if (xs instanceof NofibPrelude.Nil.class) {
+    return ys
+  } else {
+    if (ys instanceof NofibPrelude.Nil.class) {
+      return xs
+    } else {
+      if (xs instanceof NofibPrelude.Cons.class) {
+        param0 = xs.head;
+        param1 = xs.tail;
+        x = param0;
+        xs_ = param1;
+        if (ys instanceof NofibPrelude.Cons.class) {
+          param01 = ys.head;
+          param11 = ys.tail;
+          y = param01;
+          ys_ = param11;
+          scrut1 = sorting1.eqList(x, y);
+          if (scrut1 === true) {
+            tmp = merge(xs_, ys_);
+            tmp1 = NofibPrelude.Cons(y, tmp);
+            return NofibPrelude.Cons(x, tmp1)
+          } else {
+            scrut = sorting1.ltList(x, y);
+            if (scrut === true) {
+              tmp2 = NofibPrelude.Cons(y, ys_);
+              tmp3 = merge(xs_, tmp2);
+              return NofibPrelude.Cons(x, tmp3)
+            } else {
+              tmp4 = NofibPrelude.Cons(x, xs_);
+              tmp5 = merge(tmp4, ys_);
+              return NofibPrelude.Cons(y, tmp5)
+            }
+          }
+        } else {
+          throw new globalThis.Error("match error");
+        }
+      } else {
+        throw new globalThis.Error("match error");
+      }
+    }
+  }
+};
+heap = function heap(k, xs) {
+  let param0, param1, x, xs_, tmp, tmp1;
+  if (xs instanceof NofibPrelude.Nil.class) {
+    return sorting1.Tip
+  } else if (xs instanceof NofibPrelude.Cons.class) {
+    param0 = xs.head;
+    param1 = xs.tail;
+    x = param0;
+    xs_ = param1;
+    tmp = k + 1;
+    tmp1 = heap(tmp, xs_);
+    return to_heap(k, x, tmp1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+to_heap = function to_heap(k, x, t) {
+  let param0, param1, param2, y, l, r, scrut, scrut1, scrut2, scrut3, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13;
+  if (t instanceof sorting1.Tip.class) {
+    return sorting1.Branch(x, sorting1.Tip, sorting1.Tip)
+  } else if (t instanceof sorting1.Branch.class) {
+    param0 = t.a;
+    param1 = t.l;
+    param2 = t.r;
+    y = param0;
+    l = param1;
+    r = param2;
+    scrut2 = sorting1.leList(x, y);
+    if (scrut2 === true) {
+      scrut3 = sorting1.odd(k);
+      if (scrut3 === true) {
+        tmp = NofibPrelude.intDiv(k, 2);
+        tmp1 = to_heap(tmp, y, l);
+        return sorting1.Branch(x, tmp1, r)
+      } else {
+        scrut1 = sorting1.leList(x, y);
+        if (scrut1 === true) {
+          tmp2 = NofibPrelude.intDiv(k, 2);
+          tmp3 = to_heap(tmp2, y, r);
+          return sorting1.Branch(x, l, tmp3)
+        } else {
+          scrut = sorting1.odd(k);
+          if (scrut === true) {
+            tmp4 = NofibPrelude.intDiv(k, 2);
+            tmp5 = to_heap(tmp4, x, l);
+            return sorting1.Branch(y, tmp5, r)
+          } else {
+            tmp6 = NofibPrelude.intDiv(k, 2);
+            tmp7 = to_heap(tmp6, x, r);
+            return sorting1.Branch(y, l, tmp7)
+          }
+        }
+      }
+    } else {
+      scrut1 = sorting1.leList(x, y);
+      if (scrut1 === true) {
+        tmp8 = NofibPrelude.intDiv(k, 2);
+        tmp9 = to_heap(tmp8, y, r);
+        return sorting1.Branch(x, l, tmp9)
+      } else {
+        scrut = sorting1.odd(k);
+        if (scrut === true) {
+          tmp10 = NofibPrelude.intDiv(k, 2);
+          tmp11 = to_heap(tmp10, x, l);
+          return sorting1.Branch(y, tmp11, r)
+        } else {
+          tmp12 = NofibPrelude.intDiv(k, 2);
+          tmp13 = to_heap(tmp12, x, r);
+          return sorting1.Branch(y, l, tmp13)
+        }
+      }
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+clear = function clear(t) {
+  let param0, param1, param2, x, l, r, tmp, tmp1;
+  if (t instanceof sorting1.Tip.class) {
+    return NofibPrelude.Nil
+  } else if (t instanceof sorting1.Branch.class) {
+    param0 = t.a;
+    param1 = t.l;
+    param2 = t.r;
+    x = param0;
+    l = param1;
+    r = param2;
+    tmp = mix(l, r);
+    tmp1 = clear(tmp);
+    return NofibPrelude.Cons(x, tmp1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+mix = function mix(l, r) {
+  let param0, param1, param2, x, l1, r1, param01, param11, param21, y, l2, r2, scrut, tmp, tmp1, tmp2, tmp3;
+  if (l instanceof sorting1.Tip.class) {
+    return r
+  } else {
+    if (r instanceof sorting1.Tip.class) {
+      return l
+    } else {
+      if (l instanceof sorting1.Branch.class) {
+        param0 = l.a;
+        param1 = l.l;
+        param2 = l.r;
+        x = param0;
+        l1 = param1;
+        r1 = param2;
+        if (r instanceof sorting1.Branch.class) {
+          param01 = r.a;
+          param11 = r.l;
+          param21 = r.r;
+          y = param01;
+          l2 = param11;
+          r2 = param21;
+          scrut = sorting1.leList(x, y);
+          if (scrut === true) {
+            tmp = mix(l1, r1);
+            tmp1 = sorting1.Branch(y, l2, r2);
+            return sorting1.Branch(x, tmp, tmp1)
+          } else {
+            tmp2 = sorting1.Branch(x, l1, r1);
+            tmp3 = mix(l2, r2);
+            return sorting1.Branch(y, tmp2, tmp3)
+          }
+        } else {
+          throw new globalThis.Error("match error");
+        }
+      } else {
+        throw new globalThis.Error("match error");
+      }
+    }
+  }
+};
+to_tree1 = function to_tree(x, t) {
+  let param0, param1, param2, y, l, r, scrut, param01, y1, scrut1, tmp, tmp1, tmp2, tmp3;
+  if (t instanceof sorting1.Tip2.class) {
+    return sorting1.Twig2(x)
+  } else if (t instanceof sorting1.Twig2.class) {
+    param01 = t.a;
+    y1 = param01;
+    scrut1 = sorting1.leList(x, y1);
+    if (scrut1 === true) {
+      tmp = sorting1.Twig2(x);
+      return sorting1.Branch2(y1, tmp, sorting1.Tip2)
+    } else {
+      tmp1 = sorting1.Twig2(x);
+      return sorting1.Branch2(y1, sorting1.Tip2, tmp1)
+    }
+  } else if (t instanceof sorting1.Branch2.class) {
+    param0 = t.a;
+    param1 = t.l;
+    param2 = t.r;
+    y = param0;
+    l = param1;
+    r = param2;
+    scrut = sorting1.leList(x, y);
+    if (scrut === true) {
+      tmp2 = to_tree1(x, l);
+      return sorting1.Branch2(y, tmp2, r)
+    } else {
+      tmp3 = to_tree1(x, r);
+      return sorting1.Branch2(y, l, tmp3)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+mkTree1 = function mkTree(innerparam) {
+  return NofibPrelude.foldr(to_tree1, sorting1.Tip2, innerparam)
+};
+readTree1 = function readTree(t) {
+  let param0, param1, param2, x, l, r, param01, x1, tmp, tmp1, tmp2;
+  if (t instanceof sorting1.Tip2.class) {
+    return NofibPrelude.Nil
+  } else if (t instanceof sorting1.Twig2.class) {
+    param01 = t.a;
+    x1 = param01;
+    return NofibPrelude.Cons(x1, NofibPrelude.Nil)
+  } else if (t instanceof sorting1.Branch2.class) {
+    param0 = t.a;
+    param1 = t.l;
+    param2 = t.r;
+    x = param0;
+    l = param1;
+    r = param2;
+    tmp = readTree1(l);
+    tmp1 = readTree1(r);
+    tmp2 = NofibPrelude.Cons(x, tmp1);
+    return NofibPrelude.append(tmp, tmp2)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+to_tree = function to_tree(x, t) {
+  let param0, param1, param2, y, l, r, scrut, tmp, tmp1;
+  if (t instanceof sorting1.Tip.class) {
+    return sorting1.Branch(x, sorting1.Tip, sorting1.Tip)
+  } else if (t instanceof sorting1.Branch.class) {
+    param0 = t.a;
+    param1 = t.l;
+    param2 = t.r;
+    y = param0;
+    l = param1;
+    r = param2;
+    scrut = sorting1.leList(x, y);
+    if (scrut === true) {
+      tmp = to_tree(x, l);
+      return sorting1.Branch(y, tmp, r)
+    } else {
+      tmp1 = to_tree(x, r);
+      return sorting1.Branch(y, l, tmp1)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+mkTree = function mkTree(innerparam) {
+  return NofibPrelude.foldr(to_tree, sorting1.Tip, innerparam)
+};
+readTree = function readTree(t) {
+  let param0, param1, param2, x, l, r, tmp, tmp1, tmp2;
+  if (t instanceof sorting1.Tip.class) {
+    return NofibPrelude.Nil
+  } else if (t instanceof sorting1.Branch.class) {
+    param0 = t.a;
+    param1 = t.l;
+    param2 = t.r;
+    x = param0;
+    l = param1;
+    r = param2;
+    tmp = readTree(l);
+    tmp1 = readTree(r);
+    tmp2 = NofibPrelude.Cons(x, tmp1);
+    return NofibPrelude.append(tmp, tmp2)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+trins = function trins(rev, xs, ys) {
+  let param0, param1, x, xs_, param01, param11, y, ys_, scrut, xs1, y1, ys_1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10;
+  if (xs instanceof NofibPrelude.Nil.class) {
+    xs1 = xs;
+    if (ys instanceof NofibPrelude.Cons.class) {
+      param01 = ys.head;
+      param11 = ys.tail;
+      y1 = param01;
+      ys_1 = param11;
+      tmp = NofibPrelude.reverse(rev);
+      tmp1 = NofibPrelude.Cons(y1, NofibPrelude.Nil);
+      tmp2 = NofibPrelude.append(tmp, tmp1);
+      return trins(NofibPrelude.Nil, tmp2, ys_1)
+    } else if (ys instanceof NofibPrelude.Nil.class) {
+      tmp3 = NofibPrelude.reverse(rev);
+      return NofibPrelude.append(tmp3, xs1)
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    xs1 = xs;
+    if (ys instanceof NofibPrelude.Nil.class) {
+      tmp4 = NofibPrelude.reverse(rev);
+      return NofibPrelude.append(tmp4, xs1)
+    } else {
+      if (xs instanceof NofibPrelude.Cons.class) {
+        param0 = xs.head;
+        param1 = xs.tail;
+        x = param0;
+        xs_ = param1;
+        if (ys instanceof NofibPrelude.Cons.class) {
+          param01 = ys.head;
+          param11 = ys.tail;
+          y = param01;
+          ys_ = param11;
+          scrut = sorting1.ltList(x, y);
+          if (scrut === true) {
+            tmp5 = NofibPrelude.Cons(x, rev);
+            tmp6 = NofibPrelude.Cons(y, ys_);
+            return trins(tmp5, xs_, tmp6)
+          } else {
+            tmp7 = NofibPrelude.reverse(rev);
+            tmp8 = NofibPrelude.Cons(x, xs_);
+            tmp9 = NofibPrelude.Cons(y, tmp8);
+            tmp10 = NofibPrelude.append(tmp7, tmp9);
+            return trins(NofibPrelude.Nil, tmp10, ys_)
+          }
+        } else {
+          throw new globalThis.Error("match error");
+        }
+      } else {
+        throw new globalThis.Error("match error");
+      }
+    }
+  }
+};
+split = function split(x, lo, hi, ys) {
+  let param0, param1, y, ys_, scrut, tmp, tmp1, tmp2, tmp3, tmp4;
+  if (ys instanceof NofibPrelude.Nil.class) {
+    tmp = sorting1.quickerSort(lo);
+    tmp1 = sorting1.quickerSort(hi);
+    tmp2 = NofibPrelude.Cons(x, tmp1);
+    return NofibPrelude.append(tmp, tmp2)
+  } else if (ys instanceof NofibPrelude.Cons.class) {
+    param0 = ys.head;
+    param1 = ys.tail;
+    y = param0;
+    ys_ = param1;
+    scrut = sorting1.leList(y, x);
+    if (scrut === true) {
+      tmp3 = NofibPrelude.Cons(y, lo);
+      return split(x, tmp3, hi, ys_)
+    } else {
+      tmp4 = NofibPrelude.Cons(y, hi);
+      return split(x, lo, tmp4, ys_)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda$1 = function lambda$(x, y) {
+  return sorting1.geList(x, y)
+};
+lambda4 = (undefined, function (x) {
+  return (y) => {
+    return lambda$1(x, y)
+  }
+});
+lambda$ = function lambda$(p, x, y) {
+  return sorting1.select(p, x, y)
+};
+lambda3 = (undefined, function (p) {
+  return (x, y) => {
+    return lambda$(p, x, y)
+  }
+});
+lscomp1$ = function lscomp1$(x, ls) {
+  let param0, param1, h, t, scrut, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    h = param0;
+    t = param1;
+    scrut = sorting1.leList(h, x);
+    if (scrut === true) {
+      tmp = lscomp1$(x, t);
+      return NofibPrelude.Cons(h, tmp)
+    } else {
+      return lscomp1$(x, t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp1 = function lscomp1(x) {
+  return (ls) => {
+    return lscomp1$(x, ls)
+  }
+};
+lscomp2$ = function lscomp2$(x, ls) {
+  let param0, param1, h, t, scrut, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    h = param0;
+    t = param1;
+    scrut = sorting1.gtList(h, x);
+    if (scrut === true) {
+      tmp = lscomp2$(x, t);
+      return NofibPrelude.Cons(h, tmp)
+    } else {
+      return lscomp2$(x, t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp2 = function lscomp2(x) {
+  return (ls) => {
+    return lscomp2$(x, ls)
+  }
+};
+lambda2 = (undefined, function (acc, c) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = sorting1.int_of_char(c);
+  tmp1 = sorting1.z_of_int(tmp);
+  tmp2 = sorting1.z_of_int(31);
+  tmp3 = acc * tmp2;
+  return tmp1 + tmp3
+});
+lambda1 = (undefined, function (l) {
+  let tmp;
+  tmp = NofibPrelude.Cons("\n", NofibPrelude.Nil);
+  return NofibPrelude.append(l, tmp)
+});
+lambda = (undefined, function (x) {
+  return x === "\n"
+});
 sorting1 = class sorting {
   static {
     sorting1 = sorting;
-    let lambda;
+    let lambda8;
     const EQ$class = class EQ {
       constructor() {}
       toString() { return "EQ"; }
@@ -83,10 +645,10 @@ sorting1 = class sorting {
       }
       toString() { return "Branch2(" + globalThis.Predef.render(this.a) + ", " + globalThis.Predef.render(this.l) + ", " + globalThis.Predef.render(this.r) + ")"; }
     };
-    lambda = (undefined, function () {
+    lambda8 = (undefined, function () {
       return sorting.testSorting_nofib(0)
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda8)
   }
   static int_of_char(c) {
     return runtime.safeCall(c.codePointAt(0))
@@ -206,13 +768,10 @@ sorting1 = class sorting {
     }
   } 
   static lines(s) {
-    let scrut, first1, first0, l, s_, tt, param0, param1, s__, tmp, lambda;
+    let scrut, first1, first0, l, s_, tt, param0, param1, s__, tmp;
     if (s instanceof NofibPrelude.Nil.class) {
       return NofibPrelude.Nil
     } else {
-      lambda = (undefined, function (x) {
-        return x === "\n"
-      });
       scrut = NofibPrelude.break_(lambda, s);
       if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
         first0 = scrut[0];
@@ -237,13 +796,8 @@ sorting1 = class sorting {
     }
   } 
   static unlines(ls) {
-    let tmp, lambda;
-    lambda = (undefined, function (l) {
-      let tmp1;
-      tmp1 = NofibPrelude.Cons("\n", NofibPrelude.Nil);
-      return NofibPrelude.append(l, tmp1)
-    });
-    tmp = NofibPrelude.map(lambda, ls);
+    let tmp;
+    tmp = NofibPrelude.map(lambda1, ls);
     return NofibPrelude.concat(tmp)
   } 
   static odd(x) {
@@ -255,21 +809,13 @@ sorting1 = class sorting {
     return runtime.safeCall(globalThis.BigInt(x1))
   } 
   static hash(str) {
-    let tmp, tmp1, lambda;
-    lambda = (undefined, function (acc, c1) {
-      let tmp2, tmp3, tmp4, tmp5;
-      tmp2 = sorting.int_of_char(c1);
-      tmp3 = sorting.z_of_int(tmp2);
-      tmp4 = sorting.z_of_int(31);
-      tmp5 = acc * tmp4;
-      return tmp3 + tmp5
-    });
-    tmp = lambda;
+    let tmp, tmp1;
+    tmp = lambda2;
     tmp1 = sorting.z_of_int(0);
     return NofibPrelude.foldl(tmp, tmp1, str)
   } 
   static quickSort(xs3) {
-    let lscomp2, lscomp1, param0, param1, x2, xs_, tmp, tmp1, tmp2, tmp3, tmp4;
+    let param0, param1, x2, xs_, tmp, tmp1, tmp2, tmp3, tmp4;
     if (xs3 instanceof NofibPrelude.Nil.class) {
       return NofibPrelude.Nil
     } else if (xs3 instanceof NofibPrelude.Cons.class) {
@@ -277,49 +823,9 @@ sorting1 = class sorting {
       param1 = xs3.tail;
       x2 = param0;
       xs_ = param1;
-      lscomp1 = function lscomp1(ls1) {
-        let param01, param11, h, t, scrut, tmp5;
-        if (ls1 instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Nil
-        } else if (ls1 instanceof NofibPrelude.Cons.class) {
-          param01 = ls1.head;
-          param11 = ls1.tail;
-          h = param01;
-          t = param11;
-          scrut = sorting.leList(h, x2);
-          if (scrut === true) {
-            tmp5 = lscomp1(t);
-            return NofibPrelude.Cons(h, tmp5)
-          } else {
-            return lscomp1(t)
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      lscomp2 = function lscomp2(ls1) {
-        let param01, param11, h, t, scrut, tmp5;
-        if (ls1 instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Nil
-        } else if (ls1 instanceof NofibPrelude.Cons.class) {
-          param01 = ls1.head;
-          param11 = ls1.tail;
-          h = param01;
-          t = param11;
-          scrut = sorting.gtList(h, x2);
-          if (scrut === true) {
-            tmp5 = lscomp2(t);
-            return NofibPrelude.Cons(h, tmp5)
-          } else {
-            return lscomp2(t)
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      tmp = lscomp1(xs_);
+      tmp = lscomp1$(x2, xs_);
       tmp1 = sorting.quickSort(tmp);
-      tmp2 = lscomp2(xs_);
+      tmp2 = lscomp2$(x2, xs_);
       tmp3 = sorting.quickSort(tmp2);
       tmp4 = NofibPrelude.Cons(x2, tmp3);
       return NofibPrelude.append(tmp1, tmp4)
@@ -353,17 +859,15 @@ sorting1 = class sorting {
     }
   } 
   static partition(p1, xs4) {
-    let lambda;
-    lambda = (undefined, function (x3, y) {
-      return sorting.select(p1, x3, y)
-    });
-    return NofibPrelude.foldr(lambda, [
+    let lambda$this;
+    lambda$this = runtime.safeCall(lambda3(p1));
+    return NofibPrelude.foldr(lambda$this, [
       NofibPrelude.Nil,
       NofibPrelude.Nil
     ], xs4)
   } 
   static quickSort2(xs5) {
-    let param0, param1, x3, xs_, scrut, first1, first0, lo, hi, tmp, tmp1, tmp2, lambda;
+    let param0, param1, x3, xs_, scrut, first1, first0, lo, hi, tmp, tmp1, tmp2, lambda$this;
     if (xs5 instanceof NofibPrelude.Nil.class) {
       return NofibPrelude.Nil
     } else if (xs5 instanceof NofibPrelude.Cons.class) {
@@ -371,10 +875,8 @@ sorting1 = class sorting {
       param1 = xs5.tail;
       x3 = param0;
       xs_ = param1;
-      lambda = (undefined, function (y) {
-        return sorting.geList(x3, y)
-      });
-      scrut = sorting.partition(lambda, xs_);
+      lambda$this = runtime.safeCall(lambda4(x3));
+      scrut = sorting.partition(lambda$this, xs_);
       if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
         first0 = scrut[0];
         first1 = scrut[1];
@@ -392,7 +894,7 @@ sorting1 = class sorting {
     }
   } 
   static quickerSort(xss) {
-    let split, param0, param1, x3, xs6, x4;
+    let param0, param1, x3, xs6, x4;
     if (xss instanceof NofibPrelude.Nil.class) {
       return NofibPrelude.Nil
     } else if (xss instanceof NofibPrelude.Cons.class) {
@@ -404,30 +906,6 @@ sorting1 = class sorting {
       } else {
         x3 = param0;
         xs6 = param1;
-        split = function split(x5, lo, hi, ys1) {
-          let param01, param11, y, ys_, scrut, tmp, tmp1, tmp2, tmp3, tmp4;
-          if (ys1 instanceof NofibPrelude.Nil.class) {
-            tmp = sorting.quickerSort(lo);
-            tmp1 = sorting.quickerSort(hi);
-            tmp2 = NofibPrelude.Cons(x5, tmp1);
-            return NofibPrelude.append(tmp, tmp2)
-          } else if (ys1 instanceof NofibPrelude.Cons.class) {
-            param01 = ys1.head;
-            param11 = ys1.tail;
-            y = param01;
-            ys_ = param11;
-            scrut = sorting.leList(y, x5);
-            if (scrut === true) {
-              tmp3 = NofibPrelude.Cons(y, lo);
-              return split(x5, tmp3, hi, ys_)
-            } else {
-              tmp4 = NofibPrelude.Cons(y, hi);
-              return split(x5, lo, tmp4, ys_)
-            }
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        };
         return split(x3, NofibPrelude.Nil, NofibPrelude.Nil, xs6)
       }
     } else {
@@ -435,7 +913,7 @@ sorting1 = class sorting {
     }
   } 
   static insertSort(xss1) {
-    let trins, param0, param1, x3, xs6, tmp;
+    let param0, param1, x3, xs6, tmp;
     if (xss1 instanceof NofibPrelude.Nil.class) {
       return NofibPrelude.Nil
     } else if (xss1 instanceof NofibPrelude.Cons.class) {
@@ -443,62 +921,6 @@ sorting1 = class sorting {
       param1 = xss1.tail;
       x3 = param0;
       xs6 = param1;
-      trins = function trins(rev, xs7, ys1) {
-        let param01, param11, x4, xs_, param02, param12, y, ys_, scrut, xs8, y1, ys_1, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11;
-        if (xs7 instanceof NofibPrelude.Nil.class) {
-          xs8 = xs7;
-          if (ys1 instanceof NofibPrelude.Cons.class) {
-            param02 = ys1.head;
-            param12 = ys1.tail;
-            y1 = param02;
-            ys_1 = param12;
-            tmp1 = NofibPrelude.reverse(rev);
-            tmp2 = NofibPrelude.Cons(y1, NofibPrelude.Nil);
-            tmp3 = NofibPrelude.append(tmp1, tmp2);
-            return trins(NofibPrelude.Nil, tmp3, ys_1)
-          } else if (ys1 instanceof NofibPrelude.Nil.class) {
-            tmp4 = NofibPrelude.reverse(rev);
-            return NofibPrelude.append(tmp4, xs8)
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        } else {
-          xs8 = xs7;
-          if (ys1 instanceof NofibPrelude.Nil.class) {
-            tmp5 = NofibPrelude.reverse(rev);
-            return NofibPrelude.append(tmp5, xs8)
-          } else {
-            if (xs7 instanceof NofibPrelude.Cons.class) {
-              param01 = xs7.head;
-              param11 = xs7.tail;
-              x4 = param01;
-              xs_ = param11;
-              if (ys1 instanceof NofibPrelude.Cons.class) {
-                param02 = ys1.head;
-                param12 = ys1.tail;
-                y = param02;
-                ys_ = param12;
-                scrut = sorting.ltList(x4, y);
-                if (scrut === true) {
-                  tmp6 = NofibPrelude.Cons(x4, rev);
-                  tmp7 = NofibPrelude.Cons(y, ys_);
-                  return trins(tmp6, xs_, tmp7)
-                } else {
-                  tmp8 = NofibPrelude.reverse(rev);
-                  tmp9 = NofibPrelude.Cons(x4, xs_);
-                  tmp10 = NofibPrelude.Cons(y, tmp9);
-                  tmp11 = NofibPrelude.append(tmp8, tmp10);
-                  return trins(NofibPrelude.Nil, tmp11, ys_)
-                }
-              } else {
-                throw new globalThis.Error("match error");
-              }
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          }
-        }
-      };
       tmp = NofibPrelude.Cons(x3, NofibPrelude.Nil);
       return trins(NofibPrelude.Nil, tmp, xs6)
     } else {
@@ -506,425 +928,27 @@ sorting1 = class sorting {
     }
   } 
   static treeSort(param) {
-    let mkTree, readTree, tmp;
-    mkTree = function mkTree(innerparam) {
-      let to_tree;
-      to_tree = function to_tree(x3, t) {
-        let param0, param1, param2, y, l, r, scrut, tmp1, tmp2;
-        if (t instanceof sorting.Tip.class) {
-          return sorting.Branch(x3, sorting.Tip, sorting.Tip)
-        } else if (t instanceof sorting.Branch.class) {
-          param0 = t.a;
-          param1 = t.l;
-          param2 = t.r;
-          y = param0;
-          l = param1;
-          r = param2;
-          scrut = sorting.leList(x3, y);
-          if (scrut === true) {
-            tmp1 = to_tree(x3, l);
-            return sorting.Branch(y, tmp1, r)
-          } else {
-            tmp2 = to_tree(x3, r);
-            return sorting.Branch(y, l, tmp2)
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      return NofibPrelude.foldr(to_tree, sorting.Tip, innerparam)
-    };
-    readTree = function readTree(t) {
-      let param0, param1, param2, x3, l, r, tmp1, tmp2, tmp3;
-      if (t instanceof sorting.Tip.class) {
-        return NofibPrelude.Nil
-      } else if (t instanceof sorting.Branch.class) {
-        param0 = t.a;
-        param1 = t.l;
-        param2 = t.r;
-        x3 = param0;
-        l = param1;
-        r = param2;
-        tmp1 = readTree(l);
-        tmp2 = readTree(r);
-        tmp3 = NofibPrelude.Cons(x3, tmp2);
-        return NofibPrelude.append(tmp1, tmp3)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let tmp;
     tmp = mkTree(param);
     return readTree(tmp)
   } 
   static treeSort2(param1) {
-    let mkTree, readTree, tmp;
-    mkTree = function mkTree(innerparam) {
-      let to_tree;
-      to_tree = function to_tree(x3, t) {
-        let param0, param11, param2, y, l, r, scrut, param01, y1, scrut1, tmp1, tmp2, tmp3, tmp4;
-        if (t instanceof sorting.Tip2.class) {
-          return sorting.Twig2(x3)
-        } else if (t instanceof sorting.Twig2.class) {
-          param01 = t.a;
-          y1 = param01;
-          scrut1 = sorting.leList(x3, y1);
-          if (scrut1 === true) {
-            tmp1 = sorting.Twig2(x3);
-            return sorting.Branch2(y1, tmp1, sorting.Tip2)
-          } else {
-            tmp2 = sorting.Twig2(x3);
-            return sorting.Branch2(y1, sorting.Tip2, tmp2)
-          }
-        } else if (t instanceof sorting.Branch2.class) {
-          param0 = t.a;
-          param11 = t.l;
-          param2 = t.r;
-          y = param0;
-          l = param11;
-          r = param2;
-          scrut = sorting.leList(x3, y);
-          if (scrut === true) {
-            tmp3 = to_tree(x3, l);
-            return sorting.Branch2(y, tmp3, r)
-          } else {
-            tmp4 = to_tree(x3, r);
-            return sorting.Branch2(y, l, tmp4)
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      return NofibPrelude.foldr(to_tree, sorting.Tip2, innerparam)
-    };
-    readTree = function readTree(t) {
-      let param0, param11, param2, x3, l, r, param01, x4, tmp1, tmp2, tmp3;
-      if (t instanceof sorting.Tip2.class) {
-        return NofibPrelude.Nil
-      } else if (t instanceof sorting.Twig2.class) {
-        param01 = t.a;
-        x4 = param01;
-        return NofibPrelude.Cons(x4, NofibPrelude.Nil)
-      } else if (t instanceof sorting.Branch2.class) {
-        param0 = t.a;
-        param11 = t.l;
-        param2 = t.r;
-        x3 = param0;
-        l = param11;
-        r = param2;
-        tmp1 = readTree(l);
-        tmp2 = readTree(r);
-        tmp3 = NofibPrelude.Cons(x3, tmp2);
-        return NofibPrelude.append(tmp1, tmp3)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    tmp = mkTree(param1);
-    return readTree(tmp)
+    let tmp;
+    tmp = mkTree1(param1);
+    return readTree1(tmp)
   } 
   static heapSort(xs6) {
-    let to_heap, clear, heap, mix, tmp;
-    heap = function heap(k, xs7) {
-      let param0, param11, x3, xs_, tmp1, tmp2;
-      if (xs7 instanceof NofibPrelude.Nil.class) {
-        return sorting.Tip
-      } else if (xs7 instanceof NofibPrelude.Cons.class) {
-        param0 = xs7.head;
-        param11 = xs7.tail;
-        x3 = param0;
-        xs_ = param11;
-        tmp1 = k + 1;
-        tmp2 = heap(tmp1, xs_);
-        return to_heap(k, x3, tmp2)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    to_heap = function to_heap(k, x3, t) {
-      let param0, param11, param2, y, l, r, scrut, scrut1, scrut2, scrut3, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14;
-      if (t instanceof sorting.Tip.class) {
-        return sorting.Branch(x3, sorting.Tip, sorting.Tip)
-      } else if (t instanceof sorting.Branch.class) {
-        param0 = t.a;
-        param11 = t.l;
-        param2 = t.r;
-        y = param0;
-        l = param11;
-        r = param2;
-        scrut2 = sorting.leList(x3, y);
-        if (scrut2 === true) {
-          scrut3 = sorting.odd(k);
-          if (scrut3 === true) {
-            tmp1 = NofibPrelude.intDiv(k, 2);
-            tmp2 = to_heap(tmp1, y, l);
-            return sorting.Branch(x3, tmp2, r)
-          } else {
-            scrut1 = sorting.leList(x3, y);
-            if (scrut1 === true) {
-              tmp3 = NofibPrelude.intDiv(k, 2);
-              tmp4 = to_heap(tmp3, y, r);
-              return sorting.Branch(x3, l, tmp4)
-            } else {
-              scrut = sorting.odd(k);
-              if (scrut === true) {
-                tmp5 = NofibPrelude.intDiv(k, 2);
-                tmp6 = to_heap(tmp5, x3, l);
-                return sorting.Branch(y, tmp6, r)
-              } else {
-                tmp7 = NofibPrelude.intDiv(k, 2);
-                tmp8 = to_heap(tmp7, x3, r);
-                return sorting.Branch(y, l, tmp8)
-              }
-            }
-          }
-        } else {
-          scrut1 = sorting.leList(x3, y);
-          if (scrut1 === true) {
-            tmp9 = NofibPrelude.intDiv(k, 2);
-            tmp10 = to_heap(tmp9, y, r);
-            return sorting.Branch(x3, l, tmp10)
-          } else {
-            scrut = sorting.odd(k);
-            if (scrut === true) {
-              tmp11 = NofibPrelude.intDiv(k, 2);
-              tmp12 = to_heap(tmp11, x3, l);
-              return sorting.Branch(y, tmp12, r)
-            } else {
-              tmp13 = NofibPrelude.intDiv(k, 2);
-              tmp14 = to_heap(tmp13, x3, r);
-              return sorting.Branch(y, l, tmp14)
-            }
-          }
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    clear = function clear(t) {
-      let param0, param11, param2, x3, l, r, tmp1, tmp2;
-      if (t instanceof sorting.Tip.class) {
-        return NofibPrelude.Nil
-      } else if (t instanceof sorting.Branch.class) {
-        param0 = t.a;
-        param11 = t.l;
-        param2 = t.r;
-        x3 = param0;
-        l = param11;
-        r = param2;
-        tmp1 = mix(l, r);
-        tmp2 = clear(tmp1);
-        return NofibPrelude.Cons(x3, tmp2)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    mix = function mix(l, r) {
-      let param0, param11, param2, x3, l1, r1, param01, param12, param21, y, l2, r2, scrut, tmp1, tmp2, tmp3, tmp4;
-      if (l instanceof sorting.Tip.class) {
-        return r
-      } else {
-        if (r instanceof sorting.Tip.class) {
-          return l
-        } else {
-          if (l instanceof sorting.Branch.class) {
-            param0 = l.a;
-            param11 = l.l;
-            param2 = l.r;
-            x3 = param0;
-            l1 = param11;
-            r1 = param2;
-            if (r instanceof sorting.Branch.class) {
-              param01 = r.a;
-              param12 = r.l;
-              param21 = r.r;
-              y = param01;
-              l2 = param12;
-              r2 = param21;
-              scrut = sorting.leList(x3, y);
-              if (scrut === true) {
-                tmp1 = mix(l1, r1);
-                tmp2 = sorting.Branch(y, l2, r2);
-                return sorting.Branch(x3, tmp1, tmp2)
-              } else {
-                tmp3 = sorting.Branch(x3, l1, r1);
-                tmp4 = mix(l2, r2);
-                return sorting.Branch(y, tmp3, tmp4)
-              }
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        }
-      }
-    };
+    let tmp;
     tmp = heap(0, xs6);
     return clear(tmp)
   } 
   static mergeSort(param2) {
-    let runsplit, merge, merge_lists, tmp;
-    runsplit = function runsplit(run, xs7) {
-      let param0, param11, r, rs, param01, param12, x3, xs_, rs1, scrut, scrut1, scrut2, x4, xs_1, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13;
-      if (run instanceof NofibPrelude.Nil.class) {
-        if (xs7 instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Nil
-        } else if (xs7 instanceof NofibPrelude.Cons.class) {
-          param01 = xs7.head;
-          param12 = xs7.tail;
-          x4 = param01;
-          xs_1 = param12;
-          tmp1 = NofibPrelude.Cons(x4, NofibPrelude.Nil);
-          return runsplit(tmp1, xs_1)
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        if (xs7 instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Cons(run, NofibPrelude.Nil)
-        } else {
-          if (run instanceof NofibPrelude.Cons.class) {
-            param0 = run.head;
-            param11 = run.tail;
-            r = param0;
-            rs = param11;
-            if (xs7 instanceof NofibPrelude.Cons.class) {
-              param01 = xs7.head;
-              param12 = xs7.tail;
-              x3 = param01;
-              xs_ = param12;
-              if (rs instanceof NofibPrelude.Nil.class) {
-                scrut2 = sorting.gtList(x3, r);
-                if (scrut2 === true) {
-                  tmp2 = NofibPrelude.Cons(x3, NofibPrelude.Nil);
-                  tmp3 = NofibPrelude.Cons(r, tmp2);
-                  return runsplit(tmp3, xs_)
-                } else {
-                  scrut1 = sorting.leList(x3, r);
-                  if (scrut1 === true) {
-                    tmp4 = NofibPrelude.Cons(r, rs);
-                    tmp5 = NofibPrelude.Cons(x3, tmp4);
-                    return runsplit(tmp5, xs_)
-                  } else {
-                    tmp6 = NofibPrelude.Cons(r, rs);
-                    tmp7 = NofibPrelude.Cons(x3, NofibPrelude.Nil);
-                    tmp8 = runsplit(tmp7, xs_);
-                    return NofibPrelude.Cons(tmp6, tmp8)
-                  }
-                }
-              } else {
-                rs1 = rs;
-                scrut = sorting.leList(x3, r);
-                if (scrut === true) {
-                  tmp9 = NofibPrelude.Cons(r, rs1);
-                  tmp10 = NofibPrelude.Cons(x3, tmp9);
-                  return runsplit(tmp10, xs_)
-                } else {
-                  tmp11 = NofibPrelude.Cons(r, rs1);
-                  tmp12 = NofibPrelude.Cons(x3, NofibPrelude.Nil);
-                  tmp13 = runsplit(tmp12, xs_);
-                  return NofibPrelude.Cons(tmp11, tmp13)
-                }
-              }
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        }
-      }
-    };
-    merge_lists = function merge_lists(xs7) {
-      let param0, param11, x3, xs_, tmp1;
-      if (xs7 instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (xs7 instanceof NofibPrelude.Cons.class) {
-        param0 = xs7.head;
-        param11 = xs7.tail;
-        x3 = param0;
-        xs_ = param11;
-        tmp1 = merge_lists(xs_);
-        return merge(x3, tmp1)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    merge = function merge(xs7, ys1) {
-      let param0, param11, x3, xs_, param01, param12, y, ys_, scrut, scrut1, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
-      if (xs7 instanceof NofibPrelude.Nil.class) {
-        return ys1
-      } else {
-        if (ys1 instanceof NofibPrelude.Nil.class) {
-          return xs7
-        } else {
-          if (xs7 instanceof NofibPrelude.Cons.class) {
-            param0 = xs7.head;
-            param11 = xs7.tail;
-            x3 = param0;
-            xs_ = param11;
-            if (ys1 instanceof NofibPrelude.Cons.class) {
-              param01 = ys1.head;
-              param12 = ys1.tail;
-              y = param01;
-              ys_ = param12;
-              scrut1 = sorting.eqList(x3, y);
-              if (scrut1 === true) {
-                tmp1 = merge(xs_, ys_);
-                tmp2 = NofibPrelude.Cons(y, tmp1);
-                return NofibPrelude.Cons(x3, tmp2)
-              } else {
-                scrut = sorting.ltList(x3, y);
-                if (scrut === true) {
-                  tmp3 = NofibPrelude.Cons(y, ys_);
-                  tmp4 = merge(xs_, tmp3);
-                  return NofibPrelude.Cons(x3, tmp4)
-                } else {
-                  tmp5 = NofibPrelude.Cons(x3, xs_);
-                  tmp6 = merge(tmp5, ys_);
-                  return NofibPrelude.Cons(y, tmp6)
-                }
-              }
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        }
-      }
-    };
+    let tmp;
     tmp = runsplit(NofibPrelude.Nil, param2);
     return merge_lists(tmp)
   } 
   static mangle(inpt) {
-    let sort, tmp, tmp1;
-    sort = function sort(param3) {
-      let tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, lambda, lambda1;
-      tmp2 = NofibPrelude.Cons(sorting.treeSort2, NofibPrelude.Nil);
-      tmp3 = NofibPrelude.Cons(sorting.treeSort, tmp2);
-      tmp4 = NofibPrelude.Cons(sorting.quickerSort, tmp3);
-      tmp5 = NofibPrelude.Cons(sorting.quickSort2, tmp4);
-      tmp6 = NofibPrelude.Cons(sorting.quickSort, tmp5);
-      tmp7 = NofibPrelude.Cons(sorting.mergeSort, tmp6);
-      tmp8 = NofibPrelude.Cons(sorting.insertSort, tmp7);
-      tmp9 = NofibPrelude.Cons(sorting.heapSort, tmp8);
-      tmp10 = sorting.intersperse(NofibPrelude.reverse, tmp9);
-      lambda = (undefined, function (f, g) {
-        let lambda2;
-        lambda2 = (undefined, function (x3) {
-          let tmp12;
-          tmp12 = runtime.safeCall(g(x3));
-          return runtime.safeCall(f(tmp12))
-        });
-        return lambda2
-      });
-      lambda1 = (undefined, function (x3) {
-        return x3
-      });
-      tmp11 = NofibPrelude.foldr(lambda, lambda1, tmp10);
-      return runtime.safeCall(tmp11(param3))
-    };
+    let tmp, tmp1;
     tmp = sorting.lines(inpt);
     tmp1 = sort(tmp);
     return sorting.unlines(tmp1)

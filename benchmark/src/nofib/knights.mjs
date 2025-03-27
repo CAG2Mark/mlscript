@@ -2,11 +2,475 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let knights1;
+let go, lscomp2, lscomp1, lscomp21, lscomp11, find, logTen, lscomp, lscomp3, lscomp4, lscomp22, lscomp12, pp, strToInt, argsOk, all_digits, knights1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, lambda11, lambda12, lambda13, lambda14, lambda15, lambda16, lambda17, lambda18, lambda19, lambda20, lambda21, lambda22, lscomp2$, lscomp1$, lambda$, lscomp2$1, lambda$1, lscomp1$1, lambda$2, lambda$3, lambda$4, lscomp$, lambda$5, lambda$6, lambda$7, lscomp1$2, lscomp2$2, lambda$8, lambda$9;
+lambda21 = (undefined, function (a, b) {
+  let tmp;
+  tmp = knights1.myIsDigit(a);
+  return tmp && b
+});
+all_digits = function all_digits(s) {
+  return NofibPrelude.foldr(lambda21, true, s)
+};
+lambda22 = (undefined, function (a, b) {
+  let tmp;
+  tmp = all_digits(a);
+  return tmp && b
+});
+argsOk = function argsOk(ss) {
+  let tmp, tmp1, tmp2;
+  tmp = NofibPrelude.listLen(ss);
+  tmp1 = tmp === 2;
+  tmp2 = NofibPrelude.foldr(lambda22, true, ss);
+  return tmp1 && tmp2
+};
+strToInt = function strToInt(y, xs) {
+  let param0, param1, x, xs1, tmp, tmp1, tmp2, tmp3;
+  if (xs instanceof NofibPrelude.Nil.class) {
+    return y
+  } else if (xs instanceof NofibPrelude.Cons.class) {
+    param0 = xs.head;
+    param1 = xs.tail;
+    x = param0;
+    xs1 = param1;
+    tmp = 10 * y;
+    tmp1 = runtime.safeCall(x.codePointAt(0));
+    tmp2 = tmp1 - 48;
+    tmp3 = tmp + tmp2;
+    return strToInt(tmp3, xs1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+pp = function pp(xs) {
+  let param0, param1, first1, first0, x, y, xs1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8;
+  if (xs instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (xs instanceof NofibPrelude.Cons.class) {
+    param0 = xs.head;
+    param1 = xs.tail;
+    if (globalThis.Array.isArray(param0) && param0.length === 2) {
+      first0 = param0[0];
+      first1 = param0[1];
+      x = first0;
+      y = first1;
+      xs1 = param1;
+      tmp = NofibPrelude.nofibStringToList("\nKnights tour with ");
+      tmp1 = NofibPrelude.stringOfInt(x);
+      tmp2 = NofibPrelude.nofibStringToList(tmp1);
+      tmp3 = NofibPrelude.nofibStringToList(" backtracking moves\n");
+      tmp4 = knights1.showChessSet(y);
+      tmp5 = pp(xs1);
+      tmp6 = NofibPrelude.append(tmp4, tmp5);
+      tmp7 = NofibPrelude.append(tmp3, tmp6);
+      tmp8 = NofibPrelude.append(tmp2, tmp7);
+      return NofibPrelude.append(tmp, tmp8)
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda20 = (undefined, function (x) {
+  return strToInt(0, x)
+});
+lambda18 = (undefined, function () {
+  return NofibPrelude.LzNil
+});
+lambda$9 = function lambda$(q, growFn, finFn) {
+  let tmp, tmp1, tmp2;
+  tmp = knights1.inquireFront_lz(q);
+  tmp1 = knights1.removeFront_lz(q);
+  tmp2 = knights1.depthSearch(tmp1, growFn, finFn);
+  return NofibPrelude.LzCons(tmp, tmp2)
+};
+lambda19 = (undefined, function (q, growFn, finFn) {
+  return () => {
+    return lambda$9(q, growFn, finFn)
+  }
+});
+lambda15 = (undefined, function () {
+  return NofibPrelude.LzNil
+});
+lambda$8 = function lambda$(sze, h1, t1, h2, t2) {
+  let tmp;
+  tmp = lscomp2$2(sze, h1, t1, t2);
+  return NofibPrelude.LzCons([
+    h1,
+    h2
+  ], tmp)
+};
+lambda16 = (undefined, function (sze, h1, t1, h2, t2) {
+  return () => {
+    return lambda$8(sze, h1, t1, h2, t2)
+  }
+});
+lscomp2$2 = function lscomp2$(sze, h1, t1, ls) {
+  let param0, param1, h2, t2, lambda$this;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return lscomp1$2(sze, t1)
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    h2 = param0;
+    t2 = param1;
+    lambda$this = runtime.safeCall(lambda16(sze, h1, t1, h2, t2));
+    return NofibPrelude.lazy(lambda$this)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp22 = function lscomp2(sze, h1, t1) {
+  return (ls) => {
+    return lscomp2$2(sze, h1, t1, ls)
+  }
+};
+lscomp1$2 = function lscomp1$(sze, ls) {
+  let param0, param1, h1, t1, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.lazy(lambda15)
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    h1 = param0;
+    t1 = param1;
+    tmp = NofibPrelude.enumFromTo(1, sze);
+    return lscomp2$2(sze, h1, t1, tmp)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp12 = function lscomp1(sze) {
+  return (ls) => {
+    return lscomp1$2(sze, ls)
+  }
+};
+lambda17 = (undefined, function () {
+  return NofibPrelude.LzNil
+});
+lambda11 = (undefined, function () {
+  return NofibPrelude.LzNil
+});
+lambda13 = (undefined, function () {
+  return NofibPrelude.LzNil
+});
+lambda$7 = function lambda$(h) {
+  let tmp;
+  tmp = NofibPrelude.lazy(lambda13);
+  return NofibPrelude.LzCons(h, tmp)
+};
+lambda12 = (undefined, function (h) {
+  return () => {
+    return lambda$7(h)
+  }
+});
+lambda14 = (undefined, function () {
+  return NofibPrelude.LzNil
+});
+lscomp4 = function lscomp(ls) {
+  let scrut, param0, param1, first1, first0, y, x, t, scrut1, tmp;
+  scrut = NofibPrelude.force(ls);
+  if (scrut instanceof NofibPrelude.LzNil.class) {
+    return NofibPrelude.Nil
+  } else if (scrut instanceof NofibPrelude.LzCons.class) {
+    param0 = scrut.head;
+    param1 = scrut.tail;
+    if (globalThis.Array.isArray(param0) && param0.length === 2) {
+      first0 = param0[0];
+      first1 = param0[1];
+      y = first0;
+      x = first1;
+      t = param1;
+      scrut1 = y === 1;
+      if (scrut1 === true) {
+        tmp = lscomp4(t);
+        return NofibPrelude.Cons(x, tmp)
+      } else {
+        return lscomp4(t)
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda9 = (undefined, function () {
+  return NofibPrelude.LzNil
+});
+lambda$6 = function lambda$(x, t) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = knights1.deleteFirst(x);
+  tmp1 = knights1.possibleMoves(tmp);
+  tmp2 = NofibPrelude.listLen(tmp1);
+  tmp3 = lscomp3(t);
+  return NofibPrelude.LzCons([
+    tmp2,
+    x
+  ], tmp3)
+};
+lambda10 = (undefined, function (x, t) {
+  return () => {
+    return lambda$6(x, t)
+  }
+});
+lscomp3 = function lscomp(ls) {
+  let param0, param1, x, t, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.lazy(lambda9)
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    x = param0;
+    t = param1;
+    tmp = runtime.safeCall(lambda10(x, t));
+    return NofibPrelude.lazy(tmp)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda$5 = function lambda$(board, b) {
+  return knights1.moveKnight(board, b)
+};
+lambda8 = (undefined, function (board) {
+  return (b) => {
+    return lambda$5(board, b)
+  }
+});
+lscomp$ = function lscomp$(board, ls) {
+  let param0, param1, x, t, scrut, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    x = param0;
+    t = param1;
+    scrut = knights1.canMove(board, x);
+    if (scrut === true) {
+      tmp = lscomp$(board, t);
+      return NofibPrelude.Cons(x, tmp)
+    } else {
+      return lscomp$(board, t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp = function lscomp(board) {
+  return (ls) => {
+    return lscomp$(board, ls)
+  }
+};
+logTen = function logTen(x) {
+  let scrut, tmp, tmp1;
+  scrut = x === 0;
+  if (scrut === true) {
+    return 0
+  } else {
+    tmp = NofibPrelude.intDiv(x, 10);
+    tmp1 = logTen(tmp);
+    return 1 + tmp1
+  }
+};
+find = function find(x, xs) {
+  let param0, param1, y, xs1, scrut, tmp;
+  if (xs instanceof NofibPrelude.Nil.class) {
+    throw globalThis.Error("Tile not used");
+  } else if (xs instanceof NofibPrelude.Cons.class) {
+    param0 = xs.head;
+    param1 = xs.tail;
+    y = param0;
+    xs1 = param1;
+    scrut = NofibPrelude.eqTup2(x, y);
+    if (scrut === true) {
+      tmp = NofibPrelude.listLen(xs1);
+      return 1 + tmp
+    } else {
+      return find(x, xs1)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda$4 = function lambda$(ts_) {
+  return knights1.myLast(ts_)
+};
+lambda7 = (undefined, function (ts_) {
+  return () => {
+    return lambda$4(ts_)
+  }
+});
+lambda$3 = function lambda$(t) {
+  return t
+};
+lambda6 = (undefined, function (t) {
+  return () => {
+    return lambda$3(t)
+  }
+});
+lambda = (undefined, function () {
+  return NofibPrelude.LzNil
+});
+lambda1 = (undefined, function () {
+  return NofibPrelude.LzNil
+});
+lambda$2 = function lambda$(x, h, t) {
+  let tmp;
+  tmp = lscomp1$1(x, t);
+  return NofibPrelude.LzCons(h, tmp)
+};
+lambda2 = (undefined, function (x, h, t) {
+  return () => {
+    return lambda$2(x, h, t)
+  }
+});
+lscomp1$1 = function lscomp1$(x, ls) {
+  let scrut, param0, param1, h, t, scrut1, lambda$this;
+  scrut = NofibPrelude.force(ls);
+  if (scrut instanceof NofibPrelude.LzNil.class) {
+    return NofibPrelude.lazy(lambda1)
+  } else if (scrut instanceof NofibPrelude.LzCons.class) {
+    param0 = scrut.head;
+    param1 = scrut.tail;
+    h = param0;
+    t = param1;
+    scrut1 = knights1.intChessSetComp(h, x);
+    if (scrut1 === true) {
+      lambda$this = runtime.safeCall(lambda2(x, h, t));
+      return NofibPrelude.lazy(lambda$this)
+    } else {
+      return lscomp1$1(x, t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp11 = function lscomp1(x) {
+  return (ls) => {
+    return lscomp1$1(x, ls)
+  }
+};
+lambda3 = (undefined, function () {
+  return NofibPrelude.LzNil
+});
+lambda$1 = function lambda$(x, h, t) {
+  let tmp;
+  tmp = lscomp2$1(x, t);
+  return NofibPrelude.LzCons(h, tmp)
+};
+lambda4 = (undefined, function (x, h, t) {
+  return () => {
+    return lambda$1(x, h, t)
+  }
+});
+lscomp2$1 = function lscomp2$(x, ls) {
+  let scrut, param0, param1, h, t, scrut1, tmp, lambda$this;
+  scrut = NofibPrelude.force(ls);
+  if (scrut instanceof NofibPrelude.LzNil.class) {
+    return NofibPrelude.lazy(lambda3)
+  } else if (scrut instanceof NofibPrelude.LzCons.class) {
+    param0 = scrut.head;
+    param1 = scrut.tail;
+    h = param0;
+    t = param1;
+    tmp = knights1.intChessSetComp(h, x);
+    scrut1 = BenchmarkPrelude.not(tmp);
+    if (scrut1 === true) {
+      lambda$this = runtime.safeCall(lambda4(x, h, t));
+      return NofibPrelude.lazy(lambda$this)
+    } else {
+      return lscomp2$1(x, t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp21 = function lscomp2(x) {
+  return (ls) => {
+    return lscomp2$1(x, ls)
+  }
+};
+lambda$ = function lambda$(x, xs) {
+  let tmp, tmp1;
+  tmp = lscomp2$1(x, xs);
+  tmp1 = knights1.quickSortIntChessSet(tmp);
+  return NofibPrelude.LzCons(x, tmp1)
+};
+lambda5 = (undefined, function (x, xs) {
+  return () => {
+    return lambda$(x, xs)
+  }
+});
+lscomp1$ = function lscomp1$(x, ls) {
+  let param0, param1, h, t, scrut, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    h = param0;
+    t = param1;
+    scrut = knights1.intintComp(h, x);
+    if (scrut === true) {
+      tmp = lscomp1$(x, t);
+      return NofibPrelude.Cons(h, tmp)
+    } else {
+      return lscomp1$(x, t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp1 = function lscomp1(x) {
+  return (ls) => {
+    return lscomp1$(x, ls)
+  }
+};
+lscomp2$ = function lscomp2$(x, ls) {
+  let param0, param1, h, t, scrut, tmp, tmp1;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    h = param0;
+    t = param1;
+    tmp = knights1.intintComp(h, x);
+    scrut = BenchmarkPrelude.not(tmp);
+    if (scrut === true) {
+      tmp1 = lscomp2$(x, t);
+      return NofibPrelude.Cons(h, tmp1)
+    } else {
+      return lscomp2$(x, t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp2 = function lscomp2(x) {
+  return (ls) => {
+    return lscomp2$(x, ls)
+  }
+};
+go = function go(h, t) {
+  let param0, param1, head, t1;
+  if (t instanceof NofibPrelude.Nil.class) {
+    return h
+  } else if (t instanceof NofibPrelude.Cons.class) {
+    param0 = t.head;
+    param1 = t.tail;
+    head = param0;
+    t1 = param1;
+    return go(head, t1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
 knights1 = class knights {
   static {
     knights1 = knights;
-    let tmp, lambda;
+    let tmp, lambda23;
     this.createQueue = NofibPrelude.Nil;
     this.Board = function Board(a1, b1, c1, d1) {
       return new Board.class(a1, b1, c1, d1);
@@ -88,7 +552,7 @@ knights1 = class knights {
     };
     this.RD = new RD$class;
     this.RD.class = RD$class;
-    lambda = (undefined, function () {
+    lambda23 = (undefined, function () {
       let tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
       tmp1 = NofibPrelude.nofibStringToList("8");
       tmp2 = NofibPrelude.nofibStringToList("1");
@@ -98,7 +562,7 @@ knights1 = class knights {
       tmp6 = NofibPrelude.nofibListToString(tmp5);
       return BenchmarkPrelude.print(tmp6)
     });
-    tmp = lambda;
+    tmp = lambda23;
     BenchmarkPrelude.benchmark(tmp)
   }
   static myIsDigit(c) {
@@ -172,21 +636,7 @@ knights1 = class knights {
     }
   } 
   static myLast(a_t1) {
-    let go, param0, param1, a, t;
-    go = function go(h, t1) {
-      let param01, param11, head, t2;
-      if (t1 instanceof NofibPrelude.Nil.class) {
-        return h
-      } else if (t1 instanceof NofibPrelude.Cons.class) {
-        param01 = t1.head;
-        param11 = t1.tail;
-        head = param01;
-        t2 = param11;
-        return go(head, t2)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let param0, param1, a, t;
     if (a_t1 instanceof NofibPrelude.Cons.class) {
       param0 = a_t1.head;
       param1 = a_t1.tail;
@@ -198,7 +648,7 @@ knights1 = class knights {
     }
   } 
   static quickSortIntInt(xs) {
-    let lscomp2, lscomp1, param0, param1, x, xs1, tmp, tmp1, tmp2, tmp3, tmp4;
+    let param0, param1, x, xs1, tmp, tmp1, tmp2, tmp3, tmp4;
     if (xs instanceof NofibPrelude.Nil.class) {
       return NofibPrelude.Nil
     } else if (xs instanceof NofibPrelude.Cons.class) {
@@ -206,50 +656,9 @@ knights1 = class knights {
       param1 = xs.tail;
       x = param0;
       xs1 = param1;
-      lscomp1 = function lscomp1(ls) {
-        let param01, param11, h, t, scrut, tmp5;
-        if (ls instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Nil
-        } else if (ls instanceof NofibPrelude.Cons.class) {
-          param01 = ls.head;
-          param11 = ls.tail;
-          h = param01;
-          t = param11;
-          scrut = knights.intintComp(h, x);
-          if (scrut === true) {
-            tmp5 = lscomp1(t);
-            return NofibPrelude.Cons(h, tmp5)
-          } else {
-            return lscomp1(t)
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      lscomp2 = function lscomp2(ls) {
-        let param01, param11, h, t, scrut, tmp5, tmp6;
-        if (ls instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Nil
-        } else if (ls instanceof NofibPrelude.Cons.class) {
-          param01 = ls.head;
-          param11 = ls.tail;
-          h = param01;
-          t = param11;
-          tmp5 = knights.intintComp(h, x);
-          scrut = BenchmarkPrelude.not(tmp5);
-          if (scrut === true) {
-            tmp6 = lscomp2(t);
-            return NofibPrelude.Cons(h, tmp6)
-          } else {
-            return lscomp2(t)
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      tmp = lscomp1(xs1);
+      tmp = lscomp1$(x, xs1);
       tmp1 = knights.quickSortIntInt(tmp);
-      tmp2 = lscomp2(xs1);
+      tmp2 = lscomp2$(x, xs1);
       tmp3 = knights.quickSortIntInt(tmp2);
       tmp4 = NofibPrelude.Cons(x, tmp3);
       return NofibPrelude.append(tmp1, tmp4)
@@ -258,84 +667,18 @@ knights1 = class knights {
     }
   } 
   static quickSortIntChessSet(xs1) {
-    let lscomp2, lscomp1, scrut, param0, param1, x, xs2, tmp, tmp1, tmp2, tmp3, lambda, lambda1;
+    let scrut, param0, param1, x, xs2, tmp, tmp1, tmp2, tmp3;
     scrut = NofibPrelude.force(xs1);
     if (scrut instanceof NofibPrelude.LzNil.class) {
-      lambda = (undefined, function () {
-        return NofibPrelude.LzNil
-      });
       return NofibPrelude.lazy(lambda)
     } else if (scrut instanceof NofibPrelude.LzCons.class) {
       param0 = scrut.head;
       param1 = scrut.tail;
       x = param0;
       xs2 = param1;
-      lscomp1 = function lscomp1(ls) {
-        let scrut1, param01, param11, h, t, scrut2, lambda2, lambda3;
-        scrut1 = NofibPrelude.force(ls);
-        if (scrut1 instanceof NofibPrelude.LzNil.class) {
-          lambda2 = (undefined, function () {
-            return NofibPrelude.LzNil
-          });
-          return NofibPrelude.lazy(lambda2)
-        } else if (scrut1 instanceof NofibPrelude.LzCons.class) {
-          param01 = scrut1.head;
-          param11 = scrut1.tail;
-          h = param01;
-          t = param11;
-          scrut2 = knights.intChessSetComp(h, x);
-          if (scrut2 === true) {
-            lambda3 = (undefined, function () {
-              let tmp4;
-              tmp4 = lscomp1(t);
-              return NofibPrelude.LzCons(h, tmp4)
-            });
-            return NofibPrelude.lazy(lambda3)
-          } else {
-            return lscomp1(t)
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      lscomp2 = function lscomp2(ls) {
-        let scrut1, param01, param11, h, t, scrut2, tmp4, lambda2, lambda3;
-        scrut1 = NofibPrelude.force(ls);
-        if (scrut1 instanceof NofibPrelude.LzNil.class) {
-          lambda2 = (undefined, function () {
-            return NofibPrelude.LzNil
-          });
-          return NofibPrelude.lazy(lambda2)
-        } else if (scrut1 instanceof NofibPrelude.LzCons.class) {
-          param01 = scrut1.head;
-          param11 = scrut1.tail;
-          h = param01;
-          t = param11;
-          tmp4 = knights.intChessSetComp(h, x);
-          scrut2 = BenchmarkPrelude.not(tmp4);
-          if (scrut2 === true) {
-            lambda3 = (undefined, function () {
-              let tmp5;
-              tmp5 = lscomp2(t);
-              return NofibPrelude.LzCons(h, tmp5)
-            });
-            return NofibPrelude.lazy(lambda3)
-          } else {
-            return lscomp2(t)
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      tmp = lscomp1(xs2);
+      tmp = lscomp1$1(x, xs2);
       tmp1 = knights.quickSortIntChessSet(tmp);
-      lambda1 = (undefined, function () {
-        let tmp4, tmp5;
-        tmp4 = lscomp2(xs2);
-        tmp5 = knights.quickSortIntChessSet(tmp4);
-        return NofibPrelude.LzCons(x, tmp5)
-      });
-      tmp2 = lambda1;
+      tmp2 = runtime.safeCall(lambda5(x, xs2));
       tmp3 = NofibPrelude.lazy(tmp2);
       return NofibPrelude.append_lz_lz(tmp1, tmp3)
     } else {
@@ -413,11 +756,9 @@ knights1 = class knights {
     return NofibPrelude.Cons(x2, q3)
   } 
   static createBoard(x3, t) {
-    let tmp, tmp1, lambda;
-    lambda = (undefined, function () {
-      return t
-    });
-    tmp = NofibPrelude.lazy(lambda);
+    let tmp, tmp1, lambda$this;
+    lambda$this = runtime.safeCall(lambda6(t));
+    tmp = NofibPrelude.lazy(lambda$this);
     tmp1 = NofibPrelude.Cons(t, NofibPrelude.Nil);
     return knights.Board(x3, 1, tmp, tmp1)
   } 
@@ -466,7 +807,7 @@ knights1 = class knights {
     }
   } 
   static deleteFirst(b3) {
-    let param0, param1, param2, param3, s, n, f, ts, ts_, tmp, tmp1, tmp2, lambda;
+    let param0, param1, param2, param3, s, n, f, ts, ts_, tmp, tmp1, tmp2, lambda$this;
     if (b3 instanceof knights.Board.class) {
       param0 = b3.a;
       param1 = b3.b;
@@ -479,10 +820,8 @@ knights1 = class knights {
       tmp = knights.myInit(ts);
       ts_ = tmp;
       tmp1 = n - 1;
-      lambda = (undefined, function () {
-        return knights.myLast(ts_)
-      });
-      tmp2 = NofibPrelude.lazy(lambda);
+      lambda$this = runtime.safeCall(lambda7(ts_));
+      tmp2 = NofibPrelude.lazy(lambda$this);
       return knights.Board(s, tmp1, tmp2, ts_)
     } else {
       throw new globalThis.Error("match error");
@@ -537,33 +876,13 @@ knights1 = class knights {
     }
   } 
   static pieceAtTile(x5, b7) {
-    let find, param0, param1, param2, param3, ts;
+    let param0, param1, param2, param3, ts;
     if (b7 instanceof knights.Board.class) {
       param0 = b7.a;
       param1 = b7.b;
       param2 = b7.c;
       param3 = b7.d;
       ts = param3;
-      find = function find(x6, xs6) {
-        let param01, param11, y, xs7, scrut, tmp;
-        if (xs6 instanceof NofibPrelude.Nil.class) {
-          throw globalThis.Error("Tile not used");
-        } else if (xs6 instanceof NofibPrelude.Cons.class) {
-          param01 = xs6.head;
-          param11 = xs6.tail;
-          y = param01;
-          xs7 = param11;
-          scrut = NofibPrelude.eqTup2(x6, y);
-          if (scrut === true) {
-            tmp = NofibPrelude.listLen(xs7);
-            return 1 + tmp
-          } else {
-            return find(x6, xs7)
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
       return find(x5, ts)
     } else {
       throw new globalThis.Error("match error");
@@ -632,18 +951,7 @@ knights1 = class knights {
     }
   } 
   static spaces(s, y1) {
-    let logTen, tmp, tmp1, tmp2, tmp3;
-    logTen = function logTen(x7) {
-      let scrut, tmp4, tmp5;
-      scrut = x7 === 0;
-      if (scrut === true) {
-        return 0
-      } else {
-        tmp4 = NofibPrelude.intDiv(x7, 10);
-        tmp5 = logTen(tmp4);
-        return 1 + tmp5
-      }
-    };
+    let tmp, tmp1, tmp2, tmp3;
     tmp = logTen(s);
     tmp1 = logTen(y1);
     tmp2 = tmp - tmp1;
@@ -1012,27 +1320,7 @@ knights1 = class knights {
     return tmp3 && tmp4
   } 
   static possibleMoves(board5) {
-    let lscomp, res, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8;
-    lscomp = function lscomp(ls) {
-      let param0, param1, x7, t3, scrut, tmp9;
-      if (ls instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (ls instanceof NofibPrelude.Cons.class) {
-        param0 = ls.head;
-        param1 = ls.tail;
-        x7 = param0;
-        t3 = param1;
-        scrut = knights.canMove(board5, x7);
-        if (scrut === true) {
-          tmp9 = lscomp(t3);
-          return NofibPrelude.Cons(x7, tmp9)
-        } else {
-          return lscomp(t3)
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let res, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8;
     tmp = NofibPrelude.Cons(knights.RD, NofibPrelude.Nil);
     tmp1 = NofibPrelude.Cons(knights.RU, tmp);
     tmp2 = NofibPrelude.Cons(knights.LD, tmp1);
@@ -1041,7 +1329,7 @@ knights1 = class knights {
     tmp5 = NofibPrelude.Cons(knights.DL, tmp4);
     tmp6 = NofibPrelude.Cons(knights.UR, tmp5);
     tmp7 = NofibPrelude.Cons(knights.UL, tmp6);
-    tmp8 = lscomp(tmp7);
+    tmp8 = lscomp$(board5, tmp7);
     res = tmp8;
     return res
   } 
@@ -1052,92 +1340,30 @@ knights1 = class knights {
     return tmp1 === 0
   } 
   static allDescend(board7) {
-    let tmp, lambda;
+    let tmp, lambda$this;
     tmp = knights.possibleMoves(board7);
-    lambda = (undefined, function (b9) {
-      return knights.moveKnight(board7, b9)
-    });
-    return NofibPrelude.map(lambda, tmp)
+    lambda$this = runtime.safeCall(lambda8(board7));
+    return NofibPrelude.map(lambda$this, tmp)
   } 
   static descAndNo(board8) {
-    let lscomp, tmp;
-    lscomp = function lscomp(ls) {
-      let param0, param1, x7, t3, tmp1, lambda, lambda1;
-      if (ls instanceof NofibPrelude.Nil.class) {
-        lambda = (undefined, function () {
-          return NofibPrelude.LzNil
-        });
-        return NofibPrelude.lazy(lambda)
-      } else if (ls instanceof NofibPrelude.Cons.class) {
-        param0 = ls.head;
-        param1 = ls.tail;
-        x7 = param0;
-        t3 = param1;
-        lambda1 = (undefined, function () {
-          let tmp2, tmp3, tmp4, tmp5;
-          tmp2 = knights.deleteFirst(x7);
-          tmp3 = knights.possibleMoves(tmp2);
-          tmp4 = NofibPrelude.listLen(tmp3);
-          tmp5 = lscomp(t3);
-          return NofibPrelude.LzCons([
-            tmp4,
-            x7
-          ], tmp5)
-        });
-        tmp1 = lambda1;
-        return NofibPrelude.lazy(tmp1)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let tmp;
     tmp = knights.allDescend(board8);
-    return lscomp(tmp)
+    return lscomp3(tmp)
   } 
   static singleDescend(board9) {
-    let lscomp, tmp;
-    lscomp = function lscomp(ls) {
-      let scrut, param0, param1, first1, first0, y2, x7, t3, scrut1, tmp1;
-      scrut = NofibPrelude.force(ls);
-      if (scrut instanceof NofibPrelude.LzNil.class) {
-        return NofibPrelude.Nil
-      } else if (scrut instanceof NofibPrelude.LzCons.class) {
-        param0 = scrut.head;
-        param1 = scrut.tail;
-        if (globalThis.Array.isArray(param0) && param0.length === 2) {
-          first0 = param0[0];
-          first1 = param0[1];
-          y2 = first0;
-          x7 = first1;
-          t3 = param1;
-          scrut1 = y2 === 1;
-          if (scrut1 === true) {
-            tmp1 = lscomp(t3);
-            return NofibPrelude.Cons(x7, tmp1)
-          } else {
-            return lscomp(t3)
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let tmp;
     tmp = knights.descAndNo(board9);
-    return lscomp(tmp)
+    return lscomp4(tmp)
   } 
   static descendents(board10) {
-    let singles, scrut, res, scrut1, param0, param1, h, scrut2, scrut3, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, lambda, lambda1, lambda2;
+    let singles, scrut, res, scrut1, param0, param1, h, scrut2, scrut3, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, lambda$this;
     tmp = knights.canJumpFirst(board10);
     tmp1 = knights.firstPiece(board10);
     tmp2 = knights.addPiece(tmp1, board10);
     tmp3 = knights.deadEnd(tmp2);
     scrut3 = tmp && tmp3;
     if (scrut3 === true) {
-      lambda = (undefined, function () {
-        return NofibPrelude.LzNil
-      });
-      return NofibPrelude.lazy(lambda)
+      return NofibPrelude.lazy(lambda11)
     } else {
       tmp4 = knights.singleDescend(board10);
       singles = tmp4;
@@ -1156,15 +1382,8 @@ knights1 = class knights {
             param1 = singles.tail;
             h = param0;
             if (param1 instanceof NofibPrelude.Nil.class) {
-              lambda1 = (undefined, function () {
-                let tmp10, lambda3;
-                lambda3 = (undefined, function () {
-                  return NofibPrelude.LzNil
-                });
-                tmp10 = NofibPrelude.lazy(lambda3);
-                return NofibPrelude.LzCons(h, tmp10)
-              });
-              tmp9 = NofibPrelude.lazy(lambda1);
+              lambda$this = runtime.safeCall(lambda12(h));
+              tmp9 = NofibPrelude.lazy(lambda$this);
             } else {
               throw globalThis.Error("unreachable");
             }
@@ -1173,10 +1392,7 @@ knights1 = class knights {
           }
           tmp8 = tmp9;
         } else {
-          lambda2 = (undefined, function () {
-            return NofibPrelude.LzNil
-          });
-          tmp8 = NofibPrelude.lazy(lambda2);
+          tmp8 = NofibPrelude.lazy(lambda14);
         }
       }
       res = tmp8;
@@ -1203,60 +1419,17 @@ knights1 = class knights {
     }
   } 
   static root(sze) {
-    let lscomp1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, lambda;
-    lscomp1 = function lscomp1(ls) {
-      let lscomp2, param0, param1, h1, t11, tmp10, lambda1;
-      if (ls instanceof NofibPrelude.Nil.class) {
-        lambda1 = (undefined, function () {
-          return NofibPrelude.LzNil
-        });
-        return NofibPrelude.lazy(lambda1)
-      } else if (ls instanceof NofibPrelude.Cons.class) {
-        param0 = ls.head;
-        param1 = ls.tail;
-        h1 = param0;
-        t11 = param1;
-        lscomp2 = function lscomp2(ls1) {
-          let param01, param11, h2, t21, lambda2;
-          if (ls1 instanceof NofibPrelude.Nil.class) {
-            return lscomp1(t11)
-          } else if (ls1 instanceof NofibPrelude.Cons.class) {
-            param01 = ls1.head;
-            param11 = ls1.tail;
-            h2 = param01;
-            t21 = param11;
-            lambda2 = (undefined, function () {
-              let tmp11;
-              tmp11 = lscomp2(t21);
-              return NofibPrelude.LzCons([
-                h1,
-                h2
-              ], tmp11)
-            });
-            return NofibPrelude.lazy(lambda2)
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        };
-        tmp10 = NofibPrelude.enumFromTo(1, sze);
-        return lscomp2(tmp10)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9;
     tmp = sze * sze;
     tmp1 = 1 - tmp;
     tmp2 = NofibPrelude.repeat(tmp1);
     tmp3 = NofibPrelude.enumFromTo(1, sze);
-    tmp4 = lscomp1(tmp3);
+    tmp4 = lscomp1$2(sze, tmp3);
     tmp5 = sze * sze;
     tmp6 = NofibPrelude.replicate_lz(tmp5, sze);
     tmp7 = NofibPrelude.zipWith_lz_lz(knights.startTour, tmp4, tmp6);
     tmp8 = NofibPrelude.zip_lz_lz(tmp2, tmp7);
-    lambda = (undefined, function () {
-      return NofibPrelude.LzNil
-    });
-    tmp9 = NofibPrelude.lazy(lambda);
+    tmp9 = NofibPrelude.lazy(lambda17);
     return NofibPrelude.append_lz_lz(tmp8, tmp9)
   } 
   static grow(x_y2) {
@@ -1325,25 +1498,15 @@ knights1 = class knights {
     return NofibPrelude.append_lz_lz(list2, q4)
   } 
   static depthSearch(q5, growFn, finFn) {
-    let scrut, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, lambda, lambda1;
+    let scrut, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
     scrut1 = knights.emptyQueue_lz(q5);
     if (scrut1 === true) {
-      lambda = (undefined, function () {
-        return NofibPrelude.LzNil
-      });
-      return NofibPrelude.lazy(lambda)
+      return NofibPrelude.lazy(lambda18)
     } else {
       tmp = knights.inquireFront_lz(q5);
       scrut = runtime.safeCall(finFn(tmp));
       if (scrut === true) {
-        lambda1 = (undefined, function () {
-          let tmp6, tmp7, tmp8;
-          tmp6 = knights.inquireFront_lz(q5);
-          tmp7 = knights.removeFront_lz(q5);
-          tmp8 = knights.depthSearch(tmp7, growFn, finFn);
-          return NofibPrelude.LzCons(tmp6, tmp8)
-        });
-        tmp1 = lambda1;
+        tmp1 = runtime.safeCall(lambda19(q5, growFn, finFn));
         return NofibPrelude.lazy(tmp1)
       } else {
         tmp2 = knights.inquireFront_lz(q5);
@@ -1355,59 +1518,8 @@ knights1 = class knights {
     }
   } 
   static printTour(ss) {
-    let pp, strToInt, scrut, param0, param1, size2, param01, param11, number, tmp, tmp1, tmp2, lambda;
-    strToInt = function strToInt(y2, xs9) {
-      let param02, param12, x8, xs10, tmp3, tmp4, tmp5, tmp6;
-      if (xs9 instanceof NofibPrelude.Nil.class) {
-        return y2
-      } else if (xs9 instanceof NofibPrelude.Cons.class) {
-        param02 = xs9.head;
-        param12 = xs9.tail;
-        x8 = param02;
-        xs10 = param12;
-        tmp3 = 10 * y2;
-        tmp4 = runtime.safeCall(x8.codePointAt(0));
-        tmp5 = tmp4 - 48;
-        tmp6 = tmp3 + tmp5;
-        return strToInt(tmp6, xs10)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    pp = function pp(xs9) {
-      let param02, param12, first1, first0, x8, y2, xs10, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11;
-      if (xs9 instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (xs9 instanceof NofibPrelude.Cons.class) {
-        param02 = xs9.head;
-        param12 = xs9.tail;
-        if (globalThis.Array.isArray(param02) && param02.length === 2) {
-          first0 = param02[0];
-          first1 = param02[1];
-          x8 = first0;
-          y2 = first1;
-          xs10 = param12;
-          tmp3 = NofibPrelude.nofibStringToList("\nKnights tour with ");
-          tmp4 = NofibPrelude.stringOfInt(x8);
-          tmp5 = NofibPrelude.nofibStringToList(tmp4);
-          tmp6 = NofibPrelude.nofibStringToList(" backtracking moves\n");
-          tmp7 = knights.showChessSet(y2);
-          tmp8 = pp(xs10);
-          tmp9 = NofibPrelude.append(tmp7, tmp8);
-          tmp10 = NofibPrelude.append(tmp6, tmp9);
-          tmp11 = NofibPrelude.append(tmp5, tmp10);
-          return NofibPrelude.append(tmp3, tmp11)
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    lambda = (undefined, function (x8) {
-      return strToInt(0, x8)
-    });
-    scrut = NofibPrelude.map(lambda, ss);
+    let scrut, param0, param1, size2, param01, param11, number, tmp, tmp1, tmp2;
+    scrut = NofibPrelude.map(lambda20, ss);
     if (scrut instanceof NofibPrelude.Cons.class) {
       param0 = scrut.head;
       param1 = scrut.tail;
@@ -1432,28 +1544,7 @@ knights1 = class knights {
     }
   } 
   static testKnights_nofib(ss1) {
-    let argsOk, all_digits, usageString, scrut;
-    all_digits = function all_digits(s2) {
-      let lambda;
-      lambda = (undefined, function (a, b10) {
-        let tmp;
-        tmp = knights.myIsDigit(a);
-        return tmp && b10
-      });
-      return NofibPrelude.foldr(lambda, true, s2)
-    };
-    argsOk = function argsOk(ss2) {
-      let tmp, tmp1, tmp2, lambda;
-      tmp = NofibPrelude.listLen(ss2);
-      tmp1 = tmp === 2;
-      lambda = (undefined, function (a, b10) {
-        let tmp3;
-        tmp3 = all_digits(a);
-        return tmp3 && b10
-      });
-      tmp2 = NofibPrelude.foldr(lambda, true, ss2);
-      return tmp1 && tmp2
-    };
+    let usageString, scrut;
     usageString = "\nUsage: knights <board size> <no solutions> \n";
     scrut = argsOk(ss1);
     if (scrut === true) {

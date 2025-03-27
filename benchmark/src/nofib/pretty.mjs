@@ -2,11 +2,97 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let pretty1;
+let pp_word, pretty_stuff, pretty1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, lambda11, lambda$, lambda$1, lambda$2, pretty_stuff$, lambda$3;
+pp_word = function pp_word(a, b) {
+  let tmp;
+  tmp = NofibPrelude.nofibStringToList("xxxxx");
+  return pretty1.ppStr(tmp, a, b)
+};
+lambda6 = (undefined, function (a, b) {
+  let tmp;
+  tmp = NofibPrelude.nofibStringToList("This is a string");
+  return pretty1.ppStr(tmp, a, b)
+});
+lambda7 = (undefined, function (a, b) {
+  return pretty1.ppChar("@", a, b)
+});
+lambda8 = (undefined, function (a, b) {
+  let tmp;
+  tmp = - 42;
+  return pretty1.ppInt(tmp, a, b)
+});
+lambda10 = (undefined, function (a, b) {
+  let tmp;
+  tmp = NofibPrelude.nofibStringToList("This is the label");
+  return pretty1.ppStr(tmp, a, b)
+});
+lambda$3 = function lambda$(pp_words, a, b) {
+  let tmp;
+  tmp = pretty1.ppCat(pp_words);
+  return pretty1.ppHang(lambda10, 8, tmp, a, b)
+};
+lambda9 = (undefined, function (pp_words) {
+  return (a, b) => {
+    return lambda$3(pp_words, a, b)
+  }
+});
+lambda11 = (undefined, function (a, b) {
+  return pretty1.pp_SP(a, b)
+});
+pretty_stuff$ = function pretty_stuff$(pp_words, a, b) {
+  let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, lambda$this;
+  tmp = NofibPrelude.Cons(lambda6, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(lambda7, tmp);
+  tmp2 = NofibPrelude.Cons(lambda8, tmp1);
+  tmp3 = pretty1.ppBesides(tmp2);
+  lambda$this = runtime.safeCall(lambda9(pp_words));
+  tmp4 = NofibPrelude.Cons(lambda$this, NofibPrelude.Nil);
+  tmp5 = NofibPrelude.Cons(lambda11, tmp4);
+  tmp6 = NofibPrelude.Cons(tmp3, tmp5);
+  return pretty1.ppAboves(tmp6, a, b)
+};
+pretty_stuff = function pretty_stuff(pp_words) {
+  return (a, b) => {
+    return pretty_stuff$(pp_words, a, b)
+  }
+};
+lambda$2 = function lambda$(a, b, c, d) {
+  return pretty1.ppAbove(a, b, c, d)
+};
+lambda5 = (undefined, function (a, b) {
+  return (c, d) => {
+    return lambda$2(a, b, c, d)
+  }
+});
+lambda4 = (undefined, function (a, b) {
+  return runtime.safeCall(lambda5(a, b))
+});
+lambda$1 = function lambda$(a, b, c, d) {
+  return pretty1.ppBesideSP(a, b, c, d)
+};
+lambda3 = (undefined, function (a, b) {
+  return (c, d) => {
+    return lambda$1(a, b, c, d)
+  }
+});
+lambda2 = (undefined, function (a, b) {
+  return runtime.safeCall(lambda3(a, b))
+});
+lambda$ = function lambda$(a, b, c, d) {
+  return pretty1.ppBeside(a, b, c, d)
+};
+lambda1 = (undefined, function (a, b) {
+  return (c, d) => {
+    return lambda$(a, b, c, d)
+  }
+});
+lambda = (undefined, function (a, b) {
+  return runtime.safeCall(lambda1(a, b))
+});
 pretty1 = class pretty {
   static {
     pretty1 = pretty;
-    let lambda;
+    let lambda12;
     this.CSeq = class CSeq {
       constructor() {}
       toString() { return "CSeq"; }
@@ -119,12 +205,12 @@ pretty1 = class pretty {
       }
       toString() { return "MkPrettyRep(" + globalThis.Predef.render(this.cseq) + ", " + globalThis.Predef.render(this.n) + ", " + globalThis.Predef.render(this.b1) + ", " + globalThis.Predef.render(this.b2) + ")"; }
     };
-    lambda = (undefined, function () {
+    lambda12 = (undefined, function () {
       let tmp;
       tmp = pretty.testPretty_nofib();
       return NofibPrelude.nofibListToString(tmp)
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda12)
   }
   static cAppend(cs1, cs2) {
     return pretty.CAppend(cs1, cs2)
@@ -368,17 +454,9 @@ pretty1 = class pretty {
     }
   } 
   static ppBesides(ps) {
-    let lambda;
     if (ps instanceof NofibPrelude.Nil.class) {
       return pretty.ppNil
     } else {
-      lambda = (undefined, function (a10, b10) {
-        let lambda1;
-        lambda1 = (undefined, function (c2, d) {
-          return pretty.ppBeside(a10, b10, c2, d)
-        });
-        return lambda1
-      });
       return NofibPrelude.foldr1(lambda, ps)
     }
   } 
@@ -441,18 +519,10 @@ pretty1 = class pretty {
     }
   } 
   static ppCat(ps1) {
-    let lambda;
     if (ps1 instanceof NofibPrelude.Nil.class) {
       return pretty.ppNil
     } else {
-      lambda = (undefined, function (a10, b10) {
-        let lambda1;
-        lambda1 = (undefined, function (c2, d) {
-          return pretty.ppBesideSP(a10, b10, c2, d)
-        });
-        return lambda1
-      });
-      return NofibPrelude.foldr1(lambda, ps1)
+      return NofibPrelude.foldr1(lambda2, ps1)
     }
   } 
   static ppAbove(p13, p22, width7, is_vert6) {
@@ -496,18 +566,11 @@ pretty1 = class pretty {
     }
   } 
   static ppAboves(ps2, a10, b10) {
-    let tmp, lambda;
+    let tmp;
     if (ps2 instanceof NofibPrelude.Nil.class) {
       return pretty.ppNil(a10, b10)
     } else {
-      lambda = (undefined, function (a11, b11) {
-        let lambda1;
-        lambda1 = (undefined, function (c2, d) {
-          return pretty.ppAbove(a11, b11, c2, d)
-        });
-        return lambda1
-      });
-      tmp = NofibPrelude.foldr1(lambda, ps2);
+      tmp = NofibPrelude.foldr1(lambda4, ps2);
       return runtime.safeCall(tmp(a10, b10))
     }
   } 
@@ -654,52 +717,11 @@ pretty1 = class pretty {
     }
   } 
   static testPretty_nofib() {
-    let pp_word, pretty_stuff, pp_words, tmp, tmp1, tmp2;
-    pp_word = function pp_word(a11, b11) {
-      let tmp3;
-      tmp3 = NofibPrelude.nofibStringToList("xxxxx");
-      return pretty.ppStr(tmp3, a11, b11)
-    };
-    pretty_stuff = function pretty_stuff(a11, b11) {
-      let tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, lambda, lambda1, lambda2, lambda3, lambda4;
-      lambda = (undefined, function (a12, b12) {
-        let tmp10;
-        tmp10 = NofibPrelude.nofibStringToList("This is a string");
-        return pretty.ppStr(tmp10, a12, b12)
-      });
-      tmp3 = NofibPrelude.Cons(lambda, NofibPrelude.Nil);
-      lambda1 = (undefined, function (a12, b12) {
-        return pretty.ppChar("@", a12, b12)
-      });
-      tmp4 = NofibPrelude.Cons(lambda1, tmp3);
-      lambda2 = (undefined, function (a12, b12) {
-        let tmp10;
-        tmp10 = - 42;
-        return pretty.ppInt(tmp10, a12, b12)
-      });
-      tmp5 = NofibPrelude.Cons(lambda2, tmp4);
-      tmp6 = pretty.ppBesides(tmp5);
-      lambda3 = (undefined, function (a12, b12) {
-        let tmp10, lambda5;
-        tmp10 = pretty.ppCat(pp_words);
-        lambda5 = (undefined, function (a13, b13) {
-          let tmp11;
-          tmp11 = NofibPrelude.nofibStringToList("This is the label");
-          return pretty.ppStr(tmp11, a13, b13)
-        });
-        return pretty.ppHang(lambda5, 8, tmp10, a12, b12)
-      });
-      tmp7 = NofibPrelude.Cons(lambda3, NofibPrelude.Nil);
-      lambda4 = (undefined, function (a12, b12) {
-        return pretty.pp_SP(a12, b12)
-      });
-      tmp8 = NofibPrelude.Cons(lambda4, tmp7);
-      tmp9 = NofibPrelude.Cons(tmp6, tmp8);
-      return pretty.ppAboves(tmp9, a11, b11)
-    };
+    let pp_words, tmp, tmp1, tmp2, pretty_stuff$this;
     tmp = NofibPrelude.replicate(50, pp_word);
     pp_words = tmp;
-    tmp1 = pretty.ppShow(80, pretty_stuff);
+    pretty_stuff$this = runtime.safeCall(pretty_stuff(pp_words));
+    tmp1 = pretty.ppShow(80, pretty_stuff$this);
     tmp2 = NofibPrelude.nofibStringToList("\n");
     return NofibPrelude.append(tmp1, tmp2)
   }

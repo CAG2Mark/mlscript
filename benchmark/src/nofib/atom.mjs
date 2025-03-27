@@ -2,11 +2,96 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let atom1;
+let lscomp, lscomp1, atom1, lambda, lambda1, lambda2, lambda$, lambda$1, lambda$2;
+lscomp1 = function lscomp(ls) {
+  let param0, param1, state, t, tmp, tmp1, tmp2;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    state = param0;
+    t = param1;
+    tmp = atom1.show(state);
+    tmp1 = NofibPrelude.stringConcat(tmp, "\n");
+    tmp2 = lscomp1(t);
+    return NofibPrelude.Cons(tmp1, tmp2)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda$2 = function lambda$(dt, x, y) {
+  return atom1.propagate(dt, x, y)
+};
+lambda2 = (undefined, function (dt) {
+  return (x, y) => {
+    return lambda$2(dt, x, y)
+  }
+});
+lambda$1 = function lambda$(law, dt, param, init) {
+  let stream, tmp, tmp1, tmp2, lambda$this;
+  tmp = atom1.runExperiment(law, dt, param, init);
+  stream = tmp;
+  tmp1 = runtime.safeCall(law(param, stream));
+  lambda$this = runtime.safeCall(lambda2(dt));
+  tmp2 = NofibPrelude.zipWith_lz_lz(lambda$this, tmp1, stream);
+  return NofibPrelude.LzCons(init, tmp2)
+};
+lambda1 = (undefined, function (law, dt, param, init) {
+  return () => {
+    return lambda$1(law, dt, param, init)
+  }
+});
+lscomp = function lscomp(ls) {
+  let param0, param1, component, t, tmp, tmp1, tmp2;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    component = param0;
+    t = param1;
+    tmp = NofibPrelude.stringOfFloat(component);
+    tmp1 = NofibPrelude.stringConcat(tmp, "\t");
+    tmp2 = lscomp(t);
+    return NofibPrelude.Cons(tmp1, tmp2)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda$ = function lambda$(k, ss) {
+  let scrut, param0, param1, param01, param11, pos, vel, atoms, tmp, tmp1, tmp2, tmp3;
+  scrut = NofibPrelude.force(ss);
+  if (scrut instanceof NofibPrelude.LzCons.class) {
+    param0 = scrut.head;
+    param1 = scrut.tail;
+    if (param0 instanceof atom1.State.class) {
+      param01 = param0.position;
+      param11 = param0.velocity;
+      pos = param01;
+      vel = param11;
+      atoms = param1;
+      tmp = - 1.0;
+      tmp1 = atom1.scalarMut(tmp, k);
+      tmp2 = atom1.dotMult(tmp1, pos);
+      tmp3 = atom1.testforce(k, atoms);
+      return NofibPrelude.LzCons(tmp2, tmp3)
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda = (undefined, function (k, ss) {
+  return () => {
+    return lambda$(k, ss)
+  }
+});
 atom1 = class atom {
   static {
     atom1 = atom;
-    let lambda;
+    let lambda3;
     this.State = function State(position1, velocity1) {
       return new State.class(position1, velocity1);
     };
@@ -17,10 +102,10 @@ atom1 = class atom {
       }
       toString() { return "State(" + globalThis.Predef.render(this.position) + ", " + globalThis.Predef.render(this.velocity) + ")"; }
     };
-    lambda = (undefined, function () {
+    lambda3 = (undefined, function () {
       return atom.testAtom_nofib(20)
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda3)
   }
   static dotPlus(fs1, gs) {
     let param0, param1, f, fs2, param01, param11, g, gs1, tmp, tmp1;
@@ -91,53 +176,12 @@ atom1 = class atom {
     }
   } 
   static testforce(k, ss) {
-    let tmp, lambda;
-    lambda = (undefined, function () {
-      let scrut, param0, param1, param01, param11, pos, vel, atoms, tmp1, tmp2, tmp3, tmp4;
-      scrut = NofibPrelude.force(ss);
-      if (scrut instanceof NofibPrelude.LzCons.class) {
-        param0 = scrut.head;
-        param1 = scrut.tail;
-        if (param0 instanceof atom.State.class) {
-          param01 = param0.position;
-          param11 = param0.velocity;
-          pos = param01;
-          vel = param11;
-          atoms = param1;
-          tmp1 = - 1.0;
-          tmp2 = atom.scalarMut(tmp1, k);
-          tmp3 = atom.dotMult(tmp2, pos);
-          tmp4 = atom.testforce(k, atoms);
-          return NofibPrelude.LzCons(tmp3, tmp4)
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    tmp = lambda;
+    let tmp;
+    tmp = runtime.safeCall(lambda(k, ss));
     return NofibPrelude.lazy(tmp)
   } 
   static show(s) {
-    let lscomp, param0, param1, pos, vel, tmp;
-    lscomp = function lscomp(ls) {
-      let param01, param11, component, t, tmp1, tmp2, tmp3;
-      if (ls instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (ls instanceof NofibPrelude.Cons.class) {
-        param01 = ls.head;
-        param11 = ls.tail;
-        component = param01;
-        t = param11;
-        tmp1 = NofibPrelude.stringOfFloat(component);
-        tmp2 = NofibPrelude.stringConcat(tmp1, "\t");
-        tmp3 = lscomp(t);
-        return NofibPrelude.Cons(tmp2, tmp3)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let param0, param1, pos, vel, tmp;
     if (s instanceof atom.State.class) {
       param0 = s.position;
       param1 = s.velocity;
@@ -166,47 +210,19 @@ atom1 = class atom {
     }
   } 
   static runExperiment(law, dt1, param, init) {
-    let tmp, lambda;
-    lambda = (undefined, function () {
-      let stream, tmp1, tmp2, tmp3, lambda1;
-      tmp1 = atom.runExperiment(law, dt1, param, init);
-      stream = tmp1;
-      tmp2 = runtime.safeCall(law(param, stream));
-      lambda1 = (undefined, function (x, y) {
-        return atom.propagate(dt1, x, y)
-      });
-      tmp3 = NofibPrelude.zipWith_lz_lz(lambda1, tmp2, stream);
-      return NofibPrelude.LzCons(init, tmp3)
-    });
-    tmp = lambda;
+    let tmp;
+    tmp = runtime.safeCall(lambda1(law, dt1, param, init));
     return NofibPrelude.lazy(tmp)
   } 
   static testAtom_nofib(n) {
-    let lscomp, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
-    lscomp = function lscomp(ls) {
-      let param0, param1, state1, t, tmp7, tmp8, tmp9;
-      if (ls instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (ls instanceof NofibPrelude.Cons.class) {
-        param0 = ls.head;
-        param1 = ls.tail;
-        state1 = param0;
-        t = param1;
-        tmp7 = atom.show(state1);
-        tmp8 = NofibPrelude.stringConcat(tmp7, "\n");
-        tmp9 = lscomp(t);
-        return NofibPrelude.Cons(tmp8, tmp9)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
     tmp = NofibPrelude.Cons(1.0, NofibPrelude.Nil);
     tmp1 = NofibPrelude.Cons(1.0, NofibPrelude.Nil);
     tmp2 = NofibPrelude.Cons(0.0, NofibPrelude.Nil);
     tmp3 = atom.State(tmp1, tmp2);
     tmp4 = atom.runExperiment(atom.testforce, 0.02, tmp, tmp3);
     tmp5 = NofibPrelude.take_lz(n, tmp4);
-    tmp6 = lscomp(tmp5);
+    tmp6 = lscomp1(tmp5);
     return NofibPrelude.stringListConcat(tmp6)
   }
   static toString() { return "atom"; }

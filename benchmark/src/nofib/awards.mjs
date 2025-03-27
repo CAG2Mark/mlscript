@@ -2,21 +2,138 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let awards1;
+let award, atleast, awards1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, lambda11, lambda12, lambda13, lambda$, award$, lambda$1, atleast$, lambda$2;
+lambda13 = (undefined, function (x) {
+  let tmp, tmp1, tmp2;
+  tmp = NofibPrelude.intMod(x, 100);
+  tmp1 = awards1.competitors(tmp);
+  tmp2 = awards1.findallawards(tmp1);
+  return BenchmarkPrelude.print(tmp2)
+});
+lambda12 = (undefined, function (caseScrut) {
+  let first1, first0, name, scores, tmp;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    name = first0;
+    scores = first1;
+    tmp = awards1.findawards(scores);
+    return [
+      name,
+      tmp
+    ]
+  } else {
+    throw new globalThis.Error("match error");
+  }
+});
+lambda$2 = function lambda$(threshold, caseScrut) {
+  let first1, first0, sum_, p;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    sum_ = first0;
+    p = first1;
+    return sum_ >= threshold
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda9 = (undefined, function (threshold) {
+  return (caseScrut) => {
+    return lambda$2(threshold, caseScrut)
+  }
+});
+atleast$ = function atleast$(sumscores, threshold) {
+  let tmp;
+  tmp = runtime.safeCall(lambda9(threshold));
+  return NofibPrelude.filter(tmp, sumscores)
+};
+atleast = function atleast(sumscores) {
+  return (threshold) => {
+    return atleast$(sumscores, threshold)
+  }
+};
+lambda$1 = function lambda$(name, ps) {
+  return [
+    name,
+    ps
+  ]
+};
+lambda10 = (undefined, function (name) {
+  return (ps) => {
+    return lambda$1(name, ps)
+  }
+});
+award$ = function award$(sumscores, name_threshold) {
+  let first1, first0, name, threshold, tmp, tmp1, lambda$this;
+  if (globalThis.Array.isArray(name_threshold) && name_threshold.length === 2) {
+    first0 = name_threshold[0];
+    first1 = name_threshold[1];
+    name = first0;
+    threshold = first1;
+    tmp = atleast$(sumscores, threshold);
+    tmp1 = awards1.sort(tmp);
+    lambda$this = runtime.safeCall(lambda10(name));
+    return NofibPrelude.map(lambda$this, tmp1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+award = function award(sumscores) {
+  return (name_threshold) => {
+    return award$(sumscores, name_threshold)
+  }
+};
+lambda11 = (undefined, function (p) {
+  let tmp;
+  tmp = NofibPrelude.sum(p);
+  return [
+    tmp,
+    p
+  ]
+});
+lambda7 = (undefined, function (x) {
+  return NofibPrelude.Cons(x, NofibPrelude.Nil)
+});
+lambda$ = function lambda$(n, x) {
+  return NofibPrelude.Cons(n, x)
+};
+lambda8 = (undefined, function (n) {
+  return (x) => {
+    return lambda$(n, x)
+  }
+});
+lambda2 = (undefined, function (a, b) {
+  return a < b
+});
+lambda3 = (undefined, function (a, b) {
+  return a > b
+});
+lambda5 = (undefined, function (a, b) {
+  return a < b
+});
+lambda6 = (undefined, function (a, b) {
+  return a > b
+});
+lambda4 = (undefined, function (a, b) {
+  return NofibPrelude.ltList(a, b, lambda5, lambda6)
+});
+lambda1 = (undefined, function (a, b) {
+  return NofibPrelude.ltTup2(a, b, lambda2, lambda3, lambda4)
+});
+lambda = (undefined, function (x, y) {
+  return x == y
+});
 awards1 = class awards {
   static {
     awards1 = awards;
-    let lambda;
-    lambda = (undefined, function () {
+    let lambda14;
+    lambda14 = (undefined, function () {
       return awards.testAwards_nofib(100)
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda14)
   }
   static delete_(xs, e) {
-    let lambda;
-    lambda = (undefined, function (x, y) {
-      return x == y
-    });
     return NofibPrelude.deleteBy(lambda, e, xs)
   } 
   static listDiff(a, ls) {
@@ -107,40 +224,16 @@ awards1 = class awards {
     }
   } 
   static sort(l) {
-    let lambda;
-    lambda = (undefined, function (a1, b) {
-      let lambda1, lambda2, lambda3;
-      lambda1 = (undefined, function (a2, b1) {
-        return a2 < b1
-      });
-      lambda2 = (undefined, function (a2, b1) {
-        return a2 > b1
-      });
-      lambda3 = (undefined, function (a2, b1) {
-        let lambda4, lambda5;
-        lambda4 = (undefined, function (a3, b2) {
-          return a3 < b2
-        });
-        lambda5 = (undefined, function (a3, b2) {
-          return a3 > b2
-        });
-        return NofibPrelude.ltList(a2, b1, lambda4, lambda5)
-      });
-      return NofibPrelude.ltTup2(a1, b, lambda1, lambda2, lambda3)
-    });
-    return awards.qsort(lambda, l, NofibPrelude.Nil)
+    return awards.qsort(lambda1, l, NofibPrelude.Nil)
   } 
   static perms(m, nns) {
-    let param0, param1, n, ns, scrut, tmp, tmp1, tmp2, tmp3, lambda, lambda1;
+    let param0, param1, n, ns, scrut, tmp, tmp1, tmp2, tmp3, lambda$this;
     if (nns instanceof NofibPrelude.Nil.class) {
       return NofibPrelude.Nil
     } else {
       scrut = m == 1;
       if (scrut === true) {
-        lambda = (undefined, function (x2) {
-          return NofibPrelude.Cons(x2, NofibPrelude.Nil)
-        });
-        return NofibPrelude.map(lambda, nns)
+        return NofibPrelude.map(lambda7, nns)
       } else {
         if (nns instanceof NofibPrelude.Cons.class) {
           param0 = nns.head;
@@ -149,10 +242,8 @@ awards1 = class awards {
           ns = param1;
           tmp = m - 1;
           tmp1 = awards.perms(tmp, ns);
-          lambda1 = (undefined, function (x2) {
-            return NofibPrelude.Cons(n, x2)
-          });
-          tmp2 = NofibPrelude.map(lambda1, tmp1);
+          lambda$this = runtime.safeCall(lambda8(n));
+          tmp2 = NofibPrelude.map(lambda$this, tmp1);
           tmp3 = awards.perms(m, ns);
           return NofibPrelude.append(tmp2, tmp3)
         } else {
@@ -162,64 +253,19 @@ awards1 = class awards {
     }
   } 
   static awards(scores) {
-    let award, atleast, sumscores, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, lambda;
-    atleast = function atleast(threshold) {
-      let tmp6, lambda1;
-      lambda1 = (undefined, function (caseScrut) {
-        let first1, first0, sum_, p;
-        if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-          first0 = caseScrut[0];
-          first1 = caseScrut[1];
-          sum_ = first0;
-          p = first1;
-          return sum_ >= threshold
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      });
-      tmp6 = lambda1;
-      return NofibPrelude.filter(tmp6, sumscores)
-    };
-    award = function award(name_threshold) {
-      let first1, first0, name, threshold, tmp6, tmp7, lambda1;
-      if (globalThis.Array.isArray(name_threshold) && name_threshold.length === 2) {
-        first0 = name_threshold[0];
-        first1 = name_threshold[1];
-        name = first0;
-        threshold = first1;
-        tmp6 = atleast(threshold);
-        tmp7 = awards.sort(tmp6);
-        lambda1 = (undefined, function (ps) {
-          return [
-            name,
-            ps
-          ]
-        });
-        return NofibPrelude.map(lambda1, tmp7)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let sumscores, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
     tmp = awards.perms(3, scores);
-    lambda = (undefined, function (p) {
-      let tmp6;
-      tmp6 = NofibPrelude.sum(p);
-      return [
-        tmp6,
-        p
-      ]
-    });
-    tmp1 = NofibPrelude.map(lambda, tmp);
+    tmp1 = NofibPrelude.map(lambda11, tmp);
     sumscores = tmp1;
-    tmp2 = award([
+    tmp2 = award$(sumscores, [
       "Gold",
       70
     ]);
-    tmp3 = award([
+    tmp3 = award$(sumscores, [
       "Silver",
       60
     ]);
-    tmp4 = award([
+    tmp4 = award$(sumscores, [
       "Bronze",
       50
     ]);
@@ -227,7 +273,7 @@ awards1 = class awards {
     return NofibPrelude.append(tmp2, tmp5)
   } 
   static findawards(scores1) {
-    let scrut, param0, param1, head_, tail_, first1, first0, award, first11, first01, sum_, perm, tmp, tmp1;
+    let scrut, param0, param1, head_, tail_, first1, first0, award1, first11, first01, sum_, perm, tmp, tmp1;
     scrut = awards.awards(scores1);
     if (scrut instanceof NofibPrelude.Nil.class) {
       return NofibPrelude.Nil
@@ -239,7 +285,7 @@ awards1 = class awards {
       if (globalThis.Array.isArray(head_) && head_.length === 2) {
         first0 = head_[0];
         first1 = head_[1];
-        award = first0;
+        award1 = first0;
         if (globalThis.Array.isArray(first1) && first1.length === 2) {
           first01 = first1[0];
           first11 = first1[1];
@@ -248,7 +294,7 @@ awards1 = class awards {
           tmp = awards.listDiff(scores1, perm);
           tmp1 = awards.findawards(tmp);
           return NofibPrelude.Cons([
-            award,
+            award1,
             [
               sum_,
               perm
@@ -265,24 +311,8 @@ awards1 = class awards {
     }
   } 
   static findallawards(competitors) {
-    let tmp, lambda;
-    lambda = (undefined, function (caseScrut) {
-      let first1, first0, name, scores2, tmp1;
-      if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-        first0 = caseScrut[0];
-        first1 = caseScrut[1];
-        name = first0;
-        scores2 = first1;
-        tmp1 = awards.findawards(scores2);
-        return [
-          name,
-          tmp1
-        ]
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    tmp = lambda;
+    let tmp;
+    tmp = lambda12;
     return NofibPrelude.map(tmp, competitors)
   } 
   static competitors(i) {
@@ -306,15 +336,8 @@ awards1 = class awards {
     ])
   } 
   static testAwards_nofib(n) {
-    let tmp, tmp1, lambda;
-    lambda = (undefined, function (x2) {
-      let tmp2, tmp3, tmp4;
-      tmp2 = NofibPrelude.intMod(x2, 100);
-      tmp3 = awards.competitors(tmp2);
-      tmp4 = awards.findallawards(tmp3);
-      return BenchmarkPrelude.print(tmp4)
-    });
-    tmp = lambda;
+    let tmp, tmp1;
+    tmp = lambda13;
     tmp1 = NofibPrelude.enumFromTo(1, n);
     return NofibPrelude.map(tmp, tmp1)
   }

@@ -2,11 +2,41 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let rsa1;
+let rsa1, lambda, lambda1, lambda2, lambda3, lambda$;
+lambda$ = function lambda$(n, e, c) {
+  let tmp, tmp1;
+  tmp = rsa1.code(c);
+  tmp1 = rsa1.power(e, n, tmp);
+  return rsa1.string_of_z(tmp1)
+};
+lambda3 = (undefined, function (n, e) {
+  return (c) => {
+    return lambda$(n, e, c)
+  }
+});
+lambda2 = (undefined, function (x, y) {
+  let tmp, tmp1, tmp2;
+  tmp = rsa1.z_mul(rsa1.const128, x);
+  tmp1 = rsa1.int_if_char(y);
+  tmp2 = rsa1.z_of_int(tmp1);
+  return rsa1.z_add(tmp, tmp2)
+});
+lambda1 = (undefined, function (l) {
+  let tmp;
+  tmp = NofibPrelude.Cons("\n", NofibPrelude.Nil);
+  return NofibPrelude.append(l, tmp)
+});
+lambda = (undefined, function (acc, c) {
+  let tmp, tmp1, tmp2;
+  tmp = rsa1.int_if_char(c);
+  tmp1 = rsa1.z_of_int(tmp);
+  tmp2 = rsa1.z_mul(acc, rsa1.const31);
+  return rsa1.z_add(tmp1, tmp2)
+});
 rsa1 = class rsa {
   static {
     rsa1 = rsa;
-    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, lambda;
+    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, lambda4;
     tmp = rsa.z_of_int(0);
     this.const0 = tmp;
     tmp1 = rsa.z_of_int(31);
@@ -21,10 +51,10 @@ rsa1 = class rsa {
     tmp6 = runtime.safeCall(tmp5.toString());
     tmp7 = NofibPrelude.nofibStringToList(tmp6);
     this.intput = tmp7;
-    lambda = (undefined, function () {
+    lambda4 = (undefined, function () {
       return rsa.testRsa_nofib(0)
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda4)
   }
   static z_of_int(x) {
     return runtime.safeCall(globalThis.BigInt(x))
@@ -59,14 +89,7 @@ rsa1 = class rsa {
     return runtime.safeCall(c.codePointAt(0))
   } 
   static hash(str) {
-    let tmp, lambda;
-    lambda = (undefined, function (acc, c1) {
-      let tmp1, tmp2, tmp3;
-      tmp1 = rsa.int_if_char(c1);
-      tmp2 = rsa.z_of_int(tmp1);
-      tmp3 = rsa.z_mul(acc, rsa.const31);
-      return rsa.z_add(tmp2, tmp3)
-    });
+    let tmp;
     tmp = lambda;
     return NofibPrelude.foldl(tmp, rsa.const0, str)
   } 
@@ -89,13 +112,8 @@ rsa1 = class rsa {
     }
   } 
   static unlines(ls1) {
-    let tmp, lambda;
-    lambda = (undefined, function (l) {
-      let tmp1;
-      tmp1 = NofibPrelude.Cons("\n", NofibPrelude.Nil);
-      return NofibPrelude.append(l, tmp1)
-    });
-    tmp = NofibPrelude.map(lambda, ls1);
+    let tmp;
+    tmp = NofibPrelude.map(lambda1, ls1);
     return NofibPrelude.concat(tmp)
   } 
   static even(a) {
@@ -104,15 +122,8 @@ rsa1 = class rsa {
     return tmp === rsa.const0
   } 
   static code(ls2) {
-    let tmp, lambda;
-    lambda = (undefined, function (x9, y6) {
-      let tmp1, tmp2, tmp3;
-      tmp1 = rsa.z_mul(rsa.const128, x9);
-      tmp2 = rsa.int_if_char(y6);
-      tmp3 = rsa.z_of_int(tmp2);
-      return rsa.z_add(tmp1, tmp3)
-    });
-    tmp = lambda;
+    let tmp;
+    tmp = lambda2;
     return NofibPrelude.foldl(tmp, rsa.const0, ls2)
   } 
   static collect(n, xs) {
@@ -139,14 +150,8 @@ rsa1 = class rsa {
     return NofibPrelude.intDiv(tmp2, 100)
   } 
   static encrypt(n2, e, s) {
-    let tmp, tmp1, tmp2, tmp3, lambda;
-    lambda = (undefined, function (c1) {
-      let tmp4, tmp5;
-      tmp4 = rsa.code(c1);
-      tmp5 = rsa.power(e, n2, tmp4);
-      return rsa.string_of_z(tmp5)
-    });
-    tmp = lambda;
+    let tmp, tmp1, tmp2, tmp3;
+    tmp = runtime.safeCall(lambda3(n2, e));
     tmp1 = rsa.size(n2);
     tmp2 = rsa.collect(tmp1, s);
     tmp3 = NofibPrelude.map(tmp, tmp2);

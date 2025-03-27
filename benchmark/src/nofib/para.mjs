@@ -2,11 +2,398 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let para1;
+let go, plus, linc, plus1, start, breakk, unknownEq, bf, old_width_hd, width_hd, myAdd, single, trim, new_, cost, drop_nofit, para1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, lambda11, lambda12, lambda13, lambda14, lambda15, lambda16, lambda17, lambda18, lambda19, lambda$, lambda$1, lambda$2, lambda$3, lambda$4, lambda$5, lambda$6, lambda$7, lambda$8, myAdd$, bf$, drop_nofit$, trim$, new_$, old_width_hd$, cost$, width_hd$;
+lambda19 = (undefined, function (x) {
+  let tmp, tmp1;
+  tmp = para1.fst3(x);
+  tmp1 = para1.last_(tmp);
+  return para1.len_tl(tmp1)
+});
+single = function single(p) {
+  let tmp;
+  tmp = para1.len_tl(p);
+  return tmp === 0
+};
+width_hd$ = function width_hd$(tot_width, p) {
+  let scrut, tmp, tmp1;
+  scrut = single(p);
+  if (scrut === true) {
+    return tot_width
+  } else {
+    tmp = para1.width_tl(p);
+    tmp1 = tot_width - tmp;
+    return tmp1 - 1
+  }
+};
+width_hd = function width_hd(tot_width) {
+  return (p) => {
+    return width_hd$(tot_width, p)
+  }
+};
+cost$ = function cost$(tot_width, p) {
+  let a, scrut, tmp, tmp1, tmp2, tmp3;
+  scrut = single(p);
+  if (scrut === true) {
+    return 0
+  } else {
+    tmp = para1.cost_tl(p);
+    tmp1 = width_hd$(tot_width, p);
+    tmp2 = para1.optw - tmp1;
+    a = tmp2;
+    tmp3 = a * a;
+    return tmp + tmp3
+  }
+};
+cost = function cost(tot_width) {
+  return (p) => {
+    return cost$(tot_width, p)
+  }
+};
+old_width_hd$ = function old_width_hd$(tw, p) {
+  let scrut, tmp, tmp1;
+  scrut = single(p);
+  if (scrut === true) {
+    return tw
+  } else {
+    tmp = para1.width_tl(p);
+    tmp1 = tw - tmp;
+    return tmp1 - 1
+  }
+};
+old_width_hd = function old_width_hd(tw) {
+  return (p) => {
+    return old_width_hd$(tw, p)
+  }
+};
+new_$ = function new_$(tw, tl, p) {
+  let x, scrut, tmp, tmp1, tmp2, tmp3, tmp4;
+  scrut = single(p);
+  if (scrut === true) {
+    return [
+      tw,
+      0,
+      tl
+    ]
+  } else {
+    tmp = para1.cost_tl(p);
+    tmp1 = old_width_hd$(tw, p);
+    tmp2 = para1.optw - tmp1;
+    x = tmp2;
+    tmp3 = x * x;
+    tmp4 = tmp + tmp3;
+    return [
+      tw,
+      tmp4,
+      tl
+    ]
+  }
+};
+new_ = function new_(tw, tl) {
+  return (p) => {
+    return new_$(tw, tl, p)
+  }
+};
+trim$ = function trim$(tot_width, ps_pq) {
+  let ps_p, q, p, scrut, scrut1, scrut2, tmp, tmp1;
+  scrut2 = para1.null__(ps_pq);
+  if (scrut2 === true) {
+    return ps_pq
+  } else {
+    scrut1 = para1.single_(ps_pq);
+    if (scrut1 === true) {
+      return ps_pq
+    } else {
+      ps_p = para1.init_(ps_pq);
+      q = para1.last_(ps_pq);
+      p = para1.last_(ps_p);
+      tmp = cost$(tot_width, p);
+      tmp1 = cost$(tot_width, q);
+      scrut = tmp <= tmp1;
+      if (scrut === true) {
+        return trim$(tot_width, ps_p)
+      } else {
+        return ps_pq
+      }
+    }
+  }
+};
+trim = function trim(tot_width) {
+  return (ps_pq) => {
+    return trim$(tot_width, ps_pq)
+  }
+};
+drop_nofit$ = function drop_nofit$(tot_width, ps_p) {
+  let scrut, scrut1, tmp, tmp1, tmp2;
+  scrut1 = para1.null__(ps_p);
+  if (scrut1 === true) {
+    return ps_p
+  } else {
+    tmp = para1.last_(ps_p);
+    tmp1 = width_hd$(tot_width, tmp);
+    scrut = tmp1 > para1.maxw;
+    if (scrut === true) {
+      tmp2 = para1.init_(ps_p);
+      return drop_nofit$(tot_width, tmp2)
+    } else {
+      return ps_p
+    }
+  }
+};
+drop_nofit = function drop_nofit(tot_width) {
+  return (ps_p) => {
+    return drop_nofit$(tot_width, ps_p)
+  }
+};
+bf$ = function bf$(tot_width, p, q) {
+  let wqh, rqh, scrut, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14;
+  tmp = width_hd$(tot_width, q);
+  wqh = tmp;
+  tmp1 = para1.maxw - wqh;
+  tmp2 = tmp1 + 1;
+  rqh = tmp2;
+  tmp3 = single(q);
+  tmp4 = para1.cost_tl(p);
+  tmp5 = tmp4 === 0;
+  scrut1 = tmp3 && tmp5;
+  if (scrut1 === true) {
+    tmp6 = width_hd$(tot_width, p);
+    tmp7 = para1.optw - tmp6;
+    return NofibPrelude.min(tmp7, rqh)
+  } else {
+    scrut = single(q);
+    if (scrut === true) {
+      return rqh
+    } else {
+      tmp8 = cost$(tot_width, p);
+      tmp9 = cost$(tot_width, q);
+      tmp10 = tmp8 - tmp9;
+      tmp11 = width_hd$(tot_width, p);
+      tmp12 = wqh - tmp11;
+      tmp13 = 2 * tmp12;
+      tmp14 = para1.ceildiv(tmp10, tmp13);
+      return NofibPrelude.min(tmp14, rqh)
+    }
+  }
+};
+bf = function bf(tot_width) {
+  return (p, q) => {
+    return bf$(tot_width, p, q)
+  }
+};
+myAdd$ = function myAdd$(tot_width, p, qr_rs) {
+  let q, r_rs, r, scrut, scrut1, tmp, tmp1, tmp2, tmp3;
+  tmp = para1.single_(qr_rs);
+  tmp1 = para1.null__(qr_rs);
+  scrut1 = tmp || tmp1;
+  if (scrut1 === true) {
+    return para1.cons_(p, qr_rs)
+  } else {
+    q = para1.head_(qr_rs);
+    r_rs = para1.tail_(qr_rs);
+    r = para1.head_(r_rs);
+    tmp2 = bf$(tot_width, p, q);
+    tmp3 = bf$(tot_width, q, r);
+    scrut = tmp2 <= tmp3;
+    if (scrut === true) {
+      return myAdd$(tot_width, p, r_rs)
+    } else {
+      return para1.cons_(p, qr_rs)
+    }
+  }
+};
+myAdd = function myAdd(tot_width) {
+  return (p, qr_rs) => {
+    return myAdd$(tot_width, p, qr_rs)
+  }
+};
+lambda$8 = function lambda$(par, x) {
+  let tmp;
+  tmp = NofibPrelude.concat(x);
+  return runtime.safeCall(par(tmp))
+};
+lambda18 = (undefined, function (par) {
+  return (x) => {
+    return lambda$8(par, x)
+  }
+});
+lambda17 = (undefined, function (x) {
+  return NofibPrelude.listNeq(NofibPrelude.Nil, x)
+});
+unknownEq = function unknownEq(a, b) {
+  return a === b
+};
+breakk = function breakk(a, b, xs) {
+  let scrut, tmp, tmp1, tmp2;
+  scrut = unknownEq(a, b);
+  if (scrut === true) {
+    return NofibPrelude.Cons(NofibPrelude.Nil, xs)
+  } else {
+    tmp = NofibPrelude.head(xs);
+    tmp1 = NofibPrelude.Cons(b, tmp);
+    tmp2 = NofibPrelude.tail(xs);
+    return NofibPrelude.Cons(tmp1, tmp2)
+  }
+};
+start = function start(a, b) {
+  let tmp;
+  tmp = NofibPrelude.Cons(NofibPrelude.Nil, NofibPrelude.Nil);
+  return breakk(a, b, tmp)
+};
+lambda$7 = function lambda$(a, x, y) {
+  return breakk(a, x, y)
+};
+lambda15 = (undefined, function (a) {
+  return (x, y) => {
+    return lambda$7(a, x, y)
+  }
+});
+lambda$6 = function lambda$(a, y) {
+  return start(a, y)
+};
+lambda16 = (undefined, function (a) {
+  return (y) => {
+    return lambda$6(a, y)
+  }
+});
+lambda$5 = function lambda$(a, xs, ys) {
+  let tmp, tmp1;
+  tmp = NofibPrelude.Cons(a, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.append(tmp, ys);
+  return NofibPrelude.append(xs, tmp1)
+};
+lambda13 = (undefined, function (a) {
+  return (xs, ys) => {
+    return lambda$5(a, xs, ys)
+  }
+});
+lambda14 = (undefined, function (x) {
+  return x
+});
+linc = function linc(l) {
+  let a, tmp, tmp1;
+  tmp = para1.width(l);
+  tmp1 = para1.optw - tmp;
+  a = tmp1;
+  return a * a
+};
+plus1 = function plus(l, n) {
+  let tmp;
+  tmp = linc(l);
+  return tmp + n
+};
+lambda12 = (undefined, function (x) {
+  return 0
+});
+plus = function plus(w, n) {
+  let tmp, tmp1;
+  tmp = NofibPrelude.listLen(w);
+  tmp1 = tmp + 1;
+  return tmp1 + n
+};
+lambda$4 = function lambda$(w, p) {
+  return para1.new_(w, p)
+};
+lambda9 = (undefined, function (w) {
+  return (p) => {
+    return lambda$4(w, p)
+  }
+});
+lambda$3 = function lambda$(w, p) {
+  return para1.glue(w, p)
+};
+lambda10 = (undefined, function (w) {
+  return (p) => {
+    return lambda$3(w, p)
+  }
+});
+lambda8 = (undefined, function (w, ps) {
+  let tmp, tmp1, lambda$this, lambda$this1;
+  lambda$this = runtime.safeCall(lambda9(w));
+  tmp = NofibPrelude.map(lambda$this, ps);
+  lambda$this1 = runtime.safeCall(lambda10(w));
+  tmp1 = NofibPrelude.map(lambda$this1, ps);
+  return NofibPrelude.append(tmp, tmp1)
+});
+lambda11 = (undefined, function (x) {
+  let tmp, tmp1;
+  tmp = NofibPrelude.Cons(x, NofibPrelude.Nil);
+  tmp1 = NofibPrelude.Cons(tmp, NofibPrelude.Nil);
+  return NofibPrelude.Cons(tmp1, NofibPrelude.Nil)
+});
+lambda$2 = function lambda$(f, a, b) {
+  let scrut, tmp, tmp1;
+  tmp = runtime.safeCall(f(a));
+  tmp1 = runtime.safeCall(f(b));
+  scrut = tmp < tmp1;
+  if (scrut === true) {
+    return a
+  } else {
+    return b
+  }
+};
+lambda6 = (undefined, function (f) {
+  return (a, b) => {
+    return lambda$2(f, a, b)
+  }
+});
+lambda7 = (undefined, function (x) {
+  return x
+});
+lambda4 = (undefined, function (a, s) {
+  return NofibPrelude.Cons(a, s)
+});
+lambda5 = (undefined, function (a) {
+  return NofibPrelude.Cons(a, NofibPrelude.Nil)
+});
+lambda$1 = function lambda$(f, a, s) {
+  let tmp, tmp1;
+  tmp = NofibPrelude.head(s);
+  tmp1 = runtime.safeCall(f(a, tmp));
+  return NofibPrelude.Cons(tmp1, s)
+};
+lambda2 = (undefined, function (f) {
+  return (a, s) => {
+    return lambda$1(f, a, s)
+  }
+});
+lambda$ = function lambda$(g, a) {
+  let tmp;
+  tmp = runtime.safeCall(g(a));
+  return NofibPrelude.Cons(tmp, NofibPrelude.Nil)
+};
+lambda3 = (undefined, function (g) {
+  return (a) => {
+    return lambda$(g, a)
+  }
+});
+lambda1 = (undefined, function (l) {
+  let tmp;
+  tmp = NofibPrelude.nofibStringToList("\n");
+  return NofibPrelude.append(l, tmp)
+});
+lambda = (undefined, function (x) {
+  return x === "\n"
+});
+go = function go(vs) {
+  let param0, param1, v, vs1, tmp, tmp1;
+  if (vs instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (vs instanceof NofibPrelude.Cons.class) {
+    param0 = vs.head;
+    param1 = vs.tail;
+    v = param0;
+    vs1 = param1;
+    tmp = go(vs1);
+    tmp1 = NofibPrelude.append(v, tmp);
+    return NofibPrelude.Cons(" ", tmp1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
 para1 = class para {
   static {
     para1 = para;
-    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, lambda;
+    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, lambda20;
     this.maxw = 70;
     this.optw = 63;
     this.nil_ = [
@@ -35,15 +422,15 @@ para1 = class para {
     tmp19 = NofibPrelude.Cons(tmp, tmp18);
     tmp20 = NofibPrelude.concat(tmp19);
     this.test = tmp20;
-    lambda = (undefined, function () {
+    lambda20 = (undefined, function () {
       let tmp21;
       tmp21 = para.testPara_nofib();
       return NofibPrelude.nofibListToString(tmp21)
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda20)
   }
   static unwords(ws) {
-    let go, param0, param1, w, ws1, tmp;
+    let param0, param1, w, ws1, tmp;
     if (ws instanceof NofibPrelude.Nil.class) {
       return NofibPrelude.Nil
     } else if (ws instanceof NofibPrelude.Cons.class) {
@@ -51,22 +438,6 @@ para1 = class para {
       param1 = ws.tail;
       w = param0;
       ws1 = param1;
-      go = function go(vs) {
-        let param01, param11, v, vs1, tmp1, tmp2;
-        if (vs instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Nil
-        } else if (vs instanceof NofibPrelude.Cons.class) {
-          param01 = vs.head;
-          param11 = vs.tail;
-          v = param01;
-          vs1 = param11;
-          tmp1 = go(vs1);
-          tmp2 = NofibPrelude.append(v, tmp1);
-          return NofibPrelude.Cons(" ", tmp2)
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
       tmp = go(ws1);
       return NofibPrelude.append(w, tmp)
     } else {
@@ -142,10 +513,7 @@ para1 = class para {
     }
   } 
   static lines(s1) {
-    let scrut, first1, first0, l, s_, param0, param1, s__, tmp, lambda;
-    lambda = (undefined, function (x) {
-      return x === "\n"
-    });
+    let scrut, first1, first0, l, s_, param0, param1, s__, tmp;
     scrut = para.break_(lambda, s1);
     if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
       first0 = scrut[0];
@@ -168,13 +536,8 @@ para1 = class para {
     }
   } 
   static unlines(ls) {
-    let tmp, lambda;
-    lambda = (undefined, function (l) {
-      let tmp1;
-      tmp1 = NofibPrelude.nofibStringToList("\n");
-      return NofibPrelude.append(l, tmp1)
-    });
-    tmp = NofibPrelude.map(lambda, ls);
+    let tmp;
+    tmp = NofibPrelude.map(lambda1, ls);
     return NofibPrelude.concat(tmp)
   } 
   static all(p1, xs1) {
@@ -212,30 +575,13 @@ para1 = class para {
     }
   } 
   static scan1(f1, g1, xs3) {
-    let tmp, lambda, lambda1;
-    lambda = (undefined, function (a, s2) {
-      let tmp1, tmp2;
-      tmp1 = NofibPrelude.head(s2);
-      tmp2 = runtime.safeCall(f1(a, tmp1));
-      return NofibPrelude.Cons(tmp2, s2)
-    });
-    tmp = lambda;
-    lambda1 = (undefined, function (a) {
-      let tmp1;
-      tmp1 = runtime.safeCall(g1(a));
-      return NofibPrelude.Cons(tmp1, NofibPrelude.Nil)
-    });
-    return para.fold1(tmp, lambda1, xs3)
+    let tmp, lambda$this;
+    tmp = runtime.safeCall(lambda2(f1));
+    lambda$this = runtime.safeCall(lambda3(g1));
+    return para.fold1(tmp, lambda$this, xs3)
   } 
   static tails(xs4) {
-    let lambda, lambda1;
-    lambda = (undefined, function (a, s2) {
-      return NofibPrelude.Cons(a, s2)
-    });
-    lambda1 = (undefined, function (a) {
-      return NofibPrelude.Cons(a, NofibPrelude.Nil)
-    });
-    return para.scan1(lambda, lambda1, xs4)
+    return para.scan1(lambda4, lambda5, xs4)
   } 
   static single(xs5) {
     let param0, param1, a;
@@ -253,23 +599,9 @@ para1 = class para {
     }
   } 
   static minWith(f2, xs6) {
-    let tmp, lambda, lambda1;
-    lambda = (undefined, function (a, b) {
-      let scrut, tmp1, tmp2;
-      tmp1 = runtime.safeCall(f2(a));
-      tmp2 = runtime.safeCall(f2(b));
-      scrut = tmp1 < tmp2;
-      if (scrut === true) {
-        return a
-      } else {
-        return b
-      }
-    });
-    tmp = lambda;
-    lambda1 = (undefined, function (x) {
-      return x
-    });
-    return para.fold1(tmp, lambda1, xs6)
+    let tmp;
+    tmp = runtime.safeCall(lambda6(f2));
+    return para.fold1(tmp, lambda7, xs6)
   } 
   static new_(w, ls1) {
     let tmp;
@@ -290,37 +622,12 @@ para1 = class para {
     }
   } 
   static formats(txt) {
-    let tmp, tmp1, lambda, lambda1;
-    lambda = (undefined, function (w2, ps) {
-      let tmp2, tmp3, lambda2, lambda3;
-      lambda2 = (undefined, function (p2) {
-        return para.new_(w2, p2)
-      });
-      tmp2 = NofibPrelude.map(lambda2, ps);
-      lambda3 = (undefined, function (p2) {
-        return para.glue(w2, p2)
-      });
-      tmp3 = NofibPrelude.map(lambda3, ps);
-      return NofibPrelude.append(tmp2, tmp3)
-    });
-    tmp = lambda;
-    lambda1 = (undefined, function (x) {
-      let tmp2, tmp3;
-      tmp2 = NofibPrelude.Cons(x, NofibPrelude.Nil);
-      tmp3 = NofibPrelude.Cons(tmp2, NofibPrelude.Nil);
-      return NofibPrelude.Cons(tmp3, NofibPrelude.Nil)
-    });
-    tmp1 = lambda1;
+    let tmp, tmp1;
+    tmp = lambda8;
+    tmp1 = lambda11;
     return para.fold1(tmp, tmp1, txt)
   } 
   static width(ls3) {
-    let plus;
-    plus = function plus(w2, n) {
-      let tmp, tmp1;
-      tmp = NofibPrelude.listLen(w2);
-      tmp1 = tmp + 1;
-      return tmp1 + n
-    };
     return para.fold1(plus, NofibPrelude.listLen, ls3)
   } 
   static fits(xs7) {
@@ -332,23 +639,7 @@ para1 = class para {
     return para.all(para.fits, a)
   } 
   static cost(ls4) {
-    let linc, plus, lambda;
-    linc = function linc(l) {
-      let a1, tmp, tmp1;
-      tmp = para.width(l);
-      tmp1 = para.optw - tmp;
-      a1 = tmp1;
-      return a1 * a1
-    };
-    plus = function plus(l, n) {
-      let tmp;
-      tmp = linc(l);
-      return tmp + n
-    };
-    lambda = (undefined, function (x) {
-      return 0
-    });
-    return para.fold1(plus, lambda, ls4)
+    return para.fold1(plus1, lambda12, ls4)
   } 
   static par0(x) {
     let tmp, tmp1;
@@ -672,63 +963,27 @@ para1 = class para {
     }
   } 
   static unformat(a3, l) {
-    let tmp, lambda, lambda1;
-    lambda = (undefined, function (xs8, ys) {
-      let tmp1, tmp2;
-      tmp1 = NofibPrelude.Cons(a3, NofibPrelude.Nil);
-      tmp2 = NofibPrelude.append(tmp1, ys);
-      return NofibPrelude.append(xs8, tmp2)
-    });
-    tmp = lambda;
-    lambda1 = (undefined, function (x1) {
-      return x1
-    });
-    return para.fold1(tmp, lambda1, l)
+    let tmp;
+    tmp = runtime.safeCall(lambda13(a3));
+    return para.fold1(tmp, lambda14, l)
   } 
   static format(a4, x1) {
-    let start, breakk, unknownEq, lambda, lambda1;
+    let lambda$this, lambda$this1;
     if (x1 instanceof NofibPrelude.Nil.class) {
       return NofibPrelude.Cons(NofibPrelude.Nil, NofibPrelude.Nil)
     } else {
-      unknownEq = function unknownEq(a5, b) {
-        return a5 === b
-      };
-      breakk = function breakk(a5, b, xs8) {
-        let scrut, tmp, tmp1, tmp2;
-        scrut = unknownEq(a5, b);
-        if (scrut === true) {
-          return NofibPrelude.Cons(NofibPrelude.Nil, xs8)
-        } else {
-          tmp = NofibPrelude.head(xs8);
-          tmp1 = NofibPrelude.Cons(b, tmp);
-          tmp2 = NofibPrelude.tail(xs8);
-          return NofibPrelude.Cons(tmp1, tmp2)
-        }
-      };
-      start = function start(a5, b) {
-        let tmp;
-        tmp = NofibPrelude.Cons(NofibPrelude.Nil, NofibPrelude.Nil);
-        return breakk(a5, b, tmp)
-      };
-      lambda = (undefined, function (x2, y) {
-        return breakk(a4, x2, y)
-      });
-      lambda1 = (undefined, function (y) {
-        return start(a4, y)
-      });
-      return para.fold1(lambda, lambda1, x1)
+      lambda$this = runtime.safeCall(lambda15(a4));
+      lambda$this1 = runtime.safeCall(lambda16(a4));
+      return para.fold1(lambda$this, lambda$this1, x1)
     }
   } 
   static unparas(ls6) {
     return para.unformat(NofibPrelude.Nil, ls6)
   } 
   static paras(ls7) {
-    let tmp, lambda;
+    let tmp;
     tmp = para.format(NofibPrelude.Nil, ls7);
-    lambda = (undefined, function (x2) {
-      return NofibPrelude.listNeq(NofibPrelude.Nil, x2)
-    });
-    return NofibPrelude.filter(lambda, tmp)
+    return NofibPrelude.filter(lambda17, tmp)
   } 
   static parse(ls8) {
     let tmp, tmp1;
@@ -767,18 +1022,14 @@ para1 = class para {
     return NofibPrelude.intDiv(tmp1, m)
   } 
   static fmtWith(par) {
-    let tmp, tmp1, lambda;
+    let tmp, tmp1, lambda$this;
     tmp = para.parse(par);
-    lambda = (undefined, function (x2) {
-      let tmp2;
-      tmp2 = NofibPrelude.concat(x2);
-      return runtime.safeCall(par(tmp2))
-    });
-    tmp1 = NofibPrelude.map(lambda, tmp);
+    lambda$this = runtime.safeCall(lambda18(par));
+    tmp1 = NofibPrelude.map(lambda$this, tmp);
     return para.unparse(tmp1)
   } 
   static stepr(w2, ps_tw_tl) {
-    let bf, old_width_hd, width_hd, myAdd, single, trim, new_, cost, drop_nofit, first2, first1, first0, ps, tw, tl, tot_width, tot_len, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+    let first2, first1, first0, ps, tw, tl, tot_width, tot_len, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
     if (globalThis.Array.isArray(ps_tw_tl) && ps_tw_tl.length === 3) {
       first0 = ps_tw_tl[0];
       first1 = ps_tw_tl[1];
@@ -786,173 +1037,16 @@ para1 = class para {
       ps = first0;
       tw = first1;
       tl = first2;
-      single = function single(p2) {
-        let tmp8;
-        tmp8 = para.len_tl(p2);
-        return tmp8 === 0
-      };
-      width_hd = function width_hd(p2) {
-        let scrut, tmp8, tmp9;
-        scrut = single(p2);
-        if (scrut === true) {
-          return tot_width
-        } else {
-          tmp8 = para.width_tl(p2);
-          tmp9 = tot_width - tmp8;
-          return tmp9 - 1
-        }
-      };
-      cost = function cost(p2) {
-        let a6, scrut, tmp8, tmp9, tmp10, tmp11;
-        scrut = single(p2);
-        if (scrut === true) {
-          return 0
-        } else {
-          tmp8 = para.cost_tl(p2);
-          tmp9 = width_hd(p2);
-          tmp10 = para.optw - tmp9;
-          a6 = tmp10;
-          tmp11 = a6 * a6;
-          return tmp8 + tmp11
-        }
-      };
-      old_width_hd = function old_width_hd(p2) {
-        let scrut, tmp8, tmp9;
-        scrut = single(p2);
-        if (scrut === true) {
-          return tw
-        } else {
-          tmp8 = para.width_tl(p2);
-          tmp9 = tw - tmp8;
-          return tmp9 - 1
-        }
-      };
-      new_ = function new_(p2) {
-        let x2, scrut, tmp8, tmp9, tmp10, tmp11, tmp12;
-        scrut = single(p2);
-        if (scrut === true) {
-          return [
-            tw,
-            0,
-            tl
-          ]
-        } else {
-          tmp8 = para.cost_tl(p2);
-          tmp9 = old_width_hd(p2);
-          tmp10 = para.optw - tmp9;
-          x2 = tmp10;
-          tmp11 = x2 * x2;
-          tmp12 = tmp8 + tmp11;
-          return [
-            tw,
-            tmp12,
-            tl
-          ]
-        }
-      };
-      trim = function trim(ps_pq) {
-        let ps_p, q, p2, scrut, scrut1, scrut2, tmp8, tmp9;
-        scrut2 = para.null__(ps_pq);
-        if (scrut2 === true) {
-          return ps_pq
-        } else {
-          scrut1 = para.single_(ps_pq);
-          if (scrut1 === true) {
-            return ps_pq
-          } else {
-            ps_p = para.init_(ps_pq);
-            q = para.last_(ps_pq);
-            p2 = para.last_(ps_p);
-            tmp8 = cost(p2);
-            tmp9 = cost(q);
-            scrut = tmp8 <= tmp9;
-            if (scrut === true) {
-              return trim(ps_p)
-            } else {
-              return ps_pq
-            }
-          }
-        }
-      };
-      drop_nofit = function drop_nofit(ps_p) {
-        let scrut, scrut1, tmp8, tmp9, tmp10;
-        scrut1 = para.null__(ps_p);
-        if (scrut1 === true) {
-          return ps_p
-        } else {
-          tmp8 = para.last_(ps_p);
-          tmp9 = width_hd(tmp8);
-          scrut = tmp9 > para.maxw;
-          if (scrut === true) {
-            tmp10 = para.init_(ps_p);
-            return drop_nofit(tmp10)
-          } else {
-            return ps_p
-          }
-        }
-      };
-      bf = function bf(p2, q) {
-        let wqh, rqh, scrut, scrut1, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22;
-        tmp8 = width_hd(q);
-        wqh = tmp8;
-        tmp9 = para.maxw - wqh;
-        tmp10 = tmp9 + 1;
-        rqh = tmp10;
-        tmp11 = single(q);
-        tmp12 = para.cost_tl(p2);
-        tmp13 = tmp12 === 0;
-        scrut1 = tmp11 && tmp13;
-        if (scrut1 === true) {
-          tmp14 = width_hd(p2);
-          tmp15 = para.optw - tmp14;
-          return NofibPrelude.min(tmp15, rqh)
-        } else {
-          scrut = single(q);
-          if (scrut === true) {
-            return rqh
-          } else {
-            tmp16 = cost(p2);
-            tmp17 = cost(q);
-            tmp18 = tmp16 - tmp17;
-            tmp19 = width_hd(p2);
-            tmp20 = wqh - tmp19;
-            tmp21 = 2 * tmp20;
-            tmp22 = para.ceildiv(tmp18, tmp21);
-            return NofibPrelude.min(tmp22, rqh)
-          }
-        }
-      };
-      myAdd = function myAdd(p2, qr_rs) {
-        let q, r_rs, r, scrut, scrut1, tmp8, tmp9, tmp10, tmp11;
-        tmp8 = para.single_(qr_rs);
-        tmp9 = para.null__(qr_rs);
-        scrut1 = tmp8 || tmp9;
-        if (scrut1 === true) {
-          return para.cons_(p2, qr_rs)
-        } else {
-          q = para.head_(qr_rs);
-          r_rs = para.tail_(qr_rs);
-          r = para.head_(r_rs);
-          tmp10 = bf(p2, q);
-          tmp11 = bf(q, r);
-          scrut = tmp10 <= tmp11;
-          if (scrut === true) {
-            return myAdd(p2, r_rs)
-          } else {
-            return para.cons_(p2, qr_rs)
-          }
-        }
-      };
       tmp = w2 + 1;
       tmp1 = tmp + tw;
       tot_width = tmp1;
       tmp2 = 1 + tl;
       tot_len = tmp2;
       tmp3 = para.last_(ps);
-      tmp4 = new_(tmp3);
-      tmp5 = myAdd(tmp4, ps);
-      tmp6 = drop_nofit(tmp5);
-      tmp7 = trim(tmp6);
+      tmp4 = new_$(tw, tl, tmp3);
+      tmp5 = myAdd$(tot_width, tmp4, ps);
+      tmp6 = drop_nofit$(tot_width, tmp5);
+      tmp7 = trim$(tot_width, tmp6);
       return [
         tmp7,
         tot_width,
@@ -963,17 +1057,11 @@ para1 = class para {
     }
   } 
   static par3(ws2) {
-    let zs, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, lambda;
+    let zs, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
     tmp = NofibPrelude.map(NofibPrelude.listLen, ws2);
     tmp1 = para.scan1(para.stepr, para.startr, tmp);
     zs = tmp1;
-    lambda = (undefined, function (x2) {
-      let tmp6, tmp7;
-      tmp6 = para.fst3(x2);
-      tmp7 = para.last_(tmp6);
-      return para.len_tl(tmp7)
-    });
-    tmp2 = lambda;
+    tmp2 = lambda19;
     tmp3 = NofibPrelude.map(tmp2, zs);
     tmp4 = NofibPrelude.head(zs);
     tmp5 = para.thd3(tmp4);

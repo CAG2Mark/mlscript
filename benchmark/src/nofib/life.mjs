@@ -2,67 +2,191 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let life1;
+let go, life1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda$, lambda$1, lambda$2, lambda$3, lambda$4, lambda$5, lambda$6;
+lambda7 = (undefined, function (i) {
+  let tmp;
+  tmp = NofibPrelude.stringOfInt(i);
+  return NofibPrelude.nofibStringToList(tmp)
+});
+lambda$6 = function lambda$(sz, l) {
+  let tmp, tmp1;
+  tmp = life1.copy_lz(sz, 0);
+  tmp1 = life1.append_lz_lz(l, tmp);
+  return NofibPrelude.take_lz(sz, tmp1)
+};
+lambda8 = (undefined, function (sz) {
+  return (l) => {
+    return lambda$6(sz, l)
+  }
+});
+lambda$5 = function lambda$(sz, b) {
+  return life1.gen(sz, b)
+};
+lambda9 = (undefined, function (sz) {
+  return (b) => {
+    return lambda$5(sz, b)
+  }
+});
+lambda5 = (undefined, function (x) {
+  let tmp;
+  tmp = NofibPrelude.map(life1.star, x);
+  return NofibPrelude.concat(tmp)
+});
+lambda6 = (undefined, function (a, b) {
+  let tmp;
+  tmp = NofibPrelude.Cons("n", NofibPrelude.Nil);
+  return life1.glue(tmp, a, b)
+});
+lambda$4 = function lambda$(genn, xss) {
+  let tmp, tmp1, tmp2, tmp3;
+  tmp = NofibPrelude.nofibStringToList("nn");
+  tmp1 = NofibPrelude.map(lambda5, xss);
+  tmp2 = NofibPrelude.foldr(lambda6, NofibPrelude.Nil, tmp1);
+  tmp3 = NofibPrelude.append(tmp, tmp2);
+  return NofibPrelude.append(genn, tmp3)
+};
+lambda4 = (undefined, function (genn, xss) {
+  return () => {
+    return lambda$4(genn, xss)
+  }
+});
+lambda$3 = function lambda$(y, xs) {
+  return NofibPrelude.LzCons(y, xs)
+};
+lambda3 = (undefined, function (y, xs) {
+  return () => {
+    return lambda$3(y, xs)
+  }
+});
+lambda$2 = function lambda$(ls) {
+  let param0, param1, a, t, tmp;
+  if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    a = param0;
+    t = param1;
+    tmp = life1.lzfy(t);
+    return NofibPrelude.LzCons(a, tmp)
+  } else {
+    return NofibPrelude.LzNil
+  }
+};
+lambda2 = (undefined, function (ls) {
+  return () => {
+    return lambda$2(ls)
+  }
+});
+lambda$1 = function lambda$(xs, ys) {
+  let scrut, param0, param1, h, t, tmp;
+  scrut = NofibPrelude.force(xs);
+  if (scrut instanceof NofibPrelude.LzNil.class) {
+    return NofibPrelude.force(ys)
+  } else if (scrut instanceof NofibPrelude.LzCons.class) {
+    param0 = scrut.head;
+    param1 = scrut.tail;
+    h = param0;
+    t = param1;
+    tmp = life1.append_lz_lz(t, ys);
+    return NofibPrelude.LzCons(h, tmp)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda1 = (undefined, function (xs, ys) {
+  return () => {
+    return lambda$1(xs, ys)
+  }
+});
+lambda$ = function lambda$(n, x) {
+  let scrut, tmp, tmp1;
+  scrut = n === 0;
+  if (scrut === true) {
+    return NofibPrelude.LzNil
+  } else {
+    tmp = n - 1;
+    tmp1 = life1.copy_lz(tmp, x);
+    return NofibPrelude.LzCons(x, tmp1)
+  }
+};
+lambda = (undefined, function (n, x) {
+  return () => {
+    return lambda$(n, x)
+  }
+});
+go = function go(h, t) {
+  let param0, param1, head, t1;
+  if (t instanceof NofibPrelude.Nil.class) {
+    return h
+  } else if (t instanceof NofibPrelude.Cons.class) {
+    param0 = t.head;
+    param1 = t.tail;
+    head = param0;
+    t1 = param1;
+    return go(head, t1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
 life1 = class life {
   static {
     life1 = life;
-    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55, tmp56, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, lambda11, lambda12, lambda13, lambda14;
-    lambda = (undefined, function () {
-      return NofibPrelude.LzNil
-    });
-    tmp = NofibPrelude.lazy(lambda);
-    lambda1 = (undefined, function () {
-      return NofibPrelude.LzNil
-    });
-    tmp1 = NofibPrelude.lazy(lambda1);
-    lambda2 = (undefined, function () {
-      return NofibPrelude.LzNil
-    });
-    tmp2 = NofibPrelude.lazy(lambda2);
-    lambda3 = (undefined, function () {
-      return NofibPrelude.LzNil
-    });
-    tmp3 = NofibPrelude.lazy(lambda3);
-    lambda4 = (undefined, function () {
-      return NofibPrelude.LzNil
-    });
-    tmp4 = NofibPrelude.lazy(lambda4);
-    lambda5 = (undefined, function () {
-      return NofibPrelude.LzNil
-    });
-    tmp5 = NofibPrelude.lazy(lambda5);
-    lambda6 = (undefined, function () {
-      return NofibPrelude.LzNil
-    });
-    tmp6 = NofibPrelude.lazy(lambda6);
-    lambda7 = (undefined, function () {
-      return NofibPrelude.LzNil
-    });
-    tmp7 = NofibPrelude.lazy(lambda7);
-    lambda8 = (undefined, function () {
-      return NofibPrelude.LzNil
-    });
-    tmp8 = NofibPrelude.lazy(lambda8);
-    lambda9 = (undefined, function () {
-      return NofibPrelude.LzNil
-    });
-    tmp9 = NofibPrelude.lazy(lambda9);
+    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55, tmp56, lambda10, lambda11, lambda12, lambda13, lambda14, lambda15, lambda16, lambda17, lambda18, lambda19, lambda20, lambda21, lambda22, lambda23, lambda24;
     lambda10 = (undefined, function () {
       return NofibPrelude.LzNil
     });
-    tmp10 = NofibPrelude.lazy(lambda10);
+    tmp = NofibPrelude.lazy(lambda10);
     lambda11 = (undefined, function () {
       return NofibPrelude.LzNil
     });
-    tmp11 = NofibPrelude.lazy(lambda11);
+    tmp1 = NofibPrelude.lazy(lambda11);
     lambda12 = (undefined, function () {
       return NofibPrelude.LzNil
     });
-    tmp12 = NofibPrelude.lazy(lambda12);
+    tmp2 = NofibPrelude.lazy(lambda12);
     lambda13 = (undefined, function () {
       return NofibPrelude.LzNil
     });
-    tmp13 = NofibPrelude.lazy(lambda13);
+    tmp3 = NofibPrelude.lazy(lambda13);
+    lambda14 = (undefined, function () {
+      return NofibPrelude.LzNil
+    });
+    tmp4 = NofibPrelude.lazy(lambda14);
+    lambda15 = (undefined, function () {
+      return NofibPrelude.LzNil
+    });
+    tmp5 = NofibPrelude.lazy(lambda15);
+    lambda16 = (undefined, function () {
+      return NofibPrelude.LzNil
+    });
+    tmp6 = NofibPrelude.lazy(lambda16);
+    lambda17 = (undefined, function () {
+      return NofibPrelude.LzNil
+    });
+    tmp7 = NofibPrelude.lazy(lambda17);
+    lambda18 = (undefined, function () {
+      return NofibPrelude.LzNil
+    });
+    tmp8 = NofibPrelude.lazy(lambda18);
+    lambda19 = (undefined, function () {
+      return NofibPrelude.LzNil
+    });
+    tmp9 = NofibPrelude.lazy(lambda19);
+    lambda20 = (undefined, function () {
+      return NofibPrelude.LzNil
+    });
+    tmp10 = NofibPrelude.lazy(lambda20);
+    lambda21 = (undefined, function () {
+      return NofibPrelude.LzNil
+    });
+    tmp11 = NofibPrelude.lazy(lambda21);
+    lambda22 = (undefined, function () {
+      return NofibPrelude.LzNil
+    });
+    tmp12 = NofibPrelude.lazy(lambda22);
+    lambda23 = (undefined, function () {
+      return NofibPrelude.LzNil
+    });
+    tmp13 = NofibPrelude.lazy(lambda23);
     tmp14 = NofibPrelude.Cons(0, NofibPrelude.Nil);
     tmp15 = NofibPrelude.Cons(1, tmp14);
     tmp16 = NofibPrelude.Cons(1, tmp15);
@@ -107,27 +231,13 @@ life1 = class life {
     tmp55 = NofibPrelude.Cons(tmp1, tmp54);
     tmp56 = NofibPrelude.Cons(tmp, tmp55);
     this.start = tmp56;
-    lambda14 = (undefined, function () {
+    lambda24 = (undefined, function () {
       return life.testLife_nofib(15)
     });
-    BenchmarkPrelude.benchmark(lambda14)
+    BenchmarkPrelude.benchmark(lambda24)
   }
   static last(a_t) {
-    let go, param0, param1, a, t;
-    go = function go(h, t1) {
-      let param01, param11, head, t2;
-      if (t1 instanceof NofibPrelude.Nil.class) {
-        return h
-      } else if (t1 instanceof NofibPrelude.Cons.class) {
-        param01 = t1.head;
-        param11 = t1.tail;
-        head = param01;
-        t2 = param11;
-        return go(head, t2)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let param0, param1, a, t;
     if (a_t instanceof NofibPrelude.Cons.class) {
       param0 = a_t.head;
       param1 = a_t.tail;
@@ -139,40 +249,13 @@ life1 = class life {
     }
   } 
   static copy_lz(n, x) {
-    let tmp, lambda;
-    lambda = (undefined, function () {
-      let scrut, tmp1, tmp2;
-      scrut = n === 0;
-      if (scrut === true) {
-        return NofibPrelude.LzNil
-      } else {
-        tmp1 = n - 1;
-        tmp2 = life.copy_lz(tmp1, x);
-        return NofibPrelude.LzCons(x, tmp2)
-      }
-    });
-    tmp = lambda;
+    let tmp;
+    tmp = runtime.safeCall(lambda(n, x));
     return NofibPrelude.lazy(tmp)
   } 
   static append_lz_lz(xs, ys) {
-    let tmp, lambda;
-    lambda = (undefined, function () {
-      let scrut, param0, param1, h, t, tmp1;
-      scrut = NofibPrelude.force(xs);
-      if (scrut instanceof NofibPrelude.LzNil.class) {
-        return NofibPrelude.force(ys)
-      } else if (scrut instanceof NofibPrelude.LzCons.class) {
-        param0 = scrut.head;
-        param1 = scrut.tail;
-        h = param0;
-        t = param1;
-        tmp1 = life.append_lz_lz(t, ys);
-        return NofibPrelude.LzCons(h, tmp1)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    tmp = lambda;
+    let tmp;
+    tmp = runtime.safeCall(lambda1(xs, ys));
     return NofibPrelude.lazy(tmp)
   } 
   static init(ls) {
@@ -257,21 +340,8 @@ life1 = class life {
     }
   } 
   static lzfy(ls1) {
-    let tmp, lambda;
-    lambda = (undefined, function () {
-      let param0, param1, a, t, tmp1;
-      if (ls1 instanceof NofibPrelude.Cons.class) {
-        param0 = ls1.head;
-        param1 = ls1.tail;
-        a = param0;
-        t = param1;
-        tmp1 = life.lzfy(t);
-        return NofibPrelude.LzCons(a, tmp1)
-      } else {
-        return NofibPrelude.LzNil
-      }
-    });
-    tmp = lambda;
+    let tmp;
+    tmp = runtime.safeCall(lambda2(ls1));
     return NofibPrelude.lazy(tmp)
   } 
   static elt(a_b_c, d_e_f, g_h_i) {
@@ -388,7 +458,7 @@ life1 = class life {
     return NofibPrelude.append(xs6, tmp)
   } 
   static limit(ls2) {
-    let scrut, param0, param1, x5, ys4, scrut1, param01, param11, y, xs7, scrut2, tmp, tmp1, lambda;
+    let scrut, param0, param1, x5, ys4, scrut1, param01, param11, y, xs7, scrut2, tmp, tmp1, lambda$this;
     scrut = NofibPrelude.force(ls2);
     if (scrut instanceof NofibPrelude.LzCons.class) {
       param0 = scrut.head;
@@ -405,10 +475,8 @@ life1 = class life {
         if (scrut2 === true) {
           return NofibPrelude.Cons(x5, NofibPrelude.Nil)
         } else {
-          lambda = (undefined, function () {
-            return NofibPrelude.LzCons(y, xs7)
-          });
-          tmp = NofibPrelude.lazy(lambda);
+          lambda$this = runtime.safeCall(lambda3(y, xs7));
+          tmp = NofibPrelude.lazy(lambda$this);
           tmp1 = life.limit(tmp);
           return NofibPrelude.Cons(x5, tmp1)
         }
@@ -420,61 +488,30 @@ life1 = class life {
     }
   } 
   static disp(gen_xss) {
-    let first1, first0, genn, xss, tmp, lambda;
+    let first1, first0, genn, xss, tmp;
     if (globalThis.Array.isArray(gen_xss) && gen_xss.length === 2) {
       first0 = gen_xss[0];
       first1 = gen_xss[1];
       genn = first0;
       xss = first1;
-      lambda = (undefined, function () {
-        let tmp1, tmp2, tmp3, tmp4, lambda1, lambda2;
-        tmp1 = NofibPrelude.nofibStringToList("nn");
-        lambda1 = (undefined, function (x5) {
-          let tmp5;
-          tmp5 = NofibPrelude.map(life.star, x5);
-          return NofibPrelude.concat(tmp5)
-        });
-        tmp2 = NofibPrelude.map(lambda1, xss);
-        lambda2 = (undefined, function (a, b) {
-          let tmp5;
-          tmp5 = NofibPrelude.Cons("n", NofibPrelude.Nil);
-          return life.glue(tmp5, a, b)
-        });
-        tmp3 = NofibPrelude.foldr(lambda2, NofibPrelude.Nil, tmp2);
-        tmp4 = NofibPrelude.append(tmp1, tmp3);
-        return NofibPrelude.append(genn, tmp4)
-      });
-      tmp = lambda;
+      tmp = runtime.safeCall(lambda4(genn, xss));
       return NofibPrelude.lazy(tmp)
     } else {
       throw new globalThis.Error("match error");
     }
   } 
   static generations(sz) {
-    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, lambda, lambda1, lambda2;
+    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, lambda$this;
     tmp = NofibPrelude.enumFrom(0);
-    lambda = (undefined, function (i) {
-      let tmp11;
-      tmp11 = NofibPrelude.stringOfInt(i);
-      return NofibPrelude.nofibStringToList(tmp11)
-    });
-    tmp1 = NofibPrelude.map_lz(lambda, tmp);
-    lambda1 = (undefined, function (l) {
-      let tmp11, tmp12;
-      tmp11 = life.copy_lz(sz, 0);
-      tmp12 = life.append_lz_lz(l, tmp11);
-      return NofibPrelude.take_lz(sz, tmp12)
-    });
-    tmp2 = lambda1;
+    tmp1 = NofibPrelude.map_lz(lambda7, tmp);
+    tmp2 = runtime.safeCall(lambda8(sz));
     tmp3 = life.copy_lz(sz, 0);
     tmp4 = life.copy_lz(sz, tmp3);
     tmp5 = NofibPrelude.append_nl_lz(life.start, tmp4);
     tmp6 = NofibPrelude.map_lz(tmp2, tmp5);
     tmp7 = NofibPrelude.take_lz(sz, tmp6);
-    lambda2 = (undefined, function (b) {
-      return life.gen(sz, b)
-    });
-    tmp8 = NofibPrelude.iterate(lambda2, tmp7);
+    lambda$this = runtime.safeCall(lambda9(sz));
+    tmp8 = NofibPrelude.iterate(lambda$this, tmp7);
     tmp9 = life.limit(tmp8);
     tmp10 = NofibPrelude.zip_lz_nl(tmp1, tmp9);
     return NofibPrelude.map(life.disp, tmp10)

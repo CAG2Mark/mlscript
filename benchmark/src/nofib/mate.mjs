@@ -2,11 +2,973 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let mate1;
+let pieceAtWith, consFile, showRank, emptyAtAllAnd, ml, lscomp2, promote, lscomp1, kthreat, givesCheck, addPiece, solnAnd, solnOr, insert, ic, mate1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, lambda11, lambda12, lambda13, lambda14, lambda15, lambda16, lambda17, lambda18, lambda19, lambda20, lambda21, lambda22, lambda23, lambda24, lambda25, lambda26, lambda27, lambda28, lambda29, lambda30, lambda31, lambda32, lambda33, lambda34, lambda35, lambda36, lambda37, pieceAtWith$, showRank$, consFile$, emptyAtAllAnd$, lambda$, ml$, lscomp1$, lscomp2$, promote$, lambda$1, givesCheck$, kthreat$, lambda$2, lambda$3, lambda$4, lambda$5, lambda$6, lambda$7, lambda$8, lambda$9, lambda$10, lambda$11, solnAnd$, solnOr$, ic$;
+insert = function insert(x, ls) {
+  let param0, param1, y, ys, scrut, tmp, tmp1;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Cons(x, NofibPrelude.Nil)
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    y = param0;
+    ys = param1;
+    scrut = x > y;
+    if (scrut === true) {
+      tmp = insert(x, ys);
+      return NofibPrelude.Cons(y, tmp)
+    } else {
+      tmp1 = NofibPrelude.Cons(y, ys);
+      return NofibPrelude.Cons(x, tmp1)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda34 = (undefined, function (x, y) {
+  return x < y
+});
+lambda35 = (undefined, function (x, y) {
+  return x > y
+});
+lambda36 = (undefined, function (x, y) {
+  return x < y
+});
+lambda37 = (undefined, function (x, y) {
+  return x > y
+});
+ic$ = function ic$(mif, cs, ls) {
+  let param0, param1, first1, first0, mifs, cs_, etc, a, b, scrut, scrut1, scrut2, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    tmp = NofibPrelude.Cons(mif, NofibPrelude.Nil);
+    return NofibPrelude.Cons([
+      tmp,
+      cs
+    ], NofibPrelude.Nil)
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    if (globalThis.Array.isArray(param0) && param0.length === 2) {
+      first0 = param0[0];
+      first1 = param0[1];
+      mifs = first0;
+      cs_ = first1;
+      etc = param1;
+      tmp1 = mate1.showSoln(cs, 1);
+      a = tmp1;
+      tmp2 = mate1.showSoln(cs_, 1);
+      b = tmp2;
+      scrut2 = NofibPrelude.ltList(a, b, lambda34, lambda35);
+      if (scrut2 === true) {
+        tmp3 = NofibPrelude.Cons(mif, NofibPrelude.Nil);
+        tmp4 = NofibPrelude.Cons([
+          mifs,
+          cs_
+        ], etc);
+        return NofibPrelude.Cons([
+          tmp3,
+          cs
+        ], tmp4)
+      } else {
+        scrut1 = NofibPrelude.listEq(a, b);
+        if (scrut1 === true) {
+          tmp5 = insert(mif, mifs);
+          return NofibPrelude.Cons([
+            tmp5,
+            cs
+          ], etc)
+        } else {
+          tmp6 = NofibPrelude.ltList(a, b, lambda36, lambda37);
+          scrut = BenchmarkPrelude.not(tmp6);
+          if (scrut === true) {
+            tmp7 = ic$(mif, cs, etc);
+            return NofibPrelude.Cons([
+              mifs,
+              cs_
+            ], tmp7)
+          } else {
+            throw globalThis.Error("compare error");
+          }
+        }
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+ic = function ic(mif, cs) {
+  return (ls) => {
+    return ic$(mif, cs, ls)
+  }
+};
+solnOr$ = function solnOr$(c, n, mifb, other) {
+  let first1, first0, mif, b, rsm, param0, rs, scrut, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
+  if (globalThis.Array.isArray(mifb) && mifb.length === 2) {
+    first0 = mifb[0];
+    first1 = mifb[1];
+    mif = first0;
+    b = first1;
+    tmp = mate1.opponent(c);
+    tmp1 = n - 1;
+    tmp2 = mate1.replies(b, tmp, tmp1);
+    rsm = tmp2;
+    if (rsm instanceof NofibPrelude.None.class) {
+      return NofibPrelude.force(other)
+    } else if (rsm instanceof NofibPrelude.Some.class) {
+      param0 = rsm.x;
+      if (param0 instanceof NofibPrelude.Nil.class) {
+        tmp3 = mate1.opponent(c);
+        scrut = mate1.kingincheck(tmp3, b);
+        if (scrut === true) {
+          tmp4 = mate1.Solution(mif, NofibPrelude.Nil);
+          return NofibPrelude.Some(tmp4)
+        } else {
+          return NofibPrelude.force(other)
+        }
+      } else {
+        rs = param0;
+        tmp5 = mate1.Solution(mif, rs);
+        return NofibPrelude.Some(tmp5)
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+solnOr = function solnOr(c, n) {
+  return (mifb, other) => {
+    return solnOr$(c, n, mifb, other)
+  }
+};
+solnAnd$ = function solnAnd$(c, n, mifb, rest) {
+  let first1, first0, mif, b, sm, param0, s, scrut, param01, ms, tmp, tmp1, tmp2, tmp3;
+  if (globalThis.Array.isArray(mifb) && mifb.length === 2) {
+    first0 = mifb[0];
+    first1 = mifb[1];
+    mif = first0;
+    b = first1;
+    tmp = mate1.opponent(c);
+    tmp1 = n - 1;
+    tmp2 = mate1.solution(b, tmp, tmp1);
+    sm = tmp2;
+    if (sm instanceof NofibPrelude.None.class) {
+      return NofibPrelude.None
+    } else if (sm instanceof NofibPrelude.Some.class) {
+      param0 = sm.x;
+      s = param0;
+      scrut = NofibPrelude.force(rest);
+      if (scrut instanceof NofibPrelude.None.class) {
+        return NofibPrelude.None
+      } else if (scrut instanceof NofibPrelude.Some.class) {
+        param01 = scrut.x;
+        ms = param01;
+        tmp3 = NofibPrelude.Cons([
+          mif,
+          s
+        ], ms);
+        return NofibPrelude.Some(tmp3)
+      } else {
+        throw new globalThis.Error("match error");
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+solnAnd = function solnAnd(c, n) {
+  return (mifb, rest) => {
+    return solnAnd$(c, n, mifb, rest)
+  }
+};
+lambda$11 = function lambda$(f, a, t) {
+  return mate1.foldr_lz(f, a, t)
+};
+lambda33 = (undefined, function (f, a, t) {
+  return () => {
+    return lambda$11(f, a, t)
+  }
+});
+lambda32 = (undefined, function (x) {
+  let tmp;
+  tmp = mate1.comment(x);
+  return BenchmarkPrelude.not(tmp)
+});
+addPiece = function addPiece(p_sq, x) {
+  let first1, first0, p, sq;
+  if (globalThis.Array.isArray(p_sq) && p_sq.length === 2) {
+    first0 = p_sq[0];
+    first1 = p_sq[1];
+    p = first0;
+    sq = first1;
+    return mate1.putPieceAt(sq, p, x)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda30 = (undefined, function (pp) {
+  let tmp;
+  tmp = pp === " ";
+  return BenchmarkPrelude.not(tmp)
+});
+lambda$10 = function lambda$(r, a, b) {
+  return mate1.parseSquare(r, a, b)
+};
+lambda31 = (undefined, function (r) {
+  return (a, b) => {
+    return lambda$10(r, a, b)
+  }
+});
+lambda27 = (undefined, function (x) {
+  return x
+});
+lambda$9 = function lambda$(h, t) {
+  return NofibPrelude.Cons(h, t)
+};
+lambda29 = (undefined, function (h) {
+  return (t) => {
+    return lambda$9(h, t)
+  }
+});
+lambda28 = (undefined, function (h) {
+  return runtime.safeCall(lambda29(h))
+});
+lambda$8 = function lambda$(c, bd, ksq, rm, ms_) {
+  let tmp, tmp1;
+  tmp = mate1.tryMove(c, ksq, rm, bd);
+  tmp1 = mate1.maybe(lambda27, lambda28, tmp);
+  return runtime.safeCall(tmp1(ms_))
+};
+lambda26 = (undefined, function (c, bd, ksq) {
+  return (rm, ms_) => {
+    return lambda$8(c, bd, ksq, rm, ms_)
+  }
+});
+lambda$7 = function lambda$(c, bd, ksq, ms) {
+  let tmp, tmp1;
+  tmp = runtime.safeCall(lambda26(c, bd, ksq));
+  tmp1 = mate1.rawmoves(c, ksq, bd);
+  return NofibPrelude.foldr(tmp, ms, tmp1)
+};
+lambda25 = (undefined, function (c, bd) {
+  return (ksq, ms) => {
+    return lambda$7(c, bd, ksq, ms)
+  }
+});
+lambda23 = (undefined, function (x) {
+  return x
+});
+lambda$6 = function lambda$(c, sq_, bd1, p_, dummy) {
+  let tmp, tmp1;
+  tmp = mate1.opponent(c);
+  tmp1 = mate1.rmPieceAt(tmp, sq_, bd1);
+  return mate1.putPieceAt(sq_, p_, tmp1)
+};
+lambda24 = (undefined, function (c, sq_, bd1, p_) {
+  return (dummy) => {
+    return lambda$6(c, sq_, bd1, p_, dummy)
+  }
+});
+lambda$5 = function lambda$(y, xk, yk, caseScrut) {
+  let first1, first0, xe, ye, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    xe = first0;
+    ye = first1;
+    tmp = xe === xk;
+    tmp1 = NofibPrelude.min(y, yk);
+    tmp2 = tmp1 < ye;
+    tmp3 = NofibPrelude.max(y, yk);
+    tmp4 = ye < tmp3;
+    tmp5 = tmp2 && tmp4;
+    return tmp && tmp5
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda19 = (undefined, function (y, xk, yk) {
+  return (caseScrut) => {
+    return lambda$5(y, xk, yk, caseScrut)
+  }
+});
+lambda$4 = function lambda$(x, xk, yk, caseScrut) {
+  let first1, first0, xe, ye, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    xe = first0;
+    ye = first1;
+    tmp = ye === yk;
+    tmp1 = NofibPrelude.min(x, xk);
+    tmp2 = tmp1 < xe;
+    tmp3 = NofibPrelude.max(x, xk);
+    tmp4 = xe < tmp3;
+    tmp5 = tmp2 && tmp4;
+    return tmp && tmp5
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda20 = (undefined, function (x, xk, yk) {
+  return (caseScrut) => {
+    return lambda$4(x, xk, yk, caseScrut)
+  }
+});
+lambda$3 = function lambda$(x, xk, yk, caseScrut) {
+  let first1, first0, xe, ye, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    xe = first0;
+    ye = first1;
+    tmp = xe + ye;
+    tmp1 = xk + yk;
+    tmp2 = tmp === tmp1;
+    tmp3 = NofibPrelude.min(x, xk);
+    tmp4 = tmp3 < xe;
+    tmp5 = NofibPrelude.max(x, xk);
+    tmp6 = xe < tmp5;
+    tmp7 = tmp4 && tmp6;
+    return tmp2 && tmp7
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda21 = (undefined, function (x, xk, yk) {
+  return (caseScrut) => {
+    return lambda$3(x, xk, yk, caseScrut)
+  }
+});
+lambda$2 = function lambda$(x, xk, yk, caseScrut) {
+  let first1, first0, xe, ye, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    xe = first0;
+    ye = first1;
+    tmp = xe - ye;
+    tmp1 = xk - yk;
+    tmp2 = tmp === tmp1;
+    tmp3 = NofibPrelude.min(x, xk);
+    tmp4 = tmp3 < xe;
+    tmp5 = NofibPrelude.max(x, xk);
+    tmp6 = xe < tmp5;
+    tmp7 = tmp4 && tmp6;
+    return tmp2 && tmp7
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda22 = (undefined, function (x, xk, yk) {
+  return (caseScrut) => {
+    return lambda$2(x, xk, yk, caseScrut)
+  }
+});
+kthreat$ = function kthreat$(c, bd, x, y, param) {
+  let scrut, first1, first0, xk, yk, scrut1, scrut2, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45;
+  scrut = mate1.kingSquare(c, bd);
+  if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
+    first0 = scrut[0];
+    first1 = scrut[1];
+    xk = first0;
+    yk = first1;
+    if (param instanceof mate1.King.class) {
+      tmp = x - xk;
+      tmp1 = NofibPrelude.abs(tmp);
+      scrut1 = tmp1 <= 1;
+      if (scrut1 === true) {
+        tmp2 = y - yk;
+        tmp3 = NofibPrelude.abs(tmp2);
+        scrut2 = tmp3 <= 1;
+        if (scrut2 === true) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        return false
+      }
+    } else if (param instanceof mate1.Queen.class) {
+      tmp4 = kthreat$(c, bd, x, y, mate1.Rook);
+      tmp5 = kthreat$(c, bd, x, y, mate1.Bishop);
+      return tmp4 || tmp5
+    } else if (param instanceof mate1.Rook.class) {
+      tmp6 = x === xk;
+      tmp7 = runtime.safeCall(lambda19(y, xk, yk));
+      tmp8 = mate1.emptyAtAll(bd, tmp7);
+      tmp9 = tmp6 && tmp8;
+      tmp10 = y === yk;
+      tmp11 = runtime.safeCall(lambda20(x, xk, yk));
+      tmp12 = mate1.emptyAtAll(bd, tmp11);
+      tmp13 = tmp10 && tmp12;
+      return tmp9 || tmp13
+    } else if (param instanceof mate1.Bishop.class) {
+      tmp14 = x + y;
+      tmp15 = xk + yk;
+      tmp16 = tmp14 === tmp15;
+      tmp17 = runtime.safeCall(lambda21(x, xk, yk));
+      tmp18 = mate1.emptyAtAll(bd, tmp17);
+      tmp19 = tmp16 && tmp18;
+      tmp20 = x - y;
+      tmp21 = xk - yk;
+      tmp22 = tmp20 === tmp21;
+      tmp23 = runtime.safeCall(lambda22(x, xk, yk));
+      tmp24 = mate1.emptyAtAll(bd, tmp23);
+      tmp25 = tmp22 && tmp24;
+      return tmp19 || tmp25
+    } else if (param instanceof mate1.Knight.class) {
+      tmp26 = x - xk;
+      tmp27 = NofibPrelude.abs(tmp26);
+      tmp28 = tmp27 === 2;
+      tmp29 = y - yk;
+      tmp30 = NofibPrelude.abs(tmp29);
+      tmp31 = tmp30 === 1;
+      tmp32 = tmp28 && tmp31;
+      tmp33 = x - xk;
+      tmp34 = NofibPrelude.abs(tmp33);
+      tmp35 = tmp34 === 1;
+      tmp36 = y - yk;
+      tmp37 = NofibPrelude.abs(tmp36);
+      tmp38 = tmp37 === 2;
+      tmp39 = tmp35 && tmp38;
+      return tmp32 || tmp39
+    } else if (param instanceof mate1.Pawn.class) {
+      tmp40 = x - xk;
+      tmp41 = NofibPrelude.abs(tmp40);
+      tmp42 = tmp41 === 1;
+      if (c instanceof mate1.Black.class) {
+        tmp43 = y + 1;
+        tmp44 = yk === tmp43;
+      } else {
+        tmp45 = y - 1;
+        tmp44 = yk === tmp45;
+      }
+      return tmp42 && tmp44
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+kthreat = function kthreat(c, bd, x, y) {
+  return (param) => {
+    return kthreat$(c, bd, x, y, param)
+  }
+};
+givesCheck$ = function givesCheck$(c, bd, kxy) {
+  let first1, first0, k, first11, first01, x, y;
+  if (globalThis.Array.isArray(kxy) && kxy.length === 2) {
+    first0 = kxy[0];
+    first1 = kxy[1];
+    k = first0;
+    if (globalThis.Array.isArray(first1) && first1.length === 2) {
+      first01 = first1[0];
+      first11 = first1[1];
+      x = first01;
+      y = first11;
+      return kthreat$(c, bd, x, y, k)
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+givesCheck = function givesCheck(c, bd) {
+  return (kxy) => {
+    return givesCheck$(c, bd, kxy)
+  }
+};
+lambda$1 = function lambda$(mcp, x, y, param) {
+  let tmp;
+  tmp = NofibPrelude.Some(param);
+  return mate1.Move([
+    x,
+    y
+  ], mcp, tmp)
+};
+lambda18 = (undefined, function (mcp, x, y) {
+  return (param) => {
+    return lambda$1(mcp, x, y, param)
+  }
+});
+promote$ = function promote$(c, xy, mcp) {
+  let first1, first0, x, y, scrut, scrut1, scrut2, scrut3, scrut4, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, lambda$this;
+  if (globalThis.Array.isArray(xy) && xy.length === 2) {
+    first0 = xy[0];
+    first1 = xy[1];
+    x = first0;
+    y = first1;
+    if (c instanceof mate1.Black.class) {
+      tmp = true;
+    } else {
+      tmp = false;
+    }
+    scrut = tmp;
+    if (scrut === true) {
+      scrut1 = y === 1;
+      if (scrut1 === true) {
+        tmp1 = true;
+      } else {
+        tmp1 = false;
+      }
+    } else {
+      tmp1 = false;
+    }
+    if (c instanceof mate1.White.class) {
+      tmp2 = true;
+    } else {
+      tmp2 = false;
+    }
+    scrut2 = tmp2;
+    if (scrut2 === true) {
+      scrut3 = y === 8;
+      if (scrut3 === true) {
+        tmp3 = true;
+      } else {
+        tmp3 = false;
+      }
+    } else {
+      tmp3 = false;
+    }
+    scrut4 = tmp1 || tmp3;
+    if (scrut4 === true) {
+      tmp4 = NofibPrelude.Cons([
+        c,
+        mate1.Knight
+      ], NofibPrelude.Nil);
+      tmp5 = NofibPrelude.Cons([
+        c,
+        mate1.Bishop
+      ], tmp4);
+      tmp6 = NofibPrelude.Cons([
+        c,
+        mate1.Rook
+      ], tmp5);
+      tmp7 = NofibPrelude.Cons([
+        c,
+        mate1.Queen
+      ], tmp6);
+      lambda$this = runtime.safeCall(lambda18(mcp, x, y));
+      return NofibPrelude.map(lambda$this, tmp7)
+    } else {
+      tmp8 = mate1.Move([
+        x,
+        y
+      ], mcp, NofibPrelude.None);
+      return NofibPrelude.Cons(tmp8, NofibPrelude.Nil)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+promote = function promote(c) {
+  return (xy, mcp) => {
+    return promote$(c, xy, mcp)
+  }
+};
+lscomp2$ = function lscomp2$(c, bd, sq, sqs, ls) {
+  let param0, param1, h, ls1, param01, p_, scrut, tmp, tmp1, tmp2, tmp3, tmp4;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return lscomp1$(c, bd, sqs)
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    h = param0;
+    ls1 = param1;
+    if (h instanceof NofibPrelude.Some.class) {
+      param01 = h.x;
+      p_ = param01;
+      tmp = mate1.colourOf(p_);
+      tmp1 = tmp === c;
+      scrut = BenchmarkPrelude.not(tmp1);
+      if (scrut === true) {
+        tmp2 = NofibPrelude.Some(p_);
+        tmp3 = promote$(c, sq, tmp2);
+        tmp4 = lscomp2$(c, bd, sq, sqs, ls1);
+        return NofibPrelude.Cons(tmp3, tmp4)
+      } else {
+        return lscomp2$(c, bd, sq, sqs, ls1)
+      }
+    } else {
+      return lscomp2$(c, bd, sq, sqs, ls1)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp2 = function lscomp2(c, bd, sq, sqs) {
+  return (ls) => {
+    return lscomp2$(c, bd, sq, sqs, ls)
+  }
+};
+lscomp1$ = function lscomp1$(c, bd, ls) {
+  let param0, param1, sq, sqs, tmp, tmp1;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    sq = param0;
+    sqs = param1;
+    tmp = mate1.pieceAt(bd, sq);
+    tmp1 = NofibPrelude.Cons(tmp, NofibPrelude.Nil);
+    return lscomp2$(c, bd, sq, sqs, tmp1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp1 = function lscomp1(c, bd) {
+  return (ls) => {
+    return lscomp1$(c, bd, ls)
+  }
+};
+lambda13 = (undefined, function (caseScrut) {
+  let first1, first0, x, y, tmp;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    x = first0;
+    y = first1;
+    tmp = x - 1;
+    return [
+      tmp,
+      y
+    ]
+  } else {
+    throw new globalThis.Error("match error");
+  }
+});
+lambda14 = (undefined, function (caseScrut) {
+  let first1, first0, x, y, tmp;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    x = first0;
+    y = first1;
+    tmp = x + 1;
+    return [
+      tmp,
+      y
+    ]
+  } else {
+    throw new globalThis.Error("match error");
+  }
+});
+lambda15 = (undefined, function (caseScrut) {
+  let first1, first0, x, y, tmp;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    x = first0;
+    y = first1;
+    tmp = y - 1;
+    return [
+      x,
+      tmp
+    ]
+  } else {
+    throw new globalThis.Error("match error");
+  }
+});
+lambda16 = (undefined, function (caseScrut) {
+  let first1, first0, x, y, tmp;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    x = first0;
+    y = first1;
+    tmp = y + 1;
+    return [
+      x,
+      tmp
+    ]
+  } else {
+    throw new globalThis.Error("match error");
+  }
+});
+lambda17 = (undefined, function (x) {
+  return x
+});
+lambda8 = (undefined, function (caseScrut) {
+  let first1, first0, x, y, tmp, tmp1;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    x = first0;
+    y = first1;
+    tmp = x - 1;
+    tmp1 = y + 1;
+    return [
+      tmp,
+      tmp1
+    ]
+  } else {
+    throw new globalThis.Error("match error");
+  }
+});
+lambda9 = (undefined, function (caseScrut) {
+  let first1, first0, x, y, tmp, tmp1;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    x = first0;
+    y = first1;
+    tmp = x + 1;
+    tmp1 = y + 1;
+    return [
+      tmp,
+      tmp1
+    ]
+  } else {
+    throw new globalThis.Error("match error");
+  }
+});
+lambda10 = (undefined, function (caseScrut) {
+  let first1, first0, x, y, tmp, tmp1;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    x = first0;
+    y = first1;
+    tmp = x - 1;
+    tmp1 = y - 1;
+    return [
+      tmp,
+      tmp1
+    ]
+  } else {
+    throw new globalThis.Error("match error");
+  }
+});
+lambda11 = (undefined, function (caseScrut) {
+  let first1, first0, x, y, tmp, tmp1;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    x = first0;
+    y = first1;
+    tmp = x + 1;
+    tmp1 = y - 1;
+    return [
+      tmp,
+      tmp1
+    ]
+  } else {
+    throw new globalThis.Error("match error");
+  }
+});
+lambda12 = (undefined, function (x) {
+  return x
+});
+ml$ = function ml$(bd, c, inc, cont, sq, ms) {
+  let sq_, scrut, scrut1, param0, p_, scrut2, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+  tmp = runtime.safeCall(inc(sq));
+  sq_ = tmp;
+  scrut = mate1.onboard(sq_);
+  if (scrut === true) {
+    scrut1 = mate1.pieceAt(bd, sq_);
+    if (scrut1 instanceof NofibPrelude.None.class) {
+      tmp1 = mate1.Move(sq_, NofibPrelude.None, NofibPrelude.None);
+      tmp2 = NofibPrelude.Cons(tmp1, ms);
+      return ml$(bd, c, inc, cont, sq_, tmp2)
+    } else if (scrut1 instanceof NofibPrelude.Some.class) {
+      param0 = scrut1.x;
+      p_ = param0;
+      tmp3 = mate1.colourOf(p_);
+      tmp4 = tmp3 === c;
+      scrut2 = BenchmarkPrelude.not(tmp4);
+      if (scrut2 === true) {
+        tmp5 = NofibPrelude.Some(p_);
+        tmp6 = mate1.Move(sq_, tmp5, NofibPrelude.None);
+        tmp7 = NofibPrelude.Cons(tmp6, ms);
+        return runtime.safeCall(cont(tmp7))
+      } else {
+        return runtime.safeCall(cont(ms))
+      }
+    } else {
+      return runtime.safeCall(cont(ms))
+    }
+  } else {
+    return runtime.safeCall(cont(ms))
+  }
+};
+ml = function ml(bd, c, inc, cont) {
+  return (sq, ms) => {
+    return ml$(bd, c, inc, cont, sq, ms)
+  }
+};
+lambda$ = function lambda$(bd, c, sq, inc, cont, ms) {
+  return ml$(bd, c, inc, cont, sq, ms)
+};
+lambda7 = (undefined, function (bd, c, sq, inc, cont) {
+  return (ms) => {
+    return lambda$(bd, c, sq, inc, cont, ms)
+  }
+});
+lambda5 = (undefined, function (cp) {
+  let tmp, tmp1, tmp2;
+  tmp = mate1.showPiece(cp);
+  tmp1 = NofibPrelude.Cons("/", NofibPrelude.Nil);
+  tmp2 = NofibPrelude.append(tmp, tmp1);
+  return NofibPrelude.Cons("x", tmp2)
+});
+lambda6 = (undefined, function (pp) {
+  let tmp, tmp1, tmp2;
+  tmp = mate1.showPiece(pp);
+  tmp1 = NofibPrelude.Cons(")", NofibPrelude.Nil);
+  tmp2 = NofibPrelude.append(tmp, tmp1);
+  return NofibPrelude.Cons("(", tmp2)
+});
+emptyAtAllAnd$ = function emptyAtAllAnd$(e, b, ls) {
+  let param0, param1, first1, first0, s, xs, scrut, scrut1, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return b
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    if (globalThis.Array.isArray(param0) && param0.length === 2) {
+      first0 = param0[0];
+      first1 = param0[1];
+      s = first1;
+      xs = param1;
+      tmp = runtime.safeCall(e(s));
+      scrut = BenchmarkPrelude.not(tmp);
+      if (scrut === true) {
+        scrut1 = emptyAtAllAnd$(e, b, xs);
+        if (scrut1 === true) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        return false
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+emptyAtAllAnd = function emptyAtAllAnd(e) {
+  return (b, ls) => {
+    return emptyAtAllAnd$(e, b, ls)
+  }
+};
+consFile$ = function consFile$(bd, r, f, s) {
+  let scrut, param0, p, tmp, tmp1, tmp2;
+  scrut = mate1.pieceAt(bd, [
+    f,
+    r
+  ]);
+  if (scrut instanceof NofibPrelude.None.class) {
+    tmp = NofibPrelude.nofibStringToList(" -");
+    return NofibPrelude.append(tmp, s)
+  } else if (scrut instanceof NofibPrelude.Some.class) {
+    param0 = scrut.x;
+    p = param0;
+    tmp1 = mate1.pieceToChar(p);
+    tmp2 = NofibPrelude.Cons(tmp1, s);
+    return NofibPrelude.Cons(" ", tmp2)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+consFile = function consFile(bd, r) {
+  return (f, s) => {
+    return consFile$(bd, r, f, s)
+  }
+};
+showRank$ = function showRank$(bd, r) {
+  let tmp, consFile$this;
+  tmp = NofibPrelude.enumFromTo(1, 8);
+  consFile$this = runtime.safeCall(consFile(bd, r));
+  return NofibPrelude.foldr(consFile$this, NofibPrelude.Nil, tmp)
+};
+showRank = function showRank(bd) {
+  return (r) => {
+    return showRank$(bd, r)
+  }
+};
+pieceAtWith$ = function pieceAtWith$(sq, c, n, ls) {
+  let param0, param1, first1, first0, k, s, xs, scrut;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return n
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    if (globalThis.Array.isArray(param0) && param0.length === 2) {
+      first0 = param0[0];
+      first1 = param0[1];
+      k = first0;
+      s = first1;
+      xs = param1;
+      scrut = NofibPrelude.eqTup2(s, sq);
+      if (scrut === true) {
+        return NofibPrelude.Some([
+          c,
+          k
+        ])
+      } else {
+        return pieceAtWith$(sq, c, n, xs)
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+pieceAtWith = function pieceAtWith(sq) {
+  return (c, n, ls) => {
+    return pieceAtWith$(sq, c, n, ls)
+  }
+};
+lambda4 = (undefined, function (x) {
+  return x === "\n"
+});
+lambda3 = (undefined, function (l) {
+  let tmp;
+  tmp = NofibPrelude.Cons("\n", NofibPrelude.Nil);
+  return NofibPrelude.append(l, tmp)
+});
+lambda1 = (undefined, function (x) {
+  return x === " "
+});
+lambda2 = (undefined, function (x) {
+  return x === " "
+});
+lambda = (undefined, function (a, b) {
+  let first1, first0, aa, first11, first01, bb, tmp, tmp1;
+  if (globalThis.Array.isArray(a) && a.length === 2) {
+    first0 = a[0];
+    first1 = a[1];
+    aa = first0;
+    if (globalThis.Array.isArray(b) && b.length === 2) {
+      first01 = b[0];
+      first11 = b[1];
+      bb = first01;
+      tmp = NofibPrelude.listLen(aa);
+      tmp1 = NofibPrelude.listLen(bb);
+      return tmp <= tmp1
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+});
 mate1 = class mate {
   static {
     mate1 = mate;
-    let tmp, tmp1, lambda;
+    let tmp, tmp1, lambda38;
     this.Kind = class Kind {
       constructor() {}
       toString() { return "Kind"; }
@@ -133,13 +1095,13 @@ mate1 = class mate {
       }
       toString() { return "Soln(" + globalThis.Predef.render(this.a) + ", " + globalThis.Predef.render(this.b) + ")"; }
     };
-    lambda = (undefined, function () {
+    lambda38 = (undefined, function () {
       let tmp2, tmp3;
       tmp2 = mate.testMate_nofib(0);
       tmp3 = NofibPrelude.nofibListToString(tmp2);
       return BenchmarkPrelude.print(tmp3)
     });
-    tmp1 = lambda;
+    tmp1 = lambda38;
     BenchmarkPrelude.benchmark(tmp1)
   }
   static rqpart(le, x, ys, rle, rgt, r) {
@@ -227,27 +1189,7 @@ mate1 = class mate {
     }
   } 
   static sort(l) {
-    let tmp, lambda;
-    lambda = (undefined, function (a, b) {
-      let first1, first0, aa, first11, first01, bb, tmp1, tmp2;
-      if (globalThis.Array.isArray(a) && a.length === 2) {
-        first0 = a[0];
-        first1 = a[1];
-        aa = first0;
-        if (globalThis.Array.isArray(b) && b.length === 2) {
-          first01 = b[0];
-          first11 = b[1];
-          bb = first01;
-          tmp1 = NofibPrelude.listLen(aa);
-          tmp2 = NofibPrelude.listLen(bb);
-          return tmp1 <= tmp2
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
+    let tmp;
     tmp = lambda;
     return mate.qsort(tmp, l, NofibPrelude.Nil)
   } 
@@ -307,19 +1249,13 @@ mate1 = class mate {
     }
   } 
   static words(s) {
-    let scrut, s_, scrut1, first1, first0, w, s__, tmp, lambda, lambda1;
-    lambda = (undefined, function (x3) {
-      return x3 === " "
-    });
-    scrut = NofibPrelude.dropWhile(lambda, s);
+    let scrut, s_, scrut1, first1, first0, w, s__, tmp;
+    scrut = NofibPrelude.dropWhile(lambda1, s);
     if (scrut instanceof NofibPrelude.Nil.class) {
       return NofibPrelude.Nil
     } else {
       s_ = scrut;
-      lambda1 = (undefined, function (x3) {
-        return x3 === " "
-      });
-      scrut1 = NofibPrelude.break_(lambda1, s_);
+      scrut1 = NofibPrelude.break_(lambda2, s_);
       if (globalThis.Array.isArray(scrut1) && scrut1.length === 2) {
         first0 = scrut1[0];
         first1 = scrut1[1];
@@ -333,21 +1269,13 @@ mate1 = class mate {
     }
   } 
   static unlines(ls) {
-    let tmp, lambda;
-    lambda = (undefined, function (l1) {
-      let tmp1;
-      tmp1 = NofibPrelude.Cons("\n", NofibPrelude.Nil);
-      return NofibPrelude.append(l1, tmp1)
-    });
-    tmp = NofibPrelude.map(lambda, ls);
+    let tmp;
+    tmp = NofibPrelude.map(lambda3, ls);
     return NofibPrelude.concat(tmp)
   } 
   static lines(s1) {
-    let scrut, first1, first0, l1, s_, param0, param1, s__, tmp, lambda;
-    lambda = (undefined, function (x3) {
-      return x3 === "\n"
-    });
-    scrut = NofibPrelude.break_(lambda, s1);
+    let scrut, first1, first0, l1, s_, param0, param1, s__, tmp;
+    scrut = NofibPrelude.break_(lambda4, s1);
     if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
       first0 = scrut[0];
       first1 = scrut[1];
@@ -394,43 +1322,14 @@ mate1 = class mate {
     return NofibPrelude.nofibStringToList(tmp)
   } 
   static pieceAt(bd, sq) {
-    let pieceAtWith, param0, param1, wkss, bkss, tmp;
+    let param0, param1, wkss, bkss, tmp;
     if (bd instanceof mate.Board.class) {
       param0 = bd.a;
       param1 = bd.b;
       wkss = param0;
       bkss = param1;
-      pieceAtWith = function pieceAtWith(c4, n, ls2) {
-        let param01, param11, first1, first0, k, s2, xs2, scrut;
-        if (ls2 instanceof NofibPrelude.Nil.class) {
-          return n
-        } else if (ls2 instanceof NofibPrelude.Cons.class) {
-          param01 = ls2.head;
-          param11 = ls2.tail;
-          if (globalThis.Array.isArray(param01) && param01.length === 2) {
-            first0 = param01[0];
-            first1 = param01[1];
-            k = first0;
-            s2 = first1;
-            xs2 = param11;
-            scrut = NofibPrelude.eqTup2(s2, sq);
-            if (scrut === true) {
-              return NofibPrelude.Some([
-                c4,
-                k
-              ])
-            } else {
-              return pieceAtWith(c4, n, xs2)
-            }
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      tmp = pieceAtWith(mate.Black, NofibPrelude.None, bkss);
-      return pieceAtWith(mate.White, tmp, wkss)
+      tmp = pieceAtWith$(sq, mate.Black, NofibPrelude.None, bkss);
+      return pieceAtWith$(sq, mate.White, tmp, wkss)
     } else {
       throw new globalThis.Error("match error");
     }
@@ -472,34 +1371,11 @@ mate1 = class mate {
     }
   } 
   static showBoard(bd1) {
-    let showRank, tmp, tmp1, tmp2;
-    showRank = function showRank(r4) {
-      let consFile, tmp3;
-      consFile = function consFile(f1, s2) {
-        let scrut, param0, p2, tmp4, tmp5, tmp6;
-        scrut = mate.pieceAt(bd1, [
-          f1,
-          r4
-        ]);
-        if (scrut instanceof NofibPrelude.None.class) {
-          tmp4 = NofibPrelude.nofibStringToList(" -");
-          return NofibPrelude.append(tmp4, s2)
-        } else if (scrut instanceof NofibPrelude.Some.class) {
-          param0 = scrut.x;
-          p2 = param0;
-          tmp5 = mate.pieceToChar(p2);
-          tmp6 = NofibPrelude.Cons(tmp5, s2);
-          return NofibPrelude.Cons(" ", tmp6)
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      tmp3 = NofibPrelude.enumFromTo(1, 8);
-      return NofibPrelude.foldr(consFile, NofibPrelude.Nil, tmp3)
-    };
+    let tmp, tmp1, tmp2, showRank$this;
     tmp = NofibPrelude.enumFromTo(1, 8);
     tmp1 = NofibPrelude.reverse(tmp);
-    tmp2 = NofibPrelude.map(showRank, tmp1);
+    showRank$this = runtime.safeCall(showRank(bd1));
+    tmp2 = NofibPrelude.map(showRank$this, tmp1);
     return mate.unlines(tmp2)
   } 
   static showPiece(p2) {
@@ -553,45 +1429,14 @@ mate1 = class mate {
     }
   } 
   static emptyAtAll(bd2, e) {
-    let emptyAtAllAnd, param0, param1, wkss, bkss, tmp;
+    let param0, param1, wkss, bkss, tmp;
     if (bd2 instanceof mate.Board.class) {
       param0 = bd2.a;
       param1 = bd2.b;
       wkss = param0;
       bkss = param1;
-      emptyAtAllAnd = function emptyAtAllAnd(b, ls2) {
-        let param01, param11, first1, first0, s2, xs2, scrut, scrut1, tmp1;
-        if (ls2 instanceof NofibPrelude.Nil.class) {
-          return b
-        } else if (ls2 instanceof NofibPrelude.Cons.class) {
-          param01 = ls2.head;
-          param11 = ls2.tail;
-          if (globalThis.Array.isArray(param01) && param01.length === 2) {
-            first0 = param01[0];
-            first1 = param01[1];
-            s2 = first1;
-            xs2 = param11;
-            tmp1 = runtime.safeCall(e(s2));
-            scrut = BenchmarkPrelude.not(tmp1);
-            if (scrut === true) {
-              scrut1 = emptyAtAllAnd(b, xs2);
-              if (scrut1 === true) {
-                return true
-              } else {
-                return false
-              }
-            } else {
-              return false
-            }
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      tmp = emptyAtAllAnd(true, bkss);
-      return emptyAtAllAnd(tmp, wkss)
+      tmp = emptyAtAllAnd$(e, true, bkss);
+      return emptyAtAllAnd$(e, tmp, wkss)
     } else {
       throw new globalThis.Error("match error");
     }
@@ -815,7 +1660,7 @@ mate1 = class mate {
     }
   } 
   static showMove(withPiece, m) {
-    let param0, param1, param2, first1, first0, c9, k1, sq4, param01, param11, param21, sq_, mcp, mpp, capt, param02, prom, param03, scrut, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, lambda, lambda1;
+    let param0, param1, param2, first1, first0, c9, k1, sq4, param01, param11, param21, sq_, mcp, mpp, capt, param02, prom, param03, scrut, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16;
     if (m instanceof mate.MoveInFull.class) {
       param0 = m.a;
       param1 = m.b;
@@ -876,24 +1721,10 @@ mate1 = class mate {
             tmp8 = NofibPrelude.Nil;
           }
           tmp9 = NofibPrelude.Cons("-", NofibPrelude.Nil);
-          lambda = (undefined, function (cp) {
-            let tmp17, tmp18, tmp19;
-            tmp17 = mate.showPiece(cp);
-            tmp18 = NofibPrelude.Cons("/", NofibPrelude.Nil);
-            tmp19 = NofibPrelude.append(tmp17, tmp18);
-            return NofibPrelude.Cons("x", tmp19)
-          });
-          tmp10 = lambda;
+          tmp10 = lambda5;
           tmp11 = mate.maybe(tmp9, tmp10, mcp);
           tmp12 = mate.showSquare(c9, sq_);
-          lambda1 = (undefined, function (pp) {
-            let tmp17, tmp18, tmp19;
-            tmp17 = mate.showPiece(pp);
-            tmp18 = NofibPrelude.Cons(")", NofibPrelude.Nil);
-            tmp19 = NofibPrelude.append(tmp17, tmp18);
-            return NofibPrelude.Cons("(", tmp19)
-          });
-          tmp13 = lambda1;
+          tmp13 = lambda6;
           tmp14 = mate.maybe(NofibPrelude.Nil, tmp13, mpp);
           tmp15 = NofibPrelude.append(tmp12, tmp14);
           tmp16 = NofibPrelude.append(tmp11, tmp15);
@@ -1010,201 +1841,27 @@ mate1 = class mate {
     }
   } 
   static moveLine(bd8, c10, sq4, inc, cont) {
-    let ml, lambda;
-    ml = function ml(sq5, ms1) {
-      let sq_, scrut, scrut1, param0, p_1, scrut2, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
-      tmp = runtime.safeCall(inc(sq5));
-      sq_ = tmp;
-      scrut = mate.onboard(sq_);
-      if (scrut === true) {
-        scrut1 = mate.pieceAt(bd8, sq_);
-        if (scrut1 instanceof NofibPrelude.None.class) {
-          tmp1 = mate.Move(sq_, NofibPrelude.None, NofibPrelude.None);
-          tmp2 = NofibPrelude.Cons(tmp1, ms1);
-          return ml(sq_, tmp2)
-        } else if (scrut1 instanceof NofibPrelude.Some.class) {
-          param0 = scrut1.x;
-          p_1 = param0;
-          tmp3 = mate.colourOf(p_1);
-          tmp4 = tmp3 === c10;
-          scrut2 = BenchmarkPrelude.not(tmp4);
-          if (scrut2 === true) {
-            tmp5 = NofibPrelude.Some(p_1);
-            tmp6 = mate.Move(sq_, tmp5, NofibPrelude.None);
-            tmp7 = NofibPrelude.Cons(tmp6, ms1);
-            return runtime.safeCall(cont(tmp7))
-          } else {
-            return runtime.safeCall(cont(ms1))
-          }
-        } else {
-          return runtime.safeCall(cont(ms1))
-        }
-      } else {
-        return runtime.safeCall(cont(ms1))
-      }
-    };
-    lambda = (undefined, function (ms1) {
-      return ml(sq4, ms1)
-    });
-    return lambda
+    return runtime.safeCall(lambda7(bd8, c10, sq4, inc, cont))
   } 
   static bishopmoves(c11, sq5, bd9) {
-    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, lambda, lambda1, lambda2, lambda3, lambda4;
-    lambda = (undefined, function (caseScrut) {
-      let first1, first0, x3, y, tmp8, tmp9;
-      if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-        first0 = caseScrut[0];
-        first1 = caseScrut[1];
-        x3 = first0;
-        y = first1;
-        tmp8 = x3 - 1;
-        tmp9 = y + 1;
-        return [
-          tmp8,
-          tmp9
-        ]
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    tmp = lambda;
-    lambda1 = (undefined, function (caseScrut) {
-      let first1, first0, x3, y, tmp8, tmp9;
-      if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-        first0 = caseScrut[0];
-        first1 = caseScrut[1];
-        x3 = first0;
-        y = first1;
-        tmp8 = x3 + 1;
-        tmp9 = y + 1;
-        return [
-          tmp8,
-          tmp9
-        ]
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    tmp1 = lambda1;
-    lambda2 = (undefined, function (caseScrut) {
-      let first1, first0, x3, y, tmp8, tmp9;
-      if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-        first0 = caseScrut[0];
-        first1 = caseScrut[1];
-        x3 = first0;
-        y = first1;
-        tmp8 = x3 - 1;
-        tmp9 = y - 1;
-        return [
-          tmp8,
-          tmp9
-        ]
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    tmp2 = lambda2;
-    lambda3 = (undefined, function (caseScrut) {
-      let first1, first0, x3, y, tmp8, tmp9;
-      if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-        first0 = caseScrut[0];
-        first1 = caseScrut[1];
-        x3 = first0;
-        y = first1;
-        tmp8 = x3 + 1;
-        tmp9 = y - 1;
-        return [
-          tmp8,
-          tmp9
-        ]
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    tmp3 = lambda3;
-    lambda4 = (undefined, function (x3) {
-      return x3
-    });
-    tmp4 = mate.moveLine(bd9, c11, sq5, tmp3, lambda4);
+    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+    tmp = lambda8;
+    tmp1 = lambda9;
+    tmp2 = lambda10;
+    tmp3 = lambda11;
+    tmp4 = mate.moveLine(bd9, c11, sq5, tmp3, lambda12);
     tmp5 = mate.moveLine(bd9, c11, sq5, tmp2, tmp4);
     tmp6 = mate.moveLine(bd9, c11, sq5, tmp1, tmp5);
     tmp7 = mate.moveLine(bd9, c11, sq5, tmp, tmp6);
     return runtime.safeCall(tmp7(NofibPrelude.Nil))
   } 
   static rookmoves(c12, sq6, bd10) {
-    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, lambda, lambda1, lambda2, lambda3, lambda4;
-    lambda = (undefined, function (caseScrut) {
-      let first1, first0, x3, y, tmp8;
-      if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-        first0 = caseScrut[0];
-        first1 = caseScrut[1];
-        x3 = first0;
-        y = first1;
-        tmp8 = x3 - 1;
-        return [
-          tmp8,
-          y
-        ]
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    tmp = lambda;
-    lambda1 = (undefined, function (caseScrut) {
-      let first1, first0, x3, y, tmp8;
-      if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-        first0 = caseScrut[0];
-        first1 = caseScrut[1];
-        x3 = first0;
-        y = first1;
-        tmp8 = x3 + 1;
-        return [
-          tmp8,
-          y
-        ]
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    tmp1 = lambda1;
-    lambda2 = (undefined, function (caseScrut) {
-      let first1, first0, x3, y, tmp8;
-      if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-        first0 = caseScrut[0];
-        first1 = caseScrut[1];
-        x3 = first0;
-        y = first1;
-        tmp8 = y - 1;
-        return [
-          x3,
-          tmp8
-        ]
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    tmp2 = lambda2;
-    lambda3 = (undefined, function (caseScrut) {
-      let first1, first0, x3, y, tmp8;
-      if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-        first0 = caseScrut[0];
-        first1 = caseScrut[1];
-        x3 = first0;
-        y = first1;
-        tmp8 = y + 1;
-        return [
-          x3,
-          tmp8
-        ]
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    tmp3 = lambda3;
-    lambda4 = (undefined, function (x3) {
-      return x3
-    });
-    tmp4 = mate.moveLine(bd10, c12, sq6, tmp3, lambda4);
+    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+    tmp = lambda13;
+    tmp1 = lambda14;
+    tmp2 = lambda15;
+    tmp3 = lambda16;
+    tmp4 = mate.moveLine(bd10, c12, sq6, tmp3, lambda17);
     tmp5 = mate.moveLine(bd10, c12, sq6, tmp2, tmp4);
     tmp6 = mate.moveLine(bd10, c12, sq6, tmp1, tmp5);
     tmp7 = mate.moveLine(bd10, c12, sq6, tmp, tmp6);
@@ -1327,135 +1984,12 @@ mate1 = class mate {
     }
   } 
   static pawnmoves(c15, pq2, bd13) {
-    let promote, lscomp1, first1, first0, p3, q, fwd, movs, on1, on2, scrut, scrut1, scrut2, scrut3, scrut4, caps, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17;
+    let first1, first0, p3, q, fwd, movs, on1, on2, scrut, scrut1, scrut2, scrut3, scrut4, caps, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17;
     if (globalThis.Array.isArray(pq2) && pq2.length === 2) {
       first0 = pq2[0];
       first1 = pq2[1];
       p3 = first0;
       q = first1;
-      promote = function promote(xy, mcp) {
-        let first11, first01, x3, y, scrut5, scrut6, scrut7, scrut8, scrut9, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, lambda;
-        if (globalThis.Array.isArray(xy) && xy.length === 2) {
-          first01 = xy[0];
-          first11 = xy[1];
-          x3 = first01;
-          y = first11;
-          if (c15 instanceof mate.Black.class) {
-            tmp18 = true;
-          } else {
-            tmp18 = false;
-          }
-          scrut5 = tmp18;
-          if (scrut5 === true) {
-            scrut6 = y === 1;
-            if (scrut6 === true) {
-              tmp19 = true;
-            } else {
-              tmp19 = false;
-            }
-          } else {
-            tmp19 = false;
-          }
-          if (c15 instanceof mate.White.class) {
-            tmp20 = true;
-          } else {
-            tmp20 = false;
-          }
-          scrut7 = tmp20;
-          if (scrut7 === true) {
-            scrut8 = y === 8;
-            if (scrut8 === true) {
-              tmp21 = true;
-            } else {
-              tmp21 = false;
-            }
-          } else {
-            tmp21 = false;
-          }
-          scrut9 = tmp19 || tmp21;
-          if (scrut9 === true) {
-            tmp22 = NofibPrelude.Cons([
-              c15,
-              mate.Knight
-            ], NofibPrelude.Nil);
-            tmp23 = NofibPrelude.Cons([
-              c15,
-              mate.Bishop
-            ], tmp22);
-            tmp24 = NofibPrelude.Cons([
-              c15,
-              mate.Rook
-            ], tmp23);
-            tmp25 = NofibPrelude.Cons([
-              c15,
-              mate.Queen
-            ], tmp24);
-            lambda = (undefined, function (param) {
-              let tmp27;
-              tmp27 = NofibPrelude.Some(param);
-              return mate.Move([
-                x3,
-                y
-              ], mcp, tmp27)
-            });
-            return NofibPrelude.map(lambda, tmp25)
-          } else {
-            tmp26 = mate.Move([
-              x3,
-              y
-            ], mcp, NofibPrelude.None);
-            return NofibPrelude.Cons(tmp26, NofibPrelude.Nil)
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      lscomp1 = function lscomp1(ls2) {
-        let lscomp2, param0, param1, sq7, sqs1, tmp18, tmp19;
-        if (ls2 instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Nil
-        } else if (ls2 instanceof NofibPrelude.Cons.class) {
-          param0 = ls2.head;
-          param1 = ls2.tail;
-          sq7 = param0;
-          sqs1 = param1;
-          lscomp2 = function lscomp2(ls3) {
-            let param01, param11, h, ls4, param02, p_1, scrut5, tmp20, tmp21, tmp22, tmp23, tmp24;
-            if (ls3 instanceof NofibPrelude.Nil.class) {
-              return lscomp1(sqs1)
-            } else if (ls3 instanceof NofibPrelude.Cons.class) {
-              param01 = ls3.head;
-              param11 = ls3.tail;
-              h = param01;
-              ls4 = param11;
-              if (h instanceof NofibPrelude.Some.class) {
-                param02 = h.x;
-                p_1 = param02;
-                tmp20 = mate.colourOf(p_1);
-                tmp21 = tmp20 === c15;
-                scrut5 = BenchmarkPrelude.not(tmp21);
-                if (scrut5 === true) {
-                  tmp22 = NofibPrelude.Some(p_1);
-                  tmp23 = promote(sq7, tmp22);
-                  tmp24 = lscomp2(ls4);
-                  return NofibPrelude.Cons(tmp23, tmp24)
-                } else {
-                  return lscomp2(ls4)
-                }
-              } else {
-                return lscomp2(ls4)
-              }
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          };
-          tmp18 = mate.pieceAt(bd13, sq7);
-          tmp19 = NofibPrelude.Cons(tmp18, NofibPrelude.Nil);
-          return lscomp2(tmp19)
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
       if (c15 instanceof mate.White.class) {
         tmp = 1;
       } else {
@@ -1475,7 +2009,7 @@ mate1 = class mate {
       ];
       scrut = mate.pieceAt(bd13, on1);
       if (scrut instanceof NofibPrelude.None.class) {
-        tmp4 = promote(on1, NofibPrelude.None);
+        tmp4 = promote$(c15, on1, NofibPrelude.None);
         scrut1 = q === 2;
         if (scrut1 === true) {
           if (c15 instanceof mate.White.class) {
@@ -1525,7 +2059,7 @@ mate1 = class mate {
         tmp10,
         tmp11
       ], tmp14);
-      tmp16 = lscomp1(tmp15);
+      tmp16 = lscomp1$(c15, bd13, tmp15);
       tmp17 = NofibPrelude.concat(tmp16);
       caps = tmp17;
       return NofibPrelude.append(movs, caps)
@@ -1540,195 +2074,14 @@ mate1 = class mate {
     return NofibPrelude.append(tmp, tmp1)
   } 
   static kingincheck(c17, bd15) {
-    let givesCheck, tmp, tmp1;
-    givesCheck = function givesCheck(kxy) {
-      let kthreat, first1, first0, k1, first11, first01, x3, y;
-      if (globalThis.Array.isArray(kxy) && kxy.length === 2) {
-        first0 = kxy[0];
-        first1 = kxy[1];
-        k1 = first0;
-        if (globalThis.Array.isArray(first1) && first1.length === 2) {
-          first01 = first1[0];
-          first11 = first1[1];
-          x3 = first01;
-          y = first11;
-          kthreat = function kthreat(param) {
-            let scrut, first12, first02, xk, yk, scrut1, scrut2, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, lambda, lambda1, lambda2, lambda3;
-            scrut = mate.kingSquare(c17, bd15);
-            if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
-              first02 = scrut[0];
-              first12 = scrut[1];
-              xk = first02;
-              yk = first12;
-              if (param instanceof mate.King.class) {
-                tmp2 = x3 - xk;
-                tmp3 = NofibPrelude.abs(tmp2);
-                scrut1 = tmp3 <= 1;
-                if (scrut1 === true) {
-                  tmp4 = y - yk;
-                  tmp5 = NofibPrelude.abs(tmp4);
-                  scrut2 = tmp5 <= 1;
-                  if (scrut2 === true) {
-                    return true
-                  } else {
-                    return false
-                  }
-                } else {
-                  return false
-                }
-              } else if (param instanceof mate.Queen.class) {
-                tmp6 = kthreat(mate.Rook);
-                tmp7 = kthreat(mate.Bishop);
-                return tmp6 || tmp7
-              } else if (param instanceof mate.Rook.class) {
-                tmp8 = x3 === xk;
-                lambda = (undefined, function (caseScrut) {
-                  let first13, first03, xe, ye, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53;
-                  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-                    first03 = caseScrut[0];
-                    first13 = caseScrut[1];
-                    xe = first03;
-                    ye = first13;
-                    tmp48 = xe === xk;
-                    tmp49 = NofibPrelude.min(y, yk);
-                    tmp50 = tmp49 < ye;
-                    tmp51 = NofibPrelude.max(y, yk);
-                    tmp52 = ye < tmp51;
-                    tmp53 = tmp50 && tmp52;
-                    return tmp48 && tmp53
-                  } else {
-                    throw new globalThis.Error("match error");
-                  }
-                });
-                tmp9 = lambda;
-                tmp10 = mate.emptyAtAll(bd15, tmp9);
-                tmp11 = tmp8 && tmp10;
-                tmp12 = y === yk;
-                lambda1 = (undefined, function (caseScrut) {
-                  let first13, first03, xe, ye, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53;
-                  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-                    first03 = caseScrut[0];
-                    first13 = caseScrut[1];
-                    xe = first03;
-                    ye = first13;
-                    tmp48 = ye === yk;
-                    tmp49 = NofibPrelude.min(x3, xk);
-                    tmp50 = tmp49 < xe;
-                    tmp51 = NofibPrelude.max(x3, xk);
-                    tmp52 = xe < tmp51;
-                    tmp53 = tmp50 && tmp52;
-                    return tmp48 && tmp53
-                  } else {
-                    throw new globalThis.Error("match error");
-                  }
-                });
-                tmp13 = lambda1;
-                tmp14 = mate.emptyAtAll(bd15, tmp13);
-                tmp15 = tmp12 && tmp14;
-                return tmp11 || tmp15
-              } else if (param instanceof mate.Bishop.class) {
-                tmp16 = x3 + y;
-                tmp17 = xk + yk;
-                tmp18 = tmp16 === tmp17;
-                lambda2 = (undefined, function (caseScrut) {
-                  let first13, first03, xe, ye, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55;
-                  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-                    first03 = caseScrut[0];
-                    first13 = caseScrut[1];
-                    xe = first03;
-                    ye = first13;
-                    tmp48 = xe + ye;
-                    tmp49 = xk + yk;
-                    tmp50 = tmp48 === tmp49;
-                    tmp51 = NofibPrelude.min(x3, xk);
-                    tmp52 = tmp51 < xe;
-                    tmp53 = NofibPrelude.max(x3, xk);
-                    tmp54 = xe < tmp53;
-                    tmp55 = tmp52 && tmp54;
-                    return tmp50 && tmp55
-                  } else {
-                    throw new globalThis.Error("match error");
-                  }
-                });
-                tmp19 = lambda2;
-                tmp20 = mate.emptyAtAll(bd15, tmp19);
-                tmp21 = tmp18 && tmp20;
-                tmp22 = x3 - y;
-                tmp23 = xk - yk;
-                tmp24 = tmp22 === tmp23;
-                lambda3 = (undefined, function (caseScrut) {
-                  let first13, first03, xe, ye, tmp48, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55;
-                  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-                    first03 = caseScrut[0];
-                    first13 = caseScrut[1];
-                    xe = first03;
-                    ye = first13;
-                    tmp48 = xe - ye;
-                    tmp49 = xk - yk;
-                    tmp50 = tmp48 === tmp49;
-                    tmp51 = NofibPrelude.min(x3, xk);
-                    tmp52 = tmp51 < xe;
-                    tmp53 = NofibPrelude.max(x3, xk);
-                    tmp54 = xe < tmp53;
-                    tmp55 = tmp52 && tmp54;
-                    return tmp50 && tmp55
-                  } else {
-                    throw new globalThis.Error("match error");
-                  }
-                });
-                tmp25 = lambda3;
-                tmp26 = mate.emptyAtAll(bd15, tmp25);
-                tmp27 = tmp24 && tmp26;
-                return tmp21 || tmp27
-              } else if (param instanceof mate.Knight.class) {
-                tmp28 = x3 - xk;
-                tmp29 = NofibPrelude.abs(tmp28);
-                tmp30 = tmp29 === 2;
-                tmp31 = y - yk;
-                tmp32 = NofibPrelude.abs(tmp31);
-                tmp33 = tmp32 === 1;
-                tmp34 = tmp30 && tmp33;
-                tmp35 = x3 - xk;
-                tmp36 = NofibPrelude.abs(tmp35);
-                tmp37 = tmp36 === 1;
-                tmp38 = y - yk;
-                tmp39 = NofibPrelude.abs(tmp38);
-                tmp40 = tmp39 === 2;
-                tmp41 = tmp37 && tmp40;
-                return tmp34 || tmp41
-              } else if (param instanceof mate.Pawn.class) {
-                tmp42 = x3 - xk;
-                tmp43 = NofibPrelude.abs(tmp42);
-                tmp44 = tmp43 === 1;
-                if (c17 instanceof mate.Black.class) {
-                  tmp45 = y + 1;
-                  tmp46 = yk === tmp45;
-                } else {
-                  tmp47 = y - 1;
-                  tmp46 = yk === tmp47;
-                }
-                return tmp44 && tmp46
-              } else {
-                throw new globalThis.Error("match error");
-              }
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          };
-          return kthreat(k1)
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let tmp, tmp1, givesCheck$this;
     tmp = mate.opponent(c17);
     tmp1 = mate.forcesColoured(tmp, bd15);
-    return mate.any(givesCheck, tmp1)
+    givesCheck$this = runtime.safeCall(givesCheck(c17, bd15));
+    return mate.any(givesCheck$this, tmp1)
   } 
   static tryMove(c18, ksq, m1, bd16) {
-    let first1, first0, k1, sq8, param0, param1, param2, sq_, mcp, mpp, p3, bd17, p_1, bd21, scrut, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, lambda, lambda1;
+    let first1, first0, k1, sq8, param0, param1, param2, sq_, mcp, mpp, p3, bd17, p_1, bd21, scrut, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
     if (globalThis.Array.isArray(ksq) && ksq.length === 2) {
       first0 = ksq[0];
       first1 = ksq[1];
@@ -1747,19 +2100,10 @@ mate1 = class mate {
         ];
         tmp = mate.rmPieceAt(c18, sq8, bd16);
         bd17 = tmp;
-        lambda = (undefined, function (x3) {
-          return x3
-        });
-        tmp1 = mate.maybe(p3, lambda, mpp);
+        tmp1 = mate.maybe(p3, lambda23, mpp);
         p_1 = tmp1;
         tmp2 = mate.putPieceAt(sq_, p_1, bd17);
-        lambda1 = (undefined, function (dummy) {
-          let tmp8, tmp9;
-          tmp8 = mate.opponent(c18);
-          tmp9 = mate.rmPieceAt(tmp8, sq_, bd17);
-          return mate.putPieceAt(sq_, p_1, tmp9)
-        });
-        tmp3 = lambda1;
+        tmp3 = runtime.safeCall(lambda24(c18, sq_, bd17, p_1));
         tmp4 = mate.maybe(tmp2, tmp3, mcp);
         bd21 = tmp4;
         tmp5 = mate.kingincheck(c18, bd21);
@@ -1812,31 +2156,10 @@ mate1 = class mate {
     }
   } 
   static moveDetailsFor(c20, bd18) {
-    let tmp, lambda;
+    let tmp, lambda$this;
     tmp = mate.forcesColoured(c20, bd18);
-    lambda = (undefined, function (ksq2, ms1) {
-      let tmp1, tmp2, lambda1;
-      lambda1 = (undefined, function (rm, ms_) {
-        let tmp3, tmp4, lambda2, lambda3;
-        tmp3 = mate.tryMove(c20, ksq2, rm, bd18);
-        lambda2 = (undefined, function (x3) {
-          return x3
-        });
-        lambda3 = (undefined, function (h) {
-          let lambda4;
-          lambda4 = (undefined, function (t) {
-            return NofibPrelude.Cons(h, t)
-          });
-          return lambda4
-        });
-        tmp4 = mate.maybe(lambda2, lambda3, tmp3);
-        return runtime.safeCall(tmp4(ms_))
-      });
-      tmp1 = lambda1;
-      tmp2 = mate.rawmoves(c20, ksq2, bd18);
-      return NofibPrelude.foldr(tmp1, ms1, tmp2)
-    });
-    return NofibPrelude.foldr(lambda, NofibPrelude.Nil, tmp)
+    lambda$this = runtime.safeCall(lambda25(c20, bd18));
+    return NofibPrelude.foldr(lambda$this, NofibPrelude.Nil, tmp)
   } 
   static comment(s2) {
     let tmp, tmp1, tmp2, tmp3;
@@ -1963,34 +2286,15 @@ mate1 = class mate {
     }
   } 
   static parseRank(r5, x3) {
-    let tmp, tmp1, tmp2, lambda, lambda1;
+    let tmp, tmp1, tmp2, lambda$this;
     tmp = NofibPrelude.enumFromTo(1, 8);
-    lambda = (undefined, function (pp) {
-      let tmp3;
-      tmp3 = pp === " ";
-      return BenchmarkPrelude.not(tmp3)
-    });
-    tmp1 = NofibPrelude.filter(lambda, x3);
-    lambda1 = (undefined, function (a1, b) {
-      return mate.parseSquare(r5, a1, b)
-    });
-    tmp2 = NofibPrelude.zipWith(lambda1, tmp, tmp1);
+    tmp1 = NofibPrelude.filter(lambda30, x3);
+    lambda$this = runtime.safeCall(lambda31(r5));
+    tmp2 = NofibPrelude.zipWith(lambda$this, tmp, tmp1);
     return NofibPrelude.concat(tmp2)
   } 
   static parseBoard(ls4) {
-    let addPiece, tmp, tmp1, tmp2, tmp3;
-    addPiece = function addPiece(p_sq, x4) {
-      let first1, first0, p3, sq8;
-      if (globalThis.Array.isArray(p_sq) && p_sq.length === 2) {
-        first0 = p_sq[0];
-        first1 = p_sq[1];
-        p3 = first0;
-        sq8 = first1;
-        return mate.putPieceAt(sq8, p3, x4)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let tmp, tmp1, tmp2, tmp3;
     tmp = NofibPrelude.enumFromTo(1, 8);
     tmp1 = NofibPrelude.reverse(tmp);
     tmp2 = NofibPrelude.zipWith(mate.parseRank, tmp1, ls4);
@@ -1998,13 +2302,8 @@ mate1 = class mate {
     return NofibPrelude.foldr(addPiece, mate.emptyBoard, tmp3)
   } 
   static parseProblem(s4) {
-    let bdtxt_gltxt, first1, first0, bdtxt, gltxt, bd19, gl, tmp, tmp1, tmp2, tmp3, lambda;
-    lambda = (undefined, function (x4) {
-      let tmp4;
-      tmp4 = mate.comment(x4);
-      return BenchmarkPrelude.not(tmp4)
-    });
-    tmp = NofibPrelude.filter(lambda, s4);
+    let bdtxt_gltxt, first1, first0, bdtxt, gltxt, bd19, gl, tmp, tmp1, tmp2, tmp3;
+    tmp = NofibPrelude.filter(lambda32, s4);
     tmp1 = NofibPrelude.splitAt(8, tmp);
     bdtxt_gltxt = tmp1;
     if (globalThis.Array.isArray(bdtxt_gltxt) && bdtxt_gltxt.length === 2) {
@@ -2030,16 +2329,14 @@ mate1 = class mate {
     return mate.parseProblem(tmp)
   } 
   static foldr_lz(f2, a1, x4) {
-    let param0, param1, h, t, tmp, lambda;
+    let param0, param1, h, t, tmp, lambda$this;
     if (x4 instanceof NofibPrelude.Cons.class) {
       param0 = x4.head;
       param1 = x4.tail;
       h = param0;
       t = param1;
-      lambda = (undefined, function () {
-        return mate.foldr_lz(f2, a1, t)
-      });
-      tmp = NofibPrelude.lazy(lambda);
+      lambda$this = runtime.safeCall(lambda33(f2, a1, t));
+      tmp = NofibPrelude.lazy(lambda$this);
       return runtime.safeCall(f2(h, tmp))
     } else if (x4 instanceof NofibPrelude.Nil.class) {
       return a1
@@ -2048,44 +2345,7 @@ mate1 = class mate {
     }
   } 
   static replies(bd19, c22, n) {
-    let solnAnd, mds, scrut, scrut1, scrut2, tmp, tmp1;
-    solnAnd = function solnAnd(mifb, rest) {
-      let first1, first0, mif, b, sm, param0, s6, scrut3, param01, ms1, tmp2, tmp3, tmp4, tmp5;
-      if (globalThis.Array.isArray(mifb) && mifb.length === 2) {
-        first0 = mifb[0];
-        first1 = mifb[1];
-        mif = first0;
-        b = first1;
-        tmp2 = mate.opponent(c22);
-        tmp3 = n - 1;
-        tmp4 = mate.solution(b, tmp2, tmp3);
-        sm = tmp4;
-        if (sm instanceof NofibPrelude.None.class) {
-          return NofibPrelude.None
-        } else if (sm instanceof NofibPrelude.Some.class) {
-          param0 = sm.x;
-          s6 = param0;
-          scrut3 = NofibPrelude.force(rest);
-          if (scrut3 instanceof NofibPrelude.None.class) {
-            return NofibPrelude.None
-          } else if (scrut3 instanceof NofibPrelude.Some.class) {
-            param01 = scrut3.x;
-            ms1 = param01;
-            tmp5 = NofibPrelude.Cons([
-              mif,
-              s6
-            ], ms1);
-            return NofibPrelude.Some(tmp5)
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let mds, scrut, scrut1, scrut2, tmp, tmp1, solnAnd$this;
     tmp = mate.moveDetailsFor(c22, bd19);
     mds = tmp;
     scrut1 = n === 0;
@@ -2100,55 +2360,21 @@ mate1 = class mate {
       scrut = n > 0;
       if (scrut === true) {
         tmp1 = NofibPrelude.Some(NofibPrelude.Nil);
-        return mate.foldr_lz(solnAnd, tmp1, mds)
+        solnAnd$this = runtime.safeCall(solnAnd(c22, n));
+        return mate.foldr_lz(solnAnd$this, tmp1, mds)
       } else {
         throw globalThis.Error("n < 0");
       }
     }
   } 
   static solution(bd20, c23, n1) {
-    let solnOr, scrut, mds, tmp;
-    solnOr = function solnOr(mifb, other) {
-      let first1, first0, mif, b, rsm, param0, rs, scrut1, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
-      if (globalThis.Array.isArray(mifb) && mifb.length === 2) {
-        first0 = mifb[0];
-        first1 = mifb[1];
-        mif = first0;
-        b = first1;
-        tmp1 = mate.opponent(c23);
-        tmp2 = n1 - 1;
-        tmp3 = mate.replies(b, tmp1, tmp2);
-        rsm = tmp3;
-        if (rsm instanceof NofibPrelude.None.class) {
-          return NofibPrelude.force(other)
-        } else if (rsm instanceof NofibPrelude.Some.class) {
-          param0 = rsm.x;
-          if (param0 instanceof NofibPrelude.Nil.class) {
-            tmp4 = mate.opponent(c23);
-            scrut1 = mate.kingincheck(tmp4, b);
-            if (scrut1 === true) {
-              tmp5 = mate.Solution(mif, NofibPrelude.Nil);
-              return NofibPrelude.Some(tmp5)
-            } else {
-              return NofibPrelude.force(other)
-            }
-          } else {
-            rs = param0;
-            tmp6 = mate.Solution(mif, rs);
-            return NofibPrelude.Some(tmp6)
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let scrut, mds, tmp, solnOr$this;
     scrut = n1 > 0;
     if (scrut === true) {
       tmp = mate.moveDetailsFor(c23, bd20);
       mds = tmp;
-      return mate.foldr_lz(solnOr, NofibPrelude.None, mds)
+      solnOr$this = runtime.safeCall(solnOr(c23, n1));
+      return mate.foldr_lz(solnOr$this, NofibPrelude.None, mds)
     } else {
       throw globalThis.Error("n <= 0");
     }
@@ -2279,109 +2505,15 @@ mate1 = class mate {
     }
   } 
   static insertCompact(mif_s, ls5) {
-    let insert, ic, first1, first0, mif, s8, cs, tmp;
+    let first1, first0, mif, s8, cs, tmp;
     if (globalThis.Array.isArray(mif_s) && mif_s.length === 2) {
       first0 = mif_s[0];
       first1 = mif_s[1];
       mif = first0;
       s8 = first1;
-      insert = function insert(x5, ls6) {
-        let param0, param1, y, ys2, scrut, tmp1, tmp2;
-        if (ls6 instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Cons(x5, NofibPrelude.Nil)
-        } else if (ls6 instanceof NofibPrelude.Cons.class) {
-          param0 = ls6.head;
-          param1 = ls6.tail;
-          y = param0;
-          ys2 = param1;
-          scrut = x5 > y;
-          if (scrut === true) {
-            tmp1 = insert(x5, ys2);
-            return NofibPrelude.Cons(y, tmp1)
-          } else {
-            tmp2 = NofibPrelude.Cons(y, ys2);
-            return NofibPrelude.Cons(x5, tmp2)
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      ic = function ic(ls6) {
-        let param0, param1, first11, first01, mifs2, cs_, etc, a2, b, scrut, scrut1, scrut2, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, lambda, lambda1, lambda2, lambda3;
-        if (ls6 instanceof NofibPrelude.Nil.class) {
-          tmp1 = NofibPrelude.Cons(mif, NofibPrelude.Nil);
-          return NofibPrelude.Cons([
-            tmp1,
-            cs
-          ], NofibPrelude.Nil)
-        } else if (ls6 instanceof NofibPrelude.Cons.class) {
-          param0 = ls6.head;
-          param1 = ls6.tail;
-          if (globalThis.Array.isArray(param0) && param0.length === 2) {
-            first01 = param0[0];
-            first11 = param0[1];
-            mifs2 = first01;
-            cs_ = first11;
-            etc = param1;
-            tmp2 = mate.showSoln(cs, 1);
-            a2 = tmp2;
-            tmp3 = mate.showSoln(cs_, 1);
-            b = tmp3;
-            lambda = (undefined, function (x5, y) {
-              return x5 < y
-            });
-            lambda1 = (undefined, function (x5, y) {
-              return x5 > y
-            });
-            scrut2 = NofibPrelude.ltList(a2, b, lambda, lambda1);
-            if (scrut2 === true) {
-              tmp4 = NofibPrelude.Cons(mif, NofibPrelude.Nil);
-              tmp5 = NofibPrelude.Cons([
-                mifs2,
-                cs_
-              ], etc);
-              return NofibPrelude.Cons([
-                tmp4,
-                cs
-              ], tmp5)
-            } else {
-              scrut1 = NofibPrelude.listEq(a2, b);
-              if (scrut1 === true) {
-                tmp6 = insert(mif, mifs2);
-                return NofibPrelude.Cons([
-                  tmp6,
-                  cs
-                ], etc)
-              } else {
-                lambda2 = (undefined, function (x5, y) {
-                  return x5 < y
-                });
-                lambda3 = (undefined, function (x5, y) {
-                  return x5 > y
-                });
-                tmp7 = NofibPrelude.ltList(a2, b, lambda2, lambda3);
-                scrut = BenchmarkPrelude.not(tmp7);
-                if (scrut === true) {
-                  tmp8 = ic(etc);
-                  return NofibPrelude.Cons([
-                    mifs2,
-                    cs_
-                  ], tmp8)
-                } else {
-                  throw globalThis.Error("compare error");
-                }
-              }
-            }
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
       tmp = mate.compact(s8);
       cs = tmp;
-      return ic(ls5)
+      return ic$(mif, cs, ls5)
     } else {
       throw new globalThis.Error("match error");
     }

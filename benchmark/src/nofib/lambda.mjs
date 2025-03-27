@@ -2,11 +2,199 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let lambda1;
+let lookup2, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, lambda11, lambda12, lambda13, lambda14, lambda15, lambda16, lambda17, lambda18, lambda19, lambda20, lambda$, lambda$1, lambda$2, lookup2$, lambda$3, lambda$4, lambda$5, lambda$6, lambda$7, lambda$8, lambda$9, lambda$10;
+lambda20 = (undefined, function (caseScrut) {
+  let first1, first0, v, t, tmp, tmp1, tmp2, tmp3, tmp4;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    v = first0;
+    t = first1;
+    tmp = NofibPrelude.nofibStringToList("=");
+    tmp1 = lambda1.pp(t);
+    tmp2 = NofibPrelude.nofibStringToList(", ");
+    tmp3 = NofibPrelude.append(tmp1, tmp2);
+    tmp4 = NofibPrelude.append(tmp, tmp3);
+    return NofibPrelude.append(v, tmp4)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+});
+lambda18 = (undefined, function (dummy) {
+  throw globalThis.Error("undefined var");
+});
+lambda19 = (undefined, function (x) {
+  return x
+});
+lambda11 = (undefined, function (t) {
+  return lambda1.traverseTerm(t)
+});
+lambda$10 = function lambda$(x, e) {
+  let tmp;
+  tmp = lambda1.lookupVar(x);
+  return lambda1.myBind(tmp, lambda11)
+};
+lambda10 = (undefined, function (x) {
+  return (e) => {
+    return lambda$10(x, e)
+  }
+});
+lambda$9 = function lambda$(u_, v_) {
+  let tmp, tmp1;
+  tmp = u_ + v_;
+  tmp1 = lambda1.Con(tmp);
+  return lambda1.myReturn(tmp1)
+};
+lambda13 = (undefined, function (u_) {
+  return (v_) => {
+    return lambda$9(u_, v_)
+  }
+});
+lambda$8 = function lambda$(v, u_) {
+  let tmp, lambda$this;
+  tmp = lambda1.traverseCon(v);
+  lambda$this = runtime.safeCall(lambda13(u_));
+  return lambda1.myBind(tmp, lambda$this)
+};
+lambda12 = (undefined, function (v) {
+  return (u_) => {
+    return lambda$8(v, u_)
+  }
+});
+lambda$7 = function lambda$(x, b, env) {
+  let tmp, tmp1;
+  tmp = lambda1.Lam(x, b);
+  tmp1 = lambda1.Thunk(tmp, env);
+  return lambda1.myReturn(tmp1)
+};
+lambda14 = (undefined, function (x, b) {
+  return (env) => {
+    return lambda$7(x, b, env)
+  }
+});
+lambda$6 = function lambda$(v, u_) {
+  return lambda1.apply(u_, v)
+};
+lambda15 = (undefined, function (v) {
+  return (u_) => {
+    return lambda$6(v, u_)
+  }
+});
+lambda$5 = function lambda$(a, b, vall) {
+  let scrut, tmp;
+  tmp = lambda1.Con(0);
+  scrut = lambda1.eqTerm(vall, tmp);
+  if (scrut === true) {
+    return lambda1.traverseTerm(a)
+  } else {
+    return lambda1.traverseTerm(b)
+  }
+};
+lambda16 = (undefined, function (a, b) {
+  return (vall) => {
+    return lambda$5(a, b, vall)
+  }
+});
+lambda17 = (undefined, function (_dummy) {
+  let tmp;
+  tmp = lambda1.Con(0);
+  return lambda1.myReturn(tmp)
+});
+lambda$4 = function lambda$(a, x, b, e, orig) {
+  let tmp, tmp1, tmp2;
+  tmp = lambda1.Thunk(a, orig);
+  tmp1 = lambda1.traverseTerm(b);
+  tmp2 = lambda1.pushVar(x, tmp, tmp1);
+  return lambda1.withEnv(e, tmp2)
+};
+lambda9 = (undefined, function (a, x, b, e) {
+  return (orig) => {
+    return lambda$4(a, x, b, e, orig)
+  }
+});
+lambda8 = (undefined, function (_t) {
+  let param0, c;
+  if (_t instanceof lambda1.Con.class) {
+    param0 = _t.i;
+    c = param0;
+    return lambda1.myReturn(c)
+  } else {
+    throw globalThis.Error("Not a Con");
+  }
+});
+lambda$3 = function lambda$(v, t, m, env) {
+  let tmp;
+  tmp = NofibPrelude.Cons([
+    v,
+    t
+  ], env);
+  return lambda1.withEnv(tmp, m)
+};
+lambda7 = (undefined, function (v, t, m) {
+  return (env) => {
+    return lambda$3(v, t, m, env)
+  }
+});
+lambda4 = (undefined, function (dummy) {
+  throw globalThis.Error("undefined");
+});
+lambda5 = (undefined, function (x) {
+  return x
+});
+lookup2$ = function lookup2$(v, env) {
+  let tmp;
+  tmp = lambda1.lookup(v, env);
+  return lambda1.myMaybe(lambda4, lambda5, tmp)
+};
+lookup2 = function lookup2(v) {
+  return (env) => {
+    return lookup2$(v, env)
+  }
+};
+lambda$2 = function lambda$(v, env) {
+  let tmp;
+  tmp = lookup2$(v, env);
+  return lambda1.myReturn(tmp)
+};
+lambda6 = (undefined, function (v) {
+  return (env) => {
+    return lambda$2(v, env)
+  }
+});
+lambda$1 = function lambda$(a, s) {
+  return [
+    s,
+    a
+  ]
+};
+lambda3 = (undefined, function (a) {
+  return (s) => {
+    return lambda$1(a, s)
+  }
+});
+lambda$ = function lambda$(m, f, s) {
+  let scrut, first1, first0, s_, a, tmp;
+  scrut = lambda1.myRunState(m, s);
+  if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
+    first0 = scrut[0];
+    first1 = scrut[1];
+    s_ = first0;
+    a = first1;
+    tmp = runtime.safeCall(f(a));
+    return lambda1.myRunState(tmp, s_)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda2 = (undefined, function (m, f) {
+  return (s) => {
+    return lambda$(m, f, s)
+  }
+});
 lambda1 = class lambda {
   static {
     lambda1 = lambda;
-    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, lambda2, lambda3;
+    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, lambda21, lambda22;
     this.MyState = function MyState(r1) {
       return new MyState.class(r1);
     };
@@ -16,13 +204,13 @@ lambda1 = class lambda {
       }
       toString() { return "MyState(" + globalThis.Predef.render(this.r) + ")"; }
     };
-    lambda2 = (undefined, function (s) {
+    lambda21 = (undefined, function (s) {
       return [
         s,
         s
       ]
     });
-    tmp = lambda.MyState(lambda2);
+    tmp = lambda.MyState(lambda21);
     this.myGet = tmp;
     this.Term = class Term {
       constructor() {}
@@ -158,12 +346,12 @@ lambda1 = class lambda {
     this.partialSum0 = tmp33;
     tmp34 = lambda.App(lambda.fix, lambda.partialSum0);
     this.sum0 = tmp34;
-    lambda3 = (undefined, function () {
+    lambda22 = (undefined, function () {
       let tmp35;
       tmp35 = lambda.testLambda_nofib(80);
       return runtime.safeCall(tmp35.toString())
     });
-    BenchmarkPrelude.benchmark(lambda3)
+    BenchmarkPrelude.benchmark(lambda22)
   }
   static lookup(k, t) {
     let param0, param1, first1, first0, x, v, t1, scrut;
@@ -202,33 +390,14 @@ lambda1 = class lambda {
     }
   } 
   static myBind(m1, f) {
-    let tmp, lambda2;
-    lambda2 = (undefined, function (s1) {
-      let scrut, first1, first0, s_, a, tmp1;
-      scrut = lambda.myRunState(m1, s1);
-      if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
-        first0 = scrut[0];
-        first1 = scrut[1];
-        s_ = first0;
-        a = first1;
-        tmp1 = runtime.safeCall(f(a));
-        return lambda.myRunState(tmp1, s_)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    tmp = lambda2;
+    let tmp;
+    tmp = runtime.safeCall(lambda2(m1, f));
     return lambda.MyState(tmp)
   } 
   static myReturn(a) {
-    let lambda2;
-    lambda2 = (undefined, function (s1) {
-      return [
-        s1,
-        a
-      ]
-    });
-    return lambda.MyState(lambda2)
+    let lambda$this;
+    lambda$this = runtime.safeCall(lambda3(a));
+    return lambda.MyState(lambda$this)
   } 
   static myEvalState(m2, s1) {
     let scrut, first1, first0, s_, a1;
@@ -422,24 +591,9 @@ lambda1 = class lambda {
     }
   } 
   static lookupVar(v) {
-    let lookup2, lambda2;
-    lookup2 = function lookup2(env) {
-      let tmp, lambda3, lambda4;
-      tmp = lambda.lookup(v, env);
-      lambda3 = (undefined, function (dummy) {
-        throw globalThis.Error("undefined");
-      });
-      lambda4 = (undefined, function (x1) {
-        return x1
-      });
-      return lambda.myMaybe(lambda3, lambda4, tmp)
-    };
-    lambda2 = (undefined, function (env) {
-      let tmp;
-      tmp = lookup2(env);
-      return lambda.myReturn(tmp)
-    });
-    return lambda.myBind(lambda.myGet, lambda2)
+    let lambda$this;
+    lambda$this = runtime.safeCall(lambda6(v));
+    return lambda.myBind(lambda.myGet, lambda$this)
   } 
   static withEnv(tmp, m3) {
     let tmp1;
@@ -447,38 +601,21 @@ lambda1 = class lambda {
     return lambda.myReturn(tmp1)
   } 
   static pushVar(v1, t1, m4) {
-    let lambda2;
-    lambda2 = (undefined, function (env) {
-      let tmp1;
-      tmp1 = NofibPrelude.Cons([
-        v1,
-        t1
-      ], env);
-      return lambda.withEnv(tmp1, m4)
-    });
-    return lambda.myBind(lambda.myGet, lambda2)
+    let lambda$this;
+    lambda$this = runtime.safeCall(lambda7(v1, t1, m4));
+    return lambda.myBind(lambda.myGet, lambda$this)
   } 
   static traverseTerm(t2) {
     return lambda.eval(t2)
   } 
   static traverseCon(t3) {
-    let tmp1, tmp2, lambda2;
+    let tmp1, tmp2;
     tmp1 = lambda.traverseTerm(t3);
-    lambda2 = (undefined, function (_t) {
-      let param0, c;
-      if (_t instanceof lambda.Con.class) {
-        param0 = _t.i;
-        c = param0;
-        return lambda.myReturn(c)
-      } else {
-        throw globalThis.Error("Not a Con");
-      }
-    });
-    tmp2 = lambda2;
+    tmp2 = lambda8;
     return lambda.myBind(tmp1, tmp2)
   } 
   static apply(t4, a3) {
-    let param0, param1, param01, param11, x1, b2, e, tmp1, lambda2;
+    let param0, param1, param01, param11, x1, b2, e, tmp1;
     if (t4 instanceof lambda.Thunk.class) {
       param0 = t4.t;
       param1 = t4.e;
@@ -488,14 +625,7 @@ lambda1 = class lambda {
         x1 = param01;
         b2 = param11;
         e = param1;
-        lambda2 = (undefined, function (orig) {
-          let tmp2, tmp3, tmp4;
-          tmp2 = lambda.Thunk(a3, orig);
-          tmp3 = lambda.traverseTerm(b2);
-          tmp4 = lambda.pushVar(x1, tmp2, tmp3);
-          return lambda.withEnv(e, tmp4)
-        });
-        tmp1 = lambda2;
+        tmp1 = runtime.safeCall(lambda9(a3, x1, b2, e));
         return lambda.myBind(lambda.myGet, tmp1)
       } else {
         throw new globalThis.Error("match error");
@@ -505,37 +635,20 @@ lambda1 = class lambda {
     }
   } 
   static eval(ter) {
-    let param0, i, param01, param1, param2, c, a4, b2, param02, param11, u, v2, param03, param12, x1, b3, param04, param13, t5, e, param05, param14, u1, v3, param06, x2, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7;
+    let param0, i, param01, param1, param2, c, a4, b2, param02, param11, u, v2, param03, param12, x1, b3, param04, param13, t5, e, param05, param14, u1, v3, param06, x2, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, lambda$this, lambda$this1, lambda$this2;
     if (ter instanceof lambda.Var.class) {
       param06 = ter.s;
       x2 = param06;
-      lambda2 = (undefined, function (e1) {
-        let tmp8, lambda8;
-        tmp8 = lambda.lookupVar(x2);
-        lambda8 = (undefined, function (t6) {
-          return lambda.traverseTerm(t6)
-        });
-        return lambda.myBind(tmp8, lambda8)
-      });
-      return lambda.myBind(lambda.myGet, lambda2)
+      lambda$this = runtime.safeCall(lambda10(x2));
+      return lambda.myBind(lambda.myGet, lambda$this)
     } else if (ter instanceof lambda.Add.class) {
       param05 = ter.a;
       param14 = ter.b;
       u1 = param05;
       v3 = param14;
       tmp1 = lambda.traverseCon(u1);
-      lambda3 = (undefined, function (u_) {
-        let tmp8, lambda8;
-        tmp8 = lambda.traverseCon(v3);
-        lambda8 = (undefined, function (v_) {
-          let tmp9, tmp10;
-          tmp9 = u_ + v_;
-          tmp10 = lambda.Con(tmp9);
-          return lambda.myReturn(tmp10)
-        });
-        return lambda.myBind(tmp8, lambda8)
-      });
-      return lambda.myBind(tmp1, lambda3)
+      lambda$this1 = runtime.safeCall(lambda12(v3));
+      return lambda.myBind(tmp1, lambda$this1)
     } else if (ter instanceof lambda.Thunk.class) {
       param04 = ter.t;
       param13 = ter.e;
@@ -548,13 +661,7 @@ lambda1 = class lambda {
       param12 = ter.t;
       x1 = param03;
       b3 = param12;
-      lambda4 = (undefined, function (env) {
-        let tmp8, tmp9;
-        tmp8 = lambda.Lam(x1, b3);
-        tmp9 = lambda.Thunk(tmp8, env);
-        return lambda.myReturn(tmp9)
-      });
-      tmp3 = lambda4;
+      tmp3 = runtime.safeCall(lambda14(x1, b3));
       return lambda.myBind(lambda.myGet, tmp3)
     } else if (ter instanceof lambda.App.class) {
       param02 = ter.a;
@@ -562,10 +669,8 @@ lambda1 = class lambda {
       u = param02;
       v2 = param11;
       tmp4 = lambda.traverseTerm(u);
-      lambda5 = (undefined, function (u_) {
-        return lambda.apply(u_, v2)
-      });
-      return lambda.myBind(tmp4, lambda5)
+      lambda$this2 = runtime.safeCall(lambda15(v2));
+      return lambda.myBind(tmp4, lambda$this2)
     } else if (ter instanceof lambda.IfZero.class) {
       param01 = ter.a;
       param1 = ter.b;
@@ -574,17 +679,7 @@ lambda1 = class lambda {
       a4 = param1;
       b2 = param2;
       tmp5 = lambda.traverseTerm(c);
-      lambda6 = (undefined, function (vall) {
-        let scrut, tmp8;
-        tmp8 = lambda.Con(0);
-        scrut = lambda.eqTerm(vall, tmp8);
-        if (scrut === true) {
-          return lambda.traverseTerm(a4)
-        } else {
-          return lambda.traverseTerm(b2)
-        }
-      });
-      tmp6 = lambda6;
+      tmp6 = runtime.safeCall(lambda16(a4, b2));
       return lambda.myBind(tmp5, tmp6)
     } else if (ter instanceof lambda.Con.class) {
       param0 = ter.i;
@@ -592,29 +687,18 @@ lambda1 = class lambda {
       tmp7 = lambda.Con(i);
       return lambda.myReturn(tmp7)
     } else if (ter instanceof lambda.Incr.class) {
-      lambda7 = (undefined, function (_dummy) {
-        let tmp8;
-        tmp8 = lambda.Con(0);
-        return lambda.myReturn(tmp8)
-      });
-      return lambda.myBind(lambda.incr, lambda7)
+      return lambda.myBind(lambda.incr, lambda17)
     } else {
       throw new globalThis.Error("match error");
     }
   } 
   static simpleEval(env, ter1) {
-    let param0, param1, t5, e, param01, param11, param2, c, a4, b2, val_, scrut, param02, param12, u, v2, u_, param03, param13, x1, b3, param04, param14, u1, v3, u_1, v_, param05, e1, param06, v4, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, lambda2, lambda3;
+    let param0, param1, t5, e, param01, param11, param2, c, a4, b2, val_, scrut, param02, param12, u, v2, u_, param03, param13, x1, b3, param04, param14, u1, v3, u_1, v_, param05, e1, param06, v4, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9;
     if (ter1 instanceof lambda.Var.class) {
       param06 = ter1.s;
       v4 = param06;
       tmp1 = lambda.lookup(v4, env);
-      lambda2 = (undefined, function (dummy) {
-        throw globalThis.Error("undefined var");
-      });
-      lambda3 = (undefined, function (x2) {
-        return x2
-      });
-      tmp2 = lambda.myMaybe(lambda2, lambda3, tmp1);
+      tmp2 = lambda.myMaybe(lambda18, lambda19, tmp1);
       return lambda.simpleEval(env, tmp2)
     } else if (ter1 instanceof lambda.Con.class) {
       param05 = ter1.i;
@@ -806,26 +890,9 @@ lambda1 = class lambda {
     return lambda.ppn(0, t7)
   } 
   static ppenv(env3) {
-    let tmp1, tmp2, tmp3, tmp4, tmp5, lambda2;
+    let tmp1, tmp2, tmp3, tmp4, tmp5;
     tmp1 = NofibPrelude.nofibStringToList("[");
-    lambda2 = (undefined, function (caseScrut) {
-      let first1, first0, v2, t8, tmp6, tmp7, tmp8, tmp9, tmp10;
-      if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-        first0 = caseScrut[0];
-        first1 = caseScrut[1];
-        v2 = first0;
-        t8 = first1;
-        tmp6 = NofibPrelude.nofibStringToList("=");
-        tmp7 = lambda.pp(t8);
-        tmp8 = NofibPrelude.nofibStringToList(", ");
-        tmp9 = NofibPrelude.append(tmp7, tmp8);
-        tmp10 = NofibPrelude.append(tmp6, tmp9);
-        return NofibPrelude.append(v2, tmp10)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    tmp2 = lambda2;
+    tmp2 = lambda20;
     tmp3 = NofibPrelude.flatMap(tmp2, env3);
     tmp4 = NofibPrelude.nofibStringToList("]");
     tmp5 = NofibPrelude.append(tmp3, tmp4);

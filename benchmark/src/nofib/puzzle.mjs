@@ -2,11 +2,195 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let puzzle1;
+let minAcc, lscomp3, lscomp2, lscomp1, puzzle1, lambda, lambda1, lambda2, lambda3, lambda$, lambda$1, lambda$2, lscomp2$, lscomp3$, lscomp1$;
+lscomp1$ = function lscomp1$(source, dest, location, countdown, history, newHistory, newLocation, ls) {
+  let param0, param1, item, xs, scrut, newDest, scrut1, newTime, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    item = param0;
+    xs = param1;
+    tmp = puzzle1.position(item, dest);
+    scrut = puzzle1.bankEq(tmp, location);
+    if (scrut === true) {
+      tmp1 = puzzle1.updateState(dest, item, newLocation);
+      newDest = tmp1;
+      scrut1 = puzzle1.notSeen(newDest, history);
+      if (scrut1 === true) {
+        tmp2 = puzzle1.u2times(item);
+        tmp3 = countdown + tmp2;
+        newTime = tmp3;
+        tmp4 = puzzle1.transfer(source, newDest, newLocation, newTime, newHistory);
+        tmp5 = lscomp1$(source, dest, location, countdown, history, newHistory, newLocation, xs);
+        return NofibPrelude.Cons(tmp4, tmp5)
+      } else {
+        return lscomp1$(source, dest, location, countdown, history, newHistory, newLocation, xs)
+      }
+    } else {
+      return lscomp1$(source, dest, location, countdown, history, newHistory, newLocation, xs)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp1 = function lscomp1(source, dest, location, countdown, history, newHistory, newLocation) {
+  return (ls) => {
+    return lscomp1$(source, dest, location, countdown, history, newHistory, newLocation, ls)
+  }
+};
+lscomp3$ = function lscomp3$(source, dest, location, countdown, history, newHistory, newLocation, i, xs, ls) {
+  let param0, param1, j, ys, scrut, scrut1, newDest, scrut2, newTime, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return lscomp2$(source, dest, location, countdown, history, newHistory, newLocation, xs)
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    j = param0;
+    ys = param1;
+    tmp = puzzle1.position(i, dest);
+    scrut = puzzle1.bankEq(tmp, location);
+    if (scrut === true) {
+      tmp1 = puzzle1.position(j, dest);
+      scrut1 = puzzle1.bankEq(tmp1, location);
+      if (scrut1 === true) {
+        tmp2 = puzzle1.updateState(dest, i, newLocation);
+        tmp3 = puzzle1.updateState(tmp2, j, newLocation);
+        newDest = tmp3;
+        scrut2 = puzzle1.notSeen(newDest, history);
+        if (scrut2 === true) {
+          tmp4 = puzzle1.u2times(i);
+          tmp5 = countdown + tmp4;
+          newTime = tmp5;
+          tmp6 = puzzle1.transfer(source, newDest, newLocation, newTime, newHistory);
+          tmp7 = lscomp3$(source, dest, location, countdown, history, newHistory, newLocation, i, xs, ys);
+          return NofibPrelude.Cons(tmp6, tmp7)
+        } else {
+          return lscomp3$(source, dest, location, countdown, history, newHistory, newLocation, i, xs, ys)
+        }
+      } else {
+        return lscomp3$(source, dest, location, countdown, history, newHistory, newLocation, i, xs, ys)
+      }
+    } else {
+      return lscomp3$(source, dest, location, countdown, history, newHistory, newLocation, i, xs, ys)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp3 = function lscomp3(source, dest, location, countdown, history, newHistory, newLocation, i, xs) {
+  return (ls) => {
+    return lscomp3$(source, dest, location, countdown, history, newHistory, newLocation, i, xs, ls)
+  }
+};
+lscomp2$ = function lscomp2$(source, dest, location, countdown, history, newHistory, newLocation, ls) {
+  let param0, param1, i, xs, tmp, tmp1;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    i = param0;
+    xs = param1;
+    tmp = puzzle1.succItem(i);
+    tmp1 = puzzle1.itemFromTo(tmp, puzzle1.Adam);
+    return lscomp3$(source, dest, location, countdown, history, newHistory, newLocation, i, xs, tmp1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp2 = function lscomp2(source, dest, location, countdown, history, newHistory, newLocation) {
+  return (ls) => {
+    return lscomp2$(source, dest, location, countdown, history, newHistory, newLocation, ls)
+  }
+};
+minAcc = function minAcc(minSoFar, mins, ls) {
+  let param0, param1, history, next, total, scrut, scrut1, tmp, tmp1, tmp2;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return mins
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    history = param0;
+    next = param1;
+    tmp = puzzle1.totalTime(history);
+    total = tmp;
+    scrut1 = minSoFar < total;
+    if (scrut1 === true) {
+      return minAcc(minSoFar, mins, next)
+    } else {
+      scrut = minSoFar === total;
+      if (scrut === true) {
+        tmp1 = NofibPrelude.Cons(history, mins);
+        return minAcc(minSoFar, tmp1, next)
+      } else {
+        tmp2 = NofibPrelude.Cons(history, NofibPrelude.Nil);
+        return minAcc(total, tmp2, next)
+      }
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda$2 = function lambda$(history, timestate, acc, s) {
+  let first1, first0, time, state, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8;
+  if (globalThis.Array.isArray(timestate) && timestate.length === 2) {
+    first0 = timestate[0];
+    first1 = timestate[1];
+    time = first0;
+    state = first1;
+    tmp = NofibPrelude.nofibStringToList("Time: ");
+    tmp1 = puzzle1.totalTime(history);
+    tmp2 = tmp1 - time;
+    tmp3 = NofibPrelude.stringOfInt(tmp2);
+    tmp4 = NofibPrelude.nofibStringToList(tmp3);
+    tmp5 = runtime.safeCall(acc(s));
+    tmp6 = puzzle1.writeState(state, tmp5);
+    tmp7 = NofibPrelude.Cons("\n", tmp6);
+    tmp8 = NofibPrelude.append(tmp4, tmp7);
+    return NofibPrelude.append(tmp, tmp8)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda3 = (undefined, function (history, timestate, acc) {
+  return (s) => {
+    return lambda$2(history, timestate, acc, s)
+  }
+});
+lambda$1 = function lambda$(history, timestate, acc) {
+  return runtime.safeCall(lambda3(history, timestate, acc))
+};
+lambda1 = (undefined, function (history) {
+  return (timestate, acc) => {
+    return lambda$1(history, timestate, acc)
+  }
+});
+lambda2 = (undefined, function (x) {
+  return x
+});
+lambda$ = function lambda$(state, caseScrut) {
+  let first1, first0, s, tmp;
+  if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
+    first0 = caseScrut[0];
+    first1 = caseScrut[1];
+    s = first1;
+    tmp = puzzle1.stateEq(state, s);
+    return BenchmarkPrelude.not(tmp)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lambda = (undefined, function (state) {
+  return (caseScrut) => {
+    return lambda$(state, caseScrut)
+  }
+});
 puzzle1 = class puzzle {
   static {
     puzzle1 = puzzle;
-    let tmp, tmp1, tmp2, lambda;
+    let tmp, tmp1, tmp2, lambda4;
     this.ItemType = class ItemType {
       constructor() {}
       toString() { return "ItemType"; }
@@ -79,14 +263,14 @@ puzzle1 = class puzzle {
     this.initialState = tmp;
     tmp1 = puzzle.State(puzzle.RightBank, puzzle.RightBank, puzzle.RightBank, puzzle.RightBank);
     this.finalState = tmp1;
-    lambda = (undefined, function () {
+    lambda4 = (undefined, function () {
       let tmp3, tmp4, tmp5;
       tmp3 = NofibPrelude.Cons(2, NofibPrelude.Nil);
       tmp4 = puzzle.testPuzzle_nofib(tmp3);
       tmp5 = NofibPrelude.nofibListToString(tmp4);
       return BenchmarkPrelude.print(tmp5)
     });
-    tmp2 = lambda;
+    tmp2 = lambda4;
     BenchmarkPrelude.benchmark(tmp2)
   }
   static itemEq(a, b) {
@@ -317,20 +501,8 @@ puzzle1 = class puzzle {
     }
   } 
   static notSeen(state, states) {
-    let tmp, lambda;
-    lambda = (undefined, function (caseScrut) {
-      let first1, first0, s8, tmp1;
-      if (globalThis.Array.isArray(caseScrut) && caseScrut.length === 2) {
-        first0 = caseScrut[0];
-        first1 = caseScrut[1];
-        s8 = first1;
-        tmp1 = puzzle.stateEq(state, s8);
-        return BenchmarkPrelude.not(tmp1)
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    tmp = lambda;
+    let tmp;
+    tmp = runtime.safeCall(lambda(state));
     return NofibPrelude.all(tmp, states)
   } 
   static writeItem(i4, b4, rest) {
@@ -412,39 +584,12 @@ puzzle1 = class puzzle {
     }
   } 
   static writeHistory(history1, x) {
-    let tmp, lambda, lambda1;
+    let tmp, lambda$this;
     if (history1 instanceof NofibPrelude.Nil.class) {
       return x
     } else {
-      lambda = (undefined, function (timestate, acc) {
-        let lambda2;
-        lambda2 = (undefined, function (s9) {
-          let first1, first0, time, state2, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9;
-          if (globalThis.Array.isArray(timestate) && timestate.length === 2) {
-            first0 = timestate[0];
-            first1 = timestate[1];
-            time = first0;
-            state2 = first1;
-            tmp1 = NofibPrelude.nofibStringToList("Time: ");
-            tmp2 = puzzle.totalTime(history1);
-            tmp3 = tmp2 - time;
-            tmp4 = NofibPrelude.stringOfInt(tmp3);
-            tmp5 = NofibPrelude.nofibStringToList(tmp4);
-            tmp6 = runtime.safeCall(acc(s9));
-            tmp7 = puzzle.writeState(state2, tmp6);
-            tmp8 = NofibPrelude.Cons("\n", tmp7);
-            tmp9 = NofibPrelude.append(tmp5, tmp8);
-            return NofibPrelude.append(tmp1, tmp9)
-          } else {
-            throw new globalThis.Error("match error");
-          }
-        });
-        return lambda2
-      });
-      lambda1 = (undefined, function (x1) {
-        return x1
-      });
-      tmp = NofibPrelude.foldr(lambda, lambda1, history1);
+      lambda$this = runtime.safeCall(lambda1(history1));
+      tmp = NofibPrelude.foldr(lambda$this, lambda2, history1);
       return runtime.safeCall(tmp(x))
     }
   } 
@@ -471,7 +616,7 @@ puzzle1 = class puzzle {
     }
   } 
   static minSolutions(history2) {
-    let minAcc, param0, param1, history3, next, tmp, tmp1, tmp2;
+    let param0, param1, history3, next, tmp, tmp1, tmp2;
     if (history2 instanceof NofibPrelude.Nil.class) {
       return NofibPrelude.Nil
     } else if (history2 instanceof NofibPrelude.Cons.class) {
@@ -479,34 +624,6 @@ puzzle1 = class puzzle {
       param1 = history2.tail;
       history3 = param0;
       next = param1;
-      minAcc = function minAcc(minSoFar, mins, ls) {
-        let param01, param11, history4, next1, total, scrut, scrut1, tmp3, tmp4, tmp5;
-        if (ls instanceof NofibPrelude.Nil.class) {
-          return mins
-        } else if (ls instanceof NofibPrelude.Cons.class) {
-          param01 = ls.head;
-          param11 = ls.tail;
-          history4 = param01;
-          next1 = param11;
-          tmp3 = puzzle.totalTime(history4);
-          total = tmp3;
-          scrut1 = minSoFar < total;
-          if (scrut1 === true) {
-            return minAcc(minSoFar, mins, next1)
-          } else {
-            scrut = minSoFar === total;
-            if (scrut === true) {
-              tmp4 = NofibPrelude.Cons(history4, mins);
-              return minAcc(minSoFar, tmp4, next1)
-            } else {
-              tmp5 = NofibPrelude.Cons(history4, NofibPrelude.Nil);
-              return minAcc(total, tmp5, next1)
-            }
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
       tmp = puzzle.totalTime(history3);
       tmp1 = NofibPrelude.Cons(history3, NofibPrelude.Nil);
       tmp2 = minAcc(tmp, tmp1, next);
@@ -529,7 +646,7 @@ puzzle1 = class puzzle {
     }
   } 
   static transfer(source, dest, location, countdown, history3) {
-    let lscomp2, lscomp1, newHistory, newLocation, moveOne, moveTwo, scrut, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8;
+    let newHistory, newLocation, moveOne, moveTwo, scrut, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8;
     scrut = puzzle.stateEq(source, dest);
     if (scrut === true) {
       tmp = NofibPrelude.Cons([
@@ -538,93 +655,6 @@ puzzle1 = class puzzle {
       ], history3);
       return NofibPrelude.Cons(tmp, NofibPrelude.Nil)
     } else {
-      lscomp1 = function lscomp1(ls) {
-        let param0, param1, item, xs, scrut1, newDest, scrut2, newTime, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14;
-        if (ls instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Nil
-        } else if (ls instanceof NofibPrelude.Cons.class) {
-          param0 = ls.head;
-          param1 = ls.tail;
-          item = param0;
-          xs = param1;
-          tmp9 = puzzle.position(item, dest);
-          scrut1 = puzzle.bankEq(tmp9, location);
-          if (scrut1 === true) {
-            tmp10 = puzzle.updateState(dest, item, newLocation);
-            newDest = tmp10;
-            scrut2 = puzzle.notSeen(newDest, history3);
-            if (scrut2 === true) {
-              tmp11 = puzzle.u2times(item);
-              tmp12 = countdown + tmp11;
-              newTime = tmp12;
-              tmp13 = puzzle.transfer(source, newDest, newLocation, newTime, newHistory);
-              tmp14 = lscomp1(xs);
-              return NofibPrelude.Cons(tmp13, tmp14)
-            } else {
-              return lscomp1(xs)
-            }
-          } else {
-            return lscomp1(xs)
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
-      lscomp2 = function lscomp2(ls) {
-        let lscomp3, param0, param1, i6, xs, tmp9, tmp10;
-        if (ls instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Nil
-        } else if (ls instanceof NofibPrelude.Cons.class) {
-          param0 = ls.head;
-          param1 = ls.tail;
-          i6 = param0;
-          xs = param1;
-          lscomp3 = function lscomp3(ls1) {
-            let param01, param11, j, ys, scrut1, scrut2, newDest, scrut3, newTime, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18;
-            if (ls1 instanceof NofibPrelude.Nil.class) {
-              return lscomp2(xs)
-            } else if (ls1 instanceof NofibPrelude.Cons.class) {
-              param01 = ls1.head;
-              param11 = ls1.tail;
-              j = param01;
-              ys = param11;
-              tmp11 = puzzle.position(i6, dest);
-              scrut1 = puzzle.bankEq(tmp11, location);
-              if (scrut1 === true) {
-                tmp12 = puzzle.position(j, dest);
-                scrut2 = puzzle.bankEq(tmp12, location);
-                if (scrut2 === true) {
-                  tmp13 = puzzle.updateState(dest, i6, newLocation);
-                  tmp14 = puzzle.updateState(tmp13, j, newLocation);
-                  newDest = tmp14;
-                  scrut3 = puzzle.notSeen(newDest, history3);
-                  if (scrut3 === true) {
-                    tmp15 = puzzle.u2times(i6);
-                    tmp16 = countdown + tmp15;
-                    newTime = tmp16;
-                    tmp17 = puzzle.transfer(source, newDest, newLocation, newTime, newHistory);
-                    tmp18 = lscomp3(ys);
-                    return NofibPrelude.Cons(tmp17, tmp18)
-                  } else {
-                    return lscomp3(ys)
-                  }
-                } else {
-                  return lscomp3(ys)
-                }
-              } else {
-                return lscomp3(ys)
-              }
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          };
-          tmp9 = puzzle.succItem(i6);
-          tmp10 = puzzle.itemFromTo(tmp9, puzzle.Adam);
-          return lscomp3(tmp10)
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
       tmp1 = NofibPrelude.Cons([
         countdown,
         dest
@@ -633,11 +663,11 @@ puzzle1 = class puzzle {
       tmp2 = puzzle.opposite(location);
       newLocation = tmp2;
       tmp3 = puzzle.itemFromTo(puzzle.Bono, puzzle.Adam);
-      tmp4 = lscomp1(tmp3);
+      tmp4 = lscomp1$(source, dest, location, countdown, history3, newHistory, newLocation, tmp3);
       tmp5 = NofibPrelude.concat(tmp4);
       moveOne = tmp5;
       tmp6 = puzzle.itemFromTo(puzzle.Bono, puzzle.Larry);
-      tmp7 = lscomp2(tmp6);
+      tmp7 = lscomp2$(source, dest, location, countdown, history3, newHistory, newLocation, tmp6);
       tmp8 = NofibPrelude.concat(tmp7);
       moveTwo = tmp8;
       return NofibPrelude.append(moveOne, moveTwo)

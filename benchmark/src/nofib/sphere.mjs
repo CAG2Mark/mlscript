@@ -2,11 +2,341 @@ import runtime from "./../../../hkmc2/shared/src/test/mlscript-compile/Runtime.m
 import NofibPrelude from "./../precompiled/NofibPrelude.mjs";
 import BenchmarkPrelude from "./../precompiled/BenchmarkPrelude.mjs";
 import fs from "fs";
-let sphere1;
+let lscomp, lscomp1, lscomp2, lscomp3, lscomp4, lscomp5, lscomp6, lscomp7, f, sphmap, u8, lscomp21, f1, lscomp11, sphere1, lambda, lambda1, sphmap$, lambda$, lscomp1$, lscomp2$, f$;
+f$ = function f$(lights, firstray, scrnx, scrny, i, j) {
+  return sphere1.tracepixel(sphere1.testspheres, lights, i, j, firstray, scrnx, scrny)
+};
+f1 = function f(lights, firstray, scrnx, scrny) {
+  return (i, j) => {
+    return f$(lights, firstray, scrnx, scrny, i, j)
+  }
+};
+lscomp2$ = function lscomp2$(winsize, lights, firstray, scrnx, scrny, i, t1, ls2) {
+  let param0, param1, j, t2, tmp, tmp1;
+  if (ls2 instanceof NofibPrelude.Nil.class) {
+    return lscomp1$(winsize, lights, firstray, scrnx, scrny, t1)
+  } else if (ls2 instanceof NofibPrelude.Cons.class) {
+    param0 = ls2.head;
+    param1 = ls2.tail;
+    j = param0;
+    t2 = param1;
+    tmp = f$(lights, firstray, scrnx, scrny, i, j);
+    tmp1 = lscomp2$(winsize, lights, firstray, scrnx, scrny, i, t1, t2);
+    return NofibPrelude.Cons([
+      [
+        i,
+        j
+      ],
+      tmp
+    ], tmp1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp21 = function lscomp2(winsize, lights, firstray, scrnx, scrny, i, t1) {
+  return (ls2) => {
+    return lscomp2$(winsize, lights, firstray, scrnx, scrny, i, t1, ls2)
+  }
+};
+lscomp1$ = function lscomp1$(winsize, lights, firstray, scrnx, scrny, ls1) {
+  let param0, param1, i, t1, tmp, tmp1;
+  if (ls1 instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls1 instanceof NofibPrelude.Cons.class) {
+    param0 = ls1.head;
+    param1 = ls1.tail;
+    i = param0;
+    t1 = param1;
+    tmp = winsize - 1;
+    tmp1 = NofibPrelude.enumFromTo(0, tmp);
+    return lscomp2$(winsize, lights, firstray, scrnx, scrny, i, t1, tmp1)
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp11 = function lscomp1(winsize, lights, firstray, scrnx, scrny) {
+  return (ls1) => {
+    return lscomp1$(winsize, lights, firstray, scrnx, scrny, ls1)
+  }
+};
+u8 = function u8(x) {
+  let tmp, tmp1;
+  tmp = 255 * x;
+  tmp1 = NofibPrelude.round(tmp);
+  return sphere1.z_of_int(tmp1)
+};
+lambda1 = (undefined, function (rgb, acc) {
+  let first2, first1, first0, r, g, b, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10;
+  if (globalThis.Array.isArray(rgb) && rgb.length === 3) {
+    first0 = rgb[0];
+    first1 = rgb[1];
+    first2 = rgb[2];
+    r = first0;
+    g = first1;
+    b = first2;
+    tmp = u8(r);
+    tmp1 = u8(g);
+    tmp2 = sphere1.z_of_int(7);
+    tmp3 = tmp1 * tmp2;
+    tmp4 = tmp + tmp3;
+    tmp5 = u8(b);
+    tmp6 = sphere1.z_of_int(23);
+    tmp7 = tmp5 * tmp6;
+    tmp8 = tmp4 + tmp7;
+    tmp9 = sphere1.z_of_int(61);
+    tmp10 = acc * tmp9;
+    return tmp8 + tmp10
+  } else {
+    throw new globalThis.Error("match error");
+  }
+});
+lambda$ = function lambda$(hitpos, surf, norm, refl, l) {
+  return sphere1.lightray(l, hitpos, norm, refl, surf)
+};
+lambda = (undefined, function (hitpos, surf, norm, refl) {
+  return (l) => {
+    return lambda$(hitpos, surf, norm, refl, l)
+  }
+});
+f = function f(d1s1, d2s2) {
+  let first1, first0, d1, s1, first11, first01, d2, s2_, scrut;
+  if (globalThis.Array.isArray(d1s1) && d1s1.length === 2) {
+    first0 = d1s1[0];
+    first1 = d1s1[1];
+    d1 = first0;
+    s1 = first1;
+    if (globalThis.Array.isArray(d2s2) && d2s2.length === 2) {
+      first01 = d2s2[0];
+      first11 = d2s2[1];
+      d2 = first01;
+      s2_ = first11;
+      scrut = d1 < d2;
+      if (scrut === true) {
+        return [
+          d1,
+          s1
+        ]
+      } else {
+        return [
+          d2,
+          s2_
+        ]
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+sphmap$ = function sphmap$(pos, dir, xss) {
+  let param0, param1, x, xs, scrut, first1, first0, is_hit, where_hit, tmp;
+  if (xss instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (xss instanceof NofibPrelude.Cons.class) {
+    param0 = xss.head;
+    param1 = xss.tail;
+    x = param0;
+    xs = param1;
+    scrut = sphere1.sphereintersect(pos, dir, x);
+    if (globalThis.Array.isArray(scrut) && scrut.length === 2) {
+      first0 = scrut[0];
+      first1 = scrut[1];
+      is_hit = first0;
+      where_hit = first1;
+      if (is_hit === true) {
+        tmp = sphmap$(pos, dir, xs);
+        return NofibPrelude.Cons([
+          where_hit,
+          x
+        ], tmp)
+      } else {
+        return sphmap$(pos, dir, xs)
+      }
+    } else {
+      throw new globalThis.Error("match error");
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+sphmap = function sphmap(pos, dir) {
+  return (xss) => {
+    return sphmap$(pos, dir, xss)
+  }
+};
+lscomp7 = function lscomp(ls) {
+  let param0, param1, x, t, param01, s, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    x = param0;
+    t = param1;
+    if (x instanceof sphere1.Body.class) {
+      param01 = x.v;
+      s = param01;
+      tmp = lscomp7(t);
+      return NofibPrelude.Cons(s, tmp)
+    } else {
+      return lscomp7(t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp6 = function lscomp(ls) {
+  let param0, param1, x, t, param01, s, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    x = param0;
+    t = param1;
+    if (x instanceof sphere1.Refract.class) {
+      param01 = x.v;
+      s = param01;
+      tmp = lscomp6(t);
+      return NofibPrelude.Cons(s, tmp)
+    } else {
+      return lscomp6(t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp5 = function lscomp(ls) {
+  let param0, param1, x, t, param01, s, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    x = param0;
+    t = param1;
+    if (x instanceof sphere1.Transmit.class) {
+      param01 = x.v;
+      s = param01;
+      tmp = lscomp5(t);
+      return NofibPrelude.Cons(s, tmp)
+    } else {
+      return lscomp5(t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp4 = function lscomp(ls) {
+  let param0, param1, x, t, param01, s, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    x = param0;
+    t = param1;
+    if (x instanceof sphere1.Reflect.class) {
+      param01 = x.v;
+      s = param01;
+      tmp = lscomp4(t);
+      return NofibPrelude.Cons(s, tmp)
+    } else {
+      return lscomp4(t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp3 = function lscomp(ls) {
+  let param0, param1, x, t, param01, s, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    x = param0;
+    t = param1;
+    if (x instanceof sphere1.Specpow.class) {
+      param01 = x.v;
+      s = param01;
+      tmp = lscomp3(t);
+      return NofibPrelude.Cons(s, tmp)
+    } else {
+      return lscomp3(t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp2 = function lscomp(ls) {
+  let param0, param1, x, t, param01, s, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    x = param0;
+    t = param1;
+    if (x instanceof sphere1.Specular.class) {
+      param01 = x.v;
+      s = param01;
+      tmp = lscomp2(t);
+      return NofibPrelude.Cons(s, tmp)
+    } else {
+      return lscomp2(t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp1 = function lscomp(ls) {
+  let param0, param1, x, t, param01, s, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    x = param0;
+    t = param1;
+    if (x instanceof sphere1.Diffuse.class) {
+      param01 = x.v;
+      s = param01;
+      tmp = lscomp1(t);
+      return NofibPrelude.Cons(s, tmp)
+    } else {
+      return lscomp1(t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
+lscomp = function lscomp(ls) {
+  let param0, param1, x, t, param01, s, tmp;
+  if (ls instanceof NofibPrelude.Nil.class) {
+    return NofibPrelude.Nil
+  } else if (ls instanceof NofibPrelude.Cons.class) {
+    param0 = ls.head;
+    param1 = ls.tail;
+    x = param0;
+    t = param1;
+    if (x instanceof sphere1.Ambient.class) {
+      param01 = x.v;
+      s = param01;
+      tmp = lscomp(t);
+      return NofibPrelude.Cons(s, tmp)
+    } else {
+      return lscomp(t)
+    }
+  } else {
+    throw new globalThis.Error("match error");
+  }
+};
 sphere1 = class sphere {
   static {
     sphere1 = sphere;
-    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, lambda;
+    let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp29, tmp30, tmp31, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp40, tmp41, tmp42, tmp43, tmp44, tmp45, lambda2;
     this.pi = globalThis.Math.PI;
     this.epsilon = 0.000001;
     this.infinity = 100000000.0;
@@ -277,10 +607,10 @@ sphere1 = class sphere {
       0.361,
       0.753
     ];
-    lambda = (undefined, function () {
+    lambda2 = (undefined, function () {
       return sphere.testSphere_nofib(30)
     });
-    BenchmarkPrelude.benchmark(lambda)
+    BenchmarkPrelude.benchmark(lambda2)
   }
   static vecadd(a1, a2) {
     let first2, first1, first0, x1, y1, z1, first21, first11, first01, x2, y2, z2, tmp, tmp1, tmp2;
@@ -561,28 +891,7 @@ sphere1 = class sphere {
     }
   } 
   static ambientsurf(ss) {
-    let lscomp, tmp, tmp1, tmp2;
-    lscomp = function lscomp(ls) {
-      let param0, param1, x4, t, param01, s, tmp3;
-      if (ls instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (ls instanceof NofibPrelude.Cons.class) {
-        param0 = ls.head;
-        param1 = ls.tail;
-        x4 = param0;
-        t = param1;
-        if (x4 instanceof sphere.Ambient.class) {
-          param01 = x4.v;
-          s = param01;
-          tmp3 = lscomp(t);
-          return NofibPrelude.Cons(s, tmp3)
-        } else {
-          return lscomp(t)
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
+    let tmp, tmp1, tmp2;
     tmp = lscomp(ss);
     tmp1 = NofibPrelude.Cons([
       0.0,
@@ -593,29 +902,8 @@ sphere1 = class sphere {
     return NofibPrelude.head(tmp2)
   } 
   static diffusesurf(ss1) {
-    let lscomp, tmp, tmp1, tmp2;
-    lscomp = function lscomp(ls) {
-      let param0, param1, x4, t, param01, s, tmp3;
-      if (ls instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (ls instanceof NofibPrelude.Cons.class) {
-        param0 = ls.head;
-        param1 = ls.tail;
-        x4 = param0;
-        t = param1;
-        if (x4 instanceof sphere.Diffuse.class) {
-          param01 = x4.v;
-          s = param01;
-          tmp3 = lscomp(t);
-          return NofibPrelude.Cons(s, tmp3)
-        } else {
-          return lscomp(t)
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    tmp = lscomp(ss1);
+    let tmp, tmp1, tmp2;
+    tmp = lscomp1(ss1);
     tmp1 = NofibPrelude.Cons([
       0.0,
       0.0,
@@ -625,29 +913,8 @@ sphere1 = class sphere {
     return NofibPrelude.head(tmp2)
   } 
   static specularsurf(ss2) {
-    let lscomp, tmp, tmp1, tmp2;
-    lscomp = function lscomp(ls) {
-      let param0, param1, x4, t, param01, s, tmp3;
-      if (ls instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (ls instanceof NofibPrelude.Cons.class) {
-        param0 = ls.head;
-        param1 = ls.tail;
-        x4 = param0;
-        t = param1;
-        if (x4 instanceof sphere.Specular.class) {
-          param01 = x4.v;
-          s = param01;
-          tmp3 = lscomp(t);
-          return NofibPrelude.Cons(s, tmp3)
-        } else {
-          return lscomp(t)
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    tmp = lscomp(ss2);
+    let tmp, tmp1, tmp2;
+    tmp = lscomp2(ss2);
     tmp1 = NofibPrelude.Cons([
       0.0,
       0.0,
@@ -657,141 +924,36 @@ sphere1 = class sphere {
     return NofibPrelude.head(tmp2)
   } 
   static specpowsurf(ss3) {
-    let lscomp, tmp, tmp1, tmp2;
-    lscomp = function lscomp(ls) {
-      let param0, param1, x4, t, param01, s, tmp3;
-      if (ls instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (ls instanceof NofibPrelude.Cons.class) {
-        param0 = ls.head;
-        param1 = ls.tail;
-        x4 = param0;
-        t = param1;
-        if (x4 instanceof sphere.Specpow.class) {
-          param01 = x4.v;
-          s = param01;
-          tmp3 = lscomp(t);
-          return NofibPrelude.Cons(s, tmp3)
-        } else {
-          return lscomp(t)
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    tmp = lscomp(ss3);
+    let tmp, tmp1, tmp2;
+    tmp = lscomp3(ss3);
     tmp1 = NofibPrelude.Cons(8.0, NofibPrelude.Nil);
     tmp2 = NofibPrelude.append(tmp, tmp1);
     return NofibPrelude.head(tmp2)
   } 
   static reflectsurf(ss4) {
-    let lscomp, tmp, tmp1, tmp2;
-    lscomp = function lscomp(ls) {
-      let param0, param1, x4, t, param01, s, tmp3;
-      if (ls instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (ls instanceof NofibPrelude.Cons.class) {
-        param0 = ls.head;
-        param1 = ls.tail;
-        x4 = param0;
-        t = param1;
-        if (x4 instanceof sphere.Reflect.class) {
-          param01 = x4.v;
-          s = param01;
-          tmp3 = lscomp(t);
-          return NofibPrelude.Cons(s, tmp3)
-        } else {
-          return lscomp(t)
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    tmp = lscomp(ss4);
+    let tmp, tmp1, tmp2;
+    tmp = lscomp4(ss4);
     tmp1 = NofibPrelude.Cons(0.0, NofibPrelude.Nil);
     tmp2 = NofibPrelude.append(tmp, tmp1);
     return NofibPrelude.head(tmp2)
   } 
   static transmitsurf(ss5) {
-    let lscomp, tmp, tmp1, tmp2;
-    lscomp = function lscomp(ls) {
-      let param0, param1, x4, t, param01, s, tmp3;
-      if (ls instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (ls instanceof NofibPrelude.Cons.class) {
-        param0 = ls.head;
-        param1 = ls.tail;
-        x4 = param0;
-        t = param1;
-        if (x4 instanceof sphere.Transmit.class) {
-          param01 = x4.v;
-          s = param01;
-          tmp3 = lscomp(t);
-          return NofibPrelude.Cons(s, tmp3)
-        } else {
-          return lscomp(t)
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    tmp = lscomp(ss5);
+    let tmp, tmp1, tmp2;
+    tmp = lscomp5(ss5);
     tmp1 = NofibPrelude.Cons(0.0, NofibPrelude.Nil);
     tmp2 = NofibPrelude.append(tmp, tmp1);
     return NofibPrelude.head(tmp2)
   } 
   static refractsurf(ss6) {
-    let lscomp, tmp, tmp1, tmp2;
-    lscomp = function lscomp(ls) {
-      let param0, param1, x4, t, param01, s, tmp3;
-      if (ls instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (ls instanceof NofibPrelude.Cons.class) {
-        param0 = ls.head;
-        param1 = ls.tail;
-        x4 = param0;
-        t = param1;
-        if (x4 instanceof sphere.Refract.class) {
-          param01 = x4.v;
-          s = param01;
-          tmp3 = lscomp(t);
-          return NofibPrelude.Cons(s, tmp3)
-        } else {
-          return lscomp(t)
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    tmp = lscomp(ss6);
+    let tmp, tmp1, tmp2;
+    tmp = lscomp6(ss6);
     tmp1 = NofibPrelude.Cons(1.0, NofibPrelude.Nil);
     tmp2 = NofibPrelude.append(tmp, tmp1);
     return NofibPrelude.head(tmp2)
   } 
   static bodysurf(ss7) {
-    let lscomp, tmp, tmp1, tmp2;
-    lscomp = function lscomp(ls) {
-      let param0, param1, x4, t, param01, s, tmp3;
-      if (ls instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (ls instanceof NofibPrelude.Cons.class) {
-        param0 = ls.head;
-        param1 = ls.tail;
-        x4 = param0;
-        t = param1;
-        if (x4 instanceof sphere.Body.class) {
-          param01 = x4.v;
-          s = param01;
-          tmp3 = lscomp(t);
-          return NofibPrelude.Cons(s, tmp3)
-        } else {
-          return lscomp(t)
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    tmp = lscomp(ss7);
+    let tmp, tmp1, tmp2;
+    tmp = lscomp7(ss7);
     tmp1 = NofibPrelude.Cons([
       1.0,
       1.0,
@@ -960,70 +1122,8 @@ sphere1 = class sphere {
     }
   } 
   static trace(spheres, pos2, dir1) {
-    let f, sphmap, dists, scrut, first1, first0, mindist, sp2, scrut1, tmp, tmp1, tmp2, tmp3;
-    f = function f(d1s1, d2s2) {
-      let first11, first01, d1, s1, first12, first02, d2, s2_, scrut2;
-      if (globalThis.Array.isArray(d1s1) && d1s1.length === 2) {
-        first01 = d1s1[0];
-        first11 = d1s1[1];
-        d1 = first01;
-        s1 = first11;
-        if (globalThis.Array.isArray(d2s2) && d2s2.length === 2) {
-          first02 = d2s2[0];
-          first12 = d2s2[1];
-          d2 = first02;
-          s2_ = first12;
-          scrut2 = d1 < d2;
-          if (scrut2 === true) {
-            return [
-              d1,
-              s1
-            ]
-          } else {
-            return [
-              d2,
-              s2_
-            ]
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    sphmap = function sphmap(xss) {
-      let param0, param1, x5, xs, scrut2, first11, first01, is_hit, where_hit, tmp4;
-      if (xss instanceof NofibPrelude.Nil.class) {
-        return NofibPrelude.Nil
-      } else if (xss instanceof NofibPrelude.Cons.class) {
-        param0 = xss.head;
-        param1 = xss.tail;
-        x5 = param0;
-        xs = param1;
-        scrut2 = sphere.sphereintersect(pos2, dir1, x5);
-        if (globalThis.Array.isArray(scrut2) && scrut2.length === 2) {
-          first01 = scrut2[0];
-          first11 = scrut2[1];
-          is_hit = first01;
-          where_hit = first11;
-          if (is_hit === true) {
-            tmp4 = sphmap(xs);
-            return NofibPrelude.Cons([
-              where_hit,
-              x5
-            ], tmp4)
-          } else {
-            return sphmap(xs)
-          }
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    };
-    tmp = sphmap(spheres);
+    let dists, scrut, first1, first0, mindist, sp2, scrut1, tmp, tmp1, tmp2, tmp3;
+    tmp = sphmap$(pos2, dir1, spheres);
     dists = tmp;
     scrut1 = NofibPrelude.null_(dists);
     if (scrut1 === true) {
@@ -1248,7 +1348,7 @@ sphere1 = class sphere {
     }
   } 
   static shade(lights, sp2, lookpos, dir3, dist, contrib) {
-    let hitpos, ambientlight, surf1, amb, norm1, refl1, diff, transmitted, simple, trintensity, matchIdent_1, scrut, first1, first0, is_tir, trcol, reflsurf, reflectiv, rcol, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, lambda;
+    let hitpos, ambientlight, surf1, amb, norm1, refl1, diff, transmitted, simple, trintensity, matchIdent_1, scrut, first1, first0, is_tir, trcol, reflsurf, reflectiv, rcol, scrut1, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21, tmp22, tmp23, lambda$this;
     tmp = sphere.vecscale(dir3, dist);
     tmp1 = sphere.vecadd(lookpos, tmp);
     hitpos = tmp1;
@@ -1270,10 +1370,8 @@ sphere1 = class sphere {
     tmp9 = sphere.vecscale(norm1, tmp8);
     tmp10 = sphere.vecadd(dir3, tmp9);
     refl1 = tmp10;
-    lambda = (undefined, function (l2) {
-      return sphere.lightray(l2, hitpos, norm1, refl1, surf1)
-    });
-    tmp11 = NofibPrelude.map(lambda, lights);
+    lambda$this = runtime.safeCall(lambda(hitpos, surf1, norm1, refl1));
+    tmp11 = NofibPrelude.map(lambda$this, lights);
     tmp12 = sphere.vecsum(tmp11);
     diff = tmp12;
     tmp13 = sphere.transmitsurf(surf1);
@@ -1442,44 +1540,13 @@ sphere1 = class sphere {
     return runtime.safeCall(globalThis.BigInt(x6))
   } 
   static hash(param1) {
-    let u8, tmp, tmp1, lambda;
-    u8 = function u8(x7) {
-      let tmp2, tmp3;
-      tmp2 = 255 * x7;
-      tmp3 = NofibPrelude.round(tmp2);
-      return sphere.z_of_int(tmp3)
-    };
-    lambda = (undefined, function (rgb, acc) {
-      let first2, first1, first0, r, g, b, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, tmp12;
-      if (globalThis.Array.isArray(rgb) && rgb.length === 3) {
-        first0 = rgb[0];
-        first1 = rgb[1];
-        first2 = rgb[2];
-        r = first0;
-        g = first1;
-        b = first2;
-        tmp2 = u8(r);
-        tmp3 = u8(g);
-        tmp4 = sphere.z_of_int(7);
-        tmp5 = tmp3 * tmp4;
-        tmp6 = tmp2 + tmp5;
-        tmp7 = u8(b);
-        tmp8 = sphere.z_of_int(23);
-        tmp9 = tmp7 * tmp8;
-        tmp10 = tmp6 + tmp9;
-        tmp11 = sphere.z_of_int(61);
-        tmp12 = acc * tmp11;
-        return tmp10 + tmp12
-      } else {
-        throw new globalThis.Error("match error");
-      }
-    });
-    tmp = lambda;
+    let tmp, tmp1;
+    tmp = lambda1;
     tmp1 = sphere.z_of_int(0);
     return NofibPrelude.foldr(tmp, tmp1, param1)
   } 
   static ray(winsize1) {
-    let f, lscomp1, lights4, scrut, first2, first1, first0, firstray1, scrnx1, scrny1, tmp, tmp1;
+    let lights4, scrut, first2, first1, first0, firstray1, scrnx1, scrny1, tmp, tmp1;
     lights4 = sphere.testlights;
     scrut = sphere.camparams(sphere.lookfrom, sphere.lookat, sphere.vup, sphere.fov, winsize1);
     if (globalThis.Array.isArray(scrut) && scrut.length === 3) {
@@ -1489,50 +1556,9 @@ sphere1 = class sphere {
       firstray1 = first0;
       scrnx1 = first1;
       scrny1 = first2;
-      f = function f(i, j) {
-        return sphere.tracepixel(sphere.testspheres, lights4, i, j, firstray1, scrnx1, scrny1)
-      };
-      lscomp1 = function lscomp1(ls1) {
-        let lscomp2, param0, param11, i, t1, tmp2, tmp3;
-        if (ls1 instanceof NofibPrelude.Nil.class) {
-          return NofibPrelude.Nil
-        } else if (ls1 instanceof NofibPrelude.Cons.class) {
-          param0 = ls1.head;
-          param11 = ls1.tail;
-          i = param0;
-          t1 = param11;
-          lscomp2 = function lscomp2(ls2) {
-            let param01, param12, j, t2, tmp4, tmp5;
-            if (ls2 instanceof NofibPrelude.Nil.class) {
-              return lscomp1(t1)
-            } else if (ls2 instanceof NofibPrelude.Cons.class) {
-              param01 = ls2.head;
-              param12 = ls2.tail;
-              j = param01;
-              t2 = param12;
-              tmp4 = f(i, j);
-              tmp5 = lscomp2(t2);
-              return NofibPrelude.Cons([
-                [
-                  i,
-                  j
-                ],
-                tmp4
-              ], tmp5)
-            } else {
-              throw new globalThis.Error("match error");
-            }
-          };
-          tmp2 = winsize1 - 1;
-          tmp3 = NofibPrelude.enumFromTo(0, tmp2);
-          return lscomp2(tmp3)
-        } else {
-          throw new globalThis.Error("match error");
-        }
-      };
       tmp = winsize1 - 1;
       tmp1 = NofibPrelude.enumFromTo(0, tmp);
-      return lscomp1(tmp1)
+      return lscomp1$(winsize1, lights4, firstray1, scrnx1, scrny1, tmp1)
     } else {
       throw new globalThis.Error("match error");
     }
