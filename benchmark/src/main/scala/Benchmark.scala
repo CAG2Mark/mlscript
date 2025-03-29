@@ -58,33 +58,39 @@ object Benchmark {
     precompileModules
     val testDir = os.pwd/"hkmc2"/"shared"/"src"/"test"
     // Import nofib
-//     val nofibSources = os.list(os.pwd/"hkmc2"/"shared"/"src"/"test"/"mlscript"/"nofib").filter(_.last != "NofibPrelude.mls").filter(_.last != "input")
-//     nofibSources.foreach: path =>
-//       println(s"Importing ${path.last}")
-//       val preludeStr = f"""import "../precompiled/NofibPrelude.mls"
-// import "../precompiled/BenchmarkPrelude.mls"
-// import "fs"
-// open NofibPrelude
-// open BenchmarkPrelude
+    val nofibSources = os.list(os.pwd/"hkmc2"/"shared"/"src"/"test"/"mlscript"/"nofib").filter(_.last != "NofibPrelude.mls").filter(_.last != "input")
+    nofibSources.foreach: path =>
+      println(s"Importing ${path.last}")
+      val preludeStr = f"""import "../precompiled/NofibPrelude.mls"
+import "../precompiled/BenchmarkPrelude.mls"
+import "fs"
+open NofibPrelude
+open BenchmarkPrelude
 
-// module ${path.baseName.replace("-", "")} with ...
-// """
-//       val result = os.read(path).split("\n").map: line =>
-//           if line.startsWith(":") || line.startsWith("import ") then
-//             f"// $line"
-//           else if line.startsWith("prog(6).toStr") || line.startsWith("test") || line.startsWith("nofib") ||
-//             line.startsWith("print(test") || line.startsWith("print(nofib") || line.startsWith("print of") ||
-//             line.startsWith("map(x => nofib") then
-//             f"benchmark of () => $line"
-//           else if line.startsWith("let ls = testFish") then
-//             "let ls = benchmark of () => testFish_nofib(1)"
-//           else if line.startsWith("let ") then
-//             // convert private variables away
-//             "val " + line.drop(4)
-//           else
-//             line
-//         .mkString(preludeStr, "\n", "\n")
-//       os.write.over(os.pwd/"benchmark"/"src"/"nofib"/path.last, result)
+module ${path.baseName.replace("-", "")} with ...
+"""
+      val result = os.read(path).split("\n").map: line =>
+          if line.startsWith(":") || line.startsWith("import ") then
+            f"// $line"
+          else if line.startsWith("prog(6).toStr") || line.startsWith("test") || line.startsWith("nofib") ||
+            line.startsWith("map(x => nofib") then
+            f"fun main() = $line"
+          else if line.startsWith("print(test") || line.startsWith("print(nofib") then
+            assert(line.endsWith(")"))
+            f"fun main() = ${line.drop(6).dropRight(1)}"
+          else if line == "print of" then
+            "fun main() ="
+          else if line.startsWith("let ls = testFish") then
+            "fun main() = testFish_nofib(1)"
+          else if line == "ls" && path.baseName == "fish" then
+            ""
+          else if line.startsWith("let ") then
+            // convert private variables away
+            "val " + line.drop(4)
+          else
+            line
+        .mkString(preludeStr, "\n", "\n")
+      os.write.over(os.pwd/"benchmark"/"src"/"nofib"/path.last.replace("-", ""), result)
     println("Compiling nofib")
     val nofibPaths = os.list(benchmarkBaseDir/"nofib")
     nofibPaths.foreach: path =>
@@ -95,7 +101,10 @@ object Benchmark {
       println(s"=> Running ${path.last}")
       val result = configsLst.map: (targetDir, _, nme) =>
         println(s"=> => Running ${path.last} with $nme")
-        val result = os.proc("node", targetDir/"nofib"/(path.baseName + ".mjs")).call(stderr = os.Inherit)
+        val targetImport = s"import Target from \"${targetDir/"nofib"/(path.baseName + ".mjs")}\";\n"
+        val benchmarkImport = s"import Benchmark from \"${targetDir/"precompiled"/"BenchmarkPrelude.mjs"}\";\n"
+        val benchmarkJS = targetImport + benchmarkImport + "Benchmark.benchmark(Target.main)"
+        val result = os.proc("node").call(stdin = benchmarkJS, stderr = os.Inherit)
         val resultStr = result.out.bytes.map(_.toChar).mkString
         var time: Opt[Double] = N
         resultStr.linesIterator.foreach: line =>

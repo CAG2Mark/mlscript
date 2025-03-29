@@ -163,3 +163,16 @@ lazy val benchmark = crossProject(JSPlatform, JVMPlatform).in(file("benchmark"))
   .dependsOn(hkmc2)
 lazy val benchmarkJVM = benchmark.jvm
 lazy val benchmarkJS = benchmark.js
+
+lazy val benchmarkTest = project.in(file("benchmark"))
+  .dependsOn(benchmarkJVM)
+  .dependsOn(hkmc2DiffTests % "compile->compile;test->test")
+  .settings(
+    scalaVersion := scala3Version,
+    
+    libraryDependencies += "org.scalactic" %%% "scalactic" % "3.2.18",
+    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.18" % "test",
+    
+    watchSources += WatchSource(
+      baseDirectory.value/"src"/"test"/"nofib", "*.mls", NothingFilter),
+  )
