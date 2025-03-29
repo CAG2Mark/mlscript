@@ -230,6 +230,7 @@ val stackDepth = 0 // Tracks the virtual + real stack depth
 val stackOffset = 0 // How much to offset stackDepth by to get the true stack depth (i.e. the virtual depth)
 val stackHandler = null
 val stackResume = null
+val stackSafeCounter = 0
 
 object StackDelayHandler with
   fun delay() = mkEffect of this, k =>
@@ -258,6 +259,7 @@ fun runStackSafe(limit, f) =
   while stackResume !== null do
     let saved = stackResume
     set
+      stackSafeCounter += 1
       stackResume = null
       stackOffset = stackDepth
       result = saved()

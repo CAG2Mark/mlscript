@@ -1,67 +1,6 @@
 import runtime from "./Runtime.mjs";
 import RuntimeJS from "./RuntimeJS.mjs";
-let Runtime1, lambda, lambda1, lambda2, lambda$, lambda$1, lambda$2, showFunctionContChain$capture1, showHandlerContChain$capture1;
-lambda$ = function lambda$(StackDelayHandler$instance, k) {
-  Runtime1.stackResume = k;
-  return runtime.Unit
-};
-lambda2 = (undefined, function (StackDelayHandler$instance) {
-  return (k) => {
-    return lambda$(StackDelayHandler$instance, k)
-  }
-});
-lambda$2 = function lambda$(cont, showHandlerContChain$capture2, m, marker) {
-  let scrut, tmp, tmp1;
-  scrut = runtime.safeCall(m.has(cont));
-  if (scrut === true) {
-    tmp = ", " + marker;
-    tmp1 = showHandlerContChain$capture2.result0$ + tmp;
-    showHandlerContChain$capture2.result0$ = tmp1;
-    return runtime.Unit
-  } else {
-    return runtime.Unit
-  }
-};
-lambda1 = (undefined, function (cont, showHandlerContChain$capture2) {
-  return (m, marker) => {
-    return lambda$2(cont, showHandlerContChain$capture2, m, marker)
-  }
-});
-showHandlerContChain$capture1 = function showHandlerContChain$capture(result0$1) {
-  return new showHandlerContChain$capture.class(result0$1);
-};
-showHandlerContChain$capture1.class = class showHandlerContChain$capture {
-  constructor(result0$) {
-    this.result0$ = result0$;
-  }
-  toString() { return "showHandlerContChain$capture(" + globalThis.Predef.render(this.result0$) + ")"; }
-};
-lambda$1 = function lambda$(cont, showFunctionContChain$capture2, m, marker) {
-  let scrut, tmp, tmp1;
-  scrut = runtime.safeCall(m.has(cont));
-  if (scrut === true) {
-    tmp = ", " + marker;
-    tmp1 = showFunctionContChain$capture2.result0$ + tmp;
-    showFunctionContChain$capture2.result0$ = tmp1;
-    return runtime.Unit
-  } else {
-    return runtime.Unit
-  }
-};
-lambda = (undefined, function (cont, showFunctionContChain$capture2) {
-  return (m, marker) => {
-    return lambda$1(cont, showFunctionContChain$capture2, m, marker)
-  }
-});
-showFunctionContChain$capture1 = function showFunctionContChain$capture(result0$1) {
-  return new showFunctionContChain$capture.class(result0$1);
-};
-showFunctionContChain$capture1.class = class showFunctionContChain$capture {
-  constructor(result0$) {
-    this.result0$ = result0$;
-  }
-  toString() { return "showFunctionContChain$capture(" + globalThis.Predef.render(this.result0$) + ")"; }
-};
+let Runtime1;
 Runtime1 = class Runtime {
   static {
     Runtime1 = Runtime;
@@ -145,12 +84,16 @@ Runtime1 = class Runtime {
     this.stackOffset = 0;
     this.stackHandler = null;
     this.stackResume = null;
+    this.stackSafeCounter = 0;
     const StackDelayHandler$class = class StackDelayHandler {
       constructor() {}
       delay() {
-        let lambda$this;
-        lambda$this = runtime.safeCall(lambda2(this));
-        return Runtime.mkEffect(this, lambda$this)
+        let lambda;
+        lambda = (undefined, function (k) {
+          Runtime.stackResume = k;
+          return runtime.Unit
+        });
+        return Runtime.mkEffect(this, lambda)
       }
       toString() { return "StackDelayHandler"; }
     };
@@ -180,13 +123,24 @@ Runtime1 = class Runtime {
     throw globalThis.Error(tmp3);
   } 
   static showFunctionContChain(cont, hl, vis, reps) {
-    let scrut, scrut1, scrut2, scrut3, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, capture;
-    capture = new showFunctionContChain$capture1(null);
+    let scrut, result, scrut1, scrut2, scrut3, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9, tmp10, tmp11, lambda;
     if (cont instanceof Runtime.FunctionContFrame.class) {
       tmp = cont.constructor.name + "(pc=";
       tmp1 = tmp + cont.pc;
-      capture.result0$ = tmp1;
-      tmp2 = runtime.safeCall(lambda(cont, capture));
+      result = tmp1;
+      lambda = (undefined, function (m, marker) {
+        let scrut4, tmp12, tmp13;
+        scrut4 = runtime.safeCall(m.has(cont));
+        if (scrut4 === true) {
+          tmp12 = ", " + marker;
+          tmp13 = result + tmp12;
+          result = tmp13;
+          return runtime.Unit
+        } else {
+          return runtime.Unit
+        }
+      });
+      tmp2 = lambda;
       tmp3 = runtime.safeCall(hl.forEach(tmp2));
       scrut1 = runtime.safeCall(vis.has(cont));
       if (scrut1 === true) {
@@ -198,21 +152,21 @@ Runtime1 = class Runtime {
         } else {
           tmp5 = runtime.Unit;
         }
-        tmp6 = capture.result0$ + ", REPEAT";
-        capture.result0$ = tmp6;
+        tmp6 = result + ", REPEAT";
+        result = tmp6;
         tmp7 = runtime.Unit;
       } else {
         tmp7 = runtime.safeCall(vis.add(cont));
       }
       scrut3 = cont.completed;
       if (scrut3 === true) {
-        tmp8 = capture.result0$ + ", COMPLETED";
-        capture.result0$ = tmp8;
+        tmp8 = result + ", COMPLETED";
+        result = tmp8;
         tmp9 = runtime.Unit;
       } else {
         tmp9 = runtime.Unit;
       }
-      tmp10 = capture.result0$ + ") -> ";
+      tmp10 = result + ") -> ";
       tmp11 = Runtime.showFunctionContChain(cont.next, hl, vis, reps);
       return tmp10 + tmp11
     } else {
@@ -225,11 +179,22 @@ Runtime1 = class Runtime {
     }
   } 
   static showHandlerContChain(cont1, hl1, vis1, reps1) {
-    let scrut, scrut1, scrut2, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, capture;
-    capture = new showHandlerContChain$capture1(null);
+    let scrut, result, scrut1, scrut2, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, lambda;
     if (cont1 instanceof Runtime.HandlerContFrame.class) {
-      capture.result0$ = cont1.handler.constructor.name;
-      tmp = runtime.safeCall(lambda1(cont1, capture));
+      result = cont1.handler.constructor.name;
+      lambda = (undefined, function (m, marker) {
+        let scrut3, tmp8, tmp9;
+        scrut3 = runtime.safeCall(m.has(cont1));
+        if (scrut3 === true) {
+          tmp8 = ", " + marker;
+          tmp9 = result + tmp8;
+          result = tmp9;
+          return runtime.Unit
+        } else {
+          return runtime.Unit
+        }
+      });
+      tmp = lambda;
       tmp1 = runtime.safeCall(hl1.forEach(tmp));
       scrut1 = runtime.safeCall(vis1.has(cont1));
       if (scrut1 === true) {
@@ -241,13 +206,13 @@ Runtime1 = class Runtime {
         } else {
           tmp3 = runtime.Unit;
         }
-        tmp4 = capture.result0$ + ", REPEAT";
-        capture.result0$ = tmp4;
+        tmp4 = result + ", REPEAT";
+        result = tmp4;
         tmp5 = runtime.Unit;
       } else {
         tmp5 = runtime.safeCall(vis1.add(cont1));
       }
-      tmp6 = capture.result0$ + " -> ";
+      tmp6 = result + " -> ";
       tmp7 = Runtime.showFunctionContChain(cont1.next, hl1, vis1, reps1);
       return tmp6 + tmp7
     } else {
@@ -542,25 +507,27 @@ Runtime1 = class Runtime {
     return tmp
   } 
   static runStackSafe(limit, f) {
-    let result, scrut, saved, tmp1, tmp2, tmp3;
+    let result, scrut, saved, tmp1, tmp2, tmp3, tmp4;
     Runtime.stackLimit = limit;
     Runtime.stackDepth = 0;
     Runtime.stackOffset = 0;
     Runtime.stackHandler = Runtime.StackDelayHandler;
     tmp1 = Runtime.enterHandleBlock(Runtime.StackDelayHandler, f);
     result = tmp1;
-    tmp4: while (true) {
+    tmp5: while (true) {
       scrut = Runtime.stackResume !== null;
       if (scrut === true) {
         saved = Runtime.stackResume;
+        tmp2 = Runtime.stackSafeCounter + 1;
+        Runtime.stackSafeCounter = tmp2;
         Runtime.stackResume = null;
         Runtime.stackOffset = Runtime.stackDepth;
-        tmp2 = runtime.safeCall(saved());
-        result = tmp2;
-        tmp3 = runtime.Unit;
-        continue tmp4;
+        tmp3 = runtime.safeCall(saved());
+        result = tmp3;
+        tmp4 = runtime.Unit;
+        continue tmp5;
       } else {
-        tmp3 = runtime.Unit;
+        tmp4 = runtime.Unit;
       }
       break;
     }

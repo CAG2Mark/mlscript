@@ -39,8 +39,6 @@ class ParserSetup(file: os.Path, dbgParsing: Bool)(using Elaborator.State, Raise
 // * The weird type of `mkOutput` is to allow wrapping the reporting of diagnostics in synchronized blocks
 class MLsCompiler(preludeFile: os.Path, mkOutput: ((Str => Unit) => Unit) => Unit)(using Config):
   
-  val runtimeFile: os.Path = preludeFile/os.up/os.up/os.up/"mlscript-compile"/"Runtime.mjs"
-  
   
   val report = ReportFormatter: outputConsumer =>
     mkOutput: output =>
@@ -56,7 +54,7 @@ class MLsCompiler(preludeFile: os.Path, mkOutput: ((Str => Unit) => Unit) => Uni
   var dbgParsing = false
   
   
-  def compileModule(file: os.Path): Unit =
+  def compileModule(file: os.Path, outFile: Opt[os.Path] = N, exportName: Opt[Str] = N, runtimeImportPath: Opt[os.Path] = N): Unit =
     
     val wd = file / os.up
     
@@ -80,6 +78,7 @@ class MLsCompiler(preludeFile: os.Path, mkOutput: ((Str => Unit) => Unit) => Uni
       val elab = Elaborator(etl, wd, newCtx)
       val parsed = mainParse.resultBlk
       val (blk0, _) = elab.importFrom(parsed)
+      val runtimeFile: os.Path = runtimeImportPath.getOrElse(preludeFile/os.up/os.up/os.up/"mlscript-compile"/"Runtime.mjs")
       val blk = new semantics.Term.Blk(
         semantics.Import(State.runtimeSymbol, runtimeFile.toString) :: blk0.stats,
         blk0.res
@@ -93,13 +92,13 @@ class MLsCompiler(preludeFile: os.Path, mkOutput: ((Str => Unit) => Unit) => Uni
       val baseScp: utils.Scope =
         utils.Scope.empty
       val nestedScp = baseScp.nest
-      val nme = file.baseName
+      val nme = exportName.getOrElse(file.baseName)
       val exportedSymbol = parsed.definedSymbols.find(_._1 === nme).map(_._2)
       val je = nestedScp.givenIn:
         jsb.program(le, exportedSymbol, wd)
       val jsStr = je.stripBreaks.mkString(100)
-      val out = file / os.up / (file.baseName + ".mjs")
-      os.write.over(out, jsStr)
+      val out = outFile.getOrElse(file / os.up / (file.baseName + ".mjs"))
+      os.write.over(out, jsStr, createFolders = true)
   
   
 end MLsCompiler

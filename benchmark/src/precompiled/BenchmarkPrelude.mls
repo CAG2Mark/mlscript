@@ -1,36 +1,5 @@
-import "../../../hkmc2/shared/src/test/mlscript-compile/Runtime.mls"
-import "../../../hkmc2/shared/src/test/mlscript-compile/Predef.mls"
-import "./NofibPrelude.mls"
-import "benchmark"
-open Predef
-open NofibPrelude
-
-let b = benchmark
-
-module BenchmarkPrelude with ...
-
-fun not(x) = x === false
-
-fun print(s) = s
-
-fun helper(f) =
-  let success = true
-  js.try_catch of () => f(), (e) =>
-    set success = false
-    Predef.print("Error: " + e)
-  success
-
-fun benchmark(fn) =
-  // print(helper(fn))
-  // print("benchmarking...")
-  let suite = new b.Suite()
-  suite.add("main", fn)
-  let settings = {}
-  set settings.async = false
-  suite.run(settings)
-  if suite.0.stats.sample.length > 0 do
-    Predef.print("Time: " + suite.0.stats.mean * 1000 + "ms")
-  // if res do
-  //   Predef.print("Time: " + (end - start) + "ms")
-
-set globalThis.Predef = Predef
+module BenchmarkPrelude with
+  fun not(x)
+  fun print(s)
+  fun helper(f)
+  fun benchmark(fn)
