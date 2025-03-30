@@ -13,9 +13,11 @@ fun not(x) = x === false
 
 fun print(s) = s
 
+fun maybeStackSafe(f) = f()
+
 fun helper(f) =
   let success = true
-  js.try_catch of () => f(), (e) =>
+  js.try_catch of () => maybeStackSafe(f), (e) =>
     set success = false
     Predef.print("Error: " + e)
   success
