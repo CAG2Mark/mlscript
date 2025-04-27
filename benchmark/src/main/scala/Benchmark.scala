@@ -134,7 +134,6 @@ module ${path.baseName.replace("-", "")} with ...
           println(f"$path: ${(baseline / effect) * 100}%.3f%%, ${(baseline / stackSafe) * 100}%.3f%%")
         case _ =>
           println(s"$path: One of the test failed")
-    // lazy val nofibFiles = List(os.pwd/"benchmark"/"src"/"examples"/"StackSafety.mls")
 
     // val results = nofibFiles.map: path =>
     //   def run(compiler: MLsCompiler): Option[Double] =
