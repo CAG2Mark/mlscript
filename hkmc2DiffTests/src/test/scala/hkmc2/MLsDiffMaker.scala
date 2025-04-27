@@ -6,7 +6,7 @@ import mlscript.utils.*, shorthands.*
 import utils.*
 
 import hkmc2.semantics.Elaborator
-import hkmc2.semantics.ImplicitResolver
+import hkmc2.semantics.Resolver
 
 import semantics.Elaborator.Ctx
 
@@ -56,7 +56,8 @@ abstract class MLsDiffMaker extends DiffMaker:
   // * Compiler configuration
   
   val noSanityCheck = NullaryCommand("noSanityCheck")
-  val effectHandlers = NullaryCommand("effectHandlers")
+  val effectHandlers = Command("effectHandlers")(_.trim)
+  val effectHandlersOptions = Set("debug", "")
   val stackSafe = Command("stackSafe")(_.trim)
   val liftDefns = NullaryCommand("lift")
   
@@ -64,9 +65,12 @@ abstract class MLsDiffMaker extends DiffMaker:
     import Config.*
     if stackSafe.isSet && effectHandlers.isUnset then
       output(s"$errMarker Option ':stackSafe' requires ':effectHandlers' to be set")
+    if !effectHandlers.get.forall(effectHandlersOptions.contains(_)) then
+      output(s"$errMarker Option ':effectHandlers' only supports 'debug' as option")
     Config(
       sanityChecks = Opt.when(noSanityCheck.isUnset)(SanityChecks(light = true)),
       effectHandlers = Opt.when(effectHandlers.isSet)(EffectHandlers(
+        debug = effectHandlers.get.contains("debug"),
         stackSafety = stackSafe.get.flatMap:
           case "off" => N
           case value => value.toIntOption match
@@ -108,13 +112,13 @@ abstract class MLsDiffMaker extends DiffMaker:
       // * Perhaps this should be the default behavior of TraceLogger.
       if doTrace then super.trace(pre, post)(thunk)
       else thunk
-      
+  
   val rtl = new TraceLogger:
     override def doTrace = dbgResolving.isSet
     override def emitDbg(str: String): Unit = output(str)
   
   var curCtx = Elaborator.State.init
-  var curICtx = ImplicitResolver.ICtx.empty
+  var curICtx = Resolver.ICtx.empty
   
   var prelude = Elaborator.Ctx.empty
   
@@ -241,20 +245,20 @@ abstract class MLsDiffMaker extends DiffMaker:
       output(s"Elaborated tree:")
       output(e.showAsTree(using post))
       
-    val resolver = ImplicitResolver(rtl)
-    curICtx = resolver.resolveBlk(e)(using curICtx)
-    
-    if showResolve.isSet then
-      output(s"Resolved: ${e.showDbg}")
-    showResolvedTree.get.foreach: post =>
-      output(s"Resolved tree:")
-      output(e.showAsTree(using post))
-    
     processTerm(e, inImport = false)
       
   
   
   def processTerm(trm: semantics.Term.Blk, inImport: Bool)(using Config, Raise): Unit =
+    val resolver = Resolver(rtl)
+    curICtx = resolver.traverseBlock(trm)(using curICtx)
+    
+    if showResolve.isSet then
+      output(s"Resolved: ${trm.showDbg}")
+    showResolvedTree.get.foreach: post =>
+      output(s"Resolved tree:")
+      output(trm.showAsTree(using post))
+    
     if typeCheck.isSet then
       val typer = typing.TypeChecker()
       val ty = typer.typeProd(trm)

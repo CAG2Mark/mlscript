@@ -20,13 +20,13 @@ fun hi(n) =
   else hi(n - 1)
 hi(0)
 //│ JS (unsanitized):
-//│ let hi, res;
+//│ let hi, res, $_stack$_safe$_body$_;
 //│ hi = function hi(n) {
-//│   let scrut, tmp, stackDelayRes, Cont$func$hi$StackSafety$_mls_L18_4_47$1;
-//│   Cont$func$hi$StackSafety$_mls_L18_4_47$1 = function Cont$func$hi$StackSafety$_mls_L18_4_47$(pc1) {
-//│     return new Cont$func$hi$StackSafety$_mls_L18_4_47$.class(pc1);
+//│   let scrut, tmp, stackDelayRes, Cont$func$hi$1;
+//│   Cont$func$hi$1 = function Cont$func$hi$(pc1) {
+//│     return new Cont$func$hi$.class(pc1);
 //│   };
-//│   Cont$func$hi$StackSafety$_mls_L18_4_47$1.class = class Cont$func$hi$StackSafety$_mls_L18_4_47$ extends runtime.FunctionContFrame.class {
+//│   Cont$func$hi$1.class = class Cont$func$hi$ extends runtime.FunctionContFrame.class {
 //│     constructor(pc) {
 //│       let tmp1;
 //│       tmp1 = super(null);
@@ -57,11 +57,11 @@ hi(0)
 //│         break;
 //│       }
 //│     }
-//│     toString() { return "Cont$func$hi$StackSafety$_mls_L18_4_47$(" + globalThis.Predef.render(this.pc) + ")"; }
+//│     toString() { return "Cont$func$hi$(" + runtime.render(this.pc) + ")"; }
 //│   };
 //│   stackDelayRes = runtime.checkDepth();
 //│   if (stackDelayRes instanceof runtime.EffectSig.class) {
-//│     stackDelayRes.contTrace.last.next = new Cont$func$hi$StackSafety$_mls_L18_4_47$1.class(0);
+//│     stackDelayRes.contTrace.last.next = new Cont$func$hi$1.class(0);
 //│     stackDelayRes.contTrace.last = stackDelayRes.contTrace.last.next;
 //│     return stackDelayRes
 //│   }
@@ -74,11 +74,12 @@ hi(0)
 //│     return hi(tmp)
 //│   }
 //│ };
-//│ res = runtime.runStackSafe(5, () => {
+//│ $_stack$_safe$_body$_ = (undefined, function () {
 //│   return hi(0)
 //│ });
+//│ res = runtime.runStackSafe(5, $_stack$_safe$_body$_);
 //│ if (res instanceof runtime.EffectSig.class) {
-//│   throw new this.Error("Unhandled effects");
+//│   res = runtime.topLevelEffect(res, false);
 //│ }
 //│ res
 //│ = 0
@@ -93,13 +94,13 @@ fun sum(n) =
     n + sum(n - 1)
 sum(10000)
 //│ JS (unsanitized):
-//│ let sum1, res1;
+//│ let sum1, res1, $_stack$_safe$_body$_1;
 //│ sum1 = function sum(n) {
-//│   let scrut, tmp, tmp1, curDepth, stackDelayRes, Cont$func$sum$StackSafety$_mls_L90_4_57$1;
-//│   Cont$func$sum$StackSafety$_mls_L90_4_57$1 = function Cont$func$sum$StackSafety$_mls_L90_4_57$(pc1) {
-//│     return new Cont$func$sum$StackSafety$_mls_L90_4_57$.class(pc1);
+//│   let scrut, tmp, tmp1, curDepth, stackDelayRes, Cont$func$sum$1;
+//│   Cont$func$sum$1 = function Cont$func$sum$(pc1) {
+//│     return new Cont$func$sum$.class(pc1);
 //│   };
-//│   Cont$func$sum$StackSafety$_mls_L90_4_57$1.class = class Cont$func$sum$StackSafety$_mls_L90_4_57$ extends runtime.FunctionContFrame.class {
+//│   Cont$func$sum$1.class = class Cont$func$sum$ extends runtime.FunctionContFrame.class {
 //│     constructor(pc) {
 //│       let tmp2;
 //│       tmp2 = super(null);
@@ -143,12 +144,12 @@ sum(10000)
 //│         break;
 //│       }
 //│     }
-//│     toString() { return "Cont$func$sum$StackSafety$_mls_L90_4_57$(" + globalThis.Predef.render(this.pc) + ")"; }
+//│     toString() { return "Cont$func$sum$(" + runtime.render(this.pc) + ")"; }
 //│   };
 //│   curDepth = runtime.stackDepth;
 //│   stackDelayRes = runtime.checkDepth();
 //│   if (stackDelayRes instanceof runtime.EffectSig.class) {
-//│     stackDelayRes.contTrace.last.next = new Cont$func$sum$StackSafety$_mls_L90_4_57$1.class(0);
+//│     stackDelayRes.contTrace.last.next = new Cont$func$sum$1.class(0);
 //│     stackDelayRes.contTrace.last = stackDelayRes.contTrace.last.next;
 //│     return stackDelayRes
 //│   }
@@ -160,7 +161,7 @@ sum(10000)
 //│     runtime.stackDepth = runtime.stackDepth + 1;
 //│     tmp1 = sum1(tmp);
 //│     if (tmp1 instanceof runtime.EffectSig.class) {
-//│       tmp1.contTrace.last.next = new Cont$func$sum$StackSafety$_mls_L90_4_57$1.class(1);
+//│       tmp1.contTrace.last.next = new Cont$func$sum$1.class(1);
 //│       tmp1.contTrace.last = tmp1.contTrace.last.next;
 //│       return tmp1
 //│     }
@@ -168,11 +169,12 @@ sum(10000)
 //│     return n + tmp1
 //│   }
 //│ };
-//│ res1 = runtime.runStackSafe(1000, () => {
+//│ $_stack$_safe$_body$_1 = (undefined, function () {
 //│   return sum1(10000)
 //│ });
+//│ res1 = runtime.runStackSafe(1000, $_stack$_safe$_body$_1);
 //│ if (res1 instanceof runtime.EffectSig.class) {
-//│   throw new this.Error("Unhandled effects");
+//│   res1 = runtime.topLevelEffect(res1, false);
 //│ }
 //│ res1
 //│ = 50005000
@@ -200,6 +202,18 @@ foo(foo)
 //│ ctr = 10001
 
 :stackSafe 1000
+:effectHandlers
+:expect 50005000
+val foo =
+  val f = n =>
+    if n <= 0 then 0
+    else n + f(n-1)
+  f(10000)
+foo
+//│ = 50005000
+//│ foo = 50005000
+
+:stackSafe 0
 :effectHandlers
 :expect 50005000
 val foo =

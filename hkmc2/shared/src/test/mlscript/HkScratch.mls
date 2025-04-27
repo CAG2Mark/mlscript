@@ -28,7 +28,7 @@ a + 4
 //│   rhs = Tup of Ls of 
 //│     Ident of "a"
 //│     IntLit of 4
-//│ Elab: ( import member:Option‹555› from /home/attempt0/mlscript/benchmark/hkmc2/shared/src/test/mlscript-compile/Option.mjs; ‹› val member:a‹546› = 3; member:a‹546›#666; builtin:+‹27›#0(member:a‹546›#666, 4) )
+//│ Elab: ( import member:Option‹861› from /home/attempt0/mlscript/benchmark/hkmc2/shared/src/test/mlscript-compile/Option.mjs; ‹› val member:a‹852› = 3; member:a‹852›#666; builtin:+‹27›#0(member:a‹852›#666, 4) )
 //│ ╔══[WARNING] Pure expression in statement position
 //│ ║  l.14: 	a
 //│ ╙──      	^
@@ -40,7 +40,7 @@ a + 4
 import "../mlscript-compile/Option.mls"
 fun Some(x) = x
 Some
-//│ Elab: ( import member:Option‹1000› from /home/attempt0/mlscript/benchmark/hkmc2/shared/src/test/mlscript-compile/Option.mjs; ‹› fun member:Some‹991›(Param(‹›,x‹1432›,None), ) = x‹1432›#666; member:Some‹991›#666 )
+//│ Elab: ( import member:Option‹1460› from /home/attempt0/mlscript/benchmark/hkmc2/shared/src/test/mlscript-compile/Option.mjs; ‹› fun member:Some‹1451›(Param(‹›,x‹2046›,None,Modulefulness(None)), ) = x‹2046›#666; member:Some‹1451›#666 )
 //│ JS (unsanitized):
 //│ import Option1 from "./../mlscript-compile/Option.mjs";
 //│ let Some;
@@ -64,21 +64,21 @@ Some
 //│       Ident of "x"
 //│   rhs = S of Ident of "x"
 //│ Ident of "Some"
-//│ Elab: ( ‹› fun member:Some‹1436›(Param(‹›,x‹1438›,None), ) = x‹1438›#666; member:Some‹1436›#666 )
+//│ Elab: ( ‹› fun member:Some‹2050›(Param(‹›,x‹2052›,None,Modulefulness(None)), ) = x‹2052›#666; member:Some‹2050›#666 )
 //│ = [function Some]
 
 import "../mlscript-compile/Example.mls"
-//│ Elab: ( import member:Example‹1447› from /home/attempt0/mlscript/benchmark/hkmc2/shared/src/test/mlscript-compile/Example.mjs; )
+//│ Elab: ( import member:Example‹2061› from /home/attempt0/mlscript/benchmark/hkmc2/shared/src/test/mlscript-compile/Example.mjs; )
 
 :sjs
 open Example
 module M with
   fun inc() = 1
   fun test() = inc()
-//│ Elab: ( Mod M ( ‹module› fun member:inc‹1866›() = 1; ‹module› fun member:test‹1865›() = (module:M‹1868›#666.)inc‹member:inc‹1866››(); ); )
+//│ Elab: ( Mod M ( ‹› fun member:inc‹2632›() = 1; ‹› fun member:test‹2631›() = (module:M‹2634›#666.)inc‹member:inc‹2632››(); ); )
 //│ JS (unsanitized):
 //│ let M1;
-//│ M1 = class M {
+//│ (class M {
 //│   static {
 //│     M1 = M;
 //│   }
@@ -89,11 +89,11 @@ module M with
 //│     return M.inc()
 //│   }
 //│   static toString() { return "M"; }
-//│ };
+//│ });
 
 :sjs
 inc
-//│ Elab: ( (member:Example‹1447›#666.)inc‹member:inc‹1445›› )
+//│ Elab: ( (member:Example‹2061›#666.)inc‹member:inc‹2059›› )
 //│ JS (unsanitized):
 //│ Example.inc
 //│ = [function inc]
@@ -103,14 +103,14 @@ inc
 open Example
 fun inc() = 1
 inc
-//│ Elab: ( ‹› fun member:inc‹1879›() = 1; member:inc‹1879›#666 )
+//│ Elab: ( ‹› fun member:inc‹2645›() = 1; member:inc‹2645›#666 )
 //│ JS (unsanitized):
 //│ let inc; inc = function inc() { return 1 }; inc
 //│ = [function inc]
 
 :sjs
 inc
-//│ Elab: ( member:inc‹1879›#666 )
+//│ Elab: ( member:inc‹2645›#666 )
 //│ JS (unsanitized):
 //│ inc
 //│ = [function inc]
@@ -121,7 +121,7 @@ module A with
 //│ Elab: ( Mod A ( λ(). 1() ); )
 //│ JS (unsanitized):
 //│ let A1;
-//│ A1 = class A {
+//│ (class A {
 //│   static {
 //│     A1 = A;
 //│     let lambda;
@@ -131,4 +131,4 @@ module A with
 //│     lambda()
 //│   }
 //│   static toString() { return "A"; }
-//│ };
+//│ });

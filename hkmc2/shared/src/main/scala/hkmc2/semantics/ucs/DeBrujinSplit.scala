@@ -74,7 +74,7 @@ object DeBrujinSplit:
         Branch(scrutinee, ClassLike(ConstructorLike.StringJoin), innermost.increment(2), alternative)
         alternative
       case Ident(ctorName) => patternParams.find(_.sym.name == ctorName) match
-        case S(Param(_, symbol, _)) => (scrutinee, innermost, alternative) =>
+        case S(Param(sym = symbol)) => (scrutinee, innermost, alternative) =>
           log(s"found an input pattern: ${symbol.name}")
           val arity = 0 // TODO: fill in the arity
           Branch(scrutinee, ClassLike(ConstructorLike.Parameter(symbol)), innermost.increment(arity), alternative)
@@ -347,7 +347,7 @@ extension (split: DeBrujinSplit)
                   go(body, ctx2)
               val select = scoped("ucs:sel"):
                 elab.reference(symbol).getOrElse(Term.Error)
-              val pattern = Pattern.ClassLike(symbol, select, S(subSymbols), false)(Empty())
+              val pattern = Pattern.ClassLike(symbol, select, S(subSymbols.map(S.apply)), false)(Empty())
               semantics.Branch(ctx(scrutinee - 1)(), pattern, consequent2) ~: go(alternative, ctx)
             case ClassLike(ConstructorLike.Symbol(symbol: ModuleSymbol)) =>
               val select = scoped("ucs:sel"):

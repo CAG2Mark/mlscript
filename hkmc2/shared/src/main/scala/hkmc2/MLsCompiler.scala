@@ -7,6 +7,7 @@ import utils.*
 
 import hkmc2.semantics.MemberSymbol
 import hkmc2.semantics.Elaborator
+import hkmc2.semantics.Resolver
 import semantics.Elaborator.Ctx
 import hkmc2.syntax.Keyword.`override`
 import semantics.Elaborator.State
@@ -49,6 +50,7 @@ class MLsCompiler(preludeFile: os.Path, mkOutput: ((Str => Unit) => Unit) => Uni
   // TODO adapt logic
   val etl = new TraceLogger{override def doTrace: Bool = false}
   val ltl = new TraceLogger{override def doTrace: Bool = false}
+  val rtl = new TraceLogger{override def doTrace: Bool = false}
   
   
   var dbgParsing = false
@@ -78,6 +80,8 @@ class MLsCompiler(preludeFile: os.Path, mkOutput: ((Str => Unit) => Unit) => Uni
       val elab = Elaborator(etl, wd, newCtx)
       val parsed = mainParse.resultBlk
       val (blk0, _) = elab.importFrom(parsed)
+      val resolver = Resolver(rtl)
+      resolver.traverseBlock(blk0)(using Resolver.ICtx.empty)
       val runtimeFile: os.Path = runtimeImportPath.getOrElse(preludeFile/os.up/os.up/os.up/"mlscript-compile"/"Runtime.mjs")
       val blk = new semantics.Term.Blk(
         semantics.Import(State.runtimeSymbol, runtimeFile.toString) :: blk0.stats,

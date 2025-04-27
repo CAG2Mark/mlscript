@@ -244,7 +244,7 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
       val varSym = VarSymbol(Tree.Ident(nme))
       val fldSym = BlockMemberSymbol(nme, Nil)
       
-      val p = Param(FldFlags.empty.copy(value = true), varSym, None)
+      val p = Param(FldFlags.empty.copy(value = true), varSym, N, Modulefulness.none)
       varSym.decl = S(p) // * Currently this is only accessed to create the class' toString method
       
       val vd = ValDefn(
@@ -613,6 +613,12 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
         case Assign(t: TermSymbol, rhs, rest) if t.owner.isDefined =>
           ctx.getIsymPath(t.owner.get) match
             case Some(value) if !belongsToCtor(t.owner.get) =>
+              if (t.k is syntax.LetBind) && !t.owner.forall(_.isInstanceOf[semantics.TopLevelSymbol]) then
+                // TODO: improve the error message
+                raise(ErrorReport(
+                  msg"Uses of private fields cannot yet be lifted." -> N :: Nil,
+                  N, Diagnostic.Source.Compilation
+                ))
               AssignField(value.asPath, t.id, applyResult(rhs), applyBlock(rest))(N)
             case _ => super.applyBlock(rewritten)
         
@@ -622,6 +628,12 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
           case None => ctx.getLocalPath(lhs) match
             case None => super.applyBlock(rewritten)
             case Some(value) => Assign(value, applyResult(rhs), applyBlock(rest))
+        
+        case Define(d: ValDefn, rest: Block) if d.owner.isDefined =>
+          ctx.getIsymPath(d.owner.get) match
+            case Some(value) if !belongsToCtor(d.owner.get) =>
+              AssignField(value.asPath, Tree.Ident(d.sym.nme), applyResult(d.rhs), applyBlock(rest))(S(d.sym))
+            case _ => super.applyBlock(rewritten)
         
         case Define(d: Defn, rest: Block) => ctx.modLocals.get(d.sym) match 
           case Some(sym) if !ctx.ignored(d.sym) => ctx.getBmsReqdInfo(d.sym) match
@@ -650,7 +662,14 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
         case _ => super.applyPath(p)
       case Value.Ref(t: TermSymbol) if t.owner.isDefined =>
         ctx.getIsymPath(t.owner.get) match
-          case Some(value) if !belongsToCtor(t.owner.get) => Select(value.asPath, t.id)(N)
+          case Some(value) if !belongsToCtor(t.owner.get) =>
+            if (t.k is syntax.LetBind) && !t.owner.forall(_.isInstanceOf[semantics.TopLevelSymbol]) then
+              // TODO: improve the error message
+              raise(ErrorReport(
+                msg"Uses of private fields cannot yet be lifted." -> N :: Nil,
+                N, Diagnostic.Source.Compilation
+              ))
+            Select(value.asPath, t.id)(N)
           case _ => super.applyPath(p)
       
       // Rewrites this.className.class to reference the top-level definition
@@ -731,25 +750,25 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
         (sym, createSym(sym.nme + "$member"))
 
       val extraParamsCaptures = capturesSymbols.map: // parameter list
-        case (d, (sym, _)) => Param(FldFlags.empty, sym, None)
+        case (d, (sym, _)) => Param(FldFlags.empty, sym, N, Modulefulness.none)
       val newCapturePaths = capturesSymbols.map: // mapping from sym to param symbol
           case (d, (_, sym)) => d -> sym.asPath
         .toMap
 
       val extraParamsLocals = localsSymbols.map: // parameter list
-        case (d, (sym, _)) => Param(FldFlags.empty, sym, None)
+        case (d, (sym, _)) => Param(FldFlags.empty, sym, N, Modulefulness.none)
       val newLocalsPaths = localsSymbols.map: // mapping from sym to param symbol
           case (d, (_, sym)) => d -> sym
         .toMap
 
       val extraParamsIsyms = isymSymbols.map: // parameter list
-        case (d, (sym, _)) => Param(FldFlags.empty, sym, None)
+        case (d, (sym, _)) => Param(FldFlags.empty, sym, N, Modulefulness.none)
       val newIsymPaths = isymSymbols.map: // mapping from sym to param symbol
           case (d, (_, sym)) => d -> sym
         .toMap
 
       val extraParamsBms = bmsSymbols.map: // parameter list
-        case (d, (sym, _)) => Param(FldFlags.empty, sym, None)
+        case (d, (sym, _)) => Param(FldFlags.empty, sym, N, Modulefulness.none)
       val newBmsPaths = bmsSymbols.map: // mapping from sym to param symbol
           case (d, (_, sym)) => d -> sym.asPath
         .toMap
@@ -819,7 +838,7 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
             acc = blk => acc(Assign(curSym, call, blk))
           val bod = acc(Return(Call(curSym.asPath, extraSyms.map(_.asPath.asArg))(true, false), false))
 
-          inline def toPlist(ls: List[VarSymbol]) = PlainParamList(ls.map(s => Param(FldFlags.empty, s, N)))
+          inline def toPlist(ls: List[VarSymbol]) = PlainParamList(ls.map(s => Param(FldFlags.empty, s, N, Modulefulness.none)))
 
           val paramPlist = paramSyms.map(toPlist)
           val auxPlist = auxSyms.map(toPlist)

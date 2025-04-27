@@ -16,9 +16,9 @@ object Benchmark {
   
   val preludePath = os.pwd/"hkmc2"/"shared"/"src"/"test"/"mlscript"/"decls"/"Prelude.mls"
   val compilerNoInstr = MLsCompiler(preludePath, _(println))(using Config(N, N, S(LiftDefns())))
-  val compilerInstr = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(N)), S(LiftDefns())))
-  val compilerStackSafe = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(S(StackSafety.default))), N))
-  val compilerStackSafeLifted = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(S(StackSafety.default))), S(LiftDefns())))
+  val compilerInstr = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(false, N)), S(LiftDefns())))
+  val compilerStackSafe = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(false, S(StackSafety.default))), N))
+  val compilerStackSafeLifted = MLsCompiler(preludePath, _(println))(using Config(N, S(EffectHandlers(false, S(StackSafety.default))), S(LiftDefns())))
   
   val configsLst =
       (noInstrDir, compilerNoInstr, "only lifting") ::
@@ -38,6 +38,7 @@ object Benchmark {
   def precompileModules =
     
     compileVersions(os.rel/"precompiled"/"Runtime.mls", configs.map((targetDir, _) => (targetDir, compilerNoInstr)))
+    compileVersions(os.rel/"precompiled"/"Rendering.mls", configs.map((targetDir, _) => (targetDir, compilerNoInstr)))
     
     configs.foreach: (targetDir, _) =>
       os.copy.over(benchmarkBaseDir/"precompiled"/"RuntimeJS.mjs", targetDir/"precompiled"/"RuntimeJS.mjs")

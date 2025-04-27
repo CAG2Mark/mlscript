@@ -1,5 +1,6 @@
 
 import "./Runtime.mls"
+import "./Rendering.mls"
 
 module Predef with ...
 
@@ -13,70 +14,39 @@ fun (@) apply(f, ...args) = f(...args)
 fun (|>) pipeInto(x, f) = f(x)
 fun (<|) pipeFrom(f, x) = f(x)
 
+// Same as above but with high precedence
+fun (.>) pipeIntoHi(x, f) = f(x)
+fun (<.) pipeFromHi(f, x) = f(x)
+
 fun (!>) tap(x, f) = f(x); x
 fun (<!) pat(f, x) = f(x); x
 
 fun (>>) andThen(f, g)(x) = g(f(x))
 fun (<<) compose(f, g)(x) = f(g(x))
 
+// x . foo(a, b, c) == foo(x, a, b, c)
 fun (.) passTo(receiver, f)(...args) = f(receiver, ...args)
 
+// Same as above but with low precedence
+fun (|.) passToLo(receiver, f)(...args) = f(receiver, ...args)
+
+// x |>. foo(a, b, c) == foo.call(x, a, b, c)
 fun (|>.) call(receiver, f)(...args) = f.call(receiver, ...args)
 
-fun pass1(f)(...xs) = f(xs.0)
-fun pass2(f)(...xs) = f(xs.0, xs.1)
-fun pass3(f)(...xs) = f(xs.0, xs.1, xs.2)
-
-fun passing(f, ...args) = f.bind(null, ...args)
-
+val pass1 = Rendering.pass1
+val pass2 = Rendering.pass2
+val pass3 = Rendering.pass3
+val passing = Rendering.passing
+val map = Rendering.map
+val fold = Rendering.fold
+val interleave = Rendering.interleave
+val render = Rendering.render
 
 fun print(...xs) =
   console.log(...map(renderAsStr)(...xs))
 
-fun printRaw(x) =
-  console.log(render(x))
-
-fun interleave(sep)(...args) =
-  if args.length === 0 then [] else...
-  let
-    res = Array of args.length * 2 - 1
-    len = args.length
-    i = 0
-  while i < len do
-    let idx = i * 2
-    set
-      res.[idx] = args.[i]
-      i += 1
-    if i < len do set res.[idx + 1] = sep
-  res
-
 fun renderAsStr(arg) =
   if arg is Str then arg else render(arg)
-
-fun render(arg) = if
-  arg is
-    undefined then "undefined"
-    null      then "null"
-    Array     then fold(+)("[", ...interleave(", ")(...map(render)(...arg)), "]")
-    Str       then JSON.stringify(arg)
-    Set       then fold(+)("Set{", ...interleave(", ")(...map(render)(...arg)), "}")
-    Map       then fold(+)("Map{", ...interleave(", ")(...map(render)(...arg)), "}")
-    Function  and
-      let p = Object.getOwnPropertyDescriptor(arg, "prototype")
-      (p is Object and p.("writable")) || (p is undefined) then
-        "[function" + (if arg.name is
-          ""  then ""
-          nme then " " + nme
-        ) + "]"
-    Object then
-      if arg.constructor.name is "Object"
-      then
-        let es = Object.entries(arg)
-        fold(+)("{", ...interleave(", ")(...map(case [k, v] then k + ": " + render(v))(...es)), "}")
-      else String(arg)
-  let ts = arg.("toString") // not accessing as `arg.toString` to avoid the sanity check
-  ts is undefined then "[" + typeof(arg) + "]"
-  else ts.call(arg)
 
 val assert = console.assert
 
@@ -85,27 +55,6 @@ fun (???) notImplementedError = throw Error("Not implemented")
 
 
 fun tuple(...xs) = xs
-
-fun tupleSlice(xs, i, j) =
-  // * This is more robust than `xs.slice(i, xs.length - j)`
-  // * as it is not affected by users redefining `slice`
-  globalThis.Array.prototype.slice.call(xs, i, xs.length - j)
-
-fun tupleGet(xs, i) =
-  // * Contrary to `xs.[i]`, this supports negative indices (Python-style)
-  globalThis.Array.prototype.at.call(xs, i)
-
-fun map(f)(...xs) = xs.map(pass1(f))
-
-fun fold(f)(init, ...rest) =
-  let
-    i = 0
-    len = rest.length
-  while i < len do
-    set
-      init = f(init, rest.at(i))
-      i += 1
-  init
 
 val foldl = fold
 
@@ -126,54 +75,12 @@ fun mkStr(...xs) =
   fold((acc, x) => assert(x is Str); acc + x) of ...xs
 
 
-fun stringStartsWith(string, prefix) = string.startsWith(prefix)
-
-fun stringGet(string, i) = string.at(i)
-
-fun stringDrop(string, n) = string.slice(n)
-
-
-fun unreachable = throw Error("unreachable")
-
-fun checkArgs(functionName, expected, isUB, got) =
-  if got < expected || isUB && got > expected do
-    let name = if functionName.length > 0 then " '" + functionName + "'" else ""
-    // throw globalThis.Error("Function" + name + " expected "
-    //   + (if isUB then "" else "at least ")
-    //   + expected
-    //   + " argument(s) but got " + got)
-    throw Error of fold(+) of
-      "Function", name, " expected "
-      if isUB then "" else "at least "
-      expected, " argument"
-      if expected === 1 then "" else "s"
-      " but got ", got
-
-
-module TraceLogger with
-  mut val enabled = false
-  mut val indentLvl = 0
-  fun indent() =
-    if enabled then
-      let prev = indentLvl
-      set indentLvl = prev + 1
-      prev
-    else ()
-  fun resetIndent(n) =
-    if enabled then
-      set indentLvl = n
-    else ()
-  fun log(msg) =
-    if enabled then
-      console.log("| ".repeat(indentLvl) + msg.replaceAll("\n", "\n" + "  ".repeat(indentLvl)))
-    else ()
-
-
-data class Test with
-  val y = 1
 
 // This binds the handler in body, which means body can raise effects in handler
 fun enterHandleBlock(handler, body) =
   // This is a simple wrapper of a handler runtime function, which must not be instrumented so cannot be directly implemented here.
   // It also calls other internal runtime functions as well.
   Runtime.enterHandleBlock(handler, body)
+
+fun raiseUnhandledEffect() =
+  Runtime.mkEffect(Runtime.FatalEffect, null)

@@ -1,4 +1,5 @@
-import "./RuntimeJS.mjs" 
+import "./RuntimeJS.mjs"
+import "./Rendering.mls"
 
 
 module Runtime with ...
@@ -7,6 +8,21 @@ module Runtime with ...
 object Unit with
   fun toString() = "()"
 
+
+fun unreachable = throw Error("unreachable")
+
+fun checkArgs(functionName, expected, isUB, got) =
+  if got < expected || isUB && got > expected do
+    let name = if functionName.length > 0 then " '" + functionName + "'" else ""
+    // throw globalThis.Error("Function" + name + " expected "
+    //   + (if isUB then "" else "at least ")
+    //   + expected
+    //   + " argument(s) but got " + got)
+    throw Error of "Function" + name + " expected "
+      + (if isUB then "" else "at least " )
+      + expected + " argument"
+      + (if expected === 1 then "" else "s")
+      + " but got " + got
 
 fun safeCall(x) =
   if x is undefined then Unit else x
@@ -23,13 +39,74 @@ fun deboundMethod(mtdName, clsName) =
 
 val try_catch = RuntimeJS.try_catch
 
+class EffectHandle(_reified) with
+  val reified = _reified
+  fun resumeWith(value) =
+    Runtime.try(() => resume(reified.contTrace)(value))
+  fun raise() =
+    topLevelEffect(reified, false)
+
+fun try(f) =
+  let res = f()
+  if res is EffectSig then EffectHandle(res) else res
+
 
 // For `pattern` definitions
 data class MatchResult(captures)
 data class MatchFailure(errors)
 
+// For pattern matching on tuples
+module Tuple with
+  fun slice(xs, i, j) =
+    // * This is more robust than `xs.slice(i, xs.length - j)`
+    // * as it is not affected by users redefining `slice`
+    globalThis.Array.prototype.slice.call(xs, i, xs.length - j)
+
+  fun get(xs, i) =
+    // * Contrary to `xs.[i]`, this supports negative indices (Python-style)
+    if i >= xs.length then
+      throw RangeError("Tuple.get: index out of bounds")
+    else globalThis.Array.prototype.at.call(xs, i)
+
+module Str with
+  fun startsWith(string, prefix) = string.startsWith(prefix)
+
+  fun get(string, i) =
+    if i >= string.length then
+      throw RangeError("Str.get: index out of bounds")
+    else string.at(i)
+
+  fun drop(string, n) = string.slice(n)
+
+// Re-export rendering functions
+val render = Rendering.render
+
+fun printRaw(x) = console.log(render(x))
+
+// TraceLogger
+
+module TraceLogger with
+  mut val enabled = false
+  mut val indentLvl = 0
+  fun indent() =
+    if enabled then
+      let prev = indentLvl
+      set indentLvl = prev + 1
+      prev
+    else ()
+  fun resetIndent(n) =
+    if enabled then
+      set indentLvl = n
+    else ()
+  fun log(msg) =
+    if enabled then
+      console.log("| ".repeat(indentLvl) + msg.replaceAll("\n", "\n" + "  ".repeat(indentLvl)))
+    else ()
 
 // Private definitions for algebraic effects
+
+object FatalEffect
+object PrintStackEffect
 
 data abstract class FunctionContFrame(next) with
   fun resume(value)
@@ -40,6 +117,53 @@ data class EffectSig(contTrace, handler, handlerFun)
 
 class NonLocalReturn with
   fun ret(value)
+
+data class FnLocalsInfo(fnName, locals)
+data class LocalVarInfo(localName, value)
+
+
+fun raisePrintStackEffect(showLocals) =
+  mkEffect(PrintStackEffect, showLocals)
+
+fun topLevelEffect(tr, debug) =
+  while tr.handler === PrintStackEffect do
+    console.log(showStackTrace("Stack Trace:", tr, debug, tr.handlerFun))
+    set tr = resume(tr.contTrace)(())
+  if tr is EffectSig then
+    throw showStackTrace("Error: Unhandled effect " + tr.handler.constructor.name, tr, debug, false)
+  else
+    tr
+
+fun showStackTrace(header, tr, debug, showLocals) =
+  let
+    msg = header
+    curHandler = tr.contTrace
+    atTail = true
+  if debug do
+    while curHandler !== null do
+      let cur = curHandler.next
+      while cur !== null do
+        let locals = cur.getLocals
+        let curLocals = locals.at(locals.length - 1)
+        let loc = cur.getLoc
+        let loc = if loc is null then "pc=" + cur.pc else loc
+        let localsMsg = if showLocals and curLocals.locals.length > 0 then
+          " with locals: " + curLocals.locals.map(l => l.localName + "=" + Rendering.render(l.value)).join(", ")
+        else
+          ""
+        set
+          msg += "\n\tat " + curLocals.fnName + " (" + loc + ")"
+          msg += localsMsg
+          cur = cur.next
+          atTail = false
+      set curHandler = curHandler.nextHandler
+      if curHandler !== null do
+        set
+          msg += "\n\twith handler " + curHandler.handler.constructor.name
+          atTail = false
+    if atTail do
+      set msg += "\n\tat tail position"
+  msg
 
 fun showFunctionContChain(cont, hl, vis, reps) =
   if cont is FunctionContFrame then
@@ -52,8 +176,6 @@ fun showFunctionContChain(cont, hl, vis, reps) =
       set result += ", REPEAT"
     else
       vis.add(cont)
-    if cont.completed do
-      set result += ", COMPLETED"
     result + ") -> " + showFunctionContChain(cont.next, hl, vis, reps)
   else if cont === null then
     "(null)"
@@ -125,6 +247,16 @@ fun handleBlockImpl(cur, handler) =
     cur.contTrace.lastHandler.nextHandler = handlerFrame
     cur.contTrace.lastHandler = handlerFrame
     cur.contTrace.last = handlerFrame
+  handleEffects(cur)
+
+fun enterHandleBlock(handler, body) =
+  let cur = body()
+  if cur is EffectSig then
+    handleBlockImpl(cur, handler)
+  else
+    cur
+
+fun handleEffects(cur) =
   while cur is
     EffectSig then
       let nxt = handleEffect(cur)
@@ -134,13 +266,6 @@ fun handleBlockImpl(cur, handler) =
         set cur = nxt
     else
       return cur
-
-fun enterHandleBlock(handler, body) =
-  let cur = body()
-  if cur is EffectSig then
-    handleBlockImpl(cur, handler)
-  else
-    cur
 
 // return either new effect, final result or the same continuation if there is no handler
 fun handleEffect(cur) =
@@ -192,16 +317,7 @@ fun resume(contTrace)(value) =
   if contTrace.resumed do
     throw Error("Multiple resumption")
   set contTrace.resumed = true
-  let cur = resumeContTrace(contTrace, value)
-  while cur is
-    EffectSig then
-      let nxt = handleEffect(cur)
-      if cur === nxt then
-        return cur
-      else
-        set cur = nxt
-    else
-      return cur
+  handleEffects(resumeContTrace(contTrace, value))
 
 fun resumeContTrace(contTrace, value) =
   while
@@ -225,12 +341,11 @@ fun resumeContTrace(contTrace, value) =
       return value
 
 // stack safety
-val stackLimit = 0 // How deep the stack can go before heapifying the stack
-val stackDepth = 0 // Tracks the virtual + real stack depth
-val stackOffset = 0 // How much to offset stackDepth by to get the true stack depth (i.e. the virtual depth)
-val stackHandler = null
-val stackResume = null
-val stackSafeCounter = 0
+mut val stackLimit = 0 // How deep the stack can go before heapifying the stack
+mut val stackDepth = 0 // Tracks the virtual + real stack depth
+mut val stackOffset = 0 // How much to offset stackDepth by to get the true stack depth (i.e. the virtual depth)
+mut val stackHandler = null
+mut val stackResume = null
 
 object StackDelayHandler with
   fun delay() = mkEffect of this, k =>
@@ -252,14 +367,13 @@ fun resetDepth(tmp, curDepth) =
 fun runStackSafe(limit, f) =
   set
     stackLimit = limit
-    stackDepth = 0
+    stackDepth = 1
     stackOffset = 0
     stackHandler = StackDelayHandler
   let result = enterHandleBlock(StackDelayHandler, f)
   while stackResume !== null do
     let saved = stackResume
     set
-      stackSafeCounter += 1
       stackResume = null
       stackOffset = stackDepth
       result = saved()

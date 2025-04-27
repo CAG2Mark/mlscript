@@ -1,19 +1,18 @@
 :js
 
 
-:todo // * Initialization error
 :sjs
 module Foo with
   val self: module Foo = Foo
 //│ JS (unsanitized):
 //│ let Foo1;
-//│ Foo1 = class Foo {
+//│ (class Foo {
 //│   static {
 //│     Foo1 = Foo;
 //│     this.self = Foo1;
 //│   }
 //│   static toString() { return "Foo"; }
-//│ };
+//│ });
 
 Foo.self
 //│ = Foo
@@ -29,9 +28,8 @@ Foo.self
 :e
 module Foo with
   val self = this
-//│ ╔══[ERROR] Functions returning module values must have explicit return types.
-//│ ║  l.31: 	  val self = this
-//│ ╙──      	      ^^^^
+//│ ╔══[ERROR] Unexpected moduleful reference.
+//│ ╙── Value must be marked as returning a 'module' in order to return a module.
 
 Foo.self
 //│ = Foo
