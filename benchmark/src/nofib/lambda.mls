@@ -5,10 +5,7 @@ open NofibPrelude
 open BenchmarkPrelude
 
 module lambda with ...
-// :js
 
-// :silent
-// :import NofibPrelude.mls
 
 
 fun lookup(k, t) = if t is
@@ -45,7 +42,6 @@ data
 
 object Unit
 
-// :...
 //│ ————————————————————————————————————————————————————————————————————————————————
 fun eqEnv(a, b) = if a is
   Nil and b is Nil then true
@@ -79,7 +75,6 @@ fun withEnv(tmp, m) = myReturn(myEvalState(m, tmp))
 
 fun pushVar(v, t, m) = myBind(myGet, env => withEnv([v, t] :: env, m))
 
-// :...
 //│ ————————————————————————————————————————————————————————————————————————————————
 fun traverseTerm(t) = eval(t)
 
@@ -115,7 +110,6 @@ fun eval(ter) = if ter is
   Incr then myBind(incr, _dummy => myReturn(Con(0)))
 //│ ————————————————————————————————————————————————————————————————————————————————
 
-// :...
 //│ ————————————————————————————————————————————————————————————————————————————————
 fun simpleEval(env, ter) = if ter is
   Var(v) then simpleEval(env, myMaybe(dummy => throw Error("undefined var"), x => x, lookup(v, env)))
@@ -146,7 +140,6 @@ fun simpleEvalCon(env, e) =
 
 fun bracket(ot, ths, t) = if ths <= ot then "(" :: (t +: nofibStringToList(")")) else t
 
-// :...
 //│ ————————————————————————————————————————————————————————————————————————————————
 fun ppn(n, ter) = if ter is
   Var(v) then v

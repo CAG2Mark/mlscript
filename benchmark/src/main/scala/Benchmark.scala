@@ -70,26 +70,26 @@ open BenchmarkPrelude
 
 module ${path.baseName.replace("-", "")} with ...
 """
-      val result = os.read(path).split("\n").map: line =>
-          if line.startsWith(":") || line.startsWith("import ") then
-            f"// $line"
+      val result = os.read(path).split("\n").flatMap: line =>
+          if line.startsWith(":") || line.startsWith("import ") || line.startsWith("//|") then
+            N
           else if line.startsWith("prog(6).toStr") || line.startsWith("test") || line.startsWith("nofib") ||
             line.startsWith("map(x => nofib") then
-            f"fun main() = $line"
+            S(f"fun main() = $line")
           else if line.startsWith("print(test") || line.startsWith("print(nofib") then
             assert(line.endsWith(")"))
-            f"fun main() = ${line.drop(6).dropRight(1)}"
+            S(f"fun main() = ${line.drop(6).dropRight(1)}")
           else if line == "print of" then
-            "fun main() ="
+            S("fun main() =")
           else if line.startsWith("let ls = testFish") then
-            "fun main() = testFish_nofib(1)"
+            S("fun main() = testFish_nofib(1)")
           else if line == "ls" && path.baseName == "fish" then
-            ""
+            S("")
           else if line.startsWith("let ") then
             // convert private variables away
-            "val " + line.drop(4)
+            S("val " + line.drop(4))
           else
-            line
+            S(line)
         .mkString(preludeStr, "\n", "\n")
       os.write.over(os.pwd/"benchmark"/"src"/"nofib"/path.last.replace("-", ""), result)
     println("Compiling nofib")

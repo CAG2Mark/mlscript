@@ -5,15 +5,9 @@ open NofibPrelude
 open BenchmarkPrelude
 
 module mate with ...
-// :js
 
-// :silent
-// :import NofibPrelude.mls
 
-// :silent
-// import "fs"
 
-// :...
 //│ ————————————————————————————————————————————————————————————————————————————————
 fun rqpart(le, x, ys, rle, rgt, r) = if ys is
   Nil then qsort(le, rle, x :: qsort(le, rgt, r))
@@ -453,7 +447,6 @@ fun foldr_lz(f, a, x) = if x is
   h :: t then f(h, lazy of () => foldr_lz(f, a, t))
   Nil then a
 
-// :...
 //│ ————————————————————————————————————————————————————————————————————————————————
 fun replies(bd, c, n) =
   let mds = moveDetailsFor(c, bd)
@@ -493,7 +486,6 @@ data class Soln(a: MoveInFull, b: List[[List[MoveInFull],Soln]])
 
 fun tab(n) = if n <= 0 then Nil else " " :: tab(n - 1)
 
-// :...
 //│ ————————————————————————————————————————————————————————————————————————————————
 fun showReplies(rs, n) = if rs is
   Nil then Nil
@@ -521,7 +513,6 @@ fun showSoln(s, n) = if s is Soln(mif, rs) then
 //│ ————————————————————————————————————————————————————————————————————————————————
 
 
-// :...
 //│ ————————————————————————————————————————————————————————————————————————————————
 fun compact(s) = if s is Solution(mif, rs) then Soln(mif, foldr(insertCompact, Nil, rs))
 

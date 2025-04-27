@@ -5,10 +5,7 @@ open NofibPrelude
 open BenchmarkPrelude
 
 module boyer2 with ...
-// :js
 
-// :silent
-// :import NofibPrelude.mls
 
 
 
@@ -148,7 +145,6 @@ fun addlemmalst(lspls, term) = if lspls is
   Nil then term
   h :: t then addlemmalst(t, addlemma(h, term))
 
-// :...
 //│ ————————————————————————————————————————————————————————————————————————————————
 fun applysubstlst(alist, y) = if y is
   Nill then Nill
@@ -163,7 +159,6 @@ fun applysubst(alist, x) = if x is
   Conss([x, y]) then Conss([x, applysubstlst(alist, y)])
 //│ ————————————————————————————————————————————————————————————————————————————————
 
-// :...
 //│ ————————————————————————————————————————————————————————————————————————————————
 fun onewayunify1lst(l1, l2, u) = if
   l1 is Nill then [true, u]
@@ -182,7 +177,6 @@ fun onewayunify1(t1, t2, u) = if
 
 fun onewayunify(t1, t2) = onewayunify1(t1, t2, Nill)
 
-// :...
 //│ ————————————————————————————————————————————————————————————————————————————————
 fun rewritewithlemmas(t, l, term) = if l is
   Nil then t
@@ -342,6 +336,5 @@ fun testresult(i) = tautp(teststatement(i))
 
 fun testBoyer2_nofib(n) = report(testresult(n))
 
-// :expect "The term is a tautology"
 fun main() = testBoyer2_nofib(3)
 //│ = "The term is a tautology"
