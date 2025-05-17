@@ -29,7 +29,7 @@ object Benchmark {
 
   def compileFile(file: os.RelPath, targetDir: os.Path, compiler: MLsCompiler, exportName: Option[Str] = N, outFileOpt: Option[os.RelPath] = N) =
     val outFile = outFileOpt.getOrElse(file/os.up/(file.baseName + ".mjs"))
-    compiler.compileModule(benchmarkBaseDir/file, S(targetDir/outFile), exportName, S(benchmarkBaseDir/runtimeRelPath))
+    compiler.compileModule(benchmarkBaseDir/file, S(targetDir/outFile), exportName, S(benchmarkBaseDir/runtimeRelPath), true)
 
   def compileVersions(file: os.RelPath, configs: List[(os.Path, MLsCompiler)]) =
     configs.foreach: (targetDir, compiler) =>

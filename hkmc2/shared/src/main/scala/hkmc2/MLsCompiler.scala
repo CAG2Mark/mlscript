@@ -56,7 +56,7 @@ class MLsCompiler(preludeFile: os.Path, mkOutput: ((Str => Unit) => Unit) => Uni
   var dbgParsing = false
   
   
-  def compileModule(file: os.Path, outFile: Opt[os.Path] = N, exportName: Opt[Str] = N, runtimeImportPath: Opt[os.Path] = N): Unit =
+  def compileModule(file: os.Path, outFile: Opt[os.Path] = N, exportName: Opt[Str] = N, runtimeImportPath: Opt[os.Path] = N, skipTerm: Bool = false): Unit =
     
     val wd = file / os.up
     
@@ -83,8 +83,9 @@ class MLsCompiler(preludeFile: os.Path, mkOutput: ((Str => Unit) => Unit) => Uni
       val resolver = Resolver(rtl)
       resolver.traverseBlock(blk0)(using Resolver.ICtx.empty)
       val runtimeFile: os.Path = runtimeImportPath.getOrElse(preludeFile/os.up/os.up/os.up/"mlscript-compile"/"Runtime.mjs")
+      val termFile: os.Path = preludeFile/os.up/os.up/os.up/"mlscript-compile"/"Term.mjs"
       val blk = new semantics.Term.Blk(
-        semantics.Import(State.runtimeSymbol, runtimeFile.toString) :: blk0.stats,
+        semantics.Import(State.runtimeSymbol, runtimeFile.toString) :: (if !skipTerm then semantics.Import(State.termSymbol, termFile.toString) :: blk0.stats else blk0.stats),
         blk0.res
       )
       val low = ltl.givenIn:
@@ -95,6 +96,9 @@ class MLsCompiler(preludeFile: os.Path, mkOutput: ((Str => Unit) => Unit) => Uni
       val le = low.program(blk)
       val baseScp: utils.Scope =
         utils.Scope.empty
+      // * This line serves for `import.meta.url`, which retrieves directory and file names of mjs files.
+      // * Having `module id"import" with ...` in `prelude.mls` will generate `globalThis.import` that is undefined.
+      baseScp.bindings += Elaborator.State.importSymbol -> "import"
       val nestedScp = baseScp.nest
       val nme = exportName.getOrElse(file.baseName)
       val exportedSymbol = parsed.definedSymbols.find(_._1 === nme).map(_._2)
