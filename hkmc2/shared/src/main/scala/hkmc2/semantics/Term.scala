@@ -53,6 +53,7 @@ sealed trait ResolvableImpl:
 
   def duplicate: this.type =
     this.match
+      case t: Term.Resolved => t.copy()(t.typ)
       case t: Term.Ref => t.copy()(t.tree, t.refNum, t.typ)
       case t: Term.App => t.copy()(t.tree, t.typ, t.resSym)
       case t: Term.TyApp => t.copy()(t.typ)
@@ -71,6 +72,7 @@ sealed trait ResolvableImpl:
   
   def withTyp(typ: Type): this.type = 
     this.match
+      case t: Term.Resolved => t.copy()(S(typ))
       case t: Term.Ref => t.copy()(t.tree, t.refNum, S(typ))
       case t: Term.App => t.copy()(t.tree, S(typ), t.resSym)
       case t: Term.TyApp => t.copy()(S(typ))
@@ -188,6 +190,9 @@ enum Term extends Statement:
   case UnitVal()
   case Missing // Placeholder terms that were not elaborated due to the "lightweight" elaboration mode `Mode.Light`
   case Lit(lit: Literal)
+  /** A term that wraps another term, indicating that the symbol of the inner term is resolved. */
+  case Resolved(t: Term, sym: DefinitionSymbol[?])
+    (val typ: Opt[Type]) extends Term, ResolvableImpl
   case Ref(sym: Symbol)
     (val tree: Tree.Ident, val refNum: Int, val typ: Opt[Type]) extends Term, ResolvableImpl
   case App(lhs: Term, rhs: Term)
@@ -257,6 +262,7 @@ enum Term extends Statement:
     case r: Resolvable => r.expanded
     case t => t
   match
+    case res: Resolved => S(res.sym)
     case ref: Ref => ref.symbol
     case sel: Sel => sel.sym
     case sel: SynthSel => sel.sym
@@ -268,6 +274,7 @@ enum Term extends Statement:
     case r: Resolvable => r.expanded
     case t => t
   match
+    case res: Resolved => res.typ
     case ref: Ref => ref.typ
     case app: App => app.typ
     case app: TyApp => app.typ
@@ -296,6 +303,7 @@ enum Term extends Statement:
     case Lit(Tree.DecLit(value)) => Lit(Tree.DecLit(value))
     case Lit(Tree.BoolLit(value)) => Lit(Tree.BoolLit(value))
     case Lit(Tree.UnitLit(value)) => Lit(Tree.UnitLit(value))
+    case term @ Resolved(t, sym) => Resolved(t.mkClone, sym)(term.typ)
     case term @ Ref(sym) => Ref(sym)(Tree.Ident(term.tree.name), term.refNum, term.typ)
     case term @ Sel(prefix, nme) => Sel(prefix.mkClone, Tree.Ident(nme.name))(term.sym, term.typ)
     case term @ App(lhs, rhs) => App(lhs.mkClone, rhs.mkClone)(term.tree, term.typ, term.resSym)
@@ -420,6 +428,7 @@ sealed trait Statement extends AutoLocated, ProductWithExtraInfo:
     case _ => subTerms
   def subTerms: Ls[Term] = this match
     case Error | Missing | _: Lit | _: Ref | _: UnitVal => Nil
+    case Resolved(t, sym) => t :: Nil
     case App(lhs, rhs) => lhs :: rhs :: Nil
     case RcdField(lhs, rhs) => lhs :: rhs :: Nil
     case RcdSpread(bod) => bod :: Nil
@@ -493,6 +502,8 @@ sealed trait Statement extends AutoLocated, ProductWithExtraInfo:
   def showDbg: Str = this match
     case r: Ref =>
       showPlain
+    case r: Resolved =>
+      s"${r.showPlain}‹${r.sym}›"
     case trm: Term =>
       // s"$showPlain‹${trm.symbol.getOrElse("")}›"
       s"$showPlain${trm.symbol.fold("")("‹"+_+"›")}"
@@ -506,6 +517,7 @@ sealed trait Statement extends AutoLocated, ProductWithExtraInfo:
   def showPlain: Str = this match
     case Term.UnitVal() => "()"
     case Lit(lit) => lit.idStr
+    case Resolved(t, sym) => t.showPlain
     case r @ Ref(symbol) => symbol.toString + symbol.getState.dbgRefNum(r.refNum)
     case App(lhs, rhs) => s"${lhs.showDbg}${rhs.showAsParams}"
     case RcdField(lhs, rhs) => s"${lhs.showDbg}: ${rhs.showDbg}"

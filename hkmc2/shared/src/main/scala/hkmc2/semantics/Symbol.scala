@@ -293,11 +293,28 @@ sealed trait ClassLikeSymbol extends IdentifiedSymbol:
   def subst(using sub: SymbolSubst): ClassLikeSymbol
 
 
+/**
+ * A symbol that the entity it represents has a definition.
+ *
+ * This is different from `MemberSymbol` because `BlockMemberSymbol` extends `MemberSymbol`, and its
+ * definition is ambiguous in the sense that a `BlockMemberSymbol` corresponds to multiple
+ * overloaded definitions. In contrast, a `DefinitionSymbol` corresponds to only one specific
+ * definition.
+ */
+sealed trait DefinitionSymbol[Defn <: Definition] extends Symbol:
+  def defn: Opt[Defn]
+  def subst(using sub: SymbolSubst): DefinitionSymbol[Defn]
+
 /** This is the symbol associated to specific definitions.
   * One overloaded `BlockMemberSymbol` may correspond to multiple `InnerSymbol`s
   * A `Ref(_: InnerSymbol)` represents a `this`-like reference to the current object. */
   // TODO prevent from appearing in Ref
 sealed trait InnerSymbol(using State) extends Symbol:
+  // Ideally, InnerSymbol should extend DefinitionSymbol, but that requires us to specify the type
+  // parameter to all occurrences of InnerSymbol. So, we use a self-type annotation instead to
+  // ensure that any implementation of InnerSymbol is also a DefinitionSymbol.
+  self: DefinitionSymbol[?] =>
+  
   val privatesScope: Scope = Scope.empty // * Scope for private members of this symbol
   val thisProxy: TempSymbol = TempSymbol(N, s"this$$$nme")
   def subst(using SymbolSubst): InnerSymbol
@@ -306,7 +323,12 @@ trait IdentifiedSymbol extends Symbol:
   val id: Tree.Ident
 
 class ClassSymbol(val tree: Tree.TypeDef, val id: Tree.Ident)(using State)
-    extends MemberSymbol[ClassDef] with ClassLikeSymbol with CtorSymbol with InnerSymbol with NamedSymbol:
+    extends MemberSymbol[ClassDef]
+    with ClassLikeSymbol
+    with CtorSymbol
+    with DefinitionSymbol[ClassDef]
+    with InnerSymbol
+    with NamedSymbol:
   def name: Str = nme
   def nme = id.name
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of classe here
@@ -317,7 +339,12 @@ class ClassSymbol(val tree: Tree.TypeDef, val id: Tree.Ident)(using State)
   override def subst(using sub: SymbolSubst): ClassSymbol = sub.mapClsSym(this)
 
 class ModuleOrObjectSymbol(val tree: Tree.TypeDef, val id: Tree.Ident)(using State)
-    extends MemberSymbol[ModuleOrObjectDef] with ClassLikeSymbol with CtorSymbol with InnerSymbol with NamedSymbol:
+    extends MemberSymbol[ModuleOrObjectDef]
+    with ClassLikeSymbol
+    with CtorSymbol
+    with DefinitionSymbol[ModuleOrObjectDef]
+    with InnerSymbol
+    with NamedSymbol:
   def name: Str = nme
   def nme = id.name
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of module here
@@ -335,7 +362,10 @@ class TypeAliasSymbol(val id: Tree.Ident)(using State) extends MemberSymbol[Type
   def subst(using sub: SymbolSubst): TypeAliasSymbol = sub.mapTypeAliasSym(this)
 
 class PatternSymbol(val id: Tree.Ident, val params: Opt[Tree.Tup], val body: Tree)(using State)
-    extends MemberSymbol[PatternDef] with CtorSymbol with InnerSymbol:
+    extends MemberSymbol[PatternDef]
+    with CtorSymbol
+    with DefinitionSymbol[PatternDef]
+    with InnerSymbol:
   def nme = id.name
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of pattern here
   override def toString: Str = s"pattern:${id.name}"
@@ -343,7 +373,9 @@ class PatternSymbol(val id: Tree.Ident, val params: Opt[Tree.Tup], val body: Tre
   override def subst(using sub: SymbolSubst): PatternSymbol = sub.mapPatSym(this)
 
 class TopLevelSymbol(blockNme: Str)(using State)
-    extends MemberSymbol[ModuleOrObjectDef] with InnerSymbol:
+    extends MemberSymbol[ModuleOrObjectDef]
+    with DefinitionSymbol[ModuleOrObjectDef]
+    with InnerSymbol:
   def nme = blockNme
   def toLoc: Option[Loc] = N
   override def toString: Str = s"globalThis:$blockNme${State.dbgUid(uid)}"
