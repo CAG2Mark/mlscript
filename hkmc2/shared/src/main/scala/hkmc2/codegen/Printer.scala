@@ -91,7 +91,7 @@ object Printer:
       else doc
 
   def mkDocument(value: Value)(using Raise, Scope): Document = value match
-    case Value.Ref(l) => getVar(l)
+    case Value.Ref(l, _) => getVar(l)
     case Value.This(sym) => doc"this"
     case Value.Lit(lit) => doc"${lit.idStr}"
     case Value.Lam(params, body) =>

@@ -44,7 +44,7 @@ class Subst(initMap: Map[Local, Value]):
     Subst(map + kv)
   */
   def apply(v: Value): Value = v match
-    case Value.Ref(l) => map.getOrElse(l, v)
+    case Value.Ref(l, _) => map.getOrElse(l, v)
     case _ => v
 object Subst:
   val empty = Subst(Map.empty)
@@ -289,6 +289,77 @@ class Lowering()(using Config, TL, Raise, State, Ctx):
       subTerm_nonTail(arg): ar =>
         k(Arg(spread = S(true), ar) :: Nil)
   
+  def ref(ref: st.Ref, disamb: Opt[DefinitionSymbol[?]], inStmtPos: Bool)(k: Result => Block)(using Subst): Block =
+    def warnStmt = if inStmtPos then
+      raise:
+        WarningReport(msg"Pure expression in statement position" -> ref.toLoc :: Nil, S(ref))
+    
+    val st.Ref(sym) = ref
+    sym match
+      case ctx.builtins.source.bms | ctx.builtins.js.bms | ctx.builtins.debug.bms | ctx.builtins.annotations.bms =>
+        return fail:
+          ErrorReport(
+            msg"Module '${sym.nme}' is virtual (i.e., \"compiler fiction\"); cannot be used directly" -> ref.toLoc ::
+            Nil, S(ref), source = Diagnostic.Source.Compilation)
+      case sym if sym.asCls.exists(ctx.builtins.virtualClasses) =>
+        return fail:
+          ErrorReport(
+            msg"Symbol '${sym.nme}' is virtual (i.e., \"compiler fiction\"); cannot be used as a term" -> ref.toLoc ::
+            Nil, S(ref), source = Diagnostic.Source.Compilation)
+      case _ => ()
+    
+    sym match
+    case sym: BuiltinSymbol =>
+      warnStmt
+      if sym.binary then
+        val t1 = new Tree.Ident("arg1")
+        val t2 = new Tree.Ident("arg2")
+        val p1 = Param(FldFlags.empty, VarSymbol(t1), N, Modulefulness.none)
+        val p2 = Param(FldFlags.empty, VarSymbol(t2), N, Modulefulness.none)
+        val ps = PlainParamList(p1 :: p2 :: Nil)
+        val bod = st.App(ref, st.Tup(List(st.Ref(p1.sym)(t1, 666, N).resolve, st.Ref(p2.sym)(t2, 666, N).resolve))
+          (Tree.Tup(Nil // FIXME should not be required (using dummy value)
+            )))(
+            Tree.App(Tree.Empty(), Tree.Empty()), // FIXME should not be required (using dummy value)
+            N,
+            FlowSymbol(sym.nme)
+          ).resolve
+        val (paramLists, bodyBlock) = setupFunctionDef(ps :: Nil, bod, S(sym.nme))
+        tl.log(s"Ref builtin $sym")
+        assert(paramLists.length === 1)
+        return k(Value.Lam(paramLists.head, bodyBlock).withLocOf(ref))
+      if sym.unary then
+        val t1 = new Tree.Ident("arg")
+        val p1 = Param(FldFlags.empty, VarSymbol(t1), N, Modulefulness.none)
+        val ps = PlainParamList(p1 :: Nil)
+        val bod = st.App(ref, st.Tup(List(st.Ref(p1.sym)(t1, 666, N).resolve))
+          (Tree.Tup(Nil // FIXME should not be required (using dummy value)
+            )))(
+            Tree.App(Tree.Empty(), Tree.Empty()), // FIXME should not be required (using dummy value)
+            N,
+            FlowSymbol(sym.nme)
+          ).resolve
+        val (paramLists, bodyBlock) = setupFunctionDef(ps :: Nil, bod, S(sym.nme))
+        tl.log(s"Ref builtin $sym")
+        assert(paramLists.length === 1)
+        return k(Value.Lam(paramLists.head, bodyBlock).withLocOf(ref))
+    case bs: BlockMemberSymbol =>
+      disamb.flatMap(_.defn) orElse bs.defn match
+      case S(d) if d.hasDeclareModifier.isDefined =>
+        return term(Sel(State.globalThisSymbol.ref().resolve, ref.tree)(S(bs), N).withLocOf(ref).resolve)(k)
+      case S(td: TermDefinition) if td.k is syntax.Fun =>
+        // * Local functions with no parameter lists are getters
+        // * and are lowered to functions with an empty parameter list
+        // * (non-local functions are compiled into getter methods selected on some prefix)
+        if td.params.isEmpty then
+          val l = new TempSymbol(S(ref))
+          return Assign(l, Call(Value.Ref(bs, disamb).withLocOf(ref), Nil)(true, true), k(Value.Ref(l, disamb)))
+      case S(_) => ()
+      case N => () // TODO panic here; can only lower refs to elab'd symbols
+    case _ => ()
+    warnStmt
+    k(subst(Value.Ref(sym, disamb).withLocOf(ref)))
+  
   @tailrec
   final def term(t: st, inStmtPos: Bool = false)(k: Result => Block)(using Subst): Block =
     tl.log(s"Lowering.term ${t.showDbg.truncate(100, "[...]")}${
@@ -317,71 +388,10 @@ class Lowering()(using Config, TL, Raise, State, Ctx):
     case st.CtxTup(fs) =>
       // * This case is currently triggered for code such as `f(using 42)`
       args(fs)(args => k(Value.Arr(mut = false, args)))
-    case ref @ st.Ref(sym) =>
-      sym match
-      case ctx.builtins.source.bms | ctx.builtins.js.bms | ctx.builtins.debug.bms | ctx.builtins.annotations.bms =>
-        return fail:
-          ErrorReport(
-            msg"Module '${sym.nme}' is virtual (i.e., \"compiler fiction\"); cannot be used directly" -> t.toLoc ::
-            Nil, S(t), source = Diagnostic.Source.Compilation)
-      case sym if sym.asCls.exists(ctx.builtins.virtualClasses) =>
-        return fail:
-          ErrorReport(
-            msg"Symbol '${sym.nme}' is virtual (i.e., \"compiler fiction\"); cannot be used as a term" -> t.toLoc ::
-            Nil, S(t), source = Diagnostic.Source.Compilation)
-      case _ => ()
-      
-      sym match
-      case sym: BuiltinSymbol =>
-        warnStmt
-        if sym.binary then
-          val t1 = new Tree.Ident("arg1")
-          val t2 = new Tree.Ident("arg2")
-          val p1 = Param(FldFlags.empty, VarSymbol(t1), N, Modulefulness.none)
-          val p2 = Param(FldFlags.empty, VarSymbol(t2), N, Modulefulness.none)
-          val ps = PlainParamList(p1 :: p2 :: Nil)
-          val bod = st.App(t, st.Tup(List(st.Ref(p1.sym)(t1, 666, N).resolve, st.Ref(p2.sym)(t2, 666, N).resolve))
-            (Tree.Tup(Nil // FIXME should not be required (using dummy value)
-              )))(
-              Tree.App(Tree.Empty(), Tree.Empty()), // FIXME should not be required (using dummy value)
-              N,
-              FlowSymbol(sym.nme)
-            ).resolve
-          val (paramLists, bodyBlock) = setupFunctionDef(ps :: Nil, bod, S(sym.nme))
-          tl.log(s"Ref builtin $sym")
-          assert(paramLists.length === 1)
-          return k(Value.Lam(paramLists.head, bodyBlock).withLocOf(ref))
-        if sym.unary then
-          val t1 = new Tree.Ident("arg")
-          val p1 = Param(FldFlags.empty, VarSymbol(t1), N, Modulefulness.none)
-          val ps = PlainParamList(p1 :: Nil)
-          val bod = st.App(t, st.Tup(List(st.Ref(p1.sym)(t1, 666, N).resolve))
-            (Tree.Tup(Nil // FIXME should not be required (using dummy value)
-              )))(
-              Tree.App(Tree.Empty(), Tree.Empty()), // FIXME should not be required (using dummy value)
-              N,
-              FlowSymbol(sym.nme)
-            ).resolve
-          val (paramLists, bodyBlock) = setupFunctionDef(ps :: Nil, bod, S(sym.nme))
-          tl.log(s"Ref builtin $sym")
-          assert(paramLists.length === 1)
-          return k(Value.Lam(paramLists.head, bodyBlock).withLocOf(ref))
-      case bs: BlockMemberSymbol =>
-        bs.defn match
-        case S(d) if d.hasDeclareModifier.isDefined =>
-          return term(Sel(State.globalThisSymbol.ref().resolve, ref.tree)(S(bs), N).withLocOf(ref).resolve)(k)
-        case S(td: TermDefinition) if td.k is syntax.Fun =>
-          // * Local functions with no parameter lists are getters
-          // * and are lowered to functions with an empty parameter list
-          // * (non-local functions are compiled into getter methods selected on some prefix)
-          if td.params.isEmpty then
-            val l = new TempSymbol(S(t))
-            return Assign(l, Call(Value.Ref(bs).withLocOf(ref), Nil)(true, true), k(Value.Ref(l)))
-        case S(_) => ()
-        case N => () // TODO panic here; can only lower refs to elab'd symbols
-      case _ => ()
-      warnStmt
-      k(subst(Value.Ref(sym).withLocOf(ref)))
+    case t @ st.Ref(sym) =>
+      ref(t, N, inStmtPos)(k)
+    case st.Resolved(t @ st.Ref(bsym), sym) =>
+      ref(t, S(sym), inStmtPos)(k)
     case st.App(ref @ Ref(sym: BuiltinSymbol), arg) =>
       arg match
       case st.Tup(Nil) =>
@@ -424,6 +434,7 @@ class Lowering()(using Config, TL, Raise, State, Ctx):
         case _: sem.BuiltinSymbol => true
         case sym: sem.BlockMemberSymbol =>
           sym.trmImplTree.fold(sym.clsTree.isDefined)(_.k is syntax.Fun)
+        case sym: sem.TermSymbol => sym.k is syntax.Fun
         // Do not perform safety check on `MatchResult` and `MatchFailure`.
         case sym => (sym is State.matchResultClsSymbol) ||
           (sym is State.matchFailureClsSymbol)
@@ -448,7 +459,7 @@ class Lowering()(using Config, TL, Raise, State, Ctx):
               msg"Debugging functions are not enabled" ->
               t.toLoc :: Nil,
               source = Diagnostic.Source.Compilation)
-        conclude(Value.Ref(ctx.builtins.debug.getLocals).withLocOf(f))
+        conclude(Value.Ref(ctx.builtins.debug.getLocals, N).withLocOf(f))
       // * Due to whacky JS semantics, we need to make sure that selections leading to a call
       // * are preserved in the call and not moved to a temporary variable.
       case sel @ Sel(prefix, nme) =>
@@ -694,7 +705,7 @@ class Lowering()(using Config, TL, Raise, State, Ctx):
           val pctor = parentConstructor(cls, as)
           val clsDef = ClsLikeDefn(N, isym, sym, syntax.Cls, N, Nil, S(sr),
             mtds, privateFlds, publicFlds, pctor, ctor, N)
-          val inner = new New(sym.ref().resolve, Nil, N)
+          val inner = new New(sym.ref().resolved(isym), Nil, N)
           Define(clsDef, term_nonTail(if mut then Mut(inner) else inner)(k))
       
     case Try(sub, finallyDo) =>
@@ -807,8 +818,10 @@ class Lowering()(using Config, TL, Raise, State, Ctx):
     case Ref(sym) if Elaborator.binaryOps.contains(sym.nme) => // builtin symbols
       val l = new TempSymbol(N)
       setupTerm("Builtin", Value.Lit(Tree.StrLit(sym.nme)) :: Nil)(k)
+    case Resolved(Ref(sym), disamb) =>
+      k(Value.Ref(sym, S(disamb)))
     case Ref(sym) =>
-      k(Value.Ref(sym))
+      k(Value.Ref(sym, N))
     case SynthSel(Ref(sym: ModuleOrObjectSymbol), name) => // Local cross-stage references
       setupSymbol(sym): r1 =>
         val l1, l2 = new TempSymbol(N)

@@ -28,7 +28,7 @@ object LambdaRewriter:
             case lam: Value.Lam => 
               val sym = BlockMemberSymbol("lambda", Nil, nameIsMeaningful = false)
               lambdasList ::= (sym -> super.applyLam(lam))
-              Value.Ref(sym)
+              Value.Ref(sym, N)
             case _ => super.applyValue(v)
         val blk = lambdaRewriter.applyBlock(b)
         (blk, lambdasList)

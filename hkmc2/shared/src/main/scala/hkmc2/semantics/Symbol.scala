@@ -53,7 +53,6 @@ abstract class Symbol(using State) extends Located:
     case _ => false
   
   
-  // * Not defining `asTrm` since `TermDef` curretly doesn't have a symbol
   def hasTrmDef: Bool = this match
     case trm: TermSymbol => true
     case mem: BlockMemberSymbol => mem.trmTree.nonEmpty
@@ -70,12 +69,15 @@ abstract class Symbol(using State) extends Located:
   def asMod: Opt[ModuleOrObjectSymbol] = asModOrObj.filter(_.tree.k is Mod)
   def asObj: Opt[ModuleOrObjectSymbol] = asModOrObj.filter(_.tree.k is Obj)
   def asClsOrMod: Opt[ClassSymbol | ModuleOrObjectSymbol] = asCls orElse asModOrObj
-  /* 
+  
+  // * This is a hack for that `TermDef` currently doesn't have a symbol. 
+  // * So, the symbol is from the `TermDefinition`. 
   def asTrm: Opt[TermSymbol] = this match
     case trm: TermSymbol => S(trm)
-    case mem: BlockMemberSymbol => mem.trmTree.flatMap(_.symbol.asTrm)
+    case mem: BlockMemberSymbol => mem.tdefn match
+      case S(defn: TermDefinition) => S(defn.tsym)
+      case N => N
     case _ => N
-  */
   def asPat: Opt[PatternSymbol] = this match
     case pat: PatternSymbol => S(pat)
     case mem: BlockMemberSymbol => mem.patTree.flatMap(_.symbol.asPat)
@@ -88,8 +90,9 @@ abstract class Symbol(using State) extends Located:
   def asClsLike: Opt[ClassSymbol | ModuleOrObjectSymbol | PatternSymbol] =
     (asCls: Opt[ClassSymbol | ModuleOrObjectSymbol | PatternSymbol]) orElse asModOrObj orElse asPat
   def asTpe: Opt[TypeSymbol] = asCls
-    .orElse[TypeSymbol](asModOrObj)
+    .orElse[TypeSymbol](asObj)
     .orElse[TypeSymbol](asAls)
+    .orElse[TypeSymbol](asMod)
   def asNonModTpe: Opt[TypeSymbol] = asCls
     .orElse[TypeSymbol](asObj)
     .orElse[TypeSymbol](asAls)
@@ -100,11 +103,13 @@ abstract class Symbol(using State) extends Located:
       case S(defn: TypeLikeDef) => S(defn.bsym)
       case S(defn: TermDefinition) => S(defn.sym)
       case N => N
-
+  
   /** Get the symbol corresponding to the "representative" of a set of overloaded definitions,
     * or the sole definition, if it is not overloaded.
     * We should consider the ordering terms > classes/objects/types > modules, for this purpose. */
-  def asPrincipal =
+  def asPrincipal: Opt[TermSymbol | ClassSymbol | ModuleOrObjectSymbol | TypeAliasSymbol | PatternSymbol] =
+    val asTrm: Opt[TermSymbol | ClassSymbol | ModuleOrObjectSymbol | TypeAliasSymbol | PatternSymbol] = this.asTrm
+    asTrm orElse
     asCls orElse
     asObj orElse
     asAls orElse
@@ -197,6 +202,12 @@ class BuiltinSymbol
 class BlockMemberSymbol(val nme: Str, val trees: Ls[TypeOrTermDef], val nameIsMeaningful: Bool = true)(using State)
     extends MemberSymbol[Definition]:
   
+  // * This is a hack for that `TermDef` currently doesn't have a symbol. 
+  // * So, the symbol is from the `TermDefinition`. 
+  // * To prevent the `TermDefinition` from being overridden by other definitions,
+  // * we use a special field here.
+  var tdefn: Opt[TermDefinition] = N
+  
   def toLoc: Option[Loc] = Loc(trees)
   
   def describe: Str =
@@ -240,11 +251,14 @@ sealed abstract class MemberSymbol[Defn <: Definition](using State) extends Symb
 
 
 class TermSymbol(val k: TermDefKind, val owner: Opt[InnerSymbol], val id: Tree.Ident)(using State)
-    extends MemberSymbol[Definition] with LocalSymbol with NamedSymbol:
+    extends MemberSymbol[TermDefinition]
+    with DefinitionSymbol[TermDefinition]
+    with LocalSymbol
+    with NamedSymbol:
   def nme: Str = id.name
   def name: Str = nme
   def toLoc: Option[Loc] = id.toLoc
-  override def toString: Str = s"${owner.getOrElse("")}.${id.name}"
+  override def toString: Str = s"term:${owner.map(o => s"${o}.").getOrElse("")}${id.name}${State.dbgUid(uid)}"
   
   def subst(using sub: SymbolSubst): TermSymbol = sub.mapTermSym(this)
 
@@ -354,7 +368,9 @@ class ModuleOrObjectSymbol(val tree: Tree.TypeDef, val id: Tree.Ident)(using Sta
   
   override def subst(using sub: SymbolSubst): ModuleOrObjectSymbol = sub.mapModuleSym(this)
 
-class TypeAliasSymbol(val id: Tree.Ident)(using State) extends MemberSymbol[TypeDef]:
+class TypeAliasSymbol(val id: Tree.Ident)(using State)
+    extends MemberSymbol[TypeDef]
+    with DefinitionSymbol[TypeDef]:
   def nme = id.name
   def toLoc: Option[Loc] = id.toLoc // TODO track source tree of type alias here
   override def toString: Str = s"type:${id.name}${State.dbgUid(uid)}"

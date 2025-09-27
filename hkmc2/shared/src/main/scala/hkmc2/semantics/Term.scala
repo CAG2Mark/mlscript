@@ -121,6 +121,9 @@ sealed trait ResolvableImpl:
   def resolve: this.type = expand(N)
   def dontResolve: this.type = this // TODO rm
   
+  def resolved(sym: DefinitionSymbol[?]): Term.Resolved =
+    Term.Resolved(this, sym)(typ = resolvedTyp)
+  
   def hasExpansion = expansion.isDefined
   
   def defn: Opt[Definition] = resolvedSym match

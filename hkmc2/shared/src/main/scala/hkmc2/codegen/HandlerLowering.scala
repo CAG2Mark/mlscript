@@ -123,7 +123,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     def apply(res: Local, uid: StateId, rest: Block) =
       Assign(res, PureCall(Value.Ref(resumptionSymbol), List(Value.Lit(Tree.IntLit(uid)))), rest)
     def unapply(blk: Block) = blk match
-      case Assign(res, PureCall(Value.Ref(`resumptionSymbol`), List(Value.Lit(Tree.IntLit(uid)))), rest) =>
+      case Assign(res, PureCall(Value.Ref(`resumptionSymbol`, _), List(Value.Lit(Tree.IntLit(uid)))), rest) =>
         Some(res, uid, rest)
       case _ => None
   
@@ -132,7 +132,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     def apply(res: Local, uid: StateId) =
       Assign(res, PureCall(Value.Ref(returnContSymbol), List(Value.Lit(Tree.IntLit(uid)))), End(""))
     def unapply(blk: Block) = blk match
-      case Assign(res, PureCall(Value.Ref(`returnContSymbol`), List(Value.Lit(Tree.IntLit(uid)))), _) =>
+      case Assign(res, PureCall(Value.Ref(`returnContSymbol`, _), List(Value.Lit(Tree.IntLit(uid)))), _) =>
         Some(res, uid)
       case _ => None
   
@@ -148,7 +148,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     def unapply(blk: Block) = blk match
       case Assign(
           res,
-          PureCall(Value.Ref(`callSymbol`), List(Value.Lit(Tree.IntLit(uid)))),
+          PureCall(Value.Ref(`callSymbol`, _), List(Value.Lit(Tree.IntLit(uid)))),
           Assign(_, c, rest)) =>
         Some(res, uid, c, rest)
       case _ => None
@@ -158,7 +158,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     def apply(uid: StateId) =
       Return(PureCall(Value.Ref(transitionSymbol), List(Value.Lit(Tree.IntLit(uid)))), false)
     def unapply(blk: Block) = blk match
-      case Return(PureCall(Value.Ref(`transitionSymbol`), List(Value.Lit(Tree.IntLit(uid)))), false) =>
+      case Return(PureCall(Value.Ref(`transitionSymbol`, _), List(Value.Lit(Tree.IntLit(uid)))), false) =>
         S(uid)
       case _ => N
   
@@ -166,7 +166,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     private val fnEndSymbol = freshTmp("fnEnd")
     def apply() = Return(PureCall(Value.Ref(fnEndSymbol), Nil), false)
     def unapply(blk: Block) = blk match
-      case Return(PureCall(Value.Ref(`fnEndSymbol`), Nil), false) => true
+      case Return(PureCall(Value.Ref(`fnEndSymbol`, _), Nil), false) => true
       case _ => false
   
   private class FreshId:
@@ -397,7 +397,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
           ResultPlaceholder(res, freshId(), c2, k(Value.Ref(res)))
         case r => super.applyResult2(r)(k)
       override def applyPath(p: Path): Path = p match
-        case Value.Ref(`getLocalsSym`) => handlerCtx.debugInfo.prevLocalsFn.get
+        case Value.Ref(`getLocalsSym`, _) => handlerCtx.debugInfo.prevLocalsFn.get
         case _ => super.applyPath(p)
       override def applyLam(lam: Value.Lam): Value.Lam =
         // This should normally be unreachable due to prior desugaring of lambda
@@ -501,7 +501,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     
     val body = blockBuilder
       .define(clsDefn)
-      .assign(h.lhs, Instantiate(mut = true, Value.Ref(clsDefn.sym), Nil))
+      .assign(h.lhs, Instantiate(mut = true, Value.Ref(clsDefn.sym, S(h.cls)), Nil))
       .rest(handlerBody)
     
     val defn = FunDefn(

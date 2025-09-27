@@ -100,16 +100,16 @@ object Lifter:
 
   object RefOfBms:
     def unapply(p: Path) = p match
-      case Value.Ref(l: BlockMemberSymbol) => S(l)
+      case Value.Ref(l: BlockMemberSymbol, disamb) => S((l, disamb))
       case s @ Select(_, _) => s.symbol match
-        case Some(value: BlockMemberSymbol) => S(value)
+        case Some(value: BlockMemberSymbol) => S(value, N)
         case _ => N
       case _ => N
   
   object InstSel:
     def unapply(p: Path) = p match
-      case Value.Ref(l: BlockMemberSymbol) => S(l)
-      case s @ Select(Value.Ref(l: BlockMemberSymbol), Tree.Ident("class")) => S(l)
+      case Value.Ref(l: BlockMemberSymbol, _) => S(l)
+      case s @ Select(Value.Ref(l: BlockMemberSymbol, _), Tree.Ident("class")) => S(l)
       case _ => N
   
   def modOrObj(d: Defn) = d match
@@ -435,7 +435,7 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
           case _ => ()
       
       override def applyResult(r: Result): Unit = r match
-        case Call(Value.Ref(_: BlockMemberSymbol), args) =>
+        case Call(Value.Ref(_: BlockMemberSymbol, _), args) =>
           args.foreach(applyArg)
         case Instantiate(mut, InstSel(_), args) =>
           args.foreach(applyArg)
@@ -459,9 +459,9 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
           parentPath match
             case None => ()
             case Some(path) if isHandlerClsPath(path) => ()
-            case Some(Select(RefOfBms(s), Tree.Ident("class"))) =>
+            case Some(Select(RefOfBms(s, _), Tree.Ident("class"))) =>
               if clsSyms.contains(s) then extendsGraph += (s -> defn.sym)
-            case Some(RefOfBms(s)) =>
+            case Some(RefOfBms(s, _)) =>
               if clsSyms.contains(s) then extendsGraph += (s -> defn.sym)
             case _ if !ignored.contains(defn.sym) =>
               raise(WarningReport(
@@ -482,7 +482,7 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
           mod.foreach(applyClsLikeBody)
       
       override def applyValue(v: Value): Unit = v match
-        case RefOfBms(l) if clsSyms.contains(l) && !modOrObj(ctx.defns(l)) =>
+        case RefOfBms(l, _) if clsSyms.contains(l) && !modOrObj(ctx.defns(l)) =>
           raise(WarningReport(
             msg"Cannot yet lift class `${l.nme}` as it is used as a first-class class." -> N :: Nil,
             N, Diagnostic.Source.Compilation
@@ -593,7 +593,7 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
       
       override def applyResult(r: Result): Result = r match
         // if possible, directly rewrite the call using the efficient version
-        case c @ Call(RefOfBms(l), args) => ctx.bmsReqdInfo.get(l) match
+        case c @ Call(RefOfBms(l, _), args) => ctx.bmsReqdInfo.get(l) match
           case Some(info) if !ctx.isModOrObj(l) =>
             val extraArgs = ctx.defns.get(l) match
               // If it's a class, we need to add the isMut parameter.
@@ -611,20 +611,22 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
             Call(info.singleCallBms.asPath, extraArgs ++ newArgs)(true, false)
           case _ => super.applyResult(r)
         // if possible, directly create the bms and replace the result with it
-        case RefOfBms(l) if ctx.bmsReqdInfo.contains(l) && !ctx.isModOrObj(l) =>
+        case RefOfBms(l, _) if ctx.bmsReqdInfo.contains(l) && !ctx.isModOrObj(l) =>
           createCall(l, ctx)
         case _ => super.applyResult(r)
       
       // otherwise, there's no choice but to create the call earlier
       override def applyPath(p: Path): Path = p match
-        case RefOfBms(l) if ctx.bmsReqdInfo.contains(l) && !ctx.isModOrObj(l) =>
+        case RefOfBms(l, disamb) if ctx.bmsReqdInfo.contains(l) && !ctx.isModOrObj(l) =>
           val newSym = syms.get(l) match
             case None =>
               val newSym = FlowSymbol(l.nme + "$this")
               syms.addOne(l -> newSym)
               newSym
             case Some(value) => value
-          Value.Ref(newSym)
+          Value.Ref(newSym, disamb)
+          // TODO:          ^
+          // TODO: Ref Refactorization
         case _ => super.applyPath(p)
     (walker.applyBlock(b), syms.toList)
   end rewriteBms
@@ -699,11 +701,11 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
     override def applyPath(p: Path): Path = 
       p match
       // These two cases rewrites `this.whatever` when referencing an outer class's fields.
-      case Value.Ref(l: InnerSymbol) =>
+      case Value.Ref(l: InnerSymbol, _) =>
         ctx.resolveIsymPath(l) match
         case Some(value) if !iSymInScope(l) => value.read
         case _ => super.applyPath(p)
-      case Value.Ref(t: TermSymbol) if t.owner.isDefined =>
+      case Value.Ref(t: TermSymbol, _) if t.owner.isDefined =>
         ctx.resolveIsymPath(t.owner.get) match
           case Some(value) if !iSymInScope(t.owner.get) =>
             if (t.k is syntax.LetBind) && !t.owner.forall(_.isInstanceOf[semantics.TopLevelSymbol]) then
@@ -716,9 +718,11 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
           case _ => super.applyPath(p)
       
       // Rewrites this.className.class to reference the top-level definition
-      case s @ Select(RefOfBms(l), Tree.Ident("class")) if !ctx.ignored(l) && ctx.isRelevant(l) =>
+      case s @ Select(RefOfBms(l, disamb), Tree.Ident("class")) if !ctx.ignored(l) && ctx.isRelevant(l) =>
         // this class will be lifted, rewrite the ref to strip it of `Select`
-        Select(Value.Ref(l), Tree.Ident("class"))(s.symbol)
+        Select(Value.Ref(l, disamb), Tree.Ident("class"))(s.symbol)
+        // TODO:            ^
+        // TODO: Ref Refactorization
 
       // For objects inside classes: When an object is nested inside a class, its defn will be
       // replaced by a symbol, to which the object instance is assigned. This rewrites references
@@ -730,13 +734,13 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
 
       // This is to rewrite references to classes that are not lifted (when their BlockMemberSymbol
       // reference is passed as function parameters).
-      case RefOfBms(l) if ctx.ignored(l) && ctx.isRelevant(l) => ctx.getIgnoredBmsPath(l) match
+      case RefOfBms(l, _) if ctx.ignored(l) && ctx.isRelevant(l) => ctx.getIgnoredBmsPath(l) match
         case Some(value) => value.read
         case None => super.applyPath(p)
       
       // This rewrites naked references to locals. If a function is in a capture, then we select that value
       // from the capture; otherwise, we see if that local is passed directly as a parameter to this defn.
-      case Value.Ref(l) => ctx.getLocalCaptureSym(l) match
+      case Value.Ref(l, _) => ctx.getLocalCaptureSym(l) match
         case Some(captureSym) => 
           Select(ctx.getLocalClosPath(l).get.read, captureSym.id)(N)
         case None => ctx.getLocalPath(l) match
@@ -1099,8 +1103,8 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
       case d => d
 
     def rewriteExtends(p: Path): Path = p match
-      case RefOfBms(b) if !ctx.ignored(b) && ctx.isRelevant(b) => b.asPath
-      case Select(RefOfBms(b), Tree.Ident("class")) if !ctx.ignored(b) && ctx.isRelevant(b) => 
+      case RefOfBms(b, _) if !ctx.ignored(b) && ctx.isRelevant(b) => b.asPath
+      case Select(RefOfBms(b, _), Tree.Ident("class")) if !ctx.ignored(b) && ctx.isRelevant(b) => 
         Select(b.asPath, Tree.Ident("class"))(N)
       case _ => return p
       

@@ -9,7 +9,9 @@ new Foo
 //│ Blk:
 //│   stats = Nil
 //│   res = New:
-//│     cls = Ref{sym=member:Foo} of member:Foo
+//│     cls = Resolved{sym=class:Foo}:
+//│       t = Ref{sym=member:Foo} of member:Foo
+//│       sym = class:Foo
 //│     args = Nil
 //│     rft = N
 
@@ -20,7 +22,9 @@ new! Foo
 //│ Blk:
 //│   stats = Nil
 //│   res = DynNew:
-//│     cls = Ref{sym=member:Foo} of member:Foo
+//│     cls = Resolved{sym=class:Foo}:
+//│       t = Ref{sym=member:Foo} of member:Foo
+//│       sym = class:Foo
 //│     args = Nil
 
 val foo: Foo = new Foo
@@ -30,7 +34,9 @@ foo
 //│ Resolved tree:
 //│ Blk:
 //│   stats = Nil
-//│   res = Ref{sym=member:foo,typ=class:Foo} of member:foo
+//│   res = Resolved{sym=term:foo,typ=class:Foo}:
+//│     t = Ref{sym=member:foo} of member:foo
+//│     sym = term:foo
 
 :rt
 foo.foo
@@ -51,7 +57,9 @@ new Foo2
 //│ Blk:
 //│   stats = Nil
 //│   res = New:
-//│     cls = Ref{sym=member:Foo2} of member:Foo2
+//│     cls = Resolved{sym=class:Foo2}:
+//│       t = Ref{sym=member:Foo2} of member:Foo2
+//│       sym = class:Foo2
 //│     args = Nil
 //│     rft = N
 
@@ -62,7 +70,9 @@ new! Foo2
 //│ Blk:
 //│   stats = Nil
 //│   res = DynNew:
-//│     cls = Ref{sym=member:Foo2} of member:Foo2
+//│     cls = Resolved{sym=class:Foo2}:
+//│       t = Ref{sym=member:Foo2} of member:Foo2
+//│       sym = class:Foo2
 //│     args = Nil
 
 val foo: Foo2[Str, Int] = new Foo2
@@ -72,7 +82,9 @@ foo
 //│ Resolved tree:
 //│ Blk:
 //│   stats = Nil
-//│   res = Ref{sym=member:foo,typ=class:Foo2[class:Str, class:Int]} of member:foo
+//│   res = Resolved{sym=term:foo,typ=class:Foo2[class:Str, class:Int]}:
+//│     t = Ref{sym=member:foo} of member:foo
+//│     sym = term:foo
 
 :rt
 foo.foo
@@ -91,7 +103,7 @@ fun f(x: Foo) = x
 //│     TermDefinition:
 //│       k = Fun
 //│       sym = member:f
-//│       tsym = .f
+//│       tsym = term:f
 //│       params = Ls of 
 //│         ParamList:
 //│           flags = ()
@@ -99,7 +111,9 @@ fun f(x: Foo) = x
 //│             Param:
 //│               flags = ()
 //│               sym = x
-//│               sign = S of Ref{sym=member:Foo} of member:Foo
+//│               sign = S of Resolved{sym=class:Foo}:
+//│                 t = Ref{sym=member:Foo} of member:Foo
+//│                 sym = class:Foo
 //│               modulefulness = Modulefulness of N
 //│           restParam = N
 //│       tparams = N
@@ -120,14 +134,18 @@ M
 //│ Resolved tree:
 //│ Blk:
 //│   stats = Nil
-//│   res = Ref{sym=member:M,typ=module:M} of member:M
+//│   res = Resolved{sym=module:M,typ=module:M}:
+//│     t = Ref{sym=member:M} of member:M
+//│     sym = module:M
 
 :rt
 O
 //│ Resolved tree:
 //│ Blk:
 //│   stats = Nil
-//│   res = Ref{sym=member:O,typ=object:O} of member:O
+//│   res = Resolved{sym=object:O,typ=object:O}:
+//│     t = Ref{sym=member:O} of member:O
+//│     sym = object:O
 
 val m: module M = M
 val o: O = O
@@ -137,14 +155,18 @@ m
 //│ Resolved tree:
 //│ Blk:
 //│   stats = Nil
-//│   res = Ref{sym=member:m,typ=module:M} of member:m
+//│   res = Resolved{sym=term:m,typ=module:M}:
+//│     t = Ref{sym=member:m} of member:m
+//│     sym = term:m
 
 :rt
 o
 //│ Resolved tree:
 //│ Blk:
 //│   stats = Nil
-//│   res = Ref{sym=member:o,typ=object:O} of member:o
+//│   res = Resolved{sym=term:o,typ=object:O}:
+//│     t = Ref{sym=member:o} of member:o
+//│     sym = term:o
 
 :rt
 fun f(module m: M): module M = m
@@ -154,7 +176,7 @@ fun f(module m: M): module M = m
 //│     TermDefinition:
 //│       k = Fun
 //│       sym = member:f
-//│       tsym = .f
+//│       tsym = term:f
 //│       params = Ls of 
 //│         ParamList:
 //│           flags = ()
@@ -162,11 +184,15 @@ fun f(module m: M): module M = m
 //│             Param:
 //│               flags = ()
 //│               sym = m
-//│               sign = S of Ref{sym=member:M} of member:M
+//│               sign = S of Resolved{sym=module:M,typ=module:M}:
+//│                 t = Ref{sym=member:M} of member:M
+//│                 sym = module:M
 //│               modulefulness = Modulefulness of S of module:M
 //│           restParam = N
 //│       tparams = N
-//│       sign = S of Ref{sym=member:M} of member:M
+//│       sign = S of Resolved{sym=module:M,typ=module:M}:
+//│         t = Ref{sym=member:M} of member:M
+//│         sym = module:M
 //│       body = S of Ref{sym=m,typ=module:M} of m
 //│       resSym = ‹result of member:f›
 //│       flags = ()
@@ -183,7 +209,7 @@ fun f(o: O) = o
 //│     TermDefinition:
 //│       k = Fun
 //│       sym = member:f
-//│       tsym = .f
+//│       tsym = term:f
 //│       params = Ls of 
 //│         ParamList:
 //│           flags = ()
@@ -191,7 +217,9 @@ fun f(o: O) = o
 //│             Param:
 //│               flags = ()
 //│               sym = o
-//│               sign = S of Ref{sym=member:O} of member:O
+//│               sign = S of Resolved{sym=object:O,typ=object:O}:
+//│                 t = Ref{sym=member:O} of member:O
+//│                 sym = object:O
 //│               modulefulness = Modulefulness of N
 //│           restParam = N
 //│       tparams = N

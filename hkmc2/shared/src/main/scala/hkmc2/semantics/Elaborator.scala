@@ -1093,6 +1093,8 @@ extends Importer:
                         Fun, mtdSym, tsym, PlainParamList(Param(FldFlags.empty, valueSym, N, Modulefulness.none) :: Nil) :: Nil,
                         N, N, S(valueSym.ref(Ident("value"))), FlowSymbol(s"‹result of non-local return›"), TermDefFlags.empty, Modulefulness.none, Nil, N)
                       tsym.defn = S(td)
+                      mtdSym.defn = S(td)
+                      mtdSym.tdefn = S(td)
                       val htd = HandlerTermDefinition(resumeSym, td)
                       Term.Handle(nonLocalRetHandler, state.nonLocalRetHandlerTrm, Nil, clsSym, htd :: Nil, b)
               val r = FlowSymbol(s"‹result of ${sym}›")
@@ -1111,6 +1113,7 @@ extends Importer:
                 TermDefFlags.empty.copy(isMethod = isMethod), mfn, annotations, N)
               tsym.defn = S(tdf)
               sym.defn = S(tdf)
+              sym.tdefn = S(tdf)
               
               tdf
             go(sts, Nil, tdf :: acc)
@@ -1197,6 +1200,7 @@ extends Importer:
                 assert(p.fldSym.isEmpty)
                 p.fldSym = S(fsym)
                 fsym.defn = S(fdef)
+                fsym.tdefn = S(fdef)
                 tsym.defn = S(fdef)
                 fdef :: Nil
               else
@@ -1319,6 +1323,28 @@ extends Importer:
                 val (bod, c) = mkBody
                 ClassDef(owner, Cls, clsSym, sym, tps, pss, newOf(td), ObjBody(bod), annotations, comp)
               clsSym.defn = S(cd)
+              if pss.nonEmpty then
+                val ctsym = TermSymbol(Fun, S(clsSym), clsSym.id)
+                val ctdef =
+                  TermDefinition(
+                    Fun,
+                    sym,
+                    ctsym,
+                    pss,
+                    S(tps.map(tp => Param(FldFlags.empty, tp.sym, N, Modulefulness.none))),
+                    S(clsSym.ref()),
+                    N,
+                    FlowSymbol(s"‹constructor›"),
+                    TermDefFlags.empty,
+                    Modulefulness.none,
+                    annotations.collect: 
+                      case a @ Annot.Modifier(Keyword.`declare`) => a
+                    ,
+                    S(clsSym),
+                  )
+                ctsym.defn = S(ctdef)
+                sym.tdefn = S(ctdef)
+                log(s"Constructor: ${ctdef}")
               cd
         sym.defn = S(defn)
         go(sts, Nil, defn :: acc)

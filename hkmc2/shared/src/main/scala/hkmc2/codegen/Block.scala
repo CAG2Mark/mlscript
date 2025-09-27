@@ -492,7 +492,7 @@ sealed abstract class Result extends AutoLocated:
     case Instantiate(mut, cls, args) => cls :: args.map(_.value)
     case Select(qual, name) => qual :: name :: Nil
     case DynSelect(qual, fld, arrayIdx) => qual :: fld :: Nil
-    case Value.Ref(l) => Nil
+    case Value.Ref(l, disamb) => Nil
     case Value.This(sym) => Nil
     case Value.Lit(lit) => lit :: Nil
     case Value.Lam(params, body) => params :: Nil
@@ -512,7 +512,7 @@ sealed abstract class Result extends AutoLocated:
     case Call(fun, args) => fun.freeVars ++ args.flatMap(_.value.freeVars).toSet
     case Instantiate(mut, cls, args) => cls.freeVars ++ args.flatMap(_.value.freeVars).toSet
     case Select(qual, name) => qual.freeVars 
-    case Value.Ref(l) => Set(l)
+    case Value.Ref(l, disamb) => Set(l)
     case Value.This(sym) => Set.empty
     case Value.Lit(lit) => Set.empty
     case Value.Lam(params, body) => body.freeVars -- params.paramSyms
@@ -525,11 +525,11 @@ sealed abstract class Result extends AutoLocated:
     case Call(fun, args) => fun.freeVarsLLIR ++ args.flatMap(_.value.freeVarsLLIR).toSet
     case Instantiate(mut, cls, args) => cls.freeVarsLLIR ++ args.flatMap(_.value.freeVarsLLIR).toSet
     case Select(qual, name) => qual.freeVarsLLIR 
-    case Value.Ref(l: (BuiltinSymbol | TopLevelSymbol | ClassSymbol | TermSymbol)) => Set.empty
-    case Value.Ref(l: MemberSymbol[?]) => l.defn match
+    case Value.Ref(l: (BuiltinSymbol | TopLevelSymbol | ClassSymbol | TermSymbol), disamb) => Set.empty
+    case Value.Ref(l: MemberSymbol[?], disamb) => l.defn match
       case Some(d: ClassLikeDef) => Set.empty
       case _ => Set(l)
-    case Value.Ref(l) => Set(l)
+    case Value.Ref(l, disamb) => Set(l)
     case Value.This(sym) => Set.empty
     case Value.Lit(lit) => Set.empty
     case Value.Lam(params, body) => body.freeVarsLLIR -- params.paramSyms
@@ -561,12 +561,17 @@ case class Select(qual: Path, name: Tree.Ident)(val symbol: Opt[FieldSymbol]) ex
 case class DynSelect(qual: Path, fld: Path, arrayIdx: Bool) extends Path
 
 enum Value extends Path:
-  case Ref(l: Local)
+  case Ref(l: Local, disamb: Opt[DefinitionSymbol[?]])
   case This(sym: InnerSymbol) // TODO rm – just use Ref
   case Lit(lit: Literal)
   case Lam(params: ParamList, body: Block)
   case Arr(mut: Bool, elems: Ls[Arg])
   case Rcd(mut: Bool, elems: Ls[RcdArg])
+
+object Value:
+  object Ref:
+    def apply(l: DefinitionSymbol[?]): Ref = Ref(l, S(l))
+    def apply(l: TempSymbol | VarSymbol | BuiltinSymbol): Ref = Ref(l, N)
 
 case class Arg(spread: Opt[Bool], value: Path)
 
@@ -597,6 +602,6 @@ extension (k: Block => Block)
 def blockBuilder: Block => Block = identity
 
 extension (l: Local)
-  def asPath: Path = Value.Ref(l)
+  def asPath: Path = Value.Ref(l, N)
 
 

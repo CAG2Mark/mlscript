@@ -50,7 +50,7 @@ class StackSafeTransform(depthLimit: Int, paths: HandlerPaths)(using State):
   // Rewrites anything that can contain a Call to increase the stack depth
   def transform(b: Block, curDepth: => Symbol, isTopLevel: Bool = false): Block =
     def usesStack(r: Result) = r match
-      case Call(Value.Ref(_: BuiltinSymbol), _) => false
+      case Call(Value.Ref(_: BuiltinSymbol, _), _) => false
       case _: Call | _: Instantiate => true
       case _ => false
 
@@ -114,7 +114,7 @@ class StackSafeTransform(depthLimit: Int, paths: HandlerPaths)(using State):
     new BlockTraverserShallow:
       applyBlock(b)
       override def applyResult(r: Result): Unit = r match
-        case Call(Value.Ref(_: BuiltinSymbol), _) => ()
+        case Call(Value.Ref(_: BuiltinSymbol, _), _) => ()
         case _: Call | _: Instantiate => trivial = false
         case _ => ()
     trivial

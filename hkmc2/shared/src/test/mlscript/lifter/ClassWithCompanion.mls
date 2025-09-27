@@ -1,17 +1,147 @@
-:lift
 :js
 
 
 :w
+:lot
 fun foo(x) =
   class C(y) with
     fun get = [x, y]
   module C with
     val empty = C(123)
   C.empty
-//│ ═══[WARNING] Modules are not yet lifted.
+//│ Lowered:
+//│ Program:
+//│   imports = Nil
+//│   main = Define:
+//│     defn = FunDefn:
+//│       owner = N
+//│       sym = member:foo
+//│       params = Ls of 
+//│         ParamList:
+//│           flags = ()
+//│           params = Ls of 
+//│             Param:
+//│               flags = ()
+//│               sym = x
+//│               sign = N
+//│               modulefulness = Modulefulness of N
+//│           restParam = N
+//│       body = Define:
+//│         defn = ClsLikeDefn:
+//│           owner = N
+//│           isym = class:C
+//│           sym = member:C
+//│           k = Cls
+//│           paramsOpt = S of ParamList:
+//│             flags = ()
+//│             params = Ls of 
+//│               Param:
+//│                 flags = ()
+//│                 sym = y
+//│                 sign = N
+//│                 modulefulness = Modulefulness of N
+//│             restParam = N
+//│           auxParams = Nil
+//│           parentPath = N
+//│           methods = Ls of 
+//│             FunDefn:
+//│               owner = S of class:C
+//│               sym = member:get
+//│               params = Nil
+//│               body = Return:
+//│                 res = Arr:
+//│                   mut = false
+//│                   elems = Ls of 
+//│                     Arg:
+//│                       spread = N
+//│                       value = Ref:
+//│                         l = x
+//│                         disamb = N
+//│                     Arg:
+//│                       spread = N
+//│                       value = Ref:
+//│                         l = term:class:C.y
+//│                         disamb = N
+//│                 implct = false
+//│           privateFields = Ls of 
+//│             term:class:C.y
+//│           publicFields = Nil
+//│           preCtor = End of ""
+//│           ctor = Assign:
+//│             lhs = term:class:C.y
+//│             rhs = Ref:
+//│               l = y
+//│               disamb = N
+//│             rest = End of ""
+//│           companion = S of ClsLikeBody:
+//│             isym = module:C
+//│             methods = Nil
+//│             privateFields = Nil
+//│             publicFields = Ls of 
+//│               Tuple2:
+//│                 _1 = member:empty
+//│                 _2 = term:module:C.empty
+//│             ctor = Begin:
+//│               sub = End of ""
+//│               rest = Assign: \
+//│               lhs = $tmp
+//│               rhs = Call:
+//│                 fun = Ref:
+//│                   l = member:C
+//│                   disamb = S of term:class:C.C
+//│                 args = Ls of 
+//│                   Arg:
+//│                     spread = N
+//│                     value = Lit of IntLit of 123
+//│               rest = Define: \
+//│               defn = ValDefn:
+//│                 tsym = term:module:C.empty
+//│                 sym = member:empty
+//│                 rhs = Ref:
+//│                   l = $tmp
+//│                   disamb = N
+//│               rest = End of ""
+//│         rest = Assign: \
+//│         lhs = $selRes
+//│         rhs = Select{member:empty}:
+//│           qual = Ref:
+//│             l = member:C
+//│             disamb = S of module:C
+//│           name = Ident of "empty"
+//│         rest = Match: \
+//│         scrut = Ref:
+//│           l = $selRes
+//│           disamb = N
+//│         arms = Ls of 
+//│           Tuple2:
+//│             _1 = Lit of UnitLit of false
+//│             _2 = Throw of Instantiate:
+//│               mut = false
+//│               cls = Select:
+//│                 qual = Ref:
+//│                   l = globalThis:globalThis
+//│                   disamb = S of globalThis:globalThis
+//│                 name = Ident of "Error"
+//│               args = Ls of 
+//│                 Arg:
+//│                   spread = N
+//│                   value = Lit of StrLit of "Access to required field 'empty' yielded 'undefined'"
+//│         dflt = N
+//│         rest = Return: \
+//│         res = Ref:
+//│           l = $selRes
+//│           disamb = N
+//│         implct = false
+//│     rest = Assign: \
+//│     lhs = $block$res
+//│     rhs = Lit of UnitLit of false
+//│     rest = End of ""
+//│ FAILURE: Unexpected lack of warnings
 
+:sjs
 foo(10).get
+//│ JS (unsanitized):
+//│ let tmp; tmp = foo(10); tmp.get
 //│ = [10, 123]
 
 :w
@@ -21,7 +151,7 @@ fun foo(x) =
   module C with
     val empty = new C
   C.empty
-//│ ═══[WARNING] Modules are not yet lifted.
+//│ FAILURE: Unexpected lack of warnings
 
 foo(10).get
 //│ = 10

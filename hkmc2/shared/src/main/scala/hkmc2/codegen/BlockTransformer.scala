@@ -118,9 +118,9 @@ class BlockTransformer(subst: SymbolSubst):
     case v: Value => applyValue(v)
   
   def applyValue(v: Value): Value = v match
-    case Value.Ref(l) =>
+    case Value.Ref(l, disamb) =>
       val l2 = l.subst
-      if (l2 is l) then v else Value.Ref(l2)
+      if (l2 is l) then v else Value.Ref(l2, disamb)
     case Value.This(sym) =>
       val sym2 = sym.subst
       if (sym2 is sym) then v else Value.This(sym2)
