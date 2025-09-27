@@ -112,7 +112,10 @@ class JSBuilder(using TL, State, Ctx) extends CodeBuilder:
       if l.nullary then l.nme
       else errExpr(msg"Illegal reference to builtin symbol '${l.nme}'")
     case Value.Ref(l, disamb) => l match
-      case l: BlockMemberSymbol if l.hasLiftedClass && disamb.flatMap(d => d.asMod orElse d.asCls).isDefined =>
+      case l: BlockMemberSymbol if {
+        l.hasLiftedClass && 
+        disamb.flatMap(d => d.asMod orElse d.asCls).exists(_ isnt ctx.builtins.Array)
+      } =>
         doc"${getVar(l, l.toLoc)}.class"
       case _ =>
         getVar(l, r.toLoc)

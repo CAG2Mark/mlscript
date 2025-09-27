@@ -276,20 +276,6 @@ class Resolver(tl: TraceLogger)
           ictx
       
       traverseStmts(rest)(using newICtx)
-    
-  
-  def expand2DotClass(t: Resolvable, expect: Expect.Module | Expect.Class) = 
-    log(s"Expanding ${t} to ${t}.class because it is expected to be a ${expect}.")
-    t.resolvedSym match
-    case S(bsym: BlockMemberSymbol) if bsym.hasLiftedClass => 
-      val sym = expect match
-        case _: Expect.Module => bsym.asMod
-        case _: Expect.Class => bsym.asCls
-      sym.foreach: sym =>
-        if sym isnt ctx.builtins.Array then
-          t.expand(S(Term.SynthSel(t.duplicate, new Tree.Ident("class"))(S(sym), S(Type.Ref(sym, Nil)))))
-    case _ =>
-      ()
   
   /**
     * Traverse a term: traverse the sub-terms, resolve the term, and
@@ -332,11 +318,6 @@ class Resolver(tl: TraceLogger)
       
       case t: Resolvable =>
         resolve(t, prefer = expect, inAppPrefix = false, inTyPrefix = false, inCtxPrefix = false)
-        t.expanded match
-        case t: Resolvable => expect match
-          case expect: Expect.Class => expand2DotClass(t, expect = expect)
-          case _ =>
-        case _ =>
       
       case _ =>
         t.subTerms.foreach(traverse(_, expect = NonModule(N)))
@@ -825,7 +806,6 @@ class Resolver(tl: TraceLogger)
               lastWords(s"${mdef}: field symbol found ${fldSym} but no block member symbol")
             log(s"Resolving symbol for ${t}, defn = ${lhs.defn}")
             t.expand(S(t.withSym(bsym)))
-            expand2DotClass(lhs, expect = Expect.Module(N))
             log(s"Resolved symbol for ${t}: ${bsym}")
           case N => 
             t.expand(S(t.withSym(ErrorSymbol(id.name, Tree.Dummy))))
@@ -853,22 +833,7 @@ class Resolver(tl: TraceLogger)
         case _: Module => bms.asMod
         case _: Class => bms.asCls
         case _: Selectable => bms.asModOrObj
-        case _: (Any.type | NonModule) => 
-          val trmSym = bms.defn match
-          case S(defn: TermDefinition) => S(defn.tsym)
-          case _ => N
-          trmSym orElse bms.asPrincipal
-          // TODO: @Harry check trmSym if needed
-        // case _: Any =>
-        //   val trmSym = bms.defn match
-        //   case S(defn: TermDefinition) => S(defn.tsym)
-        //   case _ => N
-        //   trmSym orElse bms.asPrincipal
-        //   bms.defn match
-        //   case S(defn: TermDefinition) => S(defn.tsym)
-        //   // case S(defn: ClassDef) => S(defn.sym)
-        //   // case S(defn: ModuleOrObjectDef) => S(defn.sym)
-        //   case _ => N
+        case _: (Any.type | NonModule) => bms.asPrincipal
       
       t match
       case t @ Apps(base: Resolvable, ass) => 
