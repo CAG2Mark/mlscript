@@ -869,6 +869,7 @@ class Resolver(tl: TraceLogger)
     log(s"Resolving implicit argument, expecting a ${p.sign}")
     p.sign match
       case S(sign) => 
+        // FIXME[Harry]: Don't re-resolve signatures for every argument!
         val ty = resolveSign(sign, expect = if p.modulefulness.modified then Module(N) else NonModule(N))
         log(s"Resolving implicit argument, expecting a ${ty.show}")
         ictx.query(ty) match
