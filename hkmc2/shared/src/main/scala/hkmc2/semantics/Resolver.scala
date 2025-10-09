@@ -801,12 +801,15 @@ class Resolver(tl: TraceLogger)
         lhs.singletonDefn.foreach: mdef =>
           val fsym = mdef.body.members.get(id.name)
           fsym match
-          case S(fldSym) => 
-            val bsym = fldSym.asBlkMember.getOrElse:
-              lastWords(s"${mdef}: field symbol found ${fldSym} but no block member symbol")
+          case S(bms: BlockMemberSymbol) =>
             log(s"Resolving symbol for ${t}, defn = ${lhs.defn}")
-            t.expand(S(t.withSym(bsym)))
-            log(s"Resolved symbol for ${t}: ${bsym}")
+            disambSym(prefer, sign)(bms) match
+              case S(ds) =>
+                t.expand(S(Term.Resolved(t.withSym(bms), ds)(N)))
+              case N =>
+                log(s"! Unable to disambiguate ${bms}")
+                t.expand(S(t.withSym(bms)))
+            log(s"Resolved symbol for ${t}: ${bms}")
           case N => 
             t.expand(S(t.withSym(ErrorSymbol(id.name, Tree.Dummy))))
             raise: 

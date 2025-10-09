@@ -113,6 +113,7 @@ class JSBuilder(using TL, State, Ctx) extends CodeBuilder:
       else errExpr(msg"Illegal reference to builtin symbol '${l.nme}'")
     case Value.Ref(l, disamb) => l match
       case l: BlockMemberSymbol if {
+        // TODO @Harry: refactor(ize) duplicated logic
         l.hasLiftedClass && 
         disamb.flatMap(d => d.asMod orElse d.asCls).exists(_ isnt ctx.builtins.Array)
       } =>
@@ -152,7 +153,13 @@ class JSBuilder(using TL, State, Ctx) extends CodeBuilder:
     case Value.Lam(ps, bod) => scope.nest givenIn:
       val (params, bodyDoc) = setupFunction(none, ps, bod)
       doc"($params) => ${ braced(bodyDoc) }"
-    case Select(qual, id) =>
+    case s @ Select(qual, id) => 
+      val dotClass = s.symbol match
+        case S(bms: BlockMemberSymbol) if {
+          bms.hasLiftedClass && 
+          s.disamb.flatMap(d => d.asMod orElse d.asCls).exists(_ isnt ctx.builtins.Array)
+        } => doc".class"
+        case _ => doc""
       val name = id.name
       doc"${result(qual)}${
         if isValidFieldName(name)
@@ -160,7 +167,7 @@ class JSBuilder(using TL, State, Ctx) extends CodeBuilder:
         else name.toIntOption match
           case S(index) => doc"[$index]"
           case N => doc"[${makeStringLiteral(name)}]"
-      }"
+      }${dotClass}"
     case DynSelect(qual, fld, ai) =>
       if ai
       then doc"${result(qual)}.at(${result(fld)})"

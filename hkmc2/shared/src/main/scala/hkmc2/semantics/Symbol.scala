@@ -103,6 +103,7 @@ abstract class Symbol(using State) extends Located:
       case S(defn: TypeLikeDef) => S(defn.bsym)
       case S(defn: TermDefinition) => S(defn.sym)
       case N => N
+    case _ => N
   
   /** Get the symbol corresponding to the "representative" of a set of overloaded definitions,
     * or the sole definition, if it is not overloaded.
@@ -316,8 +317,12 @@ sealed trait ClassLikeSymbol extends IdentifiedSymbol:
  * definition.
  */
 sealed trait DefinitionSymbol[Defn <: Definition] extends Symbol:
+  this: MemberSymbol[Defn] =>
+  
   def defn: Opt[Defn]
   def subst(using sub: SymbolSubst): DefinitionSymbol[Defn]
+  
+  def asMemSym: MemberSymbol[Defn] = this
 
 /** This is the symbol associated to specific definitions.
   * One overloaded `BlockMemberSymbol` may correspond to multiple `InnerSymbol`s

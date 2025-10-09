@@ -671,11 +671,18 @@ final case class HandlerTermDefinition(
 
 case class ObjBody(blk: Term.Blk):
   
-  lazy val members: Map[Str, FieldSymbol] = blk.stats.collect:
-    case td: TermDefinition => td.sym.nme -> td.sym
-    case td: ClassLikeDef => td.sym.nme -> td.sym
-    case td: TypeDef => td.sym.nme -> td.sym
-  .toMap
+  lazy val members: Map[Str, BlockMemberSymbol] =
+    blk.stats.collect:
+      case td: TermDefinition => td.sym
+      case td: ClassLikeDef => td.bsym
+      case td: TypeDef => td.bsym
+    .groupBy(_.nme)
+    .map: (nme, syms) =>
+      if syms.distinct.length > 1 then
+        lastWords:
+          s"Duplicate members named '${nme}' with different block-member symbols: ${syms.mkString(", ")}."
+      nme -> syms.head
+    .toMap
   
   lazy val (methods, nonMethods) = blk.stats.partitionMap:
     case td: TermDefinition if td.k is syntax.Fun => L(td)

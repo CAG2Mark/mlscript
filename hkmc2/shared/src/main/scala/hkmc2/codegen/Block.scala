@@ -550,23 +550,31 @@ case class Call(fun: Path, args: Ls[Arg])(val isMlsFun: Bool, val mayRaiseEffect
 case class Instantiate(mut: Bool, cls: Path, args: Ls[Arg]) extends Result
 
 sealed abstract class Path extends TrivialResult:
-  def selN(id: Tree.Ident): Path = Select(this, id)(N)
-  def sel(id: Tree.Ident, sym: FieldSymbol): Path = Select(this, id)(S(sym))
+  def selN(id: Tree.Ident): Path = Select(this, id)(N, N)
+  def sel(id: Tree.Ident, sym: FieldSymbol): Path = Select(this, id)(S(sym), N)
   def selSN(id: Str): Path = selN(new Tree.Ident(id))
   def asArg = Arg(spread = N, this)
 
-case class Select(qual: Path, name: Tree.Ident)(val symbol: Opt[FieldSymbol]) extends Path with ProductWithExtraInfo:
-  def extraInfo: Str = symbol.mkString
+case class Select(qual: Path, name: Tree.Ident)(val symbol: Opt[FieldSymbol], val disamb: Opt[DefinitionSymbol[?]]) extends Path with ProductWithExtraInfo:
+  def extraInfo: Str = 
+    (symbol.map(s => s"sym=${s}") :: disamb.map(s => s"disamb=${s}") :: Nil)
+      .collect:
+        case S(info) => info
+      .mkString(",")
 
 case class DynSelect(qual: Path, fld: Path, arrayIdx: Bool) extends Path
 
-enum Value extends Path:
+enum Value extends Path with ProductWithExtraInfo:
   case Ref(l: Local, disamb: Opt[DefinitionSymbol[?]])
   case This(sym: InnerSymbol) // TODO rm – just use Ref
   case Lit(lit: Literal)
   case Lam(params: ParamList, body: Block)
   case Arr(mut: Bool, elems: Ls[Arg])
   case Rcd(mut: Bool, elems: Ls[RcdArg])
+  
+  override def extraInfo: Str = this match
+    case Ref(l, disamb) => disamb.map(s => s"disamb=${s}").mkString
+    case _ => ""
 
 object Value:
   object Ref:

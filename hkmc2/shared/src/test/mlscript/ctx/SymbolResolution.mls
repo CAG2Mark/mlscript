@@ -24,42 +24,50 @@ M.foo
 //│ Resolved tree:
 //│ Blk:
 //│   stats = Nil
-//│   res = Sel{sym=member:foo,typ=module:M}:
-//│     prefix = Resolved{sym=module:M,typ=module:M}:
-//│       t = Ref{sym=member:M} of member:M
-//│       sym = module:M
-//│     nme = Ident of "foo"
+//│   res = Resolved{sym=term:module:M.foo,typ=module:M}:
+//│     t = Sel{sym=member:foo}:
+//│       prefix = Resolved{sym=module:M,typ=module:M}:
+//│         t = Ref{sym=member:M} of member:M
+//│         sym = module:M
+//│       nme = Ident of "foo"
+//│     sym = term:module:M.foo
 
 M.bar
 //│ Resolved tree:
 //│ Blk:
 //│   stats = Nil
-//│   res = Sel{sym=member:bar,typ=module:M}:
-//│     prefix = Resolved{sym=module:M,typ=module:M}:
-//│       t = Ref{sym=member:M} of member:M
-//│       sym = module:M
-//│     nme = Ident of "bar"
+//│   res = Resolved{sym=term:module:M.bar,typ=module:M}:
+//│     t = Sel{sym=member:bar}:
+//│       prefix = Resolved{sym=module:M,typ=module:M}:
+//│         t = Ref{sym=member:M} of member:M
+//│         sym = module:M
+//│       nme = Ident of "bar"
+//│     sym = term:module:M.bar
 
 M.baz
 //│ Resolved tree:
 //│ Blk:
 //│   stats = Nil
-//│   res = Sel{sym=member:baz}:
-//│     prefix = Resolved{sym=module:M,typ=module:M}:
-//│       t = Ref{sym=member:M} of member:M
-//│       sym = module:M
-//│     nme = Ident of "baz"
+//│   res = Resolved{sym=term:module:M.baz}:
+//│     t = Sel{sym=member:baz}:
+//│       prefix = Resolved{sym=module:M,typ=module:M}:
+//│         t = Ref{sym=member:M} of member:M
+//│         sym = module:M
+//│       nme = Ident of "baz"
+//│     sym = term:module:M.baz
 
 M.baz()
 //│ Resolved tree:
 //│ Blk:
 //│   stats = Nil
 //│   res = App{typ=module:M}:
-//│     lhs = Sel{sym=member:baz}:
-//│       prefix = Resolved{sym=module:M,typ=module:M}:
-//│         t = Ref{sym=member:M} of member:M
-//│         sym = module:M
-//│       nme = Ident of "baz"
+//│     lhs = Resolved{sym=term:module:M.baz}:
+//│       t = Sel{sym=member:baz}:
+//│         prefix = Resolved{sym=module:M,typ=module:M}:
+//│           t = Ref{sym=member:M} of member:M
+//│           sym = module:M
+//│         nme = Ident of "baz"
+//│       sym = term:module:M.baz
 //│     rhs = Tup of Nil
 
 M.foo.bar.baz()
@@ -67,69 +75,79 @@ M.foo.bar.baz()
 //│ Blk:
 //│   stats = Nil
 //│   res = App{typ=module:M}:
-//│     lhs = Sel{sym=member:baz}:
-//│       prefix = Sel{sym=member:bar,typ=module:M}:
-//│         prefix = Sel{sym=member:foo,typ=module:M}:
-//│           prefix = Resolved{sym=module:M,typ=module:M}:
-//│             t = Ref{sym=member:M} of member:M
-//│             sym = module:M
-//│           nme = Ident of "foo"
-//│         nme = Ident of "bar"
-//│       nme = Ident of "baz"
+//│     lhs = Resolved{sym=term:module:M.baz}:
+//│       t = Sel{sym=member:baz}:
+//│         prefix = Sel{sym=member:bar,typ=module:M}:
+//│           prefix = Sel{sym=member:foo,typ=module:M}:
+//│             prefix = Resolved{sym=module:M,typ=module:M}:
+//│               t = Ref{sym=member:M} of member:M
+//│               sym = module:M
+//│             nme = Ident of "foo"
+//│           nme = Ident of "bar"
+//│         nme = Ident of "baz"
+//│       sym = term:module:M.baz
 //│     rhs = Tup of Nil
 
 M.that.that
 //│ Resolved tree:
 //│ Blk:
 //│   stats = Nil
-//│   res = Sel{sym=member:that,typ=module:M}:
-//│     prefix = Sel{sym=member:that,typ=module:N}:
-//│       prefix = Resolved{sym=module:M,typ=module:M}:
-//│         t = Ref{sym=member:M} of member:M
-//│         sym = module:M
+//│   res = Resolved{sym=term:module:N.that,typ=module:M}:
+//│     t = Sel{sym=member:that}:
+//│       prefix = Sel{sym=member:that,typ=module:N}:
+//│         prefix = Resolved{sym=module:M,typ=module:M}:
+//│           t = Ref{sym=member:M} of member:M
+//│           sym = module:M
+//│         nme = Ident of "that"
 //│       nme = Ident of "that"
-//│     nme = Ident of "that"
+//│     sym = term:module:N.that
 
 M.that.that.that.that.that.that
 //│ Resolved tree:
 //│ Blk:
 //│   stats = Nil
-//│   res = Sel{sym=member:that,typ=module:M}:
-//│     prefix = Sel{sym=member:that,typ=module:N}:
-//│       prefix = Sel{sym=member:that,typ=module:M}:
-//│         prefix = Sel{sym=member:that,typ=module:N}:
-//│           prefix = Sel{sym=member:that,typ=module:M}:
-//│             prefix = Sel{sym=member:that,typ=module:N}:
-//│               prefix = Resolved{sym=module:M,typ=module:M}:
-//│                 t = Ref{sym=member:M} of member:M
-//│                 sym = module:M
+//│   res = Resolved{sym=term:module:N.that,typ=module:M}:
+//│     t = Sel{sym=member:that}:
+//│       prefix = Sel{sym=member:that,typ=module:N}:
+//│         prefix = Sel{sym=member:that,typ=module:M}:
+//│           prefix = Sel{sym=member:that,typ=module:N}:
+//│             prefix = Sel{sym=member:that,typ=module:M}:
+//│               prefix = Sel{sym=member:that,typ=module:N}:
+//│                 prefix = Resolved{sym=module:M,typ=module:M}:
+//│                   t = Ref{sym=member:M} of member:M
+//│                   sym = module:M
+//│                 nme = Ident of "that"
 //│               nme = Ident of "that"
 //│             nme = Ident of "that"
 //│           nme = Ident of "that"
 //│         nme = Ident of "that"
 //│       nme = Ident of "that"
-//│     nme = Ident of "that"
+//│     sym = term:module:N.that
 
 R.foo
 //│ Resolved tree:
 //│ Blk:
 //│   stats = Nil
-//│   res = Sel{sym=member:foo}:
-//│     prefix = Resolved{sym=module:R,typ=module:R}:
-//│       t = Ref{sym=member:R} of member:R
-//│       sym = module:R
-//│     nme = Ident of "foo"
+//│   res = Resolved{sym=term:module:R.foo}:
+//│     t = Sel{sym=member:foo}:
+//│       prefix = Resolved{sym=module:R,typ=module:R}:
+//│         t = Ref{sym=member:R} of member:R
+//│         sym = module:R
+//│       nme = Ident of "foo"
+//│     sym = term:module:R.foo
 
 R.foo()
 //│ Resolved tree:
 //│ Blk:
 //│   stats = Nil
 //│   res = App:
-//│     lhs = Sel{sym=member:foo}:
-//│       prefix = Resolved{sym=module:R,typ=module:R}:
-//│         t = Ref{sym=member:R} of member:R
-//│         sym = module:R
-//│       nme = Ident of "foo"
+//│     lhs = Resolved{sym=term:module:R.foo}:
+//│       t = Sel{sym=member:foo}:
+//│         prefix = Resolved{sym=module:R,typ=module:R}:
+//│           t = Ref{sym=member:R} of member:R
+//│           sym = module:R
+//│         nme = Ident of "foo"
+//│       sym = term:module:R.foo
 //│     rhs = Tup of Nil
 
 R.foo()()
@@ -138,11 +156,13 @@ R.foo()()
 //│   stats = Nil
 //│   res = App{typ=module:N}:
 //│     lhs = App:
-//│       lhs = Sel{sym=member:foo}:
-//│         prefix = Resolved{sym=module:R,typ=module:R}:
-//│           t = Ref{sym=member:R} of member:R
-//│           sym = module:R
-//│         nme = Ident of "foo"
+//│       lhs = Resolved{sym=term:module:R.foo}:
+//│         t = Sel{sym=member:foo}:
+//│           prefix = Resolved{sym=module:R,typ=module:R}:
+//│             t = Ref{sym=member:R} of member:R
+//│             sym = module:R
+//│           nme = Ident of "foo"
+//│         sym = term:module:R.foo
 //│       rhs = Tup of Nil
 //│     rhs = Tup of Nil
 
@@ -153,11 +173,13 @@ R.foo()()()
 //│   res = App:
 //│     lhs = App{typ=module:N}:
 //│       lhs = App:
-//│         lhs = Sel{sym=member:foo}:
-//│           prefix = Resolved{sym=module:R,typ=module:R}:
-//│             t = Ref{sym=member:R} of member:R
-//│             sym = module:R
-//│           nme = Ident of "foo"
+//│         lhs = Resolved{sym=term:module:R.foo}:
+//│           t = Sel{sym=member:foo}:
+//│             prefix = Resolved{sym=module:R,typ=module:R}:
+//│               t = Ref{sym=member:R} of member:R
+//│               sym = module:R
+//│             nme = Ident of "foo"
+//│           sym = term:module:R.foo
 //│         rhs = Tup of Nil
 //│       rhs = Tup of Nil
 //│     rhs = Tup of Nil
@@ -173,11 +195,13 @@ R.bar
 //│   res = App{typ=module:M}:
 //│     lhs = App:
 //│       lhs = App:
-//│         lhs = Sel{sym=member:bar}:
-//│           prefix = Resolved{sym=module:R,typ=module:R}:
-//│             t = Ref{sym=member:R} of member:R
-//│             sym = module:R
-//│           nme = Ident of "bar"
+//│         lhs = Resolved{sym=term:module:R.bar}:
+//│           t = Sel{sym=member:bar}:
+//│             prefix = Resolved{sym=module:R,typ=module:R}:
+//│               t = Ref{sym=member:R} of member:R
+//│               sym = module:R
+//│             nme = Ident of "bar"
+//│           sym = term:module:R.bar
 //│         rhs = Tup of Ls of 
 //│           Fld:
 //│             flags = ()
@@ -242,12 +266,14 @@ R.bar[Int]
 //│   res = App{typ=module:M}:
 //│     lhs = App:
 //│       lhs = App:
-//│         lhs = TyApp{sym=member:bar}:
-//│           lhs = Sel{sym=member:bar}:
-//│             prefix = Resolved{sym=module:R,typ=module:R}:
-//│               t = Ref{sym=member:R} of member:R
-//│               sym = module:R
-//│             nme = Ident of "bar"
+//│         lhs = TyApp{sym=term:module:R.bar}:
+//│           lhs = Resolved{sym=term:module:R.bar}:
+//│             t = Sel{sym=member:bar}:
+//│               prefix = Resolved{sym=module:R,typ=module:R}:
+//│                 t = Ref{sym=member:R} of member:R
+//│                 sym = module:R
+//│               nme = Ident of "bar"
+//│             sym = term:module:R.bar
 //│           targs = Ls of 
 //│             Resolved{sym=class:Int}:
 //│               t = Ref{sym=member:Int} of member:Int

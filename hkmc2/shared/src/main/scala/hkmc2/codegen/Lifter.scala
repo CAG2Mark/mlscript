@@ -229,7 +229,7 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
     
     def read = this match
       case Sym(l) => l.asPath
-      case PubField(isym, sym) => Select(isym.asPath, Tree.Ident(sym.nme))(S(sym))
+      case PubField(isym, sym) => Select(isym.asPath, Tree.Ident(sym.nme))(S(sym), N)
       
     def asArg = read.asArg
     
@@ -714,13 +714,13 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
                 msg"Uses of private fields cannot yet be lifted." -> N :: Nil,
                 N, Diagnostic.Source.Compilation
               ))
-            Select(value.read, t.id)(N)
+            Select(value.read, t.id)(N, N)
           case _ => super.applyPath(p)
       
       // Rewrites this.className.class to reference the top-level definition
       case s @ Select(RefOfBms(l, disamb), Tree.Ident("class")) if !ctx.ignored(l) && ctx.isRelevant(l) =>
         // this class will be lifted, rewrite the ref to strip it of `Select`
-        Select(Value.Ref(l, disamb), Tree.Ident("class"))(s.symbol)
+        Select(Value.Ref(l, disamb), Tree.Ident("class"))(s.symbol, N)
         // TODO:            ^
         // TODO: Ref Refactorization
 
@@ -729,7 +729,7 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
       // from the objects BlockMemberSymbol to that new symbol.
       case s @ Select(qual, ident) => 
         s.symbol.flatMap(ctx.getLocalPath) match
-        case Some(LocalPath.Sym(value: MemberSymbol[?])) => Select(qual, Tree.Ident(value.nme))(S(value))
+        case Some(LocalPath.Sym(value: MemberSymbol[?])) => Select(qual, Tree.Ident(value.nme))(S(value), N)
         case _ => super.applyPath(p) 
 
       // This is to rewrite references to classes that are not lifted (when their BlockMemberSymbol
@@ -742,7 +742,7 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
       // from the capture; otherwise, we see if that local is passed directly as a parameter to this defn.
       case Value.Ref(l, _) => ctx.getLocalCaptureSym(l) match
         case Some(captureSym) => 
-          Select(ctx.getLocalClosPath(l).get.read, captureSym.id)(N)
+          Select(ctx.getLocalClosPath(l).get.read, captureSym.id)(N, N)
         case None => ctx.getLocalPath(l) match
           case Some(value) => value.read
           case None => super.applyPath(p)
@@ -942,7 +942,7 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
             
             var curSym = TempSymbol(None, "tmp")
             def instInner(isMut: Bool) = if c.paramsOpt.isDefined
-              then Instantiate(mut = isMut, Select(c.sym.asPath, Tree.Ident("class"))(N), paramArgs)
+              then Instantiate(mut = isMut, Select(c.sym.asPath, Tree.Ident("class"))(N, N), paramArgs)
               else Instantiate(mut = isMut, c.sym.asPath, paramArgs)
             
             val initSym = curSym
@@ -1105,7 +1105,7 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
     def rewriteExtends(p: Path): Path = p match
       case RefOfBms(b, _) if !ctx.ignored(b) && ctx.isRelevant(b) => b.asPath
       case Select(RefOfBms(b, _), Tree.Ident("class")) if !ctx.ignored(b) && ctx.isRelevant(b) => 
-        Select(b.asPath, Tree.Ident("class"))(N)
+        Select(b.asPath, Tree.Ident("class"))(N, N)
       case _ => return p
       
     // if this class extends something, rewrite
@@ -1196,7 +1196,8 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
       .withCompanionMap(analyzer.companionMap)
 
     val walker1 = new BlockTransformerShallow(SymbolSubst()):
-      override def applyBlock(b: Block): Block = b match
+      override def applyBlock(b: Block): Block =
+        b match
         case Define(d, rest) =>
           val (unliftable, modules, objects) = createMetadata(d, ctx)
 
