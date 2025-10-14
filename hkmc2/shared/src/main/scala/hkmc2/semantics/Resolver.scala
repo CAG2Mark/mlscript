@@ -14,6 +14,8 @@ import typing.Type
 
 import Message.MessageContext
 import scala.annotation.tailrec
+import hkmc2.semantics.ucs.FlatPattern
+import hkmc2.syntax.Keyword.__
 
 object Resolver:
   

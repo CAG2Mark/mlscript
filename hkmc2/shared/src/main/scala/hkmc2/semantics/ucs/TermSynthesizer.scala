@@ -38,19 +38,23 @@ trait TermSynthesizer(using Ctx, State):
 
   /** Make a term that looks like `runtime.MatchResult` with its symbol. */
   protected lazy val matchResultClass =
-    sel(runtimeRef, "MatchResult", State.matchResultClsSymbol)
+    Term.Resolved
+      (sel(runtimeRef, "MatchResult", State.matchResultClsSymbol), State.matchResultClsSymbol)
+      (N)
 
   /** Make a pattern that looks like `runtime.MatchResult.class`. */
   protected def matchResultPattern(parameters: Opt[Ls[BlockLocalSymbol]]): FlatPattern.ClassLike =
-    FlatPattern.ClassLike(sel(matchResultClass, "class", State.matchResultClsSymbol), parameters)
+    FlatPattern.ClassLike(matchResultClass, parameters)
 
   /** Make a term that looks like `runtime.MatchFailure` with its symbol. */
   protected lazy val matchFailureClass =
-    sel(runtimeRef, "MatchFailure", State.matchFailureClsSymbol)
+    Term.Resolved
+      (sel(runtimeRef, "MatchFailure", State.matchFailureClsSymbol), State.matchFailureClsSymbol)
+      (N)
 
   /** Make a pattern that looks like `runtime.MatchFailure.class`. */
   protected def matchFailurePattern(parameters: Opt[Ls[BlockLocalSymbol]]): FlatPattern.ClassLike =
-    FlatPattern.ClassLike(sel(matchFailureClass, "class", State.matchFailureClsSymbol), parameters)
+    FlatPattern.ClassLike(matchFailureClass, parameters)
 
   protected lazy val tupleSlice = sel(sel(runtimeRef, "Tuple"), "slice")
   protected lazy val tupleLazySlice = sel(sel(runtimeRef, "Tuple"), "lazySlice")

@@ -116,6 +116,10 @@ abstract class Symbol(using State) extends Located:
     asAls orElse
     asPat orElse
     asMod
+  
+  def asDefnSym_TODO: Opt[DefinitionSymbol[?]] = this match
+    case defn: DefinitionSymbol[?] => S(defn)
+    case _ => N
 
   override def equals(x: Any): Bool = x match
     case that: Symbol => uid === that.uid
@@ -323,6 +327,10 @@ sealed trait DefinitionSymbol[Defn <: Definition] extends Symbol:
   def subst(using sub: SymbolSubst): DefinitionSymbol[Defn]
   
   def asMemSym: MemberSymbol[Defn] = this
+  
+  def hasLiftedClass: Bool =
+    this.asBlkMember.exists(_.hasLiftedClass) ||
+    this.asCls.flatMap(_.defn).exists(_.paramsOpt.isDefined)
 
 /** This is the symbol associated to specific definitions.
   * One overloaded `BlockMemberSymbol` may correspond to multiple `InnerSymbol`s

@@ -42,17 +42,17 @@ class Normalization(using tl: TL)(using Raise, Ctx, State) extends TermSynthesiz
   extension (lhs: FlatPattern.ClassLike)
     /** Generate a term that really resolves to the class at runtime. */
     def selectClass: FlatPattern.ClassLike =
-      val constructor = lhs.constructor.symbol match
-        case S(cls: ClassSymbol) => lhs.constructor
-        case S(mem: BlockMemberSymbol) =>
-          // If the class is declaration-only, we do not need to select the
-          // class.
-          if !mem.hasLiftedClass || mem.defn.exists(_.hasDeclareModifier.isDefined) then
-            lhs.constructor
-          else
-            Term.SynthSel(lhs.constructor, Tree.Ident("class"))(mem.clsTree.orElse(mem.modOrObjTree).map(_.symbol), N).resolve
-        case _ => lhs.constructor
-      lhs.copy(constructor)(lhs.tree, lhs.output)
+      // val constructor = lhs.constructor.symbol match
+      //   case S(cls: ClassSymbol) => lhs.constructor
+      //   case S(mem: BlockMemberSymbol) =>
+      //     // If the class is declaration-only, we do not need to select the
+      //     // class.
+      //     if !mem.hasLiftedClass || mem.defn.exists(_.hasDeclareModifier.isDefined) then
+      //       lhs.constructor
+      //     else
+      //       Term.SynthSel(lhs.constructor, Tree.Ident("class"))(mem.clsTree.orElse(mem.modOrObjTree).map(_.symbol), N).resolve
+      //   case _ => lhs.constructor
+      lhs.copy(lhs.constructor)(lhs.tree, lhs.output)
   
   extension (lhs: FlatPattern)
     /** Checks if two patterns are the same. */

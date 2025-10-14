@@ -250,6 +250,7 @@ enum Term extends Statement:
    * elaboration. 
    */
   lazy val symbol: Opt[Symbol] = this match
+    case res: Resolved => S(res.sym)
     case Ref(sym) => S(sym)
     case sel: Sel => sel.sym
     case sel: SynthSel => sel.sym

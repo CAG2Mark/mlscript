@@ -115,7 +115,7 @@ class WatBuilder(using TraceLogger, State) extends CodeBuilder:
       )
     case r => result(r)
 
-  def fieldSelect(thisSym: BlockMemberSymbol, sym: FieldSymbol)(using Ctx, Raise): FieldIdx =
+  def fieldSelect(thisSym: BlockMemberSymbol, sym: DefinitionSymbol[?])(using Ctx, Raise): FieldIdx =
     val structInfo = ctx.getTypeInfo_!(thisSym)
     val symToField = structInfo.compType match
       case ty: StructType => ty.fields
@@ -231,7 +231,7 @@ class WatBuilder(using TraceLogger, State) extends CodeBuilder:
 
     case sel @ Select(qual, id) =>
       val qualRes = result(qual)
-      val selSym = sel.symbol getOrElse:
+      val selSym = sel.symbol_SelectSymbol getOrElse:
         lastWords(s"Symbol for Select(...) expression must be resolved")
       val selTrmSym = selSym match
         case termSym: TermSymbol => termSym
@@ -260,7 +260,7 @@ class WatBuilder(using TraceLogger, State) extends CodeBuilder:
             ),
             extraInfo = S(s"Block IR of `cls` expression: ${cls.toString}")
           )
-      val ctorClsSym = ctorClsPath.symbol match
+      val ctorClsSym = ctorClsPath.symbol_SelectSymbol match
         case S(sym) => sym
         case N => return errExpr(
             Ls(

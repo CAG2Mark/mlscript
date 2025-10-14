@@ -68,10 +68,10 @@ class Lowering()(using Config, TL, Raise, State, Ctx):
   val lift: Bool = config.liftDefns.isDefined
 
   private lazy val unreachableFn =
-    Select(Value.Ref(State.runtimeSymbol), Tree.Ident("unreachable"))(N, N)
+    Select(Value.Ref(State.runtimeSymbol), Tree.Ident("unreachable"))(N)
   
   def unit: Path =
-    Select(Value.Ref(State.runtimeSymbol), Tree.Ident("Unit"))(S(State.unitSymbol), N)
+    Select(Value.Ref(State.runtimeSymbol), Tree.Ident("Unit"))(S(State.unitSymbol))
   
   
   def fail(err: ErrorReport): Block =
@@ -482,16 +482,20 @@ class Lowering()(using Config, TL, Raise, State, Ctx):
       // * are preserved in the call and not moved to a temporary variable.
       case sel @ Sel(prefix, nme) =>
         subTerm(prefix): p =>
-          conclude(Select(p, nme)(sel.sym, N).withLocOf(sel))
+          conclude(Select(p, nme)(sel.sym.flatMap(_.asDefnSym_TODO)).withLocOf(sel))
       case Resolved(sel @ Sel(prefix, nme), sym) =>
         subTerm(prefix): p =>
-          conclude(Select(p, nme)(sel.sym, S(sym)).withLocOf(sel))
+          // conclude(Select(p, nme)(sel.sym, S(sym)).withLocOf(sel))
+          // TODO @Harry: Check this logic.
+          conclude(Select(p, nme)(S(sym)).withLocOf(sel))
       case sel @ SelProj(prefix, _, nme) =>
         subTerm(prefix): p =>
-          conclude(Select(p, nme)(sel.sym, N).withLocOf(sel))
+          conclude(Select(p, nme)(sel.sym.flatMap(_.asDefnSym_TODO)).withLocOf(sel))
       case Resolved(sel @ SelProj(prefix, _, nme), sym) =>
         subTerm(prefix): p =>
-          conclude(Select(p, nme)(sel.sym, S(sym)).withLocOf(sel))
+          // conclude(Select(p, nme)(sel.sym, S(sym)).withLocOf(sel))
+          // TODO @Harry: Check this logic.
+          conclude(Select(p, nme)(S(sym)).withLocOf(sel))
       case _ => subTerm(f)(conclude)
     case h @ Handle(lhs, rhs, as, cls, defs, bod) =>
       if !lowerHandlers then
@@ -630,7 +634,7 @@ class Lowering()(using Config, TL, Raise, State, Ctx):
                       Case.Cls(ctorSym, st) -> go(tail, topLevel = false)
                     case (param, arg) :: args =>
                       val (cse, blk) = mkArgs(args)
-                      (cse, Assign(arg, Select(sr, new Tree.Ident(param.id.name).withLocOf(arg))(S(param), N), blk))
+                      (cse, Assign(arg, Select(sr, new Tree.Ident(param.id.name).withLocOf(arg))(S(param)), blk))
                   mkMatch(mkArgs(clsParams.iterator.zip(args).toList))
                 ctor.symbol.flatMap(_.asClsOrMod) match
                   case S(cls: ClassSymbol) if ctx.builtins.virtualClasses contains cls =>
@@ -657,7 +661,7 @@ class Lowering()(using Config, TL, Raise, State, Ctx):
                     case ((fieldName, fieldSymbol), blk) =>
                       mkMatch(
                         Case.Field(fieldName, safe = true), // we know we have an object, no need to check again
-                        Assign(fieldSymbol, Select(sr, fieldName)(N, N), blk)
+                        Assign(fieldSymbol, Select(sr, fieldName)(N), blk)
                       )
                 )
         case Split.Else(els) =>
@@ -669,7 +673,7 @@ class Lowering()(using Config, TL, Raise, State, Ctx):
                 else End()
               )
         case Split.End =>
-          Throw(Instantiate(mut = false, Select(Value.Ref(State.globalThisSymbol), Tree.Ident("Error"))(N, N),
+          Throw(Instantiate(mut = false, Select(Value.Ref(State.globalThisSymbol), Tree.Ident("Error"))(N),
             Value.Lit(syntax.Tree.StrLit("match error")).asArg :: Nil)) // TODO add failed-match scrutinee info
       
       val normalize = ucs.Normalization()
@@ -697,11 +701,13 @@ class Lowering()(using Config, TL, Raise, State, Ctx):
     case sel @ SynthSel(prefix, nme) =>
       // * Not using `setupSelection` as these selections are not meant to be sanity-checked
       subTerm(prefix): p =>
-        k(Select(p, nme)(sel.sym, N))
+        k(Select(p, nme)(sel.sym.flatMap(_.asDefnSym_TODO)))
     case Resolved(sel @ SynthSel(prefix, nme), sym) =>
       // * Not using `setupSelection` as these selections are not meant to be sanity-checked
       subTerm(prefix): p =>
-        k(Select(p, nme)(sel.sym, S(sym)))
+        // k(Select(p, nme)(sel.sym, S(sym)))
+        // TODO @Harry: Check this logic.
+        k(Select(p, nme)(S(sym)))
     
     case DynSel(prefix, fld, ai) =>
       subTerm(prefix): p =>
@@ -755,17 +761,17 @@ class Lowering()(using Config, TL, Raise, State, Ctx):
     case sp @ SelProj(prefix, _, proj) =>
       setupSelection(prefix, proj, sp.sym, N)(k)
     case Region(reg, body) =>
-      Assign(reg, Instantiate(mut = false, Select(Value.Ref(State.globalThisSymbol), Tree.Ident("Region"))(N, N), Nil),
+      Assign(reg, Instantiate(mut = false, Select(Value.Ref(State.globalThisSymbol), Tree.Ident("Region"))(N), Nil),
         term_nonTail(body)(k))
     case RegRef(reg, value) =>
       plainArgs(reg :: value :: Nil): args =>
-        k(Instantiate(mut = false, Select(Value.Ref(State.globalThisSymbol), Tree.Ident("Ref"))(N, N), args))
+        k(Instantiate(mut = false, Select(Value.Ref(State.globalThisSymbol), Tree.Ident("Ref"))(N), args))
     case Drop(ref) =>
       subTerm(ref): _ =>
         k(unit)
     case Deref(ref) =>
       subTerm(ref): r =>
-        k(Select(r, Tree.Ident("value"))(N, N))
+        k(Select(r, Tree.Ident("value"))(N))
     case SetRef(lhs, rhs) =>
       subTerm(lhs): ref =>
         subTerm_nonTail(rhs): value =>
@@ -1079,7 +1085,8 @@ class Lowering()(using Config, TL, Raise, State, Ctx):
   def setupSelection(prefix: Term, nme: Tree.Ident, sym: Opt[FieldSymbol], disamb: Opt[DefinitionSymbol[?]])(k: Result => Block)(using Subst): Block =
     subTerm(prefix): p =>
       val selRes = TempSymbol(N, "selRes") // TODO @LP: why is it here?
-      k(Select(p, nme)(sym, disamb))
+      // k(Select(p, nme)(sym, disamb))
+      k(Select(p, nme)(disamb.orElse(sym.flatMap(_.asDefnSym_TODO))))
   
   final def setupFunctionOrByNameDef(paramLists: List[ParamList], bodyTerm: Term, name: Option[Str])
       (using Subst): (List[ParamList], Block) =
@@ -1111,15 +1118,15 @@ trait LoweringSelSanityChecks(using Config, TL, Raise, State)
       // * We are careful to access `x.f` before `x.f$__checkNotMethod` in case `x` is, eg, `undefined` and
       // * the access should throw an error like `TypeError: Cannot read property 'f' of undefined`.
       val b0 = blockBuilder
-        .assign(selRes, Select(p, nme)(sym, disamb))
+        .assign(selRes, Select(p, nme)(disamb.orElse(sym.flatMap(_.asDefnSym_TODO))))
       (if sym.isDefined then
         // * If the symbol is known, the elaborator will have already checked the access [invariant:1]
         b0
       else b0
-        .assign(TempSymbol(N, "discarded"), Select(p, Tree.Ident(nme.name+"$__checkNotMethod"))(N, N)))
+        .assign(TempSymbol(N, "discarded"), Select(p, Tree.Ident(nme.name+"$__checkNotMethod"))(N)))
         .ifthen(selRes.asPath,
           Case.Lit(syntax.Tree.UnitLit(false)),
-          Throw(Instantiate(mut = false, Select(Value.Ref(State.globalThisSymbol), Tree.Ident("Error"))(N, N),
+          Throw(Instantiate(mut = false, Select(Value.Ref(State.globalThisSymbol), Tree.Ident("Error"))(N),
             Value.Lit(syntax.Tree.StrLit(s"Access to required field '${nme.name}' yielded 'undefined'")).asArg :: Nil))
         )
         .rest(k(selRes.asPath))
@@ -1131,7 +1138,7 @@ trait LoweringTraceLog(instrument: Bool)(using TL, Raise, State)
   
   private def selFromGlobalThis(path: Str*): Path =
       path.foldLeft[Path](Value.Ref(State.globalThisSymbol)):
-        (qual, name) => Select(qual, Tree.Ident(name))(N, N)
+        (qual, name) => Select(qual, Tree.Ident(name))(N)
     
   private def assignStmts(stmts: (Local, Result)*)(rest: Block) =
     stmts.foldRight(rest):

@@ -103,7 +103,7 @@ object Lifter:
   object RefOfBms:
     def unapply(p: Path) = p match
       case Value.Ref(l: BlockMemberSymbol, disamb) => S((l, disamb))
-      case s @ Select(_, _) => s.symbol match
+      case s @ Select(_, _) => s.symbol_SelectSymbol match
         case Some(value: BlockMemberSymbol) => S(value, N)
         case _ => N
       case _ => N
@@ -234,7 +234,8 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
     
     def read = this match
       case Sym(l) => l.asPath
-      case PubField(isym, sym) => Select(isym.asPath, Tree.Ident(sym.nme))(S(sym), N)
+      case PubField(isym, sym) => Select(isym.asPath, Tree.Ident(sym.nme))(isym.asDefnSym_TODO)
+      // TODO: isym.asInstanceOf
       
     def asArg = read.asArg
     
@@ -798,13 +799,13 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
                 msg"Uses of private fields cannot yet be lifted." -> N :: Nil,
                 N, Diagnostic.Source.Compilation
               ))
-            k(Select(value.read, t.id)(N, N))
+            k(Select(value.read, t.id)(N))
           case _ => super.applyPath(p)(k)
       
       // Rewrites this.className.class to reference the top-level definition
       case s @ Select(RefOfBms(l, disamb), Tree.Ident("class")) if !ctx.ignored(l) && ctx.isRelevant(l) =>
         // this class will be lifted, rewrite the ref to strip it of `Select`
-        k(Select(Value.Ref(l, disamb), Tree.Ident("class"))(s.symbol, N))
+        k(Select(Value.Ref(l, disamb), Tree.Ident("class"))(s.symbol_SelectSymbol))
         // TODO:            ^
         // TODO: Ref Refactorization
 
@@ -812,9 +813,9 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
       // replaced by a symbol, to which the object instance is assigned. This rewrites references
       // from the objects BlockMemberSymbol to that new symbol.
       case s @ Select(qual, ident) => 
-        s.symbol.flatMap(ctx.getLocalPath) match
-        case Some(LocalPath.Sym(value: MemberSymbol[?])) =>
-          k(Select(qual, Tree.Ident(value.nme))(S(value), N))
+        s.symbol_SelectSymbol.flatMap(ctx.getLocalPath) match
+        case Some(LocalPath.Sym(value: DefinitionSymbol[?])) =>
+          k(Select(qual, Tree.Ident(value.nme))(S(value)))
         case _ => super.applyPath(p)(k)
 
       // This is to rewrite references to classes that are not lifted (when their BlockMemberSymbol
@@ -827,7 +828,7 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
       // from the capture; otherwise, we see if that local is passed directly as a parameter to this defn.
       case Value.Ref(l, _) => ctx.getLocalCaptureSym(l) match
         case Some(captureSym) => 
-          k(Select(ctx.getLocalClosPath(l).get.read, captureSym.id)(N, N))
+          k(Select(ctx.getLocalClosPath(l).get.read, captureSym.id)(N))
         case None => ctx.getLocalPath(l) match
           case Some(value) => k(value.read)
           case None => super.applyPath(p)(k)
@@ -1027,8 +1028,9 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
             val isMutSym = VarSymbol(Tree.Ident("isMut"))
             
             var curSym = TempSymbol(None, "tmp")
+            // TODO: This special case Select(..., "class") is redundant after this PR.
             def instInner(isMut: Bool) = if c.paramsOpt.isDefined
-              then Instantiate(mut = isMut, Select(c.sym.asPath, Tree.Ident("class"))(N, N), paramArgs)
+              then Instantiate(mut = isMut, Select(c.sym.asPath, Tree.Ident("class"))(N), paramArgs)
               else Instantiate(mut = isMut, c.sym.asPath, paramArgs)
             
             val initSym = curSym
@@ -1188,10 +1190,11 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
       case c: ClsLikeDefn => c.copy(owner = N)
       case d => d
 
+    // TODO: The special case Select(..., "class") is redundant after the PR.
     def rewriteExtends(p: Path): Path = p match
       case RefOfBms(b, _) if !ctx.ignored(b) && ctx.isRelevant(b) => b.asPath
       case Select(RefOfBms(b, _), Tree.Ident("class")) if !ctx.ignored(b) && ctx.isRelevant(b) => 
-        Select(b.asPath, Tree.Ident("class"))(N, N)
+        Select(b.asPath, Tree.Ident("class"))(N)
       case _ => return p
       
     // if this class extends something, rewrite

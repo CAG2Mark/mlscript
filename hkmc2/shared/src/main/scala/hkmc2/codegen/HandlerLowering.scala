@@ -591,7 +591,9 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         f.owner match
         case None => S(Call(f.sym.asPath, params)(true, true))
         case Some(owner) => 
-          S(Call(Select(owner.asPath, Tree.Ident(f.sym.nme))(S(f.sym), N), params)(true, true))
+          S(Call(Select(owner.asPath, Tree.Ident(f.sym.nme))(S(f.innerSym.asInstanceOf)), params)(true, true))
+          // TODO:                                               ^^^^^^^^
+          // TODO: @Harry check again on asInstanceOf
       case _ => None // TODO: more than one plist
     
     FunDefn(f.owner, f.sym, f.params, translateBlock(f.body,
@@ -719,8 +721,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     
     // Create the DoUnwind function
     doUnwindMap += R(clsSym) -> Select(clsSym.asPath, Tree.Ident("doUnwind"))(
-      N /* this refers to the method defined in Runtime.FunctionContFrame */,
-      N
+      N /* this refers to the method defined in Runtime.FunctionContFrame */
     )
     val newPcSym = VarSymbol(Tree.Ident("newPc"))
     val resSym = VarSymbol(Tree.Ident("res"))
@@ -792,8 +793,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
           override def applyBlock(b: Block): Block = b match
             case ReturnCont(res, uid) => Return(Call(
                 Select(clsSym.asPath, Tree.Ident("doUnwind"))(
-                  N /* this refers to the method defined in Runtime.FunctionContFrame */,
-                  N
+                  N /* this refers to the method defined in Runtime.FunctionContFrame */
                 ),
                 res.asPath.asArg :: Value.Lit(Tree.IntLit(uid)).asArg :: Nil)(true, false),
                 false

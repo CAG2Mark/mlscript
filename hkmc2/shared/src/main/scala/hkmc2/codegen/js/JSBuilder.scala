@@ -154,10 +154,10 @@ class JSBuilder(using TL, State, Ctx) extends CodeBuilder:
       val (params, bodyDoc) = setupFunction(none, ps, bod)
       doc"($params) => ${ braced(bodyDoc) }"
     case s @ Select(qual, id) => 
-      val dotClass = s.symbol match
-        case S(bms: BlockMemberSymbol) if {
-          bms.hasLiftedClass && 
-          s.disamb.flatMap(d => d.asMod orElse d.asCls).exists(_ isnt ctx.builtins.Array)
+      val dotClass = s.symbol_SelectSymbol match
+        case S(ds) if {
+          (ds.hasLiftedClass) && 
+          (ds.asMod orElse ds.asCls).exists(_ isnt ctx.builtins.Array)
         } => doc".class"
         case _ => doc""
       val name = id.name
