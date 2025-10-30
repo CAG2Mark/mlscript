@@ -406,6 +406,7 @@ sealed trait Statement extends AutoLocated, ProductWithExtraInfo:
       case Annotated(annotation, target) => "annotation"
       case Ret(res) => "return"
       case Try(body, finallyDo) => "try expression"
+      case Resolved(t, sym) => t.describe
       case s => TODO(s)
     this match
       case self: Resolvable => self.resolvedTyp match

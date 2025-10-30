@@ -132,6 +132,7 @@ object Resolver:
     case NonModule(reason: Opt[Message])
     case Class(reason: Opt[Message])
     case Selectable(reason: Opt[Message])
+    case PatternConstructor(reason: Opt[Message])
     case Any
     
     def message: Ls[Message -> Opt[Loc]] = this match
@@ -296,7 +297,13 @@ class Resolver(tl: TraceLogger)
         def split(s: Split): Unit = s match
           case Split.Cons(head, tail) =>
             traverse(head.scrutinee, expect = NonModule(N))
-            head.pattern.subTerms.foreach(traverse(_, expect = NonModule(N)))
+            head.pattern match
+              case FlatPattern.ClassLike(constructor = t) =>
+                head.pattern.subTerms.foreach:
+                  case `t` => traverse(t, expect = PatternConstructor(N))
+                  case other => traverse(other, expect = NonModule(N))
+              case _ =>
+                head.pattern.subTerms.foreach(traverse(_, expect = NonModule(N)))
             split(head.continuation)
             split(tail)
           case Split.Let(sym, term, tail) =>
@@ -417,6 +424,35 @@ class Resolver(tl: TraceLogger)
 
       traverseBlock(cld.body.blk)(using withCtxParams)
     
+    def traversePattern(p: Pattern): Unit = p match
+      case _: (Pattern.Wildcard | Pattern.Literal | Pattern.Range) => ()
+      case Pattern.Constructor(target, patternArguments, arguments) =>
+        traverse(target, expect = PatternConstructor(N))
+        patternArguments.foreach(traversePattern(_))
+        arguments.foreach(_.foreach(traversePattern(_)))
+      case Pattern.Composition(_, left, right) =>
+        traversePattern(left)
+        traversePattern(right)
+      case Pattern.Negation(pattern) =>
+        traversePattern(pattern)
+      case Pattern.Concatenation(left, right) =>
+        traversePattern(left)
+        traversePattern(right)
+      case Pattern.Tuple(leading, spread, trailing) =>
+        leading.foreach(traversePattern(_))
+        spread.foreach(traversePattern(_))
+        trailing.foreach(traversePattern(_))
+      case Pattern.Record(fields) =>
+        fields.map((id, p) => traversePattern(p))
+      case Pattern.Chain(first, second) =>
+        traversePattern(first)
+        traversePattern(second)
+      case Pattern.Alias(pattern, _) =>
+        traversePattern(pattern)
+      case Pattern.Transform(pattern, transform) =>
+        traversePattern(pattern)
+        traverse(transform, expect = NonModule(N))
+    
     defn match
     
     // Case: instance definition. Add the instance to the context.
@@ -442,10 +478,10 @@ class Resolver(tl: TraceLogger)
     case defn: ClassLikeDef =>
       log(s"Resolving ${defn.kind.desc} definition $defn")
       
-      // For pattern definitions, we need to traverse through the pattern body.
       defn match
         case defn: PatternDef =>
-          defn.pattern.subTerms.foreach(traverse(_, expect = NonModule(N)))
+          // For pattern definitions, we need to traverse through the pattern body.
+          traversePattern(defn.pattern)
         case _: ClassLikeDef => ()
       
       traverseClassLikeDef(defn)
@@ -748,6 +784,14 @@ class Resolver(tl: TraceLogger)
         bms.asTpe
       case _: (Any.type | NonModule) =>
         bms.asPrincipal
+      case _: PatternConstructor =>
+        bms.asCls orElse
+        bms.asObj orElse
+        bms.asAls orElse
+        bms.asPat orElse
+        bms.asMod orElse
+        bms.asTrm
+        
         
   
   /**
@@ -809,7 +853,7 @@ class Resolver(tl: TraceLogger)
               case S(ds) =>
                 t.expand(S(Term.Resolved(t.withSym(bms), ds)(N)))
               case N =>
-                log(s"! Unable to disambiguate ${bms}")
+                log(s"Unable to disambiguate ${bms}")
                 t.expand(S(t.withSym(bms)))
             log(s"Resolved symbol for ${t}: ${bms}")
           case N => 

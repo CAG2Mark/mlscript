@@ -14,13 +14,64 @@ class Test with
         k(x * 2)
     h.perform("A", x) + h.perform("B", x + 1)
 let t = new Test
-//│ t = Test
+//│ FAILURE: Unexpected exception
+//│ /!!!\ Uncaught error: java.lang.ClassCastException: Cannot cast to scala.Nothing
+//│ 	at: hkmc2.codegen.HandlerLowering.hkmc2$codegen$HandlerLowering$$translateFun(HandlerLowering.scala:594)
+//│ 	at: hkmc2.codegen.HandlerLowering.$anonfun$12(HandlerLowering.scala:626)
+//│ 	at: scala.collection.immutable.List.map(List.scala:247)
+//│ 	at: hkmc2.codegen.HandlerLowering.hkmc2$codegen$HandlerLowering$$translateCls(HandlerLowering.scala:626)
+//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyDefn(HandlerLowering.scala:534)
+//│ 	at: hkmc2.codegen.BlockTransformer.applyBlock(BlockTransformer.scala:75)
+//│ 	at: hkmc2.codegen.BlockTransformerShallow.applyBlock(BlockTransformer.scala:288)
+//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyBlock(HandlerLowering.scala:509)
+//│ 	at: hkmc2.codegen.HandlerLowering.firstPass(HandlerLowering.scala:536)
+//│ 	at: hkmc2.codegen.HandlerLowering.hkmc2$codegen$HandlerLowering$$translateBlock(HandlerLowering.scala:477)
 
 [t.p(2), t.p(3)]
-//│ > A
-//│ > B
-//│ > A
-//│ > B
-//│ = [10, 14]
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:112)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = t
+//│     _2 = class hkmc2.semantics.VarSymbol
+//│   _2 = Scope:
+//│     parent = N
+//│     curThis = S of S of globalThis:globalThis
+//│     bindings = HashMap(member:Predef -> Predef, $runtime -> runtime, $definitionMetadata -> definitionMetadata, member:Effect -> Effect1, $prettyPrint -> prettyPrint, class:Effect -> Effect, $Term -> Term, $block$res -> block$res1, $block$res -> block$res2, $tmp -> tmp, $tmp -> tmp1, $block$res -> block$res)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 't'
+//│ ║  l.30: 	[t.p(2), t.p(3)]
+//│ ║        	 ^
+//│ ╟── which references the symbol introduced here
+//│ ║  l.16: 	let t = new Test
+//│ ╙──      	    ^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:112)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = t
+//│     _2 = class hkmc2.semantics.VarSymbol
+//│   _2 = Scope:
+//│     parent = N
+//│     curThis = S of S of globalThis:globalThis
+//│     bindings = HashMap(member:Predef -> Predef, $runtime -> runtime, $definitionMetadata -> definitionMetadata, member:Effect -> Effect1, $prettyPrint -> prettyPrint, class:Effect -> Effect, $Term -> Term, $block$res -> block$res1, $block$res -> block$res2, $tmp -> tmp, $tmp -> tmp1, $block$res -> block$res)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 't'
+//│ ║  l.30: 	[t.p(2), t.p(3)]
+//│ ║        	         ^
+//│ ╟── which references the symbol introduced here
+//│ ║  l.16: 	let t = new Test
+//│ ╙──      	    ^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:154)
+//│ ═══[RUNTIME ERROR] ReferenceError: t is not defined
+//│     at REPL13:1:44
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at REPLServer.defaultEval (node:repl:593:22)
+//│     at bound (node:domain:433:15)
+//│     at REPLServer.runBound [as eval] (node:domain:444:12)
+//│     at REPLServer.onLine (node:repl:922:10)
+//│     at REPLServer.emit (node:events:518:28)
+//│     at REPLServer.emit (node:domain:489:12)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:419:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:613:22)
 
 

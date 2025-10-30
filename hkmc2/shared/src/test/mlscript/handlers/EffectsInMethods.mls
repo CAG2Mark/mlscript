@@ -10,17 +10,111 @@ class Test with
   fun p(h, x) =
     h.perform("A", x) + h.perform("B", x + 1)
 let t = new Test
-//│ t = Test
+//│ FAILURE: Unexpected exception
+//│ /!!!\ Uncaught error: java.lang.ClassCastException: Cannot cast to scala.Nothing
+//│ 	at: hkmc2.codegen.HandlerLowering.hkmc2$codegen$HandlerLowering$$translateFun(HandlerLowering.scala:594)
+//│ 	at: hkmc2.codegen.HandlerLowering.$anonfun$12(HandlerLowering.scala:626)
+//│ 	at: scala.collection.immutable.List.map(List.scala:247)
+//│ 	at: hkmc2.codegen.HandlerLowering.hkmc2$codegen$HandlerLowering$$translateCls(HandlerLowering.scala:626)
+//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyDefn(HandlerLowering.scala:534)
+//│ 	at: hkmc2.codegen.BlockTransformer.applyBlock(BlockTransformer.scala:75)
+//│ 	at: hkmc2.codegen.BlockTransformerShallow.applyBlock(BlockTransformer.scala:288)
+//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyBlock(HandlerLowering.scala:509)
+//│ 	at: hkmc2.codegen.HandlerLowering.firstPass(HandlerLowering.scala:536)
+//│ 	at: hkmc2.codegen.HandlerLowering.hkmc2$codegen$HandlerLowering$$translateBlock(HandlerLowering.scala:477)
 
 handle h = Effect with
   fun perform(arg, x)(k) =
     print(arg)
     k(x * 2)
 [t.p(h, 2), t.p(h, 3)]
-//│ > A
-//│ > B
-//│ > A
-//│ > B
-//│ = [10, 14]
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:112)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = t
+//│     _2 = class hkmc2.semantics.VarSymbol
+//│   _2 = Scope:
+//│     parent = S of Scope:
+//│       parent = S of Scope:
+//│         parent = S of Scope:
+//│           parent = S of Scope:
+//│             parent = S of Scope:
+//│               parent = N
+//│               curThis = S of S of globalThis:globalThis
+//│               bindings = HashMap(class:Cont$handler$h$perform$ -> Cont$handler$h$perform$, member:Predef -> Predef, class:Cont$handleBlock$h$ -> Cont$handleBlock$h$, $runtime -> runtime, $definitionMetadata -> definitionMetadata, member:Effect -> Effect1, $prettyPrint -> prettyPrint, class:Effect -> Effect, $Term -> Term, $block$res -> block$res1, $block$res -> block$res2, $tmp -> tmp, member:handleBlock$ -> handleBlock$, $block$res -> block$res, class:Handler$h$ -> Handler$h$)
+//│             curThis = S of N
+//│             bindings = HashMap($args -> args)
+//│           curThis = N
+//│           bindings = HashMap($tmp -> tmp1, member:Cont$handleBlock$h$ -> Cont$handleBlock$h$1, $tmp -> tmp2, member:doUnwind -> doUnwind, member:Handler$h$ -> Handler$h$1, h -> h)
+//│         curThis = S of S of class:Cont$handleBlock$h$
+//│         bindings = HashMap(pc -> pc)
+//│       curThis = N
+//│       bindings = HashMap($args -> args1, value$ -> value$)
+//│     curThis = N
+//│     bindings = HashMap($contLoop -> contLoop)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 't'
+//│ ║  l.30: 	[t.p(h, 2), t.p(h, 3)]
+//│ ║        	            ^
+//│ ╟── which references the symbol introduced here
+//│ ║  l.12: 	let t = new Test
+//│ ╙──      	    ^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:112)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = t
+//│     _2 = class hkmc2.semantics.VarSymbol
+//│   _2 = Scope:
+//│     parent = S of Scope:
+//│       parent = S of Scope:
+//│         parent = N
+//│         curThis = S of S of globalThis:globalThis
+//│         bindings = HashMap(class:Cont$handler$h$perform$ -> Cont$handler$h$perform$, member:Predef -> Predef, class:Cont$handleBlock$h$ -> Cont$handleBlock$h$, $runtime -> runtime, $definitionMetadata -> definitionMetadata, member:Effect -> Effect1, $prettyPrint -> prettyPrint, class:Effect -> Effect, $Term -> Term, $block$res -> block$res1, $block$res -> block$res2, $tmp -> tmp, member:handleBlock$ -> handleBlock$, $block$res -> block$res, class:Handler$h$ -> Handler$h$)
+//│       curThis = S of N
+//│       bindings = HashMap($args -> args)
+//│     curThis = N
+//│     bindings = HashMap($tmp -> tmp1, member:Cont$handleBlock$h$ -> Cont$handleBlock$h$1, $tmp -> tmp2, member:doUnwind -> doUnwind, member:Handler$h$ -> Handler$h$1, h -> h)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 't'
+//│ ║  l.30: 	[t.p(h, 2), t.p(h, 3)]
+//│ ║        	 ^
+//│ ╟── which references the symbol introduced here
+//│ ║  l.12: 	let t = new Test
+//│ ╙──      	    ^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:112)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = t
+//│     _2 = class hkmc2.semantics.VarSymbol
+//│   _2 = Scope:
+//│     parent = S of Scope:
+//│       parent = S of Scope:
+//│         parent = N
+//│         curThis = S of S of globalThis:globalThis
+//│         bindings = HashMap(class:Cont$handler$h$perform$ -> Cont$handler$h$perform$, member:Predef -> Predef, class:Cont$handleBlock$h$ -> Cont$handleBlock$h$, $runtime -> runtime, $definitionMetadata -> definitionMetadata, member:Effect -> Effect1, $prettyPrint -> prettyPrint, class:Effect -> Effect, $Term -> Term, $block$res -> block$res1, $block$res -> block$res2, $tmp -> tmp, member:handleBlock$ -> handleBlock$, $block$res -> block$res, class:Handler$h$ -> Handler$h$)
+//│       curThis = S of N
+//│       bindings = HashMap($args -> args)
+//│     curThis = N
+//│     bindings = HashMap($tmp -> tmp1, member:Cont$handleBlock$h$ -> Cont$handleBlock$h$1, $tmp -> tmp2, member:doUnwind -> doUnwind, member:Handler$h$ -> Handler$h$1, h -> h)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 't'
+//│ ║  l.30: 	[t.p(h, 2), t.p(h, 3)]
+//│ ║        	            ^
+//│ ╟── which references the symbol introduced here
+//│ ║  l.12: 	let t = new Test
+//│ ╙──      	    ^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:154)
+//│ ═══[RUNTIME ERROR] ReferenceError: t is not defined
+//│     at handleBlock$ (REPL13:1:4084)
+//│     at REPL13:1:4411
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at REPLServer.defaultEval (node:repl:593:22)
+//│     at bound (node:domain:433:15)
+//│     at REPLServer.runBound [as eval] (node:domain:444:12)
+//│     at REPLServer.onLine (node:repl:922:10)
+//│     at REPLServer.emit (node:events:518:28)
+//│     at REPLServer.emit (node:domain:489:12)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:419:12)
 
 

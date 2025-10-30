@@ -24,26 +24,8 @@ fun main() =
   let d = Derived()
   d.Base#get() * d.Derived#get()
 main()
-//│ LLIR:
-//│   class Base() {
-//│     def get() =
-//│       1
-//│   }
-//│   class Derived() extends Base {
-//│     def get1() =
-//│       2
-//│   }
-//│   def main() =
-//│     let x = Derived() in
-//│     let x1 = Base.get(x) in
-//│     let x2 = Derived.get(x) in
-//│     let x3 = *(x1,x2) in
-//│     x3
-//│   def entry() =
-//│     let* (x4) = main() in
-//│     x4
-//│   entry = entry
-//│ 
-//│ Interpreted:
-//│ 4
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: bErrStop (Builder.scala:22)
+//│ ═══[COMPILATION ERROR] Unsupported kind of Call Call(Select(Ref(d,None),Ident(get)),List())
+//│ Stopped due to an error during the Llir generation
 

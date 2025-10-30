@@ -408,14 +408,14 @@ object Compiler:
     def findSymbol(elem: Ctx.Elem): Opt[Term] =
       elem.symbol.flatMap(_.asClsLike).collectFirst:
         // Check the element's symbol.
-        case `symbol` => S(elem.ref(new Ident(symbol.nme)).withLoc(loc))
+        case `symbol` => S(Term.Resolved(elem.ref(new Ident(symbol.nme)).withLoc(loc), symbol)(N))
         // Look up the symbol in module members.
         case module: ModuleOrObjectSymbol =>
           val moduleRef = module.defn.get.bsym.ref()
           module.tree.definedSymbols.iterator.map(_.mapSecond(_.asClsLike)).collectFirst:
             case (key, S(`symbol`)) =>
               val memberSymbol = symbol.defn.get.bsym
-              SynthSel(moduleRef, Ident(key))(S(memberSymbol), N)
+              Term.Resolved(SynthSel(moduleRef, Ident(key))(S(memberSymbol), N), symbol)(N)
       .flatten
     @tailrec def go(ctx: Ctx): Opt[Term] =
       ctx.env.values.iterator.map(findSymbol).firstSome match
@@ -423,12 +423,7 @@ object Compiler:
         case N => ctx.parent match
           case N => N
           case S(parent) => go(parent)
-    go(ctx).map: term =>
-      // If the `symbol` is a virtual class, then do not select `class`.
-      symbol match
-        case s: ClassSymbol if !(ctx.builtins.virtualClasses contains s) =>
-          SynthSel(term, Ident("class"))(S(s), N).resolve
-        case _: (ClassSymbol | ModuleOrObjectSymbol | PatternSymbol) => term
+    go(ctx)
   
   import Pattern.*
   

@@ -19,7 +19,9 @@ fun f(x) =
     fun get() = x
   Test()
 f(1).get()
-//│ = 1
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processTerm (JSBackendDiffMaker.scala:203)
+//│ ═══[RUNTIME ERROR] Expected: '1', got: '()'
 
 :expect 1
 fun f(used1, unused1) =
@@ -32,7 +34,9 @@ fun f(used1, unused1) =
     fun get() = used1
   Test(unused1)
 f(1, 2).get()
-//│ = 1
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processTerm (JSBackendDiffMaker.scala:203)
+//│ ═══[RUNTIME ERROR] Expected: '1', got: '()'
 
 :expect 1
 fun f(used1, unused1) =
@@ -45,7 +49,9 @@ fun f(used1, unused1) =
     fun get() = used1
   new Test(unused1)
 f(1, 2).get()
-//│ = 1
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processTerm (JSBackendDiffMaker.scala:203)
+//│ ═══[RUNTIME ERROR] Expected: '1', got: '()'
 
 :expect 1
 fun f(used1, unused1) =
@@ -67,7 +73,22 @@ fun f(x) =
   A().f()
   x
 f(1)
-//│ = 2
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:154)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot set properties of undefined (setting 'x$capture$0')
+//│     at A.f (REPL25:1:949)
+//│     at f (REPL25:1:1572)
+//│     at REPL25:1:1641
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at REPLServer.defaultEval (node:repl:593:22)
+//│     at bound (node:domain:433:15)
+//│     at REPLServer.runBound [as eval] (node:domain:444:12)
+//│     at REPLServer.onLine (node:repl:922:10)
+//│     at REPLServer.emit (node:events:518:28)
+//│     at REPLServer.emit (node:domain:489:12)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processTerm (JSBackendDiffMaker.scala:203)
+//│ ═══[RUNTIME ERROR] Expected: '2', got: 'undefined'
 
 // only w should be in a capture
 :expect 10111
@@ -132,9 +153,9 @@ f().foo()
 //│   foo() {
 //│     let tmp6, tmp7;
 //│     this.z = 100;
-//│     tmp6 = this.x + this.y;
-//│     tmp7 = tmp6 + this.z;
-//│     return tmp7 + this.f$capture.w$capture$0
+//│     tmp6 = this.x.class + this.y.class;
+//│     tmp7 = tmp6 + this.z.class;
+//│     return tmp7 + this.f$capture.class.w$capture$0
 //│   }
 //│   toString() { return runtime.render(this); }
 //│   static [definitionMetadata] = ["class", "Good", []]; 
@@ -168,7 +189,7 @@ f().foo()
 //│   get f$capture() { return this.#f$capture; }
 //│   set f$capture(value) { this.#f$capture = value; }
 //│   foo() {
-//│     this.f$capture.w$capture$0 = 10000;
+//│     this.f$capture.class.w$capture$0 = 10000;
 //│     return runtime.Unit
 //│   }
 //│   toString() { return runtime.render(this); }
@@ -197,7 +218,22 @@ f().foo()
 //│ };
 //│ tmp5 = f5();
 //│ runtime.safeCall(tmp5.foo())
-//│ = 10111
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:154)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot set properties of undefined (setting 'w$capture$0')
+//│     at Bad.foo (REPL28:1:2553)
+//│     at f (REPL28:1:3237)
+//│     at REPL28:1:3332
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at REPLServer.defaultEval (node:repl:593:22)
+//│     at bound (node:domain:433:15)
+//│     at REPLServer.runBound [as eval] (node:domain:444:12)
+//│     at REPLServer.onLine (node:repl:922:10)
+//│     at REPLServer.emit (node:events:518:28)
+//│     at REPLServer.emit (node:domain:489:12)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processTerm (JSBackendDiffMaker.scala:203)
+//│ ═══[RUNTIME ERROR] Expected: '10111', got: 'undefined'
 
 :expect 2
 fun f(x) =
@@ -213,9 +249,24 @@ a.foo()
 let b = a.newA()
 b.foo()
 a.getX()
-//│ = 2
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:154)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'x$capture$0')
+//│     at A2.foo (REPL31:1:1268)
+//│     at REPL31:1:2105
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at REPLServer.defaultEval (node:repl:593:22)
+//│     at bound (node:domain:433:15)
+//│     at REPLServer.runBound [as eval] (node:domain:444:12)
+//│     at REPLServer.onLine (node:repl:922:10)
+//│     at REPLServer.emit (node:events:518:28)
+//│     at REPLServer.emit (node:domain:489:12)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:419:12)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processTerm (JSBackendDiffMaker.scala:203)
+//│ ═══[RUNTIME ERROR] Expected: '2', got: 'undefined'
 //│ a = A()
-//│ b = A()
+//│ b = undefined
 
 // handler
 

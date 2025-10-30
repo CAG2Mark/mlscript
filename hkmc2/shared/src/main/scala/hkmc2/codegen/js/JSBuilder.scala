@@ -113,9 +113,9 @@ class JSBuilder(using TL, State, Ctx) extends CodeBuilder:
       else errExpr(msg"Illegal reference to builtin symbol '${l.nme}'")
     case Value.Ref(l, disamb) => l match
       case l: BlockMemberSymbol if {
-        // TODO @Harry: refactor(ize) duplicated logic
+        // println(disamb.flatMap(d => d.asModOrObj orElse d.asCls))
         l.hasLiftedClass && 
-        disamb.flatMap(d => d.asMod orElse d.asCls).exists(_ isnt ctx.builtins.Array)
+        disamb.flatMap(s => s.asCls orElse s.asMod).exists(_ isnt ctx.builtins.Array)
       } =>
         doc"${getVar(l, l.toLoc)}.class"
       case _ =>
@@ -157,7 +157,7 @@ class JSBuilder(using TL, State, Ctx) extends CodeBuilder:
       val dotClass = s.symbol_SelectSymbol match
         case S(ds) if {
           (ds.hasLiftedClass) && 
-          (ds.asMod orElse ds.asCls).exists(_ isnt ctx.builtins.Array)
+          (ds.asModOrObj orElse ds.asCls).exists(_ isnt ctx.builtins.Array)
         } => doc".class"
         case _ => doc""
       val name = id.name
@@ -469,6 +469,7 @@ class JSBuilder(using TL, State, Ctx) extends CodeBuilder:
           case Elaborator.ctx.builtins.BigInt => doc"typeof $sd === 'bigint'"
           case Elaborator.ctx.builtins.Symbol.module => doc"typeof $sd === 'symbol'"
           case Elaborator.ctx.builtins.TypedArray => doc"globalThis.ArrayBuffer.isView($sd) && !($sd instanceof globalThis.DataView)"
+          case _: ModuleOrObjectSymbol => doc"$sd === ${result(pth)}"
           case _ => doc"$sd instanceof ${result(pth)}"
         case Case.Tup(len, inf) => doc"$runtimeVar.Tuple.isArrayLike($sd) && $sd.length ${if inf then ">=" else "==="} ${len}"
         case Case.Field(name = n, safe = false) =>

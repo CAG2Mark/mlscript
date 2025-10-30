@@ -26,6 +26,8 @@ trait TermSynthesizer(using Ctx, State):
   protected final def app(l: Term, r: Term, label: Str): Term.App = app(l, r, FlowSymbol(label))
   protected final def app(l: Term, r: Term, s: FlowSymbol): Term.App =
     (Term.App(l, r)(App(Dummy, Dummy), N, s): Term.App).resolve
+  protected final def `new`(cls: Term, args: Ls[Term], label: Str): Term.New = 
+    Term.New(cls, args, N)
   protected final def rcd(fields: RcdField*): Term.Rcd = Term.Rcd(false, fields.toList)
   
   protected final def splitLet(sym: BlockLocalSymbol, term: Term)(inner: Split): Split =
@@ -101,16 +103,16 @@ trait TermSynthesizer(using Ctx, State):
     Split.Let(s, cond, Branch(s.safeRef, inner) ~: Split.End)
   
   protected final def makeMatchResult(output: Term) =
-    app(matchResultClass, tup(fld(output), fld(rcd())), "result of `MatchResult`")
+    `new`(matchResultClass, tup(fld(output), fld(rcd())) :: Nil, "result of `MatchResult`")
   
   protected final def makeMatchResult(output: Term, bindings: Term) =
-    app(matchResultClass, tup(fld(output), fld(bindings)), "result of `MatchResult`")
+    `new`(matchResultClass, tup(fld(output), fld(bindings)) :: Nil, "result of `MatchResult`")
   
   protected final def makeMatchResult(output: Term, fields: Ls[RcdField | RcdSpread]) =
-    app(matchResultClass, tup(fld(output), fld(Term.Rcd(false, fields))), "result of `MatchResult`")
+    `new`(matchResultClass, tup(fld(output), fld(Term.Rcd(false, fields))) :: Nil, "result of `MatchResult`")
     
   protected final def makeMatchFailure(errors: Term = Term.Lit(UnitLit(true))) =
-    app(matchFailureClass, tup(fld(errors)), "result of `MatchFailure`")
+    `new`(matchFailureClass, tup(fld(errors)) :: Nil, "result of `MatchFailure`")
 
   /** Make a `Branch` that calls `Pattern` symbols' `unapply` functions. */
   def makeLocalPatternBranch(

@@ -243,10 +243,11 @@ object Elaborator:
     val nonLocalRet =
       val id = new Ident("ret")
       BlockMemberSymbol(id.name, Nil, true)
-    val matchResultClsSymbol =
+    val (matchResultClsSymbol, matchResultTrmSymbol) =
       val id = new Ident("MatchResult")
       val td = TypeDef(syntax.Cls, App(id, Tup(Ident("output") :: Ident("bindings") :: Nil)), N)
       val cs = ClassSymbol(td, id)
+      val ts = TermSymbol(syntax.Fun, N, id)
       val flag = FldFlags.empty.copy(isVal = true)
       val ps = PlainParamList(
         Param(flag, VarSymbol(Ident("output")), N, Modulefulness(N)(false)) ::
@@ -254,16 +255,47 @@ object Elaborator:
         Nil)
       cs.defn = S(ClassDef.Parameterized(N, syntax.Cls, cs, BlockMemberSymbol(cs.name, Nil),
         Nil, ps, Nil, N, ObjBody(Blk(Nil, Term.Lit(UnitLit(false)))), N, Nil))
-      cs
-    val matchFailureClsSymbol =
+      ts.defn = S:
+        TermDefinition(
+          syntax.Fun,
+          BlockMemberSymbol(id.name, td :: Nil),
+          ts,
+          ps :: Nil,
+          N,
+          N,
+          N,
+          FlowSymbol("MatchResult-constructor"),
+          TermDefFlags.empty,
+          Modulefulness(N)(false),
+          Nil,
+          N,
+        )
+      cs -> ts
+    val (matchFailureClsSymbol, matchFailureTrmSymbol) =
       val id = new Ident("MatchFailure")
       val td = DummyTypeDef(syntax.Cls)
       val cs = ClassSymbol(td, id)
+      val ts = TermSymbol(syntax.Fun, N, id)
       val flag = FldFlags.empty.copy(isVal = true)
       val ps = PlainParamList(Param(flag, VarSymbol(Ident("errors")), N, Modulefulness(N)(false)) :: Nil)
       cs.defn = S(ClassDef.Parameterized(N, syntax.Cls, cs, BlockMemberSymbol(cs.name, td :: Nil),
         Nil, ps, Nil, N, ObjBody(Blk(Nil, Term.Lit(UnitLit(false)))), N, Nil))
-      cs
+      ts.defn = S:
+        TermDefinition(
+          syntax.Fun,
+          BlockMemberSymbol(id.name, td :: Nil),
+          ts,
+          ps :: Nil,
+          N,
+          N,
+          N,
+          FlowSymbol("MatchFailure-constructor"),
+          TermDefFlags.empty,
+          Modulefulness(N)(false),
+          Nil,
+          N,
+        )
+      cs -> ts
     val builtinOpsMap =
       val baseBuiltins = builtins.map: op =>
           op -> BuiltinSymbol(op,
