@@ -234,7 +234,7 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
     
     def read = this match
       case Sym(l) => l.asPath
-      case PubField(isym, sym) => Select(isym.asPath, Tree.Ident(sym.nme))(isym.asDefnSym_TODO)
+      case PubField(isym, sym) => Select(isym.asPath, Tree.Ident(sym.nme))(N)
       // TODO: isym.asInstanceOf
       
     def asArg = read.asArg
@@ -242,8 +242,11 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
     def assign(value: Result, rest: Block) = this match
       case Sym(l) => Assign(l, value, rest)
       case PubField(isym, sym) => AssignField(isym.asPath, Tree.Ident(sym.nme), value, rest)(S(sym))
-    
-    
+  
+    def readDisamb(d: Opt[DefinitionSymbol[?]]) = this match
+      case Sym(l) => Value.Ref(l, d)
+      case PubField(isym, sym) => Select(isym.asPath, Tree.Ident(sym.nme))(d)
+  
   def isHandlerClsPath(p: Path) = handlerPaths match
     case None => false
     case Some(paths) => paths.isHandlerClsPath(p)
@@ -820,8 +823,8 @@ class Lifter(handlerPaths: Opt[HandlerPaths])(using State, Raise):
 
       // This is to rewrite references to classes that are not lifted (when their BlockMemberSymbol
       // reference is passed as function parameters).
-      case RefOfBms(l, _) if ctx.ignored(l) && ctx.isRelevant(l) => ctx.getIgnoredBmsPath(l) match
-        case Some(value) => k(value.read)
+      case RefOfBms(l, disamb) if ctx.ignored(l) && ctx.isRelevant(l) => ctx.getIgnoredBmsPath(l) match
+        case Some(value) => k(value.readDisamb(disamb))
         case None => super.applyPath(p)(k)
       
       // This rewrites naked references to locals. If a function is in a capture, then we select that value
