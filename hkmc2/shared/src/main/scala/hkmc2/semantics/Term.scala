@@ -59,6 +59,7 @@ sealed trait ResolvableImpl:
       case t: Term.TyApp => t.copy()(t.typ)
       case t: Term.Sel => t.copy()(t.sym, t.typ)
       case t: Term.SynthSel => t.copy()(t.sym, t.typ)
+      case t: Term.SelProj => t.copy()(t.sym, t.typ)
     .withLocOf(this)
     .asInstanceOf
   
@@ -66,6 +67,7 @@ sealed trait ResolvableImpl:
     this.match
       case t: Term.Sel => t.copy()(S(sym), t.typ)
       case t: Term.SynthSel => t.copy()(S(sym), t.typ)
+      case t: Term.SelProj => t.copy()(S(sym), t.typ)
       case _ => lastWords(s"Cannot attach a symbol to a non-selection term: ${this.show}")
     .withLocOf(this)
     .asInstanceOf
@@ -78,6 +80,7 @@ sealed trait ResolvableImpl:
       case t: Term.TyApp => t.copy()(S(typ))
       case t: Term.Sel => t.copy()(t.sym, S(typ))
       case t: Term.SynthSel => t.copy()(t.sym, S(typ))
+      case t: Term.SelProj => t.copy()(t.sym, S(typ))
     .withLocOf(this)
     .asInstanceOf
   
@@ -206,6 +209,8 @@ enum Term extends Statement:
     (val sym: Opt[FieldSymbol], val typ: Opt[Type]) extends Term, ResolvableImpl
   case SynthSel(prefix: Term, nme: Tree.Ident)
     (val sym: Opt[FieldSymbol], val typ: Opt[Type]) extends Term, ResolvableImpl
+  case SelProj(prefix: Term, cls: Term, proj: Tree.Ident)
+    (val sym: Opt[FieldSymbol], val typ: Opt[Type]) extends Term, ResolvableImpl
   case DynSel(prefix: Term, fld: Term, arrayIdx: Bool)
   case Tup(fields: Ls[Elem])(val tree: Tree.Tup)
   case Mut(underlying: Tup | Rcd | New | DynNew)
@@ -221,7 +226,6 @@ enum Term extends Statement:
   case Unquoted(body: Term)
   case New(cls: Term, args: Ls[Term], rft: Opt[ClassSymbol -> ObjBody])
   case DynNew(cls: Term, args: Ls[Term])
-  case SelProj(prefix: Term, cls: Term, proj: Tree.Ident)(val sym: Opt[FieldSymbol])
   case Asc(term: Term, ty: Term)
   case CompType(lhs: Term, rhs: Term, pol: Bool)
   case Neg(rhs: Term)
@@ -330,7 +334,7 @@ enum Term extends Statement:
       New(cls.mkClone, args.map(_.mkClone), rft.map { case (cs, ob) => cs -> ObjBody(ob.blk.mkBlkClone) })
     case DynNew(cls, args) => DynNew(cls.mkClone, args.map(_.mkClone))
     case term @ SelProj(prefix, cls, proj) =>
-      SelProj(prefix.mkClone, cls.mkClone, Tree.Ident(proj.name))(term.sym)
+      SelProj(prefix.mkClone, cls.mkClone, Tree.Ident(proj.name))(term.sym, term.typ)
     case Asc(term, ty) => Asc(term.mkClone, ty.mkClone)
     case CompType(lhs, rhs, pol) => CompType(lhs.mkClone, rhs.mkClone, pol)
     case Neg(rhs) => Neg(rhs.mkClone)

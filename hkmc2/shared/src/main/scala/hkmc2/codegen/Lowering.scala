@@ -760,6 +760,8 @@ class Lowering()(using Config, TL, Raise, State, Ctx):
     // * BbML-specific cases: t.Cls#field and mutable operations
     case sp @ SelProj(prefix, _, proj) =>
       setupSelection(prefix, proj, sp.sym, N)(k)
+    case Resolved(sp @ SelProj(prefix, _, proj), sym) =>
+      setupSelection(prefix, proj, sp.sym, S(sym))(k)
     case Region(reg, body) =>
       Assign(reg, Instantiate(mut = false, Select(Value.Ref(State.globalThisSymbol), Tree.Ident("Region"))(N), Nil),
         term_nonTail(body)(k))

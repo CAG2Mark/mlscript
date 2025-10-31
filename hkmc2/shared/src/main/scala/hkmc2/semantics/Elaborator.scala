@@ -554,7 +554,7 @@ extends Importer:
         case _ =>
           raise(ErrorReport(msg"Identifier `${idn.name}` does not name a known class symbol." -> idn.toLoc :: Nil))
           N
-      Term.SelProj(subterm(pre), c, idp)(f)
+      Term.SelProj(subterm(pre), c, idp)(f, N)
     case App(Ident("#"), Tup(Sel(pre, Ident(name)) :: App(Ident(proj), args) :: Nil)) =>
       subterm(App(App(Ident("#"), Tup(Sel(pre, Ident(name)) :: Ident(proj) :: Nil)), args))
     case App(Ident("!"), Tup(rhs :: Nil)) =>
@@ -635,7 +635,7 @@ extends Importer:
       )
       val rs = FlowSymbol.app()
       Term.Lam(ps,
-        Term.App(Term.SelProj(self.ref(), c, nme)(f), args.ref())(
+        Term.App(Term.SelProj(self.ref(), c, nme)(f, N), args.ref())(
           App(nme, Tup(Nil)) // FIXME
           , N, rs)
       )

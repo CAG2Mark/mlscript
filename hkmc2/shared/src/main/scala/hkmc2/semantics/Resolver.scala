@@ -555,13 +555,17 @@ class Resolver(tl: TraceLogger)
         targs.foreach(traverse(_, expect = Any))
         (t.callableDefn, ictx)
       
-      case AnySel(pre: Resolvable, id) =>
+      case AnySel(pre: Resolvable, id, cls) =>
         resolve(pre, prefer = Selectable(N), inAppPrefix = false, inCtxPrefix = false, inTyPrefix = false)
+        cls.foreach:
+          case cls: Resolvable => resolve(cls, prefer = Class(N), inAppPrefix = false, inCtxPrefix = false, inTyPrefix = false)
+          case cls => traverse(cls, expect = Class(N))
         resolveSymbol(t, prefer = prefer, sign = false)
         resolveType(t, prefer = prefer)
         (t.callableDefn, ictx)
-      case AnySel(pre, id) =>
+      case AnySel(pre, id, cls) =>
         traverse(pre, expect = Selectable(N))
+        cls.foreach(traverse(_, expect = Class(N)))
         (t.callableDefn, ictx)
       
       case Term.Ref(_: BlockMemberSymbol) =>
@@ -842,10 +846,14 @@ class Resolver(tl: TraceLogger)
         resolveType(t, prefer = prefer)
         log(s"Resolved symbol for ${t}: ${sym}")
       
-      case t @ AnySel(lhs: Resolvable, id) => lhs.expandedResolvableIn: lhs =>
+      case t @ AnySel(lhs: Resolvable, id, cls) => lhs.expandedResolvableIn: lhs =>
         log(s"Resolving symbol for selection ${t}, defn = ${lhs.defn}")
         
-        // Signleton Definitions
+        val clsDefn = cls.flatMap: sym =>
+          sym.resolvedSym.flatMap(_.asCls).map: clsSym =>
+            clsSym.defn.getOrElse(die)
+        
+        // Singleton Definitions
         lhs.singletonDefn.foreach: defn =>
           val fsym = defn.body.members.get(id.name)
           fsym match
@@ -867,7 +875,7 @@ class Resolver(tl: TraceLogger)
                   extraInfo = S(defn))
         
         // Class-Like Definitions
-        lhs.defn.foreach: 
+        (clsDefn orElse lhs.defn).foreach: 
           case defn: ClassLikeDef =>
             // A reference to a member within the class is elaborated into a SynthSel, e.g.,
             // class C with
@@ -1007,8 +1015,8 @@ class Resolver(tl: TraceLogger)
     case Term.App(Term.Ref(_: BuiltinSymbol), Term.Tup(Fld(term = Term.Lit(_)) :: Nil)) =>
     
     // Selection. The prefix should be a term, rather than a type, that
-    // can be selected from.
-    case AnySel(base, _) =>
+    // can be selected from. This should not be a selection projection.
+    case AnySel(base, _, N) =>
       base.subTerms.foreach(traverse(_, expect = Any))
     
     // Type Application. Traverse the type constructor and arguments,
@@ -1132,9 +1140,10 @@ class Resolver(tl: TraceLogger)
 end Resolver
 
 object AnySel:
-  def unapply(t: (Term.Sel | Term.SynthSel)): S[(Term, Tree.Ident)] = t match
-    case Term.Sel(lhs, id) => S((lhs, id))
-    case Term.SynthSel(lhs, id) => S((lhs, id))
+  def unapply(t: (Term.Sel | Term.SynthSel | Term.SelProj)): S[(Term, Tree.Ident, Opt[Term])] = t match
+    case Term.Sel(lhs, id) => S((lhs, id, N))
+    case Term.SynthSel(lhs, id) => S((lhs, id, N))
+    case Term.SelProj(lhs, cls, proj) => S((lhs, proj, S(cls)))
 
 object ModuleChecker:
   

@@ -10,8 +10,17 @@ fun main() =
   a.A#f()
 main()
 //│ = 1
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: bErrStop (Builder.scala:22)
-//│ ═══[COMPILATION ERROR] Unsupported kind of Call Call(Select(Ref(a,None),Ident(f)),List())
-//│ Stopped due to an error during the Llir generation
+//│ LLIR:
+//│   class A(m) {
+//│     def f() =
+//│       m
+//│   }
+//│   def main() =
+//│     let x = A(1) in
+//│     let x1 = A.f(x) in
+//│     x1
+//│   def entry() =
+//│     let* (x2) = main() in
+//│     x2
+//│   entry = entry
 
