@@ -1243,7 +1243,7 @@ extends Importer:
                   p.modulefulness,
                   Nil,
                   N,
-                )
+                ).withLocOf(p)
                 assert(p.fldSym.isEmpty)
                 p.fldSym = S(fsym)
                 fsym.defn = S(fdef)
@@ -1268,7 +1268,12 @@ extends Importer:
           
           val (blk, c) = fn(using ctxWithFields)
           val blkWithFields: Blk = blk.copy(stats = fields ::: blk.stats)
-          (blkWithFields, c)
+          ObjBody.extractMembers(blkWithFields) match
+            case R(_) =>
+              (blkWithFields, c)
+            case L(errs) =>
+              errs.foreach(raise)
+              (blk, c)
         
         def mkBody(using Ctx) = withFields:
           body match

@@ -9,6 +9,7 @@ import syntax.*
 import Elaborator.State
 import hkmc2.typing.Type
 import hkmc2.semantics.Elaborator.{Ctx, ctx}
+import hkmc2.Message.MessageContext
 
 
 final case class QuantVar(sym: VarSymbol, ub: Opt[Term], lb: Opt[Term])
@@ -670,20 +671,34 @@ final case class HandlerTermDefinition(
   td: TermDefinition
 )
 
+object ObjBody:
+  
+  def extractMembers(blk: Term.Blk): Ls[ErrorReport] \/ Map[Str, BlockMemberSymbol] =
+    val (errs, mems) = blk.stats.collect:
+      case td: TermDefinition => td.sym -> td
+      case td: ClassLikeDef => td.bsym -> td
+      case td: TypeDef => td.bsym -> td
+    .groupBy(_._1.nme)
+    .partitionMap: (nme, syms) =>
+      if syms.map(_._1).distinct.tail.nonEmpty then L:
+        (msg"Found duplicate members with the same name '${nme}'." -> N) ::
+        syms.map(_._2).map(msg"Defined at: " -> _.toLoc)
+      else R:
+        nme -> syms.head._1
+    
+    if errs.nonEmpty then
+      L(errs.map(ErrorReport(_)).toList)
+    else
+      R(mems.toMap)
+
 case class ObjBody(blk: Term.Blk):
   
   lazy val members: Map[Str, BlockMemberSymbol] =
-    blk.stats.collect:
-      case td: TermDefinition => td.sym
-      case td: ClassLikeDef => td.bsym
-      case td: TypeDef => td.bsym
-    .groupBy(_.nme)
-    .map: (nme, syms) =>
-      if syms.distinct.length > 1 then
-        lastWords:
-          s"Duplicate members named '${nme}' with different block-member symbols: ${syms.mkString(", ")}."
-      nme -> syms.head
-    .toMap
+    ObjBody.extractMembers(blk) match
+      case L(errs) => lastWords:
+        errs.map(_.mainMsg).mkString("\n")
+      case R(mems) =>
+        mems
   
   lazy val (methods, nonMethods) = blk.stats.partitionMap:
     case td: TermDefinition if td.k is syntax.Fun => L(td)
