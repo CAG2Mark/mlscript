@@ -521,7 +521,7 @@ class Resolver(tl: TraceLogger)
     */
   def resolve(t: Resolvable, prefer: Expect, inAppPrefix: Bool, inCtxPrefix: Bool, inTyPrefix: Bool)(using ICtx): (Opt[CallableDefinition], ICtx) =
   trace[(Opt[CallableDefinition], ICtx)](
-    s"Resolving resolvable term: ${t}, (inPrefix = ${inTyPrefix})", 
+    s"Resolving resolvable term: ${t}, (prefer = ${prefer}, inAppPrefix = ${inAppPrefix}, inCtxPrefix = ${inCtxPrefix}, inTyPrefix = ${inTyPrefix})", 
     _ => s"~> ${t.expanded} (sym = ${t.resolvedSym}, typ = ${t.resolvedTyp})"
   ):
     // Resolve the sub-resolvable-terms of the term. 
@@ -574,7 +574,7 @@ class Resolver(tl: TraceLogger)
         (N, ictx)
     
     t.expandedResolvableIn: t =>
-      log(s"Resolving resolvable term ${t} with sym = ${t.resolvedSym}, typ = ${t.resolvedTyp}: ${t.resolvedSym.map(_.asInstanceOf[MemberSymbol[?]].defn)}")
+      log(s"Resolving resolvable term ${t} with sym = ${t.resolvedSym}, typ = ${t.resolvedTyp}")
       
       // Fill the context with possibly the type arguments information.
       val newICtx2 = newICtx1.givenIn:
@@ -844,25 +844,57 @@ class Resolver(tl: TraceLogger)
       
       case t @ AnySel(lhs: Resolvable, id) => lhs.expandedResolvableIn: lhs =>
         log(s"Resolving symbol for selection ${t}, defn = ${lhs.defn}")
-        lhs.singletonDefn.foreach: mdef =>
-          val fsym = mdef.body.members.get(id.name)
+        
+        // Signleton Definitions
+        lhs.singletonDefn.foreach: defn =>
+          val fsym = defn.body.members.get(id.name)
           fsym match
-          case S(bms: BlockMemberSymbol) =>
-            log(s"Resolving symbol for ${t}, defn = ${lhs.defn}")
-            disambSym(prefer, sign)(bms) match
-              case S(ds) =>
-                t.expand(S(Term.Resolved(t.withSym(bms), ds)(N)))
+            case S(bms: BlockMemberSymbol) =>
+              log(s"Resolving symbol for ${t}, defn = ${lhs.defn}")
+              disambSym(prefer, sign)(bms) match
+                case S(ds) =>
+                  t.expand(S(Term.Resolved(t.withSym(bms), ds)(N)))
+                case N =>
+                  log(s"Unable to disambiguate ${bms}")
+                  t.expand(S(t.withSym(bms)))
+              log(s"Resolved symbol for ${t}: ${bms}")
+            case N => 
+              t.expand(S(t.withSym(ErrorSymbol(id.name, Tree.Dummy))))
+              raise: 
+                ErrorReport(
+                  msg"${defn.kind.desc.capitalize} '${defn.sym.nme}' " +
+                  msg"does not contain member '${id.name}'" -> t.toLoc :: Nil,
+                  extraInfo = S(defn))
+        
+        // Class-Like Definitions
+        lhs.defn.foreach: 
+          case defn: ClassLikeDef =>
+            // A reference to a member within the class is elaborated into a SynthSel, e.g.,
+            // class C with
+            //   fun f = 42
+            //   f
+            // The `f` in the body is elaborated into SynthSel(class:Foo, 'f').
+            val fsym = defn.body.members.get(id.name)
+            fsym match
+              case S(bms: BlockMemberSymbol) =>
+                log(s"Resolving symbol for ${t}, defn = ${lhs.defn}")
+                disambSym(prefer, sign)(bms) match
+                  case S(ds) =>
+                    t.expand(S(Term.Resolved(t.withSym(bms), ds)(N)))
+                  case N =>
+                    log(s"Unable to disambiguate ${bms}")
+                    t.expand(S(t.withSym(bms)))
+                log(s"Resolved symbol for ${t}: ${bms}")
               case N =>
-                log(s"Unable to disambiguate ${bms}")
-                t.expand(S(t.withSym(bms)))
-            log(s"Resolved symbol for ${t}: ${bms}")
-          case N => 
-            t.expand(S(t.withSym(ErrorSymbol(id.name, Tree.Dummy))))
-            raise: 
-              ErrorReport(
-                msg"${mdef.kind.desc.capitalize} '${mdef.sym.nme}' " +
-                msg"does not contain member '${id.name}'" -> t.toLoc :: Nil,
-                extraInfo = S(mdef))
+                // TODO @Harry: Appropriately resolve all selections on classes.
+                // t.expand(S(t.withSym(ErrorSymbol(id.name, Tree.Dummy))))
+                // raise: 
+                //   ErrorReport(
+                //     msg"${defn.kind.desc.capitalize} '${defn.sym.nme}' " +
+                //     msg"does not contain member '${id.name}'" -> t.toLoc :: Nil,
+                //     extraInfo = S(defn))'
+          case defn =>
+            log(s"Unsupported selection from definition: ${defn}")
       case _ =>
   
   /**
