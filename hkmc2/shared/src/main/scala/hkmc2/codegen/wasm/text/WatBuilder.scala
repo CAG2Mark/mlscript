@@ -252,15 +252,16 @@ class WatBuilder(using TraceLogger, State) extends CodeBuilder:
       )
 
     case Instantiate(_, cls, as) =>
-      val ctorClsPath = cls match
-        case sel: Select => sel
+      val ctorClsSymOpt = cls match
+        case ref: Value.Ref => ref.disamb
+        case sel: Select => sel.symbol_SelectSymbol
         case cls => return errExpr(
             Ls(
-              msg"WatBuilder::result for Instantiate(...) where `cls` is not a Select(...) path not implemented yet " -> cls.toLoc
+              msg"WatBuilder::result for Instantiate(...) where `cls` is not a Ref(...) or Select(...) path not implemented yet " -> cls.toLoc
             ),
             extraInfo = S(s"Block IR of `cls` expression: ${cls.toString}")
           )
-      val ctorClsSym = ctorClsPath.symbol_SelectSymbol match
+      val ctorClsSym = ctorClsSymOpt match
         case S(sym) => sym
         case N => return errExpr(
             Ls(
