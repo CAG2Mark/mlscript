@@ -10,18 +10,6 @@ class ThreadEffect with
       tasks.pop()()
   fun fork(thread: () -> ()): ()
   fun yld(): ()
-//│ FAILURE: Unexpected exception
-//│ /!!!\ Uncaught error: java.lang.ClassCastException: Cannot cast to scala.Nothing
-//│ 	at: hkmc2.codegen.HandlerLowering.hkmc2$codegen$HandlerLowering$$translateFun(HandlerLowering.scala:594)
-//│ 	at: hkmc2.codegen.HandlerLowering.$anonfun$12(HandlerLowering.scala:626)
-//│ 	at: scala.collection.immutable.List.map(List.scala:247)
-//│ 	at: hkmc2.codegen.HandlerLowering.hkmc2$codegen$HandlerLowering$$translateCls(HandlerLowering.scala:626)
-//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyDefn(HandlerLowering.scala:534)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyBlock(BlockTransformer.scala:75)
-//│ 	at: hkmc2.codegen.BlockTransformerShallow.applyBlock(BlockTransformer.scala:288)
-//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyBlock(HandlerLowering.scala:509)
-//│ 	at: hkmc2.codegen.HandlerLowering.firstPass(HandlerLowering.scala:536)
-//│ 	at: hkmc2.codegen.HandlerLowering.hkmc2$codegen$HandlerLowering$$translateBlock(HandlerLowering.scala:477)
 
 
 fun f(h, x)() =
@@ -51,46 +39,14 @@ handle h = ThreadEffect with
     this.drain()
 in
   main(h)
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:112)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:ThreadEffect
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parent = S of Scope:
-//│       parent = S of Scope:
-//│         parent = S of Scope:
-//│           parent = N
-//│           curThis = S of S of globalThis:globalThis
-//│           bindings = HashMap(member:getLocals -> getLocals2, member:Predef -> Predef, member:getLocals -> getLocals, class:Handler$h$ -> Handler$h$, $runtime -> runtime, member:getLocals -> getLocals1, member:main -> main, member:getLocals -> getLocals3, $definitionMetadata -> definitionMetadata, member:handleBlock$ -> handleBlock$, $prettyPrint -> prettyPrint, class:Cont$handler$h$yld$ -> Cont$handler$h$yld$, $Term -> Term, class:Cont$func$main$ -> Cont$func$main$, member:f -> f, class:Cont$func$f$ -> Cont$func$f$, class:Cont$handler$h$fork$ -> Cont$handler$h$fork$, class:Cont$handleBlock$h$ -> Cont$handleBlock$h$, $block$res -> block$res2, $block$res -> block$res3, $block$res -> block$res1, $block$res -> block$res, $tmp -> tmp)
-//│         curThis = S of N
-//│         bindings = HashMap($args -> args)
-//│       curThis = N
-//│       bindings = HashMap(h -> h, member:Cont$handleBlock$h$ -> Cont$handleBlock$h$1, member:Handler$h$ -> Handler$h$1, member:doUnwind -> doUnwind, member:getLocals -> getLocals4, $res -> res)
-//│     curThis = S of S of class:Handler$h$
-//│     bindings = HashMap()
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'ThreadEffect'
-//│ ║  l.44: 	handle h = ThreadEffect with
-//│ ║        	           ^^^^^^^^^^^^
-//│ ╟── which references the symbol introduced here
-//│ ║  l.5: 	class ThreadEffect with
-//│ ║       	      ^^^^^^^^^^^^^^^^^
-//│ ║  l.6: 	  // task queue
-//│ ║       	^^^^^^^^^^^^^^^
-//│ ║  l.7: 	  val tasks = mut []
-//│ ║       	^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.8: 	  fun drain() =
-//│ ║       	^^^^^^^^^^^^^^^
-//│ ║  l.9: 	    while tasks.length != 0 do
-//│ ║       	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.10: 	      tasks.pop()()
-//│ ║        	^^^^^^^^^^^^^^^^^^^
-//│ ║  l.11: 	  fun fork(thread: () -> ()): ()
-//│ ║        	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.12: 	  fun yld(): ()
-//│ ╙──      	^^^^^^^^^^^^^^^
-//│ ═══[RUNTIME ERROR] ReferenceError: ThreadEffect is not defined
+//│ > main start
+//│ > main end
+//│ > f 2
+//│ ═══[RUNTIME ERROR] Error: Unhandled effect Handler$h$
+//│ 	at f (UserThreadsSafe.mls:17:3)
+//│ 	at drain (UserThreadsSafe.mls:10:7)
+//│ 	at fork (UserThreadsSafe.mls:35:5)
+//│ 	at fork (UserThreadsSafe.mls:35:5)
 
 
 // FIFO
@@ -105,45 +61,13 @@ handle h = ThreadEffect with
     this.drain()
 in
   main(h)
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:112)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:ThreadEffect
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parent = S of Scope:
-//│       parent = S of Scope:
-//│         parent = S of Scope:
-//│           parent = N
-//│           curThis = S of S of globalThis:globalThis
-//│           bindings = HashMap(class:Handler$h$ -> Handler$h$, $runtime -> runtime, member:main -> main, class:Cont$handleBlock$h$ -> Cont$handleBlock$h$1, $definitionMetadata -> definitionMetadata, $prettyPrint -> prettyPrint, $Term -> Term, member:f -> f, class:Cont$handler$h$fork$ -> Cont$handler$h$fork$, $block$res -> block$res2, $block$res -> block$res3, class:Handler$h$ -> Handler$h$1, $block$res -> block$res1, $block$res -> block$res, $tmp -> tmp, member:getLocals -> getLocals2, member:Predef -> Predef, member:getLocals -> getLocals, class:Cont$handler$h$fork$ -> Cont$handler$h$fork$1, member:getLocals -> getLocals1, member:getLocals -> getLocals3, member:handleBlock$ -> handleBlock$, class:Cont$handler$h$yld$ -> Cont$handler$h$yld$, class:Cont$func$main$ -> Cont$func$main$, $block$res -> block$res4, class:Cont$func$f$ -> Cont$func$f$, class:Cont$handleBlock$h$ -> Cont$handleBlock$h$, $tmp -> tmp1, member:getLocals -> getLocals4, member:handleBlock$ -> handleBlock$1, class:Cont$handler$h$yld$ -> Cont$handler$h$yld$1)
-//│         curThis = S of N
-//│         bindings = HashMap($args -> args)
-//│       curThis = N
-//│       bindings = HashMap(member:getLocals -> getLocals5, $res -> res, h -> h, member:Cont$handleBlock$h$ -> Cont$handleBlock$h$2, member:Handler$h$ -> Handler$h$2, member:doUnwind -> doUnwind)
-//│     curThis = S of S of class:Handler$h$
-//│     bindings = HashMap()
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'ThreadEffect'
-//│ ║  l.98: 	handle h = ThreadEffect with
-//│ ║        	           ^^^^^^^^^^^^
-//│ ╟── which references the symbol introduced here
-//│ ║  l.5: 	class ThreadEffect with
-//│ ║       	      ^^^^^^^^^^^^^^^^^
-//│ ║  l.6: 	  // task queue
-//│ ║       	^^^^^^^^^^^^^^^
-//│ ║  l.7: 	  val tasks = mut []
-//│ ║       	^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.8: 	  fun drain() =
-//│ ║       	^^^^^^^^^^^^^^^
-//│ ║  l.9: 	    while tasks.length != 0 do
-//│ ║       	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.10: 	      tasks.pop()()
-//│ ║        	^^^^^^^^^^^^^^^^^^^
-//│ ║  l.11: 	  fun fork(thread: () -> ()): ()
-//│ ║        	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.12: 	  fun yld(): ()
-//│ ╙──      	^^^^^^^^^^^^^^^
-//│ ═══[RUNTIME ERROR] ReferenceError: ThreadEffect is not defined
+//│ > main start
+//│ > main end
+//│ > f 0
+//│ ═══[RUNTIME ERROR] Error: Unhandled effect Handler$h$1
+//│ 	at f (UserThreadsSafe.mls:17:3)
+//│ 	at drain (UserThreadsSafe.mls:10:7)
+//│ 	at fork (UserThreadsSafe.mls:57:5)
+//│ 	at fork (UserThreadsSafe.mls:57:5)
 
 

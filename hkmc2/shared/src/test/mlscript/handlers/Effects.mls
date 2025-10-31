@@ -230,57 +230,11 @@ module A with
   data class Effect(x) with
     fun test() = x
     fun perform(arg)
-//│ FAILURE: Unexpected exception
-//│ /!!!\ Uncaught error: java.lang.ClassCastException: Cannot cast to scala.Nothing
-//│ 	at: hkmc2.codegen.HandlerLowering.hkmc2$codegen$HandlerLowering$$translateFun(HandlerLowering.scala:594)
-//│ 	at: hkmc2.codegen.HandlerLowering.$anonfun$12(HandlerLowering.scala:626)
-//│ 	at: scala.collection.immutable.List.map(List.scala:247)
-//│ 	at: hkmc2.codegen.HandlerLowering.hkmc2$codegen$HandlerLowering$$translateCls(HandlerLowering.scala:626)
-//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyDefn(HandlerLowering.scala:534)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyBlock(BlockTransformer.scala:75)
-//│ 	at: hkmc2.codegen.BlockTransformerShallow.applyBlock(BlockTransformer.scala:288)
-//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyBlock(HandlerLowering.scala:509)
-//│ 	at: hkmc2.codegen.HandlerLowering.firstPass(HandlerLowering.scala:536)
-//│ 	at: hkmc2.codegen.HandlerLowering.hkmc2$codegen$HandlerLowering$$translateBlock(HandlerLowering.scala:477)
 
 handle h = A.Effect(3) with
   fun perform()(k) = 0
 h.perform()
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:112)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:A
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parent = N
-//│     curThis = S of S of globalThis:globalThis
-//│     bindings = HashMap(class:Cont$func$lambda$ -> Cont$func$lambda$, class:Cont$handleBlock$h$ -> Cont$handleBlock$h$6, class:Cont$handleBlock$h$ -> Cont$handleBlock$h$3, class:Cont$handler$h$perform$ -> Cont$handler$h$perform$3, $runtime -> runtime, class:Handler$h$ -> Handler$h$, $definitionMetadata -> definitionMetadata, $prettyPrint -> prettyPrint, $block$res -> block$res14, $Term -> Term, $tmp -> tmp11, class:Handler$h$ -> Handler$h$3, $block$res -> block$res2, $tmp -> tmp, class:Cont$handler$h$perform$ -> Cont$handler$h$perform$, class:Cont$func$foo$ -> Cont$func$foo$1, member:handleBlock$ -> handleBlock$11, $block$res -> block$res5, $tmp -> tmp3, class:Cont$handleBlock$h$ -> Cont$handleBlock$h$5, class:Handler$h$ -> Handler$h$12, member:handleBlock$ -> handleBlock$, class:Cont$handler$h$perform$ -> Cont$handler$h$perform$4, member:handleBlock$ -> handleBlock$3, class:Cont$handler$h$perform$ -> Cont$handler$h$perform$2, class:Handler$h$ -> Handler$h$11, $block$res -> block$res15, $tmp -> tmp12, $selRes -> selRes, class:Cont$handleBlock$h$ -> Cont$handleBlock$h$2, class:Cont$handleBlock$h$ -> Cont$handleBlock$h$10, $res -> res, class:Cont$func$bar$ -> Cont$func$bar$, member:handleBlock$ -> handleBlock$12, class:Cont$handler$h$perform$ -> Cont$handler$h$perform$1, member:foo -> foo2, class:Handler$h$ -> Handler$h$2, class:Cont$handleBlock$h$ -> Cont$handleBlock$h$11, class:Handler$h$ -> Handler$h$9, member:foo -> foo1, $block$res -> block$res4, $tmp -> tmp2, member:foo -> foo, $block$res -> block$res8, member:handleBlock$ -> handleBlock$2, member:bar -> bar, class:Cont$func$foobar$ -> Cont$func$foobar$, member:foobar -> foobar, member:foo -> foo3, class:Handler$h$ -> Handler$h$5, class:Handler$h$ -> Handler$h$8, $block$res -> block$res12, class:Cont$handleBlock$h$ -> Cont$handleBlock$h$1, $tmp -> tmp9, member:handleBlock$ -> handleBlock$10, $block$res -> block$res7, class:Handler$h$ -> Handler$h$1, $block$res -> block$res11, $tmp -> tmp5, result -> result, $tmp -> tmp8, class:Handler$h$ -> Handler$h$6, class:Handler$h$ -> Handler$h$7, class:Cont$handleBlock$h$ -> Cont$handleBlock$h$9, $block$res -> block$res, member:handleBlock$ -> handleBlock$8, $block$res -> block$res3, $tmp -> tmp1, class:Handler$h$ -> Handler$h$10, member:Predef -> Predef, class:Cont$func$foo$ -> Cont$func$foo$, class:Handler$h$ -> Handler$h$4, member:Effect -> Effect1, class:Effect -> Effect, member:handleBlock$ -> handleBlock$1, $block$res -> block$res9, class:Cont$handleBlock$h$ -> Cont$handleBlock$h$7, $tmp -> tmp6, $block$res -> block$res10, member:handleBlock$ -> handleBlock$5, $tmp -> tmp7, $block$res -> block$res1, $block$res -> block$res6, class:Cont$handleBlock$h$ -> Cont$handleBlock$h$, $tmp -> tmp4, member:handleBlock$ -> handleBlock$6, $block$res -> block$res13, class:Cont$handler$h$perform$ -> Cont$handler$h$perform$5, class:Cont$handleBlock$h$ -> Cont$handleBlock$h$4, member:handleBlock$ -> handleBlock$9, member:handleBlock$ -> handleBlock$7, member:handleBlock$ -> handleBlock$4, $tmp -> tmp10, class:Cont$handleBlock$h$ -> Cont$handleBlock$h$8)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'A'
-//│ ║  l.246: 	handle h = A.Effect(3) with
-//│ ║         	           ^
-//│ ╟── which references the symbol introduced here
-//│ ║  l.229: 	module A with
-//│ ║         	       ^^^^^^
-//│ ║  l.230: 	  data class Effect(x) with
-//│ ║         	^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.231: 	    fun test() = x
-//│ ║         	^^^^^^^^^^^^^^^^^^
-//│ ║  l.232: 	    fun perform(arg)
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:154)
-//│ ═══[RUNTIME ERROR] ReferenceError: A is not defined
-//│     at REPL53:1:46
-//│     at ContextifyScript.runInThisContext (node:vm:137:12)
-//│     at REPLServer.defaultEval (node:repl:593:22)
-//│     at bound (node:domain:433:15)
-//│     at REPLServer.runBound [as eval] (node:domain:444:12)
-//│     at REPLServer.onLine (node:repl:922:10)
-//│     at REPLServer.emit (node:events:518:28)
-//│     at REPLServer.emit (node:domain:489:12)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:419:12)
-//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:613:22)
+//│ = 0
 
 fun f(perform) =
   handle h = Effect with
@@ -414,18 +368,7 @@ fun foo(h) =
 handle h = Eff with
   fun perform()(k) = k(())
 foo(h) 
-//│ FAILURE: Unexpected exception
-//│ /!!!\ Uncaught error: java.lang.ClassCastException: Cannot cast to scala.Nothing
-//│ 	at: hkmc2.codegen.HandlerLowering.hkmc2$codegen$HandlerLowering$$translateFun(HandlerLowering.scala:594)
-//│ 	at: hkmc2.codegen.HandlerLowering.$anonfun$12(HandlerLowering.scala:626)
-//│ 	at: scala.collection.immutable.List.map(List.scala:247)
-//│ 	at: hkmc2.codegen.HandlerLowering.hkmc2$codegen$HandlerLowering$$translateCls(HandlerLowering.scala:626)
-//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyDefn(HandlerLowering.scala:534)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyBlock(BlockTransformer.scala:75)
-//│ 	at: hkmc2.codegen.BlockTransformerShallow.applyBlock(BlockTransformer.scala:288)
-//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyBlock(HandlerLowering.scala:509)
-//│ 	at: hkmc2.codegen.BlockTransformer.applySubBlock(BlockTransformer.scala:16)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyBlock$$anonfun$3$$anonfun$1(BlockTransformer.scala:38)
+//│ = 123
 
 :expect 123
 fun foo(h) =
@@ -451,18 +394,7 @@ fun foo(h) =
 handle h = Eff with
   fun perform()(k) = k(())
 foo(h)
-//│ FAILURE: Unexpected exception
-//│ /!!!\ Uncaught error: java.lang.ClassCastException: Cannot cast to scala.Nothing
-//│ 	at: hkmc2.codegen.HandlerLowering.hkmc2$codegen$HandlerLowering$$translateFun(HandlerLowering.scala:594)
-//│ 	at: hkmc2.codegen.HandlerLowering.translateBody$$anonfun$1(HandlerLowering.scala:616)
-//│ 	at: scala.collection.immutable.List.map(List.scala:247)
-//│ 	at: hkmc2.codegen.HandlerLowering.translateBody(HandlerLowering.scala:616)
-//│ 	at: hkmc2.codegen.HandlerLowering.$anonfun$13(HandlerLowering.scala:628)
-//│ 	at: scala.Option.map(Option.scala:242)
-//│ 	at: hkmc2.codegen.HandlerLowering.hkmc2$codegen$HandlerLowering$$translateCls(HandlerLowering.scala:628)
-//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyDefn(HandlerLowering.scala:534)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyBlock(BlockTransformer.scala:75)
-//│ 	at: hkmc2.codegen.BlockTransformerShallow.applyBlock(BlockTransformer.scala:288)
+//│ = 123
 
 // Access superclass fields
 handle h1 = Object with
