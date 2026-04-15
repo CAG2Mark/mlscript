@@ -738,9 +738,9 @@ class Lifter(topLevelBlk: Block)(using State, Raise, Config):
     /** Maps definition symbols to the path representing that definition. */
     protected val passedDefnsMap: Map[DefinitionSymbol[?], DefnRef]
     
-    protected lazy val capturesOrdered: List[ScopedInfo]
+    protected lazy val capturesOrdered: List[ScopedInfo] = reqCaptures.toList.sorted
     protected final lazy val passedSymsOrdered: List[Local] = reqPassedSymbols.toList.sortBy(_.uid)
-    protected final lazy val passedDefnsOrdered: List[DefinitionSymbol[?]] = reqDefns.toList.sortBy(_.uid)
+    protected final lazy val reqDefnsOrdered: List[DefinitionSymbol[?]] = reqDefns.toList.sortBy(_.uid)
     
     override lazy val capturePaths: Map[ScopedInfo, Path] =
       if thisCapturedLocals.isEmpty then capSymsMap
@@ -776,7 +776,7 @@ class Lifter(topLevelBlk: Block)(using State, Raise, Config):
       defnPathsFromThisObj ++ fromParents
     
     final def formatArgs: List[Arg] =
-      val defnsArgs = passedDefnsOrdered.map(d => ctx.defnsMap(d).asArg)
+      val defnsArgs = reqDefnsOrdered.map(d => ctx.defnsMap(d).asArg)
       val captureArgs = capturesOrdered.map(c => ctx.capturesMap(c).asArg)
       val localArgs = passedSymsOrdered.map(l => ctx.symbolsMap(l).asArg)
       defnsArgs ::: captureArgs ::: localArgs
@@ -789,10 +789,10 @@ class Lifter(topLevelBlk: Block)(using State, Raise, Config):
   sealed trait GenericRewrittenScope[T] extends RewrittenScope[T]:
     lazy val captureSym = VarSymbol(Tree.Ident(obj.nme + "$cap"))
     override lazy val capturePath = captureSym.asPath
-    protected val liftedObjsSyms: Map[InnerSymbol, VarSymbol] = node.liftedObjSyms.map: s =>
+    protected val liftedObjsOrdered: List[InnerSymbol] = node.liftedObjSyms.toList.sortBy(_.uid)
+    protected val liftedObjsSyms: Map[InnerSymbol, VarSymbol] = liftedObjsOrdered.map: s =>
         s -> VarSymbol(Tree.Ident(s.nme + "$"))
       .toMap
-    protected val liftedObjsOrdered: List[InnerSymbol] = node.liftedObjSyms.toList.sortBy(_.uid)
     override lazy val liftedObjsMap: Map[InnerSymbol, LocalPath] = liftedObjsSyms.map:
       case k -> v => k -> v.asLocalPath
     
@@ -804,10 +804,10 @@ class Lifter(topLevelBlk: Block)(using State, Raise, Config):
   sealed trait ClsLikeRewrittenScope[T](sym: InnerSymbol) extends RewrittenScope[T]:
     lazy val captureSym = TermSymbol(syntax.ImmutVal, S(sym), Tree.Ident(obj.nme + "$cap"))
     override lazy val capturePath = captureSym.asPath
-    protected val liftedObjsSyms: Map[InnerSymbol, TermSymbol] = node.liftedObjSyms.map: s =>
+    protected val liftedObjsOrdered: List[InnerSymbol] = node.liftedObjSyms.toList.sortBy(_.uid)
+    protected val liftedObjsSyms: Map[InnerSymbol, TermSymbol] = liftedObjsOrdered.map: s =>
         s -> TermSymbol(syntax.ImmutVal, S(sym), Tree.Ident(s.nme + "$"))
       .toMap
-    protected val liftedObjsOrdered: List[InnerSymbol] = node.liftedObjSyms.toList.sortBy(_.uid)
     override lazy val liftedObjsMap: Map[InnerSymbol, LocalPath] = liftedObjsSyms.map:
       case k -> v => k -> v.asLocalPath
     protected def appendCaptureField(privFields: List[TermSymbol]) =
@@ -908,26 +908,24 @@ class Lifter(topLevelBlk: Block)(using State, Raise, Config):
       LifterResult(newComp, rewriterCtor.extraDefns.toList ::: extras)
    
   class LiftedFunc(override val obj: ScopedObject.Func)(using ctx: LifterCtxNew) extends LiftedScope[FunDefn](obj) with GenericRewrittenScope[FunDefn]:
-    private val passedSymsMap_ : Map[Local, VarSymbol] = passedSyms.map: s =>
+    private val passedSymsMap_ : Map[Local, VarSymbol] = passedSymsOrdered.map: s =>
         s -> VarSymbol(Tree.Ident(s.nme))
       .toMap
-    private val capSymsMap_ : Map[ScopedInfo, VarSymbol] = reqCaptures.toList.sorted.map: i =>
+    private val capSymsMap_ : Map[ScopedInfo, VarSymbol] = capturesOrdered.map: i =>
         val nme = data.getNode(i).obj.nme
         i -> VarSymbol(Tree.Ident(nme + "$cap"))
       .toMap
-    private val defnSymsMap_ : Map[DefinitionSymbol[?], VarSymbol] = reqDefns.map: i =>
+    private val defnSymsMap_ : Map[DefinitionSymbol[?], VarSymbol] = reqDefnsOrdered.sortBy(_.uid).map: i =>
         val nme = data.getNode(i).obj.nme
         i -> VarSymbol(Tree.Ident(nme + "$"))
       .toMap
-    
-    override lazy val capturesOrdered: List[ScopedInfo] = reqCaptures.toList.sorted
     
     override protected val passedSymsMap = passedSymsMap_.view.mapValues(_.asLocalPath).toMap
     override protected val capSymsMap = capSymsMap_.view.mapValues(_.asPath).toMap
     override protected val passedDefnsMap = defnSymsMap_.view.mapValues(_.asDefnRef).toMap
     
     val auxParams: List[Param] =
-      (passedDefnsOrdered.map(defnSymsMap_) ::: capturesOrdered.map(capSymsMap_) ::: passedSymsOrdered.map(passedSymsMap_))
+      (reqDefnsOrdered.map(defnSymsMap_) ::: capturesOrdered.map(capSymsMap_) ::: passedSymsOrdered.map(passedSymsMap_))
       .map: s =>
         val decl = Param(FldFlags.empty.copy(isVal = false), s, N, Modulefulness.none)
         s.decl = S(decl)
@@ -1021,14 +1019,14 @@ class Lifter(topLevelBlk: Block)(using State, Raise, Config):
     private val captureSym = TermSymbol(syntax.ImmutVal, S(obj.cls.isym), Tree.Ident(obj.nme + "$cap"))
     override lazy val capturePath: Path = captureSym.asPath
     
-    private val passedSymsMap_ : Map[Local, (vs: VarSymbol, ts: TermSymbol)] = passedSyms.map: s =>
+    private val passedSymsMap_ : Map[Local, (vs: VarSymbol, ts: TermSymbol)] = passedSymsOrdered.map: s =>
         s -> 
           (
             VarSymbol(Tree.Ident(s.nme)),
             TermSymbol(syntax.LetBind, S(obj.cls.isym), Tree.Ident(s.nme))
           )
       .toMap
-    private val capSymsMap_ : Map[ScopedInfo, (vs: VarSymbol, ts: TermSymbol)] = reqCaptures.toList.sorted.map: i =>
+    private val capSymsMap_ : Map[ScopedInfo, (vs: VarSymbol, ts: TermSymbol)] = capturesOrdered.map: i =>
         val nme = data.getNode(i).obj.nme + "$cap"
         i ->
           (
@@ -1036,7 +1034,7 @@ class Lifter(topLevelBlk: Block)(using State, Raise, Config):
             TermSymbol(syntax.LetBind, S(obj.cls.isym), Tree.Ident(nme))
           )
       .toMap
-    private val defnSymsMap_ : Map[DefinitionSymbol[?], (vs: VarSymbol, ts: TermSymbol)] = reqDefns.map: i =>
+    private val defnSymsMap_ : Map[DefinitionSymbol[?], (vs: VarSymbol, ts: TermSymbol)] = reqDefnsOrdered.map: i =>
         i -> 
           (
             VarSymbol(Tree.Ident(i.nme + "$")),
@@ -1046,18 +1044,16 @@ class Lifter(topLevelBlk: Block)(using State, Raise, Config):
     
     private lazy val extraPrivSyms: List[TermSymbol] = 
       liftedObjsOrdered.map(liftedObjsSyms)
-      ::: passedDefnsOrdered.map(defnSymsMap_(_).ts)
+      ::: reqDefnsOrdered.map(defnSymsMap_(_).ts)
       ::: capturesOrdered.map(capSymsMap_(_).ts)
       ::: passedSymsOrdered.map(passedSymsMap_(_).ts)
-    
-    override lazy val capturesOrdered: List[ScopedInfo] = reqCaptures.toList.sorted
     
     override protected val passedSymsMap = passedSymsMap_.view.mapValues(_.ts.asLocalPath).toMap
     override protected val capSymsMap = capSymsMap_.view.mapValues(_.ts.asPath).toMap
     override protected val passedDefnsMap = defnSymsMap_.view.mapValues(_.ts.asDefnRef).toMap
     
     val auxParams: List[Param] =
-      (passedDefnsOrdered.map(x => defnSymsMap_(x).vs)
+      (reqDefnsOrdered.map(x => defnSymsMap_(x).vs)
         ::: capturesOrdered.map(x => capSymsMap_(x).vs)
         ::: passedSymsOrdered.map(x => passedSymsMap_(x).vs))
       .map(Param.simple(_))
@@ -1164,7 +1160,7 @@ class Lifter(topLevelBlk: Block)(using State, Raise, Config):
         case (sym, acc) =>
           val (vs, ts) = capSymsMap_(sym)
           Assign(ts, vs.asPath, acc)
-      val ctorWithDefns = passedDefnsOrdered.foldRight(ctorWithCaps):
+      val ctorWithDefns = reqDefnsOrdered.foldRight(ctorWithCaps):
         case (sym, acc) =>
           val (vs, ts) = defnSymsMap_(sym)
           Assign(ts, vs.asPath, acc)
