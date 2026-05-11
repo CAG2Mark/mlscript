@@ -6,6 +6,9 @@ import org.scalatest.concurrent.{TimeLimitedTests, Signaler}
 
 import mlscript.utils._, shorthands._
 import io.PlatformPath.given
+import hkmc2.Config.EffectHandlers
+import hkmc2.Config.LiftDefns
+import hkmc2.Config.StackSafety
 
 
 // Reusable base class for compile test runners. Subclasses provide the
@@ -32,6 +35,8 @@ abstract class CompileTestRunnerBase(
   
   val validExt = Set("mls")
   
+  def benchmarkHandlers = false
+  
   for dir <- compileDirs do {
     val allFiles = os.walk(dir)
       .filter(_.toIO.isFile)
@@ -54,7 +59,13 @@ abstract class CompileTestRunnerBase(
         // * Stack safety relies on the fact that runtime uses while loops for resumption
         // * and does not create extra stack depth. Hence, while loop rewriting should be disabled here.
         // * (It used to be on by default, but now is off by default, so nothing to do.)
-        given Config = Config.default(mainTestDir)
+        given Config =
+          if benchmarkHandlers then Config.default(mainTestDir).copy(
+            //effectHandlers = S(EffectHandlers(false, S(StackSafety(1500)), true, false, false)),
+            effectHandlers = S(EffectHandlers(false, N, true, false, false)),
+            liftDefns = S(LiftDefns()),
+            )
+          else Config.default(mainTestDir).copy(liftDefns = S(LiftDefns()))
         
         // Synchronize diagnostic output to avoid interleaving since the compiler tests run in parallel.
         val wrap: (=> Unit) => Unit = body => this.synchronized(body)
@@ -66,6 +77,7 @@ abstract class CompileTestRunnerBase(
             val termFile = mainTestDir / "mlscript-compile" / "Term.mjs",
           mkRaise = report.mkRaise
         )
+        
         compiler.compileModule(file)
         
         if report.badLines.nonEmpty then

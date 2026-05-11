@@ -8,6 +8,8 @@ class NofibCompileTestRunner extends CompileTestRunnerBase(
   compileDirs = TestFolders.nofibCompileDirs(os.pwd),
 ):
   protected def cctx: CompilerCtx = NofibCompileTestRunner.cctx
+  
+  override final def benchmarkHandlers = false
 
 end NofibCompileTestRunner
 

@@ -10,6 +10,7 @@ import hkmc2.syntax.Tree
 import hkmc2.codegen.HandlerLowering.FnOrCls
 
 class StackSafeTransform(depthLimit: Int, paths: HandlerPaths, stackSafetyMap: StackSafetyMap)(using State, Config):
+  private var i = 0
   private val STACK_DEPTH_IDENT: Tree.Ident = Tree.Ident("stackDepth")
 
   private val runtimePath: Path = State.runtimeSymbol.asPath
@@ -80,7 +81,8 @@ class StackSafeTransform(depthLimit: Int, paths: HandlerPaths, stackSafetyMap: S
       
       override def applyResult(r: Result)(k: Result => Block): Block =
         if usesStack(r) then
-          val tmp = TempSymbol(N, "res")
+          val tmp = TempSymbol(N, "res" + i)
+          i += 1
           Scoped(Set.single(tmp), extract(r, false, k, tmp, curDepth))
         else
           super.applyResult(r)(k)
@@ -137,12 +139,14 @@ class StackSafeTransform(depthLimit: Int, paths: HandlerPaths, stackSafetyMap: S
         TempSymbol(None, "curDepth")
       val newBody = transform(blk, curDepth)
       val resSym = TempSymbol(None, "stackDelayRes")
+      val tmp = TempSymbol(N)
       val addStackSafeEffect = blk => blockBuilder
         .assignFieldN(runtimePath, STACK_DEPTH_IDENT, op("+", stackDepthPath, intLit(increment)))
         .staticif(usedDepth, _.assignScoped(curDepth, stackDepthPath))
         .assignScoped(resSym, Call(checkDepthPath, Nil)(true, true, false))
+        .assignScoped(tmp, paths.curEffect)
         .ifthen(
-          paths.curEffect,
+          tmp.asPath,
           Case.Lit(Tree.UnitLit(true)),
           End(),
           S(doUnwindBlk)

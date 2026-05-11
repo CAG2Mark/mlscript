@@ -13,5 +13,5 @@ object NofibDiffTestState extends DiffTestRunner.State:
 
 class NofibDiffTestRunner
   extends DiffTestRunnerBase(NofibDiffTestState)
-  with ParallelTestExecution
+  // with ParallelTestExecution
 
