@@ -1,3 +1,10 @@
+# CPS Transform Branch
+
+This branch is purely used to explore the performance impact of a CPS-based handler transformation. This will not be merged into
+the main compiler.
+
+Diff: https://github.com/hkust-taco/mlscript/compare/hkmc2...CAG2Mark:mlscript:effects-cps
+
 # MLscript
 
 What would TypeScript look like if was designed with type inference, soundness, and pattern matching in mind?
