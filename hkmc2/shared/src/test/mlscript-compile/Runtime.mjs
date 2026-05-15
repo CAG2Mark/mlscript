@@ -623,6 +623,9 @@ let Runtime1;
       break;
     }
   } 
+  static cpsId(x) {
+    return x
+  } 
   static get unreachable() {
     throw runtime.safeCall(globalThis.Error("unreachable"));
   } 

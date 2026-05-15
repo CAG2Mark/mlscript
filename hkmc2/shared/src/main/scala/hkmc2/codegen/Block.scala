@@ -965,7 +965,7 @@ extension (k: Block => Block)
   def ifthen(scrut: Path, cse: Case, trm: Block, els: Opt[Block] = N): Block => Block =
     k.chain(Match(scrut, cse -> trm :: Nil, els, _))
   def label(label: LabelSymbol, loop: Bool, body: Block) = k.chain(Label(label, loop, body, _))
-  def ret(r: Result) = k.rest(Return(r, false))
+  def ret(r: Result, implct: Bool = false) = k.rest(Return(r, implct))
   def scopedVars(s: collection.Set[Local]) = k.chain(Scoped(s, _))
   def staticif(b: Boolean, f: (Block => Block) => (Block => Block)) = if b then k.transform(f) else k
   def foldLeft[A](xs: Iterable[A])(f: (Block => Block, A) => Block => Block) = xs.foldLeft(k)(f)
@@ -975,3 +975,8 @@ def blockBuilder: Block => Block = identity
 extension (l: Local)
   def asPath: Path = Value.Ref(l, N)
 
+def createNestedFn(name: String, params: ParamList, body: Block, nameIsMeaningful: Bool = true)(using State) =
+  val bms = BlockMemberSymbol(name, Nil, nameIsMeaningful)
+  val fnDef = FunDefn.withFreshSymbol(N, bms, params :: Nil, body)(N, Nil)
+  val blk = (rest: Block) => Scoped(Set(bms), Define(fnDef, rest))
+  (fnDef, blk)

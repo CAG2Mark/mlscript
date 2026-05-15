@@ -1342,6 +1342,7 @@ object PlainParamList:
   def unapply(pl: ParamList): Opt[Ls[Param]] = pl match
     case ParamList(ParamListFlags.empty, params, N) => S(params)
     case _ => N
+  def simple(params: Ls[VarSymbol]) = apply(params.map(Param.simple(_)))
 
 final case class ParamListFlags(ctx: Bool):
   def show: Str = (if ctx then "ctx " else "")

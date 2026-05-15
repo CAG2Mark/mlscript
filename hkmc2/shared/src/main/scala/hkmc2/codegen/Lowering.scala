@@ -1202,18 +1202,18 @@ class Lowering()(using Config, TL, Raise, State, Ctx, SymbolPrinter):
       if shouldFlattenScopes then ScopeFlattener().applyBlock(deforested)
       else deforested
     
-    val lifted =
-      if lift then Lifter(scopeFlattened).transform
-      else scopeFlattened
-    
-    val (withHandlers2, stackSafetyInfo) = config.effectHandlers.fold((lifted, Map.empty)): opt =>
-      HandlerLowering(handlerPaths, opt).translateTopLevel(lifted)
+    val (withHandlers2, stackSafetyInfo) = config.effectHandlers.fold((scopeFlattened, Map.empty)): opt =>
+      HandlerLowering(handlerPaths, opt).translateTopLevel(scopeFlattened)
     
     val stackSafe = config.stackSafety match
       case N => withHandlers2
       case S(sts) => StackSafeTransform(sts.stackLimit, handlerPaths, stackSafetyInfo).transformTopLevel(withHandlers2)
     
-    val flattened = stackSafe.flattened
+    val lifted2 =
+      if lift then Lifter(stackSafe).transform
+      else stackSafe
+    
+    val flattened = lifted2.flattened
     
     val bufferable = BufferableTransform().transform(flattened)
     

@@ -8,5 +8,41 @@
 // :d
 // :todo
 
+:noInline
+:sjs
+fun f(x) =
+  fun g = x
+  g
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let f; f = function f(x) { let g; g = function g() { return x }; return g() };
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
-
+:sjs
+:effectHandlers
+fun g(x) = x + 2
+fun f(x) =
+  let a = g(x)
+  a + 2
+fun h(x) = g(x)
+f(0)
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let f1, g, h;
+//│ g = function g(k, x) {
+//│   let tmp;
+//│   tmp = x + 2;
+//│   return k(tmp)
+//│ };
+//│ f1 = function f(k, x) {
+//│   let a, cpsCont;
+//│   cpsCont = function cpsCont(retVal) {
+//│     let tmp;
+//│     a = retVal;
+//│     tmp = a + 2;
+//│     return k(tmp)
+//│   };
+//│   return g(cpsCont, x)
+//│ };
+//│ h = function h(k, x) { return g(k, x) };
+//│ f1(runtime.cpsId, 0)
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
+//│ = 4

@@ -115,9 +115,6 @@ abstract class MLsDiffMaker extends DiffMaker:
       output(s"$errMarker Option ':stackSafe' requires ':effectHandlers' to be set")
     if !effectHandlers.get.forall(effectHandlersOptions.contains(_)) then
       output(s"$errMarker Option ':effectHandlers' only supports 'debug' as option")
-    if effectHandlers.isSet then
-      if liftDefns.isUnset then
-        output(s"$errMarker Option ':effectHandlers' requires ':lift'")
     if inlineThreshold.isSet && noInlineOpt.isSet then
       output(s"$errMarker Option ':noInline' conflicts with option ':inlineThreshold'")
     Config(
