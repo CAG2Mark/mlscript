@@ -29,6 +29,51 @@ sealed abstract class Block extends Product:
     case _: End => true
     case _ => false
   
+  def showDbg(using DebugPrinter): Str = this match
+    case End(msg) => s"End(${msg})"
+    case Unreachable(msg) => s"Unreachable(${msg})"
+    case Break(lbl) => s"Break(${lbl.showDbg})"
+    case Continue(lbl) => s"Continue(${lbl.showDbg})"
+    case Return(res, implct) => s"Return(${res.showDbg}, implct = $implct)"
+    case Match(scrut, arms, dflt, rest) =>
+      val armsStr = arms.map((pat, arm) => s"case ${pat.showDbg} => ${arm.showDbg}").mkString("\n")
+      val dfltStr = dflt.map(d => s"default => ${d.showDbg}\n").getOrElse("")
+      s"""|Match(${scrut.showDbg}) {
+          |$armsStr
+          |$dfltStr
+          |}
+          |${rest.showDbg}""".stripMargin
+    case Label(lbl, loop, body, rest) =>
+      s"""|Label(${lbl.showDbg}, loop = $loop) {
+          |${body.showDbg}
+          |}
+          |${rest.showDbg}""".stripMargin
+    case Begin(sub, rest) =>
+      s"""|Begin {
+          |${sub.showDbg}
+          |}
+          |${rest.showDbg}""".stripMargin
+    case TryBlock(sub, finallyDo, rest) =>
+      s"""|Try {
+          |${sub.showDbg}
+          |} finally {
+          |${finallyDo.showDbg}
+          |}
+          |${rest.showDbg}""".stripMargin
+    case Assign(lhs, rhs, rest) =>
+      s"""|Assign(${lhs.showDbg} = ${rhs.showDbg})
+          |${rest.showDbg}""".stripMargin
+    case AssignField(lhs, nme, rhs, rest) =>
+      s"""|AssignField(${lhs.showDbg}.${nme} = ${rhs.showDbg})
+          |${rest.showDbg}""".stripMargin
+    case AssignDynField(lhs, fld, arrayIdx, rhs, rest) =>
+      val access = if arrayIdx then s"[${fld.showDbg}]" else s".${fld.showDbg}"
+      s"""|AssignDynField(${lhs.showDbg}$access = ${rhs.showDbg})
+          |${rest.showDbg}""".stripMargin
+    case Define(defn, rest) =>
+      s"""|Define(${defn.showDbg})
+          |${rest.showDbg}""".stripMargin
+  
   lazy val isAbortive: Bool = this match
     case _: End => false
     case _: Throw | _: Break | _: Continue | _: Unreachable => true
@@ -107,7 +152,7 @@ sealed abstract class Block extends Product:
     case AssignField(lhs, nme, rhs, rest) => lhs.freeVars ++ rhs.freeVars ++ rest.freeVars
     case AssignDynField(lhs, fld, arrayIdx, rhs, rest) => lhs.freeVars ++ fld.freeVars ++ rhs.freeVars ++ rest.freeVars
     case Define(defn, rest) => defn.freeVars ++ rest.freeVars
-    case Scoped(syms, body) => body.freeVars
+    case Scoped(syms, body) => body.freeVars -- syms
     case End(msg) => Set.empty
     case Unreachable(msg) => Set.empty
   
@@ -387,6 +432,8 @@ object Match:
     val arms = if emptyDflt then _arms.filterNot(_._2.isEmpty) else _arms
     if arms.isEmpty && scrut.isPure then dflt.fold(rest)(Begin(_, rest))
     else dflt match
+    case S(Unreachable(_)) if scrut.isPure && arms.sizeCompare(1) === 0 =>
+      Begin(arms.head._2, rest)
     case S(Match(`scrut`, arms2, dflt2, _: End)) => // TODO: also handle non-End rest (may require a join point)
       // * Currently, this branch does not seem used often (or at all?),
       // * because the UCS and (especially) MergeMatchArmTransformer already do a good job at merging matches
@@ -433,10 +480,10 @@ object Begin:
 object HandleBlock:
 
   def suspend(tag: Path, handlerFun: Path)(using Elaborator.Ctx): Result =
-    Call(Value.Ref(Elaborator.ctx.builtins.runtime.suspend, N), tag.asArg :: handlerFun.asArg :: Nil)(true, true, false)
+    Call(Value.Ref(Elaborator.ctx.builtins.runtime.suspend, N), (tag.asArg :: handlerFun.asArg :: Nil) ne_:: Nil)(true, true, false)
 
   def handleSuspension(tag: Path, bodyFun: Path)(using Elaborator.Ctx): Result =
-    Call(Value.Ref(Elaborator.ctx.builtins.runtime.handle_suspension, N), tag.asArg :: bodyFun.asArg :: Nil)(true, true, false)
+    Call(Value.Ref(Elaborator.ctx.builtins.runtime.handle_suspension, N), (tag.asArg :: bodyFun.asArg :: Nil) ne_:: Nil)(true, true, false)
   
   private def create(
       lhs: Local,
@@ -476,7 +523,7 @@ object HandleBlock:
       N, Nil,
       S(par), handlerMtds, Nil, Nil,
       // Apparently, the lifter is not happy with any assignment in the preCtor...
-      Return(Call(Value.Ref(State.builtinOpsMap("super")), args.map(_.asArg))(true, true, false), true),
+      Return(Call(Value.Ref(State.builtinOpsMap("super")), args.map(_.asArg) ne_:: Nil)(true, true, false), true),
       End(),
       N,
       N,
@@ -485,7 +532,7 @@ object HandleBlock:
     blockBuilder
       .scopedVars(Set(clsDefn.sym, sym))
       .define(clsDefn)
-      .assign(lhs, Instantiate(mut = true, Value.Ref(clsDefn.sym, S(cls)), Nil))
+      .assign(lhs, Instantiate(mut = true, Value.Ref(clsDefn.sym, S(cls)), Nil :: Nil))
       .define(bodyDefn)
       .assign(res, handleSuspension(lhs.asPath, Value.Ref(bodyDefn.sym, S(bodyDefn.dSym))))
       .rest(rest)
@@ -515,6 +562,11 @@ sealed abstract class Defn:
     case _ => false
   def isOwned: Bool = owner.isDefined
   def owner: Opt[InnerSymbol]
+  
+  def showDbg(using DebugPrinter): Str = this match
+    case vd: ValDefn => s"ValDefn(${vd.sym.showDbg} = ${vd.rhs.showDbg})"
+    case fd: FunDefn => s"FunDefn(${fd.sym.showDbg}(...))"
+    case c: ClsLikeDefn => s"ClsLikeDefn(${c.sym.showDbg}, ...)"
   
   /** Whether this definition as a statement has any side effect (if unused). */
   def isPure: Bool = this match
@@ -546,6 +598,7 @@ sealed abstract class Defn:
         -- auxParams.flatMap(_.paramSyms)
         ++ stat.iterator.flatMap(_.freeVars)
         ++ sym.optionIf(own.isEmpty)
+        ++ parentSym.iterator.flatMap(_.freeVars)
   
   lazy val freeVarsLLIR: Set[Local] = this match
     case FunDefn(own, sym, dSym, params, body) => body.freeVarsLLIR -- params.flatMap(_.paramSyms) - sym
@@ -645,7 +698,7 @@ final case class ClsLikeDefn(
     owner: Opt[InnerSymbol],
     isym: DefinitionSymbol[? <: ClassLikeDef] & InnerSymbol,
     sym: BlockMemberSymbol,
-    ctorSym: Opt[TermSymbol],
+    ctorSym: Opt[ClassCtorSymbol],
     k: syntax.ClsLikeKind,
     paramsOpt: Opt[ParamList],
     auxParams: List[ParamList],
@@ -719,7 +772,13 @@ enum Case:
     * @param safe true will omit the instanceof Object check
   */
   case Field(name: Tree.Ident, safe: Bool)
-
+  
+  def showDbg(using DebugPrinter): Str = this match
+    case Lit(lit) => lit.idStr
+    case Cls(cls, path) => s"Cls(${cls.showDbg}, ${path.showDbg})"
+    case Tup(len, inf) => s"Tup($len, $inf)"
+    case Field(name, safe) => s"Field(${name.showDbg}, $safe)"
+  
   lazy val freeVars: Set[Local] = this match
     case Lit(_) => Set.empty
     case Cls(_, path) => path.freeVars
@@ -739,12 +798,26 @@ sealed abstract class Result extends AutoLocated:
 // sealed abstract class Result extends AutoLocated with ProductWithExtraInfo:
 //   def extraInfo: Str = toLoc.toString
   
+  def showDbg(using DebugPrinter): Str = this match
+    case Value.Ref(l, disamb) => s"${l.showAsPlain}${disamb.fold("")(s => s"‹${s.showAsPlain}›")}"
+    case Value.This(sym) => s"this[${sym.showAsPlain}]"
+    case Value.Lit(lit) => lit.idStr
+    case Select(q, n) => s"Select(${q.showDbg}, ${n.showDbg})"
+    case DynSelect(q, fld, arrayIdx) => s"DynSelect(${q.showDbg}, ${fld.showDbg}, $arrayIdx)"
+    case Call(fun, argss) => s"Call(${fun.showDbg}, [${
+      argss.map(_.map(a => a.value.showDbg).mkString("[", ", ", "]")).mkString(", ")}])"
+    case Lambda(params, body) => s"Lambda(${params.showDbg}, ${body.showDbg})"
+    case Record(mut, args) => s"Record($mut, [${args.map(a => s"${a.showDbg} = ${a.value.showDbg}").mkString(", ")}])"
+    case Tuple(mut, elems) => s"Tuple($mut, [${elems.map(_.value.showDbg).mkString(", ")}])"
+    case Instantiate(mut, cls, argss) => s"Instantiate($mut, ${cls.showDbg}, [${
+      argss.map(_.map(a => a.value.showDbg).mkString("[", ", ", "]")).mkString(", ")}])"
+  
   lazy val isPure: Bool = this match
     case _: Value => true
     case sel @ Select(q, n) =>
       q.isPure && sel.symbol.exists(_.isPure)
-    case Call(Value.Ref(bs: BuiltinSymbol, _), as) if bs.isPure =>
-      as.forall(_.value.isPure)
+    case Call(Value.Ref(bs: BuiltinSymbol, _), ass) if bs.isPure =>
+      ass.forall(_.forall(_.value.isPure))
     case Record(mut, args) => args.forall(_.value.isPure)
     case Tuple(mut, elems) => elems.forall(_.value.isPure)
     // case Instantiate(mut, cls, args) => // TODO?
@@ -755,8 +828,8 @@ sealed abstract class Result extends AutoLocated:
   // * is from some different place (with a different Origin), such as the location attached to symbols.
   // * That's why for example, we're not adding the `l` of `Value.Ref` to the children list.
   protected def children: Vector[Located] = this match
-    case Call(fun, args) => fun +: args.iterator.map(_.value).toVector
-    case Instantiate(mut, cls, args) => cls +: args.iterator.map(_.value).toVector
+    case Call(fun, argss) => fun +: argss.iterator.flatten.map(_.value).toVector
+    case Instantiate(mut, cls, argss) => cls +: argss.iterator.flatten.map(_.value).toVector
     case Select(qual, name) => Vector.double(qual, name)
     case DynSelect(qual, fld, arrayIdx) => Vector.double(qual, fld)
     case Lambda(params, body) => Vector.single(params)
@@ -768,16 +841,16 @@ sealed abstract class Result extends AutoLocated:
   
   // TODO rm Lam from values and thus the need for this method
   def subBlocks: Ls[Block] = this match
-    case Call(fun, args) => fun.subBlocks ::: args.flatMap(_.value.subBlocks)
-    case Instantiate(mut, cls, args) => args.flatMap(_.value.subBlocks)
+    case Call(fun, argss) => fun.subBlocks ::: argss.flatten.flatMap(_.value.subBlocks)
+    case Instantiate(mut, cls, argss) => argss.flatten.flatMap(_.value.subBlocks)
     case Select(qual, name) => qual.subBlocks
     case Lambda(params, body) => body :: Nil
     case Tuple(mut, elems) => elems.flatMap(_.value.subBlocks)
     case _ => Nil
   
   lazy val freeVars: Set[Local] = this match
-    case Call(fun, args) => fun.freeVars ++ args.flatMap(_.value.freeVars).toSet
-    case Instantiate(mut, cls, args) => cls.freeVars ++ args.flatMap(_.value.freeVars).toSet
+    case Call(fun, argss) => fun.freeVars ++ argss.flatten.flatMap(_.value.freeVars).toSet
+    case Instantiate(mut, cls, argss) => cls.freeVars ++ argss.flatten.flatMap(_.value.freeVars).toSet
     case Select(qual, name) => qual.freeVars 
     case Lambda(params, body) => body.freeVars -- params.paramSyms
     case Tuple(mut, elems) => elems.flatMap(_.value.freeVars).toSet
@@ -789,8 +862,8 @@ sealed abstract class Result extends AutoLocated:
     case DynSelect(qual, fld, arrayIdx) => qual.freeVars ++ fld.freeVars
   
   lazy val freeVarsLLIR: Set[Local] = this match
-    case Call(fun, args) => fun.freeVarsLLIR ++ args.flatMap(_.value.freeVarsLLIR).toSet
-    case Instantiate(mut, cls, args) => cls.freeVarsLLIR ++ args.flatMap(_.value.freeVarsLLIR).toSet
+    case Call(fun, argss) => fun.freeVarsLLIR ++ argss.flatten.flatMap(_.value.freeVarsLLIR).toSet
+    case Instantiate(mut, cls, argss) => cls.freeVarsLLIR ++ argss.flatten.flatMap(_.value.freeVarsLLIR).toSet
     case Select(qual, name) => qual.freeVarsLLIR 
     case Lambda(params, body) => body.freeVarsLLIR -- params.paramSyms
     case Tuple(mut, elems) => elems.flatMap(_.value.freeVarsLLIR).toSet
@@ -817,9 +890,9 @@ type Local = Symbol
  * regardless of whether the check for effect is inserted or not.
  * Note that the check for effect is inserted during HandlerLowering and setting this to true
  * after handler is lowered does not have any effect on the code generation. */
-case class Call(fun: Path, args: Ls[Arg])(val isMlsFun: Bool, val mayRaiseEffects: Bool, val explicitTailCall: Bool) extends Result
+case class Call(fun: Path, argss: NELs[Ls[Arg]])(val isMlsFun: Bool, val mayRaiseEffects: Bool, val explicitTailCall: Bool) extends Result
 
-case class Instantiate(mut: Bool, cls: Path, args: Ls[Arg]) extends Result
+case class Instantiate(mut: Bool, cls: Path, argss: Ls[Ls[Arg]]) extends Result
 
 case class Lambda(params: ParamList, body: Block) extends Result
 
@@ -833,6 +906,10 @@ sealed abstract class Path extends TrivialResult:
   def sel(id: Tree.Ident, sym: DefinitionSymbol[?]): Path = Select(this, id)(S(sym))
   def selSN(id: Str): Path = selN(new Tree.Ident(id))
   def asArg = Arg(spread = N, this)
+  def targetSymbol: Opt[DefinitionSymbol[?]] = this match
+    case ref: Value.Ref => ref.disamb
+    case sel: Select => sel.symbol
+    case _ => N
 
 /**
  * @param symbol The symbol representing the definition that the selection refers to, if known.
@@ -869,6 +946,8 @@ case class Arg(spread: Opt[SpreadKind], value: Path)
 // * `IndxdArg(N, value)` represents a spread element in a record `...value`
 case class RcdArg(idx: Opt[Path], value: Path):
   def spread: Bool = idx.isEmpty
+  def showDbg(using DebugPrinter): Str =
+    if spread then s"...${value.showDbg}" else s"(${idx.get.showDbg}): ${value.showDbg}"
 
 extension (k: Block => Block)
   

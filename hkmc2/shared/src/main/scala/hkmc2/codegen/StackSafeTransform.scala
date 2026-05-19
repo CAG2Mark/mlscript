@@ -21,7 +21,7 @@ class StackSafeTransform(depthLimit: Int, paths: HandlerPaths, stackSafetyMap: S
   private def intLit(n: BigInt) = Value.Lit(Tree.IntLit(n))
   
   private def op(op: String, a: Path, b: Path) =
-    Call(State.builtinOpsMap(op).asPath, a.asArg :: b.asArg :: Nil)(true, false, false)
+    Call(State.builtinOpsMap(op).asPath, (a.asArg :: b.asArg :: Nil) ne_:: Nil)(true, false, false)
 
   // Increases the stack depth, assigns the call to a value, then decreases the stack depth
   // then binds that value to a desired block
@@ -37,7 +37,7 @@ class StackSafeTransform(depthLimit: Int, paths: HandlerPaths, stackSafetyMap: S
     val bodSym = BlockMemberSymbol("‹stack safe body›", Nil, false)
     val bodFun = FunDefn.withFreshSymbol(N, bodSym, ParamList(ParamListFlags.empty, Nil, N) :: Nil, body)(configOverride = N, annotations = Nil)
     Scoped(Set.single(bodSym),
-      Define(bodFun, Assign(resSym, Call(runStackSafePath, intLit(depthLimit).asArg :: bodSym.asPath.asArg :: Nil)(true, true, false), rest))
+      Define(bodFun, Assign(resSym, Call(runStackSafePath, (intLit(depthLimit).asArg :: bodSym.asPath.asArg :: Nil) ne_:: Nil)(true, true, false), rest))
     )
 
   def extractResTopLevel(res: Result, isTailCall: Bool, f: Result => Block, sym: Symbol, curDepth: => Symbol) =
@@ -143,8 +143,7 @@ class StackSafeTransform(depthLimit: Int, paths: HandlerPaths, stackSafetyMap: S
       val addStackSafeEffect = blk => blockBuilder
         .assignFieldN(runtimePath, STACK_DEPTH_IDENT, op("+", stackDepthPath, intLit(increment)))
         .staticif(usedDepth, _.assignScoped(curDepth, stackDepthPath))
-        .assignScoped(resSym, Call(checkDepthPath, Nil)(true, true, false))
-        .assignScoped(tmp, paths.curEffect)
+        .assignScoped(resSym, Call(checkDepthPath, Nil ne_:: Nil)(true, true, false))
         .ifthen(
           tmp.asPath,
           Case.Lit(Tree.UnitLit(true)),

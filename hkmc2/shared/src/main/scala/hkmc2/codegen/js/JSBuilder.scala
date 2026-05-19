@@ -107,6 +107,11 @@ class JSBuilder(using Config, TL, State, Ctx) extends CodeBuilder:
       case S(index) => doc"[$index]"
       case N => doc"[${JSBuilder.makeStringLiteral(s)}]"
   
+  // For use as the qualifier of a field selection
+  def resultQual(r: Result)(using Raise, Scope): Document =
+    val res = result(r)
+    if r.isInstanceOf[Value.Lit] then doc"(${res})" else res
+  
   def result(r: Result)(using Raise, Scope): Document = r match
     case Value.This(sym) => scope.findThis_!(sym)
     case Value.Lit(Tree.StrLit(value)) => makeStringLiteral(value)
@@ -119,33 +124,35 @@ class JSBuilder(using Config, TL, State, Ctx) extends CodeBuilder:
         doc"${getVar(l, l.toLoc)}.class"
       case _ =>
         getVar(l, r.toLoc)
-    case Call(Value.Ref(l: BuiltinSymbol, _), lhs :: rhs :: Nil) if !l.functionLike =>
+    case Call(Value.Ref(l: BuiltinSymbol, _), (lhs :: rhs :: Nil) :: Nil) if !l.functionLike =>
       if l.binary then
         val res = doc"${operand(lhs)} ${l.nme} ${operand(rhs)}"
         if needsParens(l.nme) then doc"(${res})" else res
       else errExpr(msg"Cannot call non-binary builtin symbol '${l.nme}'")
-    case Call(Value.Ref(l: BuiltinSymbol, _), rhs :: Nil) if !l.functionLike =>
+    case Call(Value.Ref(l: BuiltinSymbol, _), (rhs :: Nil) :: Nil) if !l.functionLike =>
       if l.unary then
         val res = doc"${l.nme} ${operand(rhs)}"
         if needsParens(l.nme) then doc"(${res})" else res
       else errExpr(msg"Cannot call non-unary builtin symbol '${l.nme}'")
-    case Call(Value.Ref(l: BuiltinSymbol, _), args) =>
+    case Call(Value.Ref(l: BuiltinSymbol, _), args :: Nil) =>
       if l.functionLike then
         val argsDoc = args.map(argument).mkDocument(", ")
         doc"${l.nme}(${argsDoc})"
       else errExpr(msg"Illegal arity for builtin symbol '${l.nme}'")
     
-    case Call(s @ Select(_, Elaborator.ctx.builtins.BuiltInOpIdent(jsOp)), lhs :: rhs :: Nil) =>
+    case Call(s @ Select(_, Elaborator.ctx.builtins.BuiltInOpIdent(jsOp)), (lhs :: rhs :: Nil) :: Nil) =>
       val res = doc"${operand(lhs)} ${jsOp} ${operand(rhs)}"
       if needsParens(jsOp) then doc"(${res})" else res
-    case c @ Call(fun, args) =>
+    case c @ Call(fun, argss) =>
       val base = subexpression(fun)
-      val argsDoc = args.map(argument).mkDocument(", ")
+      val calls = argss.foldLeft(base): (acc, args) =>
+        val argsDoc = args.map(argument).mkDocument(", ")
+        doc"${acc}(${argsDoc})"
       if c.isMlsFun
       then if checkMLsCalls
-        then doc"$runtimeVar.checkCall(${base}(${argsDoc}))"
-        else doc"${base}(${argsDoc})"
-      else doc"$runtimeVar.safeCall(${base}(${argsDoc}))"
+        then doc"$runtimeVar.checkCall(${calls})"
+        else doc"${calls}"
+      else doc"$runtimeVar.safeCall(${calls})"
     case Lambda(ps, bod) => scope.nest givenIn:
       val (params, bodyDoc) = setupFunction(none, ps, bod, isLambda = true)
       doc"($params) => ${ braced(bodyDoc) }"
@@ -154,7 +161,7 @@ class JSBuilder(using Config, TL, State, Ctx) extends CodeBuilder:
         case S(ds) if ds.shouldBeLifted => doc".class"
         case _ => doc""
       val name = id.name
-      doc"${result(qual)}${
+      doc"${resultQual(qual)}${
         if isValidFieldName(name)
         then doc".$name"
         else name.toIntOption match
@@ -163,10 +170,12 @@ class JSBuilder(using Config, TL, State, Ctx) extends CodeBuilder:
       }${dotClass}"
     case DynSelect(qual, fld, ai) =>
       if ai
-      then doc"${result(qual)}.at(${result(fld)})"
+      then doc"${resultQual(qual)}.at(${result(fld)})"
       else doc"${result(qual)}[${result(fld)}]"
-    case Instantiate(mut, cls, as) =>
-      val inner = doc"new ${result(cls)}(${as.map(argument).mkDocument(", ")})"
+    case Instantiate(mut, cls, argss) =>
+      val calls = argss.foldLeft(result(cls)): (acc, args) =>
+        doc"${acc}(${args.map(argument).mkDocument(", ")})"
+      val inner = doc"new $calls"
       if mut then inner else doc"$freeze(${inner})"
     case Tuple(mut, es) if es.isEmpty => if mut then "[]" else doc"$freeze([])"
     case Tuple(mut, es) =>
@@ -565,9 +574,10 @@ class JSBuilder(using Config, TL, State, Ctx) extends CodeBuilder:
       val switchBod = cases.foldLeft(doc""): (acc, arm) =>
         val needsBreak = arm.isInstanceOf[SwitchCase.ExplicitBreak]
         acc :: doc" # case ${result(Value.Lit(arm.litValue))}: #{ ${
-          // * Note: we use `nonNestedScoped` here because in JS, `case` clauses do not create a new scope,
+          // * Note: we use `block` here so that Scoped nodes will create proper brace sections,
+          // * necessary since `case` clauses do not create a new scope,
           // * so something like `switch (x) { case 1: let y = 1; break; case 2: let y = 2 }` is ill-formed!
-          nonNestedScoped(arm.body)(bd => returningTerm(bd, endSemi = true))
+          block(arm.body, endSemi = true)
         }${if needsBreak then doc" # break;" else ""} #} "
       val bodWithDflt = doc"${switchBod}${dflt match
         case Some(bd) => doc" # default: #{ ${nonBracedScoped(bd)(bd => returningTerm(bd, endSemi = true))} #} "
@@ -618,6 +628,8 @@ class JSBuilder(using Config, TL, State, Ctx) extends CodeBuilder:
       doc" # /* $msg */"
     case End(_) => doc""
     
+    case Unreachable(msg) if config.sanityChecks.exists(_.checkUnreachable) =>
+      doc" # throw new Error(${makeStringLiteral(s"Reached 'unreachable' code ($msg)")});"
     case Unreachable(msg) if config.commentGeneratedCode =>
       if msg.isEmpty then doc" # /* Unreachable */"
       else doc" # /* Unreachable: $msg */"
@@ -649,8 +661,9 @@ class JSBuilder(using Config, TL, State, Ctx) extends CodeBuilder:
 
     // Only nested scopes in unusual positions are handled here.
     case Scoped(syms, body) =>
-      scope.nest.givenIn:
-        blockPreamble(syms.view.filter(body.freeVars)) :: returningTerm(body, endSemi = endSemi)
+      doc" # " :: braced:
+        scope.nest.givenIn:
+          blockPreamble(syms.view.filter(body.freeVars)) :: returningTerm(body, endSemi = endSemi)
     
     // case _ => ???
   

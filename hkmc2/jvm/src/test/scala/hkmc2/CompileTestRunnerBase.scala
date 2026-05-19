@@ -18,10 +18,11 @@ import hkmc2.Config.StackSafety
 abstract class CompileTestRunnerBase(
   compileDirs: Ls[os.Path],
   excludedDirs: Ls[os.Path] = Nil,
-)
-  extends funsuite.AnyFunSuite
-  with ParallelTestExecution
-:
+) extends TimeOutTests, ParallelTestExecution:
+  
+  
+  val timeLimit = Span(15, Seconds)
+  
   
   given CompilerCtx = cctx
   

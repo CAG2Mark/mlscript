@@ -55,7 +55,7 @@ class Printer(using Raise, ShowCfg, SymbolPrinter, Config):
     case Begin(sub, rest) =>
       doc"begin #{  # ${print(sub)}; #}  # ${print(rest)}"
     case TryBlock(sub, finallyDo, rest) =>
-      doc"try #{  # ${print(sub)} #  #} finally #  #{ ${print(finallyDo)}; #  #} ${print(rest)}"
+      doc"try #{  # ${print(sub)} #}  # finally #{  # ${print(finallyDo)}; #  #} ${print(rest)}"
     case Assign(_: NoSymbol, rhs, rest) =>
       doc"do ${print(rhs)}; # ${print(rest)}"
     case Assign(lhs, rhs, rest) =>
@@ -150,7 +150,7 @@ class Printer(using Raise, ShowCfg, SymbolPrinter, Config):
     if arg.spread.nonEmpty
       then doc"...${doc}"
       else doc
-
+  
   def print(value: Value)(using Scope): Document = value match
     case Value.Ref(l: InnerSymbol, N) => doc"${print(l)}.this"
     case Value.Ref(l, N) => print(l)
@@ -170,9 +170,12 @@ class Printer(using Raise, ShowCfg, SymbolPrinter, Config):
   def print(result: Result)(using Scope): Document =
     (if !showPurity || result.isPure then "" else "!") ::
     result.match
-    case Call(fun, args) => doc"${print(fun)}(${args.map(print).mkDocument(", ")})"
-    case Instantiate(mut, cls, args) =>
-      doc"new ${if mut then "mut " else ""}${print(cls)}(${args.map(print).mkDocument(", ")})"
+    case Call(fun, argss) =>
+      val chainedArgs = argss.map(args => doc"(${args.map(print).mkDocument(", ")})").mkDocument("")
+      doc"${print(fun)}${chainedArgs}"
+    case Instantiate(mut, cls, argss) =>
+      val chainedArgs = argss.map(args => doc"(${args.map(print).mkDocument(", ")})").mkDocument("")
+      doc"new ${if mut then "mut " else ""}${print(cls)}${chainedArgs}"
     case Lambda(params, body) =>
       scope.nest.givenIn:
         val allParams =

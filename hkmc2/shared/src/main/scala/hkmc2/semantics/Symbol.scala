@@ -21,6 +21,9 @@ abstract class Symbol(using State) extends Located:
   
   val uid: Uid[Symbol] = State.suid.nextUid
   
+  def showDbg(using DebugPrinter): Str =
+    this.showAsPlain
+  
   def showPlainName(using scp: Scope): hkmc2.document.Document =
     import hkmc2.document.*
     scp.allocateOrGetName(this)(using throw _)
@@ -192,6 +195,7 @@ object FlowSymbol:
   
 end FlowSymbol
 
+sealed trait LocalVarSymbol extends LocalSymbol
 sealed trait LocalSymbol extends Symbol:
   def subst(using s: SymbolSubst): LocalSymbol
 sealed trait NamedSymbol extends Symbol:
@@ -209,7 +213,7 @@ abstract class BlockLocalSymbol(name: Str)(using State) extends FlowSymbol(name)
   self: LocalSymbol => // * using `with LocalSymbol` in the `extends` clause makes Scala think there's a bad override
   var decl: Opt[Declaration] = N
 
-class TempSymbol(val trm: Opt[Term], dbgNme: Str = "tmp")(using State) extends BlockLocalSymbol(dbgNme) with LocalSymbol:
+class TempSymbol(val trm: Opt[Term], dbgNme: Str = "tmp")(using State) extends BlockLocalSymbol(dbgNme) with LocalVarSymbol:
   // val nameHints: MutSet[Str] = MutSet.empty // * May be useful later?
   override def toLoc: Option[Loc] = trm.flatMap(_.toLoc)
   override def prefix: Str = "tmp:"
@@ -225,7 +229,7 @@ class InstSymbol(val origin: Symbol)(using State) extends LocalSymbol:
   def subst(using sub: SymbolSubst): InstSymbol = sub.mapInstSym(this)
 
 
-class VarSymbol(val id: Ident)(using State) extends BlockLocalSymbol(id.name) with NamedSymbol with LocalSymbol:
+class VarSymbol(val id: Ident)(using State) extends BlockLocalSymbol(id.name) with NamedSymbol with LocalVarSymbol:
   val name: Str = id.name
   override def toLoc: Opt[Loc] = id.toLoc
   // override def toString: Str = s"$name@$uid"
@@ -325,6 +329,15 @@ class TermSymbol(val k: TermDefKind, val owner: Opt[InnerSymbol], val id: Tree.I
   
   def subst(using sub: SymbolSubst): TermSymbol = sub.mapTermSym(this)
 
+
+class ClassCtorSymbol(
+  override val k: syntax.Fun.type,
+  override val owner: S[ClassSymbol],
+  id: Tree.Ident
+)(using State) extends TermSymbol(k, owner, id):
+  override def subst(using sub: SymbolSubst): ClassCtorSymbol = sub.mapClassCtorSym(this)
+
+
 object TermSymbol:
   def fromFunBms(b: BlockMemberSymbol, owner: Opt[InnerSymbol])(using State) =
     TermSymbol(syntax.Fun, owner, Tree.Ident(b.nme))
@@ -411,12 +424,12 @@ sealed trait InnerSymbol(using State) extends Symbol:
   // Ideally, InnerSymbol should extend DefinitionSymbol, but that requires us to specify the type
   // parameter to all occurrences of InnerSymbol. So, we use a self-type annotation instead to
   // ensure that any implementation of InnerSymbol is also a DefinitionSymbol.
-  self: DefinitionSymbol[?] =>
+  self: DefinitionSymbol[? <: ClassLikeDef] =>
   val privatesScope: Scope = Scope.empty(Scope.Cfg.default) // * Scope for private members of this symbol
   val thisProxy: TempSymbol = TempSymbol(N, s"this$$$nme")
   def subst(using SymbolSubst): InnerSymbol
-  def asDefnSym: DefinitionSymbol[?] & InnerSymbol = this match
-    case d: DefinitionSymbol[?] => d
+  def asDefnSym: DefinitionSymbol[? <: ClassLikeDef] & InnerSymbol = this match
+    case d: DefinitionSymbol[? <: ClassLikeDef] => d
 
 trait IdentifiedSymbol extends Symbol:
   val id: Tree.Ident
