@@ -79,11 +79,73 @@ handle h = Object with
   @tailcall
   fun f()(r) = 2
 //│ ═══[WARNING] This annotation has no effect.
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:test -> test1, f -> f2, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, tmp:block$res -> block$res7, member:Handler$h$f -> Handler$h$f, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:A -> A3, member:Handler$h$ -> Handler$h$1, tmp:Block -> Block, class:A -> A2, tmp:option -> option, member:cpsCont -> cpsCont, tmp:block$res -> block$res, tmp:block$res -> block$res8, member:f -> f, tmp:block$res -> block$res12, member:A -> A5, tmp:block$res -> block$res1, class:A -> A4, member:A -> A1, class:A -> A, tmp:block$res -> block$res2, tmp:block$res -> block$res9, tmp:block$res -> block$res3, member:A -> A7, class:A -> A6, member:f -> f1, member:g -> g, module:A -> A6, tmp:block$res -> block$res10, member:f_g -> f_g, member:A -> A9, class:A -> A8, tmp:block$res -> block$res4, module:A -> A8, member:g -> g1, tmp:block$res -> block$res11, tmp:block$res -> block$res5, member:test -> test, h -> h)
+//│         curThis = S of S of class:Handler$h$⁰
+//│         bindings = HashMap()
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:test -> test1, f -> f2, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, tmp:block$res -> block$res7, member:Handler$h$f -> Handler$h$f, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:A -> A3, member:Handler$h$ -> Handler$h$1, tmp:Block -> Block, class:A -> A2, tmp:option -> option, member:cpsCont -> cpsCont, tmp:block$res -> block$res, tmp:block$res -> block$res8, member:f -> f, tmp:block$res -> block$res12, member:A -> A5, tmp:block$res -> block$res1, class:A -> A4, member:A -> A1, class:A -> A, tmp:block$res -> block$res2, tmp:block$res -> block$res9, tmp:block$res -> block$res3, member:A -> A7, class:A -> A6, member:f -> f1, member:g -> g, module:A -> A6, tmp:block$res -> block$res10, member:f_g -> f_g, member:A -> A9, class:A -> A8, tmp:block$res -> block$res4, module:A -> A8, member:g -> g1, tmp:block$res -> block$res11, tmp:block$res -> block$res5, member:test -> test, h -> h)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│     at REPL44:1:1016
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 :w
 fun test =
   @tailcall 1 + 2
 //│ ╔══[WARNING] This annotation has no effect.
 //│ ╟── The @tailcall annotation has no effect on calls to built-in symbols.
-//│ ║  l.85: 	  @tailcall 1 + 2
-//│ ╙──      	            ^^^^^
+//│ ║  l.147: 	  @tailcall 1 + 2
+//│ ╙──       	            ^^^^^

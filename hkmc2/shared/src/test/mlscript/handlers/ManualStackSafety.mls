@@ -62,60 +62,176 @@ fun test(n, stackLimit) =
   let ans = fact(n)
   set stackDepth = 0
   ans
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.21: 	      console.log("resuming at offset:", curOffset)
+//│ ╙──      	      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.22: 	      let tmp = resume()
+//│ ╙──      	                ^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.23: 	      console.log("finished at offset:", curOffset)
+//│ ╙──      	      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.27: 	    if stackDepth - stackOffset >= stackLimit do h.perform()
+//│ ╙──      	                                                 ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.29: 	    f(f)
+//│ ╙──      	    ^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.35: 	        if stackDepth - stackOffset >= stackLimit do h.perform()
+//│ ╙──      	                                                     ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.41: 	        res(y)
+//│ ╙──      	        ^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.33: 	      if stackDepth - stackOffset >= stackLimit do h.perform()
+//│ ╙──      	                                                   ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.43: 	      g(b)
+//│ ╙──      	      ^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.31: 	    if stackDepth - stackOffset >= stackLimit do h.perform()
+//│ ╙──      	                                                 ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.50: 	        if stackDepth - stackOffset >= stackLimit do h.perform()
+//│ ╙──      	                                                     ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.52: 	          console.log(stackDepth, stackOffset)
+//│ ╙──      	          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.55: 	          let prev = self(x - 1)
+//│ ╙──      	                     ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.57: 	          console.log("resumed:", x)
+//│ ╙──      	          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.48: 	      if stackDepth - stackOffset >= stackLimit do h.perform()
+//│ ╙──      	                                                   ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.62: 	  let ans = fact(n)
+//│ ╙──      	            ^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont -> cpsCont1, member:Capture$scope3 -> Capture$scope31, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont2, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope0, member:a$ -> a$, member:cpsCont$ -> cpsCont$2, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope01, member:Handler$h$perform$ -> Handler$h$perform$, tmp:block$res -> block$res1, member:cpsCont$ -> cpsCont$, member:a$ -> a$1, tmp:block$res -> block$res, member:handleBlock$$ -> handleBlock$$, member:b -> b, member:a -> a, member:b -> b1, member:a -> a1, member:mkrec -> mkrec, member:selfApp -> selfApp, member:StackDelay -> StackDelay1, member:test -> test, member:b$ -> b$, member:handleBlock$ -> handleBlock$, member:b$ -> b$1, member:Handler$h$perform -> Handler$h$perform, class:StackDelay -> StackDelay, member:Handler$h$ -> Handler$h$1, class:Capture$scope3 -> Capture$scope3, class:Handler$h$ -> Handler$h$, class:Capture$scope7 -> Capture$scope7, class:Capture$scope1 -> Capture$scope1, member:cpsCont -> cpsCont, member:Capture$scope7 -> Capture$scope71, member:Capture$scope1 -> Capture$scope11)
+//│         curThis = S of S of class:Handler$h$⁰
+//│         bindings = HashMap(k -> k, scope0$cap -> scope0$cap)
+//│       bindings = HashMap(k -> k1)
+//│     bindings = HashMap(tmp:Handler$h$perform$here -> Handler$h$perform$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Left of Cfg:
+//│           escapeChars = true
+//│           useSuperscripts = false
+//│           includeZero = false
+//│           defaultName = "tmp"
+//│         curThis = S of S of globalThis:globalThis⁰
+//│         bindings = HashMap(member:cpsCont -> cpsCont1, member:Capture$scope3 -> Capture$scope31, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont2, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope0, member:a$ -> a$, member:cpsCont$ -> cpsCont$2, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope01, member:Handler$h$perform$ -> Handler$h$perform$, tmp:block$res -> block$res1, member:cpsCont$ -> cpsCont$, member:a$ -> a$1, tmp:block$res -> block$res, member:handleBlock$$ -> handleBlock$$, member:b -> b, member:a -> a, member:b -> b1, member:a -> a1, member:mkrec -> mkrec, member:selfApp -> selfApp, member:StackDelay -> StackDelay1, member:test -> test, member:b$ -> b$, member:handleBlock$ -> handleBlock$, member:b$ -> b$1, member:Handler$h$perform -> Handler$h$perform, class:StackDelay -> StackDelay, member:Handler$h$ -> Handler$h$1, class:Capture$scope3 -> Capture$scope3, class:Handler$h$ -> Handler$h$, class:Capture$scope7 -> Capture$scope7, class:Capture$scope1 -> Capture$scope1, member:cpsCont -> cpsCont, member:Capture$scope7 -> Capture$scope71, member:Capture$scope1 -> Capture$scope11)
+//│       curThis = S of N
+//│       bindings = HashMap(n -> n, stackLimit -> stackLimit, k -> k)
+//│     bindings = HashMap(h -> h, scope0$cap -> scope0$cap, tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 
 :expect 3628800
 test(10, 100)
-//│ > 1 0
-//│ > 3 0
-//│ > 5 0
-//│ > 7 0
-//│ > 9 0
-//│ > 11 0
-//│ > 13 0
-//│ > 15 0
-//│ > 17 0
-//│ > 19 0
-//│ > resumed: 1
-//│ > resumed: 2
-//│ > resumed: 3
-//│ > resumed: 4
-//│ > resumed: 5
-//│ > resumed: 6
-//│ > resumed: 7
-//│ > resumed: 8
-//│ > resumed: 9
-//│ > resumed: 10
-//│ = 3628800
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+//│     at new Handler$h$ (REPL10:1:8367)
+//│     at test (REPL10:1:9213)
+//│     at REPL13:1:38
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:297)
+//│ ═══[RUNTIME ERROR] Expected: '3628800', got: 'undefined'
 
 :expect 3628800
 test(10, 5)
-//│ > 1 0
-//│ > resuming at offset: 0
-//│ > 3 5
-//│ > 5 5
-//│ > 7 5
-//│ > resuming at offset: 5
-//│ > 9 10
-//│ > 11 10
-//│ > resuming at offset: 10
-//│ > 13 15
-//│ > 15 15
-//│ > 17 15
-//│ > resuming at offset: 15
-//│ > 19 20
-//│ > resumed: 1
-//│ > resumed: 2
-//│ > resumed: 3
-//│ > resumed: 4
-//│ > resumed: 5
-//│ > resumed: 6
-//│ > resumed: 7
-//│ > resumed: 8
-//│ > resumed: 9
-//│ > resumed: 10
-//│ > finished at offset: 15
-//│ > finished at offset: 10
-//│ > finished at offset: 5
-//│ > finished at offset: 0
-//│ = 3628800
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+//│     at new Handler$h$ (REPL10:1:8367)
+//│     at test (REPL10:1:9213)
+//│     at REPL16:1:38
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:297)
+//│ ═══[RUNTIME ERROR] Expected: '3628800', got: 'undefined'
 

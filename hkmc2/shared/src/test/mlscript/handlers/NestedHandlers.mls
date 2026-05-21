@@ -33,6 +33,151 @@ fun handleEffects(g) =
         print("h2 end " + String(cur))
         result
   g(h1, h2)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.20: 	        print("h1 start " + String(cur))
+//│ ╙──      	                            ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.21: 	        let result = k(x)
+//│ ╙──      	                     ^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.22: 	        print("h1 end " + String(cur))
+//│ ╙──      	                          ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.31: 	        print("h2 start " + String(cur))
+//│ ╙──      	                            ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.32: 	        let result = k(x)
+//│ ╙──      	                     ^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.33: 	        print("h2 end " + String(cur))
+//│ ╙──      	                          ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.35: 	  g(h1, h2)
+//│ ╙──      	  ^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$3, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:handleBlock$$ -> handleBlock$$1, class:Handler$h2$ -> Handler$h2$, tmp:runtime -> runtime, tmp:block$res -> block$res3, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, member:cpsCont -> cpsCont2, member:Handler$h1$f$ -> Handler$h1$f$, tmp:Term -> Term, tmp:Block -> Block, member:cpsCont -> cpsCont3, tmp:option -> option, member:cpsCont -> cpsCont4, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res, member:Handler$h2$f$ -> Handler$h2$f$, id -> id, tmp:block$res -> block$res1, member:Capture$scope0 -> Capture$scope01, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, class:MaybeStop -> MaybeStop, class:Capture$scope4 -> Capture$scope4, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res2, member:handleBlock$$ -> handleBlock$$, member:cpsCont$ -> cpsCont$4, member:handleEffects -> handleEffects, member:Capture$scope4 -> Capture$scope41, class:Handler$h1$ -> Handler$h1$, member:handleBlock$ -> handleBlock$, member:Handler$h2$f -> Handler$h2$f, member:cpsCont$ -> cpsCont$5, member:cpsCont$ -> cpsCont$2, member:Handler$h2$ -> Handler$h2$1, class:Capture$scope1 -> Capture$scope1, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:Capture$scope1 -> Capture$scope11)
+//│         curThis = S of S of class:Handler$h2$⁰
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(k -> k1, x -> x)
+//│     bindings = HashMap(tmp:Handler$h2$f$here -> Handler$h2$f$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$3, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:handleBlock$$ -> handleBlock$$1, class:Handler$h2$ -> Handler$h2$, tmp:runtime -> runtime, tmp:block$res -> block$res3, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, member:cpsCont -> cpsCont2, member:Handler$h1$f$ -> Handler$h1$f$, tmp:Term -> Term, tmp:Block -> Block, member:cpsCont -> cpsCont3, tmp:option -> option, member:cpsCont -> cpsCont4, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res, member:Handler$h2$f$ -> Handler$h2$f$, id -> id, tmp:block$res -> block$res1, member:Capture$scope0 -> Capture$scope01, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, class:MaybeStop -> MaybeStop, class:Capture$scope4 -> Capture$scope4, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res2, member:handleBlock$$ -> handleBlock$$, member:cpsCont$ -> cpsCont$4, member:handleEffects -> handleEffects, member:Capture$scope4 -> Capture$scope41, class:Handler$h1$ -> Handler$h1$, member:handleBlock$ -> handleBlock$, member:Handler$h2$f -> Handler$h2$f, member:cpsCont$ -> cpsCont$5, member:cpsCont$ -> cpsCont$2, member:Handler$h2$ -> Handler$h2$1, class:Capture$scope1 -> Capture$scope1, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:Capture$scope1 -> Capture$scope11)
+//│         curThis = S of N
+//│         bindings = HashMap(g -> g, h1 -> h1)
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap(tmp:inlinedVal -> inlinedVal, h2 -> h2, scope1$cap -> scope1$cap, tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$3, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:handleBlock$$ -> handleBlock$$1, class:Handler$h2$ -> Handler$h2$, tmp:runtime -> runtime, tmp:block$res -> block$res3, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, member:cpsCont -> cpsCont2, member:Handler$h1$f$ -> Handler$h1$f$, tmp:Term -> Term, tmp:Block -> Block, member:cpsCont -> cpsCont3, tmp:option -> option, member:cpsCont -> cpsCont4, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res, member:Handler$h2$f$ -> Handler$h2$f$, id -> id, tmp:block$res -> block$res1, member:Capture$scope0 -> Capture$scope01, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, class:MaybeStop -> MaybeStop, class:Capture$scope4 -> Capture$scope4, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res2, member:handleBlock$$ -> handleBlock$$, member:cpsCont$ -> cpsCont$4, member:handleEffects -> handleEffects, member:Capture$scope4 -> Capture$scope41, class:Handler$h1$ -> Handler$h1$, member:handleBlock$ -> handleBlock$, member:Handler$h2$f -> Handler$h2$f, member:cpsCont$ -> cpsCont$5, member:cpsCont$ -> cpsCont$2, member:Handler$h2$ -> Handler$h2$1, class:Capture$scope1 -> Capture$scope1, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:Capture$scope1 -> Capture$scope11)
+//│         curThis = S of S of class:Handler$h1$⁰
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(k -> k1, x -> x)
+//│     bindings = HashMap(tmp:Handler$h1$f$here -> Handler$h1$f$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Left of Cfg:
+//│           escapeChars = true
+//│           useSuperscripts = false
+//│           includeZero = false
+//│           defaultName = "tmp"
+//│         curThis = S of S of globalThis:globalThis⁰
+//│         bindings = HashMap(member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$3, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:handleBlock$$ -> handleBlock$$1, class:Handler$h2$ -> Handler$h2$, tmp:runtime -> runtime, tmp:block$res -> block$res3, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, member:cpsCont -> cpsCont2, member:Handler$h1$f$ -> Handler$h1$f$, tmp:Term -> Term, tmp:Block -> Block, member:cpsCont -> cpsCont3, tmp:option -> option, member:cpsCont -> cpsCont4, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res, member:Handler$h2$f$ -> Handler$h2$f$, id -> id, tmp:block$res -> block$res1, member:Capture$scope0 -> Capture$scope01, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, class:MaybeStop -> MaybeStop, class:Capture$scope4 -> Capture$scope4, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res2, member:handleBlock$$ -> handleBlock$$, member:cpsCont$ -> cpsCont$4, member:handleEffects -> handleEffects, member:Capture$scope4 -> Capture$scope41, class:Handler$h1$ -> Handler$h1$, member:handleBlock$ -> handleBlock$, member:Handler$h2$f -> Handler$h2$f, member:cpsCont$ -> cpsCont$5, member:cpsCont$ -> cpsCont$2, member:Handler$h2$ -> Handler$h2$1, class:Capture$scope1 -> Capture$scope1, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:Capture$scope1 -> Capture$scope11)
+//│       curThis = S of N
+//│       bindings = HashMap(k -> k, g -> g)
+//│     bindings = HashMap(h1 -> h1, tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here, scope0$cap -> scope0$cap)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 
 
 fun f(h1, h2) =
@@ -43,19 +188,49 @@ fun f(h1, h2) =
   h1.f(false)
   h2.f(false)
 handleEffects(f)
-//│ > h1 start 1
-//│ > h2 start 2
-//│ > h1 start 3
-//│ > h2 start 4
-//│ > h1 start 5
-//│ > h2 start 6
-//│ > h2 end 6
-//│ > h2 end 4
-//│ > h2 end 2
-//│ > h1 end 5
-//│ > h1 end 3
-//│ > h1 end 1
-//│ = false
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.184: 	  h1.f(false)
+//│ ╙──       	  ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.185: 	  h2.f(false)
+//│ ╙──       	  ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.186: 	  h1.f(false)
+//│ ╙──       	  ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.187: 	  h2.f(false)
+//│ ╙──       	  ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.188: 	  h1.f(false)
+//│ ╙──       	  ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.189: 	  h2.f(false)
+//│ ╙──       	  ^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+//│     at new Handler$h1$ (REPL17:1:6518)
+//│     at handleEffects (REPL17:1:7192)
+//│     at REPL20:1:378
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
 
 
 fun f(h1, h2) =
@@ -66,13 +241,49 @@ fun f(h1, h2) =
   h1.f(false)
   h2.f(false)
 handleEffects(f)
-//│ > h1 start 7
-//│ > h2 start 8
-//│ > h1 start 9
-//│ > h2 stop
-//│ > h2 end 8
-//│ > h1 end 9
-//│ > h1 end 7
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.237: 	  h1.f(false)
+//│ ╙──       	  ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.238: 	  h2.f(false)
+//│ ╙──       	  ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.239: 	  h1.f(false)
+//│ ╙──       	  ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.240: 	  h2.f(true)
+//│ ╙──       	  ^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.241: 	  h1.f(false)
+//│ ╙──       	  ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.242: 	  h2.f(false)
+//│ ╙──       	  ^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+//│     at new Handler$h1$ (REPL17:1:6518)
+//│     at handleEffects (REPL17:1:7192)
+//│     at REPL23:1:379
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
 
 
 fun f(h1, h2) =
@@ -83,10 +294,49 @@ fun f(h1, h2) =
   h1.f(false)
   h2.f(false)
 handleEffects(f)
-//│ > h1 start 10
-//│ > h2 start 11
-//│ > h1 stop
-//│ > h1 end 10
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.290: 	  h1.f(false)
+//│ ╙──       	  ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.291: 	  h2.f(false)
+//│ ╙──       	  ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.292: 	  h1.f(true)
+//│ ╙──       	  ^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.293: 	  h2.f(false)
+//│ ╙──       	  ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.294: 	  h1.f(false)
+//│ ╙──       	  ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.295: 	  h2.f(false)
+//│ ╙──       	  ^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+//│     at new Handler$h1$ (REPL17:1:6518)
+//│     at handleEffects (REPL17:1:7192)
+//│     at REPL26:1:379
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
 
 
 class Eff with
@@ -114,7 +364,147 @@ handle h = Eff with
     k()
 f(h, box, 10)
 box.n
-//│ = 5120
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.352: 	    h.perform()
+//│ ╙──       	    ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.357: 	        h.perform()
+//│ ╙──       	        ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.358: 	        k()
+//│ ╙──       	        ^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.364: 	    k()
+//│ ╙──       	    ^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:f -> f2, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, member:handleBlock$$ -> handleBlock$$1, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Capture$scope4 -> Capture$scope43, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$6, tmp:block$res -> block$res8, tmp:block$res -> block$res6, member:handleBlock$$ -> handleBlock$$2, member:Eff -> Eff1, member:Handler$h2$f$ -> Handler$h2$f$, member:Box -> Box1, class:Eff -> Eff, class:Box -> Box, class:Capture$scope4 -> Capture$scope4, box -> box, tmp:block$res -> block$res7, member:Capture$scope4 -> Capture$scope41, member:f -> f3, class:Capture$scope7 -> Capture$scope7, member:handleBlock$ -> handleBlock$, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:cpsCont$ -> cpsCont$2, class:Handler$h2$ -> Handler$h2$2, member:Handler$h2$ -> Handler$h2$1, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, h -> h, tmp:block$res -> block$res3, class:Handler$h$ -> Handler$h$, member:cpsCont -> cpsCont2, member:Handler$h1$f$ -> Handler$h1$f$, member:f -> f, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res, class:Capture$scope0 -> Capture$scope02, id -> id, tmp:block$res -> block$res1, member:Capture$scope0 -> Capture$scope01, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, member:Capture$scope0 -> Capture$scope03, class:MaybeStop -> MaybeStop, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res4, member:Handler$h2$ -> Handler$h2$3, member:cpsCont$ -> cpsCont$8, member:f -> f1, tmp:block$res -> block$res2, member:handleBlock$$ -> handleBlock$$, member:cpsCont$ -> cpsCont$4, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:cpsCont$ -> cpsCont$5, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, class:Capture$scope1 -> Capture$scope1, member:cpsCont -> cpsCont6, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res5)
+//│         curThis = S of N
+//│         bindings = HashMap(param0 -> param0, param1 -> param1, param2 -> param2, param3 -> param3, param4 -> param4, param5 -> param5, label:loopLabel -> loopLabel, id -> id1)
+//│       bindings = HashMap(scope4$cap -> scope4$cap, tmp:scrut -> scrut, h2 -> h2)
+//│     bindings = HashMap(tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:f -> f2, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, member:handleBlock$$ -> handleBlock$$1, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Capture$scope4 -> Capture$scope43, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$6, tmp:block$res -> block$res8, tmp:block$res -> block$res6, member:handleBlock$$ -> handleBlock$$2, member:Eff -> Eff1, member:Handler$h2$f$ -> Handler$h2$f$, member:Box -> Box1, class:Eff -> Eff, class:Box -> Box, class:Capture$scope4 -> Capture$scope4, box -> box, tmp:block$res -> block$res7, member:Capture$scope4 -> Capture$scope41, member:f -> f3, class:Capture$scope7 -> Capture$scope7, member:handleBlock$ -> handleBlock$, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:cpsCont$ -> cpsCont$2, class:Handler$h2$ -> Handler$h2$2, member:Handler$h2$ -> Handler$h2$1, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, h -> h, tmp:block$res -> block$res3, class:Handler$h$ -> Handler$h$, member:cpsCont -> cpsCont2, member:Handler$h1$f$ -> Handler$h1$f$, member:f -> f, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res, class:Capture$scope0 -> Capture$scope02, id -> id, tmp:block$res -> block$res1, member:Capture$scope0 -> Capture$scope01, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, member:Capture$scope0 -> Capture$scope03, class:MaybeStop -> MaybeStop, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res4, member:Handler$h2$ -> Handler$h2$3, member:cpsCont$ -> cpsCont$8, member:f -> f1, tmp:block$res -> block$res2, member:handleBlock$$ -> handleBlock$$, member:cpsCont$ -> cpsCont$4, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:cpsCont$ -> cpsCont$5, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, class:Capture$scope1 -> Capture$scope1, member:cpsCont -> cpsCont6, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res5)
+//│         curThis = S of S of class:Handler$h2$¹
+//│         bindings = HashMap(k -> k, h -> h1, box -> box1)
+//│       bindings = HashMap(k -> k1)
+//│     bindings = HashMap(tmp:Handler$h2$perform$here -> Handler$h2$perform$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:f -> f2, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, member:handleBlock$$ -> handleBlock$$1, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Capture$scope4 -> Capture$scope43, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$6, tmp:block$res -> block$res8, tmp:block$res -> block$res6, member:handleBlock$$ -> handleBlock$$2, member:Eff -> Eff1, member:Handler$h2$f$ -> Handler$h2$f$, member:Box -> Box1, class:Eff -> Eff, class:Box -> Box, class:Capture$scope4 -> Capture$scope4, box -> box, tmp:block$res -> block$res7, member:Capture$scope4 -> Capture$scope41, member:f -> f3, class:Capture$scope7 -> Capture$scope7, member:handleBlock$ -> handleBlock$, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:cpsCont$ -> cpsCont$2, class:Handler$h2$ -> Handler$h2$2, member:Handler$h2$ -> Handler$h2$1, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, h -> h, tmp:block$res -> block$res3, class:Handler$h$ -> Handler$h$, member:cpsCont -> cpsCont2, member:Handler$h1$f$ -> Handler$h1$f$, member:f -> f, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res, class:Capture$scope0 -> Capture$scope02, id -> id, tmp:block$res -> block$res1, member:Capture$scope0 -> Capture$scope01, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, member:Capture$scope0 -> Capture$scope03, class:MaybeStop -> MaybeStop, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res4, member:Handler$h2$ -> Handler$h2$3, member:cpsCont$ -> cpsCont$8, member:f -> f1, tmp:block$res -> block$res2, member:handleBlock$$ -> handleBlock$$, member:cpsCont$ -> cpsCont$4, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:cpsCont$ -> cpsCont$5, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, class:Capture$scope1 -> Capture$scope1, member:cpsCont -> cpsCont6, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res5)
+//│         curThis = S of S of class:Handler$h$⁰
+//│         bindings = HashMap()
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(member:f -> f2, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, member:handleBlock$$ -> handleBlock$$1, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Capture$scope4 -> Capture$scope43, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$6, tmp:block$res -> block$res8, tmp:block$res -> block$res6, member:handleBlock$$ -> handleBlock$$2, member:Eff -> Eff1, member:Handler$h2$f$ -> Handler$h2$f$, member:Box -> Box1, class:Eff -> Eff, class:Box -> Box, class:Capture$scope4 -> Capture$scope4, box -> box, tmp:block$res -> block$res7, member:Capture$scope4 -> Capture$scope41, member:f -> f3, class:Capture$scope7 -> Capture$scope7, member:handleBlock$ -> handleBlock$, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:cpsCont$ -> cpsCont$2, class:Handler$h2$ -> Handler$h2$2, member:Handler$h2$ -> Handler$h2$1, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, h -> h, tmp:block$res -> block$res3, class:Handler$h$ -> Handler$h$, member:cpsCont -> cpsCont2, member:Handler$h1$f$ -> Handler$h1$f$, member:f -> f, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res, class:Capture$scope0 -> Capture$scope02, id -> id, tmp:block$res -> block$res1, member:Capture$scope0 -> Capture$scope01, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, member:Capture$scope0 -> Capture$scope03, class:MaybeStop -> MaybeStop, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res4, member:Handler$h2$ -> Handler$h2$3, member:cpsCont$ -> cpsCont$8, member:f -> f1, tmp:block$res -> block$res2, member:handleBlock$$ -> handleBlock$$, member:cpsCont$ -> cpsCont$4, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:cpsCont$ -> cpsCont$5, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, class:Capture$scope1 -> Capture$scope1, member:cpsCont -> cpsCont6, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res5)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│     at REPL33:1:7407
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:297)
+//│ ═══[RUNTIME ERROR] Expected: '5120', got: 'undefined'
 
 handle h1 = Eff with
   fun perform()(k) =
@@ -132,18 +522,152 @@ handle h2 = Eff with
 h2.perform()
 h2.perform()
 h2.perform()
-//│ > h2
-//│ > h1
-//│ > h2
-//│ > h1
-//│ > h2
-//│ > h1
-//│ > h2 end
-//│ > h2 end
-//│ > h2 end
-//│ > h1 end
-//│ > h1 end
-//│ > h1 end
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.512: 	    let x = k()
+//│ ╙──       	            ^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.518: 	    h1.perform()
+//│ ╙──       	    ^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.519: 	    let x = k()
+//│ ╙──       	            ^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.522: 	h2.perform()
+//│ ╙──       	^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.523: 	h2.perform()
+//│ ╙──       	^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.524: 	h2.perform()
+//│ ╙──       	^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont$ -> cpsCont$10, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, member:Capture$scope4 -> Capture$scope43, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:cpsCont$ -> cpsCont$6, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$2, member:handleBlock$$ -> handleBlock$$3, class:Capture$scope3 -> Capture$scope3, class:Capture$scope7 -> Capture$scope7, member:handleBlock$ -> handleBlock$, member:Capture$scope3 -> Capture$scope31, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:Handler$h2$ -> Handler$h2$1, member:cpsCont$ -> cpsCont$12, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$13, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res3, member:cpsCont -> cpsCont2, member:f -> f, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$8, member:f -> f1, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res9, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res5, member:f -> f2, member:cpsCont$ -> cpsCont$1, member:handleBlock$$ -> handleBlock$$1, member:Predef -> Predef, tmp:block$res -> block$res8, tmp:block$res -> block$res6, member:Eff -> Eff1, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, member:Box -> Box1, class:Handler$h1$ -> Handler$h1$2, class:Eff -> Eff, class:Box -> Box, class:Capture$scope4 -> Capture$scope4, box -> box, tmp:block$res -> block$res7, class:Handler$h2$ -> Handler$h2$4, member:Capture$scope4 -> Capture$scope41, member:f -> f3, member:cpsCont$ -> cpsCont$2, class:Handler$h2$ -> Handler$h2$2, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:Handler$h2$ -> Handler$h2$5, member:handleBlock$ -> handleBlock$4, h -> h, member:Handler$h1$perform -> Handler$h1$perform, class:Handler$h$ -> Handler$h$, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont9, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, tmp:block$res -> block$res, id -> id, member:cpsCont -> cpsCont11, tmp:block$res -> block$res1, member:cpsCont -> cpsCont12, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:cpsCont -> cpsCont13, member:Handler$h2$ -> Handler$h2$3, member:cpsCont -> cpsCont14, tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$4, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, class:Capture$scope6 -> Capture$scope6, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$5, member:cpsCont$ -> cpsCont$9, member:cpsCont -> cpsCont6)
+//│         curThis = S of S of class:Handler$h2$²
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(k -> k1)
+//│     bindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont$ -> cpsCont$10, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, member:Capture$scope4 -> Capture$scope43, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:cpsCont$ -> cpsCont$6, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$2, member:handleBlock$$ -> handleBlock$$3, class:Capture$scope3 -> Capture$scope3, class:Capture$scope7 -> Capture$scope7, member:handleBlock$ -> handleBlock$, member:Capture$scope3 -> Capture$scope31, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:Handler$h2$ -> Handler$h2$1, member:cpsCont$ -> cpsCont$12, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$13, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res3, member:cpsCont -> cpsCont2, member:f -> f, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$8, member:f -> f1, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res9, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res5, member:f -> f2, member:cpsCont$ -> cpsCont$1, member:handleBlock$$ -> handleBlock$$1, member:Predef -> Predef, tmp:block$res -> block$res8, tmp:block$res -> block$res6, member:Eff -> Eff1, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, member:Box -> Box1, class:Handler$h1$ -> Handler$h1$2, class:Eff -> Eff, class:Box -> Box, class:Capture$scope4 -> Capture$scope4, box -> box, tmp:block$res -> block$res7, class:Handler$h2$ -> Handler$h2$4, member:Capture$scope4 -> Capture$scope41, member:f -> f3, member:cpsCont$ -> cpsCont$2, class:Handler$h2$ -> Handler$h2$2, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:Handler$h2$ -> Handler$h2$5, member:handleBlock$ -> handleBlock$4, h -> h, member:Handler$h1$perform -> Handler$h1$perform, class:Handler$h$ -> Handler$h$, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont9, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, tmp:block$res -> block$res, id -> id, member:cpsCont -> cpsCont11, tmp:block$res -> block$res1, member:cpsCont -> cpsCont12, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:cpsCont -> cpsCont13, member:Handler$h2$ -> Handler$h2$3, member:cpsCont -> cpsCont14, tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$4, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, class:Capture$scope6 -> Capture$scope6, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$5, member:cpsCont$ -> cpsCont$9, member:cpsCont -> cpsCont6)
+//│         curThis = S of S of class:Handler$h1$¹
+//│         bindings = HashMap()
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Left of Cfg:
+//│           escapeChars = true
+//│           useSuperscripts = false
+//│           includeZero = false
+//│           defaultName = "tmp"
+//│         curThis = S of S of globalThis:globalThis⁰
+//│         bindings = HashMap(member:cpsCont$ -> cpsCont$10, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, member:Capture$scope4 -> Capture$scope43, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:cpsCont$ -> cpsCont$6, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$2, member:handleBlock$$ -> handleBlock$$3, class:Capture$scope3 -> Capture$scope3, class:Capture$scope7 -> Capture$scope7, member:handleBlock$ -> handleBlock$, member:Capture$scope3 -> Capture$scope31, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:Handler$h2$ -> Handler$h2$1, member:cpsCont$ -> cpsCont$12, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$13, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res3, member:cpsCont -> cpsCont2, member:f -> f, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$8, member:f -> f1, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res9, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res5, member:f -> f2, member:cpsCont$ -> cpsCont$1, member:handleBlock$$ -> handleBlock$$1, member:Predef -> Predef, tmp:block$res -> block$res8, tmp:block$res -> block$res6, member:Eff -> Eff1, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, member:Box -> Box1, class:Handler$h1$ -> Handler$h1$2, class:Eff -> Eff, class:Box -> Box, class:Capture$scope4 -> Capture$scope4, box -> box, tmp:block$res -> block$res7, class:Handler$h2$ -> Handler$h2$4, member:Capture$scope4 -> Capture$scope41, member:f -> f3, member:cpsCont$ -> cpsCont$2, class:Handler$h2$ -> Handler$h2$2, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:Handler$h2$ -> Handler$h2$5, member:handleBlock$ -> handleBlock$4, h -> h, member:Handler$h1$perform -> Handler$h1$perform, class:Handler$h$ -> Handler$h$, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont9, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, tmp:block$res -> block$res, id -> id, member:cpsCont -> cpsCont11, tmp:block$res -> block$res1, member:cpsCont -> cpsCont12, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:cpsCont -> cpsCont13, member:Handler$h2$ -> Handler$h2$3, member:cpsCont -> cpsCont14, tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$4, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, class:Capture$scope6 -> Capture$scope6, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$5, member:cpsCont$ -> cpsCont$9, member:cpsCont -> cpsCont6)
+//│       curThis = S of N
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap(tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here, scope0$cap -> scope0$cap, h2 -> h2)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(member:cpsCont$ -> cpsCont$10, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, member:Capture$scope4 -> Capture$scope43, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:cpsCont$ -> cpsCont$6, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$2, member:handleBlock$$ -> handleBlock$$3, class:Capture$scope3 -> Capture$scope3, class:Capture$scope7 -> Capture$scope7, member:handleBlock$ -> handleBlock$, member:Capture$scope3 -> Capture$scope31, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:Handler$h2$ -> Handler$h2$1, member:cpsCont$ -> cpsCont$12, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$13, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res3, member:cpsCont -> cpsCont2, member:f -> f, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$8, member:f -> f1, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res9, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res5, member:f -> f2, member:cpsCont$ -> cpsCont$1, member:handleBlock$$ -> handleBlock$$1, member:Predef -> Predef, tmp:block$res -> block$res8, tmp:block$res -> block$res6, member:Eff -> Eff1, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, member:Box -> Box1, class:Handler$h1$ -> Handler$h1$2, class:Eff -> Eff, class:Box -> Box, class:Capture$scope4 -> Capture$scope4, box -> box, tmp:block$res -> block$res7, class:Handler$h2$ -> Handler$h2$4, member:Capture$scope4 -> Capture$scope41, member:f -> f3, member:cpsCont$ -> cpsCont$2, class:Handler$h2$ -> Handler$h2$2, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:Handler$h2$ -> Handler$h2$5, member:handleBlock$ -> handleBlock$4, h -> h, member:Handler$h1$perform -> Handler$h1$perform, class:Handler$h$ -> Handler$h$, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont9, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, tmp:block$res -> block$res, id -> id, member:cpsCont -> cpsCont11, tmp:block$res -> block$res1, member:cpsCont -> cpsCont12, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:cpsCont -> cpsCont13, member:Handler$h2$ -> Handler$h2$3, member:cpsCont -> cpsCont14, tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$4, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, class:Capture$scope6 -> Capture$scope6, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$5, member:cpsCont$ -> cpsCont$9, member:cpsCont -> cpsCont6)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│     at REPL36:1:5240
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 
 handle h1 = Eff with
@@ -162,10 +686,213 @@ handle h3 = Eff with
     k()
 h1.perform()
 h3.perform()
-//│ > h1
-//│ > h3
-//│ > h2
-//│ > h1
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.676: 	    k()
+//│ ╙──       	    ^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.680: 	    h1.perform()
+//│ ╙──       	    ^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.681: 	    k()
+//│ ╙──       	    ^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.685: 	    h2.perform()
+//│ ╙──       	    ^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.686: 	    k()
+//│ ╙──       	    ^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.687: 	h1.perform()
+//│ ╙──       	^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.688: 	h3.perform()
+//│ ╙──       	^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont$ -> cpsCont$10, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Capture$scope1 -> Capture$scope12, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, member:Capture$scope1 -> Capture$scope13, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, member:Capture$scope4 -> Capture$scope43, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:cpsCont$ -> cpsCont$16, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:handleBlock$$ -> handleBlock$$5, member:cpsCont$ -> cpsCont$6, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$2, member:handleBlock$$ -> handleBlock$$3, member:Handler$h3$perform$ -> Handler$h3$perform$, class:Capture$scope3 -> Capture$scope3, class:Capture$scope7 -> Capture$scope7, member:cpsCont$ -> cpsCont$17, member:handleBlock$ -> handleBlock$, member:Capture$scope3 -> Capture$scope31, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:Handler$h2$ -> Handler$h2$1, member:cpsCont$ -> cpsCont$12, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$13, member:cpsCont$ -> cpsCont$18, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res3, member:cpsCont -> cpsCont2, member:f -> f, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$8, member:f -> f1, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res9, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, h1 -> h11, class:Handler$h1$ -> Handler$h1$4, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res5, tmp:block$res -> block$res10, member:f -> f2, member:cpsCont$ -> cpsCont$1, class:Handler$h2$ -> Handler$h2$6, member:handleBlock$$ -> handleBlock$$1, member:Predef -> Predef, class:Handler$h3$ -> Handler$h3$, tmp:block$res -> block$res8, tmp:block$res -> block$res6, member:Eff -> Eff1, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, member:Box -> Box1, class:Handler$h1$ -> Handler$h1$2, class:Eff -> Eff, class:Box -> Box, tmp:tmp -> tmp2, class:Capture$scope4 -> Capture$scope4, member:handleBlock$ -> handleBlock$5, box -> box, member:Handler$h3$perform -> Handler$h3$perform, tmp:block$res -> block$res7, class:Handler$h2$ -> Handler$h2$4, member:Handler$h3$ -> Handler$h3$1, member:handleBlock$ -> handleBlock$6, member:Capture$scope4 -> Capture$scope41, member:f -> f3, member:Handler$h2$perform -> Handler$h2$perform2, member:Handler$h2$ -> Handler$h2$7, member:handleBlock$ -> handleBlock$7, member:Handler$h1$perform -> Handler$h1$perform1, member:cpsCont$ -> cpsCont$2, class:Handler$h2$ -> Handler$h2$2, member:Handler$h1$ -> Handler$h1$5, member:cpsCont -> cpsCont15, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:cpsCont -> cpsCont16, member:Handler$h2$ -> Handler$h2$5, member:handleBlock$ -> handleBlock$4, h -> h, member:Handler$h1$perform -> Handler$h1$perform, member:cpsCont -> cpsCont17, class:Handler$h$ -> Handler$h$, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont18, member:cpsCont -> cpsCont19, member:cpsCont -> cpsCont9, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, member:cpsCont -> cpsCont20, tmp:block$res -> block$res, id -> id, member:cpsCont -> cpsCont11, tmp:block$res -> block$res1, member:cpsCont$ -> cpsCont$14, member:cpsCont -> cpsCont12, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:cpsCont -> cpsCont13, member:Handler$h2$ -> Handler$h2$3, member:cpsCont -> cpsCont14, tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$4, tmp:tmp -> tmp, class:Capture$scope0 -> Capture$scope06, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, class:Capture$scope6 -> Capture$scope6, member:Capture$scope0 -> Capture$scope07, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$15, member:cpsCont$ -> cpsCont$5, member:handleBlock$$ -> handleBlock$$4, member:cpsCont$ -> cpsCont$9, member:cpsCont -> cpsCont6)
+//│         curThis = S of S of class:Handler$h3$⁰
+//│         bindings = HashMap(h2 -> h2, k -> k)
+//│       bindings = HashMap(k -> k1)
+//│     bindings = HashMap(tmp:Handler$h3$perform$here -> Handler$h3$perform$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont$ -> cpsCont$10, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Capture$scope1 -> Capture$scope12, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, member:Capture$scope1 -> Capture$scope13, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, member:Capture$scope4 -> Capture$scope43, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:cpsCont$ -> cpsCont$16, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:handleBlock$$ -> handleBlock$$5, member:cpsCont$ -> cpsCont$6, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$2, member:handleBlock$$ -> handleBlock$$3, member:Handler$h3$perform$ -> Handler$h3$perform$, class:Capture$scope3 -> Capture$scope3, class:Capture$scope7 -> Capture$scope7, member:cpsCont$ -> cpsCont$17, member:handleBlock$ -> handleBlock$, member:Capture$scope3 -> Capture$scope31, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:Handler$h2$ -> Handler$h2$1, member:cpsCont$ -> cpsCont$12, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$13, member:cpsCont$ -> cpsCont$18, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res3, member:cpsCont -> cpsCont2, member:f -> f, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$8, member:f -> f1, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res9, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, h1 -> h11, class:Handler$h1$ -> Handler$h1$4, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res5, tmp:block$res -> block$res10, member:f -> f2, member:cpsCont$ -> cpsCont$1, class:Handler$h2$ -> Handler$h2$6, member:handleBlock$$ -> handleBlock$$1, member:Predef -> Predef, class:Handler$h3$ -> Handler$h3$, tmp:block$res -> block$res8, tmp:block$res -> block$res6, member:Eff -> Eff1, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, member:Box -> Box1, class:Handler$h1$ -> Handler$h1$2, class:Eff -> Eff, class:Box -> Box, tmp:tmp -> tmp2, class:Capture$scope4 -> Capture$scope4, member:handleBlock$ -> handleBlock$5, box -> box, member:Handler$h3$perform -> Handler$h3$perform, tmp:block$res -> block$res7, class:Handler$h2$ -> Handler$h2$4, member:Handler$h3$ -> Handler$h3$1, member:handleBlock$ -> handleBlock$6, member:Capture$scope4 -> Capture$scope41, member:f -> f3, member:Handler$h2$perform -> Handler$h2$perform2, member:Handler$h2$ -> Handler$h2$7, member:handleBlock$ -> handleBlock$7, member:Handler$h1$perform -> Handler$h1$perform1, member:cpsCont$ -> cpsCont$2, class:Handler$h2$ -> Handler$h2$2, member:Handler$h1$ -> Handler$h1$5, member:cpsCont -> cpsCont15, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:cpsCont -> cpsCont16, member:Handler$h2$ -> Handler$h2$5, member:handleBlock$ -> handleBlock$4, h -> h, member:Handler$h1$perform -> Handler$h1$perform, member:cpsCont -> cpsCont17, class:Handler$h$ -> Handler$h$, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont18, member:cpsCont -> cpsCont19, member:cpsCont -> cpsCont9, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, member:cpsCont -> cpsCont20, tmp:block$res -> block$res, id -> id, member:cpsCont -> cpsCont11, tmp:block$res -> block$res1, member:cpsCont$ -> cpsCont$14, member:cpsCont -> cpsCont12, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:cpsCont -> cpsCont13, member:Handler$h2$ -> Handler$h2$3, member:cpsCont -> cpsCont14, tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$4, tmp:tmp -> tmp, class:Capture$scope0 -> Capture$scope06, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, class:Capture$scope6 -> Capture$scope6, member:Capture$scope0 -> Capture$scope07, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$15, member:cpsCont$ -> cpsCont$5, member:handleBlock$$ -> handleBlock$$4, member:cpsCont$ -> cpsCont$9, member:cpsCont -> cpsCont6)
+//│         curThis = S of N
+//│         bindings = HashMap(h2 -> h2)
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap(h3 -> h3, scope1$cap -> scope1$cap, tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here, tmp:inlinedVal -> inlinedVal)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont$ -> cpsCont$10, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Capture$scope1 -> Capture$scope12, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, member:Capture$scope1 -> Capture$scope13, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, member:Capture$scope4 -> Capture$scope43, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:cpsCont$ -> cpsCont$16, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:handleBlock$$ -> handleBlock$$5, member:cpsCont$ -> cpsCont$6, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$2, member:handleBlock$$ -> handleBlock$$3, member:Handler$h3$perform$ -> Handler$h3$perform$, class:Capture$scope3 -> Capture$scope3, class:Capture$scope7 -> Capture$scope7, member:cpsCont$ -> cpsCont$17, member:handleBlock$ -> handleBlock$, member:Capture$scope3 -> Capture$scope31, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:Handler$h2$ -> Handler$h2$1, member:cpsCont$ -> cpsCont$12, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$13, member:cpsCont$ -> cpsCont$18, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res3, member:cpsCont -> cpsCont2, member:f -> f, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$8, member:f -> f1, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res9, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, h1 -> h11, class:Handler$h1$ -> Handler$h1$4, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res5, tmp:block$res -> block$res10, member:f -> f2, member:cpsCont$ -> cpsCont$1, class:Handler$h2$ -> Handler$h2$6, member:handleBlock$$ -> handleBlock$$1, member:Predef -> Predef, class:Handler$h3$ -> Handler$h3$, tmp:block$res -> block$res8, tmp:block$res -> block$res6, member:Eff -> Eff1, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, member:Box -> Box1, class:Handler$h1$ -> Handler$h1$2, class:Eff -> Eff, class:Box -> Box, tmp:tmp -> tmp2, class:Capture$scope4 -> Capture$scope4, member:handleBlock$ -> handleBlock$5, box -> box, member:Handler$h3$perform -> Handler$h3$perform, tmp:block$res -> block$res7, class:Handler$h2$ -> Handler$h2$4, member:Handler$h3$ -> Handler$h3$1, member:handleBlock$ -> handleBlock$6, member:Capture$scope4 -> Capture$scope41, member:f -> f3, member:Handler$h2$perform -> Handler$h2$perform2, member:Handler$h2$ -> Handler$h2$7, member:handleBlock$ -> handleBlock$7, member:Handler$h1$perform -> Handler$h1$perform1, member:cpsCont$ -> cpsCont$2, class:Handler$h2$ -> Handler$h2$2, member:Handler$h1$ -> Handler$h1$5, member:cpsCont -> cpsCont15, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:cpsCont -> cpsCont16, member:Handler$h2$ -> Handler$h2$5, member:handleBlock$ -> handleBlock$4, h -> h, member:Handler$h1$perform -> Handler$h1$perform, member:cpsCont -> cpsCont17, class:Handler$h$ -> Handler$h$, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont18, member:cpsCont -> cpsCont19, member:cpsCont -> cpsCont9, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, member:cpsCont -> cpsCont20, tmp:block$res -> block$res, id -> id, member:cpsCont -> cpsCont11, tmp:block$res -> block$res1, member:cpsCont$ -> cpsCont$14, member:cpsCont -> cpsCont12, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:cpsCont -> cpsCont13, member:Handler$h2$ -> Handler$h2$3, member:cpsCont -> cpsCont14, tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$4, tmp:tmp -> tmp, class:Capture$scope0 -> Capture$scope06, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, class:Capture$scope6 -> Capture$scope6, member:Capture$scope0 -> Capture$scope07, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$15, member:cpsCont$ -> cpsCont$5, member:handleBlock$$ -> handleBlock$$4, member:cpsCont$ -> cpsCont$9, member:cpsCont -> cpsCont6)
+//│         curThis = S of S of class:Handler$h2$³
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(k -> k1)
+//│     bindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont$ -> cpsCont$10, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Capture$scope1 -> Capture$scope12, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, member:Capture$scope1 -> Capture$scope13, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, member:Capture$scope4 -> Capture$scope43, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:cpsCont$ -> cpsCont$16, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:handleBlock$$ -> handleBlock$$5, member:cpsCont$ -> cpsCont$6, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$2, member:handleBlock$$ -> handleBlock$$3, member:Handler$h3$perform$ -> Handler$h3$perform$, class:Capture$scope3 -> Capture$scope3, class:Capture$scope7 -> Capture$scope7, member:cpsCont$ -> cpsCont$17, member:handleBlock$ -> handleBlock$, member:Capture$scope3 -> Capture$scope31, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:Handler$h2$ -> Handler$h2$1, member:cpsCont$ -> cpsCont$12, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$13, member:cpsCont$ -> cpsCont$18, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res3, member:cpsCont -> cpsCont2, member:f -> f, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$8, member:f -> f1, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res9, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, h1 -> h11, class:Handler$h1$ -> Handler$h1$4, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res5, tmp:block$res -> block$res10, member:f -> f2, member:cpsCont$ -> cpsCont$1, class:Handler$h2$ -> Handler$h2$6, member:handleBlock$$ -> handleBlock$$1, member:Predef -> Predef, class:Handler$h3$ -> Handler$h3$, tmp:block$res -> block$res8, tmp:block$res -> block$res6, member:Eff -> Eff1, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, member:Box -> Box1, class:Handler$h1$ -> Handler$h1$2, class:Eff -> Eff, class:Box -> Box, tmp:tmp -> tmp2, class:Capture$scope4 -> Capture$scope4, member:handleBlock$ -> handleBlock$5, box -> box, member:Handler$h3$perform -> Handler$h3$perform, tmp:block$res -> block$res7, class:Handler$h2$ -> Handler$h2$4, member:Handler$h3$ -> Handler$h3$1, member:handleBlock$ -> handleBlock$6, member:Capture$scope4 -> Capture$scope41, member:f -> f3, member:Handler$h2$perform -> Handler$h2$perform2, member:Handler$h2$ -> Handler$h2$7, member:handleBlock$ -> handleBlock$7, member:Handler$h1$perform -> Handler$h1$perform1, member:cpsCont$ -> cpsCont$2, class:Handler$h2$ -> Handler$h2$2, member:Handler$h1$ -> Handler$h1$5, member:cpsCont -> cpsCont15, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:cpsCont -> cpsCont16, member:Handler$h2$ -> Handler$h2$5, member:handleBlock$ -> handleBlock$4, h -> h, member:Handler$h1$perform -> Handler$h1$perform, member:cpsCont -> cpsCont17, class:Handler$h$ -> Handler$h$, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont18, member:cpsCont -> cpsCont19, member:cpsCont -> cpsCont9, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, member:cpsCont -> cpsCont20, tmp:block$res -> block$res, id -> id, member:cpsCont -> cpsCont11, tmp:block$res -> block$res1, member:cpsCont$ -> cpsCont$14, member:cpsCont -> cpsCont12, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:cpsCont -> cpsCont13, member:Handler$h2$ -> Handler$h2$3, member:cpsCont -> cpsCont14, tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$4, tmp:tmp -> tmp, class:Capture$scope0 -> Capture$scope06, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, class:Capture$scope6 -> Capture$scope6, member:Capture$scope0 -> Capture$scope07, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$15, member:cpsCont$ -> cpsCont$5, member:handleBlock$$ -> handleBlock$$4, member:cpsCont$ -> cpsCont$9, member:cpsCont -> cpsCont6)
+//│         curThis = S of S of class:Handler$h1$²
+//│         bindings = HashMap()
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Left of Cfg:
+//│           escapeChars = true
+//│           useSuperscripts = false
+//│           includeZero = false
+//│           defaultName = "tmp"
+//│         curThis = S of S of globalThis:globalThis⁰
+//│         bindings = HashMap(member:cpsCont$ -> cpsCont$10, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Capture$scope1 -> Capture$scope12, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, member:Capture$scope1 -> Capture$scope13, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, member:Capture$scope4 -> Capture$scope43, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:cpsCont$ -> cpsCont$16, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:handleBlock$$ -> handleBlock$$5, member:cpsCont$ -> cpsCont$6, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$2, member:handleBlock$$ -> handleBlock$$3, member:Handler$h3$perform$ -> Handler$h3$perform$, class:Capture$scope3 -> Capture$scope3, class:Capture$scope7 -> Capture$scope7, member:cpsCont$ -> cpsCont$17, member:handleBlock$ -> handleBlock$, member:Capture$scope3 -> Capture$scope31, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:Handler$h2$ -> Handler$h2$1, member:cpsCont$ -> cpsCont$12, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$13, member:cpsCont$ -> cpsCont$18, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res3, member:cpsCont -> cpsCont2, member:f -> f, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$8, member:f -> f1, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res9, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, h1 -> h11, class:Handler$h1$ -> Handler$h1$4, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res5, tmp:block$res -> block$res10, member:f -> f2, member:cpsCont$ -> cpsCont$1, class:Handler$h2$ -> Handler$h2$6, member:handleBlock$$ -> handleBlock$$1, member:Predef -> Predef, class:Handler$h3$ -> Handler$h3$, tmp:block$res -> block$res8, tmp:block$res -> block$res6, member:Eff -> Eff1, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, member:Box -> Box1, class:Handler$h1$ -> Handler$h1$2, class:Eff -> Eff, class:Box -> Box, tmp:tmp -> tmp2, class:Capture$scope4 -> Capture$scope4, member:handleBlock$ -> handleBlock$5, box -> box, member:Handler$h3$perform -> Handler$h3$perform, tmp:block$res -> block$res7, class:Handler$h2$ -> Handler$h2$4, member:Handler$h3$ -> Handler$h3$1, member:handleBlock$ -> handleBlock$6, member:Capture$scope4 -> Capture$scope41, member:f -> f3, member:Handler$h2$perform -> Handler$h2$perform2, member:Handler$h2$ -> Handler$h2$7, member:handleBlock$ -> handleBlock$7, member:Handler$h1$perform -> Handler$h1$perform1, member:cpsCont$ -> cpsCont$2, class:Handler$h2$ -> Handler$h2$2, member:Handler$h1$ -> Handler$h1$5, member:cpsCont -> cpsCont15, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:cpsCont -> cpsCont16, member:Handler$h2$ -> Handler$h2$5, member:handleBlock$ -> handleBlock$4, h -> h, member:Handler$h1$perform -> Handler$h1$perform, member:cpsCont -> cpsCont17, class:Handler$h$ -> Handler$h$, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont18, member:cpsCont -> cpsCont19, member:cpsCont -> cpsCont9, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, member:cpsCont -> cpsCont20, tmp:block$res -> block$res, id -> id, member:cpsCont -> cpsCont11, tmp:block$res -> block$res1, member:cpsCont$ -> cpsCont$14, member:cpsCont -> cpsCont12, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:cpsCont -> cpsCont13, member:Handler$h2$ -> Handler$h2$3, member:cpsCont -> cpsCont14, tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$4, tmp:tmp -> tmp, class:Capture$scope0 -> Capture$scope06, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, class:Capture$scope6 -> Capture$scope6, member:Capture$scope0 -> Capture$scope07, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$15, member:cpsCont$ -> cpsCont$5, member:handleBlock$$ -> handleBlock$$4, member:cpsCont$ -> cpsCont$9, member:cpsCont -> cpsCont6)
+//│       curThis = S of N
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap(scope0$cap -> scope0$cap, h2 -> h2, tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(member:cpsCont$ -> cpsCont$10, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Capture$scope1 -> Capture$scope12, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, member:Capture$scope1 -> Capture$scope13, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, member:Capture$scope4 -> Capture$scope43, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:cpsCont$ -> cpsCont$16, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:handleBlock$$ -> handleBlock$$5, member:cpsCont$ -> cpsCont$6, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$2, member:handleBlock$$ -> handleBlock$$3, member:Handler$h3$perform$ -> Handler$h3$perform$, class:Capture$scope3 -> Capture$scope3, class:Capture$scope7 -> Capture$scope7, member:cpsCont$ -> cpsCont$17, member:handleBlock$ -> handleBlock$, member:Capture$scope3 -> Capture$scope31, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:Handler$h2$ -> Handler$h2$1, member:cpsCont$ -> cpsCont$12, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$13, member:cpsCont$ -> cpsCont$18, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res3, member:cpsCont -> cpsCont2, member:f -> f, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$8, member:f -> f1, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res9, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, h1 -> h11, class:Handler$h1$ -> Handler$h1$4, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res5, tmp:block$res -> block$res10, member:f -> f2, member:cpsCont$ -> cpsCont$1, class:Handler$h2$ -> Handler$h2$6, member:handleBlock$$ -> handleBlock$$1, member:Predef -> Predef, class:Handler$h3$ -> Handler$h3$, tmp:block$res -> block$res8, tmp:block$res -> block$res6, member:Eff -> Eff1, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, member:Box -> Box1, class:Handler$h1$ -> Handler$h1$2, class:Eff -> Eff, class:Box -> Box, tmp:tmp -> tmp2, class:Capture$scope4 -> Capture$scope4, member:handleBlock$ -> handleBlock$5, box -> box, member:Handler$h3$perform -> Handler$h3$perform, tmp:block$res -> block$res7, class:Handler$h2$ -> Handler$h2$4, member:Handler$h3$ -> Handler$h3$1, member:handleBlock$ -> handleBlock$6, member:Capture$scope4 -> Capture$scope41, member:f -> f3, member:Handler$h2$perform -> Handler$h2$perform2, member:Handler$h2$ -> Handler$h2$7, member:handleBlock$ -> handleBlock$7, member:Handler$h1$perform -> Handler$h1$perform1, member:cpsCont$ -> cpsCont$2, class:Handler$h2$ -> Handler$h2$2, member:Handler$h1$ -> Handler$h1$5, member:cpsCont -> cpsCont15, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:cpsCont -> cpsCont16, member:Handler$h2$ -> Handler$h2$5, member:handleBlock$ -> handleBlock$4, h -> h, member:Handler$h1$perform -> Handler$h1$perform, member:cpsCont -> cpsCont17, class:Handler$h$ -> Handler$h$, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont18, member:cpsCont -> cpsCont19, member:cpsCont -> cpsCont9, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, member:cpsCont -> cpsCont20, tmp:block$res -> block$res, id -> id, member:cpsCont -> cpsCont11, tmp:block$res -> block$res1, member:cpsCont$ -> cpsCont$14, member:cpsCont -> cpsCont12, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:cpsCont -> cpsCont13, member:Handler$h2$ -> Handler$h2$3, member:cpsCont -> cpsCont14, tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$4, tmp:tmp -> tmp, class:Capture$scope0 -> Capture$scope06, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, class:Capture$scope6 -> Capture$scope6, member:Capture$scope0 -> Capture$scope07, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$15, member:cpsCont$ -> cpsCont$5, member:handleBlock$$ -> handleBlock$$4, member:cpsCont$ -> cpsCont$9, member:cpsCont -> cpsCont6)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│     at REPL39:1:6267
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 
 let d = 0
@@ -187,7 +914,147 @@ while i < 10 do
   h2.perform()
   set i = i + 1
 d
-//│ = 11
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.906: 	    k()
+//│ ╙──       	    ^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.908: 	h1.perform()
+//│ ╙──       	^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.913: 	      k()
+//│ ╙──       	      ^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.914: 	  h2.perform()
+//│ ╙──       	  ^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:handleBlock$$ -> handleBlock$$6, member:cpsCont$ -> cpsCont$10, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Capture$scope1 -> Capture$scope12, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, member:Capture$scope1 -> Capture$scope13, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, member:Capture$scope4 -> Capture$scope43, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:cpsCont$ -> cpsCont$16, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:handleBlock$$ -> handleBlock$$5, member:cpsCont$ -> cpsCont$6, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$2, member:handleBlock$$ -> handleBlock$$3, member:while_cpsCont_cpsCont$ -> while_cpsCont_cpsCont$, member:Handler$h3$perform$ -> Handler$h3$perform$, class:Capture$scope3 -> Capture$scope3, class:Capture$scope7 -> Capture$scope7, member:cpsCont$ -> cpsCont$17, member:handleBlock$ -> handleBlock$, member:Capture$scope3 -> Capture$scope31, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, tmp:block$res -> block$res12, member:Handler$h2$ -> Handler$h2$1, member:cpsCont$ -> cpsCont$12, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$13, member:cpsCont$ -> cpsCont$18, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res3, member:cpsCont -> cpsCont2, member:f -> f, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$8, member:f -> f1, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res9, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, h1 -> h11, class:Handler$h1$ -> Handler$h1$4, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res5, tmp:block$res -> block$res10, member:f -> f2, d -> d, member:cpsCont$ -> cpsCont$1, class:Handler$h2$ -> Handler$h2$6, tmp:block$res -> block$res11, h1 -> h12, member:handleBlock$$ -> handleBlock$$1, class:Handler$h1$ -> Handler$h1$6, member:Predef -> Predef, class:Handler$h3$ -> Handler$h3$, tmp:block$res -> block$res8, tmp:block$res -> block$res6, class:Handler$h2$ -> Handler$h2$8, member:Eff -> Eff1, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, member:Box -> Box1, class:Handler$h1$ -> Handler$h1$2, class:Eff -> Eff, class:Box -> Box, tmp:tmp -> tmp2, class:Capture$scope4 -> Capture$scope4, member:handleBlock$ -> handleBlock$5, tmp:tmp -> tmp3, box -> box, member:Handler$h3$perform -> Handler$h3$perform, tmp:block$res -> block$res7, member:while -> while1, class:Handler$h2$ -> Handler$h2$4, member:Handler$h3$ -> Handler$h3$1, member:handleBlock$ -> handleBlock$6, member:handleBlock$ -> handleBlock$8, member:Capture$scope4 -> Capture$scope41, member:f -> f3, member:Handler$h2$perform -> Handler$h2$perform2, member:Handler$h2$perform -> Handler$h2$perform3, member:Handler$h2$ -> Handler$h2$7, member:Handler$h2$ -> Handler$h2$9, member:handleBlock$ -> handleBlock$7, member:Handler$h1$perform -> Handler$h1$perform1, member:handleBlock$ -> handleBlock$9, member:cpsCont$ -> cpsCont$2, member:Handler$h1$perform -> Handler$h1$perform2, class:Handler$h2$ -> Handler$h2$2, member:Handler$h1$ -> Handler$h1$5, member:Handler$h1$ -> Handler$h1$7, member:cpsCont -> cpsCont15, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:cpsCont -> cpsCont16, member:Handler$h2$ -> Handler$h2$5, member:cpsCont -> cpsCont21, member:handleBlock$ -> handleBlock$4, h -> h, member:Handler$h1$perform -> Handler$h1$perform, member:cpsCont -> cpsCont17, member:cpsCont -> cpsCont22, class:Handler$h$ -> Handler$h$, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont18, member:cpsCont -> cpsCont19, member:cpsCont -> cpsCont9, class:Capture$scope0 -> Capture$scope08, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, member:cpsCont -> cpsCont20, tmp:block$res -> block$res, id -> id, member:cpsCont -> cpsCont11, tmp:block$res -> block$res1, member:cpsCont$ -> cpsCont$14, member:cpsCont -> cpsCont12, member:Capture$scope0 -> Capture$scope09, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:cpsCont -> cpsCont13, member:cpsCont$ -> cpsCont$19, member:Handler$h2$ -> Handler$h2$3, member:cpsCont -> cpsCont14, tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$4, tmp:tmp -> tmp, class:Capture$scope0 -> Capture$scope06, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, class:Capture$scope6 -> Capture$scope6, member:Capture$scope0 -> Capture$scope07, class:Capture$scope1 -> Capture$scope14, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$15, member:cpsCont$ -> cpsCont$5, member:handleBlock$$ -> handleBlock$$4, member:Capture$scope1 -> Capture$scope15, member:cpsCont$ -> cpsCont$9, member:cpsCont -> cpsCont6, member:cpsCont$ -> cpsCont$20)
+//│         curThis = S of N
+//│         bindings = HashMap(param2 -> param2, param3 -> param3, label:loopLabel -> loopLabel, id -> id1, param0 -> param0, param1 -> param1)
+//│       bindings = HashMap(tmp:scrut -> scrut, scope1$cap -> scope1$cap)
+//│     bindings = HashMap(tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:handleBlock$$ -> handleBlock$$6, member:cpsCont$ -> cpsCont$10, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Capture$scope1 -> Capture$scope12, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, member:Capture$scope1 -> Capture$scope13, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, member:Capture$scope4 -> Capture$scope43, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:cpsCont$ -> cpsCont$16, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:handleBlock$$ -> handleBlock$$5, member:cpsCont$ -> cpsCont$6, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$2, member:handleBlock$$ -> handleBlock$$3, member:while_cpsCont_cpsCont$ -> while_cpsCont_cpsCont$, member:Handler$h3$perform$ -> Handler$h3$perform$, class:Capture$scope3 -> Capture$scope3, class:Capture$scope7 -> Capture$scope7, member:cpsCont$ -> cpsCont$17, member:handleBlock$ -> handleBlock$, member:Capture$scope3 -> Capture$scope31, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, tmp:block$res -> block$res12, member:Handler$h2$ -> Handler$h2$1, member:cpsCont$ -> cpsCont$12, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$13, member:cpsCont$ -> cpsCont$18, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res3, member:cpsCont -> cpsCont2, member:f -> f, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$8, member:f -> f1, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res9, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, h1 -> h11, class:Handler$h1$ -> Handler$h1$4, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res5, tmp:block$res -> block$res10, member:f -> f2, d -> d, member:cpsCont$ -> cpsCont$1, class:Handler$h2$ -> Handler$h2$6, tmp:block$res -> block$res11, h1 -> h12, member:handleBlock$$ -> handleBlock$$1, class:Handler$h1$ -> Handler$h1$6, member:Predef -> Predef, class:Handler$h3$ -> Handler$h3$, tmp:block$res -> block$res8, tmp:block$res -> block$res6, class:Handler$h2$ -> Handler$h2$8, member:Eff -> Eff1, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, member:Box -> Box1, class:Handler$h1$ -> Handler$h1$2, class:Eff -> Eff, class:Box -> Box, tmp:tmp -> tmp2, class:Capture$scope4 -> Capture$scope4, member:handleBlock$ -> handleBlock$5, tmp:tmp -> tmp3, box -> box, member:Handler$h3$perform -> Handler$h3$perform, tmp:block$res -> block$res7, member:while -> while1, class:Handler$h2$ -> Handler$h2$4, member:Handler$h3$ -> Handler$h3$1, member:handleBlock$ -> handleBlock$6, member:handleBlock$ -> handleBlock$8, member:Capture$scope4 -> Capture$scope41, member:f -> f3, member:Handler$h2$perform -> Handler$h2$perform2, member:Handler$h2$perform -> Handler$h2$perform3, member:Handler$h2$ -> Handler$h2$7, member:Handler$h2$ -> Handler$h2$9, member:handleBlock$ -> handleBlock$7, member:Handler$h1$perform -> Handler$h1$perform1, member:handleBlock$ -> handleBlock$9, member:cpsCont$ -> cpsCont$2, member:Handler$h1$perform -> Handler$h1$perform2, class:Handler$h2$ -> Handler$h2$2, member:Handler$h1$ -> Handler$h1$5, member:Handler$h1$ -> Handler$h1$7, member:cpsCont -> cpsCont15, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:cpsCont -> cpsCont16, member:Handler$h2$ -> Handler$h2$5, member:cpsCont -> cpsCont21, member:handleBlock$ -> handleBlock$4, h -> h, member:Handler$h1$perform -> Handler$h1$perform, member:cpsCont -> cpsCont17, member:cpsCont -> cpsCont22, class:Handler$h$ -> Handler$h$, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont18, member:cpsCont -> cpsCont19, member:cpsCont -> cpsCont9, class:Capture$scope0 -> Capture$scope08, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, member:cpsCont -> cpsCont20, tmp:block$res -> block$res, id -> id, member:cpsCont -> cpsCont11, tmp:block$res -> block$res1, member:cpsCont$ -> cpsCont$14, member:cpsCont -> cpsCont12, member:Capture$scope0 -> Capture$scope09, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:cpsCont -> cpsCont13, member:cpsCont$ -> cpsCont$19, member:Handler$h2$ -> Handler$h2$3, member:cpsCont -> cpsCont14, tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$4, tmp:tmp -> tmp, class:Capture$scope0 -> Capture$scope06, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, class:Capture$scope6 -> Capture$scope6, member:Capture$scope0 -> Capture$scope07, class:Capture$scope1 -> Capture$scope14, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$15, member:cpsCont$ -> cpsCont$5, member:handleBlock$$ -> handleBlock$$4, member:Capture$scope1 -> Capture$scope15, member:cpsCont$ -> cpsCont$9, member:cpsCont -> cpsCont6, member:cpsCont$ -> cpsCont$20)
+//│         curThis = S of S of class:Handler$h2$⁴
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(k -> k1)
+//│     bindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:handleBlock$$ -> handleBlock$$6, member:cpsCont$ -> cpsCont$10, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Capture$scope1 -> Capture$scope12, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, member:Capture$scope1 -> Capture$scope13, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, member:Capture$scope4 -> Capture$scope43, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:cpsCont$ -> cpsCont$16, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:handleBlock$$ -> handleBlock$$5, member:cpsCont$ -> cpsCont$6, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$2, member:handleBlock$$ -> handleBlock$$3, member:while_cpsCont_cpsCont$ -> while_cpsCont_cpsCont$, member:Handler$h3$perform$ -> Handler$h3$perform$, class:Capture$scope3 -> Capture$scope3, class:Capture$scope7 -> Capture$scope7, member:cpsCont$ -> cpsCont$17, member:handleBlock$ -> handleBlock$, member:Capture$scope3 -> Capture$scope31, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, tmp:block$res -> block$res12, member:Handler$h2$ -> Handler$h2$1, member:cpsCont$ -> cpsCont$12, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$13, member:cpsCont$ -> cpsCont$18, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res3, member:cpsCont -> cpsCont2, member:f -> f, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$8, member:f -> f1, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res9, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, h1 -> h11, class:Handler$h1$ -> Handler$h1$4, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res5, tmp:block$res -> block$res10, member:f -> f2, d -> d, member:cpsCont$ -> cpsCont$1, class:Handler$h2$ -> Handler$h2$6, tmp:block$res -> block$res11, h1 -> h12, member:handleBlock$$ -> handleBlock$$1, class:Handler$h1$ -> Handler$h1$6, member:Predef -> Predef, class:Handler$h3$ -> Handler$h3$, tmp:block$res -> block$res8, tmp:block$res -> block$res6, class:Handler$h2$ -> Handler$h2$8, member:Eff -> Eff1, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, member:Box -> Box1, class:Handler$h1$ -> Handler$h1$2, class:Eff -> Eff, class:Box -> Box, tmp:tmp -> tmp2, class:Capture$scope4 -> Capture$scope4, member:handleBlock$ -> handleBlock$5, tmp:tmp -> tmp3, box -> box, member:Handler$h3$perform -> Handler$h3$perform, tmp:block$res -> block$res7, member:while -> while1, class:Handler$h2$ -> Handler$h2$4, member:Handler$h3$ -> Handler$h3$1, member:handleBlock$ -> handleBlock$6, member:handleBlock$ -> handleBlock$8, member:Capture$scope4 -> Capture$scope41, member:f -> f3, member:Handler$h2$perform -> Handler$h2$perform2, member:Handler$h2$perform -> Handler$h2$perform3, member:Handler$h2$ -> Handler$h2$7, member:Handler$h2$ -> Handler$h2$9, member:handleBlock$ -> handleBlock$7, member:Handler$h1$perform -> Handler$h1$perform1, member:handleBlock$ -> handleBlock$9, member:cpsCont$ -> cpsCont$2, member:Handler$h1$perform -> Handler$h1$perform2, class:Handler$h2$ -> Handler$h2$2, member:Handler$h1$ -> Handler$h1$5, member:Handler$h1$ -> Handler$h1$7, member:cpsCont -> cpsCont15, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:cpsCont -> cpsCont16, member:Handler$h2$ -> Handler$h2$5, member:cpsCont -> cpsCont21, member:handleBlock$ -> handleBlock$4, h -> h, member:Handler$h1$perform -> Handler$h1$perform, member:cpsCont -> cpsCont17, member:cpsCont -> cpsCont22, class:Handler$h$ -> Handler$h$, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont18, member:cpsCont -> cpsCont19, member:cpsCont -> cpsCont9, class:Capture$scope0 -> Capture$scope08, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, member:cpsCont -> cpsCont20, tmp:block$res -> block$res, id -> id, member:cpsCont -> cpsCont11, tmp:block$res -> block$res1, member:cpsCont$ -> cpsCont$14, member:cpsCont -> cpsCont12, member:Capture$scope0 -> Capture$scope09, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:cpsCont -> cpsCont13, member:cpsCont$ -> cpsCont$19, member:Handler$h2$ -> Handler$h2$3, member:cpsCont -> cpsCont14, tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$4, tmp:tmp -> tmp, class:Capture$scope0 -> Capture$scope06, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, class:Capture$scope6 -> Capture$scope6, member:Capture$scope0 -> Capture$scope07, class:Capture$scope1 -> Capture$scope14, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$15, member:cpsCont$ -> cpsCont$5, member:handleBlock$$ -> handleBlock$$4, member:Capture$scope1 -> Capture$scope15, member:cpsCont$ -> cpsCont$9, member:cpsCont -> cpsCont6, member:cpsCont$ -> cpsCont$20)
+//│         curThis = S of S of class:Handler$h1$³
+//│         bindings = HashMap()
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(member:handleBlock$$ -> handleBlock$$6, member:cpsCont$ -> cpsCont$10, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Capture$scope1 -> Capture$scope12, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, member:Capture$scope1 -> Capture$scope13, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, member:Capture$scope4 -> Capture$scope43, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:cpsCont$ -> cpsCont$16, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:handleBlock$$ -> handleBlock$$5, member:cpsCont$ -> cpsCont$6, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$2, member:handleBlock$$ -> handleBlock$$3, member:while_cpsCont_cpsCont$ -> while_cpsCont_cpsCont$, member:Handler$h3$perform$ -> Handler$h3$perform$, class:Capture$scope3 -> Capture$scope3, class:Capture$scope7 -> Capture$scope7, member:cpsCont$ -> cpsCont$17, member:handleBlock$ -> handleBlock$, member:Capture$scope3 -> Capture$scope31, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, tmp:block$res -> block$res12, member:Handler$h2$ -> Handler$h2$1, member:cpsCont$ -> cpsCont$12, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$13, member:cpsCont$ -> cpsCont$18, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res3, member:cpsCont -> cpsCont2, member:f -> f, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$8, member:f -> f1, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res9, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, h1 -> h11, class:Handler$h1$ -> Handler$h1$4, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res5, tmp:block$res -> block$res10, member:f -> f2, d -> d, member:cpsCont$ -> cpsCont$1, class:Handler$h2$ -> Handler$h2$6, tmp:block$res -> block$res11, h1 -> h12, member:handleBlock$$ -> handleBlock$$1, class:Handler$h1$ -> Handler$h1$6, member:Predef -> Predef, class:Handler$h3$ -> Handler$h3$, tmp:block$res -> block$res8, tmp:block$res -> block$res6, class:Handler$h2$ -> Handler$h2$8, member:Eff -> Eff1, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, member:Box -> Box1, class:Handler$h1$ -> Handler$h1$2, class:Eff -> Eff, class:Box -> Box, tmp:tmp -> tmp2, class:Capture$scope4 -> Capture$scope4, member:handleBlock$ -> handleBlock$5, tmp:tmp -> tmp3, box -> box, member:Handler$h3$perform -> Handler$h3$perform, tmp:block$res -> block$res7, member:while -> while1, class:Handler$h2$ -> Handler$h2$4, member:Handler$h3$ -> Handler$h3$1, member:handleBlock$ -> handleBlock$6, member:handleBlock$ -> handleBlock$8, member:Capture$scope4 -> Capture$scope41, member:f -> f3, member:Handler$h2$perform -> Handler$h2$perform2, member:Handler$h2$perform -> Handler$h2$perform3, member:Handler$h2$ -> Handler$h2$7, member:Handler$h2$ -> Handler$h2$9, member:handleBlock$ -> handleBlock$7, member:Handler$h1$perform -> Handler$h1$perform1, member:handleBlock$ -> handleBlock$9, member:cpsCont$ -> cpsCont$2, member:Handler$h1$perform -> Handler$h1$perform2, class:Handler$h2$ -> Handler$h2$2, member:Handler$h1$ -> Handler$h1$5, member:Handler$h1$ -> Handler$h1$7, member:cpsCont -> cpsCont15, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:cpsCont -> cpsCont16, member:Handler$h2$ -> Handler$h2$5, member:cpsCont -> cpsCont21, member:handleBlock$ -> handleBlock$4, h -> h, member:Handler$h1$perform -> Handler$h1$perform, member:cpsCont -> cpsCont17, member:cpsCont -> cpsCont22, class:Handler$h$ -> Handler$h$, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont18, member:cpsCont -> cpsCont19, member:cpsCont -> cpsCont9, class:Capture$scope0 -> Capture$scope08, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, member:cpsCont -> cpsCont20, tmp:block$res -> block$res, id -> id, member:cpsCont -> cpsCont11, tmp:block$res -> block$res1, member:cpsCont$ -> cpsCont$14, member:cpsCont -> cpsCont12, member:Capture$scope0 -> Capture$scope09, member:Capture$scope8 -> Capture$scope81, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:cpsCont -> cpsCont13, member:cpsCont$ -> cpsCont$19, member:Handler$h2$ -> Handler$h2$3, member:cpsCont -> cpsCont14, tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$4, tmp:tmp -> tmp, class:Capture$scope0 -> Capture$scope06, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, class:Capture$scope6 -> Capture$scope6, member:Capture$scope0 -> Capture$scope07, class:Capture$scope1 -> Capture$scope14, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$15, member:cpsCont$ -> cpsCont$5, member:handleBlock$$ -> handleBlock$$4, member:Capture$scope1 -> Capture$scope15, member:cpsCont$ -> cpsCont$9, member:cpsCont -> cpsCont6, member:cpsCont$ -> cpsCont$20)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│     at REPL46:1:5106
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:297)
+//│ ═══[RUNTIME ERROR] Expected: '11', got: 'undefined'
 
 abstract class Eff2 with
   fun f1(): ()
@@ -212,8 +1079,208 @@ handle h2 = Eff2 with
     h1.f1()
 h2.f2()
 h2.f1()
-//│ > h2.f2 pre
-//│ > h2.f1
-//│ > h2.f2 post
-//│ > h1.f1 pre
-//│ > h1.f1 post
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.1068: 	    k()
+//│ ╙──        	    ^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.1070: 	  fun f2()(k) = k()
+//│ ╙──        	                ^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.1074: 	    k()
+//│ ╙──        	    ^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.1077: 	    k()
+//│ ╙──        	    ^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.1079: 	    h1.f1()
+//│ ╙──        	    ^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.1080: 	h2.f2()
+//│ ╙──        	^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.1081: 	h2.f1()
+//│ ╙──        	^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:handleBlock$$ -> handleBlock$$6, member:cpsCont$ -> cpsCont$10, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$3, member:while_cpsCont_cpsCont$ -> while_cpsCont_cpsCont$, class:Capture$scope3 -> Capture$scope3, member:Capture$scope3 -> Capture$scope31, tmp:block$res -> block$res12, member:cpsCont$ -> cpsCont$12, member:Eff2 -> Eff21, class:Eff2 -> Eff2, member:cpsCont$ -> cpsCont$13, tmp:block$res -> block$res13, h1 -> h13, class:Handler$h1$ -> Handler$h1$8, tmp:block$res -> block$res3, member:f -> f, class:Handler$h2$ -> Handler$h2$10, tmp:block$res -> block$res4, member:f -> f1, tmp:block$res -> block$res9, h1 -> h11, class:Handler$h1$ -> Handler$h1$4, tmp:tmp -> tmp4, member:handleBlock$ -> handleBlock$10, member:Handler$h2$f1 -> Handler$h2$f1, tmp:block$res -> block$res5, member:Handler$h2$f2 -> Handler$h2$f2, member:f -> f2, class:Handler$h2$ -> Handler$h2$6, member:Handler$h2$ -> Handler$h2$11, member:handleBlock$ -> handleBlock$11, member:Handler$h1$f1 -> Handler$h1$f1, member:Handler$h1$f2 -> Handler$h1$f2, member:Predef -> Predef, member:Handler$h1$ -> Handler$h1$9, class:Handler$h3$ -> Handler$h3$, member:cpsCont -> cpsCont23, tmp:block$res -> block$res6, member:Eff -> Eff1, member:Box -> Box1, class:Eff -> Eff, member:cpsCont -> cpsCont24, class:Box -> Box, tmp:tmp -> tmp2, member:cpsCont -> cpsCont25, member:handleBlock$ -> handleBlock$5, member:cpsCont -> cpsCont26, box -> box, member:Handler$h3$perform -> Handler$h3$perform, tmp:block$res -> block$res7, member:Handler$h3$ -> Handler$h3$1, member:cpsCont -> cpsCont27, member:handleBlock$ -> handleBlock$6, member:f -> f3, member:Handler$h2$perform -> Handler$h2$perform2, member:cpsCont -> cpsCont28, member:Handler$h2$ -> Handler$h2$7, member:handleBlock$ -> handleBlock$7, member:Handler$h1$perform -> Handler$h1$perform1, member:cpsCont$ -> cpsCont$21, class:Handler$h2$ -> Handler$h2$2, member:Handler$h1$ -> Handler$h1$5, member:cpsCont -> cpsCont15, member:cpsCont -> cpsCont16, class:Capture$scope0 -> Capture$scope010, member:Capture$scope0 -> Capture$scope011, h -> h, member:cpsCont -> cpsCont17, class:Handler$h$ -> Handler$h$, member:cpsCont$ -> cpsCont$22, member:cpsCont -> cpsCont18, member:handleBlock$$ -> handleBlock$$7, member:cpsCont -> cpsCont19, member:cpsCont -> cpsCont20, tmp:block$res -> block$res, id -> id, tmp:block$res -> block$res1, member:cpsCont$ -> cpsCont$14, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:Handler$h2$ -> Handler$h2$3, tmp:block$res -> block$res2, tmp:tmp -> tmp, member:cpsCont$ -> cpsCont$23, class:Capture$scope0 -> Capture$scope06, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, member:Capture$scope0 -> Capture$scope07, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:cpsCont$ -> cpsCont$15, member:handleBlock$$ -> handleBlock$$4, member:cpsCont$ -> cpsCont$24, member:cpsCont -> cpsCont6, member:cpsCont$ -> cpsCont$25, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Capture$scope1 -> Capture$scope12, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, member:Capture$scope1 -> Capture$scope13, member:Capture$scope4 -> Capture$scope43, member:cpsCont$ -> cpsCont$16, member:handleBlock$$ -> handleBlock$$5, member:cpsCont$ -> cpsCont$6, member:handleBlock$$ -> handleBlock$$2, member:Handler$h3$perform$ -> Handler$h3$perform$, tmp:block$res -> block$res14, class:Capture$scope7 -> Capture$scope7, member:cpsCont$ -> cpsCont$17, member:handleBlock$ -> handleBlock$, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:Handler$h2$ -> Handler$h2$1, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$18, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, member:cpsCont$ -> cpsCont$8, member:handleBlock$$ -> handleBlock$$, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res10, d -> d, member:cpsCont$ -> cpsCont$1, tmp:block$res -> block$res11, h1 -> h12, member:handleBlock$$ -> handleBlock$$1, class:Handler$h1$ -> Handler$h1$6, tmp:block$res -> block$res8, class:Handler$h2$ -> Handler$h2$8, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, class:Handler$h1$ -> Handler$h1$2, class:Capture$scope4 -> Capture$scope4, tmp:tmp -> tmp3, member:while -> while1, class:Handler$h2$ -> Handler$h2$4, member:handleBlock$ -> handleBlock$8, member:Capture$scope4 -> Capture$scope41, member:Handler$h2$perform -> Handler$h2$perform3, member:Handler$h2$ -> Handler$h2$9, member:handleBlock$ -> handleBlock$9, member:cpsCont$ -> cpsCont$2, member:Handler$h1$perform -> Handler$h1$perform2, member:Handler$h1$ -> Handler$h1$7, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:Handler$h2$ -> Handler$h2$5, member:cpsCont -> cpsCont21, member:handleBlock$ -> handleBlock$4, member:Handler$h1$perform -> Handler$h1$perform, member:cpsCont -> cpsCont22, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont9, class:Capture$scope0 -> Capture$scope08, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, member:cpsCont -> cpsCont11, member:cpsCont -> cpsCont12, member:Capture$scope0 -> Capture$scope09, member:Capture$scope8 -> Capture$scope81, member:cpsCont -> cpsCont13, member:cpsCont$ -> cpsCont$19, member:cpsCont -> cpsCont14, member:cpsCont$ -> cpsCont$4, class:Capture$scope6 -> Capture$scope6, class:Capture$scope1 -> Capture$scope14, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$5, member:Capture$scope1 -> Capture$scope15, member:cpsCont$ -> cpsCont$9, member:cpsCont$ -> cpsCont$20)
+//│         curThis = S of S of class:Handler$h2$⁵
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(k -> k1)
+//│     bindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:handleBlock$$ -> handleBlock$$6, member:cpsCont$ -> cpsCont$10, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$3, member:while_cpsCont_cpsCont$ -> while_cpsCont_cpsCont$, class:Capture$scope3 -> Capture$scope3, member:Capture$scope3 -> Capture$scope31, tmp:block$res -> block$res12, member:cpsCont$ -> cpsCont$12, member:Eff2 -> Eff21, class:Eff2 -> Eff2, member:cpsCont$ -> cpsCont$13, tmp:block$res -> block$res13, h1 -> h13, class:Handler$h1$ -> Handler$h1$8, tmp:block$res -> block$res3, member:f -> f, class:Handler$h2$ -> Handler$h2$10, tmp:block$res -> block$res4, member:f -> f1, tmp:block$res -> block$res9, h1 -> h11, class:Handler$h1$ -> Handler$h1$4, tmp:tmp -> tmp4, member:handleBlock$ -> handleBlock$10, member:Handler$h2$f1 -> Handler$h2$f1, tmp:block$res -> block$res5, member:Handler$h2$f2 -> Handler$h2$f2, member:f -> f2, class:Handler$h2$ -> Handler$h2$6, member:Handler$h2$ -> Handler$h2$11, member:handleBlock$ -> handleBlock$11, member:Handler$h1$f1 -> Handler$h1$f1, member:Handler$h1$f2 -> Handler$h1$f2, member:Predef -> Predef, member:Handler$h1$ -> Handler$h1$9, class:Handler$h3$ -> Handler$h3$, member:cpsCont -> cpsCont23, tmp:block$res -> block$res6, member:Eff -> Eff1, member:Box -> Box1, class:Eff -> Eff, member:cpsCont -> cpsCont24, class:Box -> Box, tmp:tmp -> tmp2, member:cpsCont -> cpsCont25, member:handleBlock$ -> handleBlock$5, member:cpsCont -> cpsCont26, box -> box, member:Handler$h3$perform -> Handler$h3$perform, tmp:block$res -> block$res7, member:Handler$h3$ -> Handler$h3$1, member:cpsCont -> cpsCont27, member:handleBlock$ -> handleBlock$6, member:f -> f3, member:Handler$h2$perform -> Handler$h2$perform2, member:cpsCont -> cpsCont28, member:Handler$h2$ -> Handler$h2$7, member:handleBlock$ -> handleBlock$7, member:Handler$h1$perform -> Handler$h1$perform1, member:cpsCont$ -> cpsCont$21, class:Handler$h2$ -> Handler$h2$2, member:Handler$h1$ -> Handler$h1$5, member:cpsCont -> cpsCont15, member:cpsCont -> cpsCont16, class:Capture$scope0 -> Capture$scope010, member:Capture$scope0 -> Capture$scope011, h -> h, member:cpsCont -> cpsCont17, class:Handler$h$ -> Handler$h$, member:cpsCont$ -> cpsCont$22, member:cpsCont -> cpsCont18, member:handleBlock$$ -> handleBlock$$7, member:cpsCont -> cpsCont19, member:cpsCont -> cpsCont20, tmp:block$res -> block$res, id -> id, tmp:block$res -> block$res1, member:cpsCont$ -> cpsCont$14, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:Handler$h2$ -> Handler$h2$3, tmp:block$res -> block$res2, tmp:tmp -> tmp, member:cpsCont$ -> cpsCont$23, class:Capture$scope0 -> Capture$scope06, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, member:Capture$scope0 -> Capture$scope07, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:cpsCont$ -> cpsCont$15, member:handleBlock$$ -> handleBlock$$4, member:cpsCont$ -> cpsCont$24, member:cpsCont -> cpsCont6, member:cpsCont$ -> cpsCont$25, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Capture$scope1 -> Capture$scope12, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, member:Capture$scope1 -> Capture$scope13, member:Capture$scope4 -> Capture$scope43, member:cpsCont$ -> cpsCont$16, member:handleBlock$$ -> handleBlock$$5, member:cpsCont$ -> cpsCont$6, member:handleBlock$$ -> handleBlock$$2, member:Handler$h3$perform$ -> Handler$h3$perform$, tmp:block$res -> block$res14, class:Capture$scope7 -> Capture$scope7, member:cpsCont$ -> cpsCont$17, member:handleBlock$ -> handleBlock$, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:Handler$h2$ -> Handler$h2$1, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$18, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, member:cpsCont$ -> cpsCont$8, member:handleBlock$$ -> handleBlock$$, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res10, d -> d, member:cpsCont$ -> cpsCont$1, tmp:block$res -> block$res11, h1 -> h12, member:handleBlock$$ -> handleBlock$$1, class:Handler$h1$ -> Handler$h1$6, tmp:block$res -> block$res8, class:Handler$h2$ -> Handler$h2$8, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, class:Handler$h1$ -> Handler$h1$2, class:Capture$scope4 -> Capture$scope4, tmp:tmp -> tmp3, member:while -> while1, class:Handler$h2$ -> Handler$h2$4, member:handleBlock$ -> handleBlock$8, member:Capture$scope4 -> Capture$scope41, member:Handler$h2$perform -> Handler$h2$perform3, member:Handler$h2$ -> Handler$h2$9, member:handleBlock$ -> handleBlock$9, member:cpsCont$ -> cpsCont$2, member:Handler$h1$perform -> Handler$h1$perform2, member:Handler$h1$ -> Handler$h1$7, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:Handler$h2$ -> Handler$h2$5, member:cpsCont -> cpsCont21, member:handleBlock$ -> handleBlock$4, member:Handler$h1$perform -> Handler$h1$perform, member:cpsCont -> cpsCont22, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont9, class:Capture$scope0 -> Capture$scope08, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, member:cpsCont -> cpsCont11, member:cpsCont -> cpsCont12, member:Capture$scope0 -> Capture$scope09, member:Capture$scope8 -> Capture$scope81, member:cpsCont -> cpsCont13, member:cpsCont$ -> cpsCont$19, member:cpsCont -> cpsCont14, member:cpsCont$ -> cpsCont$4, class:Capture$scope6 -> Capture$scope6, class:Capture$scope1 -> Capture$scope14, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$5, member:Capture$scope1 -> Capture$scope15, member:cpsCont$ -> cpsCont$9, member:cpsCont$ -> cpsCont$20)
+//│         curThis = S of S of class:Handler$h2$⁵
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(k -> k1)
+//│     bindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:handleBlock$$ -> handleBlock$$6, member:cpsCont$ -> cpsCont$10, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$3, member:while_cpsCont_cpsCont$ -> while_cpsCont_cpsCont$, class:Capture$scope3 -> Capture$scope3, member:Capture$scope3 -> Capture$scope31, tmp:block$res -> block$res12, member:cpsCont$ -> cpsCont$12, member:Eff2 -> Eff21, class:Eff2 -> Eff2, member:cpsCont$ -> cpsCont$13, tmp:block$res -> block$res13, h1 -> h13, class:Handler$h1$ -> Handler$h1$8, tmp:block$res -> block$res3, member:f -> f, class:Handler$h2$ -> Handler$h2$10, tmp:block$res -> block$res4, member:f -> f1, tmp:block$res -> block$res9, h1 -> h11, class:Handler$h1$ -> Handler$h1$4, tmp:tmp -> tmp4, member:handleBlock$ -> handleBlock$10, member:Handler$h2$f1 -> Handler$h2$f1, tmp:block$res -> block$res5, member:Handler$h2$f2 -> Handler$h2$f2, member:f -> f2, class:Handler$h2$ -> Handler$h2$6, member:Handler$h2$ -> Handler$h2$11, member:handleBlock$ -> handleBlock$11, member:Handler$h1$f1 -> Handler$h1$f1, member:Handler$h1$f2 -> Handler$h1$f2, member:Predef -> Predef, member:Handler$h1$ -> Handler$h1$9, class:Handler$h3$ -> Handler$h3$, member:cpsCont -> cpsCont23, tmp:block$res -> block$res6, member:Eff -> Eff1, member:Box -> Box1, class:Eff -> Eff, member:cpsCont -> cpsCont24, class:Box -> Box, tmp:tmp -> tmp2, member:cpsCont -> cpsCont25, member:handleBlock$ -> handleBlock$5, member:cpsCont -> cpsCont26, box -> box, member:Handler$h3$perform -> Handler$h3$perform, tmp:block$res -> block$res7, member:Handler$h3$ -> Handler$h3$1, member:cpsCont -> cpsCont27, member:handleBlock$ -> handleBlock$6, member:f -> f3, member:Handler$h2$perform -> Handler$h2$perform2, member:cpsCont -> cpsCont28, member:Handler$h2$ -> Handler$h2$7, member:handleBlock$ -> handleBlock$7, member:Handler$h1$perform -> Handler$h1$perform1, member:cpsCont$ -> cpsCont$21, class:Handler$h2$ -> Handler$h2$2, member:Handler$h1$ -> Handler$h1$5, member:cpsCont -> cpsCont15, member:cpsCont -> cpsCont16, class:Capture$scope0 -> Capture$scope010, member:Capture$scope0 -> Capture$scope011, h -> h, member:cpsCont -> cpsCont17, class:Handler$h$ -> Handler$h$, member:cpsCont$ -> cpsCont$22, member:cpsCont -> cpsCont18, member:handleBlock$$ -> handleBlock$$7, member:cpsCont -> cpsCont19, member:cpsCont -> cpsCont20, tmp:block$res -> block$res, id -> id, tmp:block$res -> block$res1, member:cpsCont$ -> cpsCont$14, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:Handler$h2$ -> Handler$h2$3, tmp:block$res -> block$res2, tmp:tmp -> tmp, member:cpsCont$ -> cpsCont$23, class:Capture$scope0 -> Capture$scope06, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, member:Capture$scope0 -> Capture$scope07, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:cpsCont$ -> cpsCont$15, member:handleBlock$$ -> handleBlock$$4, member:cpsCont$ -> cpsCont$24, member:cpsCont -> cpsCont6, member:cpsCont$ -> cpsCont$25, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Capture$scope1 -> Capture$scope12, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, member:Capture$scope1 -> Capture$scope13, member:Capture$scope4 -> Capture$scope43, member:cpsCont$ -> cpsCont$16, member:handleBlock$$ -> handleBlock$$5, member:cpsCont$ -> cpsCont$6, member:handleBlock$$ -> handleBlock$$2, member:Handler$h3$perform$ -> Handler$h3$perform$, tmp:block$res -> block$res14, class:Capture$scope7 -> Capture$scope7, member:cpsCont$ -> cpsCont$17, member:handleBlock$ -> handleBlock$, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:Handler$h2$ -> Handler$h2$1, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$18, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, member:cpsCont$ -> cpsCont$8, member:handleBlock$$ -> handleBlock$$, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res10, d -> d, member:cpsCont$ -> cpsCont$1, tmp:block$res -> block$res11, h1 -> h12, member:handleBlock$$ -> handleBlock$$1, class:Handler$h1$ -> Handler$h1$6, tmp:block$res -> block$res8, class:Handler$h2$ -> Handler$h2$8, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, class:Handler$h1$ -> Handler$h1$2, class:Capture$scope4 -> Capture$scope4, tmp:tmp -> tmp3, member:while -> while1, class:Handler$h2$ -> Handler$h2$4, member:handleBlock$ -> handleBlock$8, member:Capture$scope4 -> Capture$scope41, member:Handler$h2$perform -> Handler$h2$perform3, member:Handler$h2$ -> Handler$h2$9, member:handleBlock$ -> handleBlock$9, member:cpsCont$ -> cpsCont$2, member:Handler$h1$perform -> Handler$h1$perform2, member:Handler$h1$ -> Handler$h1$7, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:Handler$h2$ -> Handler$h2$5, member:cpsCont -> cpsCont21, member:handleBlock$ -> handleBlock$4, member:Handler$h1$perform -> Handler$h1$perform, member:cpsCont -> cpsCont22, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont9, class:Capture$scope0 -> Capture$scope08, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, member:cpsCont -> cpsCont11, member:cpsCont -> cpsCont12, member:Capture$scope0 -> Capture$scope09, member:Capture$scope8 -> Capture$scope81, member:cpsCont -> cpsCont13, member:cpsCont$ -> cpsCont$19, member:cpsCont -> cpsCont14, member:cpsCont$ -> cpsCont$4, class:Capture$scope6 -> Capture$scope6, class:Capture$scope1 -> Capture$scope14, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$5, member:Capture$scope1 -> Capture$scope15, member:cpsCont$ -> cpsCont$9, member:cpsCont$ -> cpsCont$20)
+//│         curThis = S of S of class:Handler$h1$⁴
+//│         bindings = HashMap()
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:handleBlock$$ -> handleBlock$$6, member:cpsCont$ -> cpsCont$10, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$3, member:while_cpsCont_cpsCont$ -> while_cpsCont_cpsCont$, class:Capture$scope3 -> Capture$scope3, member:Capture$scope3 -> Capture$scope31, tmp:block$res -> block$res12, member:cpsCont$ -> cpsCont$12, member:Eff2 -> Eff21, class:Eff2 -> Eff2, member:cpsCont$ -> cpsCont$13, tmp:block$res -> block$res13, h1 -> h13, class:Handler$h1$ -> Handler$h1$8, tmp:block$res -> block$res3, member:f -> f, class:Handler$h2$ -> Handler$h2$10, tmp:block$res -> block$res4, member:f -> f1, tmp:block$res -> block$res9, h1 -> h11, class:Handler$h1$ -> Handler$h1$4, tmp:tmp -> tmp4, member:handleBlock$ -> handleBlock$10, member:Handler$h2$f1 -> Handler$h2$f1, tmp:block$res -> block$res5, member:Handler$h2$f2 -> Handler$h2$f2, member:f -> f2, class:Handler$h2$ -> Handler$h2$6, member:Handler$h2$ -> Handler$h2$11, member:handleBlock$ -> handleBlock$11, member:Handler$h1$f1 -> Handler$h1$f1, member:Handler$h1$f2 -> Handler$h1$f2, member:Predef -> Predef, member:Handler$h1$ -> Handler$h1$9, class:Handler$h3$ -> Handler$h3$, member:cpsCont -> cpsCont23, tmp:block$res -> block$res6, member:Eff -> Eff1, member:Box -> Box1, class:Eff -> Eff, member:cpsCont -> cpsCont24, class:Box -> Box, tmp:tmp -> tmp2, member:cpsCont -> cpsCont25, member:handleBlock$ -> handleBlock$5, member:cpsCont -> cpsCont26, box -> box, member:Handler$h3$perform -> Handler$h3$perform, tmp:block$res -> block$res7, member:Handler$h3$ -> Handler$h3$1, member:cpsCont -> cpsCont27, member:handleBlock$ -> handleBlock$6, member:f -> f3, member:Handler$h2$perform -> Handler$h2$perform2, member:cpsCont -> cpsCont28, member:Handler$h2$ -> Handler$h2$7, member:handleBlock$ -> handleBlock$7, member:Handler$h1$perform -> Handler$h1$perform1, member:cpsCont$ -> cpsCont$21, class:Handler$h2$ -> Handler$h2$2, member:Handler$h1$ -> Handler$h1$5, member:cpsCont -> cpsCont15, member:cpsCont -> cpsCont16, class:Capture$scope0 -> Capture$scope010, member:Capture$scope0 -> Capture$scope011, h -> h, member:cpsCont -> cpsCont17, class:Handler$h$ -> Handler$h$, member:cpsCont$ -> cpsCont$22, member:cpsCont -> cpsCont18, member:handleBlock$$ -> handleBlock$$7, member:cpsCont -> cpsCont19, member:cpsCont -> cpsCont20, tmp:block$res -> block$res, id -> id, tmp:block$res -> block$res1, member:cpsCont$ -> cpsCont$14, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:Handler$h2$ -> Handler$h2$3, tmp:block$res -> block$res2, tmp:tmp -> tmp, member:cpsCont$ -> cpsCont$23, class:Capture$scope0 -> Capture$scope06, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, member:Capture$scope0 -> Capture$scope07, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:cpsCont$ -> cpsCont$15, member:handleBlock$$ -> handleBlock$$4, member:cpsCont$ -> cpsCont$24, member:cpsCont -> cpsCont6, member:cpsCont$ -> cpsCont$25, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Capture$scope1 -> Capture$scope12, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, member:Capture$scope1 -> Capture$scope13, member:Capture$scope4 -> Capture$scope43, member:cpsCont$ -> cpsCont$16, member:handleBlock$$ -> handleBlock$$5, member:cpsCont$ -> cpsCont$6, member:handleBlock$$ -> handleBlock$$2, member:Handler$h3$perform$ -> Handler$h3$perform$, tmp:block$res -> block$res14, class:Capture$scope7 -> Capture$scope7, member:cpsCont$ -> cpsCont$17, member:handleBlock$ -> handleBlock$, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:Handler$h2$ -> Handler$h2$1, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$18, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, member:cpsCont$ -> cpsCont$8, member:handleBlock$$ -> handleBlock$$, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res10, d -> d, member:cpsCont$ -> cpsCont$1, tmp:block$res -> block$res11, h1 -> h12, member:handleBlock$$ -> handleBlock$$1, class:Handler$h1$ -> Handler$h1$6, tmp:block$res -> block$res8, class:Handler$h2$ -> Handler$h2$8, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, class:Handler$h1$ -> Handler$h1$2, class:Capture$scope4 -> Capture$scope4, tmp:tmp -> tmp3, member:while -> while1, class:Handler$h2$ -> Handler$h2$4, member:handleBlock$ -> handleBlock$8, member:Capture$scope4 -> Capture$scope41, member:Handler$h2$perform -> Handler$h2$perform3, member:Handler$h2$ -> Handler$h2$9, member:handleBlock$ -> handleBlock$9, member:cpsCont$ -> cpsCont$2, member:Handler$h1$perform -> Handler$h1$perform2, member:Handler$h1$ -> Handler$h1$7, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:Handler$h2$ -> Handler$h2$5, member:cpsCont -> cpsCont21, member:handleBlock$ -> handleBlock$4, member:Handler$h1$perform -> Handler$h1$perform, member:cpsCont -> cpsCont22, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont9, class:Capture$scope0 -> Capture$scope08, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, member:cpsCont -> cpsCont11, member:cpsCont -> cpsCont12, member:Capture$scope0 -> Capture$scope09, member:Capture$scope8 -> Capture$scope81, member:cpsCont -> cpsCont13, member:cpsCont$ -> cpsCont$19, member:cpsCont -> cpsCont14, member:cpsCont$ -> cpsCont$4, class:Capture$scope6 -> Capture$scope6, class:Capture$scope1 -> Capture$scope14, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$5, member:Capture$scope1 -> Capture$scope15, member:cpsCont$ -> cpsCont$9, member:cpsCont$ -> cpsCont$20)
+//│         curThis = S of S of class:Handler$h1$⁴
+//│         bindings = HashMap()
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Left of Cfg:
+//│           escapeChars = true
+//│           useSuperscripts = false
+//│           includeZero = false
+//│           defaultName = "tmp"
+//│         curThis = S of S of globalThis:globalThis⁰
+//│         bindings = HashMap(member:handleBlock$$ -> handleBlock$$6, member:cpsCont$ -> cpsCont$10, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$3, member:while_cpsCont_cpsCont$ -> while_cpsCont_cpsCont$, class:Capture$scope3 -> Capture$scope3, member:Capture$scope3 -> Capture$scope31, tmp:block$res -> block$res12, member:cpsCont$ -> cpsCont$12, member:Eff2 -> Eff21, class:Eff2 -> Eff2, member:cpsCont$ -> cpsCont$13, tmp:block$res -> block$res13, h1 -> h13, class:Handler$h1$ -> Handler$h1$8, tmp:block$res -> block$res3, member:f -> f, class:Handler$h2$ -> Handler$h2$10, tmp:block$res -> block$res4, member:f -> f1, tmp:block$res -> block$res9, h1 -> h11, class:Handler$h1$ -> Handler$h1$4, tmp:tmp -> tmp4, member:handleBlock$ -> handleBlock$10, member:Handler$h2$f1 -> Handler$h2$f1, tmp:block$res -> block$res5, member:Handler$h2$f2 -> Handler$h2$f2, member:f -> f2, class:Handler$h2$ -> Handler$h2$6, member:Handler$h2$ -> Handler$h2$11, member:handleBlock$ -> handleBlock$11, member:Handler$h1$f1 -> Handler$h1$f1, member:Handler$h1$f2 -> Handler$h1$f2, member:Predef -> Predef, member:Handler$h1$ -> Handler$h1$9, class:Handler$h3$ -> Handler$h3$, member:cpsCont -> cpsCont23, tmp:block$res -> block$res6, member:Eff -> Eff1, member:Box -> Box1, class:Eff -> Eff, member:cpsCont -> cpsCont24, class:Box -> Box, tmp:tmp -> tmp2, member:cpsCont -> cpsCont25, member:handleBlock$ -> handleBlock$5, member:cpsCont -> cpsCont26, box -> box, member:Handler$h3$perform -> Handler$h3$perform, tmp:block$res -> block$res7, member:Handler$h3$ -> Handler$h3$1, member:cpsCont -> cpsCont27, member:handleBlock$ -> handleBlock$6, member:f -> f3, member:Handler$h2$perform -> Handler$h2$perform2, member:cpsCont -> cpsCont28, member:Handler$h2$ -> Handler$h2$7, member:handleBlock$ -> handleBlock$7, member:Handler$h1$perform -> Handler$h1$perform1, member:cpsCont$ -> cpsCont$21, class:Handler$h2$ -> Handler$h2$2, member:Handler$h1$ -> Handler$h1$5, member:cpsCont -> cpsCont15, member:cpsCont -> cpsCont16, class:Capture$scope0 -> Capture$scope010, member:Capture$scope0 -> Capture$scope011, h -> h, member:cpsCont -> cpsCont17, class:Handler$h$ -> Handler$h$, member:cpsCont$ -> cpsCont$22, member:cpsCont -> cpsCont18, member:handleBlock$$ -> handleBlock$$7, member:cpsCont -> cpsCont19, member:cpsCont -> cpsCont20, tmp:block$res -> block$res, id -> id, tmp:block$res -> block$res1, member:cpsCont$ -> cpsCont$14, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:Handler$h2$ -> Handler$h2$3, tmp:block$res -> block$res2, tmp:tmp -> tmp, member:cpsCont$ -> cpsCont$23, class:Capture$scope0 -> Capture$scope06, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, member:Capture$scope0 -> Capture$scope07, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:cpsCont$ -> cpsCont$15, member:handleBlock$$ -> handleBlock$$4, member:cpsCont$ -> cpsCont$24, member:cpsCont -> cpsCont6, member:cpsCont$ -> cpsCont$25, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Capture$scope1 -> Capture$scope12, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, member:Capture$scope1 -> Capture$scope13, member:Capture$scope4 -> Capture$scope43, member:cpsCont$ -> cpsCont$16, member:handleBlock$$ -> handleBlock$$5, member:cpsCont$ -> cpsCont$6, member:handleBlock$$ -> handleBlock$$2, member:Handler$h3$perform$ -> Handler$h3$perform$, tmp:block$res -> block$res14, class:Capture$scope7 -> Capture$scope7, member:cpsCont$ -> cpsCont$17, member:handleBlock$ -> handleBlock$, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:Handler$h2$ -> Handler$h2$1, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$18, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, member:cpsCont$ -> cpsCont$8, member:handleBlock$$ -> handleBlock$$, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res10, d -> d, member:cpsCont$ -> cpsCont$1, tmp:block$res -> block$res11, h1 -> h12, member:handleBlock$$ -> handleBlock$$1, class:Handler$h1$ -> Handler$h1$6, tmp:block$res -> block$res8, class:Handler$h2$ -> Handler$h2$8, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, class:Handler$h1$ -> Handler$h1$2, class:Capture$scope4 -> Capture$scope4, tmp:tmp -> tmp3, member:while -> while1, class:Handler$h2$ -> Handler$h2$4, member:handleBlock$ -> handleBlock$8, member:Capture$scope4 -> Capture$scope41, member:Handler$h2$perform -> Handler$h2$perform3, member:Handler$h2$ -> Handler$h2$9, member:handleBlock$ -> handleBlock$9, member:cpsCont$ -> cpsCont$2, member:Handler$h1$perform -> Handler$h1$perform2, member:Handler$h1$ -> Handler$h1$7, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:Handler$h2$ -> Handler$h2$5, member:cpsCont -> cpsCont21, member:handleBlock$ -> handleBlock$4, member:Handler$h1$perform -> Handler$h1$perform, member:cpsCont -> cpsCont22, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont9, class:Capture$scope0 -> Capture$scope08, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, member:cpsCont -> cpsCont11, member:cpsCont -> cpsCont12, member:Capture$scope0 -> Capture$scope09, member:Capture$scope8 -> Capture$scope81, member:cpsCont -> cpsCont13, member:cpsCont$ -> cpsCont$19, member:cpsCont -> cpsCont14, member:cpsCont$ -> cpsCont$4, class:Capture$scope6 -> Capture$scope6, class:Capture$scope1 -> Capture$scope14, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$5, member:Capture$scope1 -> Capture$scope15, member:cpsCont$ -> cpsCont$9, member:cpsCont$ -> cpsCont$20)
+//│       curThis = S of N
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap(tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here, h2 -> h2, scope0$cap -> scope0$cap)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(member:handleBlock$$ -> handleBlock$$6, member:cpsCont$ -> cpsCont$10, tmp:runtime -> runtime, class:Capture$scope0 -> Capture$scope04, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope05, member:cpsCont$ -> cpsCont$11, member:handleBlock$$ -> handleBlock$$3, member:while_cpsCont_cpsCont$ -> while_cpsCont_cpsCont$, class:Capture$scope3 -> Capture$scope3, member:Capture$scope3 -> Capture$scope31, tmp:block$res -> block$res12, member:cpsCont$ -> cpsCont$12, member:Eff2 -> Eff21, class:Eff2 -> Eff2, member:cpsCont$ -> cpsCont$13, tmp:block$res -> block$res13, h1 -> h13, class:Handler$h1$ -> Handler$h1$8, tmp:block$res -> block$res3, member:f -> f, class:Handler$h2$ -> Handler$h2$10, tmp:block$res -> block$res4, member:f -> f1, tmp:block$res -> block$res9, h1 -> h11, class:Handler$h1$ -> Handler$h1$4, tmp:tmp -> tmp4, member:handleBlock$ -> handleBlock$10, member:Handler$h2$f1 -> Handler$h2$f1, tmp:block$res -> block$res5, member:Handler$h2$f2 -> Handler$h2$f2, member:f -> f2, class:Handler$h2$ -> Handler$h2$6, member:Handler$h2$ -> Handler$h2$11, member:handleBlock$ -> handleBlock$11, member:Handler$h1$f1 -> Handler$h1$f1, member:Handler$h1$f2 -> Handler$h1$f2, member:Predef -> Predef, member:Handler$h1$ -> Handler$h1$9, class:Handler$h3$ -> Handler$h3$, member:cpsCont -> cpsCont23, tmp:block$res -> block$res6, member:Eff -> Eff1, member:Box -> Box1, class:Eff -> Eff, member:cpsCont -> cpsCont24, class:Box -> Box, tmp:tmp -> tmp2, member:cpsCont -> cpsCont25, member:handleBlock$ -> handleBlock$5, member:cpsCont -> cpsCont26, box -> box, member:Handler$h3$perform -> Handler$h3$perform, tmp:block$res -> block$res7, member:Handler$h3$ -> Handler$h3$1, member:cpsCont -> cpsCont27, member:handleBlock$ -> handleBlock$6, member:f -> f3, member:Handler$h2$perform -> Handler$h2$perform2, member:cpsCont -> cpsCont28, member:Handler$h2$ -> Handler$h2$7, member:handleBlock$ -> handleBlock$7, member:Handler$h1$perform -> Handler$h1$perform1, member:cpsCont$ -> cpsCont$21, class:Handler$h2$ -> Handler$h2$2, member:Handler$h1$ -> Handler$h1$5, member:cpsCont -> cpsCont15, member:cpsCont -> cpsCont16, class:Capture$scope0 -> Capture$scope010, member:Capture$scope0 -> Capture$scope011, h -> h, member:cpsCont -> cpsCont17, class:Handler$h$ -> Handler$h$, member:cpsCont$ -> cpsCont$22, member:cpsCont -> cpsCont18, member:handleBlock$$ -> handleBlock$$7, member:cpsCont -> cpsCont19, member:cpsCont -> cpsCont20, tmp:block$res -> block$res, id -> id, tmp:block$res -> block$res1, member:cpsCont$ -> cpsCont$14, member:MaybeStop -> MaybeStop1, member:Handler$h2$perform -> Handler$h2$perform, class:MaybeStop -> MaybeStop, member:Handler$h2$ -> Handler$h2$3, tmp:block$res -> block$res2, tmp:tmp -> tmp, member:cpsCont$ -> cpsCont$23, class:Capture$scope0 -> Capture$scope06, member:handleBlock$ -> handleBlock$2, member:handleEffects -> handleEffects, member:Handler$h$perform -> Handler$h$perform, member:Capture$scope0 -> Capture$scope07, class:Handler$h1$ -> Handler$h1$, member:Handler$h$ -> Handler$h$1, member:cpsCont$ -> cpsCont$15, member:handleBlock$$ -> handleBlock$$4, member:cpsCont$ -> cpsCont$24, member:cpsCont -> cpsCont6, member:cpsCont$ -> cpsCont$25, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, class:Capture$scope1 -> Capture$scope12, class:Handler$h2$ -> Handler$h2$, class:Capture$scope4 -> Capture$scope42, member:Capture$scope1 -> Capture$scope13, member:Capture$scope4 -> Capture$scope43, member:cpsCont$ -> cpsCont$16, member:handleBlock$$ -> handleBlock$$5, member:cpsCont$ -> cpsCont$6, member:handleBlock$$ -> handleBlock$$2, member:Handler$h3$perform$ -> Handler$h3$perform$, tmp:block$res -> block$res14, class:Capture$scope7 -> Capture$scope7, member:cpsCont$ -> cpsCont$17, member:handleBlock$ -> handleBlock$, member:Capture$scope7 -> Capture$scope71, member:Handler$h2$f -> Handler$h2$f, member:Handler$h2$ -> Handler$h2$1, member:handleBlock$ -> handleBlock$1, member:Handler$h1$f -> Handler$h1$f, member:cpsCont$ -> cpsCont$7, member:Handler$h1$ -> Handler$h1$1, member:cpsCont$ -> cpsCont$18, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont1, member:Handler$h2$perform$ -> Handler$h2$perform$, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope0, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope01, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$, member:cpsCont$ -> cpsCont$8, member:handleBlock$$ -> handleBlock$$, member:f_handleBlock$_cpsCont_handleBlock$$_cpsCont$ -> f_handleBlock$_cpsCont_handleBlock$$_cpsCont$, class:Capture$scope1 -> Capture$scope1, member:Capture$scope1 -> Capture$scope11, tmp:block$res -> block$res10, d -> d, member:cpsCont$ -> cpsCont$1, tmp:block$res -> block$res11, h1 -> h12, member:handleBlock$$ -> handleBlock$$1, class:Handler$h1$ -> Handler$h1$6, tmp:block$res -> block$res8, class:Handler$h2$ -> Handler$h2$8, h1 -> h1, member:Handler$h2$f$ -> Handler$h2$f$, class:Handler$h1$ -> Handler$h1$2, class:Capture$scope4 -> Capture$scope4, tmp:tmp -> tmp3, member:while -> while1, class:Handler$h2$ -> Handler$h2$4, member:handleBlock$ -> handleBlock$8, member:Capture$scope4 -> Capture$scope41, member:Handler$h2$perform -> Handler$h2$perform3, member:Handler$h2$ -> Handler$h2$9, member:handleBlock$ -> handleBlock$9, member:cpsCont$ -> cpsCont$2, member:Handler$h1$perform -> Handler$h1$perform2, member:Handler$h1$ -> Handler$h1$7, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$3, member:handleBlock$ -> handleBlock$3, member:Handler$h2$perform -> Handler$h2$perform1, member:Handler$h2$ -> Handler$h2$5, member:cpsCont -> cpsCont21, member:handleBlock$ -> handleBlock$4, member:Handler$h1$perform -> Handler$h1$perform, member:cpsCont -> cpsCont22, member:Handler$h1$f$ -> Handler$h1$f$, member:Handler$h1$ -> Handler$h1$3, member:cpsCont -> cpsCont9, class:Capture$scope0 -> Capture$scope08, class:Capture$scope8 -> Capture$scope8, member:cpsCont -> cpsCont10, member:cpsCont -> cpsCont11, member:cpsCont -> cpsCont12, member:Capture$scope0 -> Capture$scope09, member:Capture$scope8 -> Capture$scope81, member:cpsCont -> cpsCont13, member:cpsCont$ -> cpsCont$19, member:cpsCont -> cpsCont14, member:cpsCont$ -> cpsCont$4, class:Capture$scope6 -> Capture$scope6, class:Capture$scope1 -> Capture$scope14, member:Capture$scope6 -> Capture$scope61, member:cpsCont$ -> cpsCont$5, member:Capture$scope1 -> Capture$scope15, member:cpsCont$ -> cpsCont$9, member:cpsCont$ -> cpsCont$20)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│     at REPL52:1:5227
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)

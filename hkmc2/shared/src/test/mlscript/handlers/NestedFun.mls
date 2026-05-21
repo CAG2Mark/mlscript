@@ -12,13 +12,97 @@ fun foo(f) =
   bar()
   set y += 1
   lam()
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.9: 	    f()
+//│ ╙──     	    ^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.14: 	  lam()
+//│ ╙──      	  ^^^^^
 
 
 :expect 3
 handle h = Object with
   fun f()(k) = k(())
 foo(() => h.f())
-//│ = 3
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.29: 	  fun f()(k) = k(())
+//│ ╙──      	               ^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.30: 	foo(() => h.f())
+//│ ╙──      	          ^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:Capture$scope0 -> Capture$scope01, member:lambda -> lambda, member:handleBlock$ -> handleBlock$, member:Handler$h$f -> Handler$h$f, member:cpsCont$ -> cpsCont$, member:Handler$h$ -> Handler$h$1, member:lam$ -> lam$, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, member:cpsCont -> cpsCont1, tmp:option -> option, tmp:block$res -> block$res, member:bar -> bar, member:foo -> foo, tmp:block$res -> block$res2, tmp:block$res -> block$res1, member:lam -> lam, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, tmp:tmp -> tmp)
+//│         curThis = S of S of class:Handler$h$⁰
+//│         bindings = HashMap()
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(member:Capture$scope0 -> Capture$scope01, member:lambda -> lambda, member:handleBlock$ -> handleBlock$, member:Handler$h$f -> Handler$h$f, member:cpsCont$ -> cpsCont$, member:Handler$h$ -> Handler$h$1, member:lam$ -> lam$, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, member:cpsCont -> cpsCont1, tmp:option -> option, tmp:block$res -> block$res, member:bar -> bar, member:foo -> foo, tmp:block$res -> block$res2, tmp:block$res -> block$res1, member:lam -> lam, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, tmp:tmp -> tmp)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│     at REPL13:1:1259
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:297)
+//│ ═══[RUNTIME ERROR] Expected: '3', got: 'undefined'
 
 fun foo() =
   let y = 1

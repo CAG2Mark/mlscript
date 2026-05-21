@@ -39,7 +39,94 @@ fun breakFromNestedFunctionWithEffects() =
     fun escape() = root.break(42)
     escape()
 breakFromNestedFunctionWithEffects()
-//│ = 42
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.39: 	    fun escape() = root.break(42)
+//│ ╙──      	                       ^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = label:root⁰
+//│     _2 = class hkmc2.semantics.LabelSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:escape -> escape2, tmp:block$res -> block$res3, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, tmp:block$res -> block$res, member:escape -> escape, member:handleBlock$ -> handleBlock$, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:NonLocalLabelEffect -> NonLocalLabelEffect1, tmp:block$res -> block$res1, member:escape -> escape1, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res4, member:Capture$scope0 -> Capture$scope01, tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$)
+//│         curThis = S of N
+//│         bindings = HashMap(scope0$cap -> scope0$cap)
+//│       bindings = HashMap(retVal -> retVal)
+//│     bindings = HashMap()
+//│ ═══[COMPILATION ERROR] No definition found in scope for member 'root'
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:escape -> escape2, tmp:block$res -> block$res3, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, tmp:block$res -> block$res, member:escape -> escape, member:handleBlock$ -> handleBlock$, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:NonLocalLabelEffect -> NonLocalLabelEffect1, tmp:block$res -> block$res1, member:escape -> escape1, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res4, member:Capture$scope0 -> Capture$scope01, tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$)
+//│         curThis = S of S of class:NonLocalLabelEffect⁰
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(value -> value, k -> k1)
+//│     bindings = HashMap(tmp:NonLocalLabelEffectbreak$here -> NonLocalLabelEffectbreak$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:escape -> escape2, tmp:block$res -> block$res3, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, tmp:block$res -> block$res, member:escape -> escape, member:handleBlock$ -> handleBlock$, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:NonLocalLabelEffect -> NonLocalLabelEffect1, tmp:block$res -> block$res1, member:escape -> escape1, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res4, member:Capture$scope0 -> Capture$scope01, tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$)
+//│         curThis = S of N
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(scope0$cap -> scope0$cap, label:root -> root, tmp:nonLocalHandler$root -> nonLocalHandler$root)
+//│     bindings = HashMap(tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ > let escape3, breakFromNestedFunctionWithEffects, handleBlock$, NonLocalLabelEffectbreak, NonLocalLabelEffect1, cpsCont, Capture$scope01, cpsCont$, handleBlock$$, NonLocalLabelEffectbreak$;try { NonLocalLabelEffectbreak$ = function NonLocalLabelEffectbreak$(value) {   runtime.checkArgs("NonLocalLabelEffectbreak$", 1, true, arguments.length);   return (k, resume) => {     let inlinedVal;     inlinedVal = runtime.checkCall(k(value));     return inlinedVal   } }; handleBlock$$ = (undefined, function (nonLocalHandler$root) {   runtime.checkArgs("", 1, true, arguments.length);   return (k) => {     let inlinedVal, tmp;     tmp = runtime.safeCall(nonLocalHandler$root.break(42));     inlinedVal = runtime.checkCall(k(tmp));     return inlinedVal   } }); cpsCont$ = function cpsCont$(scope0$cap) {   runtime.checkArgs("cpsCont$", 1, true, arguments.length);   return (retVal) => {     scope0$cap.tmp$1 = retVal;     scope0$cap.root$result$0 = scope0$cap.tmp$1;     break root   } }; globalThis.Object.freeze(class NonLocalLabelEffect extends runtime.NonLocalReturn {   static {     NonLocalLabelEffect1 = this   }   constructor(k) {     super(this.#k);     this.#k = k;   }   #k;   get break$__checkNotMethod() { runtime.deboundMethod("break", "NonLocalLabelEffect"); }   break(k1, value) {     runtime.checkArgs("break", 2, true, arguments.length);     let NonLocalLabelEffectbreak$here;     NonLocalLabelEffectbreak$here = runtime.checkCall(NonLocalLabelEffectbreak$(value));     return runtime.checkCall(suspend(k1, this, NonLocalLabelEffectbreak$here))   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "NonLocalLabelEffect"];  }); globalThis.Object.freeze(class Capture$scope0 {   static {     Capture$scope01 = this   }   constructor(root$result$0, tmp$1) {     this.tmp$1 = tmp$1;     this.root$result$0 = root$result$0;   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "Capture$scope0"];  }); breakFromNestedFunctionWithEffects = function breakFromNestedFunctionWithEffects(k) {   runtime.checkArgs("breakFromNestedFunctionWithEffects", 1, true, arguments.length);   let nonLocalHandler$root, scope0$cap;   scope0$cap = new Capture$scope01(undefined, undefined);   root: {     let cpsCont$here, handleBlock$$here;     nonLocalHandler$root = new NonLocalLabelEffect1(k);     cpsCont$here = runtime.checkCall(cpsCont$(scope0$cap));     handleBlock$$here = runtime.checkCall(handleBlock$$(nonLocalHandler$root));     return runtime.checkCall(handle_suspension(cpsCont$here, nonLocalHandler$root, handleBlock$$here));   }   throw new Error("Reached 'unreachable' code (Rest of abortive labelled block)"); }; block$res4 = runtime.checkCall(breakFromNestedFunctionWithEffects(runtime.cpsId)); undefined; undefined } catch (e) { console.log('\u200B' + (e.stack ?? e) + '\u200B'); }
+//│ >                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:254)
+//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Undefined label 'root'
 
 
 fun breakFromNestedLambdaWithEffects() =
@@ -47,7 +134,98 @@ fun breakFromNestedLambdaWithEffects() =
     let escape = () => root.break(42)
     escape()
 breakFromNestedLambdaWithEffects()
-//│ = 42
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.134: 	    let escape = () => root.break(42)
+//│ ╙──       	                           ^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.135: 	    escape()
+//│ ╙──       	    ^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = label:root¹
+//│     _2 = class hkmc2.semantics.LabelSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:escape$ -> escape$, member:escape -> escape2, class:NonLocalLabelEffect -> NonLocalLabelEffect2, tmp:block$res -> block$res3, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, tmp:Block -> Block, tmp:option -> option, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, tmp:block$res -> block$res, member:escape -> escape, member:cpsCont -> cpsCont1, member:handleBlock$ -> handleBlock$, class:Capture$scope0 -> Capture$scope02, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:Capture$scope0 -> Capture$scope03, tmp:block$res -> block$res5, tmp:block$res -> block$res1, member:escape -> escape1, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, member:handleBlock$$ -> handleBlock$$1, tmp:block$res -> block$res4, member:Capture$scope0 -> Capture$scope01, tmp:block$res -> block$res2, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$)
+//│         curThis = S of N
+//│         bindings = HashMap(scope0$cap -> scope0$cap)
+//│       bindings = HashMap(retVal -> retVal)
+//│     bindings = HashMap()
+//│ ═══[COMPILATION ERROR] No definition found in scope for member 'root'
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:escape$ -> escape$, member:escape -> escape2, class:NonLocalLabelEffect -> NonLocalLabelEffect2, tmp:block$res -> block$res3, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, tmp:Block -> Block, tmp:option -> option, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, tmp:block$res -> block$res, member:escape -> escape, member:cpsCont -> cpsCont1, member:handleBlock$ -> handleBlock$, class:Capture$scope0 -> Capture$scope02, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:Capture$scope0 -> Capture$scope03, tmp:block$res -> block$res5, tmp:block$res -> block$res1, member:escape -> escape1, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, member:handleBlock$$ -> handleBlock$$1, tmp:block$res -> block$res4, member:Capture$scope0 -> Capture$scope01, tmp:block$res -> block$res2, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$)
+//│         curThis = S of S of class:NonLocalLabelEffect¹
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(value -> value, k -> k1)
+//│     bindings = HashMap(tmp:NonLocalLabelEffectbreak$here -> NonLocalLabelEffectbreak$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:escape$ -> escape$, member:escape -> escape2, class:NonLocalLabelEffect -> NonLocalLabelEffect2, tmp:block$res -> block$res3, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, tmp:Block -> Block, tmp:option -> option, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, tmp:block$res -> block$res, member:escape -> escape, member:cpsCont -> cpsCont1, member:handleBlock$ -> handleBlock$, class:Capture$scope0 -> Capture$scope02, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:Capture$scope0 -> Capture$scope03, tmp:block$res -> block$res5, tmp:block$res -> block$res1, member:escape -> escape1, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, member:handleBlock$$ -> handleBlock$$1, tmp:block$res -> block$res4, member:Capture$scope0 -> Capture$scope01, tmp:block$res -> block$res2, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$)
+//│         curThis = S of N
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(label:root -> root, scope0$cap -> scope0$cap, tmp:nonLocalHandler$root -> nonLocalHandler$root)
+//│     bindings = HashMap(tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ > let breakFromNestedLambdaWithEffects, handleBlock$1, NonLocalLabelEffectbreak1, NonLocalLabelEffect3, escape4, cpsCont1, Capture$scope03, cpsCont$1, handleBlock$$1, escape$, NonLocalLabelEffectbreak$1;try { NonLocalLabelEffectbreak$1 = function NonLocalLabelEffectbreak$(value) {   runtime.checkArgs("NonLocalLabelEffectbreak$", 1, true, arguments.length);   return (k, resume) => {     let inlinedVal;     inlinedVal = runtime.checkCall(k(value));     return inlinedVal   } }; escape$ = function escape$(nonLocalHandler$root) {   runtime.checkArgs("escape$", 1, true, arguments.length);   return (k) => {     let inlinedVal, tmp;     tmp = runtime.safeCall(nonLocalHandler$root.break(42));     inlinedVal = runtime.checkCall(k(tmp));     return inlinedVal   } }; handleBlock$$1 = (undefined, function (nonLocalHandler$root) {   runtime.checkArgs("", 1, true, arguments.length);   return (k) => {     let inlinedVal, tmp, escape$here;     escape$here = runtime.checkCall(escape$(nonLocalHandler$root));     tmp = runtime.safeCall(escape$here());     inlinedVal = runtime.checkCall(k(tmp));     return inlinedVal   } }); cpsCont$1 = function cpsCont$(scope0$cap) {   runtime.checkArgs("cpsCont$", 1, true, arguments.length);   return (retVal) => {     scope0$cap.tmp$1 = retVal;     scope0$cap.root$result$0 = scope0$cap.tmp$1;     break root   } }; globalThis.Object.freeze(class NonLocalLabelEffect2 extends runtime.NonLocalReturn {   static {     NonLocalLabelEffect3 = this   }   constructor(k) {     super(this.#k);     this.#k = k;   }   #k;   get break$__checkNotMethod() { runtime.deboundMethod("break", "NonLocalLabelEffect"); }   break(k1, value) {     runtime.checkArgs("break", 2, true, arguments.length);     let NonLocalLabelEffectbreak$here;     NonLocalLabelEffectbreak$here = runtime.checkCall(NonLocalLabelEffectbreak$1(value));     return runtime.checkCall(suspend(k1, this, NonLocalLabelEffectbreak$here))   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "NonLocalLabelEffect"];  }); globalThis.Object.freeze(class Capture$scope02 {   static {     Capture$scope03 = this   }   constructor(root$result$0, tmp$1) {     this.tmp$1 = tmp$1;     this.root$result$0 = root$result$0;   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "Capture$scope0"];  }); breakFromNestedLambdaWithEffects = function breakFromNestedLambdaWithEffects(k) {   runtime.checkArgs("breakFromNestedLambdaWithEffects", 1, true, arguments.length);   let nonLocalHandler$root, scope0$cap;   scope0$cap = new Capture$scope03(undefined, undefined);   root: {     let cpsCont$here, handleBlock$$here;     nonLocalHandler$root = new NonLocalLabelEffect3(k);     cpsCont$here = runtime.checkCall(cpsCont$1(scope0$cap));     handleBlock$$here = runtime.checkCall(handleBlock$$1(nonLocalHandler$root));     return runtime.checkCall(handle_suspension(cpsCont$here, nonLocalHandler$root, handleBlock$$here));   }   throw new Error("Reached 'unreachable' code (Rest of abortive labelled block)"); }; block$res5 = runtime.checkCall(breakFromNestedLambdaWithEffects(runtime.cpsId)); undefined; undefined } catch (e) { console.log('\u200B' + (e.stack ?? e) + '\u200B'); }
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:254)
+//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Undefined label 'root'
 
 
 fun breakFromNestedFunctionAndLambdaWithEffects() =
@@ -55,7 +233,98 @@ fun breakFromNestedFunctionAndLambdaWithEffects() =
     fun makeBreaker() = () => root.break(7)
     makeBreaker()()
 breakFromNestedFunctionAndLambdaWithEffects()
-//│ = 7
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.233: 	    fun makeBreaker() = () => root.break(7)
+//│ ╙──       	                                  ^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.234: 	    makeBreaker()()
+//│ ╙──       	    ^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = label:root²
+//│     _2 = class hkmc2.semantics.LabelSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:escape -> escape2, class:NonLocalLabelEffect -> NonLocalLabelEffect2, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak2, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, tmp:block$res -> block$res6, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:lambda -> lambda, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, tmp:Block -> Block, tmp:option -> option, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope04, member:cpsCont -> cpsCont1, member:handleBlock$ -> handleBlock$, class:Capture$scope0 -> Capture$scope02, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:Capture$scope0 -> Capture$scope05, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:cpsCont$ -> cpsCont$2, member:Capture$scope0 -> Capture$scope03, member:handleBlock$$ -> handleBlock$$2, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, member:handleBlock$$ -> handleBlock$$1, member:Capture$scope0 -> Capture$scope01, class:Capture$scope2 -> Capture$scope2, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$, member:Capture$scope2 -> Capture$scope21, member:escape$ -> escape$, member:cpsCont$ -> cpsCont$3, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, member:lambda$ -> lambda$, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, tmp:block$res -> block$res, member:escape -> escape, tmp:block$res -> block$res5, tmp:block$res -> block$res1, member:makeBreaker -> makeBreaker, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, member:escape -> escape1, tmp:block$res -> block$res4, tmp:block$res -> block$res2, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, class:NonLocalLabelEffect -> NonLocalLabelEffect4)
+//│         curThis = S of N
+//│         bindings = HashMap(scope0$cap -> scope0$cap)
+//│       bindings = HashMap(retVal -> retVal)
+//│     bindings = HashMap()
+//│ ═══[COMPILATION ERROR] No definition found in scope for member 'root'
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:escape -> escape2, class:NonLocalLabelEffect -> NonLocalLabelEffect2, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak2, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, tmp:block$res -> block$res6, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:lambda -> lambda, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, tmp:Block -> Block, tmp:option -> option, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope04, member:cpsCont -> cpsCont1, member:handleBlock$ -> handleBlock$, class:Capture$scope0 -> Capture$scope02, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:Capture$scope0 -> Capture$scope05, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:cpsCont$ -> cpsCont$2, member:Capture$scope0 -> Capture$scope03, member:handleBlock$$ -> handleBlock$$2, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, member:handleBlock$$ -> handleBlock$$1, member:Capture$scope0 -> Capture$scope01, class:Capture$scope2 -> Capture$scope2, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$, member:Capture$scope2 -> Capture$scope21, member:escape$ -> escape$, member:cpsCont$ -> cpsCont$3, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, member:lambda$ -> lambda$, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, tmp:block$res -> block$res, member:escape -> escape, tmp:block$res -> block$res5, tmp:block$res -> block$res1, member:makeBreaker -> makeBreaker, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, member:escape -> escape1, tmp:block$res -> block$res4, tmp:block$res -> block$res2, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, class:NonLocalLabelEffect -> NonLocalLabelEffect4)
+//│         curThis = S of S of class:NonLocalLabelEffect²
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(value -> value, k -> k1)
+//│     bindings = HashMap(tmp:NonLocalLabelEffectbreak$here -> NonLocalLabelEffectbreak$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:escape -> escape2, class:NonLocalLabelEffect -> NonLocalLabelEffect2, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak2, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, tmp:block$res -> block$res6, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:lambda -> lambda, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, tmp:Block -> Block, tmp:option -> option, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope04, member:cpsCont -> cpsCont1, member:handleBlock$ -> handleBlock$, class:Capture$scope0 -> Capture$scope02, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:Capture$scope0 -> Capture$scope05, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:cpsCont$ -> cpsCont$2, member:Capture$scope0 -> Capture$scope03, member:handleBlock$$ -> handleBlock$$2, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, member:handleBlock$$ -> handleBlock$$1, member:Capture$scope0 -> Capture$scope01, class:Capture$scope2 -> Capture$scope2, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$, member:Capture$scope2 -> Capture$scope21, member:escape$ -> escape$, member:cpsCont$ -> cpsCont$3, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, member:lambda$ -> lambda$, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, tmp:block$res -> block$res, member:escape -> escape, tmp:block$res -> block$res5, tmp:block$res -> block$res1, member:makeBreaker -> makeBreaker, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, member:escape -> escape1, tmp:block$res -> block$res4, tmp:block$res -> block$res2, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, class:NonLocalLabelEffect -> NonLocalLabelEffect4)
+//│         curThis = S of N
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(tmp:nonLocalHandler$root -> nonLocalHandler$root, scope0$cap -> scope0$cap, label:root -> root)
+//│     bindings = HashMap(tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ > let makeBreaker, breakFromNestedFunctionAndLambdaWithEffects, handleBlock$2, NonLocalLabelEffectbreak2, NonLocalLabelEffect5, lambda, cpsCont2, cpsCont3, Capture$scope05, cpsCont$2, handleBlock$$2, Capture$scope21, cpsCont$3, lambda$, NonLocalLabelEffectbreak$2;try { NonLocalLabelEffectbreak$2 = function NonLocalLabelEffectbreak$(value) {   runtime.checkArgs("NonLocalLabelEffectbreak$", 1, true, arguments.length);   return (k, resume) => {     let inlinedVal;     inlinedVal = runtime.checkCall(k(value));     return inlinedVal   } }; globalThis.Object.freeze(class Capture$scope2 {   static {     Capture$scope21 = this   }   constructor(baseCall$0) {     this.baseCall$0 = baseCall$0;   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "Capture$scope2"];  }); lambda$ = (undefined, function (nonLocalHandler$root) {   runtime.checkArgs("", 1, true, arguments.length);   return (k) => {     let inlinedVal, tmp;     tmp = runtime.safeCall(nonLocalHandler$root.break(7));     inlinedVal = runtime.checkCall(k(tmp));     return inlinedVal   } }); cpsCont$3 = function cpsCont$(scope2$cap, k) {   runtime.checkArgs("cpsCont$", 2, true, arguments.length);   return (retVal) => {     let inlinedVal, tmp;     scope2$cap.baseCall$0 = retVal;     tmp = runtime.safeCall(scope2$cap.baseCall$0());     inlinedVal = runtime.checkCall(k(tmp));     return inlinedVal   } }; handleBlock$$2 = (undefined, function (nonLocalHandler$root) {   runtime.checkArgs("", 1, true, arguments.length);   return (k) => {     let scope2$cap, cpsCont$here, inlinedVal, lambda$here;     scope2$cap = new Capture$scope21(undefined);     cpsCont$here = runtime.checkCall(cpsCont$3(scope2$cap, k));     lambda$here = runtime.checkCall(lambda$(nonLocalHandler$root));     inlinedVal = runtime.checkCall(cpsCont$here(lambda$here));     return inlinedVal   } }); cpsCont$2 = function cpsCont$(scope0$cap) {   runtime.checkArgs("cpsCont$", 1, true, arguments.length);   return (retVal) => {     scope0$cap.tmp$1 = retVal;     scope0$cap.root$result$0 = scope0$cap.tmp$1;     break root   } }; globalThis.Object.freeze(class NonLocalLabelEffect4 extends runtime.NonLocalReturn {   static {     NonLocalLabelEffect5 = this   }   constructor(k) {     super(this.#k);     this.#k = k;   }   #k;   get break$__checkNotMethod() { runtime.deboundMethod("break", "NonLocalLabelEffect"); }   break(k1, value) {     runtime.checkArgs("break", 2, true, arguments.length);     let NonLocalLabelEffectbreak$here;     NonLocalLabelEffectbreak$here = runtime.checkCall(NonLocalLabelEffectbreak$2(value));     return runtime.checkCall(suspend(k1, this, NonLocalLabelEffectbreak$here))   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "NonLocalLabelEffect"];  }); globalThis.Object.freeze(class Capture$scope04 {   static {     Capture$scope05 = this   }   constructor(root$result$0, tmp$1) {     this.tmp$1 = tmp$1;     this.root$result$0 = root$result$0;   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "Capture$scope0"];  }); breakFromNestedFunctionAndLambdaWithEffects = function breakFromNestedFunctionAndLambdaWithEffects(k) {   runtime.checkArgs("breakFromNestedFunctionAndLambdaWithEffects", 1, true, arguments.length);   let nonLocalHandler$root, scope0$cap;   scope0$cap = new Capture$scope05(undefined, undefined);   root: {     let cpsCont$here, handleBlock$$here;     nonLocalHandler$root = new NonLocalLabelEffect5(k);     cpsCont$here = runtime.checkCall(cpsCont$2(scope0$cap));     handleBlock$$here = runtime.checkCall(handleBlock$$2(nonLocalHandler$root));     return runtime.checkCall(handle_suspension(cpsCont$here, nonLocalHandler$root, handleBlock$$here));   }   throw new Error("Reached 'unreachable' code (Rest of abortive labelled block)"); }; block$res6 = runtime.checkCall(breakFromNestedFunctionAndLambdaWithEffects(runtime.cpsId)); undefined; undefined } catch (e) { console.log('\u200B' + (e.stack ?? e) + '\u200B'); }
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:254)
+//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Undefined label 'root'
 
 
 :sir
@@ -67,149 +336,232 @@ fun continueFromNestedFunctionWithEffects() =
       root.continue
     loop()
 continueFromNestedFunctionWithEffects()
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.334: 	      if i >= 3 do root.break(i)
+//│ ╙──       	                       ^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.336: 	      root.continue
+//│ ╙──       	          ^^^^^^^^^
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let loop⁰, continueFromNestedFunctionWithEffects⁰, handleBlock$⁰, NonLocalLabelEffectbreak⁰, NonLocalLabelEffectcontinue⁰, NonLocalLabelEffect⁰, Capture$scope0⁰, handleBlock$$⁰, NonLocalLabelEffectbreak$⁰, tmp;
-//│ do runtime⁰.resetEffects﹖();
-//│ define Capture$scope0⁰ as class Capture$scope0² {
-//│   constructor Capture$scope0¹(i$0) {
-//│     define i$0⁰ as val i$0¹ = i$0;
+//│ let loop⁰, continueFromNestedFunctionWithEffects⁰, handleBlock$⁰, NonLocalLabelEffectbreak⁰, NonLocalLabelEffectcontinue⁰, NonLocalLabelEffect³, cpsCont⁰, Capture$scope0⁰, cpsCont$⁰, handleBlock$$⁰, NonLocalLabelEffectbreak$⁰;
+//│ define NonLocalLabelEffectcontinue⁰ as fun NonLocalLabelEffectcontinue¹(k, resume) {
+//│   return k(runtime⁰.Continue﹖)
+//│ };
+//│ define NonLocalLabelEffectbreak$⁰ as fun NonLocalLabelEffectbreak$¹(value)(k, resume) {
+//│   return NonLocalLabelEffectbreak¹(value, k, resume)
+//│ };
+//│ define NonLocalLabelEffectbreak⁰ as fun NonLocalLabelEffectbreak¹(value, k, resume) {
+//│   return k(value)
+//│ };
+//│ define loop⁰ as fun loop¹(scope0$cap, nonLocalHandler$root, k) {
+//│   let scrut, tmp, tmp1;
+//│   set scrut = >=⁰(scope0$cap.i$0⁰, 3);
+//│   match scrut
+//│     true =>
+//│       do nonLocalHandler$root.break﹖(scope0$cap.i$0⁰);
+//│       end
+//│   set tmp = +⁰(scope0$cap.i$0⁰, 1);
+//│   set scope0$cap.i$0 = tmp;
+//│   set tmp1 = nonLocalHandler$root.continue﹖();
+//│   return k(tmp1)
+//│ };
+//│ define handleBlock$$⁰ as fun handleBlock$$¹(scope0$cap, nonLocalHandler$root)(k) {
+//│   return handleBlock$¹(scope0$cap, nonLocalHandler$root, k)
+//│ };
+//│ define cpsCont$⁰ as fun cpsCont$¹(scope0$cap)(retVal) {
+//│   return cpsCont¹(scope0$cap, retVal)
+//│ };
+//│ define NonLocalLabelEffect³ as class NonLocalLabelEffect⁴ {
+//│   private val k⁰;
+//│   constructor(k) {
+//│     super⁰(k⁰);
+//│     set k⁰ = k;
 //│     end
 //│   }
-//│ };
-//│ define NonLocalLabelEffectcontinue⁰ as fun NonLocalLabelEffectcontinue¹(resume) {
-//│   return runtime⁰.Continue﹖
-//│ };
-//│ define NonLocalLabelEffectbreak$⁰ as fun NonLocalLabelEffectbreak$¹(value)(resume) {
-//│   return NonLocalLabelEffectbreak¹(value, resume)
-//│ };
-//│ define NonLocalLabelEffectbreak⁰ as fun NonLocalLabelEffectbreak¹(value, resume) {
-//│   return value
-//│ };
-//│ define loop⁰ as fun loop¹(scope0$cap, nonLocalHandler$root) {
-//│   let scrut, tmp1, pc;
-//│   match runtime⁰.resumePc﹖
-//│     -1 =>
-//│       set pc = 0;
-//│       end
-//│     else
-//│       let saveOffset;
-//│       set pc = runtime⁰.resumePc﹖;
-//│       set runtime⁰.resumePc = -1;
-//│       end
-//│   loop main:
-//│     match pc
-//│       2 =>
-//│         do runtime⁰.resumeValue﹖;
-//│         set pc = 1;
-//│         end
-//│     match pc
-//│       1 =>
-//│         set tmp1 = +⁰(scope0$cap.i$0¹, 1);
-//│         set scope0$cap.i$0 = tmp1;
-//│         return nonLocalHandler$root.continue﹖()
-//│       0 =>
-//│         set scrut = >=⁰(scope0$cap.i$0¹, 3);
-//│         match scrut
-//│           true =>
-//│             set runtime⁰.resumeValue = nonLocalHandler$root.break﹖(scope0$cap.i$0¹);
-//│             match runtime⁰.curEffect﹖
-//│               null =>
-//│                 set pc = 2;
-//│                 continue main
-//│               else
-//│                 return runtime⁰.unwind﹖(loop¹, 2, "NonLocalLabelControlFlow.mls:65:24", null, null, 1, 2, scope0$cap, nonLocalHandler$root, 0)
-//│             end
-//│           else
-//│             set pc = 1;
-//│             continue main
-//│         end
-//│       else
-//│         end
-//│     end
-//│   end
-//│ };
-//│ define handleBlock$$⁰ as fun handleBlock$$¹(scope0$cap, nonLocalHandler$root)() {
-//│   return handleBlock$¹(scope0$cap, nonLocalHandler$root)
-//│ };
-//│ define NonLocalLabelEffect⁰ as class NonLocalLabelEffect¹ {
-//│   method break⁰ = fun break¹(value) {
+//│   method break⁰ = fun break¹(k1, value) {
 //│     let suspendRes, NonLocalLabelEffectbreak$here;
 //│     set NonLocalLabelEffectbreak$here = NonLocalLabelEffectbreak$¹(value);
-//│     return runtime⁰.mkEffect﹖(NonLocalLabelEffect¹.this, NonLocalLabelEffectbreak$here)
+//│     return suspend⁰(k1, NonLocalLabelEffect⁴.this, NonLocalLabelEffectbreak$here)
 //│   }
-//│   method continue⁰ = fun continue¹() {
+//│   method continue⁰ = fun continue¹(k1) {
 //│     let suspendRes;
-//│     return runtime⁰.mkEffect﹖(NonLocalLabelEffect¹.this, NonLocalLabelEffectcontinue¹)
+//│     return suspend⁰(k1, NonLocalLabelEffect⁴.this, NonLocalLabelEffectcontinue¹)
 //│   }
 //│ };
-//│ define handleBlock$⁰ as fun handleBlock$¹(scope0$cap, nonLocalHandler$root) {
-//│   return loop¹(scope0$cap, nonLocalHandler$root)
+//│ define handleBlock$⁰ as fun handleBlock$¹(scope0$cap, nonLocalHandler$root, k) {
+//│   return loop¹(scope0$cap, nonLocalHandler$root, k)
 //│ };
-//│ define continueFromNestedFunctionWithEffects⁰ as fun continueFromNestedFunctionWithEffects¹() {
-//│   let i, root$result, nonLocalHandler$root, labelBodyResult, labelContinueDispatch, tmp1, scope0$cap, handleBlock$$here, pc;
-//│   match runtime⁰.resumePc﹖
-//│     -1 =>
-//│       set pc = 0;
-//│       end
+//│ define cpsCont⁰ as fun cpsCont¹(scope0$cap, retVal) {
+//│   set scope0$cap.tmp$4 = retVal;
+//│   set scope0$cap.labelBodyResult$2 = scope0$cap.tmp$4⁰;
+//│   set scope0$cap.labelContinueDispatch$3 = ===⁰(scope0$cap.labelBodyResult$2⁰, runtime⁰.Continue﹖);
+//│   match scope0$cap.labelContinueDispatch$3⁰
+//│     true =>
+//│       continue root³
 //│     else
-//│       let saveOffset;
-//│       set pc = runtime⁰.resumePc﹖;
-//│       set saveOffset = runtime⁰.resumeIdx﹖;
-//│       set scope0$cap = runtime⁰.resumeArr﹖.saveOffset;
-//│       set runtime⁰.resumePc = -1;
-//│       end
-//│   loop main:
-//│     match pc
-//│       0 =>
-//│         set scope0$cap = new mut Capture$scope0²(i);
-//│         set scope0$cap.i$0 = 0;
-//│         set pc = 1;
-//│         end
-//│     match pc
-//│       1 =>
-//│         block brk1:
-//│           set nonLocalHandler$root = new mut NonLocalLabelEffect¹();
-//│           set handleBlock$$here = handleBlock$$¹(scope0$cap, nonLocalHandler$root);
-//│           set runtime⁰.resumeValue = runtime⁰.enterHandleBlock﹖(nonLocalHandler$root, handleBlock$$here);
-//│           match runtime⁰.curEffect﹖
-//│             null =>
-//│               break brk1
-//│             else
-//│               return runtime⁰.unwind﹖(continueFromNestedFunctionWithEffects¹, 3, null, null, null, 1, 0, 1, scope0$cap)
-//│           end
-//│         set pc = 3;
-//│         end
-//│     match pc
-//│       3 =>
-//│         set tmp1 = runtime⁰.resumeValue﹖;
-//│         set labelBodyResult = tmp1;
-//│         set labelContinueDispatch = ===⁰(labelBodyResult, runtime⁰.Continue﹖);
-//│         match labelContinueDispatch
-//│           true =>
-//│             set pc = 1;
-//│             continue main
-//│           else
-//│             set root$result = labelBodyResult;
-//│             set pc = 2;
-//│             continue main
-//│         end
-//│       2 =>
-//│         return root$result
-//│       else
-//│         end
-//│     end
+//│       set scope0$cap.root$result$1 = scope0$cap.labelBodyResult$2⁰;
+//│       break root³
 //│   end
 //│ };
-//│ set tmp = continueFromNestedFunctionWithEffects¹();
-//│ match runtime⁰.curEffect﹖
-//│   null =>
-//│     tmp
-//│   else
-//│     set tmp = runtime⁰.topLevelEffect﹖(false);
-//│     tmp
-//│ end
+//│ define Capture$scope0⁰ as class Capture$scope0² {
+//│   constructor Capture$scope0¹(i$0, root$result$1, labelBodyResult$2, labelContinueDispatch$3, tmp$4) {
+//│     define tmp$4¹ as val tmp$4⁰ = tmp$4;
+//│     define labelContinueDispatch$3¹ as val labelContinueDispatch$3⁰ = labelContinueDispatch$3;
+//│     define labelBodyResult$2¹ as val labelBodyResult$2⁰ = labelBodyResult$2;
+//│     define root$result$1⁰ as val root$result$1¹ = root$result$1;
+//│     define i$0¹ as val i$0⁰ = i$0;
+//│     end
+//│   }
+//│ };
+//│ define continueFromNestedFunctionWithEffects⁰ as fun continueFromNestedFunctionWithEffects¹(k) {
+//│   let i, root$result, nonLocalHandler$root, labelBodyResult, labelContinueDispatch, tmp, scope0$cap;
+//│   set scope0$cap = new mut Capture$scope0²(i, root$result, labelBodyResult, labelContinueDispatch, tmp);
+//│   set scope0$cap.i$0 = 0;
+//│   block root:
+//│     let cpsCont$here, handleBlock$$here;
+//│     set nonLocalHandler$root = new mut NonLocalLabelEffect³(k);
+//│     set cpsCont$here = cpsCont$¹(scope0$cap);
+//│     set handleBlock$$here = handleBlock$$¹(scope0$cap, nonLocalHandler$root);
+//│     return handle_suspension⁰(cpsCont$here, nonLocalHandler$root, handleBlock$$here)
+//│   return k(scope0$cap.root$result$1¹)
+//│ };
+//│ continueFromNestedFunctionWithEffects¹(runtime⁰.cpsId﹖)
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = label:root³
+//│     _2 = class hkmc2.semantics.LabelSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:escape -> escape2, class:NonLocalLabelEffect -> NonLocalLabelEffect2, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak2, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, tmp:block$res -> block$res6, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:loop -> loop, member:lambda -> lambda, member:continueFromNestedFunctionWithEffects -> continueFromNestedFunctionWithEffects, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, tmp:Block -> Block, tmp:option -> option, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope04, member:cpsCont -> cpsCont1, class:NonLocalLabelEffect -> NonLocalLabelEffect6, member:handleBlock$ -> handleBlock$, class:Capture$scope0 -> Capture$scope02, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:Capture$scope0 -> Capture$scope05, tmp:block$res -> block$res7, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:cpsCont$ -> cpsCont$2, member:Capture$scope0 -> Capture$scope03, member:handleBlock$$ -> handleBlock$$2, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, member:handleBlock$$ -> handleBlock$$1, member:handleBlock$ -> handleBlock$3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak3, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue, member:Capture$scope0 -> Capture$scope01, class:Capture$scope2 -> Capture$scope2, member:NonLocalLabelEffect -> NonLocalLabelEffect7, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$, member:Capture$scope2 -> Capture$scope21, member:escape$ -> escape$, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont4, class:Capture$scope0 -> Capture$scope06, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, member:lambda$ -> lambda$, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:Capture$scope0 -> Capture$scope07, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, member:cpsCont$ -> cpsCont$4, tmp:block$res -> block$res, member:escape -> escape, member:handleBlock$$ -> handleBlock$$3, tmp:block$res -> block$res5, tmp:block$res -> block$res1, member:makeBreaker -> makeBreaker, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, member:escape -> escape1, tmp:block$res -> block$res4, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$3, tmp:block$res -> block$res2, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, class:NonLocalLabelEffect -> NonLocalLabelEffect4)
+//│         curThis = S of N
+//│         bindings = HashMap(scope0$cap -> scope0$cap)
+//│       bindings = HashMap(retVal -> retVal)
+//│     bindings = HashMap()
+//│ ═══[COMPILATION ERROR] No definition found in scope for member 'root'
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = label:root³
+//│     _2 = class hkmc2.semantics.LabelSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:escape -> escape2, class:NonLocalLabelEffect -> NonLocalLabelEffect2, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak2, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, tmp:block$res -> block$res6, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:loop -> loop, member:lambda -> lambda, member:continueFromNestedFunctionWithEffects -> continueFromNestedFunctionWithEffects, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, tmp:Block -> Block, tmp:option -> option, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope04, member:cpsCont -> cpsCont1, class:NonLocalLabelEffect -> NonLocalLabelEffect6, member:handleBlock$ -> handleBlock$, class:Capture$scope0 -> Capture$scope02, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:Capture$scope0 -> Capture$scope05, tmp:block$res -> block$res7, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:cpsCont$ -> cpsCont$2, member:Capture$scope0 -> Capture$scope03, member:handleBlock$$ -> handleBlock$$2, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, member:handleBlock$$ -> handleBlock$$1, member:handleBlock$ -> handleBlock$3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak3, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue, member:Capture$scope0 -> Capture$scope01, class:Capture$scope2 -> Capture$scope2, member:NonLocalLabelEffect -> NonLocalLabelEffect7, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$, member:Capture$scope2 -> Capture$scope21, member:escape$ -> escape$, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont4, class:Capture$scope0 -> Capture$scope06, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, member:lambda$ -> lambda$, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:Capture$scope0 -> Capture$scope07, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, member:cpsCont$ -> cpsCont$4, tmp:block$res -> block$res, member:escape -> escape, member:handleBlock$$ -> handleBlock$$3, tmp:block$res -> block$res5, tmp:block$res -> block$res1, member:makeBreaker -> makeBreaker, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, member:escape -> escape1, tmp:block$res -> block$res4, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$3, tmp:block$res -> block$res2, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, class:NonLocalLabelEffect -> NonLocalLabelEffect4)
+//│         curThis = S of N
+//│         bindings = HashMap(scope0$cap -> scope0$cap)
+//│       bindings = HashMap(retVal -> retVal)
+//│     bindings = HashMap()
+//│ ═══[COMPILATION ERROR] No definition found in scope for member 'root'
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:escape -> escape2, class:NonLocalLabelEffect -> NonLocalLabelEffect2, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak2, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, tmp:block$res -> block$res6, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:loop -> loop, member:lambda -> lambda, member:continueFromNestedFunctionWithEffects -> continueFromNestedFunctionWithEffects, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, tmp:Block -> Block, tmp:option -> option, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope04, member:cpsCont -> cpsCont1, class:NonLocalLabelEffect -> NonLocalLabelEffect6, member:handleBlock$ -> handleBlock$, class:Capture$scope0 -> Capture$scope02, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:Capture$scope0 -> Capture$scope05, tmp:block$res -> block$res7, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:cpsCont$ -> cpsCont$2, member:Capture$scope0 -> Capture$scope03, member:handleBlock$$ -> handleBlock$$2, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, member:handleBlock$$ -> handleBlock$$1, member:handleBlock$ -> handleBlock$3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak3, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue, member:Capture$scope0 -> Capture$scope01, class:Capture$scope2 -> Capture$scope2, member:NonLocalLabelEffect -> NonLocalLabelEffect7, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$, member:Capture$scope2 -> Capture$scope21, member:escape$ -> escape$, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont4, class:Capture$scope0 -> Capture$scope06, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, member:lambda$ -> lambda$, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:Capture$scope0 -> Capture$scope07, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, member:cpsCont$ -> cpsCont$4, tmp:block$res -> block$res, member:escape -> escape, member:handleBlock$$ -> handleBlock$$3, tmp:block$res -> block$res5, tmp:block$res -> block$res1, member:makeBreaker -> makeBreaker, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, member:escape -> escape1, tmp:block$res -> block$res4, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$3, tmp:block$res -> block$res2, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, class:NonLocalLabelEffect -> NonLocalLabelEffect4)
+//│         curThis = S of S of class:NonLocalLabelEffect⁴
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(value -> value, k -> k1)
+//│     bindings = HashMap(tmp:NonLocalLabelEffectbreak$here -> NonLocalLabelEffectbreak$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:escape -> escape2, class:NonLocalLabelEffect -> NonLocalLabelEffect2, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak2, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, tmp:block$res -> block$res6, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:loop -> loop, member:lambda -> lambda, member:continueFromNestedFunctionWithEffects -> continueFromNestedFunctionWithEffects, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, tmp:Block -> Block, tmp:option -> option, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope04, member:cpsCont -> cpsCont1, class:NonLocalLabelEffect -> NonLocalLabelEffect6, member:handleBlock$ -> handleBlock$, class:Capture$scope0 -> Capture$scope02, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:Capture$scope0 -> Capture$scope05, tmp:block$res -> block$res7, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:cpsCont$ -> cpsCont$2, member:Capture$scope0 -> Capture$scope03, member:handleBlock$$ -> handleBlock$$2, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, member:handleBlock$$ -> handleBlock$$1, member:handleBlock$ -> handleBlock$3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak3, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue, member:Capture$scope0 -> Capture$scope01, class:Capture$scope2 -> Capture$scope2, member:NonLocalLabelEffect -> NonLocalLabelEffect7, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$, member:Capture$scope2 -> Capture$scope21, member:escape$ -> escape$, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont4, class:Capture$scope0 -> Capture$scope06, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, member:lambda$ -> lambda$, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:Capture$scope0 -> Capture$scope07, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, member:cpsCont$ -> cpsCont$4, tmp:block$res -> block$res, member:escape -> escape, member:handleBlock$$ -> handleBlock$$3, tmp:block$res -> block$res5, tmp:block$res -> block$res1, member:makeBreaker -> makeBreaker, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, member:escape -> escape1, tmp:block$res -> block$res4, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$3, tmp:block$res -> block$res2, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, class:NonLocalLabelEffect -> NonLocalLabelEffect4)
+//│         curThis = S of S of class:NonLocalLabelEffect⁴
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(k -> k1)
+//│     bindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:escape -> escape2, class:NonLocalLabelEffect -> NonLocalLabelEffect2, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak2, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, tmp:block$res -> block$res6, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:loop -> loop, member:lambda -> lambda, member:continueFromNestedFunctionWithEffects -> continueFromNestedFunctionWithEffects, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, tmp:Block -> Block, tmp:option -> option, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope04, member:cpsCont -> cpsCont1, class:NonLocalLabelEffect -> NonLocalLabelEffect6, member:handleBlock$ -> handleBlock$, class:Capture$scope0 -> Capture$scope02, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:Capture$scope0 -> Capture$scope05, tmp:block$res -> block$res7, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:cpsCont$ -> cpsCont$2, member:Capture$scope0 -> Capture$scope03, member:handleBlock$$ -> handleBlock$$2, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, member:handleBlock$$ -> handleBlock$$1, member:handleBlock$ -> handleBlock$3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak3, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue, member:Capture$scope0 -> Capture$scope01, class:Capture$scope2 -> Capture$scope2, member:NonLocalLabelEffect -> NonLocalLabelEffect7, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$, member:Capture$scope2 -> Capture$scope21, member:escape$ -> escape$, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont4, class:Capture$scope0 -> Capture$scope06, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, member:lambda$ -> lambda$, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:Capture$scope0 -> Capture$scope07, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, member:cpsCont$ -> cpsCont$4, tmp:block$res -> block$res, member:escape -> escape, member:handleBlock$$ -> handleBlock$$3, tmp:block$res -> block$res5, tmp:block$res -> block$res1, member:makeBreaker -> makeBreaker, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, member:escape -> escape1, tmp:block$res -> block$res4, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$3, tmp:block$res -> block$res2, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, class:NonLocalLabelEffect -> NonLocalLabelEffect4)
+//│         curThis = S of N
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(tmp:nonLocalHandler$root -> nonLocalHandler$root, scope0$cap -> scope0$cap, label:root -> root)
+//│     bindings = HashMap(tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ = 3
+//│ > let loop, continueFromNestedFunctionWithEffects, handleBlock$3, NonLocalLabelEffectbreak3, NonLocalLabelEffectcontinue, NonLocalLabelEffect7, cpsCont4, Capture$scope07, cpsCont$4, handleBlock$$3, NonLocalLabelEffectbreak$3;try { NonLocalLabelEffectcontinue = function NonLocalLabelEffectcontinue(k, resume) {   runtime.checkArgs("NonLocalLabelEffectcontinue", 2, true, arguments.length);   return runtime.checkCall(k(runtime.Continue)) }; NonLocalLabelEffectbreak$3 = function NonLocalLabelEffectbreak$(value) {   runtime.checkArgs("NonLocalLabelEffectbreak$", 1, true, arguments.length);   return (k, resume) => {     let inlinedVal;     inlinedVal = runtime.checkCall(k(value));     return inlinedVal   } }; handleBlock$$3 = (undefined, function (scope0$cap, nonLocalHandler$root) {   runtime.checkArgs("", 2, true, arguments.length);   return (k) => {     let inlinedVal, scrut, tmp, tmp1;     scrut = scope0$cap.i$0 >= 3;     if (scrut === true) {       runtime.safeCall(nonLocalHandler$root.break(scope0$cap.i$0));     }     tmp = scope0$cap.i$0 + 1;     scope0$cap.i$0 = tmp;     tmp1 = runtime.safeCall(nonLocalHandler$root.continue());     inlinedVal = runtime.checkCall(k(tmp1));     return inlinedVal   } }); cpsCont$4 = function cpsCont$(scope0$cap) {   runtime.checkArgs("cpsCont$", 1, true, arguments.length);   return (retVal) => {     scope0$cap.tmp$4 = retVal;     scope0$cap.labelBodyResult$2 = scope0$cap.tmp$4;     scope0$cap.labelContinueDispatch$3 = scope0$cap.labelBodyResult$2 === runtime.Continue;     if (scope0$cap.labelContinueDispatch$3 === true) {       continue root     }     scope0$cap.root$result$1 = scope0$cap.labelBodyResult$2;     break root;   } }; globalThis.Object.freeze(class NonLocalLabelEffect6 extends runtime.NonLocalReturn {   static {     NonLocalLabelEffect7 = this   }   constructor(k) {     super(this.#k);     this.#k = k;   }   #k;   get break$__checkNotMethod() { runtime.deboundMethod("break", "NonLocalLabelEffect"); }    get continue$__checkNotMethod() { runtime.deboundMethod("continue", "NonLocalLabelEffect"); }   break(k1, value) {     runtime.checkArgs("break", 2, true, arguments.length);     let NonLocalLabelEffectbreak$here;     NonLocalLabelEffectbreak$here = runtime.checkCall(NonLocalLabelEffectbreak$3(value));     return runtime.checkCall(suspend(k1, this, NonLocalLabelEffectbreak$here))   }    continue(k1) {     runtime.checkArgs("continue", 1, true, arguments.length);     return runtime.checkCall(suspend(k1, this, NonLocalLabelEffectcontinue))   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "NonLocalLabelEffect"];  }); globalThis.Object.freeze(class Capture$scope06 {   static {     Capture$scope07 = this   }   constructor(i$0, root$result$1, labelBodyResult$2, labelContinueDispatch$3, tmp$4) {     this.tmp$4 = tmp$4;     this.labelContinueDispatch$3 = labelContinueDispatch$3;     this.labelBodyResult$2 = labelBodyResult$2;     this.root$result$1 = root$result$1;     this.i$0 = i$0;   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "Capture$scope0"];  }); continueFromNestedFunctionWithEffects = function continueFromNestedFunctionWithEffects(k) {   runtime.checkArgs("continueFromNestedFunctionWithEffects", 1, true, arguments.length);   let nonLocalHandler$root, scope0$cap;   scope0$cap = new Capture$scope07(undefined, undefined, undefined, undefined, undefined);   scope0$cap.i$0 = 0;   root: {     let cpsCont$here, handleBlock$$here;     nonLocalHandler$root = new NonLocalLabelEffect7(k);     cpsCont$here = runtime.checkCall(cpsCont$4(scope0$cap));     handleBlock$$here = runtime.checkCall(handleBlock$$3(scope0$cap, nonLocalHandler$root));     return runtime.checkCall(handle_suspension(cpsCont$here, nonLocalHandler$root, handleBlock$$here));   }   throw new Error("Reached 'unreachable' code (Rest of abortive labelled block)"); }; block$res7 = runtime.checkCall(continueFromNestedFunctionWithEffects(runtime.cpsId)); undefined; undefined } catch (e) { console.log('\u200B' + (e.stack ?? e) + '\u200B'); }
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:254)
+//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Undefined label 'root'
 
 
 fun continueFromNestedLambdaWithEffects() =
@@ -220,7 +572,152 @@ fun continueFromNestedLambdaWithEffects() =
       root.continue
     loop()
 continueFromNestedLambdaWithEffects()
-//│ = 2
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.570: 	      if i >= 2 do root.break(i)
+//│ ╙──       	                       ^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.572: 	      root.continue
+//│ ╙──       	          ^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.573: 	    loop()
+//│ ╙──       	    ^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = label:root⁴
+//│     _2 = class hkmc2.semantics.LabelSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:escape -> escape2, class:NonLocalLabelEffect -> NonLocalLabelEffect2, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak2, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, tmp:block$res -> block$res6, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:loop -> loop, member:lambda -> lambda, member:continueFromNestedFunctionWithEffects -> continueFromNestedFunctionWithEffects, tmp:runtime -> runtime, member:lambda$ -> lambda$1, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, tmp:Block -> Block, tmp:option -> option, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:cpsCont -> cpsCont2, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$4, member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope04, member:cpsCont -> cpsCont1, class:NonLocalLabelEffect -> NonLocalLabelEffect6, member:handleBlock$ -> handleBlock$, class:Capture$scope0 -> Capture$scope02, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:Capture$scope0 -> Capture$scope05, tmp:block$res -> block$res7, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:continueFromNestedLambdaWithEffects -> continueFromNestedLambdaWithEffects, member:cpsCont$ -> cpsCont$2, member:Capture$scope0 -> Capture$scope03, member:handleBlock$$ -> handleBlock$$2, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, member:handleBlock$$ -> handleBlock$$1, member:handleBlock$ -> handleBlock$3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak3, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue, member:Capture$scope0 -> Capture$scope01, class:NonLocalLabelEffect -> NonLocalLabelEffect8, class:Capture$scope2 -> Capture$scope2, member:NonLocalLabelEffect -> NonLocalLabelEffect7, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$, member:Capture$scope2 -> Capture$scope21, member:escape$ -> escape$, tmp:block$res -> block$res8, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont4, class:Capture$scope0 -> Capture$scope06, member:lambda -> lambda1, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, member:handleBlock$ -> handleBlock$4, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak4, member:lambda$ -> lambda$, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue1, member:NonLocalLabelEffect -> NonLocalLabelEffect9, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:Capture$scope0 -> Capture$scope07, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, member:cpsCont$ -> cpsCont$4, tmp:block$res -> block$res, member:escape -> escape, member:handleBlock$$ -> handleBlock$$3, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope08, tmp:block$res -> block$res5, tmp:block$res -> block$res1, member:makeBreaker -> makeBreaker, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, member:escape -> escape1, member:Capture$scope0 -> Capture$scope09, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$5, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$3, tmp:block$res -> block$res2, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, class:NonLocalLabelEffect -> NonLocalLabelEffect4, member:handleBlock$$ -> handleBlock$$4)
+//│         curThis = S of N
+//│         bindings = HashMap(scope0$cap -> scope0$cap)
+//│       bindings = HashMap(retVal -> retVal)
+//│     bindings = HashMap()
+//│ ═══[COMPILATION ERROR] No definition found in scope for member 'root'
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = label:root⁴
+//│     _2 = class hkmc2.semantics.LabelSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:escape -> escape2, class:NonLocalLabelEffect -> NonLocalLabelEffect2, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak2, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, tmp:block$res -> block$res6, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:loop -> loop, member:lambda -> lambda, member:continueFromNestedFunctionWithEffects -> continueFromNestedFunctionWithEffects, tmp:runtime -> runtime, member:lambda$ -> lambda$1, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, tmp:Block -> Block, tmp:option -> option, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:cpsCont -> cpsCont2, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$4, member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope04, member:cpsCont -> cpsCont1, class:NonLocalLabelEffect -> NonLocalLabelEffect6, member:handleBlock$ -> handleBlock$, class:Capture$scope0 -> Capture$scope02, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:Capture$scope0 -> Capture$scope05, tmp:block$res -> block$res7, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:continueFromNestedLambdaWithEffects -> continueFromNestedLambdaWithEffects, member:cpsCont$ -> cpsCont$2, member:Capture$scope0 -> Capture$scope03, member:handleBlock$$ -> handleBlock$$2, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, member:handleBlock$$ -> handleBlock$$1, member:handleBlock$ -> handleBlock$3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak3, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue, member:Capture$scope0 -> Capture$scope01, class:NonLocalLabelEffect -> NonLocalLabelEffect8, class:Capture$scope2 -> Capture$scope2, member:NonLocalLabelEffect -> NonLocalLabelEffect7, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$, member:Capture$scope2 -> Capture$scope21, member:escape$ -> escape$, tmp:block$res -> block$res8, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont4, class:Capture$scope0 -> Capture$scope06, member:lambda -> lambda1, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, member:handleBlock$ -> handleBlock$4, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak4, member:lambda$ -> lambda$, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue1, member:NonLocalLabelEffect -> NonLocalLabelEffect9, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:Capture$scope0 -> Capture$scope07, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, member:cpsCont$ -> cpsCont$4, tmp:block$res -> block$res, member:escape -> escape, member:handleBlock$$ -> handleBlock$$3, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope08, tmp:block$res -> block$res5, tmp:block$res -> block$res1, member:makeBreaker -> makeBreaker, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, member:escape -> escape1, member:Capture$scope0 -> Capture$scope09, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$5, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$3, tmp:block$res -> block$res2, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, class:NonLocalLabelEffect -> NonLocalLabelEffect4, member:handleBlock$$ -> handleBlock$$4)
+//│         curThis = S of N
+//│         bindings = HashMap(scope0$cap -> scope0$cap)
+//│       bindings = HashMap(retVal -> retVal)
+//│     bindings = HashMap()
+//│ ═══[COMPILATION ERROR] No definition found in scope for member 'root'
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:escape -> escape2, class:NonLocalLabelEffect -> NonLocalLabelEffect2, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak2, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, tmp:block$res -> block$res6, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:loop -> loop, member:lambda -> lambda, member:continueFromNestedFunctionWithEffects -> continueFromNestedFunctionWithEffects, tmp:runtime -> runtime, member:lambda$ -> lambda$1, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, tmp:Block -> Block, tmp:option -> option, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:cpsCont -> cpsCont2, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$4, member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope04, member:cpsCont -> cpsCont1, class:NonLocalLabelEffect -> NonLocalLabelEffect6, member:handleBlock$ -> handleBlock$, class:Capture$scope0 -> Capture$scope02, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:Capture$scope0 -> Capture$scope05, tmp:block$res -> block$res7, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:continueFromNestedLambdaWithEffects -> continueFromNestedLambdaWithEffects, member:cpsCont$ -> cpsCont$2, member:Capture$scope0 -> Capture$scope03, member:handleBlock$$ -> handleBlock$$2, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, member:handleBlock$$ -> handleBlock$$1, member:handleBlock$ -> handleBlock$3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak3, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue, member:Capture$scope0 -> Capture$scope01, class:NonLocalLabelEffect -> NonLocalLabelEffect8, class:Capture$scope2 -> Capture$scope2, member:NonLocalLabelEffect -> NonLocalLabelEffect7, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$, member:Capture$scope2 -> Capture$scope21, member:escape$ -> escape$, tmp:block$res -> block$res8, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont4, class:Capture$scope0 -> Capture$scope06, member:lambda -> lambda1, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, member:handleBlock$ -> handleBlock$4, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak4, member:lambda$ -> lambda$, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue1, member:NonLocalLabelEffect -> NonLocalLabelEffect9, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:Capture$scope0 -> Capture$scope07, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, member:cpsCont$ -> cpsCont$4, tmp:block$res -> block$res, member:escape -> escape, member:handleBlock$$ -> handleBlock$$3, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope08, tmp:block$res -> block$res5, tmp:block$res -> block$res1, member:makeBreaker -> makeBreaker, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, member:escape -> escape1, member:Capture$scope0 -> Capture$scope09, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$5, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$3, tmp:block$res -> block$res2, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, class:NonLocalLabelEffect -> NonLocalLabelEffect4, member:handleBlock$$ -> handleBlock$$4)
+//│         curThis = S of S of class:NonLocalLabelEffect⁵
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(k -> k1, value -> value)
+//│     bindings = HashMap(tmp:NonLocalLabelEffectbreak$here -> NonLocalLabelEffectbreak$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:escape -> escape2, class:NonLocalLabelEffect -> NonLocalLabelEffect2, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak2, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, tmp:block$res -> block$res6, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:loop -> loop, member:lambda -> lambda, member:continueFromNestedFunctionWithEffects -> continueFromNestedFunctionWithEffects, tmp:runtime -> runtime, member:lambda$ -> lambda$1, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, tmp:Block -> Block, tmp:option -> option, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:cpsCont -> cpsCont2, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$4, member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope04, member:cpsCont -> cpsCont1, class:NonLocalLabelEffect -> NonLocalLabelEffect6, member:handleBlock$ -> handleBlock$, class:Capture$scope0 -> Capture$scope02, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:Capture$scope0 -> Capture$scope05, tmp:block$res -> block$res7, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:continueFromNestedLambdaWithEffects -> continueFromNestedLambdaWithEffects, member:cpsCont$ -> cpsCont$2, member:Capture$scope0 -> Capture$scope03, member:handleBlock$$ -> handleBlock$$2, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, member:handleBlock$$ -> handleBlock$$1, member:handleBlock$ -> handleBlock$3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak3, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue, member:Capture$scope0 -> Capture$scope01, class:NonLocalLabelEffect -> NonLocalLabelEffect8, class:Capture$scope2 -> Capture$scope2, member:NonLocalLabelEffect -> NonLocalLabelEffect7, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$, member:Capture$scope2 -> Capture$scope21, member:escape$ -> escape$, tmp:block$res -> block$res8, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont4, class:Capture$scope0 -> Capture$scope06, member:lambda -> lambda1, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, member:handleBlock$ -> handleBlock$4, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak4, member:lambda$ -> lambda$, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue1, member:NonLocalLabelEffect -> NonLocalLabelEffect9, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:Capture$scope0 -> Capture$scope07, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, member:cpsCont$ -> cpsCont$4, tmp:block$res -> block$res, member:escape -> escape, member:handleBlock$$ -> handleBlock$$3, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope08, tmp:block$res -> block$res5, tmp:block$res -> block$res1, member:makeBreaker -> makeBreaker, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, member:escape -> escape1, member:Capture$scope0 -> Capture$scope09, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$5, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$3, tmp:block$res -> block$res2, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, class:NonLocalLabelEffect -> NonLocalLabelEffect4, member:handleBlock$$ -> handleBlock$$4)
+//│         curThis = S of S of class:NonLocalLabelEffect⁵
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(k -> k1)
+//│     bindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:escape -> escape2, class:NonLocalLabelEffect -> NonLocalLabelEffect2, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak2, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, tmp:block$res -> block$res6, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:loop -> loop, member:lambda -> lambda, member:continueFromNestedFunctionWithEffects -> continueFromNestedFunctionWithEffects, tmp:runtime -> runtime, member:lambda$ -> lambda$1, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, tmp:Block -> Block, tmp:option -> option, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:cpsCont -> cpsCont2, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$4, member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope04, member:cpsCont -> cpsCont1, class:NonLocalLabelEffect -> NonLocalLabelEffect6, member:handleBlock$ -> handleBlock$, class:Capture$scope0 -> Capture$scope02, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:Capture$scope0 -> Capture$scope05, tmp:block$res -> block$res7, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:continueFromNestedLambdaWithEffects -> continueFromNestedLambdaWithEffects, member:cpsCont$ -> cpsCont$2, member:Capture$scope0 -> Capture$scope03, member:handleBlock$$ -> handleBlock$$2, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, member:handleBlock$$ -> handleBlock$$1, member:handleBlock$ -> handleBlock$3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak3, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue, member:Capture$scope0 -> Capture$scope01, class:NonLocalLabelEffect -> NonLocalLabelEffect8, class:Capture$scope2 -> Capture$scope2, member:NonLocalLabelEffect -> NonLocalLabelEffect7, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$, member:Capture$scope2 -> Capture$scope21, member:escape$ -> escape$, tmp:block$res -> block$res8, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont4, class:Capture$scope0 -> Capture$scope06, member:lambda -> lambda1, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, member:handleBlock$ -> handleBlock$4, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak4, member:lambda$ -> lambda$, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue1, member:NonLocalLabelEffect -> NonLocalLabelEffect9, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:Capture$scope0 -> Capture$scope07, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, member:cpsCont$ -> cpsCont$4, tmp:block$res -> block$res, member:escape -> escape, member:handleBlock$$ -> handleBlock$$3, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope08, tmp:block$res -> block$res5, tmp:block$res -> block$res1, member:makeBreaker -> makeBreaker, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, member:escape -> escape1, member:Capture$scope0 -> Capture$scope09, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$5, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$3, tmp:block$res -> block$res2, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, class:NonLocalLabelEffect -> NonLocalLabelEffect4, member:handleBlock$$ -> handleBlock$$4)
+//│         curThis = S of N
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(scope0$cap -> scope0$cap, label:root -> root, tmp:nonLocalHandler$root -> nonLocalHandler$root)
+//│     bindings = HashMap(tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ > let continueFromNestedLambdaWithEffects, lambda1, handleBlock$4, NonLocalLabelEffectbreak4, NonLocalLabelEffectcontinue1, NonLocalLabelEffect9, cpsCont5, Capture$scope09, cpsCont$5, handleBlock$$4, lambda$1, NonLocalLabelEffectbreak$4;try { NonLocalLabelEffectcontinue1 = function NonLocalLabelEffectcontinue(k, resume) {   runtime.checkArgs("NonLocalLabelEffectcontinue", 2, true, arguments.length);   return runtime.checkCall(k(runtime.Continue)) }; NonLocalLabelEffectbreak$4 = function NonLocalLabelEffectbreak$(value) {   runtime.checkArgs("NonLocalLabelEffectbreak$", 1, true, arguments.length);   return (k, resume) => {     let inlinedVal;     inlinedVal = runtime.checkCall(k(value));     return inlinedVal   } }; lambda$1 = (undefined, function (scope0$cap, nonLocalHandler$root) {   runtime.checkArgs("", 2, true, arguments.length);   return (k) => {     let inlinedVal, scrut, tmp, tmp1;     scrut = scope0$cap.i$0 >= 2;     if (scrut === true) {       runtime.safeCall(nonLocalHandler$root.break(scope0$cap.i$0));     }     tmp = scope0$cap.i$0 + 1;     scope0$cap.i$0 = tmp;     tmp1 = runtime.safeCall(nonLocalHandler$root.continue());     inlinedVal = runtime.checkCall(k(tmp1));     return inlinedVal   } }); handleBlock$$4 = (undefined, function (scope0$cap, nonLocalHandler$root) {   runtime.checkArgs("", 2, true, arguments.length);   return (k) => {     let inlinedVal, tmp, lambda$here;     lambda$here = runtime.checkCall(lambda$1(scope0$cap, nonLocalHandler$root));     tmp = runtime.safeCall(lambda$here());     inlinedVal = runtime.checkCall(k(tmp));     return inlinedVal   } }); cpsCont$5 = function cpsCont$(scope0$cap) {   runtime.checkArgs("cpsCont$", 1, true, arguments.length);   return (retVal) => {     scope0$cap.tmp$4 = retVal;     scope0$cap.labelBodyResult$2 = scope0$cap.tmp$4;     scope0$cap.labelContinueDispatch$3 = scope0$cap.labelBodyResult$2 === runtime.Continue;     if (scope0$cap.labelContinueDispatch$3 === true) {       continue root     }     scope0$cap.root$result$1 = scope0$cap.labelBodyResult$2;     break root;   } }; globalThis.Object.freeze(class NonLocalLabelEffect8 extends runtime.NonLocalReturn {   static {     NonLocalLabelEffect9 = this   }   constructor(k) {     super(this.#k);     this.#k = k;   }   #k;   get break$__checkNotMethod() { runtime.deboundMethod("break", "NonLocalLabelEffect"); }    get continue$__checkNotMethod() { runtime.deboundMethod("continue", "NonLocalLabelEffect"); }   break(k1, value) {     runtime.checkArgs("break", 2, true, arguments.length);     let NonLocalLabelEffectbreak$here;     NonLocalLabelEffectbreak$here = runtime.checkCall(NonLocalLabelEffectbreak$4(value));     return runtime.checkCall(suspend(k1, this, NonLocalLabelEffectbreak$here))   }    continue(k1) {     runtime.checkArgs("continue", 1, true, arguments.length);     return runtime.checkCall(suspend(k1, this, NonLocalLabelEffectcontinue1))   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "NonLocalLabelEffect"];  }); globalThis.Object.freeze(class Capture$scope08 {   static {     Capture$scope09 = this   }   constructor(i$0, root$result$1, labelBodyResult$2, labelContinueDispatch$3, tmp$4) {     this.tmp$4 = tmp$4;     this.labelContinueDispatch$3 = labelContinueDispatch$3;     this.labelBodyResult$2 = labelBodyResult$2;     this.root$result$1 = root$result$1;     this.i$0 = i$0;   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "Capture$scope0"];  }); continueFromNestedLambdaWithEffects = function continueFromNestedLambdaWithEffects(k) {   runtime.checkArgs("continueFromNestedLambdaWithEffects", 1, true, arguments.length);   let nonLocalHandler$root, scope0$cap;   scope0$cap = new Capture$scope09(undefined, undefined, undefined, undefined, undefined);   scope0$cap.i$0 = 0;   root: {     let cpsCont$here, handleBlock$$here;     nonLocalHandler$root = new NonLocalLabelEffect9(k);     cpsCont$here = runtime.checkCall(cpsCont$5(scope0$cap));     handleBlock$$here = runtime.checkCall(handleBlock$$4(scope0$cap, nonLocalHandler$root));     return runtime.checkCall(handle_suspension(cpsCont$here, nonLocalHandler$root, handleBlock$$here));   }   throw new Error("Reached 'unreachable' code (Rest of abortive labelled block)"); }; block$res8 = runtime.checkCall(continueFromNestedLambdaWithEffects(runtime.cpsId)); undefined; undefined } catch (e) { console.log('\u200B' + (e.stack ?? e) + '\u200B'); }
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:254)
+//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Undefined label 'root'
 
 
 fun continueFromNestedFunctionAndLambdaWithEffects() =
@@ -232,6 +729,151 @@ fun continueFromNestedFunctionAndLambdaWithEffects() =
         root.continue
     mkContinue()()
 continueFromNestedFunctionAndLambdaWithEffects()
-//│ = 4
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.727: 	        if i >= 4 do root.break(i)
+//│ ╙──       	                         ^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.729: 	        root.continue
+//│ ╙──       	            ^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.730: 	    mkContinue()()
+//│ ╙──       	    ^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = label:root⁵
+//│     _2 = class hkmc2.semantics.LabelSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont -> cpsCont6, member:escape -> escape2, member:cpsCont -> cpsCont7, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, class:Capture$scope0 -> Capture$scope010, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak2, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:lambda -> lambda, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:cpsCont -> cpsCont2, member:Capture$scope0 -> Capture$scope011, member:cpsCont -> cpsCont3, member:cpsCont$ -> cpsCont$6, class:Capture$scope0 -> Capture$scope04, member:handleBlock$$ -> handleBlock$$5, member:handleBlock$ -> handleBlock$, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:Capture$scope0 -> Capture$scope05, tmp:block$res -> block$res7, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:continueFromNestedLambdaWithEffects -> continueFromNestedLambdaWithEffects, member:cpsCont$ -> cpsCont$2, member:handleBlock$$ -> handleBlock$$2, member:cpsCont -> cpsCont, class:Capture$scope2 -> Capture$scope22, class:Capture$scope0 -> Capture$scope0, member:Capture$scope2 -> Capture$scope23, member:Capture$scope0 -> Capture$scope01, class:NonLocalLabelEffect -> NonLocalLabelEffect8, member:cpsCont$ -> cpsCont$7, class:Capture$scope2 -> Capture$scope2, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$, member:Capture$scope2 -> Capture$scope21, member:cpsCont$ -> cpsCont$3, member:lambda$ -> lambda$2, member:lambda -> lambda1, member:handleBlock$ -> handleBlock$4, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak4, member:lambda$ -> lambda$, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue1, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$5, member:NonLocalLabelEffect -> NonLocalLabelEffect9, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope08, member:Capture$scope0 -> Capture$scope09, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$5, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, member:handleBlock$$ -> handleBlock$$4, class:NonLocalLabelEffect -> NonLocalLabelEffect2, tmp:block$res -> block$res6, member:loop -> loop, member:continueFromNestedFunctionWithEffects -> continueFromNestedFunctionWithEffects, tmp:block$res -> block$res9, member:lambda$ -> lambda$1, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$4, member:cpsCont -> cpsCont1, class:NonLocalLabelEffect -> NonLocalLabelEffect6, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$1, member:handleBlock$$ -> handleBlock$$1, member:handleBlock$ -> handleBlock$3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak3, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue, member:NonLocalLabelEffect -> NonLocalLabelEffect7, member:escape$ -> escape$, tmp:block$res -> block$res8, member:mkContinue -> mkContinue, member:continueFromNestedFunctionAndLambdaWithEffects -> continueFromNestedFunctionAndLambdaWithEffects, member:cpsCont -> cpsCont4, class:Capture$scope0 -> Capture$scope06, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, member:Capture$scope0 -> Capture$scope07, class:NonLocalLabelEffect -> NonLocalLabelEffect10, member:cpsCont$ -> cpsCont$4, tmp:block$res -> block$res, member:escape -> escape, member:handleBlock$$ -> handleBlock$$3, tmp:block$res -> block$res5, member:handleBlock$ -> handleBlock$5, tmp:block$res -> block$res1, member:makeBreaker -> makeBreaker, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak5, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, member:escape -> escape1, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue2, member:NonLocalLabelEffect -> NonLocalLabelEffect11, member:lambda -> lambda2, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$3, tmp:block$res -> block$res2, class:NonLocalLabelEffect -> NonLocalLabelEffect4)
+//│         curThis = S of N
+//│         bindings = HashMap(scope0$cap -> scope0$cap)
+//│       bindings = HashMap(retVal -> retVal)
+//│     bindings = HashMap()
+//│ ═══[COMPILATION ERROR] No definition found in scope for member 'root'
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = label:root⁵
+//│     _2 = class hkmc2.semantics.LabelSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont -> cpsCont6, member:escape -> escape2, member:cpsCont -> cpsCont7, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, class:Capture$scope0 -> Capture$scope010, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak2, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:lambda -> lambda, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:cpsCont -> cpsCont2, member:Capture$scope0 -> Capture$scope011, member:cpsCont -> cpsCont3, member:cpsCont$ -> cpsCont$6, class:Capture$scope0 -> Capture$scope04, member:handleBlock$$ -> handleBlock$$5, member:handleBlock$ -> handleBlock$, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:Capture$scope0 -> Capture$scope05, tmp:block$res -> block$res7, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:continueFromNestedLambdaWithEffects -> continueFromNestedLambdaWithEffects, member:cpsCont$ -> cpsCont$2, member:handleBlock$$ -> handleBlock$$2, member:cpsCont -> cpsCont, class:Capture$scope2 -> Capture$scope22, class:Capture$scope0 -> Capture$scope0, member:Capture$scope2 -> Capture$scope23, member:Capture$scope0 -> Capture$scope01, class:NonLocalLabelEffect -> NonLocalLabelEffect8, member:cpsCont$ -> cpsCont$7, class:Capture$scope2 -> Capture$scope2, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$, member:Capture$scope2 -> Capture$scope21, member:cpsCont$ -> cpsCont$3, member:lambda$ -> lambda$2, member:lambda -> lambda1, member:handleBlock$ -> handleBlock$4, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak4, member:lambda$ -> lambda$, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue1, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$5, member:NonLocalLabelEffect -> NonLocalLabelEffect9, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope08, member:Capture$scope0 -> Capture$scope09, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$5, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, member:handleBlock$$ -> handleBlock$$4, class:NonLocalLabelEffect -> NonLocalLabelEffect2, tmp:block$res -> block$res6, member:loop -> loop, member:continueFromNestedFunctionWithEffects -> continueFromNestedFunctionWithEffects, tmp:block$res -> block$res9, member:lambda$ -> lambda$1, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$4, member:cpsCont -> cpsCont1, class:NonLocalLabelEffect -> NonLocalLabelEffect6, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$1, member:handleBlock$$ -> handleBlock$$1, member:handleBlock$ -> handleBlock$3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak3, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue, member:NonLocalLabelEffect -> NonLocalLabelEffect7, member:escape$ -> escape$, tmp:block$res -> block$res8, member:mkContinue -> mkContinue, member:continueFromNestedFunctionAndLambdaWithEffects -> continueFromNestedFunctionAndLambdaWithEffects, member:cpsCont -> cpsCont4, class:Capture$scope0 -> Capture$scope06, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, member:Capture$scope0 -> Capture$scope07, class:NonLocalLabelEffect -> NonLocalLabelEffect10, member:cpsCont$ -> cpsCont$4, tmp:block$res -> block$res, member:escape -> escape, member:handleBlock$$ -> handleBlock$$3, tmp:block$res -> block$res5, member:handleBlock$ -> handleBlock$5, tmp:block$res -> block$res1, member:makeBreaker -> makeBreaker, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak5, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, member:escape -> escape1, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue2, member:NonLocalLabelEffect -> NonLocalLabelEffect11, member:lambda -> lambda2, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$3, tmp:block$res -> block$res2, class:NonLocalLabelEffect -> NonLocalLabelEffect4)
+//│         curThis = S of N
+//│         bindings = HashMap(scope0$cap -> scope0$cap)
+//│       bindings = HashMap(retVal -> retVal)
+//│     bindings = HashMap()
+//│ ═══[COMPILATION ERROR] No definition found in scope for member 'root'
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont -> cpsCont6, member:escape -> escape2, member:cpsCont -> cpsCont7, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, class:Capture$scope0 -> Capture$scope010, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak2, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:lambda -> lambda, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:cpsCont -> cpsCont2, member:Capture$scope0 -> Capture$scope011, member:cpsCont -> cpsCont3, member:cpsCont$ -> cpsCont$6, class:Capture$scope0 -> Capture$scope04, member:handleBlock$$ -> handleBlock$$5, member:handleBlock$ -> handleBlock$, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:Capture$scope0 -> Capture$scope05, tmp:block$res -> block$res7, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:continueFromNestedLambdaWithEffects -> continueFromNestedLambdaWithEffects, member:cpsCont$ -> cpsCont$2, member:handleBlock$$ -> handleBlock$$2, member:cpsCont -> cpsCont, class:Capture$scope2 -> Capture$scope22, class:Capture$scope0 -> Capture$scope0, member:Capture$scope2 -> Capture$scope23, member:Capture$scope0 -> Capture$scope01, class:NonLocalLabelEffect -> NonLocalLabelEffect8, member:cpsCont$ -> cpsCont$7, class:Capture$scope2 -> Capture$scope2, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$, member:Capture$scope2 -> Capture$scope21, member:cpsCont$ -> cpsCont$3, member:lambda$ -> lambda$2, member:lambda -> lambda1, member:handleBlock$ -> handleBlock$4, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak4, member:lambda$ -> lambda$, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue1, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$5, member:NonLocalLabelEffect -> NonLocalLabelEffect9, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope08, member:Capture$scope0 -> Capture$scope09, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$5, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, member:handleBlock$$ -> handleBlock$$4, class:NonLocalLabelEffect -> NonLocalLabelEffect2, tmp:block$res -> block$res6, member:loop -> loop, member:continueFromNestedFunctionWithEffects -> continueFromNestedFunctionWithEffects, tmp:block$res -> block$res9, member:lambda$ -> lambda$1, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$4, member:cpsCont -> cpsCont1, class:NonLocalLabelEffect -> NonLocalLabelEffect6, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$1, member:handleBlock$$ -> handleBlock$$1, member:handleBlock$ -> handleBlock$3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak3, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue, member:NonLocalLabelEffect -> NonLocalLabelEffect7, member:escape$ -> escape$, tmp:block$res -> block$res8, member:mkContinue -> mkContinue, member:continueFromNestedFunctionAndLambdaWithEffects -> continueFromNestedFunctionAndLambdaWithEffects, member:cpsCont -> cpsCont4, class:Capture$scope0 -> Capture$scope06, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, member:Capture$scope0 -> Capture$scope07, class:NonLocalLabelEffect -> NonLocalLabelEffect10, member:cpsCont$ -> cpsCont$4, tmp:block$res -> block$res, member:escape -> escape, member:handleBlock$$ -> handleBlock$$3, tmp:block$res -> block$res5, member:handleBlock$ -> handleBlock$5, tmp:block$res -> block$res1, member:makeBreaker -> makeBreaker, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak5, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, member:escape -> escape1, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue2, member:NonLocalLabelEffect -> NonLocalLabelEffect11, member:lambda -> lambda2, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$3, tmp:block$res -> block$res2, class:NonLocalLabelEffect -> NonLocalLabelEffect4)
+//│         curThis = S of S of class:NonLocalLabelEffect⁶
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(k -> k1, value -> value)
+//│     bindings = HashMap(tmp:NonLocalLabelEffectbreak$here -> NonLocalLabelEffectbreak$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont -> cpsCont6, member:escape -> escape2, member:cpsCont -> cpsCont7, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, class:Capture$scope0 -> Capture$scope010, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak2, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:lambda -> lambda, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:cpsCont -> cpsCont2, member:Capture$scope0 -> Capture$scope011, member:cpsCont -> cpsCont3, member:cpsCont$ -> cpsCont$6, class:Capture$scope0 -> Capture$scope04, member:handleBlock$$ -> handleBlock$$5, member:handleBlock$ -> handleBlock$, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:Capture$scope0 -> Capture$scope05, tmp:block$res -> block$res7, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:continueFromNestedLambdaWithEffects -> continueFromNestedLambdaWithEffects, member:cpsCont$ -> cpsCont$2, member:handleBlock$$ -> handleBlock$$2, member:cpsCont -> cpsCont, class:Capture$scope2 -> Capture$scope22, class:Capture$scope0 -> Capture$scope0, member:Capture$scope2 -> Capture$scope23, member:Capture$scope0 -> Capture$scope01, class:NonLocalLabelEffect -> NonLocalLabelEffect8, member:cpsCont$ -> cpsCont$7, class:Capture$scope2 -> Capture$scope2, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$, member:Capture$scope2 -> Capture$scope21, member:cpsCont$ -> cpsCont$3, member:lambda$ -> lambda$2, member:lambda -> lambda1, member:handleBlock$ -> handleBlock$4, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak4, member:lambda$ -> lambda$, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue1, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$5, member:NonLocalLabelEffect -> NonLocalLabelEffect9, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope08, member:Capture$scope0 -> Capture$scope09, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$5, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, member:handleBlock$$ -> handleBlock$$4, class:NonLocalLabelEffect -> NonLocalLabelEffect2, tmp:block$res -> block$res6, member:loop -> loop, member:continueFromNestedFunctionWithEffects -> continueFromNestedFunctionWithEffects, tmp:block$res -> block$res9, member:lambda$ -> lambda$1, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$4, member:cpsCont -> cpsCont1, class:NonLocalLabelEffect -> NonLocalLabelEffect6, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$1, member:handleBlock$$ -> handleBlock$$1, member:handleBlock$ -> handleBlock$3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak3, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue, member:NonLocalLabelEffect -> NonLocalLabelEffect7, member:escape$ -> escape$, tmp:block$res -> block$res8, member:mkContinue -> mkContinue, member:continueFromNestedFunctionAndLambdaWithEffects -> continueFromNestedFunctionAndLambdaWithEffects, member:cpsCont -> cpsCont4, class:Capture$scope0 -> Capture$scope06, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, member:Capture$scope0 -> Capture$scope07, class:NonLocalLabelEffect -> NonLocalLabelEffect10, member:cpsCont$ -> cpsCont$4, tmp:block$res -> block$res, member:escape -> escape, member:handleBlock$$ -> handleBlock$$3, tmp:block$res -> block$res5, member:handleBlock$ -> handleBlock$5, tmp:block$res -> block$res1, member:makeBreaker -> makeBreaker, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak5, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, member:escape -> escape1, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue2, member:NonLocalLabelEffect -> NonLocalLabelEffect11, member:lambda -> lambda2, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$3, tmp:block$res -> block$res2, class:NonLocalLabelEffect -> NonLocalLabelEffect4)
+//│         curThis = S of S of class:NonLocalLabelEffect⁶
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(k -> k1)
+//│     bindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont -> cpsCont6, member:escape -> escape2, member:cpsCont -> cpsCont7, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, class:Capture$scope0 -> Capture$scope010, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak2, member:escape -> escape3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:lambda -> lambda, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, class:NonLocalLabelEffect -> NonLocalLabelEffect, member:cpsCont -> cpsCont2, member:Capture$scope0 -> Capture$scope011, member:cpsCont -> cpsCont3, member:cpsCont$ -> cpsCont$6, class:Capture$scope0 -> Capture$scope04, member:handleBlock$$ -> handleBlock$$5, member:handleBlock$ -> handleBlock$, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak, member:Capture$scope0 -> Capture$scope05, tmp:block$res -> block$res7, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:continueFromNestedLambdaWithEffects -> continueFromNestedLambdaWithEffects, member:cpsCont$ -> cpsCont$2, member:handleBlock$$ -> handleBlock$$2, member:cpsCont -> cpsCont, class:Capture$scope2 -> Capture$scope22, class:Capture$scope0 -> Capture$scope0, member:Capture$scope2 -> Capture$scope23, member:Capture$scope0 -> Capture$scope01, class:NonLocalLabelEffect -> NonLocalLabelEffect8, member:cpsCont$ -> cpsCont$7, class:Capture$scope2 -> Capture$scope2, member:cpsCont$ -> cpsCont$, member:handleBlock$$ -> handleBlock$$, member:Capture$scope2 -> Capture$scope21, member:cpsCont$ -> cpsCont$3, member:lambda$ -> lambda$2, member:lambda -> lambda1, member:handleBlock$ -> handleBlock$4, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak4, member:lambda$ -> lambda$, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue1, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$5, member:NonLocalLabelEffect -> NonLocalLabelEffect9, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope08, member:Capture$scope0 -> Capture$scope09, tmp:block$res -> block$res4, member:cpsCont$ -> cpsCont$5, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, member:handleBlock$$ -> handleBlock$$4, class:NonLocalLabelEffect -> NonLocalLabelEffect2, tmp:block$res -> block$res6, member:loop -> loop, member:continueFromNestedFunctionWithEffects -> continueFromNestedFunctionWithEffects, tmp:block$res -> block$res9, member:lambda$ -> lambda$1, member:Predef -> Predef, member:handleBlock$ -> handleBlock$1, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak1, member:NonLocalLabelEffect -> NonLocalLabelEffect3, member:escape -> escape4, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$4, member:cpsCont -> cpsCont1, class:NonLocalLabelEffect -> NonLocalLabelEffect6, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$1, member:handleBlock$$ -> handleBlock$$1, member:handleBlock$ -> handleBlock$3, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak3, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue, member:NonLocalLabelEffect -> NonLocalLabelEffect7, member:escape$ -> escape$, tmp:block$res -> block$res8, member:mkContinue -> mkContinue, member:continueFromNestedFunctionAndLambdaWithEffects -> continueFromNestedFunctionAndLambdaWithEffects, member:cpsCont -> cpsCont4, class:Capture$scope0 -> Capture$scope06, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, member:Capture$scope0 -> Capture$scope07, class:NonLocalLabelEffect -> NonLocalLabelEffect10, member:cpsCont$ -> cpsCont$4, tmp:block$res -> block$res, member:escape -> escape, member:handleBlock$$ -> handleBlock$$3, tmp:block$res -> block$res5, member:handleBlock$ -> handleBlock$5, tmp:block$res -> block$res1, member:makeBreaker -> makeBreaker, member:NonLocalLabelEffectbreak -> NonLocalLabelEffectbreak5, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, member:escape -> escape1, member:NonLocalLabelEffectcontinue -> NonLocalLabelEffectcontinue2, member:NonLocalLabelEffect -> NonLocalLabelEffect11, member:lambda -> lambda2, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$3, tmp:block$res -> block$res2, class:NonLocalLabelEffect -> NonLocalLabelEffect4)
+//│         curThis = S of N
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(label:root -> root, tmp:nonLocalHandler$root -> nonLocalHandler$root, scope0$cap -> scope0$cap)
+//│     bindings = HashMap(tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ > let mkContinue, continueFromNestedFunctionAndLambdaWithEffects, handleBlock$5, NonLocalLabelEffectbreak5, NonLocalLabelEffectcontinue2, NonLocalLabelEffect11, lambda2, cpsCont6, cpsCont7, Capture$scope011, cpsCont$6, handleBlock$$5, Capture$scope23, cpsCont$7, lambda$2, NonLocalLabelEffectbreak$5;try { NonLocalLabelEffectcontinue2 = function NonLocalLabelEffectcontinue(k, resume) {   runtime.checkArgs("NonLocalLabelEffectcontinue", 2, true, arguments.length);   return runtime.checkCall(k(runtime.Continue)) }; NonLocalLabelEffectbreak$5 = function NonLocalLabelEffectbreak$(value) {   runtime.checkArgs("NonLocalLabelEffectbreak$", 1, true, arguments.length);   return (k, resume) => {     let inlinedVal;     inlinedVal = runtime.checkCall(k(value));     return inlinedVal   } }; globalThis.Object.freeze(class Capture$scope22 {   static {     Capture$scope23 = this   }   constructor(baseCall$0) {     this.baseCall$0 = baseCall$0;   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "Capture$scope2"];  }); lambda$2 = (undefined, function (scope0$cap, nonLocalHandler$root) {   runtime.checkArgs("", 2, true, arguments.length);   return (k) => {     let inlinedVal, scrut, tmp, tmp1;     scrut = scope0$cap.i$0 >= 4;     if (scrut === true) {       runtime.safeCall(nonLocalHandler$root.break(scope0$cap.i$0));     }     tmp = scope0$cap.i$0 + 1;     scope0$cap.i$0 = tmp;     tmp1 = runtime.safeCall(nonLocalHandler$root.continue());     inlinedVal = runtime.checkCall(k(tmp1));     return inlinedVal   } }); cpsCont$7 = function cpsCont$(scope2$cap, k) {   runtime.checkArgs("cpsCont$", 2, true, arguments.length);   return (retVal) => {     let inlinedVal, tmp;     scope2$cap.baseCall$0 = retVal;     tmp = runtime.safeCall(scope2$cap.baseCall$0());     inlinedVal = runtime.checkCall(k(tmp));     return inlinedVal   } }; handleBlock$$5 = (undefined, function (scope0$cap, nonLocalHandler$root) {   runtime.checkArgs("", 2, true, arguments.length);   return (k) => {     let scope2$cap, cpsCont$here, inlinedVal, lambda$here;     scope2$cap = new Capture$scope23(undefined);     cpsCont$here = runtime.checkCall(cpsCont$7(scope2$cap, k));     lambda$here = runtime.checkCall(lambda$2(scope0$cap, nonLocalHandler$root));     inlinedVal = runtime.checkCall(cpsCont$here(lambda$here));     return inlinedVal   } }); cpsCont$6 = function cpsCont$(scope0$cap) {   runtime.checkArgs("cpsCont$", 1, true, arguments.length);   return (retVal) => {     scope0$cap.tmp$4 = retVal;     scope0$cap.labelBodyResult$2 = scope0$cap.tmp$4;     scope0$cap.labelContinueDispatch$3 = scope0$cap.labelBodyResult$2 === runtime.Continue;     if (scope0$cap.labelContinueDispatch$3 === true) {       continue root     }     scope0$cap.root$result$1 = scope0$cap.labelBodyResult$2;     break root;   } }; globalThis.Object.freeze(class NonLocalLabelEffect10 extends runtime.NonLocalReturn {   static {     NonLocalLabelEffect11 = this   }   constructor(k) {     super(this.#k);     this.#k = k;   }   #k;   get break$__checkNotMethod() { runtime.deboundMethod("break", "NonLocalLabelEffect"); }    get continue$__checkNotMethod() { runtime.deboundMethod("continue", "NonLocalLabelEffect"); }   break(k1, value) {     runtime.checkArgs("break", 2, true, arguments.length);     let NonLocalLabelEffectbreak$here;     NonLocalLabelEffectbreak$here = runtime.checkCall(NonLocalLabelEffectbreak$5(value));     return runtime.checkCall(suspend(k1, this, NonLocalLabelEffectbreak$here))   }    continue(k1) {     runtime.checkArgs("continue", 1, true, arguments.length);     return runtime.checkCall(suspend(k1, this, NonLocalLabelEffectcontinue2))   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "NonLocalLabelEffect"];  }); globalThis.Object.freeze(class Capture$scope010 {   static {     Capture$scope011 = this   }   constructor(i$0, root$result$1, labelBodyResult$2, labelContinueDispatch$3, tmp$4) {     this.tmp$4 = tmp$4;     this.labelContinueDispatch$3 = labelContinueDispatch$3;     this.labelBodyResult$2 = labelBodyResult$2;     this.root$result$1 = root$result$1;     this.i$0 = i$0;   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "Capture$scope0"];  }); continueFromNestedFunctionAndLambdaWithEffects = function continueFromNestedFunctionAndLambdaWithEffects(k) {   runtime.checkArgs("continueFromNestedFunctionAndLambdaWithEffects", 1, true, arguments.length);   let nonLocalHandler$root, scope0$cap;   scope0$cap = new Capture$scope011(undefined, undefined, undefined, undefined, undefined);   scope0$cap.i$0 = 0;   root: {     let cpsCont$here, handleBlock$$here;     nonLocalHandler$root = new NonLocalLabelEffect11(k);     cpsCont$here = runtime.checkCall(cpsCont$6(scope0$cap));     handleBlock$$here = runtime.checkCall(handleBlock$$5(scope0$cap, nonLocalHandler$root));     return runtime.checkCall(handle_suspension(cpsCont$here, nonLocalHandler$root, handleBlock$$here));   }   throw new Error("Reached 'unreachable' code (Rest of abortive labelled block)"); }; block$res9 = runtime.checkCall(continueFromNestedFunctionAndLambdaWithEffects(runtime.cpsId)); undefined; undefined } catch (e) { console.log('\u200B' + (e.stack ?? e) + '\u200B'); }
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:254)
+//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Undefined label 'root'
 
 

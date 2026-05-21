@@ -6,8 +6,7 @@
 
 :re
 raiseUnhandledEffect()
-//│ ═══[RUNTIME ERROR] Error: Unhandled effect FatalEffect
-//│ 	at tail position
+//│ FAILURE: Unexpected lack of runtime error
 
 :sjs
 fun f() =
@@ -18,85 +17,49 @@ fun f() =
     print of raiseUnhandledEffect()
   j / i
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let f, f$debugInfo;
-//│ runtime.resetEffects();
-//│ f$debugInfo = globalThis.Object.freeze([
-//│   "f",
-//│   0,
-//│   "i",
-//│   1,
-//│   "j",
-//│   2,
-//│   "k"
-//│ ]);
-//│ f = function f() {
-//│   let i, j, k, scrut, tmp1, pc;
-//│   if (runtime.resumePc === -1) {
-//│     pc = 0;
-//│   } else {
-//│     let saveOffset;
-//│     pc = runtime.resumePc;
-//│     saveOffset = runtime.resumeIdx;
-//│     i = runtime.resumeArr.at(saveOffset);
-//│     saveOffset = saveOffset + 1;
-//│     j = runtime.resumeArr.at(saveOffset);
-//│     saveOffset = saveOffset + 1;
-//│     k = runtime.resumeArr.at(saveOffset);
-//│     saveOffset = saveOffset + 1;
-//│     scrut = runtime.resumeArr.at(saveOffset);
-//│     saveOffset = saveOffset + 1;
-//│     tmp1 = runtime.resumeArr.at(saveOffset);
-//│     runtime.resumePc = -1;
+//│ let f, Capture$scope01, cpsCont$, cpsCont$1;
+//│ (class Capture$scope0 {
+//│   static {
+//│     Capture$scope01 = this
 //│   }
-//│   main: while (true) {
-//│     switch (pc) {
-//│       case 0:
-//│         i = 0;
-//│         j = 100;
-//│         k = 2000;
-//│         runtime.resumeValue = Predef.equals(0, 0);
-//│         if (runtime.curEffect === null) {
-//│           pc = 5;
-//│         } else {
-//│           return runtime.unwind(f, 5, "Debugging.mls:17:6", f$debugInfo, null, 1, 0, 5, 0, 100, 2000, scrut, tmp1)
-//│         }
-//│       case 5:
-//│         scrut = runtime.resumeValue;
-//│         if (scrut === true) {
-//│           runtime.resumeValue = Predef.raiseUnhandledEffect();
-//│           if (runtime.curEffect === null) {
-//│             pc = 4;
-//│             continue main
-//│           }
-//│           return runtime.unwind(f, 4, "Debugging.mls:18:14", f$debugInfo, null, 1, 0, 5, i, j, k, scrut, tmp1);
-//│         }
-//│         pc = 1;
-//│         continue main;
-//│       case 4:
-//│         tmp1 = runtime.resumeValue;
-//│         pc = 3;
-//│       case 3:
-//│         runtime.resumeValue = Predef.print(tmp1);
-//│         if (runtime.curEffect === null) {
-//│           pc = 2;
-//│         } else {
-//│           return runtime.unwind(f, 2, "Debugging.mls:18:5", f$debugInfo, null, 1, 0, 5, i, j, k, scrut, tmp1)
-//│         }
-//│       case 2:
-//│         runtime.resumeValue;
-//│         pc = 1;
-//│       case 1:
-//│         return j / i;
+//│   constructor(scrut$0, tmp$1) {
+//│     this.tmp$1 = tmp$1;
+//│     this.scrut$0 = scrut$0;
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Capture$scope0"]; 
+//│ });
+//│ cpsCont$1 = function cpsCont$(scope0$cap) {
+//│   return (retVal) => {
+//│     scope0$cap.tmp$1 = retVal;
+//│     return
+//│   }
+//│ };
+//│ cpsCont$ = function cpsCont$(scope0$cap) {
+//│   return (retVal) => {
+//│     let inlinedVal;
+//│     scope0$cap.scrut$0 = retVal;
+//│     if (scope0$cap.scrut$0 === true) {
+//│       let cpsCont$here;
+//│       cpsCont$here = cpsCont$1(scope0$cap);
+//│       inlinedVal = Predef.raiseUnhandledEffect(cpsCont$here);
+//│       return inlinedVal
 //│     }
-//│     break;
+//│     return;
 //│   }
+//│ };
+//│ f = function f(k) {
+//│   let scope0$cap, cpsCont$here;
+//│   scope0$cap = new Capture$scope01(undefined, undefined);
+//│   cpsCont$here = cpsCont$(scope0$cap);
+//│   return Predef.equals(cpsCont$here, 0, 0)
 //│ };
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 :re
 f()
-//│ ═══[RUNTIME ERROR] Error: Unhandled effect FatalEffect
-//│ 	at f (Debugging.mls:18:14)
+//│ = false
+//│ FAILURE: Unexpected lack of runtime error
 
 :re
 fun lambda_test(f) =
@@ -105,32 +68,85 @@ fun lambda_test(f) =
 lambda_test(() =>
   raiseUnhandledEffect()
   100)
-//│ ═══[RUNTIME ERROR] Error: Unhandled effect FatalEffect
-//│ 	at lambda (Debugging.mls:106:3)
-//│ 	at lambda_test (Debugging.mls:103:3)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.66: 	  f()
+//│ ╙──      	  ^^^
+//│ ═══[RUNTIME ERROR] Error: Function expected 1 argument but got 0
 
 
 import "../../mlscript-compile/Runtime.mls"
 
 :silent
 let res = Runtime.try(f)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] Error: Function 'cpsCont' expected 1 argument but got 0
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:694:41)
+//│     at cpsCont (REPL25:1:73)
+//│     at Runtime.try (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:720:28)
+//│     at REPL25:1:183
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
 
 res.reified.contTrace.next.getLocals
-//│ = [LocalVarInfo("i", 0), LocalVarInfo("j", 100), LocalVarInfo("k", 2000)]
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'reified')
+//│     at REPL27:1:58
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 Runtime.debugEff(res.reified)
-//│ > Debug EffectSig:
-//│ > handler:  FatalEffect
-//│ > handlerFun:  null
-//│ > resumed:  false
-//│ > <lastHandler is self>
-//│ > FunctionContFrame(pc=4, last) -> (null)
-//│ > 
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'reified')
+//│     at REPL30:1:33
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 :expect Infinity
 res.resumeWith(42)
-//│ > 42
-//│ = Infinity
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.128: 	res.resumeWith(42)
+//│ ╙──       	^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'resumeWith')
+//│     at REPL33:1:42
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:297)
+//│ ═══[RUNTIME ERROR] Expected: 'Infinity', got: 'undefined'
 
 
 
@@ -146,31 +162,162 @@ module Test with
     j / i
   fun main()(using Debugger) =
     test(12) + test(34)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (HandlerLowering.scala:137)
+//│ ╔══[WARNING] This function is not CPS-transformed because it has more than one parameter list.
+//│ ║  l.157: 	  fun test(j)(using dbg: Debugger) =
+//│ ╙──       	      ^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (HandlerLowering.scala:137)
+//│ ╔══[WARNING] This function is not CPS-transformed because it has more than one parameter list.
+//│ ║  l.163: 	  fun main()(using Debugger) =
+//│ ╙──       	      ^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:151)
+//│ ╔══[WARNING] This call is not CPS-transformed because it has more than one argument list.
+//│ ║  l.164: 	    test(12) + test(34)
+//│ ╙──       	    ^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:151)
+//│ ╔══[WARNING] This call is not CPS-transformed because it has more than one argument list.
+//│ ║  l.164: 	    test(12) + test(34)
+//│ ╙──       	               ^^^^^^^^
 
 let res =
   handle h = Debugger with
     fun break(payload)(resume) = resume
   using Debugger = h
   Runtime.try(() => Test.main())
-//│ res = EffectHandle(_)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:151)
+//│ ╔══[WARNING] This call is not CPS-transformed because it has more than one argument list.
+//│ ║  l.190: 	  Runtime.try(() => Test.main())
+//│ ╙──       	                    ^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(tmp:selRes -> selRes, tmp:selRes -> selRes1, tmp:selRes -> selRes2, tmp:selRes -> selRes3, tmp:block$res -> block$res7, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:selRes -> selRes4, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res8, tmp:Term -> Term, tmp:tmp -> tmp1, tmp:Block -> Block, member:lambda -> lambda1, tmp:option -> option, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, tmp:block$res -> block$res9, member:Handler$h$break -> Handler$h$break, member:Debugger -> Debugger1, class:Debugger -> Debugger, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res10, member:cpsCont -> cpsCont6, member:Test -> Test1, module:Test -> Test, member:cpsCont -> cpsCont, member:lambda$ -> lambda$, member:cpsCont -> cpsCont1, class:Capture$scope0 -> Capture$scope0, member:Capture$scope0 -> Capture$scope01, tmp:block$res -> block$res12, member:cpsCont$ -> cpsCont$, member:Runtime -> Runtime, class:Test -> Test, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope02, tmp:block$res -> block$res2, tmp:block$res -> block$res3, member:lambda_test -> lambda_test, member:Capture$scope0 -> Capture$scope03, tmp:block$res -> block$res, member:cpsCont$ -> cpsCont$3, member:lambda -> lambda, tmp:block$res -> block$res1, member:f -> f, member:cpsCont -> cpsCont2, member:cpsCont$ -> cpsCont$4, member:cpsCont$ -> cpsCont$2, tmp:block$res -> block$res4, tmp:block$res -> block$res5, res -> res, tmp:block$res -> block$res11, member:cpsCont -> cpsCont3, res -> res1, h -> h, tmp:block$res -> block$res6, class:Handler$h$ -> Handler$h$)
+//│         curThis = S of S of class:Handler$h$⁰
+//│         bindings = HashMap()
+//│       bindings = HashMap(payload -> payload, k -> k)
+//│     bindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(tmp:selRes -> selRes, tmp:selRes -> selRes1, tmp:selRes -> selRes2, tmp:selRes -> selRes3, tmp:block$res -> block$res7, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:selRes -> selRes4, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res8, tmp:Term -> Term, tmp:tmp -> tmp1, tmp:Block -> Block, member:lambda -> lambda1, tmp:option -> option, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, tmp:block$res -> block$res9, member:Handler$h$break -> Handler$h$break, member:Debugger -> Debugger1, class:Debugger -> Debugger, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res10, member:cpsCont -> cpsCont6, member:Test -> Test1, module:Test -> Test, member:cpsCont -> cpsCont, member:lambda$ -> lambda$, member:cpsCont -> cpsCont1, class:Capture$scope0 -> Capture$scope0, member:Capture$scope0 -> Capture$scope01, tmp:block$res -> block$res12, member:cpsCont$ -> cpsCont$, member:Runtime -> Runtime, class:Test -> Test, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, class:Capture$scope0 -> Capture$scope02, tmp:block$res -> block$res2, tmp:block$res -> block$res3, member:lambda_test -> lambda_test, member:Capture$scope0 -> Capture$scope03, tmp:block$res -> block$res, member:cpsCont$ -> cpsCont$3, member:lambda -> lambda, tmp:block$res -> block$res1, member:f -> f, member:cpsCont -> cpsCont2, member:cpsCont$ -> cpsCont$4, member:cpsCont$ -> cpsCont$2, tmp:block$res -> block$res4, tmp:block$res -> block$res5, res -> res, tmp:block$res -> block$res11, member:cpsCont -> cpsCont3, res -> res1, h -> h, tmp:block$res -> block$res6, class:Handler$h$ -> Handler$h$)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│     at REPL42:1:1542
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
+//│ res = undefined
 
 :re
 res.raise()
-//│ ═══[RUNTIME ERROR] Error: Unhandled effect Handler$h$
-//│ 	at Test.test (Debugging.mls:145:15)
-//│ 	at Test.main (Debugging.mls:148:5)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.261: 	res.raise()
+//│ ╙──       	^^^^^^^^^^^
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'raise')
 
 set res = res.resumeWith(42)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.269: 	set res = res.resumeWith(42)
+//│ ╙──       	          ^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'resumeWith')
+//│     at REPL49:1:45
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 :re
 res.raise()
-//│ ═══[RUNTIME ERROR] Error: Unhandled effect Handler$h$
-//│ 	at Test.test (Debugging.mls:145:15)
-//│ 	at Test.main (Debugging.mls:148:16)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.290: 	res.raise()
+//│ ╙──       	^^^^^^^^^^^
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'raise')
 
 :expect 0.33676533676533676
 res.resumeWith(666)
-//│ = 0.33676533676533676
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.299: 	res.resumeWith(666)
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'resumeWith')
+//│     at REPL55:1:45
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:297)
+//│ ═══[RUNTIME ERROR] Expected: '0.33676533676533676', got: 'undefined'
 
 let i = 100
 fun f() =
@@ -182,12 +329,21 @@ fun f() =
   debug.printStack(false)
   debug.printStack(true)
   // print(debug.getLocals())
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.327: 	  debug.printStack(true)
+//│ ╙──       	  ^^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.329: 	  debug.printStack(false)
+//│ ╙──       	  ^^^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.330: 	  debug.printStack(true)
+//│ ╙──       	  ^^^^^^^^^^^^^^^^^^^^^^
 //│ i = 100
 
 f()
-//│ > Stack Trace:
-//│ > 	at f (Debugging.mls:180:3) with locals: j=200
-//│ > Stack Trace:
-//│ > 	at f (Debugging.mls:182:3)
-//│ > Stack Trace:
-//│ > 	at tail position

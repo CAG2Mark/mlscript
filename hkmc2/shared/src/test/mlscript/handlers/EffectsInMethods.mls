@@ -12,6 +12,16 @@ class Test with
   fun p(h, x) =
     h.perform("A", x) + h.perform("B", x + 1)
 let t = new Test
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.13: 	    h.perform("A", x) + h.perform("B", x + 1)
+//│ ╙──      	    ^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.13: 	    h.perform("A", x) + h.perform("B", x + 1)
+//│ ╙──      	                        ^^^^^^^^^^^^^^^^^^^^^
 //│ t = Test
 
 handle h = Effect with
@@ -19,10 +29,82 @@ handle h = Effect with
     print(arg)
     k(x * 2)
 [t.p(h, 2), t.p(h, 3)]
-//│ > A
-//│ > B
-//│ > A
-//│ > B
-//│ = [10, 14]
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.30: 	    k(x * 2)
+//│ ╙──      	    ^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.31: 	[t.p(h, 2), t.p(h, 3)]
+//│ ╙──      	 ^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.31: 	[t.p(h, 2), t.p(h, 3)]
+//│ ╙──      	            ^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(tmp:block$res -> block$res2, h -> h, member:cpsCont$ -> cpsCont$, class:Handler$h$ -> Handler$h$, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, tmp:block$res -> block$res, member:Handler$h$perform -> Handler$h$perform, member:Effect -> Effect1, class:Effect -> Effect, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res3, member:cpsCont -> cpsCont, tmp:block$res -> block$res1, member:Test -> Test1, class:Test -> Test, member:cpsCont -> cpsCont1, member:Handler$h$perform$ -> Handler$h$perform$, t -> t, class:Capture$scope2 -> Capture$scope2, member:Capture$scope2 -> Capture$scope21)
+//│         curThis = S of S of class:Handler$h$⁰
+//│         bindings = HashMap()
+//│       bindings = HashMap(k -> k, arg -> arg, x -> x)
+//│     bindings = HashMap(tmp:Handler$h$perform$here -> Handler$h$perform$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(tmp:block$res -> block$res2, h -> h, member:cpsCont$ -> cpsCont$, class:Handler$h$ -> Handler$h$, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, tmp:block$res -> block$res, member:Handler$h$perform -> Handler$h$perform, member:Effect -> Effect1, class:Effect -> Effect, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res3, member:cpsCont -> cpsCont, tmp:block$res -> block$res1, member:Test -> Test1, class:Test -> Test, member:cpsCont -> cpsCont1, member:Handler$h$perform$ -> Handler$h$perform$, t -> t, class:Capture$scope2 -> Capture$scope2, member:Capture$scope2 -> Capture$scope21)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│     at REPL17:1:2215
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 

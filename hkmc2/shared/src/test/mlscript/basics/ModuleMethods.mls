@@ -135,6 +135,12 @@ fun f3() = (() => return M)()
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful reference of type M.
 //│ ║  l.134: 	fun f3() = (() => return M)()
 //│ ╙──       	                         ^
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.134: 	fun f3() = (() => return M)()
+//│ ╙──       	                  ^^^^^^^^
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.134: 	fun f3() = (() => return M)()
+//│ ╙──       	           ^^^^^^^^^^^^^^^^^^
 
 
 
@@ -143,7 +149,7 @@ fun f3() = (() => return M)()
 :e
 fun f(module m: M) = m
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful reference of type M.
-//│ ║  l.144: 	fun f(module m: M) = m
+//│ ║  l.150: 	fun f(module m: M) = m
 //│ ║         	                     ^
 //│ ╙── Function must be marked as returning a 'module' in order to return a module.
 
@@ -156,7 +162,7 @@ fun f(module m: M): module M = m
 :e
 val v = M
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful reference of type M.
-//│ ║  l.157: 	val v = M
+//│ ║  l.163: 	val v = M
 //│ ║         	        ^
 //│ ╙── Value must be marked as returning a 'module' in order to return a module.
 
@@ -179,8 +185,8 @@ class C with
   fun foo: module M = M
   val bar: module M = M
 //│ ╔══[COMPILATION ERROR] Function returning modules should not be a class member.
-//│ ║  l.179: 	  fun foo: module M = M
+//│ ║  l.185: 	  fun foo: module M = M
 //│ ╙──       	  ^^^^^^^^^^^^^^^^^^^^^
 //│ ╔══[COMPILATION ERROR] Value returning modules should not be a class member.
-//│ ║  l.180: 	  val bar: module M = M
+//│ ║  l.186: 	  val bar: module M = M
 //│ ╙──       	  ^^^^^^^^^^^^^^^^^^^^^

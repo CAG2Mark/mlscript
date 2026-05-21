@@ -13,12 +13,78 @@ handle h = Effect with
     "A"
 h.perform("B")
 let x = 123
-//│ = "A"
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.14: 	h.perform("B")
+//│ ╙──      	^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(class:Effect -> Effect, member:cpsCont -> cpsCont, tmp:block$res -> block$res1, h -> h, class:Handler$h$ -> Handler$h$, tmp:runtime -> runtime, tmp:block$res -> block$res2, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, tmp:block$res -> block$res, member:Handler$h$ -> Handler$h$1, member:Effect -> Effect1)
+//│         curThis = S of S of class:Handler$h$⁰
+//│         bindings = HashMap()
+//│       bindings = HashMap(arg -> arg, k -> k)
+//│     bindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(class:Effect -> Effect, member:cpsCont -> cpsCont, tmp:block$res -> block$res1, h -> h, class:Handler$h$ -> Handler$h$, tmp:runtime -> runtime, tmp:block$res -> block$res2, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, tmp:block$res -> block$res, member:Handler$h$ -> Handler$h$1, member:Effect -> Effect1)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│     at REPL13:1:1103
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 :e
 x
 //│ ╔══[COMPILATION ERROR] Name not found: x
-//│ ║  l.19: 	x
+//│ ║  l.85: 	x
 //│ ╙──      	^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
@@ -28,13 +94,74 @@ handle h = Effect with
     print(arg)
 let x = 123
 x + 1
-//│ = 124
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont -> cpsCont, tmp:block$res -> block$res4, tmp:runtime -> runtime, tmp:block$res -> block$res2, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res3, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, h -> h1, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res, member:Effect -> Effect1, class:Effect -> Effect, tmp:tmp -> tmp1, member:handleBlock$ -> handleBlock$1, member:Handler$h$perform -> Handler$h$perform1, tmp:block$res -> block$res1, member:Handler$h$ -> Handler$h$3, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont -> cpsCont1, member:Handler$h$perform$ -> Handler$h$perform$, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1)
+//│         curThis = S of S of class:Handler$h$¹
+//│         bindings = HashMap()
+//│       bindings = HashMap(arg -> arg, k -> k)
+//│     bindings = HashMap(tmp:Handler$h$perform$here -> Handler$h$perform$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(member:cpsCont -> cpsCont, tmp:block$res -> block$res4, tmp:runtime -> runtime, tmp:block$res -> block$res2, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res3, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, h -> h1, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res, member:Effect -> Effect1, class:Effect -> Effect, tmp:tmp -> tmp1, member:handleBlock$ -> handleBlock$1, member:Handler$h$perform -> Handler$h$perform1, tmp:block$res -> block$res1, member:Handler$h$ -> Handler$h$3, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont -> cpsCont1, member:Handler$h$perform$ -> Handler$h$perform$, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│     at REPL19:1:1291
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 :e
 x
 //│ ╔══[COMPILATION ERROR] Name not found: x
-//│ ║  l.34: 	x
-//│ ╙──      	^
+//│ ║  l.161: 	x
+//│ ╙──       	^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 
@@ -42,12 +169,74 @@ handle h = Effect with
   fun perform(arg)(k) =
     print(arg)
 val y = 123
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont -> cpsCont, tmp:block$res -> block$res4, tmp:block$res -> block$res5, h -> h2, class:Handler$h$ -> Handler$h$4, tmp:runtime -> runtime, tmp:block$res -> block$res2, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res3, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, h -> h1, class:Handler$h$ -> Handler$h$2, tmp:tmp -> tmp2, member:handleBlock$ -> handleBlock$2, member:Handler$h$perform -> Handler$h$perform2, tmp:block$res -> block$res, member:Handler$h$ -> Handler$h$5, member:Effect -> Effect1, class:Effect -> Effect, tmp:tmp -> tmp1, member:handleBlock$ -> handleBlock$1, member:Handler$h$perform -> Handler$h$perform1, member:cpsCont -> cpsCont2, tmp:block$res -> block$res1, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$1, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont -> cpsCont1, member:Handler$h$perform$ -> Handler$h$perform$, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, tmp:block$res -> block$res6, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1)
+//│         curThis = S of S of class:Handler$h$²
+//│         bindings = HashMap()
+//│       bindings = HashMap(arg -> arg, k -> k)
+//│     bindings = HashMap(tmp:Handler$h$perform$here -> Handler$h$perform$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(member:cpsCont -> cpsCont, tmp:block$res -> block$res4, tmp:block$res -> block$res5, h -> h2, class:Handler$h$ -> Handler$h$4, tmp:runtime -> runtime, tmp:block$res -> block$res2, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res3, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, h -> h1, class:Handler$h$ -> Handler$h$2, tmp:tmp -> tmp2, member:handleBlock$ -> handleBlock$2, member:Handler$h$perform -> Handler$h$perform2, tmp:block$res -> block$res, member:Handler$h$ -> Handler$h$5, member:Effect -> Effect1, class:Effect -> Effect, tmp:tmp -> tmp1, member:handleBlock$ -> handleBlock$1, member:Handler$h$perform -> Handler$h$perform1, member:cpsCont -> cpsCont2, tmp:block$res -> block$res1, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$1, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont -> cpsCont1, member:Handler$h$perform$ -> Handler$h$perform$, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, tmp:block$res -> block$res6, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│     at REPL25:1:1303
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 :e
 y
 //│ ╔══[COMPILATION ERROR] Name not found: y
-//│ ║  l.47: 	y
-//│ ╙──      	^
+//│ ║  l.236: 	y
+//│ ╙──       	^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 

@@ -9,7 +9,7 @@ class NofibCompileTestRunner extends CompileTestRunnerBase(
 ):
   protected def cctx: CompilerCtx = NofibCompileTestRunner.cctx
   
-  override final def benchmarkHandlers = false
+  override final def benchmarkHandlers = true
 
 end NofibCompileTestRunner
 

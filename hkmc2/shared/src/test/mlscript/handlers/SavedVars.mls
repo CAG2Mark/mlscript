@@ -21,48 +21,42 @@ fun g() =
       2
   a
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let g;
-//│ runtime.resetEffects();
-//│ g = function g() {
-//│   let scrut, tmp, pc;
-//│   if (runtime.resumePc === -1) {
-//│     pc = 0;
-//│   } else {
-//│     pc = runtime.resumePc;
-//│     runtime.resumePc = -1;
+//│ let g, Capture$scope01, cpsCont$, cpsCont$1;
+//│ (class Capture$scope0 {
+//│   static {
+//│     Capture$scope01 = this
 //│   }
-//│   main: while (true) {
-//│     switch (pc) {
-//│       case 0:
-//│         runtime.resumeValue = always_true();
-//│         if (runtime.curEffect === null) {
-//│           pc = 3;
-//│         } else {
-//│           return runtime.unwind(g, 3, "SavedVars.mls:17:8", null, null, 1, 0, 0)
-//│         }
-//│       case 3:
-//│         scrut = runtime.resumeValue;
-//│         if (scrut === true) {
-//│           runtime.resumeValue = f();
-//│           if (runtime.curEffect === null) {
-//│             pc = 2;
-//│             continue main
-//│           }
-//│           return runtime.unwind(g, 2, "SavedVars.mls:18:7", null, null, 1, 0, 0);
-//│         }
-//│         tmp = 2;
-//│         pc = 1;
-//│         continue main;
-//│       case 2:
-//│         runtime.resumeValue;
-//│         tmp = 1;
-//│         pc = 1;
-//│         if (1 === 1) { return 1 }
-//│         break;
-//│       case 1:
-//│         return tmp;
+//│   constructor(scrut$0, tmp$1) {
+//│     this.tmp$1 = tmp$1;
+//│     this.scrut$0 = scrut$0;
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Capture$scope0"]; 
+//│ });
+//│ cpsCont$1 = function cpsCont$(scope0$cap) {
+//│   return (retVal) => {
+//│     scope0$cap.tmp$1 = 1;
+//│     return
+//│   }
+//│ };
+//│ cpsCont$ = function cpsCont$(scope0$cap) {
+//│   return (retVal) => {
+//│     let inlinedVal;
+//│     scope0$cap.scrut$0 = retVal;
+//│     if (scope0$cap.scrut$0 === true) {
+//│       let cpsCont$here;
+//│       cpsCont$here = cpsCont$1(scope0$cap);
+//│       inlinedVal = f(cpsCont$here);
+//│       return inlinedVal
 //│     }
-//│     break;
+//│     scope0$cap.tmp$1 = 2;
+//│     return;
 //│   }
+//│ };
+//│ g = function g(k) {
+//│   let scope0$cap, cpsCont$here;
+//│   scope0$cap = new Capture$scope01(undefined, undefined);
+//│   cpsCont$here = cpsCont$(scope0$cap);
+//│   return always_true(cpsCont$here)
 //│ };
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————

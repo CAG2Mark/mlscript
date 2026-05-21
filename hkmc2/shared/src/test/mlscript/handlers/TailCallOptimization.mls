@@ -20,7 +20,86 @@ fun foobar(z) =
   // stuff after tail call is linked differently
   3
 foobar(0)
-//│ = 3
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.10: 	  fun perform()(resume) = resume()
+//│ ╙──      	                          ^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.12: 	  h.perform()
+//│ ╙──      	  ^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.15: 	  h.perform()
+//│ ╙──      	  ^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(tmp:tmp -> tmp, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$ -> handleBlock$, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:Handler$h$perform -> Handler$h$perform, tmp:Block -> Block, tmp:option -> option, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res, member:cpsCont -> cpsCont, member:StackDelay -> StackDelay1, class:StackDelay -> StackDelay, member:cpsCont -> cpsCont1, tmp:block$res -> block$res2, tmp:block$res -> block$res1, member:bar -> bar, member:foobar -> foobar, member:foo -> foo, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont$ -> cpsCont$)
+//│         curThis = S of S of class:Handler$h$⁰
+//│         bindings = HashMap()
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(tmp:tmp -> tmp, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$ -> handleBlock$, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:Handler$h$perform -> Handler$h$perform, tmp:Block -> Block, tmp:option -> option, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res, member:cpsCont -> cpsCont, member:StackDelay -> StackDelay1, class:StackDelay -> StackDelay, member:cpsCont -> cpsCont1, tmp:block$res -> block$res2, tmp:block$res -> block$res1, member:bar -> bar, member:foobar -> foobar, member:foo -> foo, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont$ -> cpsCont$)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│     at REPL13:1:1541
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:297)
+//│ ═══[RUNTIME ERROR] Expected: '3', got: 'undefined'
 
 
 // Check that tail call optimization is applied in presence of effect handlers: there should be no function calls in the body.
@@ -33,31 +112,19 @@ fun hi(n) =
   else hi(n - 1)
 hi(0)
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let hi, tmp1, $_stack$_safe$_body$_;
-//│ runtime.resetEffects();
-//│ hi = function hi(n) {
+//│ let hi;
+//│ hi = function hi(k, n) {
 //│   loopLabel: while (true) {
-//│     runtime.stackDepth = runtime.stackDepth + 1;
-//│     runtime.checkDepth();
-//│     if (runtime.curEffect === null) {
-//│       let scrut, tmp2;
-//│       scrut = n === 0;
-//│       if (scrut === true) {
-//│         return 0
-//│       }
-//│       {
-//│         tmp2 = n - 1;
-//│         n = tmp2;
-//│         continue loopLabel;
-//│       }
+//│     let scrut, tmp1;
+//│     scrut = n === 0;
+//│     if (scrut === true) {
+//│       return k(0)
 //│     }
-//│     return runtime.unwind(hi, -1, "TailCallOptimization.mls:31:1", null, null, 1, 1, n, 0);
+//│     tmp1 = n - 1;
+//│     n = tmp1;
+//│     continue loopLabel;
 //│   }
 //│ };
-//│ $_stack$_safe$_body$_ = (undefined, function () {
-//│   return hi(0)
-//│ });
-//│ tmp1 = runtime.runStackSafe(1000, $_stack$_safe$_body$_);
-//│ if (runtime.curEffect === null) { tmp1 } else { tmp1 = runtime.topLevelEffect(false); tmp1 }
+//│ hi(runtime.cpsId, 0)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 0

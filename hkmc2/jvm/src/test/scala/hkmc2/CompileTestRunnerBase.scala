@@ -64,7 +64,7 @@ abstract class CompileTestRunnerBase(
           if benchmarkHandlers then Config.default(mainTestDir).copy(
             //effectHandlers = S(EffectHandlers(false, S(StackSafety(1500)), true, false, false)),
             effectHandlers = S(EffectHandlers(false, N, true, false, false)),
-            liftDefns = S(LiftDefns()),
+            // liftDefns = S(LiftDefns()),
             )
           else Config.default(mainTestDir).copy(liftDefns = S(LiftDefns()))
         

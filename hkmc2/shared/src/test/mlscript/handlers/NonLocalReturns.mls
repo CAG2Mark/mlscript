@@ -7,15 +7,167 @@ fun f() =
   (() => return 100)()
   print("Bad")
 f()
-//│ = 100
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.7: 	  (() => return 100)()
+//│ ╙──     	         ^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.7: 	  (() => return 100)()
+//│ ╙──     	  ^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(class:Capture$scope0 -> Capture$scope0, class:‹non-local return effect› -> $_non$_local$_return$_effect$_, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$, member:Capture$scope0 -> Capture$scope01, member:cpsCont$ -> cpsCont$, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$$ -> handleBlock$$, tmp:prettyPrint -> prettyPrint, member:lambda -> lambda, tmp:Term -> Term, tmp:Block -> Block, member:handleBlock$ -> handleBlock$, tmp:option -> option, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret, member:‹non-local return effect› -> $_non$_local$_return$_effect$_1, tmp:block$res -> block$res, tmp:block$res -> block$res1, member:f -> f, member:cpsCont -> cpsCont)
+//│         curThis = S of S of class:‹non-local return effect›⁰
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(value -> value, k -> k1)
+//│     bindings = HashMap(tmp:‹non-local return effect›ret$here -> $_non$_local$_return$_effect$_ret$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Left of Cfg:
+//│           escapeChars = true
+//│           useSuperscripts = false
+//│           includeZero = false
+//│           defaultName = "tmp"
+//│         curThis = S of S of globalThis:globalThis⁰
+//│         bindings = HashMap(class:Capture$scope0 -> Capture$scope0, class:‹non-local return effect› -> $_non$_local$_return$_effect$_, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$, member:Capture$scope0 -> Capture$scope01, member:cpsCont$ -> cpsCont$, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$$ -> handleBlock$$, tmp:prettyPrint -> prettyPrint, member:lambda -> lambda, tmp:Term -> Term, tmp:Block -> Block, member:handleBlock$ -> handleBlock$, tmp:option -> option, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret, member:‹non-local return effect› -> $_non$_local$_return$_effect$_1, tmp:block$res -> block$res, tmp:block$res -> block$res1, member:f -> f, member:cpsCont -> cpsCont)
+//│       curThis = S of N
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap(tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here, scope0$cap -> scope0$cap, tmp:nonLocalRetHandler$f -> nonLocalRetHandler$f)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+//│     at new $_non$_local$_return$_effect$_ (REPL10:1:1680)
+//│     at f (REPL10:1:2489)
+//│     at REPL10:1:2803
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
 
 
 fun foo(x) =
   let xs = [() => return x + 1]
   xs.0()
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.90: 	  let xs = [() => return x + 1]
+//│ ╙──      	                  ^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.91: 	  xs.0()
+//│ ╙──      	  ^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(class:Capture$scope0 -> Capture$scope0, member:lambda$ -> lambda$, member:Capture$scope0 -> Capture$scope01, class:‹non-local return effect› -> $_non$_local$_return$_effect$_2, member:cpsCont$ -> cpsCont$, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$$ -> handleBlock$$, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$1, tmp:Block -> Block, tmp:option -> option, member:lambda -> lambda1, member:handleBlock$ -> handleBlock$1, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret1, member:‹non-local return effect› -> $_non$_local$_return$_effect$_3, tmp:block$res -> block$res, member:f -> f, member:cpsCont -> cpsCont1, class:‹non-local return effect› -> $_non$_local$_return$_effect$_, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope03, member:lambda -> lambda, member:cpsCont$ -> cpsCont$1, member:handleBlock$ -> handleBlock$, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret, member:handleBlock$$ -> handleBlock$$1, tmp:block$res -> block$res2, member:‹non-local return effect› -> $_non$_local$_return$_effect$_1, tmp:block$res -> block$res1, member:cpsCont -> cpsCont, member:foo -> foo)
+//│         curThis = S of S of class:‹non-local return effect›¹
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(value -> value, k -> k1)
+//│     bindings = HashMap(tmp:‹non-local return effect›ret$here -> $_non$_local$_return$_effect$_ret$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Left of Cfg:
+//│           escapeChars = true
+//│           useSuperscripts = false
+//│           includeZero = false
+//│           defaultName = "tmp"
+//│         curThis = S of S of globalThis:globalThis⁰
+//│         bindings = HashMap(class:Capture$scope0 -> Capture$scope0, member:lambda$ -> lambda$, member:Capture$scope0 -> Capture$scope01, class:‹non-local return effect› -> $_non$_local$_return$_effect$_2, member:cpsCont$ -> cpsCont$, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$$ -> handleBlock$$, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$1, tmp:Block -> Block, tmp:option -> option, member:lambda -> lambda1, member:handleBlock$ -> handleBlock$1, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret1, member:‹non-local return effect› -> $_non$_local$_return$_effect$_3, tmp:block$res -> block$res, member:f -> f, member:cpsCont -> cpsCont1, class:‹non-local return effect› -> $_non$_local$_return$_effect$_, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$, class:Capture$scope0 -> Capture$scope02, member:Capture$scope0 -> Capture$scope03, member:lambda -> lambda, member:cpsCont$ -> cpsCont$1, member:handleBlock$ -> handleBlock$, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret, member:handleBlock$$ -> handleBlock$$1, tmp:block$res -> block$res2, member:‹non-local return effect› -> $_non$_local$_return$_effect$_1, tmp:block$res -> block$res1, member:cpsCont -> cpsCont, member:foo -> foo)
+//│       curThis = S of N
+//│       bindings = HashMap(x -> x, k -> k)
+//│     bindings = HashMap(tmp:nonLocalRetHandler$foo -> nonLocalRetHandler$foo, tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here, scope0$cap -> scope0$cap)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 
 foo(123)
-//│ = 124
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+//│     at new $_non$_local$_return$_effect$_2 (REPL13:1:1932)
+//│     at foo (REPL13:1:2755)
+//│     at REPL16:1:38
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
 
 
 :expect 123
@@ -31,8 +183,152 @@ fun f() =
   print("Bad")
   100
 f()
-//│ > Ok
-//│ = 123
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.177: 	    let lam2 = () => return 200
+//│ ╙──       	                     ^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.178: 	    lam()
+//│ ╙──       	    ^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.179: 	    lam2()
+//│ ╙──       	    ^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.175: 	  let lam = () => return 123
+//│ ╙──       	                  ^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope0, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, member:lambda$ -> lambda$, member:Capture$scope0 -> Capture$scope01, member:cpsCont -> cpsCont6, class:Capture$scope0 -> Capture$scope04, member:cpsCont$ -> cpsCont$, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$$ -> handleBlock$$, member:Capture$scope0 -> Capture$scope05, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$1, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$2, member:handleBlock$$ -> handleBlock$$2, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$, member:cpsCont$ -> cpsCont$3, member:lam$ -> lam$, tmp:block$res -> block$res2, tmp:block$res -> block$res3, member:g -> g, member:cpsCont$ -> cpsCont$4, member:f -> f1, tmp:block$res -> block$res1, member:foo -> foo, member:cpsCont$ -> cpsCont$5, class:‹non-local return effect› -> $_non$_local$_return$_effect$_4, class:‹non-local return effect› -> $_non$_local$_return$_effect$_2, class:Capture$scope5 -> Capture$scope5, member:Capture$scope5 -> Capture$scope51, class:‹non-local return effect› -> $_non$_local$_return$_effect$_5, member:lambda -> lambda1, member:handleBlock$ -> handleBlock$1, member:cpsCont$ -> cpsCont$6, tmp:block$res -> block$res4, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret1, member:handleBlock$$ -> handleBlock$$3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_3, tmp:block$res -> block$res, member:handleBlock$ -> handleBlock$2, member:f -> f, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret2, member:‹non-local return effect› -> $_non$_local$_return$_effect$_6, member:cpsCont -> cpsCont1, member:handleBlock$ -> handleBlock$3, class:‹non-local return effect› -> $_non$_local$_return$_effect$_, class:Capture$scope0 -> Capture$scope02, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_7, member:lam2$ -> lam2$, member:Capture$scope0 -> Capture$scope03, member:lam2 -> lam2, member:lam -> lam, member:lambda -> lambda, member:cpsCont$ -> cpsCont$1, member:handleBlock$ -> handleBlock$, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret, member:handleBlock$$ -> handleBlock$$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$2, member:‹non-local return effect› -> $_non$_local$_return$_effect$_1, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$3)
+//│         curThis = S of S of class:‹non-local return effect›²
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(k -> k1, value -> value)
+//│     bindings = HashMap(tmp:‹non-local return effect›ret$here -> $_non$_local$_return$_effect$_ret$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope0, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, member:lambda$ -> lambda$, member:Capture$scope0 -> Capture$scope01, member:cpsCont -> cpsCont6, class:Capture$scope0 -> Capture$scope04, member:cpsCont$ -> cpsCont$, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$$ -> handleBlock$$, member:Capture$scope0 -> Capture$scope05, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$1, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$2, member:handleBlock$$ -> handleBlock$$2, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$, member:cpsCont$ -> cpsCont$3, member:lam$ -> lam$, tmp:block$res -> block$res2, tmp:block$res -> block$res3, member:g -> g, member:cpsCont$ -> cpsCont$4, member:f -> f1, tmp:block$res -> block$res1, member:foo -> foo, member:cpsCont$ -> cpsCont$5, class:‹non-local return effect› -> $_non$_local$_return$_effect$_4, class:‹non-local return effect› -> $_non$_local$_return$_effect$_2, class:Capture$scope5 -> Capture$scope5, member:Capture$scope5 -> Capture$scope51, class:‹non-local return effect› -> $_non$_local$_return$_effect$_5, member:lambda -> lambda1, member:handleBlock$ -> handleBlock$1, member:cpsCont$ -> cpsCont$6, tmp:block$res -> block$res4, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret1, member:handleBlock$$ -> handleBlock$$3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_3, tmp:block$res -> block$res, member:handleBlock$ -> handleBlock$2, member:f -> f, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret2, member:‹non-local return effect› -> $_non$_local$_return$_effect$_6, member:cpsCont -> cpsCont1, member:handleBlock$ -> handleBlock$3, class:‹non-local return effect› -> $_non$_local$_return$_effect$_, class:Capture$scope0 -> Capture$scope02, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_7, member:lam2$ -> lam2$, member:Capture$scope0 -> Capture$scope03, member:lam2 -> lam2, member:lam -> lam, member:lambda -> lambda, member:cpsCont$ -> cpsCont$1, member:handleBlock$ -> handleBlock$, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret, member:handleBlock$$ -> handleBlock$$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$2, member:‹non-local return effect› -> $_non$_local$_return$_effect$_1, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$3)
+//│         curThis = S of N
+//│         bindings = HashMap(lam -> lam1, k -> k)
+//│       bindings = HashMap(retVal -> retVal)
+//│     bindings = HashMap(tmp:inlinedVal -> inlinedVal, tmp:nonLocalRetHandler$g -> nonLocalRetHandler$g, scope5$cap -> scope5$cap, tmp:cpsCont$here -> cpsCont$here1, tmp:handleBlock$$here -> handleBlock$$here, tmp:cpsCont$here -> cpsCont$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope0, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, member:lambda$ -> lambda$, member:Capture$scope0 -> Capture$scope01, member:cpsCont -> cpsCont6, class:Capture$scope0 -> Capture$scope04, member:cpsCont$ -> cpsCont$, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$$ -> handleBlock$$, member:Capture$scope0 -> Capture$scope05, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$1, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$2, member:handleBlock$$ -> handleBlock$$2, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$, member:cpsCont$ -> cpsCont$3, member:lam$ -> lam$, tmp:block$res -> block$res2, tmp:block$res -> block$res3, member:g -> g, member:cpsCont$ -> cpsCont$4, member:f -> f1, tmp:block$res -> block$res1, member:foo -> foo, member:cpsCont$ -> cpsCont$5, class:‹non-local return effect› -> $_non$_local$_return$_effect$_4, class:‹non-local return effect› -> $_non$_local$_return$_effect$_2, class:Capture$scope5 -> Capture$scope5, member:Capture$scope5 -> Capture$scope51, class:‹non-local return effect› -> $_non$_local$_return$_effect$_5, member:lambda -> lambda1, member:handleBlock$ -> handleBlock$1, member:cpsCont$ -> cpsCont$6, tmp:block$res -> block$res4, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret1, member:handleBlock$$ -> handleBlock$$3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_3, tmp:block$res -> block$res, member:handleBlock$ -> handleBlock$2, member:f -> f, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret2, member:‹non-local return effect› -> $_non$_local$_return$_effect$_6, member:cpsCont -> cpsCont1, member:handleBlock$ -> handleBlock$3, class:‹non-local return effect› -> $_non$_local$_return$_effect$_, class:Capture$scope0 -> Capture$scope02, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_7, member:lam2$ -> lam2$, member:Capture$scope0 -> Capture$scope03, member:lam2 -> lam2, member:lam -> lam, member:lambda -> lambda, member:cpsCont$ -> cpsCont$1, member:handleBlock$ -> handleBlock$, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret, member:handleBlock$$ -> handleBlock$$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$2, member:‹non-local return effect› -> $_non$_local$_return$_effect$_1, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$3)
+//│         curThis = S of S of class:‹non-local return effect›³
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(value -> value, k -> k1)
+//│     bindings = HashMap(tmp:‹non-local return effect›ret$here -> $_non$_local$_return$_effect$_ret$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Left of Cfg:
+//│           escapeChars = true
+//│           useSuperscripts = false
+//│           includeZero = false
+//│           defaultName = "tmp"
+//│         curThis = S of S of globalThis:globalThis⁰
+//│         bindings = HashMap(member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope0, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, member:lambda$ -> lambda$, member:Capture$scope0 -> Capture$scope01, member:cpsCont -> cpsCont6, class:Capture$scope0 -> Capture$scope04, member:cpsCont$ -> cpsCont$, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:handleBlock$$ -> handleBlock$$, member:Capture$scope0 -> Capture$scope05, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$1, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$2, member:handleBlock$$ -> handleBlock$$2, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$, member:cpsCont$ -> cpsCont$3, member:lam$ -> lam$, tmp:block$res -> block$res2, tmp:block$res -> block$res3, member:g -> g, member:cpsCont$ -> cpsCont$4, member:f -> f1, tmp:block$res -> block$res1, member:foo -> foo, member:cpsCont$ -> cpsCont$5, class:‹non-local return effect› -> $_non$_local$_return$_effect$_4, class:‹non-local return effect› -> $_non$_local$_return$_effect$_2, class:Capture$scope5 -> Capture$scope5, member:Capture$scope5 -> Capture$scope51, class:‹non-local return effect› -> $_non$_local$_return$_effect$_5, member:lambda -> lambda1, member:handleBlock$ -> handleBlock$1, member:cpsCont$ -> cpsCont$6, tmp:block$res -> block$res4, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret1, member:handleBlock$$ -> handleBlock$$3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_3, tmp:block$res -> block$res, member:handleBlock$ -> handleBlock$2, member:f -> f, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret2, member:‹non-local return effect› -> $_non$_local$_return$_effect$_6, member:cpsCont -> cpsCont1, member:handleBlock$ -> handleBlock$3, class:‹non-local return effect› -> $_non$_local$_return$_effect$_, class:Capture$scope0 -> Capture$scope02, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_7, member:lam2$ -> lam2$, member:Capture$scope0 -> Capture$scope03, member:lam2 -> lam2, member:lam -> lam, member:lambda -> lambda, member:cpsCont$ -> cpsCont$1, member:handleBlock$ -> handleBlock$, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret, member:handleBlock$$ -> handleBlock$$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$2, member:‹non-local return effect› -> $_non$_local$_return$_effect$_1, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$3)
+//│       curThis = S of N
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap(scope0$cap -> scope0$cap, tmp:nonLocalRetHandler$f -> nonLocalRetHandler$f, tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+//│     at new $_non$_local$_return$_effect$_5 (REPL19:1:5561)
+//│     at f (REPL19:1:6372)
+//│     at REPL19:1:6688
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:297)
+//│ ═══[RUNTIME ERROR] Expected: '123', got: 'undefined'
 
 :expect 100
 fun f() =
@@ -47,28 +343,298 @@ fun f() =
   print("Continue")
   100
 f()
-//│ > Ok
-//│ > 200
-//│ > Continue
-//│ = 100
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.337: 	    let lam2 = () => return 200
+//│ ╙──       	                     ^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.338: 	    lam2()
+//│ ╙──       	    ^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.339: 	    lam()
+//│ ╙──       	    ^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.335: 	  let lam = () => return 123
+//│ ╙──       	                  ^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope0, member:cpsCont -> cpsCont4, member:‹non-local return effect› -> $_non$_local$_return$_effect$_10, member:cpsCont -> cpsCont5, member:handleBlock$ -> handleBlock$5, member:Capture$scope0 -> Capture$scope01, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret5, member:cpsCont -> cpsCont6, class:Capture$scope0 -> Capture$scope04, member:‹non-local return effect› -> $_non$_local$_return$_effect$_11, member:cpsCont$ -> cpsCont$, member:lam2 -> lam21, tmp:runtime -> runtime, member:lam -> lam1, tmp:definitionMetadata -> definitionMetadata, member:handleBlock$$ -> handleBlock$$, member:Capture$scope0 -> Capture$scope05, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$2, member:handleBlock$$ -> handleBlock$$2, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont9, member:lam$ -> lam$, member:cpsCont -> cpsCont10, class:Capture$scope0 -> Capture$scope06, member:Capture$scope0 -> Capture$scope07, member:cpsCont$ -> cpsCont$7, member:cpsCont$ -> cpsCont$4, member:handleBlock$$ -> handleBlock$$4, tmp:block$res -> block$res1, member:foo -> foo, member:cpsCont$ -> cpsCont$5, class:‹non-local return effect› -> $_non$_local$_return$_effect$_2, class:Capture$scope1 -> Capture$scope1, class:Capture$scope5 -> Capture$scope5, member:Capture$scope1 -> Capture$scope11, member:Capture$scope5 -> Capture$scope51, member:lambda -> lambda1, member:cpsCont$ -> cpsCont$8, member:handleBlock$ -> handleBlock$1, member:cpsCont$ -> cpsCont$6, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret1, member:lam$ -> lam$1, member:handleBlock$$ -> handleBlock$$3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_3, member:cpsCont -> cpsCont1, member:cpsCont$ -> cpsCont$9, class:Capture$scope0 -> Capture$scope02, member:lam2$ -> lam2$, member:Capture$scope0 -> Capture$scope03, class:Capture$scope4 -> Capture$scope4, member:cpsCont$ -> cpsCont$1, member:Capture$scope4 -> Capture$scope41, member:handleBlock$$ -> handleBlock$$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$2, member:cpsCont$ -> cpsCont$10, member:handleBlock$$ -> handleBlock$$5, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$3, member:lambda$ -> lambda$, member:lam2$ -> lam2$1, member:Predef -> Predef, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$4, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$5, tmp:block$res -> block$res2, tmp:block$res -> block$res3, member:g -> g, member:f -> f1, class:‹non-local return effect› -> $_non$_local$_return$_effect$_4, class:‹non-local return effect› -> $_non$_local$_return$_effect$_5, tmp:block$res -> block$res4, member:g -> g1, member:f -> f2, tmp:block$res -> block$res, member:handleBlock$ -> handleBlock$2, member:f -> f, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret2, member:‹non-local return effect› -> $_non$_local$_return$_effect$_6, class:‹non-local return effect› -> $_non$_local$_return$_effect$_8, member:handleBlock$ -> handleBlock$3, class:‹non-local return effect› -> $_non$_local$_return$_effect$_, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_7, member:lam2 -> lam2, member:lam -> lam, member:lambda -> lambda, member:handleBlock$ -> handleBlock$, class:‹non-local return effect› -> $_non$_local$_return$_effect$_9, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret, tmp:block$res -> block$res5, member:‹non-local return effect› -> $_non$_local$_return$_effect$_1, member:cpsCont -> cpsCont2, member:handleBlock$ -> handleBlock$4, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret4, member:cpsCont -> cpsCont)
+//│         curThis = S of S of class:‹non-local return effect›⁴
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(value -> value, k -> k1)
+//│     bindings = HashMap(tmp:‹non-local return effect›ret$here -> $_non$_local$_return$_effect$_ret$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope0, member:cpsCont -> cpsCont4, member:‹non-local return effect› -> $_non$_local$_return$_effect$_10, member:cpsCont -> cpsCont5, member:handleBlock$ -> handleBlock$5, member:Capture$scope0 -> Capture$scope01, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret5, member:cpsCont -> cpsCont6, class:Capture$scope0 -> Capture$scope04, member:‹non-local return effect› -> $_non$_local$_return$_effect$_11, member:cpsCont$ -> cpsCont$, member:lam2 -> lam21, tmp:runtime -> runtime, member:lam -> lam1, tmp:definitionMetadata -> definitionMetadata, member:handleBlock$$ -> handleBlock$$, member:Capture$scope0 -> Capture$scope05, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$2, member:handleBlock$$ -> handleBlock$$2, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont9, member:lam$ -> lam$, member:cpsCont -> cpsCont10, class:Capture$scope0 -> Capture$scope06, member:Capture$scope0 -> Capture$scope07, member:cpsCont$ -> cpsCont$7, member:cpsCont$ -> cpsCont$4, member:handleBlock$$ -> handleBlock$$4, tmp:block$res -> block$res1, member:foo -> foo, member:cpsCont$ -> cpsCont$5, class:‹non-local return effect› -> $_non$_local$_return$_effect$_2, class:Capture$scope1 -> Capture$scope1, class:Capture$scope5 -> Capture$scope5, member:Capture$scope1 -> Capture$scope11, member:Capture$scope5 -> Capture$scope51, member:lambda -> lambda1, member:cpsCont$ -> cpsCont$8, member:handleBlock$ -> handleBlock$1, member:cpsCont$ -> cpsCont$6, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret1, member:lam$ -> lam$1, member:handleBlock$$ -> handleBlock$$3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_3, member:cpsCont -> cpsCont1, member:cpsCont$ -> cpsCont$9, class:Capture$scope0 -> Capture$scope02, member:lam2$ -> lam2$, member:Capture$scope0 -> Capture$scope03, class:Capture$scope4 -> Capture$scope4, member:cpsCont$ -> cpsCont$1, member:Capture$scope4 -> Capture$scope41, member:handleBlock$$ -> handleBlock$$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$2, member:cpsCont$ -> cpsCont$10, member:handleBlock$$ -> handleBlock$$5, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$3, member:lambda$ -> lambda$, member:lam2$ -> lam2$1, member:Predef -> Predef, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$4, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$5, tmp:block$res -> block$res2, tmp:block$res -> block$res3, member:g -> g, member:f -> f1, class:‹non-local return effect› -> $_non$_local$_return$_effect$_4, class:‹non-local return effect› -> $_non$_local$_return$_effect$_5, tmp:block$res -> block$res4, member:g -> g1, member:f -> f2, tmp:block$res -> block$res, member:handleBlock$ -> handleBlock$2, member:f -> f, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret2, member:‹non-local return effect› -> $_non$_local$_return$_effect$_6, class:‹non-local return effect› -> $_non$_local$_return$_effect$_8, member:handleBlock$ -> handleBlock$3, class:‹non-local return effect› -> $_non$_local$_return$_effect$_, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_7, member:lam2 -> lam2, member:lam -> lam, member:lambda -> lambda, member:handleBlock$ -> handleBlock$, class:‹non-local return effect› -> $_non$_local$_return$_effect$_9, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret, tmp:block$res -> block$res5, member:‹non-local return effect› -> $_non$_local$_return$_effect$_1, member:cpsCont -> cpsCont2, member:handleBlock$ -> handleBlock$4, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret4, member:cpsCont -> cpsCont)
+//│         curThis = S of N
+//│         bindings = HashMap(lam -> lam3, scope1$cap -> scope1$cap)
+//│       bindings = HashMap(retVal -> retVal)
+//│     bindings = HashMap(tmp:inlinedVal -> inlinedVal, tmp:nonLocalRetHandler$g -> nonLocalRetHandler$g, scope4$cap -> scope4$cap, tmp:cpsCont$here -> cpsCont$here1, tmp:handleBlock$$here -> handleBlock$$here, tmp:cpsCont$here -> cpsCont$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope0, member:cpsCont -> cpsCont4, member:‹non-local return effect› -> $_non$_local$_return$_effect$_10, member:cpsCont -> cpsCont5, member:handleBlock$ -> handleBlock$5, member:Capture$scope0 -> Capture$scope01, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret5, member:cpsCont -> cpsCont6, class:Capture$scope0 -> Capture$scope04, member:‹non-local return effect› -> $_non$_local$_return$_effect$_11, member:cpsCont$ -> cpsCont$, member:lam2 -> lam21, tmp:runtime -> runtime, member:lam -> lam1, tmp:definitionMetadata -> definitionMetadata, member:handleBlock$$ -> handleBlock$$, member:Capture$scope0 -> Capture$scope05, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$2, member:handleBlock$$ -> handleBlock$$2, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont9, member:lam$ -> lam$, member:cpsCont -> cpsCont10, class:Capture$scope0 -> Capture$scope06, member:Capture$scope0 -> Capture$scope07, member:cpsCont$ -> cpsCont$7, member:cpsCont$ -> cpsCont$4, member:handleBlock$$ -> handleBlock$$4, tmp:block$res -> block$res1, member:foo -> foo, member:cpsCont$ -> cpsCont$5, class:‹non-local return effect› -> $_non$_local$_return$_effect$_2, class:Capture$scope1 -> Capture$scope1, class:Capture$scope5 -> Capture$scope5, member:Capture$scope1 -> Capture$scope11, member:Capture$scope5 -> Capture$scope51, member:lambda -> lambda1, member:cpsCont$ -> cpsCont$8, member:handleBlock$ -> handleBlock$1, member:cpsCont$ -> cpsCont$6, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret1, member:lam$ -> lam$1, member:handleBlock$$ -> handleBlock$$3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_3, member:cpsCont -> cpsCont1, member:cpsCont$ -> cpsCont$9, class:Capture$scope0 -> Capture$scope02, member:lam2$ -> lam2$, member:Capture$scope0 -> Capture$scope03, class:Capture$scope4 -> Capture$scope4, member:cpsCont$ -> cpsCont$1, member:Capture$scope4 -> Capture$scope41, member:handleBlock$$ -> handleBlock$$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$2, member:cpsCont$ -> cpsCont$10, member:handleBlock$$ -> handleBlock$$5, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$3, member:lambda$ -> lambda$, member:lam2$ -> lam2$1, member:Predef -> Predef, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$4, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$5, tmp:block$res -> block$res2, tmp:block$res -> block$res3, member:g -> g, member:f -> f1, class:‹non-local return effect› -> $_non$_local$_return$_effect$_4, class:‹non-local return effect› -> $_non$_local$_return$_effect$_5, tmp:block$res -> block$res4, member:g -> g1, member:f -> f2, tmp:block$res -> block$res, member:handleBlock$ -> handleBlock$2, member:f -> f, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret2, member:‹non-local return effect› -> $_non$_local$_return$_effect$_6, class:‹non-local return effect› -> $_non$_local$_return$_effect$_8, member:handleBlock$ -> handleBlock$3, class:‹non-local return effect› -> $_non$_local$_return$_effect$_, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_7, member:lam2 -> lam2, member:lam -> lam, member:lambda -> lambda, member:handleBlock$ -> handleBlock$, class:‹non-local return effect› -> $_non$_local$_return$_effect$_9, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret, tmp:block$res -> block$res5, member:‹non-local return effect› -> $_non$_local$_return$_effect$_1, member:cpsCont -> cpsCont2, member:handleBlock$ -> handleBlock$4, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret4, member:cpsCont -> cpsCont)
+//│         curThis = S of S of class:‹non-local return effect›⁵
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(k -> k1, value -> value)
+//│     bindings = HashMap(tmp:‹non-local return effect›ret$here -> $_non$_local$_return$_effect$_ret$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Left of Cfg:
+//│           escapeChars = true
+//│           useSuperscripts = false
+//│           includeZero = false
+//│           defaultName = "tmp"
+//│         curThis = S of S of globalThis:globalThis⁰
+//│         bindings = HashMap(member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope0, member:cpsCont -> cpsCont4, member:‹non-local return effect› -> $_non$_local$_return$_effect$_10, member:cpsCont -> cpsCont5, member:handleBlock$ -> handleBlock$5, member:Capture$scope0 -> Capture$scope01, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret5, member:cpsCont -> cpsCont6, class:Capture$scope0 -> Capture$scope04, member:‹non-local return effect› -> $_non$_local$_return$_effect$_11, member:cpsCont$ -> cpsCont$, member:lam2 -> lam21, tmp:runtime -> runtime, member:lam -> lam1, tmp:definitionMetadata -> definitionMetadata, member:handleBlock$$ -> handleBlock$$, member:Capture$scope0 -> Capture$scope05, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$2, member:handleBlock$$ -> handleBlock$$2, member:cpsCont -> cpsCont7, member:cpsCont -> cpsCont8, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont9, member:lam$ -> lam$, member:cpsCont -> cpsCont10, class:Capture$scope0 -> Capture$scope06, member:Capture$scope0 -> Capture$scope07, member:cpsCont$ -> cpsCont$7, member:cpsCont$ -> cpsCont$4, member:handleBlock$$ -> handleBlock$$4, tmp:block$res -> block$res1, member:foo -> foo, member:cpsCont$ -> cpsCont$5, class:‹non-local return effect› -> $_non$_local$_return$_effect$_2, class:Capture$scope1 -> Capture$scope1, class:Capture$scope5 -> Capture$scope5, member:Capture$scope1 -> Capture$scope11, member:Capture$scope5 -> Capture$scope51, member:lambda -> lambda1, member:cpsCont$ -> cpsCont$8, member:handleBlock$ -> handleBlock$1, member:cpsCont$ -> cpsCont$6, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret1, member:lam$ -> lam$1, member:handleBlock$$ -> handleBlock$$3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_3, member:cpsCont -> cpsCont1, member:cpsCont$ -> cpsCont$9, class:Capture$scope0 -> Capture$scope02, member:lam2$ -> lam2$, member:Capture$scope0 -> Capture$scope03, class:Capture$scope4 -> Capture$scope4, member:cpsCont$ -> cpsCont$1, member:Capture$scope4 -> Capture$scope41, member:handleBlock$$ -> handleBlock$$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$2, member:cpsCont$ -> cpsCont$10, member:handleBlock$$ -> handleBlock$$5, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$3, member:lambda$ -> lambda$, member:lam2$ -> lam2$1, member:Predef -> Predef, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$4, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$5, tmp:block$res -> block$res2, tmp:block$res -> block$res3, member:g -> g, member:f -> f1, class:‹non-local return effect› -> $_non$_local$_return$_effect$_4, class:‹non-local return effect› -> $_non$_local$_return$_effect$_5, tmp:block$res -> block$res4, member:g -> g1, member:f -> f2, tmp:block$res -> block$res, member:handleBlock$ -> handleBlock$2, member:f -> f, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret2, member:‹non-local return effect› -> $_non$_local$_return$_effect$_6, class:‹non-local return effect› -> $_non$_local$_return$_effect$_8, member:handleBlock$ -> handleBlock$3, class:‹non-local return effect› -> $_non$_local$_return$_effect$_, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_7, member:lam2 -> lam2, member:lam -> lam, member:lambda -> lambda, member:handleBlock$ -> handleBlock$, class:‹non-local return effect› -> $_non$_local$_return$_effect$_9, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret, tmp:block$res -> block$res5, member:‹non-local return effect› -> $_non$_local$_return$_effect$_1, member:cpsCont -> cpsCont2, member:handleBlock$ -> handleBlock$4, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret4, member:cpsCont -> cpsCont)
+//│       curThis = S of N
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap(tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here, scope0$cap -> scope0$cap, tmp:nonLocalRetHandler$f -> nonLocalRetHandler$f)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+//│     at new $_non$_local$_return$_effect$_9 (REPL22:1:5577)
+//│     at f (REPL22:1:6388)
+//│     at REPL22:1:6705
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:297)
+//│ ═══[RUNTIME ERROR] Expected: '100', got: 'undefined'
 
 
 :re
 fun f() = () => return 3
 f()()
-//│ ═══[RUNTIME ERROR] Error: Unhandled effect $_non$_local$_return$_effect$_12
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.495: 	fun f() = () => return 3
+//│ ╙──       	                ^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.496: 	f()()
+//│ ╙──       	^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope0, member:cpsCont -> cpsCont4, member:‹non-local return effect› -> $_non$_local$_return$_effect$_10, member:cpsCont -> cpsCont5, member:handleBlock$ -> handleBlock$5, member:handleBlock$ -> handleBlock$6, member:Capture$scope0 -> Capture$scope01, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret5, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret6, member:cpsCont -> cpsCont6, class:Capture$scope0 -> Capture$scope04, member:‹non-local return effect› -> $_non$_local$_return$_effect$_11, member:‹non-local return effect› -> $_non$_local$_return$_effect$_13, member:cpsCont$ -> cpsCont$, member:lam2 -> lam21, tmp:baseCall -> baseCall, member:lambda -> lambda2, tmp:runtime -> runtime, member:lam -> lam1, tmp:definitionMetadata -> definitionMetadata, member:handleBlock$$ -> handleBlock$$, member:Capture$scope0 -> Capture$scope05, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$2, member:cpsCont -> cpsCont11, member:handleBlock$$ -> handleBlock$$2, member:cpsCont -> cpsCont12, member:cpsCont -> cpsCont7, class:Capture$scope1 -> Capture$scope12, member:cpsCont -> cpsCont8, member:Capture$scope1 -> Capture$scope13, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$, member:cpsCont$ -> cpsCont$11, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont9, member:handleBlock$$ -> handleBlock$$6, member:lam$ -> lam$, member:cpsCont -> cpsCont10, class:Capture$scope0 -> Capture$scope06, member:Capture$scope0 -> Capture$scope07, member:cpsCont$ -> cpsCont$7, member:cpsCont$ -> cpsCont$4, member:lambda$ -> lambda$1, member:handleBlock$$ -> handleBlock$$4, tmp:block$res -> block$res1, member:foo -> foo, member:cpsCont$ -> cpsCont$5, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$6, class:‹non-local return effect› -> $_non$_local$_return$_effect$_2, class:Capture$scope1 -> Capture$scope1, class:Capture$scope5 -> Capture$scope5, member:Capture$scope1 -> Capture$scope11, member:Capture$scope5 -> Capture$scope51, member:lambda -> lambda1, member:cpsCont$ -> cpsCont$8, member:handleBlock$ -> handleBlock$1, member:cpsCont$ -> cpsCont$6, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret1, member:lam$ -> lam$1, member:handleBlock$$ -> handleBlock$$3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_3, tmp:block$res -> block$res6, member:cpsCont -> cpsCont1, member:cpsCont$ -> cpsCont$9, class:Capture$scope0 -> Capture$scope02, member:lam2$ -> lam2$, member:Capture$scope0 -> Capture$scope03, class:Capture$scope4 -> Capture$scope4, member:cpsCont$ -> cpsCont$1, member:Capture$scope4 -> Capture$scope41, member:handleBlock$$ -> handleBlock$$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$2, member:cpsCont$ -> cpsCont$10, member:handleBlock$$ -> handleBlock$$5, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$3, member:lambda$ -> lambda$, member:lam2$ -> lam2$1, member:Predef -> Predef, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$4, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$5, tmp:block$res -> block$res2, tmp:block$res -> block$res3, member:g -> g, member:f -> f1, class:‹non-local return effect› -> $_non$_local$_return$_effect$_4, class:‹non-local return effect› -> $_non$_local$_return$_effect$_5, tmp:block$res -> block$res4, member:g -> g1, member:f -> f2, tmp:block$res -> block$res, member:handleBlock$ -> handleBlock$2, member:f -> f, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret2, member:‹non-local return effect› -> $_non$_local$_return$_effect$_6, class:‹non-local return effect› -> $_non$_local$_return$_effect$_8, member:handleBlock$ -> handleBlock$3, class:‹non-local return effect› -> $_non$_local$_return$_effect$_, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_7, member:lam2 -> lam2, member:lam -> lam, member:lambda -> lambda, member:handleBlock$ -> handleBlock$, class:‹non-local return effect› -> $_non$_local$_return$_effect$_9, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret, tmp:block$res -> block$res5, member:f -> f3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_1, member:cpsCont -> cpsCont2, class:‹non-local return effect› -> $_non$_local$_return$_effect$_12, member:handleBlock$ -> handleBlock$4, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret4, member:cpsCont -> cpsCont)
+//│         curThis = S of S of class:‹non-local return effect›⁶
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(value -> value, k -> k1)
+//│     bindings = HashMap(tmp:‹non-local return effect›ret$here -> $_non$_local$_return$_effect$_ret$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Left of Cfg:
+//│           escapeChars = true
+//│           useSuperscripts = false
+//│           includeZero = false
+//│           defaultName = "tmp"
+//│         curThis = S of S of globalThis:globalThis⁰
+//│         bindings = HashMap(member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope0, member:cpsCont -> cpsCont4, member:‹non-local return effect› -> $_non$_local$_return$_effect$_10, member:cpsCont -> cpsCont5, member:handleBlock$ -> handleBlock$5, member:handleBlock$ -> handleBlock$6, member:Capture$scope0 -> Capture$scope01, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret5, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret6, member:cpsCont -> cpsCont6, class:Capture$scope0 -> Capture$scope04, member:‹non-local return effect› -> $_non$_local$_return$_effect$_11, member:‹non-local return effect› -> $_non$_local$_return$_effect$_13, member:cpsCont$ -> cpsCont$, member:lam2 -> lam21, tmp:baseCall -> baseCall, member:lambda -> lambda2, tmp:runtime -> runtime, member:lam -> lam1, tmp:definitionMetadata -> definitionMetadata, member:handleBlock$$ -> handleBlock$$, member:Capture$scope0 -> Capture$scope05, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$2, member:cpsCont -> cpsCont11, member:handleBlock$$ -> handleBlock$$2, member:cpsCont -> cpsCont12, member:cpsCont -> cpsCont7, class:Capture$scope1 -> Capture$scope12, member:cpsCont -> cpsCont8, member:Capture$scope1 -> Capture$scope13, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$, member:cpsCont$ -> cpsCont$11, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont9, member:handleBlock$$ -> handleBlock$$6, member:lam$ -> lam$, member:cpsCont -> cpsCont10, class:Capture$scope0 -> Capture$scope06, member:Capture$scope0 -> Capture$scope07, member:cpsCont$ -> cpsCont$7, member:cpsCont$ -> cpsCont$4, member:lambda$ -> lambda$1, member:handleBlock$$ -> handleBlock$$4, tmp:block$res -> block$res1, member:foo -> foo, member:cpsCont$ -> cpsCont$5, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$6, class:‹non-local return effect› -> $_non$_local$_return$_effect$_2, class:Capture$scope1 -> Capture$scope1, class:Capture$scope5 -> Capture$scope5, member:Capture$scope1 -> Capture$scope11, member:Capture$scope5 -> Capture$scope51, member:lambda -> lambda1, member:cpsCont$ -> cpsCont$8, member:handleBlock$ -> handleBlock$1, member:cpsCont$ -> cpsCont$6, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret1, member:lam$ -> lam$1, member:handleBlock$$ -> handleBlock$$3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_3, tmp:block$res -> block$res6, member:cpsCont -> cpsCont1, member:cpsCont$ -> cpsCont$9, class:Capture$scope0 -> Capture$scope02, member:lam2$ -> lam2$, member:Capture$scope0 -> Capture$scope03, class:Capture$scope4 -> Capture$scope4, member:cpsCont$ -> cpsCont$1, member:Capture$scope4 -> Capture$scope41, member:handleBlock$$ -> handleBlock$$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$2, member:cpsCont$ -> cpsCont$10, member:handleBlock$$ -> handleBlock$$5, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$3, member:lambda$ -> lambda$, member:lam2$ -> lam2$1, member:Predef -> Predef, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$4, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$5, tmp:block$res -> block$res2, tmp:block$res -> block$res3, member:g -> g, member:f -> f1, class:‹non-local return effect› -> $_non$_local$_return$_effect$_4, class:‹non-local return effect› -> $_non$_local$_return$_effect$_5, tmp:block$res -> block$res4, member:g -> g1, member:f -> f2, tmp:block$res -> block$res, member:handleBlock$ -> handleBlock$2, member:f -> f, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret2, member:‹non-local return effect› -> $_non$_local$_return$_effect$_6, class:‹non-local return effect› -> $_non$_local$_return$_effect$_8, member:handleBlock$ -> handleBlock$3, class:‹non-local return effect› -> $_non$_local$_return$_effect$_, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_7, member:lam2 -> lam2, member:lam -> lam, member:lambda -> lambda, member:handleBlock$ -> handleBlock$, class:‹non-local return effect› -> $_non$_local$_return$_effect$_9, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret, tmp:block$res -> block$res5, member:f -> f3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_1, member:cpsCont -> cpsCont2, class:‹non-local return effect› -> $_non$_local$_return$_effect$_12, member:handleBlock$ -> handleBlock$4, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret4, member:cpsCont -> cpsCont)
+//│       curThis = S of N
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap(tmp:handleBlock$$here -> handleBlock$$here, scope1$cap -> scope1$cap, tmp:nonLocalRetHandler$f -> nonLocalRetHandler$f, tmp:cpsCont$here -> cpsCont$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ ═══[RUNTIME ERROR] ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
 
 :re
 fun f(): () -> Int = () => return () => 3
 f()()
-//│ ═══[RUNTIME ERROR] Error: Unhandled effect $_non$_local$_return$_effect$_14
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.564: 	fun f(): () -> Int = () => return () => 3
+//│ ╙──       	                           ^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.565: 	f()()
+//│ ╙──       	^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope0, member:cpsCont -> cpsCont4, member:‹non-local return effect› -> $_non$_local$_return$_effect$_10, member:cpsCont -> cpsCont5, member:handleBlock$ -> handleBlock$5, member:handleBlock$ -> handleBlock$6, member:Capture$scope0 -> Capture$scope01, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret5, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret6, member:cpsCont -> cpsCont6, class:Capture$scope0 -> Capture$scope04, member:‹non-local return effect› -> $_non$_local$_return$_effect$_11, member:‹non-local return effect› -> $_non$_local$_return$_effect$_13, member:cpsCont$ -> cpsCont$, member:lam2 -> lam21, tmp:baseCall -> baseCall, member:lambda -> lambda2, tmp:runtime -> runtime, member:lam -> lam1, tmp:definitionMetadata -> definitionMetadata, member:handleBlock$$ -> handleBlock$$, member:Capture$scope0 -> Capture$scope05, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$2, member:cpsCont -> cpsCont11, member:handleBlock$$ -> handleBlock$$2, member:cpsCont -> cpsCont12, member:cpsCont -> cpsCont7, class:Capture$scope1 -> Capture$scope12, member:cpsCont -> cpsCont8, member:Capture$scope1 -> Capture$scope13, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$, member:cpsCont$ -> cpsCont$11, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont9, member:handleBlock$$ -> handleBlock$$6, member:lam$ -> lam$, member:cpsCont -> cpsCont10, class:Capture$scope0 -> Capture$scope06, member:Capture$scope0 -> Capture$scope07, member:cpsCont$ -> cpsCont$7, member:cpsCont$ -> cpsCont$4, member:lambda$ -> lambda$1, member:handleBlock$$ -> handleBlock$$4, tmp:block$res -> block$res1, member:foo -> foo, member:cpsCont$ -> cpsCont$5, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$6, class:‹non-local return effect› -> $_non$_local$_return$_effect$_2, class:Capture$scope1 -> Capture$scope1, class:Capture$scope5 -> Capture$scope5, member:Capture$scope1 -> Capture$scope11, member:Capture$scope5 -> Capture$scope51, member:lambda -> lambda1, member:cpsCont$ -> cpsCont$8, member:handleBlock$ -> handleBlock$1, member:cpsCont$ -> cpsCont$6, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret1, member:lam$ -> lam$1, member:handleBlock$$ -> handleBlock$$3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_3, tmp:block$res -> block$res6, member:cpsCont -> cpsCont1, member:cpsCont$ -> cpsCont$9, member:f -> f4, class:Capture$scope0 -> Capture$scope02, class:‹non-local return effect› -> $_non$_local$_return$_effect$_14, member:lam2$ -> lam2$, member:Capture$scope0 -> Capture$scope03, class:Capture$scope4 -> Capture$scope4, member:cpsCont$ -> cpsCont$1, member:Capture$scope4 -> Capture$scope41, member:handleBlock$$ -> handleBlock$$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$2, member:lambda -> lambda3, member:handleBlock$ -> handleBlock$7, member:cpsCont$ -> cpsCont$10, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret7, member:handleBlock$$ -> handleBlock$$5, member:‹non-local return effect› -> $_non$_local$_return$_effect$_15, tmp:baseCall -> baseCall1, member:lambda -> lambda4, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$3, member:lambda$ -> lambda$, member:cpsCont -> cpsCont13, member:cpsCont -> cpsCont14, member:lam2$ -> lam2$1, class:Capture$scope1 -> Capture$scope14, member:Predef -> Predef, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$1, member:Capture$scope1 -> Capture$scope15, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$4, member:cpsCont$ -> cpsCont$12, member:handleBlock$$ -> handleBlock$$7, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$5, member:lambda$ -> lambda$2, tmp:block$res -> block$res2, tmp:block$res -> block$res3, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$7, member:g -> g, member:f -> f1, class:‹non-local return effect› -> $_non$_local$_return$_effect$_4, class:‹non-local return effect› -> $_non$_local$_return$_effect$_5, tmp:block$res -> block$res4, member:g -> g1, member:f -> f2, tmp:block$res -> block$res7, tmp:block$res -> block$res, member:handleBlock$ -> handleBlock$2, member:f -> f, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret2, member:‹non-local return effect› -> $_non$_local$_return$_effect$_6, class:‹non-local return effect› -> $_non$_local$_return$_effect$_8, member:handleBlock$ -> handleBlock$3, class:‹non-local return effect› -> $_non$_local$_return$_effect$_, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_7, member:lam2 -> lam2, member:lam -> lam, member:lambda -> lambda, member:handleBlock$ -> handleBlock$, class:‹non-local return effect› -> $_non$_local$_return$_effect$_9, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret, tmp:block$res -> block$res5, member:f -> f3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_1, member:cpsCont -> cpsCont2, class:‹non-local return effect› -> $_non$_local$_return$_effect$_12, member:handleBlock$ -> handleBlock$4, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret4, member:cpsCont -> cpsCont)
+//│         curThis = S of S of class:‹non-local return effect›⁷
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(k -> k1, value -> value)
+//│     bindings = HashMap(tmp:‹non-local return effect›ret$here -> $_non$_local$_return$_effect$_ret$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Left of Cfg:
+//│           escapeChars = true
+//│           useSuperscripts = false
+//│           includeZero = false
+//│           defaultName = "tmp"
+//│         curThis = S of S of globalThis:globalThis⁰
+//│         bindings = HashMap(member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope0, member:cpsCont -> cpsCont4, member:‹non-local return effect› -> $_non$_local$_return$_effect$_10, member:cpsCont -> cpsCont5, member:handleBlock$ -> handleBlock$5, member:handleBlock$ -> handleBlock$6, member:Capture$scope0 -> Capture$scope01, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret5, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret6, member:cpsCont -> cpsCont6, class:Capture$scope0 -> Capture$scope04, member:‹non-local return effect› -> $_non$_local$_return$_effect$_11, member:‹non-local return effect› -> $_non$_local$_return$_effect$_13, member:cpsCont$ -> cpsCont$, member:lam2 -> lam21, tmp:baseCall -> baseCall, member:lambda -> lambda2, tmp:runtime -> runtime, member:lam -> lam1, tmp:definitionMetadata -> definitionMetadata, member:handleBlock$$ -> handleBlock$$, member:Capture$scope0 -> Capture$scope05, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$2, member:cpsCont -> cpsCont11, member:handleBlock$$ -> handleBlock$$2, member:cpsCont -> cpsCont12, member:cpsCont -> cpsCont7, class:Capture$scope1 -> Capture$scope12, member:cpsCont -> cpsCont8, member:Capture$scope1 -> Capture$scope13, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$, member:cpsCont$ -> cpsCont$11, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont9, member:handleBlock$$ -> handleBlock$$6, member:lam$ -> lam$, member:cpsCont -> cpsCont10, class:Capture$scope0 -> Capture$scope06, member:Capture$scope0 -> Capture$scope07, member:cpsCont$ -> cpsCont$7, member:cpsCont$ -> cpsCont$4, member:lambda$ -> lambda$1, member:handleBlock$$ -> handleBlock$$4, tmp:block$res -> block$res1, member:foo -> foo, member:cpsCont$ -> cpsCont$5, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$6, class:‹non-local return effect› -> $_non$_local$_return$_effect$_2, class:Capture$scope1 -> Capture$scope1, class:Capture$scope5 -> Capture$scope5, member:Capture$scope1 -> Capture$scope11, member:Capture$scope5 -> Capture$scope51, member:lambda -> lambda1, member:cpsCont$ -> cpsCont$8, member:handleBlock$ -> handleBlock$1, member:cpsCont$ -> cpsCont$6, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret1, member:lam$ -> lam$1, member:handleBlock$$ -> handleBlock$$3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_3, tmp:block$res -> block$res6, member:cpsCont -> cpsCont1, member:cpsCont$ -> cpsCont$9, member:f -> f4, class:Capture$scope0 -> Capture$scope02, class:‹non-local return effect› -> $_non$_local$_return$_effect$_14, member:lam2$ -> lam2$, member:Capture$scope0 -> Capture$scope03, class:Capture$scope4 -> Capture$scope4, member:cpsCont$ -> cpsCont$1, member:Capture$scope4 -> Capture$scope41, member:handleBlock$$ -> handleBlock$$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$2, member:lambda -> lambda3, member:handleBlock$ -> handleBlock$7, member:cpsCont$ -> cpsCont$10, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret7, member:handleBlock$$ -> handleBlock$$5, member:‹non-local return effect› -> $_non$_local$_return$_effect$_15, tmp:baseCall -> baseCall1, member:lambda -> lambda4, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$3, member:lambda$ -> lambda$, member:cpsCont -> cpsCont13, member:cpsCont -> cpsCont14, member:lam2$ -> lam2$1, class:Capture$scope1 -> Capture$scope14, member:Predef -> Predef, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$1, member:Capture$scope1 -> Capture$scope15, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$4, member:cpsCont$ -> cpsCont$12, member:handleBlock$$ -> handleBlock$$7, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$5, member:lambda$ -> lambda$2, tmp:block$res -> block$res2, tmp:block$res -> block$res3, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$7, member:g -> g, member:f -> f1, class:‹non-local return effect› -> $_non$_local$_return$_effect$_4, class:‹non-local return effect› -> $_non$_local$_return$_effect$_5, tmp:block$res -> block$res4, member:g -> g1, member:f -> f2, tmp:block$res -> block$res7, tmp:block$res -> block$res, member:handleBlock$ -> handleBlock$2, member:f -> f, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret2, member:‹non-local return effect› -> $_non$_local$_return$_effect$_6, class:‹non-local return effect› -> $_non$_local$_return$_effect$_8, member:handleBlock$ -> handleBlock$3, class:‹non-local return effect› -> $_non$_local$_return$_effect$_, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_7, member:lam2 -> lam2, member:lam -> lam, member:lambda -> lambda, member:handleBlock$ -> handleBlock$, class:‹non-local return effect› -> $_non$_local$_return$_effect$_9, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret, tmp:block$res -> block$res5, member:f -> f3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_1, member:cpsCont -> cpsCont2, class:‹non-local return effect› -> $_non$_local$_return$_effect$_12, member:handleBlock$ -> handleBlock$4, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret4, member:cpsCont -> cpsCont)
+//│       curThis = S of N
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap(tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here, scope1$cap -> scope1$cap, tmp:nonLocalRetHandler$f -> nonLocalRetHandler$f)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ ═══[RUNTIME ERROR] ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
 
 
 :e
 return 100
 //│ ╔══[COMPILATION ERROR] Return statements are not allowed outside of functions.
-//│ ║  l.68: 	return 100
-//│ ╙──      	^^^^^^^^^^
+//│ ║  l.634: 	return 100
+//│ ╙──       	^^^^^^^^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 :e
@@ -76,15 +642,15 @@ if true do
   while false do
     let f = () => return 100
 //│ ╔══[COMPILATION ERROR] Return statements are not allowed outside of functions.
-//│ ║  l.77: 	    let f = () => return 100
-//│ ╙──      	                  ^^^^^^^^^^
+//│ ║  l.643: 	    let f = () => return 100
+//│ ╙──       	                  ^^^^^^^^^^
 
 :e
 fun f() =
   type A = return "lol"
 //│ ╔══[COMPILATION ERROR] Return statements are not allowed in this context.
-//│ ║  l.84: 	  type A = return "lol"
-//│ ╙──      	           ^^^^^^^^^^^^
+//│ ║  l.650: 	  type A = return "lol"
+//│ ╙──       	           ^^^^^^^^^^^^
 
 
 :expect 100
@@ -99,7 +665,86 @@ fun f() =
     f()
     print("Bad")
 f()
-//│ = 100
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.663: 	        f = () => return 100
+//│ ╙──       	                  ^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.665: 	    f()
+//│ ╙──       	    ^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope0, member:f -> f6, member:cpsCont -> cpsCont4, member:‹non-local return effect› -> $_non$_local$_return$_effect$_10, member:cpsCont -> cpsCont5, member:handleBlock$ -> handleBlock$5, member:handleBlock$ -> handleBlock$6, member:Capture$scope0 -> Capture$scope01, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret5, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret6, member:cpsCont -> cpsCont6, tmp:block$res -> block$res10, class:Capture$scope0 -> Capture$scope04, member:‹non-local return effect› -> $_non$_local$_return$_effect$_11, member:‹non-local return effect› -> $_non$_local$_return$_effect$_13, member:f -> f7, member:cpsCont$ -> cpsCont$, member:lam2 -> lam21, tmp:baseCall -> baseCall, member:lambda -> lambda2, tmp:runtime -> runtime, member:lam -> lam1, tmp:definitionMetadata -> definitionMetadata, member:handleBlock$$ -> handleBlock$$, member:Capture$scope0 -> Capture$scope05, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$2, member:cpsCont -> cpsCont11, member:handleBlock$$ -> handleBlock$$2, class:‹non-local return effect› -> $_non$_local$_return$_effect$_16, member:cpsCont -> cpsCont12, member:cpsCont -> cpsCont7, class:Capture$scope1 -> Capture$scope12, member:cpsCont -> cpsCont8, member:Capture$scope1 -> Capture$scope13, member:lambda -> lambda5, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$, member:cpsCont$ -> cpsCont$11, member:handleBlock$ -> handleBlock$8, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont9, member:handleBlock$$ -> handleBlock$$6, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret8, member:lam$ -> lam$, member:cpsCont -> cpsCont10, member:‹non-local return effect› -> $_non$_local$_return$_effect$_17, class:Capture$scope0 -> Capture$scope06, member:Capture$scope0 -> Capture$scope07, member:cpsCont -> cpsCont16, member:cpsCont$ -> cpsCont$7, member:cpsCont$ -> cpsCont$4, member:lambda$ -> lambda$1, member:cpsCont -> cpsCont17, member:handleBlock$$ -> handleBlock$$4, member:cpsCont -> cpsCont18, tmp:block$res -> block$res1, class:Capture$scope0 -> Capture$scope08, member:foo -> foo, member:cpsCont$ -> cpsCont$5, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$6, member:Capture$scope0 -> Capture$scope09, member:cpsCont$ -> cpsCont$13, class:‹non-local return effect› -> $_non$_local$_return$_effect$_2, class:Capture$scope1 -> Capture$scope1, class:Capture$scope5 -> Capture$scope5, member:handleBlock$$ -> handleBlock$$8, member:Capture$scope1 -> Capture$scope11, member:Capture$scope5 -> Capture$scope51, member:lambda -> lambda1, member:cpsCont$ -> cpsCont$8, member:handleBlock$ -> handleBlock$1, member:cpsCont$ -> cpsCont$6, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret1, member:lam$ -> lam$1, member:handleBlock$$ -> handleBlock$$3, class:Capture$scope1 -> Capture$scope16, member:‹non-local return effect› -> $_non$_local$_return$_effect$_3, tmp:block$res -> block$res6, member:cpsCont -> cpsCont1, member:cpsCont$ -> cpsCont$9, member:f -> f4, class:Capture$scope0 -> Capture$scope02, member:Capture$scope1 -> Capture$scope17, class:‹non-local return effect› -> $_non$_local$_return$_effect$_14, member:lam2$ -> lam2$, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$14, class:Capture$scope4 -> Capture$scope4, member:cpsCont$ -> cpsCont$1, member:Capture$scope4 -> Capture$scope41, member:handleBlock$$ -> handleBlock$$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$2, member:lambda -> lambda3, member:handleBlock$ -> handleBlock$7, member:cpsCont$ -> cpsCont$10, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret7, member:handleBlock$$ -> handleBlock$$5, member:‹non-local return effect› -> $_non$_local$_return$_effect$_15, tmp:baseCall -> baseCall1, member:lambda -> lambda4, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$3, member:lambda$ -> lambda$, member:cpsCont -> cpsCont13, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$8, member:cpsCont -> cpsCont14, member:lam2$ -> lam2$1, class:Capture$scope1 -> Capture$scope14, member:Predef -> Predef, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$1, member:Capture$scope1 -> Capture$scope15, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$4, member:cpsCont$ -> cpsCont$12, member:handleBlock$$ -> handleBlock$$7, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$5, member:lambda$ -> lambda$2, tmp:block$res -> block$res11, tmp:block$res -> block$res2, tmp:block$res -> block$res3, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$7, member:g -> g, member:f -> f1, class:‹non-local return effect› -> $_non$_local$_return$_effect$_4, class:‹non-local return effect› -> $_non$_local$_return$_effect$_5, tmp:block$res -> block$res4, member:g -> g1, member:f -> f2, tmp:block$res -> block$res7, tmp:block$res -> block$res8, tmp:block$res -> block$res, member:handleBlock$ -> handleBlock$2, member:f -> f, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret2, member:while -> while1, member:‹non-local return effect› -> $_non$_local$_return$_effect$_6, class:‹non-local return effect› -> $_non$_local$_return$_effect$_8, member:f -> f5, member:handleBlock$ -> handleBlock$3, class:‹non-local return effect› -> $_non$_local$_return$_effect$_, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret3, member:cpsCont -> cpsCont15, member:‹non-local return effect› -> $_non$_local$_return$_effect$_7, member:lam2 -> lam2, member:lam -> lam, member:lambda -> lambda, member:handleBlock$ -> handleBlock$, class:‹non-local return effect› -> $_non$_local$_return$_effect$_9, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret, tmp:block$res -> block$res5, member:f -> f3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_1, member:cpsCont -> cpsCont2, class:‹non-local return effect› -> $_non$_local$_return$_effect$_12, member:handleBlock$ -> handleBlock$4, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret4, tmp:block$res -> block$res9, member:cpsCont -> cpsCont)
+//│         curThis = S of S of class:‹non-local return effect›⁸
+//│         bindings = HashMap(k -> k)
+//│       bindings = HashMap(value -> value, k -> k1)
+//│     bindings = HashMap(tmp:‹non-local return effect›ret$here -> $_non$_local$_return$_effect$_ret$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Left of Cfg:
+//│           escapeChars = true
+//│           useSuperscripts = false
+//│           includeZero = false
+//│           defaultName = "tmp"
+//│         curThis = S of S of globalThis:globalThis⁰
+//│         bindings = HashMap(member:cpsCont -> cpsCont3, class:Capture$scope0 -> Capture$scope0, member:f -> f6, member:cpsCont -> cpsCont4, member:‹non-local return effect› -> $_non$_local$_return$_effect$_10, member:cpsCont -> cpsCont5, member:handleBlock$ -> handleBlock$5, member:handleBlock$ -> handleBlock$6, member:Capture$scope0 -> Capture$scope01, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret5, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret6, member:cpsCont -> cpsCont6, tmp:block$res -> block$res10, class:Capture$scope0 -> Capture$scope04, member:‹non-local return effect› -> $_non$_local$_return$_effect$_11, member:‹non-local return effect› -> $_non$_local$_return$_effect$_13, member:f -> f7, member:cpsCont$ -> cpsCont$, member:lam2 -> lam21, tmp:baseCall -> baseCall, member:lambda -> lambda2, tmp:runtime -> runtime, member:lam -> lam1, tmp:definitionMetadata -> definitionMetadata, member:handleBlock$$ -> handleBlock$$, member:Capture$scope0 -> Capture$scope05, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$2, member:cpsCont -> cpsCont11, member:handleBlock$$ -> handleBlock$$2, class:‹non-local return effect› -> $_non$_local$_return$_effect$_16, member:cpsCont -> cpsCont12, member:cpsCont -> cpsCont7, class:Capture$scope1 -> Capture$scope12, member:cpsCont -> cpsCont8, member:Capture$scope1 -> Capture$scope13, member:lambda -> lambda5, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$, member:cpsCont$ -> cpsCont$11, member:handleBlock$ -> handleBlock$8, member:cpsCont$ -> cpsCont$3, member:cpsCont -> cpsCont9, member:handleBlock$$ -> handleBlock$$6, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret8, member:lam$ -> lam$, member:cpsCont -> cpsCont10, member:‹non-local return effect› -> $_non$_local$_return$_effect$_17, class:Capture$scope0 -> Capture$scope06, member:Capture$scope0 -> Capture$scope07, member:cpsCont -> cpsCont16, member:cpsCont$ -> cpsCont$7, member:cpsCont$ -> cpsCont$4, member:lambda$ -> lambda$1, member:cpsCont -> cpsCont17, member:handleBlock$$ -> handleBlock$$4, member:cpsCont -> cpsCont18, tmp:block$res -> block$res1, class:Capture$scope0 -> Capture$scope08, member:foo -> foo, member:cpsCont$ -> cpsCont$5, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$6, member:Capture$scope0 -> Capture$scope09, member:cpsCont$ -> cpsCont$13, class:‹non-local return effect› -> $_non$_local$_return$_effect$_2, class:Capture$scope1 -> Capture$scope1, class:Capture$scope5 -> Capture$scope5, member:handleBlock$$ -> handleBlock$$8, member:Capture$scope1 -> Capture$scope11, member:Capture$scope5 -> Capture$scope51, member:lambda -> lambda1, member:cpsCont$ -> cpsCont$8, member:handleBlock$ -> handleBlock$1, member:cpsCont$ -> cpsCont$6, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret1, member:lam$ -> lam$1, member:handleBlock$$ -> handleBlock$$3, class:Capture$scope1 -> Capture$scope16, member:‹non-local return effect› -> $_non$_local$_return$_effect$_3, tmp:block$res -> block$res6, member:cpsCont -> cpsCont1, member:cpsCont$ -> cpsCont$9, member:f -> f4, class:Capture$scope0 -> Capture$scope02, member:Capture$scope1 -> Capture$scope17, class:‹non-local return effect› -> $_non$_local$_return$_effect$_14, member:lam2$ -> lam2$, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$14, class:Capture$scope4 -> Capture$scope4, member:cpsCont$ -> cpsCont$1, member:Capture$scope4 -> Capture$scope41, member:handleBlock$$ -> handleBlock$$1, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$2, member:lambda -> lambda3, member:handleBlock$ -> handleBlock$7, member:cpsCont$ -> cpsCont$10, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret7, member:handleBlock$$ -> handleBlock$$5, member:‹non-local return effect› -> $_non$_local$_return$_effect$_15, tmp:baseCall -> baseCall1, member:lambda -> lambda4, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$3, member:lambda$ -> lambda$, member:cpsCont -> cpsCont13, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$8, member:cpsCont -> cpsCont14, member:lam2$ -> lam2$1, class:Capture$scope1 -> Capture$scope14, member:Predef -> Predef, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$1, member:Capture$scope1 -> Capture$scope15, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$4, member:cpsCont$ -> cpsCont$12, member:handleBlock$$ -> handleBlock$$7, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$5, member:lambda$ -> lambda$2, tmp:block$res -> block$res11, tmp:block$res -> block$res2, tmp:block$res -> block$res3, member:‹non-local return effect›ret$ -> $_non$_local$_return$_effect$_ret$7, member:g -> g, member:f -> f1, class:‹non-local return effect› -> $_non$_local$_return$_effect$_4, class:‹non-local return effect› -> $_non$_local$_return$_effect$_5, tmp:block$res -> block$res4, member:g -> g1, member:f -> f2, tmp:block$res -> block$res7, tmp:block$res -> block$res8, tmp:block$res -> block$res, member:handleBlock$ -> handleBlock$2, member:f -> f, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret2, member:while -> while1, member:‹non-local return effect› -> $_non$_local$_return$_effect$_6, class:‹non-local return effect› -> $_non$_local$_return$_effect$_8, member:f -> f5, member:handleBlock$ -> handleBlock$3, class:‹non-local return effect› -> $_non$_local$_return$_effect$_, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret3, member:cpsCont -> cpsCont15, member:‹non-local return effect› -> $_non$_local$_return$_effect$_7, member:lam2 -> lam2, member:lam -> lam, member:lambda -> lambda, member:handleBlock$ -> handleBlock$, class:‹non-local return effect› -> $_non$_local$_return$_effect$_9, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret, tmp:block$res -> block$res5, member:f -> f3, member:‹non-local return effect› -> $_non$_local$_return$_effect$_1, member:cpsCont -> cpsCont2, class:‹non-local return effect› -> $_non$_local$_return$_effect$_12, member:handleBlock$ -> handleBlock$4, member:‹non-local return effect›ret -> $_non$_local$_return$_effect$_ret4, tmp:block$res -> block$res9, member:cpsCont -> cpsCont)
+//│       curThis = S of N
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap(tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here, scope0$cap -> scope0$cap, tmp:nonLocalRetHandler$f -> nonLocalRetHandler$f)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+//│     at new $_non$_local$_return$_effect$_16 (REPL40:1:2825)
+//│     at f (REPL40:1:3636)
+//│     at REPL40:1:3955
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:297)
+//│ ═══[RUNTIME ERROR] Expected: '100', got: 'undefined'
 
 // TODO(inliner): something is wrong here
 // broken due to handlers currently not handling `object` properly
@@ -110,13 +755,27 @@ fun f() =
     return 100
   4
 f()
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.755: 	    return 100
+//│ ╙──       	    ^^^^^^^^^^
 //│ ╔══[WARNING] Objects are not yet lifted.
-//│ ║  l.109: 	  object A with
+//│ ║  l.754: 	  object A with
 //│ ╙──       	         ^
-//│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.109: 	  object A with
-//│ ╙──       	         ^
-//│ ═══[RUNTIME ERROR] Error: Effect $_non$_local$_return$_effect$_18 is raised in a constructor
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ ═══[RUNTIME ERROR] ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
 //│ ═══[RUNTIME ERROR] Expected: '100', got: 'undefined'
 
 // ctor cannot raise effect, so error is expected.
@@ -127,7 +786,24 @@ fun f() =
     return 100
   new A
 f()
-//│ ═══[RUNTIME ERROR] Error: Effect $_non$_local$_return$_effect$_20 is raised in a constructor
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.786: 	    return 100
+//│ ╙──       	    ^^^^^^^^^^
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ ═══[RUNTIME ERROR] ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
 //│ ═══[RUNTIME ERROR] Expected: '100', got: 'undefined'
 
 :fixme
@@ -137,13 +813,30 @@ fun f() =
     (() => return 100)()
   4
 f()
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.813: 	    (() => return 100)()
+//│ ╙──       	           ^^^^^^^^^^
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.813: 	    (() => return 100)()
+//│ ╙──       	    ^^^^^^^^^^^^^^^^^^^^
 //│ ╔══[WARNING] Objects are not yet lifted.
-//│ ║  l.136: 	  object A with
+//│ ║  l.812: 	  object A with
 //│ ╙──       	         ^
-//│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.136: 	  object A with
-//│ ╙──       	         ^
-//│ ═══[RUNTIME ERROR] Error: Effect $_non$_local$_return$_effect$_22 is raised in a constructor
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ ═══[RUNTIME ERROR] ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
 //│ ═══[RUNTIME ERROR] Expected: '100', got: 'undefined'
 
 :fixme
@@ -154,5 +847,25 @@ fun f() =
   new A
   4
 f()
-//│ ═══[RUNTIME ERROR] Error: Effect $_non$_local$_return$_effect$_24 is raised in a constructor
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.846: 	    (() => return 100)()
+//│ ╙──       	           ^^^^^^^^^^
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.846: 	    (() => return 100)()
+//│ ╙──       	    ^^^^^^^^^^^^^^^^^^^^
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ ═══[RUNTIME ERROR] ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
 //│ ═══[RUNTIME ERROR] Expected: '100', got: 'undefined'

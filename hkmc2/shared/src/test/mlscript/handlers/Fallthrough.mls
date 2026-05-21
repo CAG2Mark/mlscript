@@ -15,79 +15,89 @@ fun f() =
   set x = g()
   return x
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let f;
-//│ runtime.resetEffects();
-//│ f = function f() {
-//│   let tmp, tmp1, pc;
-//│   if (runtime.resumePc === -1) {
-//│     pc = 0;
-//│   } else {
-//│     let saveOffset;
-//│     pc = runtime.resumePc;
-//│     saveOffset = runtime.resumeIdx;
-//│     tmp = runtime.resumeArr.at(saveOffset);
-//│     runtime.resumePc = -1;
+//│ let f, Capture$scope01, cpsCont$, cpsCont$1, cpsCont$2, cpsCont$3, cpsCont$4, cpsCont$5;
+//│ cpsCont$2 = function cpsCont$(scope0$cap) {
+//│   return (retVal) => {
+//│     scope0$cap.tmp$2 = retVal;
+//│     scope0$cap.tmp$3 = scope0$cap.tmp$1 + scope0$cap.tmp$2;
+//│     scope0$cap.x$0 = scope0$cap.tmp$3;
+//│     return
 //│   }
-//│   main: while (true) {
-//│     switch (pc) {
-//│       case 7:
-//│         tmp = runtime.resumeValue;
-//│         runtime.resumeValue = g();
-//│         if (runtime.curEffect === null) {
-//│           pc = 6;
-//│         } else {
-//│           return runtime.unwind(f, 6, "Fallthrough.mls:11:19", null, null, 1, 0, 1, tmp)
-//│         }
-//│       case 6:
-//│         runtime.resumeValue;
-//│         pc = 5;
-//│       case 5:
-//│         runtime.resumeValue = g();
-//│         if (runtime.curEffect === null) {
-//│           pc = 4;
-//│         } else {
-//│           return runtime.unwind(f, 4, "Fallthrough.mls:12:11", null, null, 1, 0, 1, tmp)
-//│         }
-//│       case 4:
-//│         runtime.resumeValue;
-//│         runtime.resumeValue = g();
-//│         if (runtime.curEffect === null) {
-//│           pc = 3;
-//│         } else {
-//│           return runtime.unwind(f, 3, "Fallthrough.mls:13:11", null, null, 1, 0, 1, tmp)
-//│         }
-//│       case 3:
-//│         runtime.resumeValue;
-//│         runtime.resumeValue = g();
-//│         if (runtime.curEffect === null) {
-//│           pc = 2;
-//│         } else {
-//│           return runtime.unwind(f, 2, "Fallthrough.mls:14:11", null, null, 1, 0, 1, tmp)
-//│         }
-//│       case 2:
-//│         runtime.resumeValue;
-//│         runtime.resumeValue = g();
-//│         if (runtime.curEffect === null) {
-//│           pc = 1;
-//│         } else {
-//│           return runtime.unwind(f, 1, "Fallthrough.mls:15:11", null, null, 1, 0, 1, tmp)
-//│         }
-//│       case 1:
-//│         tmp1 = runtime.resumeValue;
-//│         return tmp1;
-//│       case 0:
-//│         if (0 === 0) {
-//│           runtime.resumeValue = g();
-//│           if (runtime.curEffect === null) {
-//│             pc = 7;
-//│             continue main
-//│           }
-//│           return runtime.unwind(f, 7, "Fallthrough.mls:11:13", null, null, 1, 0, 1, tmp);
-//│         }
-//│         pc = 5;
-//│         continue main;
-//│     }
-//│     break;
+//│ };
+//│ cpsCont$1 = function cpsCont$(scope0$cap) {
+//│   return (retVal) => {
+//│     let inlinedVal, cpsCont$here;
+//│     scope0$cap.tmp$1 = retVal;
+//│     cpsCont$here = cpsCont$2(scope0$cap);
+//│     inlinedVal = g(cpsCont$here);
+//│     return inlinedVal
 //│   }
+//│ };
+//│ (class Capture$scope0 {
+//│   static {
+//│     Capture$scope01 = this
+//│   }
+//│   constructor(x$0, tmp$1, tmp$2, tmp$3, tmp$4, tmp$5, tmp$6, tmp$7) {
+//│     this.tmp$7 = tmp$7;
+//│     this.tmp$6 = tmp$6;
+//│     this.tmp$5 = tmp$5;
+//│     this.tmp$4 = tmp$4;
+//│     this.tmp$3 = tmp$3;
+//│     this.tmp$2 = tmp$2;
+//│     this.tmp$1 = tmp$1;
+//│     this.x$0 = x$0;
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Capture$scope0"]; 
+//│ });
+//│ cpsCont$5 = function cpsCont$(scope0$cap, k) {
+//│   return (retVal) => {
+//│     let inlinedVal;
+//│     scope0$cap.tmp$7 = retVal;
+//│     scope0$cap.x$0 = scope0$cap.tmp$7;
+//│     inlinedVal = k(scope0$cap.x$0);
+//│     return inlinedVal
+//│   }
+//│ };
+//│ cpsCont$4 = function cpsCont$(scope0$cap, k) {
+//│   return (retVal) => {
+//│     let inlinedVal, cpsCont$here;
+//│     scope0$cap.tmp$6 = retVal;
+//│     scope0$cap.x$0 = scope0$cap.tmp$6;
+//│     cpsCont$here = cpsCont$5(scope0$cap, k);
+//│     inlinedVal = g(cpsCont$here);
+//│     return inlinedVal
+//│   }
+//│ };
+//│ cpsCont$3 = function cpsCont$(scope0$cap, k) {
+//│   return (retVal) => {
+//│     let inlinedVal, cpsCont$here;
+//│     scope0$cap.tmp$5 = retVal;
+//│     scope0$cap.x$0 = scope0$cap.tmp$5;
+//│     cpsCont$here = cpsCont$4(scope0$cap, k);
+//│     inlinedVal = g(cpsCont$here);
+//│     return inlinedVal
+//│   }
+//│ };
+//│ cpsCont$ = function cpsCont$(scope0$cap, k) {
+//│   return (retVal) => {
+//│     let inlinedVal, cpsCont$here;
+//│     scope0$cap.tmp$4 = retVal;
+//│     scope0$cap.x$0 = scope0$cap.tmp$4;
+//│     cpsCont$here = cpsCont$3(scope0$cap, k);
+//│     inlinedVal = g(cpsCont$here);
+//│     return inlinedVal
+//│   }
+//│ };
+//│ f = function f(k) {
+//│   let scope0$cap, cpsCont$here;
+//│   scope0$cap = new Capture$scope01(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+//│   if (0 === 0) {
+//│     let cpsCont$here1;
+//│     cpsCont$here1 = cpsCont$1(scope0$cap);
+//│     return g(cpsCont$here1)
+//│   }
+//│   cpsCont$here = cpsCont$(scope0$cap, k);
+//│   return g(cpsCont$here);
 //│ };
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————

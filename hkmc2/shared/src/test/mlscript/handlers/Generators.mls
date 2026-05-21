@@ -20,6 +20,90 @@ fun permutations_impl(gen, l1, l2) =
       gen.produce(mut [])
 fun permutations(gen, l) =
   permutations_impl(gen, mut [], l)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.13: 	          result.unshift(f)
+//│ ╙──      	          ^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.14: 	          gen.produce(result)
+//│ ╙──      	          ^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.15: 	          resume(())
+//│ ╙──      	          ^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.16: 	      permutations_impl(genWithPrefix, mut [], l1.concat(t))
+//│ ╙──      	                                               ^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.17: 	      l1.push(f)
+//│ ╙──      	      ^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.20: 	      gen.produce(mut [])
+//│ ╙──      	      ^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Left of Cfg:
+//│           escapeChars = true
+//│           useSuperscripts = false
+//│           includeZero = false
+//│           defaultName = "tmp"
+//│         curThis = S of S of globalThis:globalThis⁰
+//│         bindings = HashMap(tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$3, member:Capture$scope1 -> Capture$scope11, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$, member:Handler$genWithPrefix$produce$ -> Handler$genWithPrefix$produce$, tmp:block$res -> block$res, member:Handler$genWithPrefix$produce -> Handler$genWithPrefix$produce, member:Generator -> Generator1, class:Generator -> Generator, member:cpsCont$ -> cpsCont$1, member:Handler$genWithPrefix$ -> Handler$genWithPrefix$1, tmp:block$res -> block$res1, member:permutations -> permutations, member:permutations_impl -> permutations_impl, member:cpsCont$ -> cpsCont$2, member:permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$ -> permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$, member:cpsCont -> cpsCont, member:handleBlock$$ -> handleBlock$$, class:Handler$genWithPrefix$ -> Handler$genWithPrefix$, class:Capture$scope1 -> Capture$scope1)
+//│       curThis = S of N
+//│       bindings = HashMap(id -> id, param0 -> param0, param1 -> param1, param2 -> param2, param3 -> param3, param4 -> param4, param5 -> param5, label:loopLabel -> loopLabel)
+//│     bindings = HashMap(tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$3, member:Capture$scope1 -> Capture$scope11, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$, member:Handler$genWithPrefix$produce$ -> Handler$genWithPrefix$produce$, tmp:block$res -> block$res, member:Handler$genWithPrefix$produce -> Handler$genWithPrefix$produce, member:Generator -> Generator1, class:Generator -> Generator, member:cpsCont$ -> cpsCont$1, member:Handler$genWithPrefix$ -> Handler$genWithPrefix$1, tmp:block$res -> block$res1, member:permutations -> permutations, member:permutations_impl -> permutations_impl, member:cpsCont$ -> cpsCont$2, member:permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$ -> permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$, member:cpsCont -> cpsCont, member:handleBlock$$ -> handleBlock$$, class:Handler$genWithPrefix$ -> Handler$genWithPrefix$, class:Capture$scope1 -> Capture$scope1)
+//│         curThis = S of S of class:Handler$genWithPrefix$⁰
+//│         bindings = HashMap(gen -> gen, k -> k, scope1$cap -> scope1$cap)
+//│       bindings = HashMap(result -> result, k -> k1)
+//│     bindings = HashMap(tmp:Handler$genWithPrefix$produce$here -> Handler$genWithPrefix$produce$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
 
 let res = mut []
 handle gen = Generator with
@@ -27,32 +111,79 @@ handle gen = Generator with
     res.push(result)
     resume(())
 in permutations(gen, [1, 2, 3, 4])
-//│ res = [
-//│   [1, 2, 3, 4],
-//│   [1, 2, 4, 3],
-//│   [1, 3, 2, 4],
-//│   [1, 3, 4, 2],
-//│   [1, 4, 2, 3],
-//│   [1, 4, 3, 2],
-//│   [2, 1, 3, 4],
-//│   [2, 1, 4, 3],
-//│   [2, 3, 1, 4],
-//│   [2, 3, 4, 1],
-//│   [2, 4, 1, 3],
-//│   [2, 4, 3, 1],
-//│   [3, 1, 2, 4],
-//│   [3, 1, 4, 2],
-//│   [3, 2, 1, 4],
-//│   [3, 2, 4, 1],
-//│   [3, 4, 1, 2],
-//│   [3, 4, 2, 1],
-//│   [4, 1, 2, 3],
-//│   [4, 1, 3, 2],
-//│   [4, 2, 1, 3],
-//│   [4, 2, 3, 1],
-//│   [4, 3, 1, 2],
-//│   [4, 3, 2, 1]
-//│ ]
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.111: 	    res.push(result)
+//│ ╙──       	    ^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.112: 	    resume(())
+//│ ╙──       	    ^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$3, res -> res, gen -> gen, member:Capture$scope1 -> Capture$scope11, class:Handler$gen$ -> Handler$gen$, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$, member:Handler$genWithPrefix$produce$ -> Handler$genWithPrefix$produce$, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$gen$produce -> Handler$gen$produce, tmp:block$res -> block$res, member:Handler$genWithPrefix$produce -> Handler$genWithPrefix$produce, member:Generator -> Generator1, member:Handler$gen$ -> Handler$gen$1, class:Generator -> Generator, member:cpsCont$ -> cpsCont$1, member:Handler$genWithPrefix$ -> Handler$genWithPrefix$1, member:cpsCont -> cpsCont1, tmp:block$res -> block$res1, member:permutations -> permutations, member:Handler$gen$produce$ -> Handler$gen$produce$, member:permutations_impl -> permutations_impl, member:cpsCont$ -> cpsCont$2, member:permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$ -> permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$, member:cpsCont -> cpsCont, member:handleBlock$$ -> handleBlock$$, class:Handler$genWithPrefix$ -> Handler$genWithPrefix$, class:Capture$scope1 -> Capture$scope1, tmp:block$res -> block$res3)
+//│         curThis = S of S of class:Handler$gen$⁰
+//│         bindings = HashMap()
+//│       bindings = HashMap(k -> k, result -> result)
+//│     bindings = HashMap(tmp:Handler$gen$produce$here -> Handler$gen$produce$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(tmp:block$res -> block$res2, member:cpsCont$ -> cpsCont$3, res -> res, gen -> gen, member:Capture$scope1 -> Capture$scope11, class:Handler$gen$ -> Handler$gen$, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$, member:Handler$genWithPrefix$produce$ -> Handler$genWithPrefix$produce$, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$gen$produce -> Handler$gen$produce, tmp:block$res -> block$res, member:Handler$genWithPrefix$produce -> Handler$genWithPrefix$produce, member:Generator -> Generator1, member:Handler$gen$ -> Handler$gen$1, class:Generator -> Generator, member:cpsCont$ -> cpsCont$1, member:Handler$genWithPrefix$ -> Handler$genWithPrefix$1, member:cpsCont -> cpsCont1, tmp:block$res -> block$res1, member:permutations -> permutations, member:Handler$gen$produce$ -> Handler$gen$produce$, member:permutations_impl -> permutations_impl, member:cpsCont$ -> cpsCont$2, member:permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$ -> permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$, member:cpsCont -> cpsCont, member:handleBlock$$ -> handleBlock$$, class:Handler$genWithPrefix$ -> Handler$genWithPrefix$, class:Capture$scope1 -> Capture$scope1, tmp:block$res -> block$res3)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│     at REPL16:1:1532
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
+//│ res = []
 
 fun permutations_foreach(l, f) =
   handle gen = Generator with
@@ -61,12 +192,83 @@ fun permutations_foreach(l, f) =
       resume(())
   permutations(gen, l)
 permutations_foreach([1, 2, 3], print)
-//│ > [1, 2, 3]
-//│ > [1, 3, 2]
-//│ > [2, 1, 3]
-//│ > [2, 3, 1]
-//│ > [3, 1, 2]
-//│ > [3, 2, 1]
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.191: 	      f(result)
+//│ ╙──       	      ^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.192: 	      resume(())
+//│ ╙──       	      ^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(class:Handler$gen$ -> Handler$gen$2, member:cpsCont$ -> cpsCont$3, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:handleBlock$ -> handleBlock$1, member:Handler$genWithPrefix$produce$ -> Handler$genWithPrefix$produce$, member:Handler$gen$produce -> Handler$gen$produce1, member:Handler$gen$ -> Handler$gen$3, tmp:tmp -> tmp1, member:Handler$genWithPrefix$produce -> Handler$genWithPrefix$produce, member:Handler$genWithPrefix$ -> Handler$genWithPrefix$1, member:cpsCont -> cpsCont2, class:Capture$scope0 -> Capture$scope0, member:Capture$scope0 -> Capture$scope01, member:permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$ -> permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$, member:cpsCont -> cpsCont, member:cpsCont$ -> cpsCont$4, member:handleBlock$$ -> handleBlock$$1, class:Capture$scope1 -> Capture$scope1, tmp:block$res -> block$res2, res -> res, member:Handler$gen$produce$ -> Handler$gen$produce$1, gen -> gen, member:Capture$scope1 -> Capture$scope11, class:Handler$gen$ -> Handler$gen$, member:cpsCont$ -> cpsCont$, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$gen$produce -> Handler$gen$produce, tmp:block$res -> block$res, member:Generator -> Generator1, member:Handler$gen$ -> Handler$gen$1, class:Generator -> Generator, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont1, tmp:block$res -> block$res4, tmp:block$res -> block$res1, member:permutations -> permutations, member:Handler$gen$produce$ -> Handler$gen$produce$, member:permutations_impl -> permutations_impl, member:cpsCont$ -> cpsCont$2, member:handleBlock$$ -> handleBlock$$, class:Handler$genWithPrefix$ -> Handler$genWithPrefix$, tmp:block$res -> block$res3, member:permutations_foreach -> permutations_foreach)
+//│         curThis = S of S of class:Handler$gen$¹
+//│         bindings = HashMap(f -> f, k -> k)
+//│       bindings = HashMap(result -> result, k -> k1)
+//│     bindings = HashMap(tmp:Handler$gen$produce$here -> Handler$gen$produce$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Left of Cfg:
+//│           escapeChars = true
+//│           useSuperscripts = false
+//│           includeZero = false
+//│           defaultName = "tmp"
+//│         curThis = S of S of globalThis:globalThis⁰
+//│         bindings = HashMap(class:Handler$gen$ -> Handler$gen$2, member:cpsCont$ -> cpsCont$3, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:handleBlock$ -> handleBlock$1, member:Handler$genWithPrefix$produce$ -> Handler$genWithPrefix$produce$, member:Handler$gen$produce -> Handler$gen$produce1, member:Handler$gen$ -> Handler$gen$3, tmp:tmp -> tmp1, member:Handler$genWithPrefix$produce -> Handler$genWithPrefix$produce, member:Handler$genWithPrefix$ -> Handler$genWithPrefix$1, member:cpsCont -> cpsCont2, class:Capture$scope0 -> Capture$scope0, member:Capture$scope0 -> Capture$scope01, member:permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$ -> permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$, member:cpsCont -> cpsCont, member:cpsCont$ -> cpsCont$4, member:handleBlock$$ -> handleBlock$$1, class:Capture$scope1 -> Capture$scope1, tmp:block$res -> block$res2, res -> res, member:Handler$gen$produce$ -> Handler$gen$produce$1, gen -> gen, member:Capture$scope1 -> Capture$scope11, class:Handler$gen$ -> Handler$gen$, member:cpsCont$ -> cpsCont$, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$gen$produce -> Handler$gen$produce, tmp:block$res -> block$res, member:Generator -> Generator1, member:Handler$gen$ -> Handler$gen$1, class:Generator -> Generator, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont1, tmp:block$res -> block$res4, tmp:block$res -> block$res1, member:permutations -> permutations, member:Handler$gen$produce$ -> Handler$gen$produce$, member:permutations_impl -> permutations_impl, member:cpsCont$ -> cpsCont$2, member:handleBlock$$ -> handleBlock$$, class:Handler$genWithPrefix$ -> Handler$genWithPrefix$, tmp:block$res -> block$res3, member:permutations_foreach -> permutations_foreach)
+//│       curThis = S of N
+//│       bindings = HashMap(l -> l, f -> f, k -> k)
+//│     bindings = HashMap(gen -> gen1, scope0$cap -> scope0$cap, tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+//│     at new Handler$gen$2 (REPL20:1:1400)
+//│     at permutations_foreach (REPL20:1:2199)
+//│     at REPL20:1:2523
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
 
 
 fun permutations_impl(gen, l1, l2) =
@@ -84,6 +286,85 @@ fun permutations_impl(gen, l1, l2) =
       gen.produce([])
 fun permutations(gen, l) =
   permutations_impl(gen, mut [], l)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.279: 	          gen.produce([f, ...result])
+//│ ╙──       	          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.280: 	          let x = resume(())
+//│ ╙──       	                  ^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.282: 	      permutations_impl(genWithPrefix, mut [], l1.concat(t))
+//│ ╙──       	                                               ^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.283: 	      l1.push(f)
+//│ ╙──       	      ^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.286: 	      gen.produce([])
+//│ ╙──       	      ^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Left of Cfg:
+//│           escapeChars = true
+//│           useSuperscripts = false
+//│           includeZero = false
+//│           defaultName = "tmp"
+//│         curThis = S of S of globalThis:globalThis⁰
+//│         bindings = HashMap(class:Handler$gen$ -> Handler$gen$2, member:cpsCont$ -> cpsCont$8, member:cpsCont$ -> cpsCont$3, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$genWithPrefix$produce$ -> Handler$genWithPrefix$produce$1, member:handleBlock$ -> handleBlock$1, member:Handler$genWithPrefix$produce$ -> Handler$genWithPrefix$produce$, member:Handler$gen$produce -> Handler$gen$produce1, member:Handler$gen$ -> Handler$gen$3, tmp:tmp -> tmp1, member:Handler$genWithPrefix$produce -> Handler$genWithPrefix$produce1, member:Handler$genWithPrefix$produce -> Handler$genWithPrefix$produce, member:Handler$genWithPrefix$ -> Handler$genWithPrefix$3, member:Handler$genWithPrefix$ -> Handler$genWithPrefix$1, member:cpsCont -> cpsCont2, class:Capture$scope0 -> Capture$scope0, member:Capture$scope0 -> Capture$scope01, member:permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$ -> permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$1, member:permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$ -> permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont, member:cpsCont$ -> cpsCont$4, member:handleBlock$$ -> handleBlock$$1, class:Capture$scope1 -> Capture$scope12, class:Capture$scope1 -> Capture$scope1, tmp:block$res -> block$res5, tmp:block$res -> block$res2, res -> res, member:Handler$gen$produce$ -> Handler$gen$produce$1, member:Capture$scope1 -> Capture$scope13, gen -> gen, member:Capture$scope1 -> Capture$scope11, class:Handler$gen$ -> Handler$gen$, member:cpsCont$ -> cpsCont$5, member:cpsCont$ -> cpsCont$, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$gen$produce -> Handler$gen$produce, tmp:block$res -> block$res, member:cpsCont$ -> cpsCont$6, member:Generator -> Generator1, member:Handler$gen$ -> Handler$gen$1, class:Generator -> Generator, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont1, tmp:block$res -> block$res4, tmp:block$res -> block$res1, member:permutations -> permutations1, member:cpsCont$ -> cpsCont$7, member:permutations -> permutations, member:Handler$gen$produce$ -> Handler$gen$produce$, member:permutations_impl -> permutations_impl1, member:permutations_impl -> permutations_impl, member:cpsCont$ -> cpsCont$2, member:handleBlock$$ -> handleBlock$$2, member:handleBlock$$ -> handleBlock$$, class:Handler$genWithPrefix$ -> Handler$genWithPrefix$2, class:Handler$genWithPrefix$ -> Handler$genWithPrefix$, tmp:block$res -> block$res3, member:permutations_foreach -> permutations_foreach)
+//│       curThis = S of N
+//│       bindings = HashMap(param0 -> param0, param1 -> param1, param2 -> param2, param3 -> param3, param4 -> param4, param5 -> param5, label:loopLabel -> loopLabel, id -> id)
+//│     bindings = HashMap(tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(class:Handler$gen$ -> Handler$gen$2, member:cpsCont$ -> cpsCont$8, member:cpsCont$ -> cpsCont$3, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$genWithPrefix$produce$ -> Handler$genWithPrefix$produce$1, member:handleBlock$ -> handleBlock$1, member:Handler$genWithPrefix$produce$ -> Handler$genWithPrefix$produce$, member:Handler$gen$produce -> Handler$gen$produce1, member:Handler$gen$ -> Handler$gen$3, tmp:tmp -> tmp1, member:Handler$genWithPrefix$produce -> Handler$genWithPrefix$produce1, member:Handler$genWithPrefix$produce -> Handler$genWithPrefix$produce, member:Handler$genWithPrefix$ -> Handler$genWithPrefix$3, member:Handler$genWithPrefix$ -> Handler$genWithPrefix$1, member:cpsCont -> cpsCont2, class:Capture$scope0 -> Capture$scope0, member:Capture$scope0 -> Capture$scope01, member:permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$ -> permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$1, member:permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$ -> permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont, member:cpsCont$ -> cpsCont$4, member:handleBlock$$ -> handleBlock$$1, class:Capture$scope1 -> Capture$scope12, class:Capture$scope1 -> Capture$scope1, tmp:block$res -> block$res5, tmp:block$res -> block$res2, res -> res, member:Handler$gen$produce$ -> Handler$gen$produce$1, member:Capture$scope1 -> Capture$scope13, gen -> gen, member:Capture$scope1 -> Capture$scope11, class:Handler$gen$ -> Handler$gen$, member:cpsCont$ -> cpsCont$5, member:cpsCont$ -> cpsCont$, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$gen$produce -> Handler$gen$produce, tmp:block$res -> block$res, member:cpsCont$ -> cpsCont$6, member:Generator -> Generator1, member:Handler$gen$ -> Handler$gen$1, class:Generator -> Generator, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont1, tmp:block$res -> block$res4, tmp:block$res -> block$res1, member:permutations -> permutations1, member:cpsCont$ -> cpsCont$7, member:permutations -> permutations, member:Handler$gen$produce$ -> Handler$gen$produce$, member:permutations_impl -> permutations_impl1, member:permutations_impl -> permutations_impl, member:cpsCont$ -> cpsCont$2, member:handleBlock$$ -> handleBlock$$2, member:handleBlock$$ -> handleBlock$$, class:Handler$genWithPrefix$ -> Handler$genWithPrefix$2, class:Handler$genWithPrefix$ -> Handler$genWithPrefix$, tmp:block$res -> block$res3, member:permutations_foreach -> permutations_foreach)
+//│         curThis = S of S of class:Handler$genWithPrefix$¹
+//│         bindings = HashMap(gen -> gen1, k -> k, scope1$cap -> scope1$cap)
+//│       bindings = HashMap(result -> result, k -> k1)
+//│     bindings = HashMap(tmp:Handler$genWithPrefix$produce$here -> Handler$genWithPrefix$produce$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
 
 let res = mut []
 handle gen = Generator with
@@ -92,4 +373,76 @@ handle gen = Generator with
     let x = resume(())
     x
 in permutations(gen, [1, 2, 3])
-//│ res = [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.372: 	    res.push(result)
+//│ ╙──       	    ^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
+//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.373: 	    let x = resume(())
+//│ ╙──       	            ^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(class:Handler$gen$ -> Handler$gen$2, member:cpsCont$ -> cpsCont$8, member:cpsCont$ -> cpsCont$3, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$genWithPrefix$produce$ -> Handler$genWithPrefix$produce$1, member:handleBlock$ -> handleBlock$1, member:Handler$genWithPrefix$produce$ -> Handler$genWithPrefix$produce$, member:Handler$gen$produce -> Handler$gen$produce1, member:Handler$gen$ -> Handler$gen$3, tmp:tmp -> tmp1, member:Handler$genWithPrefix$produce -> Handler$genWithPrefix$produce1, member:Handler$genWithPrefix$produce -> Handler$genWithPrefix$produce, member:Handler$genWithPrefix$ -> Handler$genWithPrefix$3, member:Handler$genWithPrefix$ -> Handler$genWithPrefix$1, member:cpsCont -> cpsCont2, class:Capture$scope0 -> Capture$scope0, member:Capture$scope0 -> Capture$scope01, member:permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$ -> permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$1, member:permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$ -> permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont, member:cpsCont$ -> cpsCont$4, member:handleBlock$$ -> handleBlock$$1, class:Capture$scope1 -> Capture$scope12, class:Capture$scope1 -> Capture$scope1, tmp:block$res -> block$res5, tmp:block$res -> block$res2, res -> res1, res -> res, member:Handler$gen$produce$ -> Handler$gen$produce$1, member:Capture$scope1 -> Capture$scope13, gen -> gen1, gen -> gen, class:Handler$gen$ -> Handler$gen$4, member:Capture$scope1 -> Capture$scope11, class:Handler$gen$ -> Handler$gen$, member:cpsCont$ -> cpsCont$5, member:cpsCont$ -> cpsCont$, tmp:tmp -> tmp, tmp:tmp -> tmp2, member:handleBlock$ -> handleBlock$, member:handleBlock$ -> handleBlock$2, member:Handler$gen$produce -> Handler$gen$produce, member:Handler$gen$produce -> Handler$gen$produce2, tmp:block$res -> block$res, member:cpsCont$ -> cpsCont$6, member:Generator -> Generator1, member:Handler$gen$ -> Handler$gen$1, member:Handler$gen$ -> Handler$gen$5, class:Generator -> Generator, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont1, tmp:block$res -> block$res4, tmp:block$res -> block$res1, member:permutations -> permutations1, member:cpsCont$ -> cpsCont$7, member:Handler$gen$produce$ -> Handler$gen$produce$2, member:permutations -> permutations, member:Handler$gen$produce$ -> Handler$gen$produce$, member:permutations_impl -> permutations_impl1, member:permutations_impl -> permutations_impl, member:cpsCont$ -> cpsCont$2, member:handleBlock$$ -> handleBlock$$2, member:handleBlock$$ -> handleBlock$$, class:Handler$genWithPrefix$ -> Handler$genWithPrefix$2, class:Handler$genWithPrefix$ -> Handler$genWithPrefix$, tmp:block$res -> block$res6, tmp:block$res -> block$res3, member:permutations_foreach -> permutations_foreach)
+//│         curThis = S of S of class:Handler$gen$²
+//│         bindings = HashMap()
+//│       bindings = HashMap(k -> k, result -> result)
+//│     bindings = HashMap(tmp:Handler$gen$produce$here -> Handler$gen$produce$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(class:Handler$gen$ -> Handler$gen$2, member:cpsCont$ -> cpsCont$8, member:cpsCont$ -> cpsCont$3, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$genWithPrefix$produce$ -> Handler$genWithPrefix$produce$1, member:handleBlock$ -> handleBlock$1, member:Handler$genWithPrefix$produce$ -> Handler$genWithPrefix$produce$, member:Handler$gen$produce -> Handler$gen$produce1, member:Handler$gen$ -> Handler$gen$3, tmp:tmp -> tmp1, member:Handler$genWithPrefix$produce -> Handler$genWithPrefix$produce1, member:Handler$genWithPrefix$produce -> Handler$genWithPrefix$produce, member:Handler$genWithPrefix$ -> Handler$genWithPrefix$3, member:Handler$genWithPrefix$ -> Handler$genWithPrefix$1, member:cpsCont -> cpsCont2, class:Capture$scope0 -> Capture$scope0, member:Capture$scope0 -> Capture$scope01, member:permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$ -> permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$1, member:permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$ -> permutations_impl_handleBlock$_cpsCont_cpsCont_cpsCont_cpsCont$_cpsCont$_handleBlock$$_cpsCont$, member:cpsCont -> cpsCont3, member:cpsCont -> cpsCont, member:cpsCont$ -> cpsCont$4, member:handleBlock$$ -> handleBlock$$1, class:Capture$scope1 -> Capture$scope12, class:Capture$scope1 -> Capture$scope1, tmp:block$res -> block$res5, tmp:block$res -> block$res2, res -> res1, res -> res, member:Handler$gen$produce$ -> Handler$gen$produce$1, member:Capture$scope1 -> Capture$scope13, gen -> gen1, gen -> gen, class:Handler$gen$ -> Handler$gen$4, member:Capture$scope1 -> Capture$scope11, class:Handler$gen$ -> Handler$gen$, member:cpsCont$ -> cpsCont$5, member:cpsCont$ -> cpsCont$, tmp:tmp -> tmp, tmp:tmp -> tmp2, member:handleBlock$ -> handleBlock$, member:handleBlock$ -> handleBlock$2, member:Handler$gen$produce -> Handler$gen$produce, member:Handler$gen$produce -> Handler$gen$produce2, tmp:block$res -> block$res, member:cpsCont$ -> cpsCont$6, member:Generator -> Generator1, member:Handler$gen$ -> Handler$gen$1, member:Handler$gen$ -> Handler$gen$5, class:Generator -> Generator, member:cpsCont$ -> cpsCont$1, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont1, tmp:block$res -> block$res4, tmp:block$res -> block$res1, member:permutations -> permutations1, member:cpsCont$ -> cpsCont$7, member:Handler$gen$produce$ -> Handler$gen$produce$2, member:permutations -> permutations, member:Handler$gen$produce$ -> Handler$gen$produce$, member:permutations_impl -> permutations_impl1, member:permutations_impl -> permutations_impl, member:cpsCont$ -> cpsCont$2, member:handleBlock$$ -> handleBlock$$2, member:handleBlock$$ -> handleBlock$$, class:Handler$genWithPrefix$ -> Handler$genWithPrefix$2, class:Handler$genWithPrefix$ -> Handler$genWithPrefix$, tmp:block$res -> block$res6, tmp:block$res -> block$res3, member:permutations_foreach -> permutations_foreach)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.278: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.279: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.280: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│     at REPL26:1:1533
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
+//│ res = []
