@@ -23,7 +23,7 @@ f(1)(2)
 //│ ║  l.19: 	f(1)(2)
 //│ ╙──      	^^^^^^^
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let tmp; set tmp = f¹(1)(2); runtime⁰.cpsId﹖(tmp)
+//│ let tmp; set tmp = f¹(1)(2); return runtime⁰.cpsId﹖(tmp)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 3
 
@@ -33,26 +33,32 @@ fun g(a)(b) = f(a)(b) + f(b)(a)
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: applyFunDefn (HandlerLowering.scala:137)
 //│ ╔══[WARNING] This function is not CPS-transformed because it has more than one parameter list.
-//│ ║  l.32: 	fun g(a)(b) = f(a)(b) + f(b)(a)
+//│ ║  l.57: 	fun g(a)(b) = f(a)(b) + f(b)(a)
 //│ ╙──      	    ^
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: checkCall (HandlerLowering.scala:151)
 //│ ╔══[WARNING] This call is not CPS-transformed because it has more than one argument list.
-//│ ║  l.32: 	fun g(a)(b) = f(a)(b) + f(b)(a)
+//│ ║  l.57: 	fun g(a)(b) = f(a)(b) + f(b)(a)
 //│ ╙──      	              ^^^^^^^
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: checkCall (HandlerLowering.scala:151)
 //│ ╔══[WARNING] This call is not CPS-transformed because it has more than one argument list.
-//│ ║  l.32: 	fun g(a)(b) = f(a)(b) + f(b)(a)
+//│ ║  l.57: 	fun g(a)(b) = f(a)(b) + f(b)(a)
 //│ ╙──      	                        ^^^^^^^
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
-//│ let g⁰;
+//│ let g⁰, g$worker⁰;
+//│ @inline
 //│ define g⁰ as fun g¹(a)(b) {
-//│   let tmp, tmp1, tmp2;
-//│   set tmp = f¹(a)(b);
-//│   set tmp1 = f¹(b)(a);
-//│   set tmp2 = +⁰(tmp, tmp1);
-//│   return runtime⁰.cpsId﹖(tmp2)
+//│   return g$worker¹(a, b)
+//│ };
+//│ define g$worker⁰ as fun g$worker¹(a, b) {
+//│   let tmp, inlinedVal, inlinedVal1, tmp1, tmp2;
+//│   set tmp2 = +⁰(a, b);
+//│   set inlinedVal = runtime⁰.cpsId﹖(tmp2);
+//│   set tmp1 = +⁰(b, a);
+//│   set inlinedVal1 = runtime⁰.cpsId﹖(tmp1);
+//│   set tmp = +⁰(inlinedVal, inlinedVal1);
+//│   return runtime⁰.cpsId﹖(tmp)
 //│ };
 //│ end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————

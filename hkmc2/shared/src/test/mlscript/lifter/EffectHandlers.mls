@@ -9,19 +9,21 @@ module A with
     f()
     val a = 1
 //│ FAILURE: Unexpected internal error
-//│ FAILURE LOCATION: thisError (Scope.scala:51)
-//│ FAILURE INFO: Scope:
-//│   parentOrCfg = Left of Cfg:
-//│     escapeChars = true
-//│     useSuperscripts = false
-//│     includeZero = false
-//│     defaultName = "tmp"
-//│   curThis = S of S of globalThis:globalThis⁰
-//│   bindings = HashMap(tmp:block$res -> block$res1, member:A -> A1, module:A -> A, class:Test -> Test, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, class:A -> A, tmp:Block -> Block, tmp:option -> option, member:cpsCont -> cpsCont, tmp:block$res -> block$res, tmp:block$res -> block$res2, member:f -> f)
+//│ FAILURE LOCATION: thisError (Scope.scala:55)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(tmp:block$res -> block$res, tmp:block$res -> block$res2, member:f -> f, tmp:runtime -> runtime, tmp:block$res -> block$res1, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, member:A -> A1, tmp:option -> option, module:A -> A, class:Test -> Test, class:A -> A, member:cpsCont -> cpsCont)
+//│   _2 = class:Test⁰
 //│ ═══[INTERNAL ERROR] `this` not in scope: class:Test
-//│ > let A1, cpsCont;try { cpsCont = function cpsCont(retVal) {   runtime.checkArgs("cpsCont", 1, true, arguments.length);   ‹MISSING_THIS›.a = 1; }; globalThis.Object.freeze(class A {   static {     A1 = this   }   static {     globalThis.Object.freeze(class Test {       static {         A.Test = this       }       constructor() {         runtime.checkCall(f(cpsCont));       }       toString() { return runtime.render(this); }       static [definitionMetadata] = ["class", "Test"];      });   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "A"];  });; undefined } catch (e) { console.log('\u200B' + (e.stack ?? e) + '\u200B'); }
+//│ > let A1, cpsCont;try { cpsCont = function cpsCont(retVal) {   runtime.checkArgs("cpsCont", 1, true, arguments.length);   ‹MISSING_THIS›.a = 1; }; globalThis.Object.freeze(class A {   static {     A1 = this   }   static {     globalThis.Object.freeze(class Test {       static {         A.Test = this       }       constructor() {         return runtime.checkCall(f(cpsCont));       }       toString() { return runtime.render(this); }       static [definitionMetadata] = ["class", "Test"];     });   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "A"]; });; undefined } catch (e) { console.log('\u200B' + (e.stack ?? e) + '\u200B'); }
 //│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:254)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:267)
 //│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Invalid or unexpected token
 
 :effectHandlers
@@ -29,19 +31,21 @@ class Test with
   f()
   val a = 1
 //│ FAILURE: Unexpected internal error
-//│ FAILURE LOCATION: thisError (Scope.scala:51)
-//│ FAILURE INFO: Scope:
-//│   parentOrCfg = Left of Cfg:
-//│     escapeChars = true
-//│     useSuperscripts = false
-//│     includeZero = false
-//│     defaultName = "tmp"
-//│   curThis = S of S of globalThis:globalThis⁰
-//│   bindings = HashMap(class:Test -> Test1, tmp:block$res -> block$res1, member:A -> A1, member:cpsCont -> cpsCont1, module:A -> A, class:Test -> Test, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:block$res -> block$res3, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, class:A -> A, tmp:Block -> Block, tmp:option -> option, member:cpsCont -> cpsCont, tmp:block$res -> block$res, tmp:block$res -> block$res2, member:f -> f, member:Test -> Test2)
+//│ FAILURE LOCATION: thisError (Scope.scala:55)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(tmp:block$res -> block$res, tmp:block$res -> block$res2, member:f -> f, member:Test -> Test2, class:Test -> Test1, tmp:runtime -> runtime, tmp:block$res -> block$res1, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, member:A -> A1, member:cpsCont -> cpsCont1, tmp:option -> option, module:A -> A, class:Test -> Test, tmp:block$res -> block$res3, class:A -> A, member:cpsCont -> cpsCont)
+//│   _2 = class:Test¹
 //│ ═══[INTERNAL ERROR] `this` not in scope: class:Test
-//│ > let Test2, cpsCont1;try { cpsCont1 = function cpsCont(retVal) {   runtime.checkArgs("cpsCont", 1, true, arguments.length);   ‹MISSING_THIS›.a = 1; }; globalThis.Object.freeze(class Test1 {   static {     Test2 = this   }   constructor() {     runtime.checkCall(f(cpsCont1));   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "Test"];  });; undefined } catch (e) { console.log('\u200B' + (e.stack ?? e) + '\u200B'); }
+//│ > let Test2, cpsCont1;try { cpsCont1 = function cpsCont(retVal) {   runtime.checkArgs("cpsCont", 1, true, arguments.length);   ‹MISSING_THIS›.a = 1; }; globalThis.Object.freeze(class Test1 {   static {     Test2 = this   }   constructor() {     return runtime.checkCall(f(cpsCont1));   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "Test"]; });; undefined } catch (e) { console.log('\u200B' + (e.stack ?? e) + '\u200B'); }
 //│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:254)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:267)
 //│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Invalid or unexpected token
 
 class Eff
@@ -55,15 +59,15 @@ h.perform(x) + 1
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
 //│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.52: 	  fun perform(x)(k) = k(x) + 1
+//│ ║  l.56: 	  fun perform(x)(k) = k(x) + 1
 //│ ╙──      	                      ^^^^
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
 //│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.54: 	h.perform(x) + 1
+//│ ║  l.58: 	h.perform(x) + 1
 //│ ╙──      	^^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
 //│ FAILURE INFO: Tuple2:
 //│   _1 = Tuple2:
 //│     _1 = member:suspend⁰
@@ -78,19 +82,19 @@ h.perform(x) + 1
 //│             includeZero = false
 //│             defaultName = "tmp"
 //│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(class:Test -> Test1, member:cpsCont -> cpsCont1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:block$res -> block$res3, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res5, tmp:Term -> Term, member:Eff -> Eff1, tmp:Block -> Block, class:Eff -> Eff, tmp:option -> option, tmp:block$res -> block$res4, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res, member:f -> f, tmp:block$res -> block$res1, member:A -> A1, module:A -> A, tmp:tmp -> tmp, class:Test -> Test, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, class:A -> A, member:Handler$h$ -> Handler$h$1, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont2, member:Handler$h$perform$ -> Handler$h$perform$, tmp:block$res -> block$res2, member:Test -> Test2)
+//│           bindings = HashMap(member:cpsCont -> cpsCont3, tmp:block$res -> block$res2, member:Test -> Test2, class:Test -> Test1, member:Handler$h$perform$ -> Handler$h$perform$, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, member:cpsCont -> cpsCont1, tmp:option -> option, tmp:block$res -> block$res3, tmp:block$res -> block$res5, member:Eff -> Eff1, class:Eff -> Eff, tmp:block$res -> block$res4, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res, member:f -> f, tmp:block$res -> block$res1, member:A -> A1, module:A -> A, tmp:tmp -> tmp, class:Test -> Test, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, class:A -> A, member:Handler$h$ -> Handler$h$1, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont2)
 //│         curThis = S of S of class:Handler$h$⁰
 //│         bindings = HashMap()
-//│       bindings = HashMap(k -> k, x -> x)
+//│       bindings = HashMap(x -> x, k -> k)
 //│     bindings = HashMap(tmp:Handler$h$perform$here -> Handler$h$perform$here)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.278: 	  fun
+//│ ║  l.279: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.279: 	    suspend
+//│ ║  l.280: 	    suspend
 //│ ╙──       	^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
 //│ FAILURE INFO: Tuple2:
 //│   _1 = Tuple2:
 //│     _1 = member:handle_suspension⁰
@@ -102,19 +106,19 @@ h.perform(x) + 1
 //│       includeZero = false
 //│       defaultName = "tmp"
 //│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(class:Test -> Test1, member:cpsCont -> cpsCont1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:block$res -> block$res3, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res5, tmp:Term -> Term, member:Eff -> Eff1, tmp:Block -> Block, class:Eff -> Eff, tmp:option -> option, tmp:block$res -> block$res4, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res, member:f -> f, tmp:block$res -> block$res1, member:A -> A1, module:A -> A, tmp:tmp -> tmp, class:Test -> Test, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, class:A -> A, member:Handler$h$ -> Handler$h$1, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont2, member:Handler$h$perform$ -> Handler$h$perform$, tmp:block$res -> block$res2, member:Test -> Test2)
+//│     bindings = HashMap(member:cpsCont -> cpsCont3, tmp:block$res -> block$res2, member:Test -> Test2, class:Test -> Test1, member:Handler$h$perform$ -> Handler$h$perform$, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, member:cpsCont -> cpsCont1, tmp:option -> option, tmp:block$res -> block$res3, tmp:block$res -> block$res5, member:Eff -> Eff1, class:Eff -> Eff, tmp:block$res -> block$res4, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res, member:f -> f, tmp:block$res -> block$res1, member:A -> A1, module:A -> A, tmp:tmp -> tmp, class:Test -> Test, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, class:A -> A, member:Handler$h$ -> Handler$h$1, member:cpsCont -> cpsCont, member:cpsCont -> cpsCont2)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.278: 	  fun
+//│ ║  l.279: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.279: 	    suspend
+//│ ║  l.280: 	    suspend
 //│ ║         	^^^^^^^^^^^
-//│ ║  l.280: 	    handle_suspension
+//│ ║  l.281: 	    handle_suspension
 //│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
 //│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL22:1:1408
+//│     at REPL22:1:1666
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -125,5 +129,5 @@ h.perform(x) + 1
 //│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
 //│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:297)
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:311)
 //│ ═══[RUNTIME ERROR] Expected: '7', got: 'undefined'

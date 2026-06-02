@@ -1,4 +1,6 @@
 :js
+open annotations
+
 
 :w
 @tailrec
@@ -14,7 +16,7 @@ class A
 @tailrec 2 + 2
 //│ ╔══[WARNING] This annotation has no effect.
 //│ ╟── This annotation is not supported on application terms.
-//│ ║  l.14: 	@tailrec 2 + 2
+//│ ║  l.16: 	@tailrec 2 + 2
 //│ ╙──      	         ^^^^^
 //│ = 4
 
@@ -36,7 +38,7 @@ fun test =
   @tailcall f
 //│ ╔══[WARNING] This annotation has no effect.
 //│ ╟── This annotation is not supported on reference terms.
-//│ ║  l.36: 	  @tailcall f
+//│ ║  l.38: 	  @tailcall f
 //│ ╙──      	            ^
 //│ f = 0
 
@@ -46,7 +48,7 @@ class A with
   fun f() = g()
   fun g() = f()
 //│ ╔══[COMPILATION ERROR] Class methods may not yet be marked @tailrec.
-//│ ║  l.46: 	  fun f() = g()
+//│ ║  l.48: 	  fun f() = g()
 //│ ╙──      	      ^
 
 :w
@@ -61,7 +63,7 @@ module A with
   @tailrec
   fun f = 2
 //│ ╔══[WARNING] This function does not directly self-recurse, but is marked @tailrec.
-//│ ║  l.62: 	  fun f = 2
+//│ ║  l.64: 	  fun f = 2
 //│ ╙──      	      ^
 
 :w
@@ -80,7 +82,7 @@ handle h = Object with
   fun f()(r) = 2
 //│ ═══[WARNING] This annotation has no effect.
 //│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
 //│ FAILURE INFO: Tuple2:
 //│   _1 = Tuple2:
 //│     _1 = member:suspend⁰
@@ -88,26 +90,24 @@ handle h = Object with
 //│   _2 = Scope:
 //│     parentOrCfg = Right of Scope:
 //│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:test -> test1, f -> f2, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, tmp:block$res -> block$res7, member:Handler$h$f -> Handler$h$f, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:A -> A3, member:Handler$h$ -> Handler$h$1, tmp:Block -> Block, class:A -> A2, tmp:option -> option, member:cpsCont -> cpsCont, tmp:block$res -> block$res, tmp:block$res -> block$res8, member:f -> f, tmp:block$res -> block$res12, member:A -> A5, tmp:block$res -> block$res1, class:A -> A4, member:A -> A1, class:A -> A, tmp:block$res -> block$res2, tmp:block$res -> block$res9, tmp:block$res -> block$res3, member:A -> A7, class:A -> A6, member:f -> f1, member:g -> g, module:A -> A6, tmp:block$res -> block$res10, member:f_g -> f_g, member:A -> A9, class:A -> A8, tmp:block$res -> block$res4, module:A -> A8, member:g -> g1, tmp:block$res -> block$res11, tmp:block$res -> block$res5, member:test -> test, h -> h)
-//│         curThis = S of S of class:Handler$h$⁰
-//│         bindings = HashMap()
-//│       bindings = HashMap(k -> k)
-//│     bindings = HashMap()
+//│         parentOrCfg = Left of Cfg:
+//│           escapeChars = true
+//│           useSuperscripts = false
+//│           includeZero = false
+//│           defaultName = "tmp"
+//│         curThis = S of S of globalThis:globalThis⁰
+//│         bindings = HashMap(member:f_g -> f_g, tmp:block$res -> block$res5, member:g -> g1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:block$res -> block$res6, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:test -> test, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res7, member:test -> test1, f -> f2, tmp:block$res -> block$res8, member:A -> A3, class:A -> A2, tmp:block$res -> block$res9, member:A -> A5, class:A -> A4, tmp:block$res -> block$res10, member:A -> A7, class:A -> A6, module:A -> A6, tmp:block$res -> block$res11, member:A -> A9, class:A -> A8, module:A -> A8, tmp:block$res -> block$res12, h -> h, class:Handler$h$ -> Handler$h$, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$h$f -> Handler$h$f, tmp:block$res -> block$res, tmp:block$res -> block$res1, member:Handler$h$ -> Handler$h$1, member:f -> f, member:cpsCont -> cpsCont, tmp:block$res -> block$res2, member:A -> A1, member:cpsCont -> cpsCont1, class:A -> A, tmp:block$res -> block$res3, tmp:block$res -> block$res4, member:f -> f1, member:g -> g, tmp:block$res -> block$res13)
+//│       curThis = S of S of class:Handler$h$⁰
+//│       bindings = HashMap()
+//│     bindings = HashMap(k -> k)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.278: 	  fun
+//│ ║  l.279: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.279: 	    suspend
+//│ ║  l.280: 	    suspend
 //│ ╙──       	^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:131)
+//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
 //│ FAILURE INFO: Tuple2:
 //│   _1 = Tuple2:
 //│     _1 = member:handle_suspension⁰
@@ -119,19 +119,19 @@ handle h = Object with
 //│       includeZero = false
 //│       defaultName = "tmp"
 //│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:test -> test1, f -> f2, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, tmp:block$res -> block$res7, member:Handler$h$f -> Handler$h$f, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:A -> A3, member:Handler$h$ -> Handler$h$1, tmp:Block -> Block, class:A -> A2, tmp:option -> option, member:cpsCont -> cpsCont, tmp:block$res -> block$res, tmp:block$res -> block$res8, member:f -> f, tmp:block$res -> block$res12, member:A -> A5, tmp:block$res -> block$res1, class:A -> A4, member:A -> A1, class:A -> A, tmp:block$res -> block$res2, tmp:block$res -> block$res9, tmp:block$res -> block$res3, member:A -> A7, class:A -> A6, member:f -> f1, member:g -> g, module:A -> A6, tmp:block$res -> block$res10, member:f_g -> f_g, member:A -> A9, class:A -> A8, tmp:block$res -> block$res4, module:A -> A8, member:g -> g1, tmp:block$res -> block$res11, tmp:block$res -> block$res5, member:test -> test, h -> h)
+//│     bindings = HashMap(member:f_g -> f_g, tmp:block$res -> block$res5, member:g -> g1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:block$res -> block$res6, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:test -> test, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res7, member:test -> test1, f -> f2, tmp:block$res -> block$res8, member:A -> A3, class:A -> A2, tmp:block$res -> block$res9, member:A -> A5, class:A -> A4, tmp:block$res -> block$res10, member:A -> A7, class:A -> A6, module:A -> A6, tmp:block$res -> block$res11, member:A -> A9, class:A -> A8, module:A -> A8, tmp:block$res -> block$res12, h -> h, class:Handler$h$ -> Handler$h$, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$h$f -> Handler$h$f, tmp:block$res -> block$res, tmp:block$res -> block$res1, member:Handler$h$ -> Handler$h$1, member:f -> f, member:cpsCont -> cpsCont, tmp:block$res -> block$res2, member:A -> A1, member:cpsCont -> cpsCont1, class:A -> A, tmp:block$res -> block$res3, tmp:block$res -> block$res4, member:f -> f1, member:g -> g, tmp:block$res -> block$res13)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.278: 	  fun
+//│ ║  l.279: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.279: 	    suspend
+//│ ║  l.280: 	    suspend
 //│ ║         	^^^^^^^^^^^
-//│ ║  l.280: 	    handle_suspension
+//│ ║  l.281: 	    handle_suspension
 //│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:258)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
 //│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL44:1:1016
+//│     at REPL47:1:1133
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)

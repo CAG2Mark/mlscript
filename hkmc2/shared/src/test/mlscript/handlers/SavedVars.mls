@@ -21,7 +21,7 @@ fun g() =
       2
   a
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let g, Capture$scope01, cpsCont$, cpsCont$1;
+//│ let g, Capture$scope01;
 //│ (class Capture$scope0 {
 //│   static {
 //│     Capture$scope01 = this
@@ -31,32 +31,14 @@ fun g() =
 //│     this.scrut$0 = scrut$0;
 //│   }
 //│   toString() { return runtime.render(this); }
-//│   static [definitionMetadata] = ["class", "Capture$scope0"]; 
+//│   static [definitionMetadata] = ["class", "Capture$scope0"];
 //│ });
-//│ cpsCont$1 = function cpsCont$(scope0$cap) {
-//│   return (retVal) => {
-//│     scope0$cap.tmp$1 = 1;
-//│     return
-//│   }
-//│ };
-//│ cpsCont$ = function cpsCont$(scope0$cap) {
-//│   return (retVal) => {
-//│     let inlinedVal;
-//│     scope0$cap.scrut$0 = retVal;
-//│     if (scope0$cap.scrut$0 === true) {
-//│       let cpsCont$here;
-//│       cpsCont$here = cpsCont$1(scope0$cap);
-//│       inlinedVal = f(cpsCont$here);
-//│       return inlinedVal
-//│     }
-//│     scope0$cap.tmp$1 = 2;
-//│     return;
-//│   }
-//│ };
 //│ g = function g(k) {
-//│   let scope0$cap, cpsCont$here;
+//│   let scope0$cap;
 //│   scope0$cap = new Capture$scope01(undefined, undefined);
-//│   cpsCont$here = cpsCont$(scope0$cap);
-//│   return always_true(cpsCont$here)
+//│   scope0$cap.scrut$0 = true;
+//│   if (scope0$cap.scrut$0 === true) { scope0$cap.tmp$1 = 1; return }
+//│   scope0$cap.tmp$1 = 2;
+//│   return;
 //│ };
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————

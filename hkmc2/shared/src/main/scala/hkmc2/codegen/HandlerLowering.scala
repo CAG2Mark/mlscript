@@ -39,7 +39,7 @@ object HandlerLowering:
     def last = p.selN(lastIdent)
     def contTrace = p.selN(contTraceIdent)
   
-  private case class LinkState(res: Local, cls: Path, uid: Path)
+  // private case class LinkState(res: Local, cls: Path, uid: Path)
   
   type FnOrCls = Either[BlockMemberSymbol, DefinitionSymbol[? <: ClassLikeDef] & InnerSymbol]
 
@@ -62,7 +62,7 @@ object HandlerLowering:
   // currentFun: path to the current function for resumption
   // thisPath: path to `this` binding if the function is a method, `this` will be rebinded on resumption
   private case class FunctionCtx(currentFun: Path, thisPath: Option[Path], resumeInfo: ResumeInfo, debugInfo: DebugInfo, inGetter: Bool):
-    def doUnwind(loc: Value, stateId: BigInt, restoreList: List[Local])(using paths: HandlerPaths) =
+    def doUnwind(loc: Value, stateId: BigInt, restoreList: List[LocalVarSymbol])(using paths: HandlerPaths) =
       Return(Call(paths.unwindPath, (
         currentFun ::
         intLit(stateId) ::
@@ -72,14 +72,14 @@ object HandlerLowering:
         resumeInfo.argLists ++:
         (intLit(restoreList.length) ::
         restoreList.map(_.asPath))
-      ).map(_.asArg) ne_:: Nil)(true, true, false), false)
+      ).map(_.asArg) ne_:: Nil)(true, true, false))
   
   // argLists: length-encoded argument list used for resumption.
   // currentLocals: All locals to be saved and reloaded, this cannot include any variables in outer scopes
   // currentStackSafetySym: The symbol to be used for stack safety
   private case class ResumeInfo(
     argLists: List[Path],
-    currentLocals: List[Local],
+    currentLocals: List[LocalVarSymbol],
     currentStackSafetySym: FnOrCls,
   )
   
@@ -170,24 +170,24 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
           val bod = k(paramSym.asPath)
           val (cpsCont, rest) = createNestedFn("cpsCont", pList, bod)
           val call = Call(path, (cpsCont.asPath.asArg :: args.head) ne_:: Nil)(true, false, false)
-          rest(Return(call, isTopLevel))
+          rest(Return(call))
       case _ => super.applyResult(r)(k)
     
-    def retResult(r: Result, implct: Bool) =
+    def retResult(r: Result) =
       val (pth, rst) = r match
         case p: Path => (p, id)
         case _ =>
           val tmp = TempSymbol(N)
           (tmp.asPath, blockBuilder.assignScoped(tmp, r))
-      rst.ret(Call(curContPath, (pth.asArg :: Nil) ne_:: Nil)(true, false, false), implct)
+      rst.ret(Call(curContPath, (pth.asArg :: Nil) ne_:: Nil)(true, false, false))
       
     override def applyBlock(b: Block): Block = b match
-      case Return(c: Call, implct) if c.mayRaiseEffects =>
+      case Return(c: Call) if c.mayRaiseEffects =>
         if !checkCall(c) then
-          retResult(c, implct)
+          retResult(c)
         else
-          Return(Call(c.fun, (curContPath.asArg :: c.argss.head) ne_:: Nil)(true, false, false), implct)
-      case Return(r: Result, implct) => retResult(r, implct)
+          Return(Call(c.fun, (curContPath.asArg :: c.argss.head) ne_:: Nil)(true, false, false))
+      case Return(r: Result) => retResult(r)
       case _ => super.applyBlock(b)
   
   def translateTopLevel(b: Block): (Block, StackSafetyMap) =

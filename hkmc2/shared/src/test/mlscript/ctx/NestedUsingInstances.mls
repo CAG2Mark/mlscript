@@ -1,0 +1,87 @@
+:js
+
+
+fun get(using Int) = use[Int]
+
+
+let x =
+  using Int = 1
+  get
+//│ x = 1
+
+object Ex with
+  using Int = 1
+  get
+
+:rt
+module Ex with
+  using Int = 1
+  get
+//│ ——————————————| Resolved tree |—————————————————————————————————————————————————————————————————————
+//│ Blk:
+//│   stats = Ls of 
+//│     ModuleOrObjectDef:
+//│       sym = module:Ex⁰
+//│       bsym = member:Ex¹
+//│       kind = Mod
+//│       body = ObjBody of Blk:
+//│         stats = Ls of 
+//│           TermDefinition:
+//│             k = Ins
+//│             sym = member:instance$Ident(Int)⁰
+//│             tsym = term:instance$Ident(Int)¹
+//│             sign = S of Resolved{sym=class:Int⁰}:
+//│               t = Ref{sym=member:Int¹} of member:Int¹
+//│               sym = class:Int⁰
+//│             body = S of Lit of IntLit of 1
+//│             modulefulness = Modulefulness of N
+//│         res = App:
+//│           lhs = Resolved{sym=term:get⁰}:
+//│             t = Ref{sym=member:get¹} of member:get¹
+//│             sym = term:get⁰
+//│           rhs = Tup of Ls of 
+//│             Fld:
+//│               term = Resolved{sym=term:instance$Ident(Int)¹,typ=class:Int⁰}:
+//│                 t = Ref{sym=member:instance$Ident(Int)⁰} of member:instance$Ident(Int)⁰
+//│                 sym = term:instance$Ident(Int)¹
+//│   res = Lit of UnitLit of false
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
+
+
+:lift
+:effectHandlers
+fun g =
+  fun f() =
+    handle h = Object with {}
+    using Int = 42
+    get
+  f
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Left of Cfg:
+//│           escapeChars = true
+//│           useSuperscripts = false
+//│           includeZero = false
+//│           defaultName = "tmp"
+//│         curThis = S of S of globalThis:globalThis⁰
+//│         bindings = HashMap(member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res3, member:Ex -> Ex3, module:Ex -> Ex2, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, class:Ex -> Ex2, tmp:option -> option, tmp:block$res -> block$res4, member:f -> f, member:g -> g, tmp:block$res -> block$res5, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res, member:get -> get, member:handleBlock$ -> handleBlock$, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res1, member:instance$Ident(Int) -> instance$Ident$_Int$_, member:cpsCont -> cpsCont, x -> x, tmp:inlinedVal -> inlinedVal, tmp:block$res -> block$res2, class:Capture$scope1 -> Capture$scope1, member:Ex -> Ex1, object:Ex -> Ex, member:Capture$scope1 -> Capture$scope11)
+//│       curThis = S of N
+//│       bindings = HashMap(k -> k)
+//│     bindings = HashMap(scope1$cap -> scope1$cap, tmp:cpsCont$here -> cpsCont$here, h -> h)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.279: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.280: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.281: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+
+

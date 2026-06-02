@@ -5,7 +5,46 @@ import RuntimeJS from "./RuntimeJS.mjs";
 import Runtime from "./Runtime.mjs";
 import Rendering from "./Rendering.mjs";
 import Term from "./Term.mjs";
-let Predef1;
+let Predef1, lambda, lambda1, lambda$, lambda$1, lambda$2;
+lambda$2 = (undefined, function (Predef2) {
+  return (acc, x) => {
+    return lambda1(Predef2, acc, x)
+  }
+});
+lambda1 = (undefined, function (Predef2, acc, x) {
+  let tmp;
+  if (typeof x === 'string') {
+    tmp = true;
+  } else {
+    tmp = false;
+  }
+  Predef2.check(tmp);
+  return acc + x
+});
+lambda$1 = (undefined, function (Predef2, b) {
+  return (a, i) => {
+    let tmp;
+    tmp = runtime.safeCall(b.at(i));
+    return Predef2.equals(a, tmp)
+  }
+});
+lambda$ = (undefined, function (Predef2, a, b) {
+  return (field) => {
+    return lambda(Predef2, a, b, field)
+  }
+});
+lambda = (undefined, function (Predef2, a, b, field) {
+  let scrut, scrut1;
+  scrut = field !== null;
+  if (scrut === true) {
+    scrut1 = Predef2.equals(a[field], b[field]);
+    if (scrut1 === true) {
+      return true
+    }
+    return false;
+  }
+  return false;
+});
 (class Predef {
   static {
     Predef1 = this
@@ -25,14 +64,14 @@ let Predef1;
         globalThis.Object.freeze(this);
       }
       toString() { return runtime.render(this); }
-      static [definitionMetadata] = ["object", "Symbols"]; 
+      static [definitionMetadata] = ["object", "Symbols"];
     });
     (class Sub {
       static {
         Predef.Sub = this
       }
       toString() { return runtime.render(this); }
-      static [definitionMetadata] = ["class", "Sub"]; 
+      static [definitionMetadata] = ["class", "Sub"];
     });
     (class Eq extends Predef.Sub {
       static {
@@ -42,7 +81,7 @@ let Predef1;
         super();
       }
       toString() { return runtime.render(this); }
-      static [definitionMetadata] = ["class", "Eq"]; 
+      static [definitionMetadata] = ["class", "Eq"];
     });
     (class Refl extends Predef.Eq {
       static {
@@ -60,98 +99,98 @@ let Predef1;
         return x
       }
       toString() { return runtime.render(this); }
-      static [definitionMetadata] = ["object", "Refl"]; 
+      static [definitionMetadata] = ["object", "Refl"];
     });
-    this.pass1 = Rendering.pass1;
-    this.pass2 = Rendering.pass2;
-    this.pass3 = Rendering.pass3;
-    this.passing = Rendering.passing;
-    this.map = Rendering.map;
-    this.fold = Rendering.fold;
-    this.interleave = Rendering.interleave;
-    this.render = Rendering.render;
-    this.js_assert = globalThis.console["assert"];
-    this.foldl = Predef.fold;
+    Predef.pass1 = Rendering.pass1;
+    Predef.pass2 = Rendering.pass2;
+    Predef.pass3 = Rendering.pass3;
+    Predef.passing = Rendering.passing;
+    Predef.map = Rendering.map;
+    Predef.fold = Rendering.fold;
+    Predef.interleave = Rendering.interleave;
+    Predef.render = Rendering.render;
+    Predef.js_assert = globalThis.console["assert"];
+    Predef.foldl = Predef.fold;
     (class meta {
       static {
         Predef.meta = this
       }
       static codegen(t, file) {
         return runtime.safeCall(Term.codegen(t, file))
-      } 
+      }
       static print(t) {
         return runtime.safeCall(Term.print(t))
       }
       toString() { return runtime.render(this); }
-      static [definitionMetadata] = ["class", "meta"]; 
+      static [definitionMetadata] = ["class", "meta"];
     });
   }
   static id(x) {
     return x
-  } 
+  }
   static hide(x) {
     return x
-  } 
+  }
   static get maybe() {
     return Predef.hide(true);
-  } 
+  }
   static apply(f, ...args) {
     return runtime.safeCall(f(...args))
-  } 
+  }
   static pipeInto(x, f) {
     return runtime.safeCall(f(x))
-  } 
+  }
   static pipeFrom(f, x) {
     return runtime.safeCall(f(x))
-  } 
+  }
   static pipeIntoHi(x, f) {
     return runtime.safeCall(f(x))
-  } 
+  }
   static pipeFromHi(f, x) {
     return runtime.safeCall(f(x))
-  } 
+  }
   static tap(x, f) {
     runtime.safeCall(f(x));
     return x
-  } 
+  }
   static pat(f, x) {
     runtime.safeCall(f(x));
     return x
-  } 
+  }
   static alsoDo(x, eff) {
     return x
-  } 
+  }
   static andThen(f, g) {
     return (x) => {
       let tmp;
       tmp = runtime.safeCall(f(x));
       return runtime.safeCall(g(tmp))
     }
-  } 
+  }
   static compose(f, g) {
     return (x) => {
       let tmp;
       tmp = runtime.safeCall(g(x));
       return runtime.safeCall(f(tmp))
     }
-  } 
+  }
   static passTo(receiver, f) {
     return (...args) => {
       return runtime.safeCall(f(receiver, ...args))
     }
-  } 
+  }
   static passToLo(receiver, f) {
     return (...args) => {
       return runtime.safeCall(f(receiver, ...args))
     }
-  } 
+  }
   static call(receiver, f) {
     return (...args) => {
       return runtime.safeCall(f.call(receiver, ...args))
     }
-  } 
+  }
   static equals(a, b) {
-    let scrut, scrut1, scrut2, ac, scrut3, md, scrut4, scrut5, scrut6, scrut7, scrut8, scrut9, lambda, lambda1, tmp, tmp1;
+    let scrut, scrut1, scrut2, ac, scrut3, md, scrut4, scrut5, scrut6, scrut7, scrut8, scrut9, tmp, tmp1, lambda$here, lambda$here1;
     scrut = a === b;
     if (scrut === true) {
       return true
@@ -160,12 +199,8 @@ let Predef1;
       if (b instanceof globalThis.Array) {
         scrut1 = a.length === b.length;
         if (scrut1 === true) {
-          lambda = (undefined, function (a1, i) {
-            let tmp2;
-            tmp2 = runtime.safeCall(b.at(i));
-            return Predef.equals(a1, tmp2)
-          });
-          return runtime.safeCall(a.every(lambda))
+          lambda$here = lambda$1(Predef, b);
+          return runtime.safeCall(a.every(lambda$here))
         }
       }
     }
@@ -185,19 +220,8 @@ let Predef1;
                 md = ac[Predef.Symbols.definitionMetadata];
                 scrut4 = md !== undefined;
                 if (scrut4 === true) {
-                  lambda1 = (undefined, function (field) {
-                    let scrut10, scrut11;
-                    scrut10 = field !== null;
-                    if (scrut10 === true) {
-                      scrut11 = Predef.equals(a[field], b[field]);
-                      if (scrut11 === true) {
-                        return true
-                      }
-                      return false;
-                    }
-                    return false;
-                  });
-                  scrut5 = runtime.safeCall(md[2].every(lambda1));
+                  lambda$here1 = lambda$(Predef, a, b);
+                  scrut5 = runtime.safeCall(md[2].every(lambda$here1));
                   if (scrut5 === true) {
                     tmp = true;
                   } else {
@@ -229,41 +253,41 @@ let Predef1;
       return false;
     }
     return false;
-  } 
+  }
   static nequals(a, b) {
     let tmp;
     tmp = Predef.equals(a, b);
     return ! tmp
-  } 
+  }
   static print(...xs) {
     let callPrefix, tmp;
     callPrefix = runtime.safeCall(Predef.map(Predef.renderAsStr));
     tmp = runtime.safeCall(callPrefix(...xs));
     return runtime.safeCall(globalThis.console.log(...tmp))
-  } 
+  }
   static renderAsStr(arg) {
     if (typeof arg === 'string') {
       return arg
     }
     return runtime.safeCall(Predef.render(arg));
-  } 
+  }
   static check(...args) {
     return runtime.safeCall(Predef.js_assert(...args))
-  } 
+  }
   static notImplemented(msg) {
     let tmp;
     tmp = "Not implemented: " + msg;
     throw runtime.safeCall(globalThis.Error(tmp))
-  } 
+  }
   static get notImplementedError() {
     throw runtime.safeCall(globalThis.Error("Not implemented"));
-  } 
+  }
   static tuple(...xs) {
     return xs
-  } 
+  }
   static mkSet(...xs) {
     return globalThis.Object.freeze(new globalThis.Set(xs))
-  } 
+  }
   static foldr(f) {
     return (first, ...rest) => {
       let len, scrut, i, init;
@@ -289,33 +313,23 @@ let Predef1;
       }
       return runtime.safeCall(f(first, init));
     }
-  } 
+  }
   static mkStr(...xs) {
-    let lambda, callPrefix;
-    lambda = (undefined, function (acc, x) {
-      let tmp, tmp1;
-      if (typeof x === 'string') {
-        tmp = true;
-      } else {
-        tmp = false;
-      }
-      Predef.check(tmp);
-      tmp1 = acc + x;
-      return tmp1
-    });
-    callPrefix = runtime.safeCall(Predef.fold(lambda));
+    let callPrefix, lambda$here;
+    lambda$here = lambda$2(Predef);
+    callPrefix = runtime.safeCall(Predef.fold(lambda$here));
     return runtime.safeCall(callPrefix(...xs))
-  } 
+  }
   static use(instance) {
     return instance
-  } 
+  }
   static enterHandleBlock(handler, body) {
     return runtime.safeCall(Runtime.enterHandleBlock(handler, body))
-  } 
+  }
   static raiseUnhandledEffect() {
     return runtime.safeCall(Runtime.mkEffect(Runtime.FatalEffect, null))
   }
   toString() { return runtime.render(this); }
-  static [definitionMetadata] = ["class", "Predef"]; 
+  static [definitionMetadata] = ["class", "Predef"];
 });
 let Predef = Predef1; export default Predef;
