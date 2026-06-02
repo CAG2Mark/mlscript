@@ -149,6 +149,23 @@ mut val resumePc = -1
 object FatalEffect
 object PrintStackEffect
 
+object TopLevelHandler
+
+data class ContThunk(thunk)
+data class Suspend(tag, handlerFun, k)
+
+fun handleEffectsCps(k, tag, v) = if v is
+  Suspend(tag', handlerFun, kk) then
+    if tag === TopLevelHandler then throw Error("unhandled effects")
+    if tag' === tag then k(handlerFun(kk))
+    else Suspend(tag', handlerFun, r => handleEffectsCps(k, tag, kk(r)))
+  else k(v)
+
+fun handlerTrampoline(k, tag, v) =
+  while v is ContThunk(thunk) do set v = thunk()
+  handleEffectsCps(k, tag, v)
+
+
 data class FunctionContFrame(next, saved) with
   fun resume(value) =
     let

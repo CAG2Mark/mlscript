@@ -8,41 +8,205 @@
 // :d
 // :todo
 
+:noOpt
+:noInline
+:sir
+:effectHandlers
+fun f(x) =
+  let y
+  if x is 0 then
+    set y = 0
+  else 
+    set y = 1
+  print(y + 1)
+  print(y + 1)
+//│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
+//│ let f⁰;
+//│ define f⁰ as fun f¹(x) {
+//│   let y, tmp, tmp1, tmp2, rest;
+//│   define rest as fun rest⁰() {
+//│     set tmp1 = +⁰(y, 1);
+//│     do Predef⁰.print⁰(tmp1);
+//│     set tmp2 = +⁰(y, 1);
+//│     return Predef⁰.print⁰(tmp2)
+//│   };
+//│   match x
+//│     0 =>
+//│       set y = 0;
+//│       set tmp = runtime⁰.Unit⁰;
+//│       return rest⁰()
+//│     else
+//│       set y = 1;
+//│       set tmp = runtime⁰.Unit⁰;
+//│       return rest⁰()
+//│   end
+//│ };
+//│ end
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
+f(0)
+//│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
+//│ return f¹(0)
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
+//│ > 1
+//│ > 1
+
+class A
+
+:noOpt
 :noInline
 :sjs
-fun f(x) =
-  fun g = x
-  g
+let x = new A
+let y = 2
+let z = 2
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let f; f = function f(x) { let g; g = function g() { return x }; return g() };
+//│ let x, y, z; x = globalThis.Object.freeze(new A1()); y = 2; z = 2;
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
+//│ x = A
+//│ y = 2
+//│ z = 2
 
-:sjs
+:noOpt
+:noInline
+:sir
 :effectHandlers
-fun g(x) = x + 2
-fun f(x) =
-  let a = g(x)
-  a + 2
-fun h(x) = g(x)
-f(0)
-//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let f1, g, h;
-//│ g = function g(k, x) {
-//│   let tmp;
-//│   tmp = x + 2;
-//│   return k(tmp)
-//│ };
-//│ f1 = function f(k, x) {
-//│   let a, cpsCont;
-//│   cpsCont = function cpsCont(retVal) {
-//│     let tmp;
-//│     a = retVal;
-//│     tmp = a + 2;
-//│     return k(tmp)
+fun foo =
+  if x is A and
+    y is A and
+      z is 2 then print("a")
+    y is 2 then print("b")
+  else
+    print("hi")
+    print("hi")
+  print("abcd")
+foo
+//│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
+//│ let foo⁰;
+//│ define foo⁰ as fun foo¹() {
+//│   let tmp, tmp1, rest, rest1, rest2;
+//│   define rest as fun rest¹() {
+//│     set tmp1 = tmp;
+//│     return Predef⁰.print⁰("abcd")
 //│   };
-//│   return g(cpsCont, x)
+//│   define rest1 as fun rest²() {
+//│     do Predef⁰.print⁰("hi");
+//│     set tmp = Predef⁰.print⁰("hi");
+//│     return rest¹()
+//│   };
+//│   define rest2 as fun rest³() {
+//│     end
+//│   };
+//│   match x⁰
+//│     A⁰ =>
+//│       let rest3;
+//│       define rest3 as fun rest⁴() {
+//│         end
+//│       };
+//│       match y⁰
+//│         A⁰ =>
+//│           match z⁰
+//│             2 =>
+//│               set tmp = Predef⁰.print⁰("a");
+//│               return rest¹()
+//│             else
+//│               return rest²()
+//│           end
+//│         2 =>
+//│           set tmp = Predef⁰.print⁰("b");
+//│           return rest¹()
+//│         else
+//│           return rest²()
+//│       end
+//│     else
+//│       return rest²()
+//│   end
 //│ };
-//│ h = function h(k, x) { return g(k, x) };
-//│ return f1(runtime.cpsId, 0)
+//│ return foo¹()
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ = 4
+//│ > b
+//│ > abcd
+
+:sir
+:effectHandlers
+handle h = Object with
+  fun a(v)(k) = k(v)
+h
+//│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
+//│ let h⁰, tmp, handleBlock$⁰, Handler$h$⁰;
+//│ define Handler$h$⁰ as class extends globalThis⁰.Object⁰ Handler$h$¹ {
+//│   method a⁰ = fun a¹(v) {
+//│     let Handler$h$a, suspendRes;
+//│     define Handler$h$a as fun Handler$h$a⁰(k) {
+//│       return k(v)
+//│     };
+//│     return suspend⁰(Handler$h$¹.this, Handler$h$a⁰)
+//│   }
+//│ };
+//│ set h⁰ = new mut Handler$h$¹();
+//│ define handleBlock$⁰ as fun handleBlock$¹() {
+//│   return h⁰
+//│ };
+//│ set tmp = handle_suspension⁰(h⁰, handleBlock$¹);
+//│ return tmp
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend¹
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(tmp:block$res -> block$res3, x -> x, y -> y, z -> z, tmp:block$res -> block$res4, member:foo -> foo, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res5, tmp:block$res -> block$res, member:f -> f, h -> h, class:Handler$h$ -> Handler$h$, member:handleBlock$ -> handleBlock$, tmp:block$res -> block$res1, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res2, tmp:block$res -> block$res6, member:A -> A1, class:A -> A)
+//│         curThis = S of S of class:Handler$h$¹
+//│         bindings = HashMap()
+//│       bindings = HashMap(v -> v)
+//│     bindings = HashMap(member:Handler$h$a -> Handler$h$a)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.279: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.280: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension¹
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(tmp:block$res -> block$res3, x -> x, y -> y, z -> z, tmp:block$res -> block$res4, member:foo -> foo, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res5, tmp:block$res -> block$res, member:f -> f, h -> h, class:Handler$h$ -> Handler$h$, member:handleBlock$ -> handleBlock$, tmp:block$res -> block$res1, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res2, tmp:block$res -> block$res6, member:A -> A1, class:A -> A)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.279: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.280: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.281: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│     at REPL28:1:815
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)

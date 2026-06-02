@@ -117,6 +117,79 @@ type StackSafetyMap = collection.Map[FnOrCls, (Int, Block)]
 
 class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise, Elaborator.State, Elaborator.Ctx):
   
+  def mapTail(b: Block)(f: BlockTail => Block): Block = b match
+    case b: BlockTail => f(b)
+    case Match(scrut, arms, dflt, rest) => Match(scrut, arms, dflt, mapTail(rest)(f))
+    case Label(label, loop, body, rest) => Label(label, loop, body, mapTail(rest)(f))
+    case Scoped(syms, body) => Scoped(syms, mapTail(body)(f))
+    case Begin(sub, rest) => Begin(sub, mapTail(rest)(f))
+    case TryBlock(sub, finallyDo, rest) => TryBlock(sub, finallyDo, mapTail(rest)(f))
+    case Assign(lhs, rhs, rest) => Assign(lhs, rhs, mapTail(rest)(f))
+    case a @ AssignField(lhs, field, res, rest) => AssignField(lhs, field, res, mapTail(rest)(f))(a.symbol)
+    case AssignDynField(lhs, fld, arrayIdx, rhs, rest) => AssignDynField(lhs, fld, arrayIdx, rhs, mapTail(rest)(f))
+    case Define(defn, rest) => Define(defn, mapTail(rest)(f))
+  
+  
+  def blockNormalizer = new BlockTransformer(SymbolSubst()):
+    val thunks: mutable.Map[LabelSymbol, () => FunDefn] = mutable.Map.empty
+    override def applyBlock(b: Block): Block = b match
+      case m @ Match(scrut, arms, dflt, rest) =>
+        var used = false
+        val (dfn, blk) = createNestedFn("rest", PlainParamList(Nil), applyBlock(rest), true)
+        def rewriteTail(arm: Block) = mapTail(arm):
+          case End(_) =>
+            used = true
+            Return(Call(dfn.asPath, Nil ne_:: Nil)(true, false, false))
+          case arm => arm
+        val newArms = arms.mapConserve:
+          case (c, b_) => (c, applyBlock(rewriteTail(b_)))
+        val newDflt = dflt.mapConserve(b_ => applyBlock(rewriteTail(b_)))
+        // Match(scrut, arms, dflt, rest)
+        val ret = Match(scrut, newArms, newDflt, End())
+        if used then
+          blk(ret)
+        else ret
+      
+      case b @ Begin(sub, rest) =>
+        if sub.isAbortive || rest.isEmpty then applyBlock(sub)
+        var good = false
+        val mapped = mapTail(sub):
+          case End(_) =>
+            good = true
+            rest
+          case b => b
+        
+        if good then applyBlock(mapped)
+        else
+          val (dfn, blk) = createNestedFn("rest", PlainParamList(Nil), applyBlock(rest), true)
+          def rewriteTail(arm: Block) = mapTail(arm):
+            case End(_) => Return(Call(dfn.asPath, Nil ne_:: Nil)(true, false, false))
+            case arm => arm
+          Begin(blk(applyBlock(rewriteTail(sub))), End())
+      
+      case Label(label, loop, body, rest) =>
+        if !loop then
+          var used = false
+          val (dfn, blk) = createNestedFn("rest", PlainParamList(Nil), applyBlock(rest), true)
+          def rewriteTail(arm: Block) = mapTail(arm):
+            case End(_) => Return(Call(dfn.asPath, Nil ne_:: Nil)(true, false, false))
+            case arm => arm
+          thunks.addOne(label, () =>
+            used = true
+            dfn
+          )
+          val res = applyBlock(body)
+          if used then blk(res) else res
+        else
+          ???
+      case Break(label) =>
+        Return(Call(thunks(label)().asPath, Nil ne_:: Nil)(true, false, false))
+      case Continue(label) => ???
+      
+      
+      case _ => super.applyBlock(b)
+    
+  
   val cpsTransformer = new BlockTransformer(SymbolSubst()):
     
     var curContPath: Path = State.runtimeSymbol.asPath.selN(Tree.Ident("cpsId"))
@@ -188,7 +261,18 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         else
           Return(Call(c.fun, (curContPath.asArg :: c.argss.head) ne_:: Nil)(true, false, false))
       case Return(r: Result) => retResult(r)
+      case _: Label => lastWords("undesugared label")
+      case b: Begin =>
+        if !b.rest.isEmpty then
+          lastWords("non-empty begin rest")
+        super.applyBlock(b)
+      case t: TryBlock => lastWords("unsupported")
+      case m: Match =>
+        if !m.rest.isEmpty then
+          lastWords("non-empty match rest")
+        super.applyBlock(b)
       case _ => super.applyBlock(b)
   
   def translateTopLevel(b: Block): (Block, StackSafetyMap) =
-    (cpsTransformer.applyBlock(b), Map.empty)
+    // (cpsTransformer.applyBlock(blockNormalizer.applyBlock(b)), Map.empty)
+    (blockNormalizer.applyBlock(b), Map.empty)
