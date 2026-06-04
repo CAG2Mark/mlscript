@@ -9,4 +9,127 @@
 // :todo
 
 
+:lift
+:sjs
+fun f(x, y, z) =
+  data class C(a) with
+    fun getX = x
+    fun getY = y
+    fun setY = set y += 1
+  class D extends C(y)
+  [new C(0), new D]
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let C1, D1, f, Capture$f1;
+//│ C1 = function C(a) {
+//│   return globalThis.Object.freeze(new C.class(a));
+//│ };
+//│ (class C {
+//│   static {
+//│     C1.class = this
+//│   }
+//│   constructor(a, f$cap, x) {
+//│     this.#f$cap = f$cap;
+//│     this.#x = x;
+//│     this.a = a;
+//│   }
+//│   #f$cap;
+//│   #x;
+//│   get getX() {
+//│     return this.#x;
+//│   }
+//│   get getY() {
+//│     return this.#f$cap.y$0;
+//│   }
+//│   get setY() {
+//│     let tmp;
+//│     tmp = this.#f$cap.y$0 + 1;
+//│     this.#f$cap.y$0 = tmp;
+//│     return runtime.Unit;
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "C", ["a"]];
+//│ });
+//│ (class D extends C1.class {
+//│   static {
+//│     D1 = this
+//│   }
+//│   constructor(f$cap, x) {
+//│     super(this.#f$cap.y$0);
+//│     this.#f$cap = f$cap;
+//│   }
+//│   #f$cap;
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "D"];
+//│ });
+//│ (class Capture$f {
+//│   static {
+//│     Capture$f1 = this
+//│   }
+//│   constructor(y$0) {
+//│     this.y$0 = y$0;
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Capture$f"];
+//│ });
+//│ f = function f(x, y, z) {
+//│   let tmp, tmp1, f$cap;
+//│   f$cap = new Capture$f1(y);
+//│   tmp = globalThis.Object.freeze(new C1.class(0, f$cap, x));
+//│   tmp1 = globalThis.Object.freeze(new D1(f$cap, x));
+//│   return globalThis.Object.freeze([ tmp, tmp1 ])
+//│ };
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
+let res = f(1, 2, 3)
+let c = res.0
+let d = res.1
+c.getY
+c.setY
+c.getY
+d.a
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ ═══[RUNTIME ERROR] ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+//│     at new D (REPL10:1:710)
+//│     at f (REPL10:1:1332)
+//│     at REPL13:1:98
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│ c = undefined
+//│ d = undefined
+//│ res = undefined
+
+:sjs
+class A(x)
+class B(x) extends A(x)
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let A1, B1;
+//│ A1 = function A(x) {
+//│   return globalThis.Object.freeze(new A.class(x));
+//│ };
+//│ (class A {
+//│   static {
+//│     A1.class = this
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "A", [null]];
+//│ });
+//│ B1 = function B(x) {
+//│   return globalThis.Object.freeze(new B.class(x));
+//│ };
+//│ (class B extends A1.class {
+//│   static {
+//│     B1.class = this
+//│   }
+//│   constructor(x) {
+//│     super(x);
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "B", [null]];
+//│ });
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
