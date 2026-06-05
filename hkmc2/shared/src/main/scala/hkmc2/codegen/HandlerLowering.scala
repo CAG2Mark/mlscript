@@ -751,7 +751,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     val transformed = translateBlock(preTransformed, ctx, Set.empty)
     val blk = blockBuilder
       .staticif(
-        !opt.doNotInstrumentTopLevelModCtor,
+        opt.resetEffects,
         _.assign(NoSymbol, Call(paths.resetEffects, Nil ne_:: Nil)(CallMetadata.defaultMlsFun))
       )
       .rest(transformed)
