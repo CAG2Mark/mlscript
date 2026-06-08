@@ -165,19 +165,21 @@ object PrintStackEffect
 object TopLevelHandler
 
 data class ContThunk(thunk)
-data class Suspend(tag, handlerFun, k)
-
-fun handleEffectsCps(k, tag, v) = if v is
-  Suspend(tag', handlerFun, kk) then
-    if tag === TopLevelHandler then throw Error("unhandled effects")
-    if tag' === tag then k(handlerFun(kk))
-    else Suspend(tag', handlerFun, r => handleEffectsCps(k, tag, kk(r)))
-  else k(v)
+data class Suspend(k, tag, handlerFun)
 
 fun handlerTrampoline(k, tag, v) =
-  while v is ContThunk(thunk) do set v = thunk()
-  handleEffectsCps(k, tag, v)
+  while v is
+    ContThunk(thunk) do set v = thunk()
+    Suspend(kk, tag', handlerFun) do
+      if tag === TopLevelHandler do throw Error("unhandled effects")
+      if tag' === tag then
+        let handlerFunCont = (k1, v) => k1(kk(v))
+        set v = handlerFun(cpsId, handlerFunCont)
+      else return Suspend(tag', handlerFun, r => handlerTrampoline(k, tag, kk(r)))
+  k(v)
 
+fun cpsHandlerImpl(k, tag, f) =
+  handlerTrampoline(k, tag, f(cpsId))
 
 data class FunctionContFrame(next, saved) with
   fun resume(value) =

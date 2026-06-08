@@ -233,14 +233,31 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         false
       else if !c.isMlsFun then
         raise(WarningReport(
-          msg"This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function." -> c.toLoc :: Nil,
+          msg"This call is CPS-transformed, but the calling convention is ambiguous because it does not necessarily call a MLS function." -> c.toLoc :: Nil,
           source = Source.Compilation))
-        false
+        true
       else
         true
     
+    override def applyPath(p: Path)(k: Path => Block): Block = p match
+      case Value.RefLike(Elaborator.ctx.builtins.runtime.handle_suspension) =>
+        k(State.runtimeSymbol.asPath.selN(Tree.Ident("cpsHandlerImpl")))
+      case _ => super.applyPath(p)(k)
+    
     override def applyResult(r: Result)(k: Result => Block): Block = r match
+      case c @ Call(Value.RefLike(Elaborator.ctx.builtins.runtime.suspend), (tag :: handlerFun :: Nil) :: Nil) =>
+        val paramSym = VarSymbol(Tree.Ident("retVal"))
+        val pList = PlainParamList.simple(paramSym :: Nil)
+        val bod = k(paramSym.asPath)
+        val (cpsCont, rest) = createNestedFn("cpsCont", pList, bod)
+        val call = Instantiate(
+          true,
+          State.runtimeSymbol.asPath.selN(Tree.Ident("Suspend")),
+          (cpsCont.asPath.asArg :: tag :: handlerFun :: Nil) ne_:: Nil)
+        rest(Return(call))
+      // case c @ Call(Value.RefLike(Elaborator.ctx.builtins.runtime.handle_suspension), (tag :: bodyFun :: Nil) :: Nil) =>
       case c @ Call(path, args) if c.mayRaiseEffects =>
+        println(path)
         if !checkCall(c) then
           super.applyResult(r)(k)
         else
@@ -248,8 +265,9 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
           val pList = PlainParamList.simple(paramSym :: Nil)
           val bod = k(paramSym.asPath)
           val (cpsCont, rest) = createNestedFn("cpsCont", pList, bod)
-          val call = Call(path, (cpsCont.asPath.asArg :: args.head) ne_:: Nil)(true, false, false)
-          rest(Return(call))
+          applyPath(path): path =>
+            val call = Call(path, (cpsCont.asPath.asArg :: args.head) ne_:: Nil)(true, false, false)
+            rest(Return(call))
       case _ => super.applyResult(r)(k)
     
     def retResult(r: Result) =
@@ -259,8 +277,13 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
           val tmp = TempSymbol(N)
           (tmp.asPath, blockBuilder.assignScoped(tmp, r))
       rst.ret(Call(curContPath, (pth.asArg :: Nil) ne_:: Nil)(true, false, false))
-      
+    
     override def applyBlock(b: Block): Block = b match
+      case Return(Call(Value.RefLike(Elaborator.ctx.builtins.runtime.suspend), args :: Nil)) =>
+        Return(Instantiate(
+          true,
+          State.runtimeSymbol.asPath.selN(Tree.Ident("Suspend")),
+          (curContPath.asArg :: args) ne_:: Nil))
       case Return(c: Call) if c.mayRaiseEffects =>
         if !checkCall(c) then
           retResult(c)
@@ -280,5 +303,5 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
       case _ => super.applyBlock(b)
   
   def translateTopLevel(b: Block): (Block, StackSafetyMap) =
-    // (cpsTransformer.applyBlock(blockNormalizer.applyBlock(b)), Map.empty)
-    (blockNormalizer.applyBlock(b), Map.empty)
+    (cpsTransformer.applyBlock(blockNormalizer.applyBlock(b)), Map.empty)
+    // (blockNormalizer.applyBlock(b), Map.empty)

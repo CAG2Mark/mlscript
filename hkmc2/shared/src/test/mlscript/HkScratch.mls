@@ -21,33 +21,51 @@ fun f(x) =
   print(y + 1)
   print(y + 1)
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define f⁰ as fun f¹(x) {
+//│ define f⁰ as fun f¹(k, x) {
 //│   let y, tmp, tmp1, tmp2, rest;
-//│   define rest as fun rest⁰() {
+//│   define rest as fun rest⁰(k1) {
+//│     let cpsCont;
 //│     set tmp1 = +⁰(y, 1);
-//│     do Predef⁰.print⁰(tmp1);
-//│     set tmp2 = +⁰(y, 1);
-//│     return Predef⁰.print⁰(tmp2)
+//│     define cpsCont as fun cpsCont⁰(retVal) {
+//│       set tmp2 = +⁰(y, 1);
+//│       return Predef⁰.print⁰(k1, tmp2)
+//│     };
+//│     return Predef⁰.print⁰(cpsCont⁰, tmp1)
 //│   };
 //│   match x
 //│     0 =>
+//│       let tmp3;
 //│       set y = 0;
 //│       set tmp = runtime⁰.Unit⁰;
-//│       return rest⁰()
+//│       set tmp3 = rest⁰();
+//│       return k(tmp3)
 //│     else
+//│       let tmp3;
 //│       set y = 1;
 //│       set tmp = runtime⁰.Unit⁰;
-//│       return rest⁰()
+//│       set tmp3 = rest⁰();
+//│       return k(tmp3)
 //│   end
 //│ };
 //│ end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 f(0)
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ return f¹(0)
+//│ return f¹(runtime⁰.cpsId﹖, 0)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ > 1
-//│ > 1
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'rest' expected 1 argument but got 0
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at rest (REPL10:1:162)
+//│     at f (REPL10:1:587)
+//│     at REPL13:1:38
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
 
 class A
 
@@ -66,7 +84,7 @@ let z = 2
 
 :noOpt
 :noInline
-:sir
+:sjs
 :effectHandlers
 fun foo =
   if x is A and
@@ -78,133 +96,153 @@ fun foo =
     print("hi")
   print("abcd")
 foo
-//│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define foo⁰ as fun foo¹() {
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let foo;
+//│ foo = function foo(k) {
 //│   let tmp, tmp1, rest, rest1, rest2;
-//│   define rest as fun rest¹() {
-//│     set tmp1 = tmp;
-//│     return Predef⁰.print⁰("abcd")
+//│   rest = function rest(k1) {
+//│     tmp1 = tmp;
+//│     return Predef.print(k1, "abcd")
 //│   };
-//│   define rest1 as fun rest²() {
-//│     do Predef⁰.print⁰("hi");
-//│     set tmp = Predef⁰.print⁰("hi");
-//│     return rest¹()
-//│   };
-//│   define rest2 as fun rest³() {
-//│     end
-//│   };
-//│   match x⁰
-//│     A⁰ =>
-//│       let rest3;
-//│       define rest3 as fun rest⁴() {
-//│         end
+//│   const proxy$rest = rest; rest1 = function rest(k1) {
+//│     let cpsCont;
+//│     cpsCont = function cpsCont(retVal) {
+//│       let cpsCont1;
+//│       cpsCont1 = function cpsCont(retVal1) {
+//│         let tmp2;
+//│         tmp = retVal1;
+//│         tmp2 = proxy$rest();
+//│         return k1(tmp2)
 //│       };
-//│       match y⁰
-//│         A⁰ =>
-//│           match z⁰
-//│             2 =>
-//│               set tmp = Predef⁰.print⁰("a");
-//│               return rest¹()
-//│             else
-//│               return rest²()
-//│           end
-//│         2 =>
-//│           set tmp = Predef⁰.print⁰("b");
-//│           return rest¹()
-//│         else
-//│           return rest²()
-//│       end
-//│     else
-//│       return rest²()
-//│   end
+//│       return Predef.print(cpsCont1, "hi")
+//│     };
+//│     return Predef.print(cpsCont, "hi")
+//│   };
+//│   rest2 = function rest(k1) {};
+//│   if (x instanceof A1) {
+//│     let rest3;
+//│     rest3 = function rest(k1) {};
+//│     if (y instanceof A1) {
+//│       if (z === 2) {
+//│         let cpsCont;
+//│         cpsCont = function cpsCont(retVal) {
+//│           let tmp2;
+//│           tmp = retVal;
+//│           tmp2 = rest();
+//│           return k(tmp2)
+//│         };
+//│         return Predef.print(cpsCont, "a")
+//│       }
+//│       {
+//│         let tmp2;
+//│         tmp2 = rest1();
+//│         return k(tmp2);
+//│       }
+//│     } else if (y === 2) {
+//│       let cpsCont;
+//│       cpsCont = function cpsCont(retVal) {
+//│         let tmp2;
+//│         tmp = retVal;
+//│         tmp2 = rest();
+//│         return k(tmp2)
+//│       };
+//│       return Predef.print(cpsCont, "b")
+//│     }
+//│     {
+//│       let tmp2;
+//│       tmp2 = rest1();
+//│       return k(tmp2);
+//│     }
+//│   }
+//│   { let tmp2; tmp2 = rest1(); return k(tmp2); }
 //│ };
-//│ return foo¹()
+//│ return foo(runtime.cpsId)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ > b
-//│ > abcd
+//│ > fun cpsCont b
 
-:sir
+:sjs
 :effectHandlers
 handle h = Object with
-  fun a(v)(k) = k(v)
-h
-//│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let h, tmp, handleBlock$, Handler$h$;
-//│ define Handler$h$ as class extends globalThis⁰.Object⁰ Handler$h$⁰ {
-//│   method a⁰ = fun a¹(v) {
-//│     let Handler$h$a, suspendRes;
-//│     define Handler$h$a as fun Handler$h$a⁰(k) {
-//│       return k(v)
-//│     };
-//│     return suspend⁰(Handler$h$⁰.this, Handler$h$a⁰)
+  fun a(v)(resume) = resume(v) + resume(v)
+h.a(1) + 4
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:235)
+//│ ╔══[WARNING] This call is CPS-transformed, but the calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.166: 	  fun a(v)(resume) = resume(v) + resume(v)
+//│ ╙──       	                     ^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:235)
+//│ ╔══[WARNING] This call is CPS-transformed, but the calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.166: 	  fun a(v)(resume) = resume(v) + resume(v)
+//│ ╙──       	                                 ^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:235)
+//│ ╔══[WARNING] This call is CPS-transformed, but the calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.167: 	h.a(1) + 4
+//│ ╙──       	^^^^^^
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let h, tmp, handleBlock$, Handler$h$1, cpsCont;
+//│ (class Handler$h$ extends globalThis.Object {
+//│   static {
+//│     Handler$h$1 = this
 //│   }
+//│   constructor() {
+//│     let cpsCont1;
+//│     cpsCont1 = function cpsCont(retVal) {};
+//│     return super(cpsCont1);
+//│   }
+//│   a(k, v) {
+//│     let Handler$h$a;
+//│     Handler$h$a = function Handler$h$a(k1, resume) {
+//│       let tmp1, tmp2, cpsCont1;
+//│       cpsCont1 = function cpsCont(retVal) {
+//│         let cpsCont2;
+//│         tmp1 = retVal;
+//│         cpsCont2 = function cpsCont(retVal1) {
+//│           let tmp3;
+//│           tmp2 = retVal1;
+//│           tmp3 = tmp1 + tmp2;
+//│           return k1(tmp3)
+//│         };
+//│         return resume(cpsCont2, v)
+//│       };
+//│       return resume(cpsCont1, v)
+//│     };
+//│     return new runtime.Suspend(k, this, Handler$h$a)
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Handler$h$"];
+//│ });
+//│ h = new Handler$h$1();
+//│ handleBlock$ = (undefined, function (k) {
+//│   let tmp1, cpsCont1;
+//│   cpsCont1 = function cpsCont(retVal) {
+//│     let tmp2;
+//│     tmp1 = retVal;
+//│     tmp2 = tmp1 + 4;
+//│     return k(tmp2)
+//│   };
+//│   return h.a(cpsCont1, 1)
+//│ });
+//│ cpsCont = function cpsCont(retVal) {
+//│   tmp = retVal;
+//│   return runtime.cpsId(tmp)
 //│ };
-//│ set h = new mut Handler$h$⁰();
-//│ define handleBlock$ as fun handleBlock$⁰() {
-//│   return h
-//│ };
-//│ set tmp = handle_suspension⁰(h, handleBlock$⁰);
-//│ return tmp
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend¹
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(member:A -> A1, class:A -> A, tmp:block$res -> block$res3, x -> x, y -> y, z -> z, tmp:block$res -> block$res4, member:foo -> foo, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res5, tmp:block$res -> block$res, member:f -> f, h -> h, class:Handler$h$ -> Handler$h$, member:handleBlock$ -> handleBlock$, tmp:block$res -> block$res1, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res2, tmp:block$res -> block$res6)
-//│         curThis = S of S of class:Handler$h$⁰
-//│         bindings = HashMap()
-//│       bindings = HashMap(v -> v)
-//│     bindings = HashMap(member:Handler$h$a -> Handler$h$a)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension¹
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Left of Cfg:
-//│       escapeChars = true
-//│       useSuperscripts = false
-//│       includeZero = false
-//│       defaultName = "tmp"
-//│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(member:A -> A1, class:A -> A, tmp:block$res -> block$res3, x -> x, y -> y, z -> z, tmp:block$res -> block$res4, member:foo -> foo, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res5, tmp:block$res -> block$res, member:f -> f, h -> h, class:Handler$h$ -> Handler$h$, member:handleBlock$ -> handleBlock$, tmp:block$res -> block$res1, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res2, tmp:block$res -> block$res6)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ return runtime.cpsHandlerImpl(cpsCont, h, handleBlock$)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:235)
+//│ ╔══[WARNING] This call is CPS-transformed, but the calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.166: 	  fun a(v)(resume) = resume(v) + resume(v)
+//│ ╙──       	                     ^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:235)
+//│ ╔══[WARNING] This call is CPS-transformed, but the calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.166: 	  fun a(v)(resume) = resume(v) + resume(v)
+//│ ╙──       	                                 ^^^^^^^^^
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:235)
+//│ ╔══[WARNING] This call is CPS-transformed, but the calling convention is ambiguous because it does not necessarily call a MLS function.
+//│ ║  l.167: 	h.a(1) + 4
+//│ ╙──       	^^^^^^
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL28:1:815
-//│     at ContextifyScript.runInThisContext (node:vm:137:12)
-//│     at defaultEval (node:repl:610:24)
-//│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│     at REPLServer.emit (node:events:509:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
-//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
+//│ = 10
