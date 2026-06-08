@@ -21,33 +21,23 @@ fun mkrec(g) =
   selfApp of self =>
     g of y => self(self)(y)
 //│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: subterm (Elaborator.scala:740)
+//│ FAILURE LOCATION: subterm (Elaborator.scala:757)
 //│ ╔══[COMPILATION ERROR] Name not found: selfApp
 //│ ║  l.21: 	  selfApp of self =>
 //│ ╙──      	  ^^^^^^^
 
 let fact = mkrec of self => x =>
   if x == 0 then 1 else self(x - 1) * x
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.30: 	  if x == 0 then 1 else self(x - 1) * x
-//│ ╙──      	                        ^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 //│ fact = undefined
 
 fact(3)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.41: 	fact(3)
-//│ ╙──      	^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] TypeError: fact is not a function
-//│     at REPL17:1:38
+//│     at REPL17:1:37
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -59,15 +49,10 @@ fact(3)
 //│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 fact(10)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.61: 	fact(10)
-//│ ╙──      	^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] TypeError: fact is not a function
-//│     at REPL20:1:40
+//│     at REPL20:1:37
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -81,11 +66,6 @@ fact(10)
 :re
 :stackSafe off
 fact(10000)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.83: 	fact(10000)
-//│ ╙──      	^^^^^^^^^^^
 //│ ═══[RUNTIME ERROR] TypeError: fact is not a function
 
 :stackSafe
@@ -93,41 +73,31 @@ fun mkrec(g) =
   selfApp of self =>
     g of y => selfApp(self)(y)
 //│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: subterm (Elaborator.scala:740)
+//│ FAILURE LOCATION: subterm (Elaborator.scala:757)
 //│ ╔══[COMPILATION ERROR] Name not found: selfApp
-//│ ║  l.93: 	  selfApp of self =>
+//│ ║  l.73: 	  selfApp of self =>
 //│ ╙──      	  ^^^^^^^
 //│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: subterm (Elaborator.scala:740)
+//│ FAILURE LOCATION: subterm (Elaborator.scala:757)
 //│ ╔══[COMPILATION ERROR] Name not found: selfApp
-//│ ║  l.94: 	    g of y => selfApp(self)(y)
+//│ ║  l.74: 	    g of y => selfApp(self)(y)
 //│ ╙──      	              ^^^^^^^
 
 // * FIXME: Why doesn't the following work when using Predef function `(==) equals`?
 let fact = mkrec of self => x =>
   if x === 0 then 1 
   else self(x - 1) * x
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.109: 	  else self(x - 1) * x
-//│ ╙──       	       ^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 //│ fact = undefined
 
 :stackSafe
 fact(10000)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.121: 	fact(10000)
-//│ ╙──       	^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] TypeError: fact1 is not a function
-//│     at REPL33:1:40
+//│     at REPL33:1:37
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -142,24 +112,14 @@ fact(10000)
 :re
 :stackSafe off
 fact(10000)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.144: 	fact(10000)
-//│ ╙──       	^^^^^^^^^^^
 //│ ═══[RUNTIME ERROR] TypeError: fact1 is not a function
 
 :stackSafe
 fact(10000)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.153: 	fact(10000)
-//│ ╙──       	^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] TypeError: fact1 is not a function
-//│     at REPL39:1:40
+//│     at REPL39:1:38
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -173,40 +133,30 @@ fact(10000)
 :re
 :stackSafe off
 fact(10000)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.175: 	fact(10000)
-//│ ╙──       	^^^^^^^^^^^
 //│ ═══[RUNTIME ERROR] TypeError: fact1 is not a function
 
 
 :stackSafe 6
 set selfApp = f => f(f)
 //│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: subterm (Elaborator.scala:740)
+//│ FAILURE LOCATION: subterm (Elaborator.scala:757)
 //│ ╔══[COMPILATION ERROR] Name not found: selfApp
-//│ ║  l.185: 	set selfApp = f => f(f)
+//│ ║  l.140: 	set selfApp = f => f(f)
 //│ ╙──       	    ^^^^^^^
 //│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: term (Lowering.scala:918)
+//│ FAILURE LOCATION: term (Lowering.scala:935)
 //│ FAILURE INFO: Error
 //│ ═══[COMPILATION ERROR] Unexpected left-hand side in assignment (‹error›)
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 :expect 3628800
 fact(10)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.200: 	fact(10)
-//│ ╙──       	^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] TypeError: fact1 is not a function
-//│     at REPL48:1:40
+//│     at REPL48:1:38
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -217,35 +167,30 @@ fact(10)
 //│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
 //│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:311)
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
 //│ ═══[RUNTIME ERROR] Expected: '3628800', got: 'undefined'
 
 
 :stackSafe 6
 set selfApp = f => f(f)
 //│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: subterm (Elaborator.scala:740)
+//│ FAILURE LOCATION: subterm (Elaborator.scala:757)
 //│ ╔══[COMPILATION ERROR] Name not found: selfApp
-//│ ║  l.225: 	set selfApp = f => f(f)
+//│ ║  l.175: 	set selfApp = f => f(f)
 //│ ╙──       	    ^^^^^^^
 //│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: term (Lowering.scala:918)
+//│ FAILURE LOCATION: term (Lowering.scala:935)
 //│ FAILURE INFO: Error
 //│ ═══[COMPILATION ERROR] Unexpected left-hand side in assignment (‹error›)
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 fact(1000)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.239: 	fact(1000)
-//│ ╙──       	^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] TypeError: fact1 is not a function
-//│     at REPL54:1:40
+//│     at REPL54:1:38
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -264,20 +209,15 @@ fun mkrec(g) =
     g(b)
   selfApp(a)
 //│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: subterm (Elaborator.scala:740)
+//│ FAILURE LOCATION: subterm (Elaborator.scala:757)
 //│ ╔══[COMPILATION ERROR] Name not found: selfApp
-//│ ║  l.263: 	    fun b(y) = selfApp(self)(y)
+//│ ║  l.208: 	    fun b(y) = selfApp(self)(y)
 //│ ╙──       	               ^^^^^^^
 //│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: subterm (Elaborator.scala:740)
+//│ FAILURE LOCATION: subterm (Elaborator.scala:757)
 //│ ╔══[COMPILATION ERROR] Name not found: selfApp
-//│ ║  l.265: 	  selfApp(a)
+//│ ║  l.210: 	  selfApp(a)
 //│ ╙──       	  ^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.264: 	    g(b)
-//│ ╙──       	    ^^^^
 
 :stackSafe 6
 import "../../mlscript-compile/Runtime.mls"
@@ -290,33 +230,18 @@ let fact =
         x * prev
     b
   mkrec(a)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.288: 	        let prev = self(x - 1)
-//│ ╙──       	                   ^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.289: 	        console.log("resumed:", x)
-//│ ╙──       	        ^^^^^^^^^^^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 //│ fact = undefined
 
 :expect 3628800
 :stackSafe 6
 fact(10)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.310: 	fact(10)
-//│ ╙──       	^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] TypeError: fact2 is not a function
-//│     at REPL64:1:40
+//│     at REPL64:1:38
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -327,5 +252,5 @@ fact(10)
 //│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
 //│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:311)
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
 //│ ═══[RUNTIME ERROR] Expected: '3628800', got: 'undefined'

@@ -4,7 +4,7 @@ package codegen
 import scala.annotation.tailrec
 import scala.collection.mutable.{Map as MutMap, Set as MutSet}
 
-import mlscript.utils.*, shorthands.*
+import hkmc2.utils.*, shorthands.*
 import utils.*
 
 import hkmc2.codegen.flowAnalysis.*
@@ -45,6 +45,7 @@ class EtaExpansionSolver(val constraintSolver: FlowConstraintSolver):
         case (fSym: TermSymbol, whichPl: Int) =>
           val fnDefn = constraintSolver.collector.preAnalyzer.res.funSymToFunDefn(fSym)
           fnDefn.affineInfo.contains(whichPl)
+        case (sym, _) => lastWords(s"prodFunIsAffine: expected TermSymbol funId, got $sym")
       end prodFunIsAffine
       
       res match
@@ -180,7 +181,7 @@ class EtaExpansionRewrite(val etaExpansionSolver: EtaExpansionSolver)(using Rais
         else
           lastWords("not the same shape?")
     
-    private def etaCall(base: Path): Call =
+    private def etaCall(base: Path): Result =
       Call(base, activeEtaArgss.ne_!)(isMlsFun = true, mayRaiseEffects = true, explicitTailCall = false)
     
     override def applyBlock(b: Block): Block = b match

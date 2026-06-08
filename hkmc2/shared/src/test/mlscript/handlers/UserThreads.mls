@@ -23,16 +23,6 @@ fun f(h, x) =
   print("f " + x)
   h.yld()
   print("f " + x)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.22: 	  h.yld()
-//│ ╙──      	  ^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.24: 	  h.yld()
-//│ ╙──      	  ^^^^^^^
 
 fun main(h) =
   print("main start")
@@ -40,21 +30,6 @@ fun main(h) =
   h.fork(() => f(h, 1))
   h.fork(() => f(h, 2))
   print("main end")
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.39: 	  h.fork(() => f(h, 0))
-//│ ╙──      	  ^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.40: 	  h.fork(() => f(h, 1))
-//│ ╙──      	  ^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.41: 	  h.fork(() => f(h, 2))
-//│ ╙──      	  ^^^^^^^^^^^^^^^^^^^^^
 
 
 // LIFO
@@ -72,78 +47,122 @@ handle h = ThreadEffect with
     k(())
 in
   h.start(main)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.63: 	    this.tasks.unshift(thread)
-//│ ╙──      	    ^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.64: 	    k(())
-//│ ╙──      	    ^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.66: 	    this.tasks.push(() => k(()))
-//│ ╙──      	                          ^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.66: 	    this.tasks.push(() => k(()))
-//│ ╙──      	    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.67: 	    enterHandleBlock(this, () => this.tasks.shift()())
-//│ ╙──      	                                 ^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.67: 	    enterHandleBlock(this, () => this.tasks.shift()())
-//│ ╙──      	                                 ^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.69: 	    this.tasks.push(() => main(this))
-//│ ╙──      	                          ^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.69: 	    this.tasks.push(() => main(this))
-//│ ╙──      	    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.71: 	      enterHandleBlock(this, () => this.tasks.shift()())
-//│ ╙──      	                                   ^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.71: 	      enterHandleBlock(this, () => this.tasks.shift()())
-//│ ╙──      	                                   ^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.72: 	    k(())
-//│ ╙──      	    ^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.74: 	  h.start(main)
-//│ ╙──      	  ^^^^^^^^^^^^^
-//│ FAILURE: Unexpected exception
-//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: Cannot resolve overloaded member symbol while: no principal disambiguation found
-//│ 	at: mlscript.utils.package$.lastWords(package.scala:239)
-//│ 	at: hkmc2.Lifter.hkmc2$Lifter$RewrittenScope$$_$$anonfun$14$$anonfun$1(Lifter.scala:718)
-//│ 	at: scala.Option.getOrElse(Option.scala:203)
-//│ 	at: hkmc2.Lifter$RewrittenScope.$anonfun$14(Lifter.scala:718)
-//│ 	at: scala.collection.StrictOptimizedIterableOps.strictOptimizedFlatMap(StrictOptimizedIterableOps.scala:120)
-//│ 	at: scala.collection.StrictOptimizedIterableOps.strictOptimizedFlatMap$(StrictOptimizedIterableOps.scala:29)
-//│ 	at: scala.collection.immutable.HashSet.strictOptimizedFlatMap(HashSet.scala:37)
-//│ 	at: scala.collection.StrictOptimizedIterableOps.flatMap(StrictOptimizedIterableOps.scala:108)
-//│ 	at: scala.collection.StrictOptimizedIterableOps.flatMap$(StrictOptimizedIterableOps.scala:29)
-//│ 	at: scala.collection.immutable.HashSet.flatMap(HashSet.scala:37)
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:Handler$h$fork$ -> Handler$h$fork$, member:Lock -> Lock1, class:Lock -> Lock, tmp:block$res -> block$res3, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:main -> main, member:Handler$h$yld$ -> Handler$h$yld$, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, member:lambda -> lambda3, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, h -> h, class:Handler$h$ -> Handler$h$, member:lambda$ -> lambda$3, member:lambda -> lambda4, member:lambda$ -> lambda$4, member:handleBlock$ -> handleBlock$, member:lambda -> lambda, tmp:block$res -> block$res5, member:Handler$h$fork -> Handler$h$fork, member:lambda -> lambda1, member:lambda -> lambda2, member:Handler$h$yld -> Handler$h$yld, member:Handler$h$start$ -> Handler$h$start$, member:lambda$ -> lambda$, tmp:block$res -> block$res, member:Handler$h$start -> Handler$h$start, member:lambda$ -> lambda$1, member:lambda$ -> lambda$2, member:Handler$h$ -> Handler$h$1, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, tmp:block$res -> block$res2, member:lambda$ -> lambda$5, member:f -> f, member:lambda$ -> lambda$6, tmp:block$res -> block$res1)
+//│         curThis = S of S of class:Handler$h$⁰
+//│         bindings = HashMap()
+//│       bindings = HashMap(thread -> thread)
+//│     bindings = HashMap(tmp:Handler$h$fork$here -> Handler$h$fork$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.280: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.281: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:Handler$h$fork$ -> Handler$h$fork$, member:Lock -> Lock1, class:Lock -> Lock, tmp:block$res -> block$res3, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:main -> main, member:Handler$h$yld$ -> Handler$h$yld$, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, member:lambda -> lambda3, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, h -> h, class:Handler$h$ -> Handler$h$, member:lambda$ -> lambda$3, member:lambda -> lambda4, member:lambda$ -> lambda$4, member:handleBlock$ -> handleBlock$, member:lambda -> lambda, tmp:block$res -> block$res5, member:Handler$h$fork -> Handler$h$fork, member:lambda -> lambda1, member:lambda -> lambda2, member:Handler$h$yld -> Handler$h$yld, member:Handler$h$start$ -> Handler$h$start$, member:lambda$ -> lambda$, tmp:block$res -> block$res, member:Handler$h$start -> Handler$h$start, member:lambda$ -> lambda$1, member:lambda$ -> lambda$2, member:Handler$h$ -> Handler$h$1, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, tmp:block$res -> block$res2, member:lambda$ -> lambda$5, member:f -> f, member:lambda$ -> lambda$6, tmp:block$res -> block$res1)
+//│         curThis = S of S of class:Handler$h$⁰
+//│         bindings = HashMap()
+//│       bindings = HashMap()
+//│     bindings = HashMap(tmp:Handler$h$yld$here -> Handler$h$yld$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.280: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.281: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:Handler$h$fork$ -> Handler$h$fork$, member:Lock -> Lock1, class:Lock -> Lock, tmp:block$res -> block$res3, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:main -> main, member:Handler$h$yld$ -> Handler$h$yld$, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, member:lambda -> lambda3, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, h -> h, class:Handler$h$ -> Handler$h$, member:lambda$ -> lambda$3, member:lambda -> lambda4, member:lambda$ -> lambda$4, member:handleBlock$ -> handleBlock$, member:lambda -> lambda, tmp:block$res -> block$res5, member:Handler$h$fork -> Handler$h$fork, member:lambda -> lambda1, member:lambda -> lambda2, member:Handler$h$yld -> Handler$h$yld, member:Handler$h$start$ -> Handler$h$start$, member:lambda$ -> lambda$, tmp:block$res -> block$res, member:Handler$h$start -> Handler$h$start, member:lambda$ -> lambda$1, member:lambda$ -> lambda$2, member:Handler$h$ -> Handler$h$1, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, tmp:block$res -> block$res2, member:lambda$ -> lambda$5, member:f -> f, member:lambda$ -> lambda$6, tmp:block$res -> block$res1)
+//│         curThis = S of S of class:Handler$h$⁰
+//│         bindings = HashMap()
+//│       bindings = HashMap(main -> main1)
+//│     bindings = HashMap(tmp:Handler$h$start$here -> Handler$h$start$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.280: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.281: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(member:Handler$h$fork$ -> Handler$h$fork$, member:Lock -> Lock1, class:Lock -> Lock, tmp:block$res -> block$res3, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:main -> main, member:Handler$h$yld$ -> Handler$h$yld$, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, member:lambda -> lambda3, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, h -> h, class:Handler$h$ -> Handler$h$, member:lambda$ -> lambda$3, member:lambda -> lambda4, member:lambda$ -> lambda$4, member:handleBlock$ -> handleBlock$, member:lambda -> lambda, tmp:block$res -> block$res5, member:Handler$h$fork -> Handler$h$fork, member:lambda -> lambda1, member:lambda -> lambda2, member:Handler$h$yld -> Handler$h$yld, member:Handler$h$start$ -> Handler$h$start$, member:lambda$ -> lambda$, tmp:block$res -> block$res, member:Handler$h$start -> Handler$h$start, member:lambda$ -> lambda$1, member:lambda$ -> lambda$2, member:Handler$h$ -> Handler$h$1, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, tmp:block$res -> block$res2, member:lambda$ -> lambda$5, member:f -> f, member:lambda$ -> lambda$6, tmp:block$res -> block$res1)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.280: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.281: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.282: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│     at REPL22:1:6650
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 
 // FIFO
@@ -161,78 +180,122 @@ handle h = ThreadEffect with
     k(())
 in
   h.start(main)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.152: 	    this.tasks.push(thread)
-//│ ╙──       	    ^^^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.153: 	    k(())
-//│ ╙──       	    ^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.155: 	    this.tasks.push(() => k(()))
-//│ ╙──       	                          ^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.155: 	    this.tasks.push(() => k(()))
-//│ ╙──       	    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.156: 	    enterHandleBlock(this, () => this.tasks.shift()())
-//│ ╙──       	                                 ^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.156: 	    enterHandleBlock(this, () => this.tasks.shift()())
-//│ ╙──       	                                 ^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.158: 	    this.tasks.push(() => main(this))
-//│ ╙──       	                          ^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.158: 	    this.tasks.push(() => main(this))
-//│ ╙──       	    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.160: 	      enterHandleBlock(this, () => this.tasks.shift()())
-//│ ╙──       	                                   ^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.160: 	      enterHandleBlock(this, () => this.tasks.shift()())
-//│ ╙──       	                                   ^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.161: 	    k(())
-//│ ╙──       	    ^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.163: 	  h.start(main)
-//│ ╙──       	  ^^^^^^^^^^^^^
-//│ FAILURE: Unexpected exception
-//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: Cannot resolve overloaded member symbol while: no principal disambiguation found
-//│ 	at: mlscript.utils.package$.lastWords(package.scala:239)
-//│ 	at: hkmc2.Lifter.hkmc2$Lifter$RewrittenScope$$_$$anonfun$14$$anonfun$1(Lifter.scala:718)
-//│ 	at: scala.Option.getOrElse(Option.scala:203)
-//│ 	at: hkmc2.Lifter$RewrittenScope.$anonfun$14(Lifter.scala:718)
-//│ 	at: scala.collection.StrictOptimizedIterableOps.strictOptimizedFlatMap(StrictOptimizedIterableOps.scala:120)
-//│ 	at: scala.collection.StrictOptimizedIterableOps.strictOptimizedFlatMap$(StrictOptimizedIterableOps.scala:29)
-//│ 	at: scala.collection.immutable.HashSet.strictOptimizedFlatMap(HashSet.scala:37)
-//│ 	at: scala.collection.StrictOptimizedIterableOps.flatMap(StrictOptimizedIterableOps.scala:108)
-//│ 	at: scala.collection.StrictOptimizedIterableOps.flatMap$(StrictOptimizedIterableOps.scala:29)
-//│ 	at: scala.collection.immutable.HashSet.flatMap(HashSet.scala:37)
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:Handler$h$fork$ -> Handler$h$fork$, member:lambda$ -> lambda$9, member:Lock -> Lock1, class:Lock -> Lock, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h$yld$ -> Handler$h$yld$, member:lambda$ -> lambda$10, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, h -> h, class:Handler$h$ -> Handler$h$, member:lambda$ -> lambda$3, member:lambda$ -> lambda$4, member:lambda -> lambda5, member:Handler$h$start$ -> Handler$h$start$, member:lambda -> lambda6, member:handleBlock$ -> handleBlock$1, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:lambda$ -> lambda$5, member:Handler$h$fork -> Handler$h$fork1, member:f -> f, member:Handler$h$yld -> Handler$h$yld1, member:Handler$h$start -> Handler$h$start1, member:lambda$ -> lambda$6, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res3, member:main -> main, member:lambda -> lambda3, member:Handler$h$fork$ -> Handler$h$fork$1, member:lambda -> lambda4, member:handleBlock$ -> handleBlock$, member:Handler$h$yld$ -> Handler$h$yld$1, member:lambda -> lambda, tmp:block$res -> block$res5, member:Handler$h$fork -> Handler$h$fork, member:lambda -> lambda1, member:lambda -> lambda2, member:Handler$h$yld -> Handler$h$yld, h -> h1, class:Handler$h$ -> Handler$h$2, member:lambda$ -> lambda$7, member:lambda$ -> lambda$, tmp:block$res -> block$res, member:Handler$h$start -> Handler$h$start, member:lambda$ -> lambda$8, member:lambda$ -> lambda$1, member:lambda$ -> lambda$2, member:Handler$h$ -> Handler$h$1, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, member:Handler$h$start$ -> Handler$h$start$1, tmp:block$res -> block$res1)
+//│         curThis = S of S of class:Handler$h$¹
+//│         bindings = HashMap()
+//│       bindings = HashMap(thread -> thread)
+//│     bindings = HashMap(tmp:Handler$h$fork$here -> Handler$h$fork$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.280: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.281: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:Handler$h$fork$ -> Handler$h$fork$, member:lambda$ -> lambda$9, member:Lock -> Lock1, class:Lock -> Lock, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h$yld$ -> Handler$h$yld$, member:lambda$ -> lambda$10, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, h -> h, class:Handler$h$ -> Handler$h$, member:lambda$ -> lambda$3, member:lambda$ -> lambda$4, member:lambda -> lambda5, member:Handler$h$start$ -> Handler$h$start$, member:lambda -> lambda6, member:handleBlock$ -> handleBlock$1, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:lambda$ -> lambda$5, member:Handler$h$fork -> Handler$h$fork1, member:f -> f, member:Handler$h$yld -> Handler$h$yld1, member:Handler$h$start -> Handler$h$start1, member:lambda$ -> lambda$6, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res3, member:main -> main, member:lambda -> lambda3, member:Handler$h$fork$ -> Handler$h$fork$1, member:lambda -> lambda4, member:handleBlock$ -> handleBlock$, member:Handler$h$yld$ -> Handler$h$yld$1, member:lambda -> lambda, tmp:block$res -> block$res5, member:Handler$h$fork -> Handler$h$fork, member:lambda -> lambda1, member:lambda -> lambda2, member:Handler$h$yld -> Handler$h$yld, h -> h1, class:Handler$h$ -> Handler$h$2, member:lambda$ -> lambda$7, member:lambda$ -> lambda$, tmp:block$res -> block$res, member:Handler$h$start -> Handler$h$start, member:lambda$ -> lambda$8, member:lambda$ -> lambda$1, member:lambda$ -> lambda$2, member:Handler$h$ -> Handler$h$1, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, member:Handler$h$start$ -> Handler$h$start$1, tmp:block$res -> block$res1)
+//│         curThis = S of S of class:Handler$h$¹
+//│         bindings = HashMap()
+//│       bindings = HashMap()
+//│     bindings = HashMap(tmp:Handler$h$yld$here -> Handler$h$yld$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.280: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.281: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:suspend⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Left of Cfg:
+//│             escapeChars = true
+//│             useSuperscripts = false
+//│             includeZero = false
+//│             defaultName = "tmp"
+//│           curThis = S of S of globalThis:globalThis⁰
+//│           bindings = HashMap(member:Handler$h$fork$ -> Handler$h$fork$, member:lambda$ -> lambda$9, member:Lock -> Lock1, class:Lock -> Lock, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h$yld$ -> Handler$h$yld$, member:lambda$ -> lambda$10, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, h -> h, class:Handler$h$ -> Handler$h$, member:lambda$ -> lambda$3, member:lambda$ -> lambda$4, member:lambda -> lambda5, member:Handler$h$start$ -> Handler$h$start$, member:lambda -> lambda6, member:handleBlock$ -> handleBlock$1, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:lambda$ -> lambda$5, member:Handler$h$fork -> Handler$h$fork1, member:f -> f, member:Handler$h$yld -> Handler$h$yld1, member:Handler$h$start -> Handler$h$start1, member:lambda$ -> lambda$6, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res3, member:main -> main, member:lambda -> lambda3, member:Handler$h$fork$ -> Handler$h$fork$1, member:lambda -> lambda4, member:handleBlock$ -> handleBlock$, member:Handler$h$yld$ -> Handler$h$yld$1, member:lambda -> lambda, tmp:block$res -> block$res5, member:Handler$h$fork -> Handler$h$fork, member:lambda -> lambda1, member:lambda -> lambda2, member:Handler$h$yld -> Handler$h$yld, h -> h1, class:Handler$h$ -> Handler$h$2, member:lambda$ -> lambda$7, member:lambda$ -> lambda$, tmp:block$res -> block$res, member:Handler$h$start -> Handler$h$start, member:lambda$ -> lambda$8, member:lambda$ -> lambda$1, member:lambda$ -> lambda$2, member:Handler$h$ -> Handler$h$1, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, member:Handler$h$start$ -> Handler$h$start$1, tmp:block$res -> block$res1)
+//│         curThis = S of S of class:Handler$h$¹
+//│         bindings = HashMap()
+//│       bindings = HashMap(main -> main1)
+//│     bindings = HashMap(tmp:Handler$h$start$here -> Handler$h$start$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.280: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.281: 	    suspend
+//│ ╙──       	^^^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(member:Handler$h$fork$ -> Handler$h$fork$, member:lambda$ -> lambda$9, member:Lock -> Lock1, class:Lock -> Lock, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h$yld$ -> Handler$h$yld$, member:lambda$ -> lambda$10, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, h -> h, class:Handler$h$ -> Handler$h$, member:lambda$ -> lambda$3, member:lambda$ -> lambda$4, member:lambda -> lambda5, member:Handler$h$start$ -> Handler$h$start$, member:lambda -> lambda6, member:handleBlock$ -> handleBlock$1, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:lambda$ -> lambda$5, member:Handler$h$fork -> Handler$h$fork1, member:f -> f, member:Handler$h$yld -> Handler$h$yld1, member:Handler$h$start -> Handler$h$start1, member:lambda$ -> lambda$6, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res3, member:main -> main, member:lambda -> lambda3, member:Handler$h$fork$ -> Handler$h$fork$1, member:lambda -> lambda4, member:handleBlock$ -> handleBlock$, member:Handler$h$yld$ -> Handler$h$yld$1, member:lambda -> lambda, tmp:block$res -> block$res5, member:Handler$h$fork -> Handler$h$fork, member:lambda -> lambda1, member:lambda -> lambda2, member:Handler$h$yld -> Handler$h$yld, h -> h1, class:Handler$h$ -> Handler$h$2, member:lambda$ -> lambda$7, member:lambda$ -> lambda$, tmp:block$res -> block$res, member:Handler$h$start -> Handler$h$start, member:lambda$ -> lambda$8, member:lambda$ -> lambda$1, member:lambda$ -> lambda$2, member:Handler$h$ -> Handler$h$1, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, member:Handler$h$start$ -> Handler$h$start$1, tmp:block$res -> block$res1)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.280: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.281: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.282: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│     at REPL25:1:6674
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 
 // Adapted from: https://ocaml.org/manual/5.3/effects.html
@@ -250,21 +313,6 @@ fun f(x)(h) =
   print("f " + x)
   h.yld()
   print("f " + x)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (HandlerLowering.scala:137)
-//│ ╔══[WARNING] This function is not CPS-transformed because it has more than one parameter list.
-//│ ║  l.247: 	fun f(x)(h) =
-//│ ╙──       	    ^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.249: 	  h.yld()
-//│ ╙──       	  ^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.251: 	  h.yld()
-//│ ╙──       	  ^^^^^^^
 
 fun main(h) =
   print("main start")
@@ -272,35 +320,10 @@ fun main(h) =
   h.fork(f(1))
   h.fork(f(2))
   print("main end")
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.271: 	  h.fork(f(0))
-//│ ╙──       	  ^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.272: 	  h.fork(f(1))
-//│ ╙──       	  ^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.273: 	  h.fork(f(2))
-//│ ╙──       	  ^^^^^^^^^^^^
 
 fun dequeue() =
   if tasks.length != 0 do
     tasks.shift()(())
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.293: 	    tasks.shift()(())
-//│ ╙──       	    ^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.293: 	    tasks.shift()(())
-//│ ╙──       	    ^^^^^^^^^^^^^^^^^
 
 fun start(thread: ThreadEffect -> ()) =
   handle h = ThreadEffect with
@@ -313,21 +336,33 @@ fun start(thread: ThreadEffect -> ()) =
   in
     thread(h)
   dequeue()
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.308: 	      tasks.push(k)
-//│ ╙──       	      ^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.311: 	      tasks.push(k)
-//│ ╙──       	      ^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.314: 	    thread(h)
-//│ ╙──       	    ^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Left of Cfg:
+//│           escapeChars = true
+//│           useSuperscripts = false
+//│           includeZero = false
+//│           defaultName = "tmp"
+//│         curThis = S of S of globalThis:globalThis⁰
+//│         bindings = HashMap(member:Handler$h$fork$ -> Handler$h$fork$, member:lambda$ -> lambda$9, member:Lock -> Lock1, class:Lock -> Lock, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h$yld$ -> Handler$h$yld$, member:lambda$ -> lambda$10, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, h -> h, tmp:block$res -> block$res11, class:Handler$h$ -> Handler$h$, member:lambda$ -> lambda$3, member:lambda$ -> lambda$4, member:start -> start, class:Handler$h$ -> Handler$h$4, member:lambda -> lambda5, member:Handler$h$start$ -> Handler$h$start$, member:lambda -> lambda6, member:handleBlock$ -> handleBlock$1, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:lambda$ -> lambda$5, member:Handler$h$fork -> Handler$h$fork1, member:f -> f, member:ThreadEffect -> ThreadEffect3, member:Handler$h$yld -> Handler$h$yld1, class:ThreadEffect -> ThreadEffect2, member:Handler$h$fork -> Handler$h$fork2, member:Handler$h$start -> Handler$h$start1, member:Handler$h$yld -> Handler$h$yld2, member:lambda$ -> lambda$6, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res7, member:Handler$h$ -> Handler$h$5, member:tasks -> tasks, member:handleBlock$$ -> handleBlock$$, tmp:tmp -> tmp, tmp:block$res -> block$res8, member:f -> f1, tmp:block$res -> block$res3, member:Handler$h$fork$ -> Handler$h$fork$2, member:main -> main, member:lambda -> lambda3, member:Handler$h$fork$ -> Handler$h$fork$1, member:lambda -> lambda4, member:handleBlock$ -> handleBlock$, member:Handler$h$yld$ -> Handler$h$yld$1, member:lambda -> lambda, tmp:block$res -> block$res5, member:Handler$h$fork -> Handler$h$fork, member:f$worker -> f$worker, member:lambda -> lambda1, tmp:block$res -> block$res9, member:lambda -> lambda2, tmp:block$res -> block$res12, member:Handler$h$yld -> Handler$h$yld, h -> h1, member:main -> main1, class:Handler$h$ -> Handler$h$2, member:lambda$ -> lambda$7, member:lambda$ -> lambda$, tmp:block$res -> block$res, member:Handler$h$start -> Handler$h$start, member:lambda$ -> lambda$8, member:lambda$ -> lambda$1, member:lambda$ -> lambda$2, member:Handler$h$ -> Handler$h$1, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, member:Handler$h$start$ -> Handler$h$start$1, tmp:block$res -> block$res10, member:dequeue -> dequeue, tmp:block$res -> block$res1)
+//│       curThis = S of N
+//│       bindings = HashMap(k -> k, new_thread -> new_thread)
+//│     bindings = HashMap(h -> h2, tmp:handleBlock$$here -> handleBlock$$here)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.280: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.281: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.282: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
 //│ FAILURE INFO: Tuple2:
@@ -344,16 +379,16 @@ fun start(thread: ThreadEffect -> ()) =
 //│             includeZero = false
 //│             defaultName = "tmp"
 //│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(member:Lock -> Lock1, member:Capture$scope0 -> Capture$scope03, class:Lock -> Lock, member:cpsCont$ -> cpsCont$2, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont6, tmp:runtime -> runtime, member:cpsCont -> cpsCont5, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, class:Capture$scope0 -> Capture$scope08, tmp:prettyPrint -> prettyPrint, class:Capture$scope0 -> Capture$scope04, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$3, member:Capture$scope0 -> Capture$scope09, member:Capture$scope0 -> Capture$scope05, member:cpsCont$ -> cpsCont$9, tmp:block$res -> block$res10, member:cpsCont$ -> cpsCont$5, member:cpsCont -> cpsCont, tmp:block$res -> block$res3, tmp:block$res -> block$res9, member:main -> main, class:Capture$scope0 -> Capture$scope0, member:start -> start, member:cpsCont$ -> cpsCont$6, class:Handler$h$ -> Handler$h$, member:Capture$scope0 -> Capture$scope01, member:cpsCont$ -> cpsCont$, member:f$worker -> f$worker, tmp:block$res -> block$res7, member:main -> main1, member:cpsCont -> cpsCont3, member:cpsCont$ -> cpsCont$1, member:cpsCont$ -> cpsCont$4, member:Handler$h$yld -> Handler$h$yld, member:lambda$ -> lambda$, member:Handler$h$ -> Handler$h$1, member:lambda$ -> lambda$1, member:while_cpsCont_cpsCont$ -> while_cpsCont_cpsCont$, member:lambda$ -> lambda$2, member:cpsCont -> cpsCont7, tmp:block$res -> block$res2, class:Capture$scope0 -> Capture$scope06, class:Capture$scope0 -> Capture$scope010, member:f -> f, member:Capture$scope0 -> Capture$scope07, member:Capture$scope0 -> Capture$scope011, member:ThreadEffect -> ThreadEffect3, class:ThreadEffect -> ThreadEffect2, member:cpsCont$ -> cpsCont$7, member:cpsCont$ -> cpsCont$10, tmp:block$res -> block$res, member:handleBlock$$ -> handleBlock$$, member:cpsCont$ -> cpsCont$8, tmp:block$res -> block$res5, member:ThreadEffect -> ThreadEffect1, member:tasks -> tasks, class:ThreadEffect -> ThreadEffect, tmp:block$res -> block$res4, tmp:tmp -> tmp, tmp:block$res -> block$res6, member:f -> f1, member:cpsCont -> cpsCont1, member:cpsCont -> cpsCont2, class:Capture$scope0 -> Capture$scope02, tmp:block$res -> block$res8, tmp:block$res -> block$res1, member:dequeue -> dequeue, member:Handler$h$fork$ -> Handler$h$fork$)
-//│         curThis = S of S of class:Handler$h$⁰
+//│           bindings = HashMap(member:Handler$h$fork$ -> Handler$h$fork$, member:lambda$ -> lambda$9, member:Lock -> Lock1, class:Lock -> Lock, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h$yld$ -> Handler$h$yld$, member:lambda$ -> lambda$10, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, h -> h, tmp:block$res -> block$res11, class:Handler$h$ -> Handler$h$, member:lambda$ -> lambda$3, member:lambda$ -> lambda$4, member:start -> start, class:Handler$h$ -> Handler$h$4, member:lambda -> lambda5, member:Handler$h$start$ -> Handler$h$start$, member:lambda -> lambda6, member:handleBlock$ -> handleBlock$1, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:lambda$ -> lambda$5, member:Handler$h$fork -> Handler$h$fork1, member:f -> f, member:ThreadEffect -> ThreadEffect3, member:Handler$h$yld -> Handler$h$yld1, class:ThreadEffect -> ThreadEffect2, member:Handler$h$fork -> Handler$h$fork2, member:Handler$h$start -> Handler$h$start1, member:Handler$h$yld -> Handler$h$yld2, member:lambda$ -> lambda$6, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res7, member:Handler$h$ -> Handler$h$5, member:tasks -> tasks, member:handleBlock$$ -> handleBlock$$, tmp:tmp -> tmp, tmp:block$res -> block$res8, member:f -> f1, tmp:block$res -> block$res3, member:Handler$h$fork$ -> Handler$h$fork$2, member:main -> main, member:lambda -> lambda3, member:Handler$h$fork$ -> Handler$h$fork$1, member:lambda -> lambda4, member:handleBlock$ -> handleBlock$, member:Handler$h$yld$ -> Handler$h$yld$1, member:lambda -> lambda, tmp:block$res -> block$res5, member:Handler$h$fork -> Handler$h$fork, member:f$worker -> f$worker, member:lambda -> lambda1, tmp:block$res -> block$res9, member:lambda -> lambda2, tmp:block$res -> block$res12, member:Handler$h$yld -> Handler$h$yld, h -> h1, member:main -> main1, class:Handler$h$ -> Handler$h$2, member:lambda$ -> lambda$7, member:lambda$ -> lambda$, tmp:block$res -> block$res, member:Handler$h$start -> Handler$h$start, member:lambda$ -> lambda$8, member:lambda$ -> lambda$1, member:lambda$ -> lambda$2, member:Handler$h$ -> Handler$h$1, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, member:Handler$h$start$ -> Handler$h$start$1, tmp:block$res -> block$res10, member:dequeue -> dequeue, tmp:block$res -> block$res1)
+//│         curThis = S of S of class:Handler$h$²
 //│         bindings = HashMap()
-//│       bindings = HashMap(new_thread -> new_thread, k -> k)
+//│       bindings = HashMap(new_thread -> new_thread)
 //│     bindings = HashMap(tmp:Handler$h$fork$here -> Handler$h$fork$here)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ╙──       	^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
@@ -370,15 +405,15 @@ fun start(thread: ThreadEffect -> ()) =
 //│           includeZero = false
 //│           defaultName = "tmp"
 //│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(member:Lock -> Lock1, member:Capture$scope0 -> Capture$scope03, class:Lock -> Lock, member:cpsCont$ -> cpsCont$2, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont6, tmp:runtime -> runtime, member:cpsCont -> cpsCont5, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, class:Capture$scope0 -> Capture$scope08, tmp:prettyPrint -> prettyPrint, class:Capture$scope0 -> Capture$scope04, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$3, member:Capture$scope0 -> Capture$scope09, member:Capture$scope0 -> Capture$scope05, member:cpsCont$ -> cpsCont$9, tmp:block$res -> block$res10, member:cpsCont$ -> cpsCont$5, member:cpsCont -> cpsCont, tmp:block$res -> block$res3, tmp:block$res -> block$res9, member:main -> main, class:Capture$scope0 -> Capture$scope0, member:start -> start, member:cpsCont$ -> cpsCont$6, class:Handler$h$ -> Handler$h$, member:Capture$scope0 -> Capture$scope01, member:cpsCont$ -> cpsCont$, member:f$worker -> f$worker, tmp:block$res -> block$res7, member:main -> main1, member:cpsCont -> cpsCont3, member:cpsCont$ -> cpsCont$1, member:cpsCont$ -> cpsCont$4, member:Handler$h$yld -> Handler$h$yld, member:lambda$ -> lambda$, member:Handler$h$ -> Handler$h$1, member:lambda$ -> lambda$1, member:while_cpsCont_cpsCont$ -> while_cpsCont_cpsCont$, member:lambda$ -> lambda$2, member:cpsCont -> cpsCont7, tmp:block$res -> block$res2, class:Capture$scope0 -> Capture$scope06, class:Capture$scope0 -> Capture$scope010, member:f -> f, member:Capture$scope0 -> Capture$scope07, member:Capture$scope0 -> Capture$scope011, member:ThreadEffect -> ThreadEffect3, class:ThreadEffect -> ThreadEffect2, member:cpsCont$ -> cpsCont$7, member:cpsCont$ -> cpsCont$10, tmp:block$res -> block$res, member:handleBlock$$ -> handleBlock$$, member:cpsCont$ -> cpsCont$8, tmp:block$res -> block$res5, member:ThreadEffect -> ThreadEffect1, member:tasks -> tasks, class:ThreadEffect -> ThreadEffect, tmp:block$res -> block$res4, tmp:tmp -> tmp, tmp:block$res -> block$res6, member:f -> f1, member:cpsCont -> cpsCont1, member:cpsCont -> cpsCont2, class:Capture$scope0 -> Capture$scope02, tmp:block$res -> block$res8, tmp:block$res -> block$res1, member:dequeue -> dequeue, member:Handler$h$fork$ -> Handler$h$fork$)
-//│       curThis = S of S of class:Handler$h$⁰
+//│         bindings = HashMap(member:Handler$h$fork$ -> Handler$h$fork$, member:lambda$ -> lambda$9, member:Lock -> Lock1, class:Lock -> Lock, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h$yld$ -> Handler$h$yld$, member:lambda$ -> lambda$10, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, h -> h, tmp:block$res -> block$res11, class:Handler$h$ -> Handler$h$, member:lambda$ -> lambda$3, member:lambda$ -> lambda$4, member:start -> start, class:Handler$h$ -> Handler$h$4, member:lambda -> lambda5, member:Handler$h$start$ -> Handler$h$start$, member:lambda -> lambda6, member:handleBlock$ -> handleBlock$1, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:lambda$ -> lambda$5, member:Handler$h$fork -> Handler$h$fork1, member:f -> f, member:ThreadEffect -> ThreadEffect3, member:Handler$h$yld -> Handler$h$yld1, class:ThreadEffect -> ThreadEffect2, member:Handler$h$fork -> Handler$h$fork2, member:Handler$h$start -> Handler$h$start1, member:Handler$h$yld -> Handler$h$yld2, member:lambda$ -> lambda$6, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res7, member:Handler$h$ -> Handler$h$5, member:tasks -> tasks, member:handleBlock$$ -> handleBlock$$, tmp:tmp -> tmp, tmp:block$res -> block$res8, member:f -> f1, tmp:block$res -> block$res3, member:Handler$h$fork$ -> Handler$h$fork$2, member:main -> main, member:lambda -> lambda3, member:Handler$h$fork$ -> Handler$h$fork$1, member:lambda -> lambda4, member:handleBlock$ -> handleBlock$, member:Handler$h$yld$ -> Handler$h$yld$1, member:lambda -> lambda, tmp:block$res -> block$res5, member:Handler$h$fork -> Handler$h$fork, member:f$worker -> f$worker, member:lambda -> lambda1, tmp:block$res -> block$res9, member:lambda -> lambda2, tmp:block$res -> block$res12, member:Handler$h$yld -> Handler$h$yld, h -> h1, member:main -> main1, class:Handler$h$ -> Handler$h$2, member:lambda$ -> lambda$7, member:lambda$ -> lambda$, tmp:block$res -> block$res, member:Handler$h$start -> Handler$h$start, member:lambda$ -> lambda$8, member:lambda$ -> lambda$1, member:lambda$ -> lambda$2, member:Handler$h$ -> Handler$h$1, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, member:Handler$h$start$ -> Handler$h$start$1, tmp:block$res -> block$res10, member:dequeue -> dequeue, tmp:block$res -> block$res1)
+//│       curThis = S of S of class:Handler$h$²
 //│       bindings = HashMap()
-//│     bindings = HashMap(k -> k)
+//│     bindings = HashMap()
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ╙──       	^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
@@ -395,25 +430,46 @@ fun start(thread: ThreadEffect -> ()) =
 //│           includeZero = false
 //│           defaultName = "tmp"
 //│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(member:Lock -> Lock1, member:Capture$scope0 -> Capture$scope03, class:Lock -> Lock, member:cpsCont$ -> cpsCont$2, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont6, tmp:runtime -> runtime, member:cpsCont -> cpsCont5, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, class:Capture$scope0 -> Capture$scope08, tmp:prettyPrint -> prettyPrint, class:Capture$scope0 -> Capture$scope04, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:cpsCont$ -> cpsCont$3, member:Capture$scope0 -> Capture$scope09, member:Capture$scope0 -> Capture$scope05, member:cpsCont$ -> cpsCont$9, tmp:block$res -> block$res10, member:cpsCont$ -> cpsCont$5, member:cpsCont -> cpsCont, tmp:block$res -> block$res3, tmp:block$res -> block$res9, member:main -> main, class:Capture$scope0 -> Capture$scope0, member:start -> start, member:cpsCont$ -> cpsCont$6, class:Handler$h$ -> Handler$h$, member:Capture$scope0 -> Capture$scope01, member:cpsCont$ -> cpsCont$, member:f$worker -> f$worker, tmp:block$res -> block$res7, member:main -> main1, member:cpsCont -> cpsCont3, member:cpsCont$ -> cpsCont$1, member:cpsCont$ -> cpsCont$4, member:Handler$h$yld -> Handler$h$yld, member:lambda$ -> lambda$, member:Handler$h$ -> Handler$h$1, member:lambda$ -> lambda$1, member:while_cpsCont_cpsCont$ -> while_cpsCont_cpsCont$, member:lambda$ -> lambda$2, member:cpsCont -> cpsCont7, tmp:block$res -> block$res2, class:Capture$scope0 -> Capture$scope06, class:Capture$scope0 -> Capture$scope010, member:f -> f, member:Capture$scope0 -> Capture$scope07, member:Capture$scope0 -> Capture$scope011, member:ThreadEffect -> ThreadEffect3, class:ThreadEffect -> ThreadEffect2, member:cpsCont$ -> cpsCont$7, member:cpsCont$ -> cpsCont$10, tmp:block$res -> block$res, member:handleBlock$$ -> handleBlock$$, member:cpsCont$ -> cpsCont$8, tmp:block$res -> block$res5, member:ThreadEffect -> ThreadEffect1, member:tasks -> tasks, class:ThreadEffect -> ThreadEffect, tmp:block$res -> block$res4, tmp:tmp -> tmp, tmp:block$res -> block$res6, member:f -> f1, member:cpsCont -> cpsCont1, member:cpsCont -> cpsCont2, class:Capture$scope0 -> Capture$scope02, tmp:block$res -> block$res8, tmp:block$res -> block$res1, member:dequeue -> dequeue, member:Handler$h$fork$ -> Handler$h$fork$)
+//│         bindings = HashMap(member:Handler$h$fork$ -> Handler$h$fork$, member:lambda$ -> lambda$9, member:Lock -> Lock1, class:Lock -> Lock, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h$yld$ -> Handler$h$yld$, member:lambda$ -> lambda$10, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, h -> h, tmp:block$res -> block$res11, class:Handler$h$ -> Handler$h$, member:lambda$ -> lambda$3, member:lambda$ -> lambda$4, member:start -> start, class:Handler$h$ -> Handler$h$4, member:lambda -> lambda5, member:Handler$h$start$ -> Handler$h$start$, member:lambda -> lambda6, member:handleBlock$ -> handleBlock$1, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:lambda$ -> lambda$5, member:Handler$h$fork -> Handler$h$fork1, member:f -> f, member:ThreadEffect -> ThreadEffect3, member:Handler$h$yld -> Handler$h$yld1, class:ThreadEffect -> ThreadEffect2, member:Handler$h$fork -> Handler$h$fork2, member:Handler$h$start -> Handler$h$start1, member:Handler$h$yld -> Handler$h$yld2, member:lambda$ -> lambda$6, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res7, member:Handler$h$ -> Handler$h$5, member:tasks -> tasks, member:handleBlock$$ -> handleBlock$$, tmp:tmp -> tmp, tmp:block$res -> block$res8, member:f -> f1, tmp:block$res -> block$res3, member:Handler$h$fork$ -> Handler$h$fork$2, member:main -> main, member:lambda -> lambda3, member:Handler$h$fork$ -> Handler$h$fork$1, member:lambda -> lambda4, member:handleBlock$ -> handleBlock$, member:Handler$h$yld$ -> Handler$h$yld$1, member:lambda -> lambda, tmp:block$res -> block$res5, member:Handler$h$fork -> Handler$h$fork, member:f$worker -> f$worker, member:lambda -> lambda1, tmp:block$res -> block$res9, member:lambda -> lambda2, tmp:block$res -> block$res12, member:Handler$h$yld -> Handler$h$yld, h -> h1, member:main -> main1, class:Handler$h$ -> Handler$h$2, member:lambda$ -> lambda$7, member:lambda$ -> lambda$, tmp:block$res -> block$res, member:Handler$h$start -> Handler$h$start, member:lambda$ -> lambda$8, member:lambda$ -> lambda$1, member:lambda$ -> lambda$2, member:Handler$h$ -> Handler$h$1, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, member:Handler$h$start$ -> Handler$h$start$1, tmp:block$res -> block$res10, member:dequeue -> dequeue, tmp:block$res -> block$res1)
 //│       curThis = S of N
-//│       bindings = HashMap(thread -> thread, k -> k)
-//│     bindings = HashMap(scope0$cap -> scope0$cap, h -> h, tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here)
+//│       bindings = HashMap(thread -> thread)
+//│     bindings = HashMap(tmp:handleBlock$$here -> handleBlock$$here, h -> h2)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ║         	^^^^^^^^^^^
-//│ ║  l.281: 	    handle_suspension
+//│ ║  l.282: 	    handle_suspension
 //│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 
 start(main)
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(member:Handler$h$fork$ -> Handler$h$fork$, member:lambda$ -> lambda$9, member:Lock -> Lock1, class:Lock -> Lock, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h$yld$ -> Handler$h$yld$, member:lambda$ -> lambda$10, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, h -> h, tmp:block$res -> block$res11, class:Handler$h$ -> Handler$h$, member:lambda$ -> lambda$3, member:lambda$ -> lambda$4, member:start -> start, class:Handler$h$ -> Handler$h$4, member:lambda -> lambda5, member:Handler$h$start$ -> Handler$h$start$, member:lambda -> lambda6, member:handleBlock$ -> handleBlock$1, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:lambda$ -> lambda$5, member:Handler$h$fork -> Handler$h$fork1, member:f -> f, member:ThreadEffect -> ThreadEffect3, member:Handler$h$yld -> Handler$h$yld1, class:ThreadEffect -> ThreadEffect2, member:Handler$h$fork -> Handler$h$fork2, member:Handler$h$start -> Handler$h$start1, member:Handler$h$yld -> Handler$h$yld2, member:lambda$ -> lambda$6, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res7, member:Handler$h$ -> Handler$h$5, member:tasks -> tasks, member:handleBlock$$ -> handleBlock$$, tmp:tmp -> tmp, tmp:block$res -> block$res8, member:f -> f1, tmp:block$res -> block$res3, member:Handler$h$fork$ -> Handler$h$fork$2, member:main -> main, member:lambda -> lambda3, member:Handler$h$fork$ -> Handler$h$fork$1, member:lambda -> lambda4, member:handleBlock$ -> handleBlock$, member:Handler$h$yld$ -> Handler$h$yld$1, member:lambda -> lambda, tmp:block$res -> block$res5, member:Handler$h$fork -> Handler$h$fork, member:f$worker -> f$worker, member:lambda -> lambda1, tmp:block$res -> block$res9, member:lambda -> lambda2, tmp:block$res -> block$res12, member:Handler$h$yld -> Handler$h$yld, h -> h1, member:main -> main1, class:Handler$h$ -> Handler$h$2, member:lambda$ -> lambda$7, member:lambda$ -> lambda$, tmp:block$res -> block$res, member:Handler$h$start -> Handler$h$start, member:lambda$ -> lambda$8, member:lambda$ -> lambda$1, h -> h2, tmp:handleBlock$$here -> handleBlock$$here, tmp:block$res -> block$res13, member:lambda$ -> lambda$2, member:Handler$h$ -> Handler$h$1, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, member:Handler$h$start$ -> Handler$h$start$1, tmp:block$res -> block$res10, member:dequeue -> dequeue, tmp:block$res -> block$res1)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.280: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.281: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.282: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at start (REPL38:1:2512)
-//│     at REPL41:1:39
+//│     at REPL47:1:130
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -422,6 +478,7 @@ start(main)
 //│     at REPLServer.onLine (node:repl:830:12)
 //│     at REPLServer.emit (node:events:509:20)
 //│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 
 import "../../mlscript-compile/Option.mls"
@@ -438,26 +495,6 @@ fun enqueue(k, x) =
 fun dequeue() =
   if tasks.length != 0 do
     tasks.shift()()
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.437: 	  tasks.push(() => k(x))
-//│ ╙──       	                   ^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.437: 	  tasks.push(() => k(x))
-//│ ╙──       	  ^^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.440: 	    tasks.shift()()
-//│ ╙──       	    ^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.440: 	    tasks.shift()()
-//│ ╙──       	    ^^^^^^^^^^^^^^^
 //│ tasks = []
 
 let exchanger = None
@@ -483,16 +520,33 @@ fun start(thread: ThreadEffect -> ()) =
   in
     thread(h)
   dequeue()
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.479: 	          k(y)
-//│ ╙──       	          ^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.484: 	    thread(h)
-//│ ╙──       	    ^^^^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Left of Cfg:
+//│           escapeChars = true
+//│           useSuperscripts = false
+//│           includeZero = false
+//│           defaultName = "tmp"
+//│         curThis = S of S of globalThis:globalThis⁰
+//│         bindings = HashMap(member:enqueue -> enqueue, member:dequeue -> dequeue1, member:Handler$h$fork$ -> Handler$h$fork$, member:lambda$ -> lambda$9, member:tasks -> tasks1, member:Lock -> Lock1, class:Lock -> Lock, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Handler$h$yld$ -> Handler$h$yld$, member:lambda$ -> lambda$10, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:lambda$ -> lambda$3, member:lambda$ -> lambda$4, tmp:tmp -> tmp1, member:lambda$ -> lambda$11, member:Handler$h$start$ -> Handler$h$start$, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:lambda$ -> lambda$5, member:f -> f, member:ThreadEffect -> ThreadEffect3, tmp:block$res -> block$res16, class:ThreadEffect -> ThreadEffect2, exchanger -> exchanger, tmp:block$res -> block$res17, member:lambda$ -> lambda$6, tmp:block$res -> block$res7, member:start -> start1, member:tasks -> tasks, class:Handler$h$ -> Handler$h$6, tmp:tmp -> tmp, tmp:block$res -> block$res8, member:f -> f1, tmp:block$res -> block$res3, member:main -> main, member:lambda -> lambda, tmp:block$res -> block$res5, member:Option -> Option, member:f$worker -> f$worker, member:lambda -> lambda1, tmp:block$res -> block$res9, member:lambda -> lambda2, h -> h1, member:main -> main1, class:Handler$h$ -> Handler$h$2, member:lambda$ -> lambda$, member:lambda$ -> lambda$1, member:lambda$ -> lambda$2, member:Handler$h$fork -> Handler$h$fork3, member:Handler$h$yld -> Handler$h$yld3, tmp:block$res -> block$res10, member:Handler$h$xchg -> Handler$h$xchg, member:dequeue -> dequeue, member:Handler$h$ -> Handler$h$7, member:handleBlock$$ -> handleBlock$$1, member:Predef -> Predef, tmp:block$res -> block$res4, member:Handler$h$fork$ -> Handler$h$fork$3, h -> h, tmp:block$res -> block$res11, class:Handler$h$ -> Handler$h$, member:start -> start, class:Handler$h$ -> Handler$h$4, member:lambda -> lambda5, member:Handler$h$xchg$ -> Handler$h$xchg$, member:lambda -> lambda6, member:handleBlock$ -> handleBlock$1, member:Handler$h$fork -> Handler$h$fork1, member:Handler$h$yld -> Handler$h$yld1, member:Handler$h$fork -> Handler$h$fork2, member:Handler$h$start -> Handler$h$start1, member:Handler$h$yld -> Handler$h$yld2, member:Handler$h$ -> Handler$h$3, member:Handler$h$ -> Handler$h$5, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res18, member:Handler$h$fork$ -> Handler$h$fork$2, member:lambda -> lambda3, member:Handler$h$fork$ -> Handler$h$fork$1, member:lambda -> lambda4, member:handleBlock$ -> handleBlock$, member:Handler$h$yld$ -> Handler$h$yld$1, member:Handler$h$fork -> Handler$h$fork, tmp:block$res -> block$res12, member:Handler$h$yld -> Handler$h$yld, member:lambda$ -> lambda$7, tmp:block$res -> block$res, member:Handler$h$start -> Handler$h$start, member:lambda$ -> lambda$8, h -> h2, tmp:handleBlock$$here -> handleBlock$$here, tmp:block$res -> block$res13, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res14, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, member:ThreadEffect -> ThreadEffect5, class:ThreadEffect -> ThreadEffect4, member:Handler$h$start$ -> Handler$h$start$1, tmp:block$res -> block$res15, tmp:block$res -> block$res1)
+//│       curThis = S of N
+//│       bindings = HashMap(new_thread -> new_thread, k -> k)
+//│     bindings = HashMap(h -> h3, tmp:handleBlock$$here -> handleBlock$$here1, tmp:lambda$here -> lambda$here, x -> x)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.280: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.281: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.282: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
 //│ FAILURE INFO: Tuple2:
@@ -509,16 +563,16 @@ fun start(thread: ThreadEffect -> ()) =
 //│             includeZero = false
 //│             defaultName = "tmp"
 //│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(member:Lock -> Lock1, class:Lock -> Lock, tmp:block$res -> block$res15, member:start -> start1, class:Handler$h$ -> Handler$h$2, member:cpsCont -> cpsCont6, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, class:Capture$scope0 -> Capture$scope08, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope09, member:cpsCont$ -> cpsCont$9, member:cpsCont -> cpsCont, tmp:block$res -> block$res9, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res16, member:start -> start, class:Handler$h$ -> Handler$h$, member:Capture$scope0 -> Capture$scope01, member:cpsCont$ -> cpsCont$, member:cpsCont$ -> cpsCont$1, member:Handler$h$yld -> Handler$h$yld1, member:Handler$h$xchg -> Handler$h$xchg, member:Handler$h$yld -> Handler$h$yld, member:Handler$h$ -> Handler$h$3, member:Handler$h$ -> Handler$h$1, member:while_cpsCont_cpsCont$ -> while_cpsCont_cpsCont$, member:cpsCont -> cpsCont7, tmp:block$res -> block$res2, class:Capture$scope0 -> Capture$scope010, member:f -> f, member:cpsCont -> cpsCont9, member:Capture$scope0 -> Capture$scope011, member:cpsCont -> cpsCont10, member:Option -> Option, member:ThreadEffect -> ThreadEffect3, class:ThreadEffect -> ThreadEffect2, member:cpsCont -> cpsCont11, member:cpsCont$ -> cpsCont$10, member:cpsCont -> cpsCont12, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res5, member:tasks -> tasks, class:Capture$scope0 -> Capture$scope014, tmp:tmp -> tmp, tmp:block$res -> block$res6, member:Capture$scope0 -> Capture$scope015, member:f -> f1, member:cpsCont -> cpsCont1, member:cpsCont$ -> cpsCont$12, member:cpsCont -> cpsCont2, class:Capture$scope0 -> Capture$scope02, member:handleBlock$$ -> handleBlock$$1, member:Handler$h$fork$ -> Handler$h$fork$, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$2, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, member:Predef -> Predef, class:Capture$scope0 -> Capture$scope04, member:Handler$h$fork$ -> Handler$h$fork$1, member:cpsCont$ -> cpsCont$3, member:Capture$scope0 -> Capture$scope05, member:cpsCont$ -> cpsCont$13, tmp:block$res -> block$res10, member:cpsCont$ -> cpsCont$5, tmp:block$res -> block$res11, tmp:block$res -> block$res3, tmp:block$res -> block$res12, member:main -> main, member:ThreadEffect -> ThreadEffect5, member:cpsCont$ -> cpsCont$14, member:cpsCont$ -> cpsCont$6, class:ThreadEffect -> ThreadEffect4, member:Handler$h$xchg$ -> Handler$h$xchg$, tmp:block$res -> block$res13, member:f$worker -> f$worker, member:enqueue -> enqueue, member:dequeue -> dequeue1, tmp:block$res -> block$res7, member:tasks -> tasks1, class:Capture$scope8 -> Capture$scope8, member:main -> main1, member:cpsCont -> cpsCont3, member:cpsCont$ -> cpsCont$4, member:Capture$scope8 -> Capture$scope81, member:lambda$ -> lambda$, member:lambda$ -> lambda$1, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$15, member:lambda$ -> lambda$2, member:cpsCont -> cpsCont8, class:Capture$scope0 -> Capture$scope06, member:lambda$ -> lambda$3, member:cpsCont$ -> cpsCont$16, member:Capture$scope0 -> Capture$scope07, member:cpsCont$ -> cpsCont$7, class:Capture$scope0 -> Capture$scope012, tmp:block$res -> block$res, member:cpsCont$ -> cpsCont$8, member:cpsCont$ -> cpsCont$17, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, tmp:block$res -> block$res4, member:Capture$scope0 -> Capture$scope013, member:cpsCont$ -> cpsCont$11, member:cpsCont$ -> cpsCont$18, tmp:block$res -> block$res8, tmp:block$res -> block$res1, member:dequeue -> dequeue, tmp:block$res -> block$res14, exchanger -> exchanger)
-//│         curThis = S of S of class:Handler$h$¹
+//│           bindings = HashMap(member:enqueue -> enqueue, member:dequeue -> dequeue1, member:Handler$h$fork$ -> Handler$h$fork$, member:lambda$ -> lambda$9, member:tasks -> tasks1, member:Lock -> Lock1, class:Lock -> Lock, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Handler$h$yld$ -> Handler$h$yld$, member:lambda$ -> lambda$10, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:lambda$ -> lambda$3, member:lambda$ -> lambda$4, tmp:tmp -> tmp1, member:lambda$ -> lambda$11, member:Handler$h$start$ -> Handler$h$start$, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:lambda$ -> lambda$5, member:f -> f, member:ThreadEffect -> ThreadEffect3, tmp:block$res -> block$res16, class:ThreadEffect -> ThreadEffect2, exchanger -> exchanger, tmp:block$res -> block$res17, member:lambda$ -> lambda$6, tmp:block$res -> block$res7, member:start -> start1, member:tasks -> tasks, class:Handler$h$ -> Handler$h$6, tmp:tmp -> tmp, tmp:block$res -> block$res8, member:f -> f1, tmp:block$res -> block$res3, member:main -> main, member:lambda -> lambda, tmp:block$res -> block$res5, member:Option -> Option, member:f$worker -> f$worker, member:lambda -> lambda1, tmp:block$res -> block$res9, member:lambda -> lambda2, h -> h1, member:main -> main1, class:Handler$h$ -> Handler$h$2, member:lambda$ -> lambda$, member:lambda$ -> lambda$1, member:lambda$ -> lambda$2, member:Handler$h$fork -> Handler$h$fork3, member:Handler$h$yld -> Handler$h$yld3, tmp:block$res -> block$res10, member:Handler$h$xchg -> Handler$h$xchg, member:dequeue -> dequeue, member:Handler$h$ -> Handler$h$7, member:handleBlock$$ -> handleBlock$$1, member:Predef -> Predef, tmp:block$res -> block$res4, member:Handler$h$fork$ -> Handler$h$fork$3, h -> h, tmp:block$res -> block$res11, class:Handler$h$ -> Handler$h$, member:start -> start, class:Handler$h$ -> Handler$h$4, member:lambda -> lambda5, member:Handler$h$xchg$ -> Handler$h$xchg$, member:lambda -> lambda6, member:handleBlock$ -> handleBlock$1, member:Handler$h$fork -> Handler$h$fork1, member:Handler$h$yld -> Handler$h$yld1, member:Handler$h$fork -> Handler$h$fork2, member:Handler$h$start -> Handler$h$start1, member:Handler$h$yld -> Handler$h$yld2, member:Handler$h$ -> Handler$h$3, member:Handler$h$ -> Handler$h$5, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res18, member:Handler$h$fork$ -> Handler$h$fork$2, member:lambda -> lambda3, member:Handler$h$fork$ -> Handler$h$fork$1, member:lambda -> lambda4, member:handleBlock$ -> handleBlock$, member:Handler$h$yld$ -> Handler$h$yld$1, member:Handler$h$fork -> Handler$h$fork, tmp:block$res -> block$res12, member:Handler$h$yld -> Handler$h$yld, member:lambda$ -> lambda$7, tmp:block$res -> block$res, member:Handler$h$start -> Handler$h$start, member:lambda$ -> lambda$8, h -> h2, tmp:handleBlock$$here -> handleBlock$$here, tmp:block$res -> block$res13, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res14, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, member:ThreadEffect -> ThreadEffect5, class:ThreadEffect -> ThreadEffect4, member:Handler$h$start$ -> Handler$h$start$1, tmp:block$res -> block$res15, tmp:block$res -> block$res1)
+//│         curThis = S of S of class:Handler$h$³
 //│         bindings = HashMap()
-//│       bindings = HashMap(new_thread -> new_thread, k -> k)
+//│       bindings = HashMap(new_thread -> new_thread)
 //│     bindings = HashMap(tmp:Handler$h$fork$here -> Handler$h$fork$here)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ╙──       	^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
@@ -535,15 +589,15 @@ fun start(thread: ThreadEffect -> ()) =
 //│           includeZero = false
 //│           defaultName = "tmp"
 //│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(member:Lock -> Lock1, class:Lock -> Lock, tmp:block$res -> block$res15, member:start -> start1, class:Handler$h$ -> Handler$h$2, member:cpsCont -> cpsCont6, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, class:Capture$scope0 -> Capture$scope08, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope09, member:cpsCont$ -> cpsCont$9, member:cpsCont -> cpsCont, tmp:block$res -> block$res9, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res16, member:start -> start, class:Handler$h$ -> Handler$h$, member:Capture$scope0 -> Capture$scope01, member:cpsCont$ -> cpsCont$, member:cpsCont$ -> cpsCont$1, member:Handler$h$yld -> Handler$h$yld1, member:Handler$h$xchg -> Handler$h$xchg, member:Handler$h$yld -> Handler$h$yld, member:Handler$h$ -> Handler$h$3, member:Handler$h$ -> Handler$h$1, member:while_cpsCont_cpsCont$ -> while_cpsCont_cpsCont$, member:cpsCont -> cpsCont7, tmp:block$res -> block$res2, class:Capture$scope0 -> Capture$scope010, member:f -> f, member:cpsCont -> cpsCont9, member:Capture$scope0 -> Capture$scope011, member:cpsCont -> cpsCont10, member:Option -> Option, member:ThreadEffect -> ThreadEffect3, class:ThreadEffect -> ThreadEffect2, member:cpsCont -> cpsCont11, member:cpsCont$ -> cpsCont$10, member:cpsCont -> cpsCont12, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res5, member:tasks -> tasks, class:Capture$scope0 -> Capture$scope014, tmp:tmp -> tmp, tmp:block$res -> block$res6, member:Capture$scope0 -> Capture$scope015, member:f -> f1, member:cpsCont -> cpsCont1, member:cpsCont$ -> cpsCont$12, member:cpsCont -> cpsCont2, class:Capture$scope0 -> Capture$scope02, member:handleBlock$$ -> handleBlock$$1, member:Handler$h$fork$ -> Handler$h$fork$, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$2, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, member:Predef -> Predef, class:Capture$scope0 -> Capture$scope04, member:Handler$h$fork$ -> Handler$h$fork$1, member:cpsCont$ -> cpsCont$3, member:Capture$scope0 -> Capture$scope05, member:cpsCont$ -> cpsCont$13, tmp:block$res -> block$res10, member:cpsCont$ -> cpsCont$5, tmp:block$res -> block$res11, tmp:block$res -> block$res3, tmp:block$res -> block$res12, member:main -> main, member:ThreadEffect -> ThreadEffect5, member:cpsCont$ -> cpsCont$14, member:cpsCont$ -> cpsCont$6, class:ThreadEffect -> ThreadEffect4, member:Handler$h$xchg$ -> Handler$h$xchg$, tmp:block$res -> block$res13, member:f$worker -> f$worker, member:enqueue -> enqueue, member:dequeue -> dequeue1, tmp:block$res -> block$res7, member:tasks -> tasks1, class:Capture$scope8 -> Capture$scope8, member:main -> main1, member:cpsCont -> cpsCont3, member:cpsCont$ -> cpsCont$4, member:Capture$scope8 -> Capture$scope81, member:lambda$ -> lambda$, member:lambda$ -> lambda$1, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$15, member:lambda$ -> lambda$2, member:cpsCont -> cpsCont8, class:Capture$scope0 -> Capture$scope06, member:lambda$ -> lambda$3, member:cpsCont$ -> cpsCont$16, member:Capture$scope0 -> Capture$scope07, member:cpsCont$ -> cpsCont$7, class:Capture$scope0 -> Capture$scope012, tmp:block$res -> block$res, member:cpsCont$ -> cpsCont$8, member:cpsCont$ -> cpsCont$17, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, tmp:block$res -> block$res4, member:Capture$scope0 -> Capture$scope013, member:cpsCont$ -> cpsCont$11, member:cpsCont$ -> cpsCont$18, tmp:block$res -> block$res8, tmp:block$res -> block$res1, member:dequeue -> dequeue, tmp:block$res -> block$res14, exchanger -> exchanger)
-//│       curThis = S of S of class:Handler$h$¹
+//│         bindings = HashMap(member:enqueue -> enqueue, member:dequeue -> dequeue1, member:Handler$h$fork$ -> Handler$h$fork$, member:lambda$ -> lambda$9, member:tasks -> tasks1, member:Lock -> Lock1, class:Lock -> Lock, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Handler$h$yld$ -> Handler$h$yld$, member:lambda$ -> lambda$10, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:lambda$ -> lambda$3, member:lambda$ -> lambda$4, tmp:tmp -> tmp1, member:lambda$ -> lambda$11, member:Handler$h$start$ -> Handler$h$start$, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:lambda$ -> lambda$5, member:f -> f, member:ThreadEffect -> ThreadEffect3, tmp:block$res -> block$res16, class:ThreadEffect -> ThreadEffect2, exchanger -> exchanger, tmp:block$res -> block$res17, member:lambda$ -> lambda$6, tmp:block$res -> block$res7, member:start -> start1, member:tasks -> tasks, class:Handler$h$ -> Handler$h$6, tmp:tmp -> tmp, tmp:block$res -> block$res8, member:f -> f1, tmp:block$res -> block$res3, member:main -> main, member:lambda -> lambda, tmp:block$res -> block$res5, member:Option -> Option, member:f$worker -> f$worker, member:lambda -> lambda1, tmp:block$res -> block$res9, member:lambda -> lambda2, h -> h1, member:main -> main1, class:Handler$h$ -> Handler$h$2, member:lambda$ -> lambda$, member:lambda$ -> lambda$1, member:lambda$ -> lambda$2, member:Handler$h$fork -> Handler$h$fork3, member:Handler$h$yld -> Handler$h$yld3, tmp:block$res -> block$res10, member:Handler$h$xchg -> Handler$h$xchg, member:dequeue -> dequeue, member:Handler$h$ -> Handler$h$7, member:handleBlock$$ -> handleBlock$$1, member:Predef -> Predef, tmp:block$res -> block$res4, member:Handler$h$fork$ -> Handler$h$fork$3, h -> h, tmp:block$res -> block$res11, class:Handler$h$ -> Handler$h$, member:start -> start, class:Handler$h$ -> Handler$h$4, member:lambda -> lambda5, member:Handler$h$xchg$ -> Handler$h$xchg$, member:lambda -> lambda6, member:handleBlock$ -> handleBlock$1, member:Handler$h$fork -> Handler$h$fork1, member:Handler$h$yld -> Handler$h$yld1, member:Handler$h$fork -> Handler$h$fork2, member:Handler$h$start -> Handler$h$start1, member:Handler$h$yld -> Handler$h$yld2, member:Handler$h$ -> Handler$h$3, member:Handler$h$ -> Handler$h$5, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res18, member:Handler$h$fork$ -> Handler$h$fork$2, member:lambda -> lambda3, member:Handler$h$fork$ -> Handler$h$fork$1, member:lambda -> lambda4, member:handleBlock$ -> handleBlock$, member:Handler$h$yld$ -> Handler$h$yld$1, member:Handler$h$fork -> Handler$h$fork, tmp:block$res -> block$res12, member:Handler$h$yld -> Handler$h$yld, member:lambda$ -> lambda$7, tmp:block$res -> block$res, member:Handler$h$start -> Handler$h$start, member:lambda$ -> lambda$8, h -> h2, tmp:handleBlock$$here -> handleBlock$$here, tmp:block$res -> block$res13, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res14, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, member:ThreadEffect -> ThreadEffect5, class:ThreadEffect -> ThreadEffect4, member:Handler$h$start$ -> Handler$h$start$1, tmp:block$res -> block$res15, tmp:block$res -> block$res1)
+//│       curThis = S of S of class:Handler$h$³
 //│       bindings = HashMap()
-//│     bindings = HashMap(k -> k)
+//│     bindings = HashMap()
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ╙──       	^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
@@ -561,16 +615,16 @@ fun start(thread: ThreadEffect -> ()) =
 //│             includeZero = false
 //│             defaultName = "tmp"
 //│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(member:Lock -> Lock1, class:Lock -> Lock, tmp:block$res -> block$res15, member:start -> start1, class:Handler$h$ -> Handler$h$2, member:cpsCont -> cpsCont6, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, class:Capture$scope0 -> Capture$scope08, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope09, member:cpsCont$ -> cpsCont$9, member:cpsCont -> cpsCont, tmp:block$res -> block$res9, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res16, member:start -> start, class:Handler$h$ -> Handler$h$, member:Capture$scope0 -> Capture$scope01, member:cpsCont$ -> cpsCont$, member:cpsCont$ -> cpsCont$1, member:Handler$h$yld -> Handler$h$yld1, member:Handler$h$xchg -> Handler$h$xchg, member:Handler$h$yld -> Handler$h$yld, member:Handler$h$ -> Handler$h$3, member:Handler$h$ -> Handler$h$1, member:while_cpsCont_cpsCont$ -> while_cpsCont_cpsCont$, member:cpsCont -> cpsCont7, tmp:block$res -> block$res2, class:Capture$scope0 -> Capture$scope010, member:f -> f, member:cpsCont -> cpsCont9, member:Capture$scope0 -> Capture$scope011, member:cpsCont -> cpsCont10, member:Option -> Option, member:ThreadEffect -> ThreadEffect3, class:ThreadEffect -> ThreadEffect2, member:cpsCont -> cpsCont11, member:cpsCont$ -> cpsCont$10, member:cpsCont -> cpsCont12, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res5, member:tasks -> tasks, class:Capture$scope0 -> Capture$scope014, tmp:tmp -> tmp, tmp:block$res -> block$res6, member:Capture$scope0 -> Capture$scope015, member:f -> f1, member:cpsCont -> cpsCont1, member:cpsCont$ -> cpsCont$12, member:cpsCont -> cpsCont2, class:Capture$scope0 -> Capture$scope02, member:handleBlock$$ -> handleBlock$$1, member:Handler$h$fork$ -> Handler$h$fork$, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$2, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, member:Predef -> Predef, class:Capture$scope0 -> Capture$scope04, member:Handler$h$fork$ -> Handler$h$fork$1, member:cpsCont$ -> cpsCont$3, member:Capture$scope0 -> Capture$scope05, member:cpsCont$ -> cpsCont$13, tmp:block$res -> block$res10, member:cpsCont$ -> cpsCont$5, tmp:block$res -> block$res11, tmp:block$res -> block$res3, tmp:block$res -> block$res12, member:main -> main, member:ThreadEffect -> ThreadEffect5, member:cpsCont$ -> cpsCont$14, member:cpsCont$ -> cpsCont$6, class:ThreadEffect -> ThreadEffect4, member:Handler$h$xchg$ -> Handler$h$xchg$, tmp:block$res -> block$res13, member:f$worker -> f$worker, member:enqueue -> enqueue, member:dequeue -> dequeue1, tmp:block$res -> block$res7, member:tasks -> tasks1, class:Capture$scope8 -> Capture$scope8, member:main -> main1, member:cpsCont -> cpsCont3, member:cpsCont$ -> cpsCont$4, member:Capture$scope8 -> Capture$scope81, member:lambda$ -> lambda$, member:lambda$ -> lambda$1, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$15, member:lambda$ -> lambda$2, member:cpsCont -> cpsCont8, class:Capture$scope0 -> Capture$scope06, member:lambda$ -> lambda$3, member:cpsCont$ -> cpsCont$16, member:Capture$scope0 -> Capture$scope07, member:cpsCont$ -> cpsCont$7, class:Capture$scope0 -> Capture$scope012, tmp:block$res -> block$res, member:cpsCont$ -> cpsCont$8, member:cpsCont$ -> cpsCont$17, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, tmp:block$res -> block$res4, member:Capture$scope0 -> Capture$scope013, member:cpsCont$ -> cpsCont$11, member:cpsCont$ -> cpsCont$18, tmp:block$res -> block$res8, tmp:block$res -> block$res1, member:dequeue -> dequeue, tmp:block$res -> block$res14, exchanger -> exchanger)
-//│         curThis = S of S of class:Handler$h$¹
+//│           bindings = HashMap(member:enqueue -> enqueue, member:dequeue -> dequeue1, member:Handler$h$fork$ -> Handler$h$fork$, member:lambda$ -> lambda$9, member:tasks -> tasks1, member:Lock -> Lock1, class:Lock -> Lock, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Handler$h$yld$ -> Handler$h$yld$, member:lambda$ -> lambda$10, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:lambda$ -> lambda$3, member:lambda$ -> lambda$4, tmp:tmp -> tmp1, member:lambda$ -> lambda$11, member:Handler$h$start$ -> Handler$h$start$, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:lambda$ -> lambda$5, member:f -> f, member:ThreadEffect -> ThreadEffect3, tmp:block$res -> block$res16, class:ThreadEffect -> ThreadEffect2, exchanger -> exchanger, tmp:block$res -> block$res17, member:lambda$ -> lambda$6, tmp:block$res -> block$res7, member:start -> start1, member:tasks -> tasks, class:Handler$h$ -> Handler$h$6, tmp:tmp -> tmp, tmp:block$res -> block$res8, member:f -> f1, tmp:block$res -> block$res3, member:main -> main, member:lambda -> lambda, tmp:block$res -> block$res5, member:Option -> Option, member:f$worker -> f$worker, member:lambda -> lambda1, tmp:block$res -> block$res9, member:lambda -> lambda2, h -> h1, member:main -> main1, class:Handler$h$ -> Handler$h$2, member:lambda$ -> lambda$, member:lambda$ -> lambda$1, member:lambda$ -> lambda$2, member:Handler$h$fork -> Handler$h$fork3, member:Handler$h$yld -> Handler$h$yld3, tmp:block$res -> block$res10, member:Handler$h$xchg -> Handler$h$xchg, member:dequeue -> dequeue, member:Handler$h$ -> Handler$h$7, member:handleBlock$$ -> handleBlock$$1, member:Predef -> Predef, tmp:block$res -> block$res4, member:Handler$h$fork$ -> Handler$h$fork$3, h -> h, tmp:block$res -> block$res11, class:Handler$h$ -> Handler$h$, member:start -> start, class:Handler$h$ -> Handler$h$4, member:lambda -> lambda5, member:Handler$h$xchg$ -> Handler$h$xchg$, member:lambda -> lambda6, member:handleBlock$ -> handleBlock$1, member:Handler$h$fork -> Handler$h$fork1, member:Handler$h$yld -> Handler$h$yld1, member:Handler$h$fork -> Handler$h$fork2, member:Handler$h$start -> Handler$h$start1, member:Handler$h$yld -> Handler$h$yld2, member:Handler$h$ -> Handler$h$3, member:Handler$h$ -> Handler$h$5, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res18, member:Handler$h$fork$ -> Handler$h$fork$2, member:lambda -> lambda3, member:Handler$h$fork$ -> Handler$h$fork$1, member:lambda -> lambda4, member:handleBlock$ -> handleBlock$, member:Handler$h$yld$ -> Handler$h$yld$1, member:Handler$h$fork -> Handler$h$fork, tmp:block$res -> block$res12, member:Handler$h$yld -> Handler$h$yld, member:lambda$ -> lambda$7, tmp:block$res -> block$res, member:Handler$h$start -> Handler$h$start, member:lambda$ -> lambda$8, h -> h2, tmp:handleBlock$$here -> handleBlock$$here, tmp:block$res -> block$res13, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res14, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, member:ThreadEffect -> ThreadEffect5, class:ThreadEffect -> ThreadEffect4, member:Handler$h$start$ -> Handler$h$start$1, tmp:block$res -> block$res15, tmp:block$res -> block$res1)
+//│         curThis = S of S of class:Handler$h$³
 //│         bindings = HashMap()
-//│       bindings = HashMap(k -> k, x -> x)
+//│       bindings = HashMap(x -> x)
 //│     bindings = HashMap(tmp:Handler$h$xchg$here -> Handler$h$xchg$here)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ╙──       	^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
@@ -587,17 +641,17 @@ fun start(thread: ThreadEffect -> ()) =
 //│           includeZero = false
 //│           defaultName = "tmp"
 //│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(member:Lock -> Lock1, class:Lock -> Lock, tmp:block$res -> block$res15, member:start -> start1, class:Handler$h$ -> Handler$h$2, member:cpsCont -> cpsCont6, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, class:Capture$scope0 -> Capture$scope08, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope09, member:cpsCont$ -> cpsCont$9, member:cpsCont -> cpsCont, tmp:block$res -> block$res9, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res16, member:start -> start, class:Handler$h$ -> Handler$h$, member:Capture$scope0 -> Capture$scope01, member:cpsCont$ -> cpsCont$, member:cpsCont$ -> cpsCont$1, member:Handler$h$yld -> Handler$h$yld1, member:Handler$h$xchg -> Handler$h$xchg, member:Handler$h$yld -> Handler$h$yld, member:Handler$h$ -> Handler$h$3, member:Handler$h$ -> Handler$h$1, member:while_cpsCont_cpsCont$ -> while_cpsCont_cpsCont$, member:cpsCont -> cpsCont7, tmp:block$res -> block$res2, class:Capture$scope0 -> Capture$scope010, member:f -> f, member:cpsCont -> cpsCont9, member:Capture$scope0 -> Capture$scope011, member:cpsCont -> cpsCont10, member:Option -> Option, member:ThreadEffect -> ThreadEffect3, class:ThreadEffect -> ThreadEffect2, member:cpsCont -> cpsCont11, member:cpsCont$ -> cpsCont$10, member:cpsCont -> cpsCont12, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res5, member:tasks -> tasks, class:Capture$scope0 -> Capture$scope014, tmp:tmp -> tmp, tmp:block$res -> block$res6, member:Capture$scope0 -> Capture$scope015, member:f -> f1, member:cpsCont -> cpsCont1, member:cpsCont$ -> cpsCont$12, member:cpsCont -> cpsCont2, class:Capture$scope0 -> Capture$scope02, member:handleBlock$$ -> handleBlock$$1, member:Handler$h$fork$ -> Handler$h$fork$, member:Capture$scope0 -> Capture$scope03, member:cpsCont$ -> cpsCont$2, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont5, member:Predef -> Predef, class:Capture$scope0 -> Capture$scope04, member:Handler$h$fork$ -> Handler$h$fork$1, member:cpsCont$ -> cpsCont$3, member:Capture$scope0 -> Capture$scope05, member:cpsCont$ -> cpsCont$13, tmp:block$res -> block$res10, member:cpsCont$ -> cpsCont$5, tmp:block$res -> block$res11, tmp:block$res -> block$res3, tmp:block$res -> block$res12, member:main -> main, member:ThreadEffect -> ThreadEffect5, member:cpsCont$ -> cpsCont$14, member:cpsCont$ -> cpsCont$6, class:ThreadEffect -> ThreadEffect4, member:Handler$h$xchg$ -> Handler$h$xchg$, tmp:block$res -> block$res13, member:f$worker -> f$worker, member:enqueue -> enqueue, member:dequeue -> dequeue1, tmp:block$res -> block$res7, member:tasks -> tasks1, class:Capture$scope8 -> Capture$scope8, member:main -> main1, member:cpsCont -> cpsCont3, member:cpsCont$ -> cpsCont$4, member:Capture$scope8 -> Capture$scope81, member:lambda$ -> lambda$, member:lambda$ -> lambda$1, tmp:tmp -> tmp1, member:cpsCont$ -> cpsCont$15, member:lambda$ -> lambda$2, member:cpsCont -> cpsCont8, class:Capture$scope0 -> Capture$scope06, member:lambda$ -> lambda$3, member:cpsCont$ -> cpsCont$16, member:Capture$scope0 -> Capture$scope07, member:cpsCont$ -> cpsCont$7, class:Capture$scope0 -> Capture$scope012, tmp:block$res -> block$res, member:cpsCont$ -> cpsCont$8, member:cpsCont$ -> cpsCont$17, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, tmp:block$res -> block$res4, member:Capture$scope0 -> Capture$scope013, member:cpsCont$ -> cpsCont$11, member:cpsCont$ -> cpsCont$18, tmp:block$res -> block$res8, tmp:block$res -> block$res1, member:dequeue -> dequeue, tmp:block$res -> block$res14, exchanger -> exchanger)
+//│         bindings = HashMap(member:enqueue -> enqueue, member:dequeue -> dequeue1, member:Handler$h$fork$ -> Handler$h$fork$, member:lambda$ -> lambda$9, member:tasks -> tasks1, member:Lock -> Lock1, class:Lock -> Lock, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Handler$h$yld$ -> Handler$h$yld$, member:lambda$ -> lambda$10, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:lambda$ -> lambda$3, member:lambda$ -> lambda$4, tmp:tmp -> tmp1, member:lambda$ -> lambda$11, member:Handler$h$start$ -> Handler$h$start$, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:lambda$ -> lambda$5, member:f -> f, member:ThreadEffect -> ThreadEffect3, tmp:block$res -> block$res16, class:ThreadEffect -> ThreadEffect2, exchanger -> exchanger, tmp:block$res -> block$res17, member:lambda$ -> lambda$6, tmp:block$res -> block$res7, member:start -> start1, member:tasks -> tasks, class:Handler$h$ -> Handler$h$6, tmp:tmp -> tmp, tmp:block$res -> block$res8, member:f -> f1, tmp:block$res -> block$res3, member:main -> main, member:lambda -> lambda, tmp:block$res -> block$res5, member:Option -> Option, member:f$worker -> f$worker, member:lambda -> lambda1, tmp:block$res -> block$res9, member:lambda -> lambda2, h -> h1, member:main -> main1, class:Handler$h$ -> Handler$h$2, member:lambda$ -> lambda$, member:lambda$ -> lambda$1, member:lambda$ -> lambda$2, member:Handler$h$fork -> Handler$h$fork3, member:Handler$h$yld -> Handler$h$yld3, tmp:block$res -> block$res10, member:Handler$h$xchg -> Handler$h$xchg, member:dequeue -> dequeue, member:Handler$h$ -> Handler$h$7, member:handleBlock$$ -> handleBlock$$1, member:Predef -> Predef, tmp:block$res -> block$res4, member:Handler$h$fork$ -> Handler$h$fork$3, h -> h, tmp:block$res -> block$res11, class:Handler$h$ -> Handler$h$, member:start -> start, class:Handler$h$ -> Handler$h$4, member:lambda -> lambda5, member:Handler$h$xchg$ -> Handler$h$xchg$, member:lambda -> lambda6, member:handleBlock$ -> handleBlock$1, member:Handler$h$fork -> Handler$h$fork1, member:Handler$h$yld -> Handler$h$yld1, member:Handler$h$fork -> Handler$h$fork2, member:Handler$h$start -> Handler$h$start1, member:Handler$h$yld -> Handler$h$yld2, member:Handler$h$ -> Handler$h$3, member:Handler$h$ -> Handler$h$5, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res18, member:Handler$h$fork$ -> Handler$h$fork$2, member:lambda -> lambda3, member:Handler$h$fork$ -> Handler$h$fork$1, member:lambda -> lambda4, member:handleBlock$ -> handleBlock$, member:Handler$h$yld$ -> Handler$h$yld$1, member:Handler$h$fork -> Handler$h$fork, tmp:block$res -> block$res12, member:Handler$h$yld -> Handler$h$yld, member:lambda$ -> lambda$7, tmp:block$res -> block$res, member:Handler$h$start -> Handler$h$start, member:lambda$ -> lambda$8, h -> h2, tmp:handleBlock$$here -> handleBlock$$here, tmp:block$res -> block$res13, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res14, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, member:ThreadEffect -> ThreadEffect5, class:ThreadEffect -> ThreadEffect4, member:Handler$h$start$ -> Handler$h$start$1, tmp:block$res -> block$res15, tmp:block$res -> block$res1)
 //│       curThis = S of N
-//│       bindings = HashMap(thread -> thread, k -> k)
-//│     bindings = HashMap(scope0$cap -> scope0$cap, h -> h, tmp:cpsCont$here -> cpsCont$here, tmp:handleBlock$$here -> handleBlock$$here)
+//│       bindings = HashMap(thread -> thread)
+//│     bindings = HashMap(h -> h3, tmp:handleBlock$$here -> handleBlock$$here1)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ║         	^^^^^^^^^^^
-//│ ║  l.281: 	    handle_suspension
+//│ ║  l.282: 	    handle_suspension
 //│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 
 fun main(h) =
@@ -609,55 +663,34 @@ fun main(h) =
     print("[t2] Sending 1")
     let v = h.xchg(1)
     print("[t2] received " + v.toString()))
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.606: 	    let v = h.xchg(0)
-//│ ╙──       	            ^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.607: 	    print("[t1] received " + v.toString()))
-//│ ╙──       	                             ^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.604: 	  h.fork(h =>
-//│ ║         	  ^^^^^^^^^^^
-//│ ║  l.605: 	    print("[t1] Sending 0")
-//│ ║         	^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.606: 	    let v = h.xchg(0)
-//│ ║         	^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.607: 	    print("[t1] received " + v.toString()))
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.610: 	    let v = h.xchg(1)
-//│ ╙──       	            ^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.611: 	    print("[t2] received " + v.toString()))
-//│ ╙──       	                             ^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.608: 	  h.fork(h =>
-//│ ║         	  ^^^^^^^^^^^
-//│ ║  l.609: 	    print("[t2] Sending 1")
-//│ ║         	^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.610: 	    let v = h.xchg(1)
-//│ ║         	^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.611: 	    print("[t2] received " + v.toString()))
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 start(main)
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:handle_suspension⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(member:enqueue -> enqueue, member:dequeue -> dequeue1, member:Handler$h$fork$ -> Handler$h$fork$, member:lambda$ -> lambda$9, member:tasks -> tasks1, member:Lock -> Lock1, class:Lock -> Lock, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Handler$h$yld$ -> Handler$h$yld$, member:lambda$ -> lambda$10, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:lambda$ -> lambda$3, member:lambda$ -> lambda$4, tmp:tmp -> tmp1, member:lambda$ -> lambda$11, member:Handler$h$start$ -> Handler$h$start$, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:lambda$ -> lambda$5, member:f -> f, member:ThreadEffect -> ThreadEffect3, tmp:block$res -> block$res16, class:ThreadEffect -> ThreadEffect2, exchanger -> exchanger, tmp:block$res -> block$res17, member:lambda$ -> lambda$6, tmp:block$res -> block$res7, member:start -> start1, member:tasks -> tasks, class:Handler$h$ -> Handler$h$6, tmp:tmp -> tmp, tmp:block$res -> block$res8, member:f -> f1, tmp:block$res -> block$res3, member:main -> main, member:lambda -> lambda, tmp:block$res -> block$res5, member:Option -> Option, member:f$worker -> f$worker, member:lambda -> lambda1, tmp:block$res -> block$res9, member:lambda -> lambda2, h -> h1, member:main -> main1, class:Handler$h$ -> Handler$h$2, member:lambda$ -> lambda$, member:lambda$ -> lambda$1, member:lambda$ -> lambda$2, member:Handler$h$fork -> Handler$h$fork3, member:Handler$h$yld -> Handler$h$yld3, tmp:block$res -> block$res10, member:Handler$h$xchg -> Handler$h$xchg, member:dequeue -> dequeue, member:Handler$h$ -> Handler$h$7, member:handleBlock$$ -> handleBlock$$1, member:Predef -> Predef, tmp:block$res -> block$res4, member:Handler$h$fork$ -> Handler$h$fork$3, h -> h, tmp:block$res -> block$res11, class:Handler$h$ -> Handler$h$, member:start -> start, class:Handler$h$ -> Handler$h$4, member:lambda -> lambda5, member:Handler$h$xchg$ -> Handler$h$xchg$, member:lambda -> lambda6, member:handleBlock$ -> handleBlock$1, member:Handler$h$fork -> Handler$h$fork1, member:Handler$h$yld -> Handler$h$yld1, member:Handler$h$fork -> Handler$h$fork2, member:Handler$h$start -> Handler$h$start1, member:Handler$h$yld -> Handler$h$yld2, member:Handler$h$ -> Handler$h$3, member:Handler$h$ -> Handler$h$5, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res18, member:main -> main2, member:Handler$h$fork$ -> Handler$h$fork$2, member:lambda -> lambda3, member:Handler$h$fork$ -> Handler$h$fork$1, member:lambda -> lambda4, member:handleBlock$ -> handleBlock$, member:Handler$h$yld$ -> Handler$h$yld$1, member:Handler$h$fork -> Handler$h$fork, tmp:block$res -> block$res12, member:Handler$h$yld -> Handler$h$yld, member:lambda$ -> lambda$7, member:lambda -> lambda7, tmp:block$res -> block$res, member:Handler$h$start -> Handler$h$start, member:lambda$ -> lambda$8, h -> h2, tmp:handleBlock$$here -> handleBlock$$here, tmp:block$res -> block$res13, member:lambda -> lambda8, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res14, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, member:ThreadEffect -> ThreadEffect5, class:ThreadEffect -> ThreadEffect4, member:Handler$h$start$ -> Handler$h$start$1, tmp:block$res -> block$res19, h -> h3, tmp:block$res -> block$res15, tmp:handleBlock$$here -> handleBlock$$here1, tmp:block$res -> block$res1, tmp:block$res -> block$res20)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.280: 	  fun
+//│ ║         	  ^^^
+//│ ║  l.281: 	    suspend
+//│ ║         	^^^^^^^^^^^
+//│ ║  l.282: 	    handle_suspension
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at start (REPL58:1:6998)
-//│     at REPL64:1:39
+//│     at REPL70:1:133
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -666,3 +699,4 @@ start(main)
 //│     at REPLServer.onLine (node:repl:830:12)
 //│     at REPLServer.emit (node:events:509:20)
 //│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)

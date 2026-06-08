@@ -24,19 +24,18 @@ fun hi(n) =
   else hi(n - 1)
 hi(0)
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let hi⁰;
-//│ define hi⁰ as fun hi¹(k, n) {
+//│ define hi⁰ as fun hi¹(n) {
 //│   let scrut, tmp;
 //│   set scrut = ===⁰(n, 0);
 //│   match scrut
 //│     true =>
-//│       return k(0)
+//│       return 0
 //│     else
 //│       set tmp = -⁰(n, 1);
-//│       return hi¹(k, tmp)
+//│       return hi¹(tmp)
 //│   end
 //│ };
-//│ return hi¹(runtime⁰.cpsId﹖, 0)
+//│ return hi¹(0)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 0
 
@@ -50,54 +49,35 @@ fun sum(n) =
     n + sum(n - 1)
 sum(10000)
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let sum⁰, cpsCont⁰, Capture$scope0⁰, cpsCont$⁰;
-//│ @inline
-//│ define cpsCont$⁰ as fun cpsCont$¹(scope0$cap, n, k)(retVal) {
-//│   return cpsCont¹(scope0$cap, n, k, retVal)
-//│ };
-//│ define cpsCont⁰ as fun cpsCont¹(scope0$cap, n, k, retVal) {
-//│   let tmp;
-//│   set scope0$cap.tmp$0⁰ = retVal;
-//│   set tmp = +⁰(n, scope0$cap.tmp$0⁰);
-//│   return k(tmp)
-//│ };
-//│ define Capture$scope0⁰ as class Capture$scope0² {
-//│   constructor Capture$scope0¹(tmp$0) {
-//│     define tmp$0¹ as val tmp$0⁰ = tmp$0;
-//│     end
-//│   }
-//│ };
-//│ define sum⁰ as fun sum¹(k, n) {
-//│   let scrut, tmp, tmp1, scope0$cap;
-//│   set scope0$cap = new mut Capture$scope0²(tmp1);
+//│ define sum⁰ as fun sum¹(n) {
+//│   let scrut, tmp, tmp1;
 //│   set scrut = ===⁰(n, 0);
 //│   match scrut
 //│     true =>
-//│       return k(0)
+//│       return 0
 //│     else
-//│       let cpsCont$here;
 //│       set tmp = -⁰(n, 1);
-//│       set cpsCont$here = cpsCont$¹(scope0$cap, n, k);
-//│       return sum¹(cpsCont$here, tmp)
+//│       set tmp1 = sum¹(tmp);
+//│       return +⁰(n, tmp1)
 //│   end
 //│ };
-//│ return sum¹(runtime⁰.cpsId﹖, 10000)
+//│ return sum¹(10000)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
-//│     at cpsCont$ (REPL16:1:80)
-//│     at sum (REPL16:1:1051)
-//│     at sum (REPL16:1:1109)
-//│     at sum (REPL16:1:1109)
-//│     at sum (REPL16:1:1109)
-//│     at sum (REPL16:1:1109)
-//│     at sum (REPL16:1:1109)
-//│     at sum (REPL16:1:1109)
-//│     at sum (REPL16:1:1109)
-//│     at sum (REPL16:1:1109)
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:759:19)
+//│     at sum (REPL16:1:51)
+//│     at sum (REPL16:1:222)
+//│     at sum (REPL16:1:222)
+//│     at sum (REPL16:1:222)
+//│     at sum (REPL16:1:222)
+//│     at sum (REPL16:1:222)
+//│     at sum (REPL16:1:222)
+//│     at sum (REPL16:1:222)
+//│     at sum (REPL16:1:222)
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:311)
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
 //│ ═══[RUNTIME ERROR] Expected: '50005000', got: 'undefined'
 
 // stack-overflows without :stackSafe
@@ -119,25 +99,20 @@ fun foo(f) =
     set ctr += 1
     dummy(f(f))
 foo(foo)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.350: 	    dummy(f(f))
-//│ ╙──       	          ^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
-//│ ═══[RUNTIME ERROR] Error: Function 'foo' expected 2 arguments but got 1
-//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:757:41)
-//│     at foo (REPL22:1:188)
-//│     at foo (REPL22:1:399)
-//│     at REPL22:1:486
-//│     at ContextifyScript.runInThisContext (node:vm:137:12)
-//│     at defaultEval (node:repl:610:24)
-//│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│ ctr = 1
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+//│     at foo (REPL22:1:156)
+//│     at foo (REPL22:1:361)
+//│     at foo (REPL22:1:361)
+//│     at foo (REPL22:1:361)
+//│     at foo (REPL22:1:361)
+//│     at foo (REPL22:1:361)
+//│     at foo (REPL22:1:361)
+//│     at foo (REPL22:1:361)
+//│     at foo (REPL22:1:361)
+//│     at foo (REPL22:1:361)
+//│ ctr = 6145
 
 :stackSafe
 :effectHandlers
@@ -148,31 +123,21 @@ val foo =
     else n + f(n-1)
   f(10000)
 foo
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.378: 	    else n + f(n-1)
-//│ ╙──       	             ^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.379: 	  f(10000)
-//│ ╙──       	  ^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
-//│ ═══[RUNTIME ERROR] Error: Function expected 2 arguments but got 1
-//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:757:41)
-//│     at lambda (REPL26:1:81)
-//│     at REPL26:1:406
-//│     at ContextifyScript.runInThisContext (node:vm:137:12)
-//│     at defaultEval (node:repl:610:24)
-//│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│     at REPLServer.emit (node:events:509:20)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:759:19)
+//│     at lambda (REPL26:1:79)
+//│     at lambda (REPL26:1:250)
+//│     at lambda (REPL26:1:250)
+//│     at lambda (REPL26:1:250)
+//│     at lambda (REPL26:1:250)
+//│     at lambda (REPL26:1:250)
+//│     at lambda (REPL26:1:250)
+//│     at lambda (REPL26:1:250)
+//│     at lambda (REPL26:1:250)
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:311)
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
 //│ ═══[RUNTIME ERROR] Expected: '50005000', got: 'undefined'
 //│ foo = undefined
 
@@ -202,26 +167,6 @@ handle h = Eff with
       else n + f(n-1)
     resume(f(10000))
 foo(h)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.426: 	fun foo(h) = h.perform()
-//│ ╙──       	             ^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.432: 	      else n + f(n-1)
-//│ ╙──       	               ^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.433: 	    resume(f(10000))
-//│ ╙──       	           ^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.433: 	    resume(f(10000))
-//│ ╙──       	    ^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
 //│ FAILURE INFO: Tuple2:
@@ -237,15 +182,15 @@ foo(h)
 //│           includeZero = false
 //│           defaultName = "tmp"
 //│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(tmp:block$res -> block$res9, tmp:block$res -> block$res2, member:sum -> sum1, member:lambda -> lambda1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, class:Capture$scope0 -> Capture$scope02, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope03, member:lambda$ -> lambda$, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res7, member:Capture$scope0 -> Capture$scope01, member:Eff -> Eff1, class:Eff -> Eff, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res8, member:foo -> foo3, tmp:block$res -> block$res3, member:sum -> sum2, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res4, member:dummy -> dummy, member:foo -> foo, ctr -> ctr, member:lambda -> lambda2, tmp:tmp -> tmp1, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1, member:cpsCont -> cpsCont1, member:cpsCont -> cpsCont2, tmp:block$res -> block$res5, member:f -> f, member:foo -> foo1, tmp:block$res -> block$res, member:sum -> sum, class:Capture$scope2 -> Capture$scope2, member:Capture$scope2 -> Capture$scope21, member:lambda -> lambda, member:lambda$ -> lambda$1, tmp:tmp -> tmp, tmp:block$res -> block$res1, member:hi -> hi, tmp:block$res -> block$res6, member:foo -> foo2)
+//│         bindings = HashMap(member:lambda -> lambda, tmp:block$res -> block$res9, tmp:tmp -> tmp1, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:foo -> foo2, tmp:runtime -> runtime, member:sum -> sum1, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:lambda -> lambda1, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res3, member:sum -> sum2, member:Capture$scope0 -> Capture$scope01, member:lambda$ -> lambda$, tmp:block$res -> block$res4, scope0$cap -> scope0$cap, member:dummy -> dummy, member:foo -> foo, tmp:block$res -> block$res7, ctr -> ctr, member:Eff -> Eff1, class:Eff -> Eff, tmp:block$res -> block$res8, member:foo -> foo3, h -> h, class:Handler$h$ -> Handler$h$, tmp:scrut -> scrut, tmp:tmp -> tmp, member:lambda -> lambda2, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res, member:sum -> sum, class:Capture$scope1 -> Capture$scope1, tmp:block$res -> block$res5, member:f -> f, member:Capture$scope1 -> Capture$scope11, member:foo -> foo1, member:lambda$ -> lambda$1, tmp:block$res -> block$res1, member:hi -> hi)
 //│       curThis = S of S of class:Handler$h$⁰
 //│       bindings = HashMap()
-//│     bindings = HashMap(k -> k)
+//│     bindings = HashMap()
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ╙──       	^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
@@ -260,19 +205,19 @@ foo(h)
 //│       includeZero = false
 //│       defaultName = "tmp"
 //│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(tmp:block$res -> block$res9, tmp:block$res -> block$res2, member:sum -> sum1, member:lambda -> lambda1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, class:Capture$scope0 -> Capture$scope02, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope03, member:lambda$ -> lambda$, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res7, member:Capture$scope0 -> Capture$scope01, member:Eff -> Eff1, class:Eff -> Eff, member:cpsCont$ -> cpsCont$, tmp:block$res -> block$res8, member:foo -> foo3, tmp:block$res -> block$res3, member:sum -> sum2, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res4, member:dummy -> dummy, member:foo -> foo, ctr -> ctr, member:lambda -> lambda2, tmp:tmp -> tmp1, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1, member:cpsCont -> cpsCont1, member:cpsCont -> cpsCont2, tmp:block$res -> block$res5, member:f -> f, member:foo -> foo1, tmp:block$res -> block$res, member:sum -> sum, class:Capture$scope2 -> Capture$scope2, member:Capture$scope2 -> Capture$scope21, member:lambda -> lambda, member:lambda$ -> lambda$1, tmp:tmp -> tmp, tmp:block$res -> block$res1, member:hi -> hi, tmp:block$res -> block$res6, member:foo -> foo2)
+//│     bindings = HashMap(member:lambda -> lambda, tmp:block$res -> block$res9, tmp:tmp -> tmp1, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:foo -> foo2, tmp:runtime -> runtime, member:sum -> sum1, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:lambda -> lambda1, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res3, member:sum -> sum2, member:Capture$scope0 -> Capture$scope01, member:lambda$ -> lambda$, tmp:block$res -> block$res4, scope0$cap -> scope0$cap, member:dummy -> dummy, member:foo -> foo, tmp:block$res -> block$res7, ctr -> ctr, member:Eff -> Eff1, class:Eff -> Eff, tmp:block$res -> block$res8, member:foo -> foo3, h -> h, class:Handler$h$ -> Handler$h$, tmp:scrut -> scrut, tmp:tmp -> tmp, member:lambda -> lambda2, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res, member:sum -> sum, class:Capture$scope1 -> Capture$scope1, tmp:block$res -> block$res5, member:f -> f, member:Capture$scope1 -> Capture$scope11, member:foo -> foo1, member:lambda$ -> lambda$1, tmp:block$res -> block$res1, member:hi -> hi)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ║         	^^^^^^^^^^^
-//│ ║  l.281: 	    handle_suspension
+//│ ║  l.282: 	    handle_suspension
 //│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL36:1:2456
+//│     at REPL36:1:1973
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -283,7 +228,7 @@ foo(h)
 //│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
 //│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:311)
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
 //│ ═══[RUNTIME ERROR] Expected: '50005000', got: 'undefined'
 
 // function call and defn inside handler
@@ -300,26 +245,6 @@ handle h = Eff with
 in
   fun foo(h) = h.perform()
   foo(h)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.528: 	      else n + f(n-1)
-//│ ╙──       	               ^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.529: 	    resume(f(10000))
-//│ ╙──       	           ^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.529: 	    resume(f(10000))
-//│ ╙──       	    ^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.531: 	  fun foo(h) = h.perform()
-//│ ╙──       	               ^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
 //│ FAILURE INFO: Tuple2:
@@ -335,15 +260,15 @@ in
 //│           includeZero = false
 //│           defaultName = "tmp"
 //│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(tmp:block$res -> block$res9, h -> h1, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res2, member:sum -> sum1, member:lambda -> lambda1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, class:Capture$scope0 -> Capture$scope02, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope03, member:lambda$ -> lambda$, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res7, member:Capture$scope0 -> Capture$scope01, member:lambda -> lambda3, member:Eff -> Eff1, class:Eff -> Eff, tmp:tmp -> tmp2, member:handleBlock$ -> handleBlock$1, member:cpsCont$ -> cpsCont$, member:Handler$h$perform -> Handler$h$perform1, tmp:block$res -> block$res8, member:Handler$h$ -> Handler$h$3, member:foo -> foo3, tmp:block$res -> block$res3, member:cpsCont -> cpsCont3, member:sum -> sum2, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont -> cpsCont4, class:Capture$scope4 -> Capture$scope4, tmp:block$res -> block$res4, member:dummy -> dummy, member:foo -> foo, ctr -> ctr, member:Capture$scope4 -> Capture$scope41, member:lambda -> lambda2, member:lambda$ -> lambda$2, tmp:tmp -> tmp1, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1, member:cpsCont -> cpsCont1, member:cpsCont -> cpsCont2, tmp:block$res -> block$res5, tmp:block$res -> block$res10, member:f -> f, member:foo -> foo1, tmp:block$res -> block$res, member:sum -> sum, class:Capture$scope2 -> Capture$scope2, member:Capture$scope2 -> Capture$scope21, member:lambda -> lambda, member:lambda$ -> lambda$1, tmp:tmp -> tmp, tmp:block$res -> block$res1, member:hi -> hi, tmp:block$res -> block$res6, member:foo -> foo2)
+//│         bindings = HashMap(member:lambda -> lambda, tmp:block$res -> block$res9, tmp:tmp -> tmp1, h -> h1, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:foo -> foo2, tmp:runtime -> runtime, member:sum -> sum1, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:lambda -> lambda1, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res3, member:sum -> sum2, member:Capture$scope0 -> Capture$scope01, member:lambda -> lambda3, member:lambda$ -> lambda$, member:handleBlock$ -> handleBlock$1, member:Handler$h$perform -> Handler$h$perform1, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res4, scope0$cap -> scope0$cap, member:dummy -> dummy, member:foo -> foo, tmp:block$res -> block$res7, ctr -> ctr, class:Capture$scope2 -> Capture$scope2, member:Eff -> Eff1, class:Eff -> Eff, member:Capture$scope2 -> Capture$scope21, tmp:block$res -> block$res8, member:lambda$ -> lambda$2, member:foo -> foo3, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res10, tmp:scrut -> scrut, tmp:tmp -> tmp, member:lambda -> lambda2, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res, member:sum -> sum, class:Capture$scope1 -> Capture$scope1, tmp:block$res -> block$res5, member:f -> f, member:Capture$scope1 -> Capture$scope11, member:foo -> foo1, member:lambda$ -> lambda$1, tmp:block$res -> block$res1, member:hi -> hi)
 //│       curThis = S of S of class:Handler$h$¹
 //│       bindings = HashMap()
-//│     bindings = HashMap(k -> k)
+//│     bindings = HashMap()
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ╙──       	^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
@@ -358,19 +283,19 @@ in
 //│       includeZero = false
 //│       defaultName = "tmp"
 //│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(tmp:block$res -> block$res9, h -> h1, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res2, member:sum -> sum1, member:lambda -> lambda1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, class:Capture$scope0 -> Capture$scope02, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope03, member:lambda$ -> lambda$, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res7, member:Capture$scope0 -> Capture$scope01, member:lambda -> lambda3, member:Eff -> Eff1, class:Eff -> Eff, tmp:tmp -> tmp2, member:handleBlock$ -> handleBlock$1, member:cpsCont$ -> cpsCont$, member:Handler$h$perform -> Handler$h$perform1, tmp:block$res -> block$res8, member:Handler$h$ -> Handler$h$3, member:foo -> foo3, tmp:block$res -> block$res3, member:cpsCont -> cpsCont3, member:sum -> sum2, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont -> cpsCont4, class:Capture$scope4 -> Capture$scope4, tmp:block$res -> block$res4, member:dummy -> dummy, member:foo -> foo, ctr -> ctr, member:Capture$scope4 -> Capture$scope41, member:lambda -> lambda2, member:lambda$ -> lambda$2, tmp:tmp -> tmp1, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1, member:cpsCont -> cpsCont1, member:cpsCont -> cpsCont2, tmp:block$res -> block$res5, tmp:block$res -> block$res10, member:f -> f, member:foo -> foo1, tmp:block$res -> block$res, member:sum -> sum, class:Capture$scope2 -> Capture$scope2, member:Capture$scope2 -> Capture$scope21, member:lambda -> lambda, member:lambda$ -> lambda$1, tmp:tmp -> tmp, tmp:block$res -> block$res1, member:hi -> hi, tmp:block$res -> block$res6, member:foo -> foo2)
+//│     bindings = HashMap(member:lambda -> lambda, tmp:block$res -> block$res9, tmp:tmp -> tmp1, h -> h1, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:foo -> foo2, tmp:runtime -> runtime, member:sum -> sum1, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:lambda -> lambda1, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res3, member:sum -> sum2, member:Capture$scope0 -> Capture$scope01, member:lambda -> lambda3, member:lambda$ -> lambda$, member:handleBlock$ -> handleBlock$1, member:Handler$h$perform -> Handler$h$perform1, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res4, scope0$cap -> scope0$cap, member:dummy -> dummy, member:foo -> foo, tmp:block$res -> block$res7, ctr -> ctr, class:Capture$scope2 -> Capture$scope2, member:Eff -> Eff1, class:Eff -> Eff, member:Capture$scope2 -> Capture$scope21, tmp:block$res -> block$res8, member:lambda$ -> lambda$2, member:foo -> foo3, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res10, tmp:scrut -> scrut, tmp:tmp -> tmp, member:lambda -> lambda2, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res, member:sum -> sum, class:Capture$scope1 -> Capture$scope1, tmp:block$res -> block$res5, member:f -> f, member:Capture$scope1 -> Capture$scope11, member:foo -> foo1, member:lambda$ -> lambda$1, tmp:block$res -> block$res1, member:hi -> hi)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ║         	^^^^^^^^^^^
-//│ ║  l.281: 	    handle_suspension
+//│ ║  l.282: 	    handle_suspension
 //│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL39:1:2348
+//│     at REPL39:1:1853
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -381,7 +306,7 @@ in
 //│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
 //│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:311)
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
 //│ ═══[RUNTIME ERROR] Expected: '50005000', got: 'undefined'
 
 :re
@@ -395,26 +320,6 @@ handle h = Eff with
       else n + f(n-1)
     resume(f(10000))
 foo(h)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.619: 	fun foo(h) = h.perform(2)
-//│ ╙──       	             ^^^^^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.625: 	      else n + f(n-1)
-//│ ╙──       	               ^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.626: 	    resume(f(10000))
-//│ ╙──       	           ^^^^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.626: 	    resume(f(10000))
-//│ ╙──       	    ^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
 //│ FAILURE INFO: Tuple2:
@@ -430,15 +335,15 @@ foo(h)
 //│           includeZero = false
 //│           defaultName = "tmp"
 //│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(tmp:block$res -> block$res9, member:lambda -> lambda4, tmp:tmp -> tmp3, h -> h1, member:handleBlock$ -> handleBlock$2, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res2, member:Handler$h$perform -> Handler$h$perform2, member:sum -> sum1, member:Handler$h$ -> Handler$h$5, member:lambda -> lambda1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, class:Capture$scope0 -> Capture$scope02, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope03, member:cpsCont -> cpsCont5, member:lambda$ -> lambda$, member:cpsCont -> cpsCont6, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res7, member:Capture$scope0 -> Capture$scope01, member:lambda -> lambda3, member:Eff -> Eff1, class:Eff -> Eff, tmp:tmp -> tmp2, member:handleBlock$ -> handleBlock$1, class:Capture$scope2 -> Capture$scope22, member:cpsCont$ -> cpsCont$, member:Handler$h$perform -> Handler$h$perform1, tmp:block$res -> block$res8, member:Capture$scope2 -> Capture$scope23, member:Handler$h$ -> Handler$h$3, member:foo -> foo3, member:lambda$ -> lambda$3, tmp:block$res -> block$res3, member:cpsCont -> cpsCont3, member:sum -> sum2, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont -> cpsCont4, tmp:block$res -> block$res11, class:Capture$scope4 -> Capture$scope4, tmp:block$res -> block$res4, member:dummy -> dummy, member:foo -> foo, ctr -> ctr, member:Capture$scope4 -> Capture$scope41, member:lambda -> lambda2, member:lambda$ -> lambda$2, tmp:tmp -> tmp1, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1, member:cpsCont -> cpsCont1, member:cpsCont -> cpsCont2, tmp:block$res -> block$res5, tmp:block$res -> block$res10, member:f -> f, member:foo -> foo1, member:foo -> foo4, tmp:block$res -> block$res, member:sum -> sum, class:Capture$scope2 -> Capture$scope2, h -> h2, class:Handler$h$ -> Handler$h$4, member:Capture$scope2 -> Capture$scope21, member:lambda -> lambda, member:lambda$ -> lambda$1, tmp:tmp -> tmp, tmp:block$res -> block$res1, member:hi -> hi, tmp:block$res -> block$res6, member:foo -> foo2)
+//│         bindings = HashMap(member:lambda -> lambda, tmp:block$res -> block$res9, member:Capture$scope1 -> Capture$scope13, tmp:tmp -> tmp1, h -> h1, class:Handler$h$ -> Handler$h$2, member:lambda$ -> lambda$3, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:foo -> foo2, tmp:runtime -> runtime, member:sum -> sum1, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res11, member:lambda -> lambda1, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res3, member:sum -> sum2, member:Capture$scope0 -> Capture$scope01, member:lambda -> lambda3, member:lambda$ -> lambda$, member:handleBlock$ -> handleBlock$1, member:Handler$h$perform -> Handler$h$perform1, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res4, scope0$cap -> scope0$cap, member:dummy -> dummy, member:foo -> foo, tmp:block$res -> block$res7, ctr -> ctr, class:Capture$scope2 -> Capture$scope2, member:Eff -> Eff1, class:Eff -> Eff, member:Capture$scope2 -> Capture$scope21, tmp:block$res -> block$res8, member:lambda$ -> lambda$2, member:foo -> foo3, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res10, tmp:scrut -> scrut, tmp:tmp -> tmp, member:foo -> foo4, h -> h2, class:Handler$h$ -> Handler$h$4, member:lambda -> lambda2, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res, member:sum -> sum, class:Capture$scope1 -> Capture$scope1, member:lambda -> lambda4, tmp:block$res -> block$res5, member:handleBlock$ -> handleBlock$2, member:f -> f, member:Capture$scope1 -> Capture$scope11, member:foo -> foo1, member:Handler$h$perform -> Handler$h$perform2, member:lambda$ -> lambda$1, member:Handler$h$ -> Handler$h$5, tmp:block$res -> block$res1, member:hi -> hi, class:Capture$scope1 -> Capture$scope12)
 //│       curThis = S of S of class:Handler$h$²
 //│       bindings = HashMap()
-//│     bindings = HashMap(k -> k, a -> a)
+//│     bindings = HashMap(a -> a)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ╙──       	^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
@@ -453,14 +358,14 @@ foo(h)
 //│       includeZero = false
 //│       defaultName = "tmp"
 //│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(tmp:block$res -> block$res9, member:lambda -> lambda4, tmp:tmp -> tmp3, h -> h1, member:handleBlock$ -> handleBlock$2, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res2, member:Handler$h$perform -> Handler$h$perform2, member:sum -> sum1, member:Handler$h$ -> Handler$h$5, member:lambda -> lambda1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, class:Capture$scope0 -> Capture$scope02, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Capture$scope0 -> Capture$scope03, member:cpsCont -> cpsCont5, member:lambda$ -> lambda$, member:cpsCont -> cpsCont6, member:cpsCont -> cpsCont, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res7, member:Capture$scope0 -> Capture$scope01, member:lambda -> lambda3, member:Eff -> Eff1, class:Eff -> Eff, tmp:tmp -> tmp2, member:handleBlock$ -> handleBlock$1, class:Capture$scope2 -> Capture$scope22, member:cpsCont$ -> cpsCont$, member:Handler$h$perform -> Handler$h$perform1, tmp:block$res -> block$res8, member:Capture$scope2 -> Capture$scope23, member:Handler$h$ -> Handler$h$3, member:foo -> foo3, member:lambda$ -> lambda$3, tmp:block$res -> block$res3, member:cpsCont -> cpsCont3, member:sum -> sum2, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont -> cpsCont4, tmp:block$res -> block$res11, class:Capture$scope4 -> Capture$scope4, tmp:block$res -> block$res4, member:dummy -> dummy, member:foo -> foo, ctr -> ctr, member:Capture$scope4 -> Capture$scope41, member:lambda -> lambda2, member:lambda$ -> lambda$2, tmp:tmp -> tmp1, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1, member:cpsCont -> cpsCont1, member:cpsCont -> cpsCont2, tmp:block$res -> block$res5, tmp:block$res -> block$res10, member:f -> f, member:foo -> foo1, member:foo -> foo4, tmp:block$res -> block$res, member:sum -> sum, class:Capture$scope2 -> Capture$scope2, h -> h2, class:Handler$h$ -> Handler$h$4, member:Capture$scope2 -> Capture$scope21, member:lambda -> lambda, member:lambda$ -> lambda$1, tmp:tmp -> tmp, tmp:block$res -> block$res1, member:hi -> hi, tmp:block$res -> block$res6, member:foo -> foo2)
+//│     bindings = HashMap(member:lambda -> lambda, tmp:block$res -> block$res9, member:Capture$scope1 -> Capture$scope13, tmp:tmp -> tmp1, h -> h1, class:Handler$h$ -> Handler$h$2, member:lambda$ -> lambda$3, tmp:block$res -> block$res6, tmp:block$res -> block$res2, member:foo -> foo2, tmp:runtime -> runtime, member:sum -> sum1, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res11, member:lambda -> lambda1, class:Capture$scope0 -> Capture$scope0, tmp:block$res -> block$res3, member:sum -> sum2, member:Capture$scope0 -> Capture$scope01, member:lambda -> lambda3, member:lambda$ -> lambda$, member:handleBlock$ -> handleBlock$1, member:Handler$h$perform -> Handler$h$perform1, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res4, scope0$cap -> scope0$cap, member:dummy -> dummy, member:foo -> foo, tmp:block$res -> block$res7, ctr -> ctr, class:Capture$scope2 -> Capture$scope2, member:Eff -> Eff1, class:Eff -> Eff, member:Capture$scope2 -> Capture$scope21, tmp:block$res -> block$res8, member:lambda$ -> lambda$2, member:foo -> foo3, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res10, tmp:scrut -> scrut, tmp:tmp -> tmp, member:foo -> foo4, h -> h2, class:Handler$h$ -> Handler$h$4, member:lambda -> lambda2, member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res, member:sum -> sum, class:Capture$scope1 -> Capture$scope1, member:lambda -> lambda4, tmp:block$res -> block$res5, member:handleBlock$ -> handleBlock$2, member:f -> f, member:Capture$scope1 -> Capture$scope11, member:foo -> foo1, member:Handler$h$perform -> Handler$h$perform2, member:lambda$ -> lambda$1, member:Handler$h$ -> Handler$h$5, tmp:block$res -> block$res1, member:hi -> hi, class:Capture$scope1 -> Capture$scope12)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ║         	^^^^^^^^^^^
-//│ ║  l.281: 	    handle_suspension
+//│ ║  l.282: 	    handle_suspension
 //│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
 
@@ -469,15 +374,14 @@ foo(h)
 :sir
 fun max(a, b) = if a < b then b else a
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let max⁰;
-//│ define max⁰ as fun max¹(k, a, b) {
+//│ define max⁰ as fun max¹(a, b) {
 //│   let scrut;
 //│   set scrut = <⁰(a, b);
 //│   match scrut
 //│     true =>
-//│       return k(b)
+//│       return b
 //│     else
-//│       return k(a)
+//│       return a
 //│   end
 //│ };
 //│ end
@@ -490,7 +394,7 @@ fun hi(n) = n
 hi(0)
 //│ /!!!\ Option ':stackSafe' requires ':effectHandlers' to be set
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let hi²; define hi² as fun hi³(n) { return n }; return hi³(0)
+//│ define hi² as fun hi³(n) { return n }; return hi³(0)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 0
 
@@ -510,20 +414,20 @@ fun sum(n) =
 fun bad() = sum(10000) + sum(10000)
 bad()
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
-//│     at new Capture$scope3 (REPL54:1:1852)
-//│     at sum (REPL54:1:2130)
-//│     at sum (REPL54:1:2384)
-//│     at sum (REPL54:1:2384)
-//│     at sum (REPL54:1:2384)
-//│     at sum (REPL54:1:2384)
-//│     at sum (REPL54:1:2384)
-//│     at sum (REPL54:1:2384)
-//│     at sum (REPL54:1:2384)
-//│     at sum (REPL54:1:2384)
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:759:19)
+//│     at sum (REPL54:1:68)
+//│     at sum (REPL54:1:244)
+//│     at sum (REPL54:1:244)
+//│     at sum (REPL54:1:244)
+//│     at sum (REPL54:1:244)
+//│     at sum (REPL54:1:244)
+//│     at sum (REPL54:1:244)
+//│     at sum (REPL54:1:244)
+//│     at sum (REPL54:1:244)
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:311)
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
 //│ ═══[RUNTIME ERROR] Expected: '100010000', got: 'undefined'
 
 

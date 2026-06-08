@@ -5,7 +5,6 @@
 :sir
 fun test_before(n, acc) = if n == 0 then acc else test_before(n - 1, n + acc)
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let test_before⁰;
 //│ define test_before⁰ as fun test_before¹(n, acc) {
 //│   loop loopLabel:
 //│     let scrut, tmp, tmp1;
@@ -31,7 +30,6 @@ fun test_before(n, acc) = if n == 0 then acc else test_before(n - 1, n + acc)
 :sir
 fun test_after(n, acc) = if n == 0 then acc else test_after(n - 1, n + acc)
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let test_after⁰;
 //│ define test_after⁰ as fun test_after¹(n, acc) {
 //│   let scrut, tmp, tmp1;
 //│   set scrut = Predef⁰.equals⁰(n, 0);
@@ -53,7 +51,6 @@ fun test_after(n, acc) = if n == 0 then acc else test_after(n - 1, n + acc)
 :sir
 fun test_reenabled(n, acc) = if n == 0 then acc else test_reenabled(n - 1, n + acc)
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let test_reenabled⁰;
 //│ define test_reenabled⁰ as fun test_reenabled¹(n, acc) {
 //│   loop loopLabel:
 //│     let scrut, tmp, tmp1;
@@ -78,7 +75,6 @@ fun test_reenabled(n, acc) = if n == 0 then acc else test_reenabled(n - 1, n + a
 @config(tailRecOpt: false)
 fun foo(n, acc) = if n == 0 then acc else foo(n - 1, n + acc)
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let foo⁰;
 //│ @config(...)
 //│ define foo⁰ as fun foo¹(n, acc) {
 //│   let scrut, tmp, tmp1;
@@ -99,7 +95,6 @@ fun foo(n, acc) = if n == 0 then acc else foo(n - 1, n + acc)
 :sir
 fun bar(n, acc) = if n == 0 then acc else bar(n - 1, n + acc)
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let bar⁰;
 //│ define bar⁰ as fun bar¹(n, acc) {
 //│   loop loopLabel:
 //│     let scrut, tmp, tmp1;
@@ -126,7 +121,7 @@ fun bar(n, acc) = if n == 0 then acc else bar(n - 1, n + acc)
 :sir
 fun foo(x) = { x.call(), print(42) }
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let foo²; define foo² as fun foo³(x) { do x.call﹖(); return Predef⁰.print⁰(42) }; end
+//│ define foo² as fun foo³(x) { do x.call﹖(); return Predef⁰.print⁰(42) }; end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 
@@ -147,19 +142,19 @@ print(h)
 //│       includeZero = false
 //│       defaultName = "tmp"
 //│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(member:foo -> foo1, tmp:block$res -> block$res3, tmp:block$res -> block$res8, tmp:block$res -> block$res4, tmp:runtime -> runtime, h -> h, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:test_reenabled -> test_reenabled, class:Handler$h$ -> Handler$h$, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$h$ -> Handler$h$1, member:cpsCont -> cpsCont, tmp:block$res -> block$res5, tmp:block$res -> block$res9, member:foo -> foo, tmp:block$res -> block$res, member:test_before -> test_before, tmp:block$res -> block$res6, member:bar -> bar, tmp:block$res -> block$res1, tmp:block$res -> block$res2, member:test_after -> test_after, tmp:block$res -> block$res7)
+//│     bindings = HashMap(tmp:block$res -> block$res7, member:foo -> foo1, tmp:runtime -> runtime, tmp:block$res -> block$res3, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:block$res -> block$res8, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, tmp:Term -> Term, h -> h, tmp:Block -> Block, member:test_reenabled -> test_reenabled, class:Handler$h$ -> Handler$h$, tmp:option -> option, member:handleBlock$ -> handleBlock$, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res9, tmp:block$res -> block$res5, member:foo -> foo, tmp:block$res -> block$res, member:test_before -> test_before, tmp:block$res -> block$res6, member:bar -> bar, tmp:block$res -> block$res1, tmp:block$res -> block$res2, member:test_after -> test_after)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ║         	^^^^^^^^^^^
-//│ ║  l.281: 	    handle_suspension
+//│ ║  l.282: 	    handle_suspension
 //│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL34:1:800
+//│     at REPL34:1:475
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -179,11 +174,6 @@ fun foo(x) = { x.call(), print(42) }
 handle h = Object with
   fun call()(resume) = "Aborted!"
 foo(h)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.178: 	fun foo(x) = { x.call(), print(42) }
-//│ ╙──       	               ^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
 //│ FAILURE INFO: Tuple2:
@@ -199,15 +189,15 @@ foo(h)
 //│           includeZero = false
 //│           defaultName = "tmp"
 //│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(member:foo -> foo1, member:cpsCont -> cpsCont1, member:cpsCont -> cpsCont2, tmp:block$res -> block$res3, tmp:block$res -> block$res8, tmp:block$res -> block$res4, tmp:runtime -> runtime, h -> h, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:test_reenabled -> test_reenabled, class:Handler$h$ -> Handler$h$, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res11, member:cpsCont -> cpsCont, tmp:block$res -> block$res5, tmp:block$res -> block$res9, member:foo -> foo, tmp:block$res -> block$res10, member:foo -> foo2, tmp:block$res -> block$res, member:test_before -> test_before, h -> h1, tmp:block$res -> block$res6, class:Handler$h$ -> Handler$h$2, member:bar -> bar, tmp:tmp -> tmp1, tmp:block$res -> block$res1, member:handleBlock$ -> handleBlock$1, tmp:block$res -> block$res2, member:Handler$h$call -> Handler$h$call, member:test_after -> test_after, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res7)
+//│         bindings = HashMap(tmp:block$res -> block$res7, member:foo -> foo1, tmp:block$res -> block$res11, tmp:runtime -> runtime, tmp:block$res -> block$res3, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:block$res -> block$res8, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, tmp:Term -> Term, h -> h, tmp:Block -> Block, member:test_reenabled -> test_reenabled, class:Handler$h$ -> Handler$h$, tmp:option -> option, member:handleBlock$ -> handleBlock$, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res9, tmp:block$res -> block$res10, member:foo -> foo2, tmp:block$res -> block$res5, member:foo -> foo, tmp:block$res -> block$res, h -> h1, class:Handler$h$ -> Handler$h$2, member:test_before -> test_before, tmp:block$res -> block$res6, member:bar -> bar, member:handleBlock$ -> handleBlock$1, member:Handler$h$call -> Handler$h$call, tmp:block$res -> block$res1, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res2, member:test_after -> test_after)
 //│       curThis = S of S of class:Handler$h$⁰
 //│       bindings = HashMap()
-//│     bindings = HashMap(k -> k)
+//│     bindings = HashMap()
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ╙──       	^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
@@ -222,19 +212,19 @@ foo(h)
 //│       includeZero = false
 //│       defaultName = "tmp"
 //│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(member:foo -> foo1, member:cpsCont -> cpsCont1, member:cpsCont -> cpsCont2, tmp:block$res -> block$res3, tmp:block$res -> block$res8, tmp:block$res -> block$res4, tmp:runtime -> runtime, h -> h, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:test_reenabled -> test_reenabled, class:Handler$h$ -> Handler$h$, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res11, member:cpsCont -> cpsCont, tmp:block$res -> block$res5, tmp:block$res -> block$res9, member:foo -> foo, tmp:block$res -> block$res10, member:foo -> foo2, tmp:block$res -> block$res, member:test_before -> test_before, h -> h1, tmp:block$res -> block$res6, class:Handler$h$ -> Handler$h$2, member:bar -> bar, tmp:tmp -> tmp1, tmp:block$res -> block$res1, member:handleBlock$ -> handleBlock$1, tmp:block$res -> block$res2, member:Handler$h$call -> Handler$h$call, member:test_after -> test_after, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res7)
+//│     bindings = HashMap(tmp:block$res -> block$res7, member:foo -> foo1, tmp:block$res -> block$res11, tmp:runtime -> runtime, tmp:block$res -> block$res3, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:block$res -> block$res8, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, tmp:Term -> Term, h -> h, tmp:Block -> Block, member:test_reenabled -> test_reenabled, class:Handler$h$ -> Handler$h$, tmp:option -> option, member:handleBlock$ -> handleBlock$, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res9, tmp:block$res -> block$res10, member:foo -> foo2, tmp:block$res -> block$res5, member:foo -> foo, tmp:block$res -> block$res, h -> h1, class:Handler$h$ -> Handler$h$2, member:test_before -> test_before, tmp:block$res -> block$res6, member:bar -> bar, member:handleBlock$ -> handleBlock$1, member:Handler$h$call -> Handler$h$call, tmp:block$res -> block$res1, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res2, member:test_after -> test_after)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ║         	^^^^^^^^^^^
-//│ ║  l.281: 	    handle_suspension
+//│ ║  l.282: 	    handle_suspension
 //│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL40:1:1351
+//│     at REPL40:1:1063
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -249,7 +239,7 @@ foo(h)
 print(42)
 #config(liftDefns: None)
 //│
-//│ > fun cpsCont 42
+//│ > 42
 
 
 #config(deadParamElim: Some(DeadParamElim(debug: true, mono: true)), inlining: None)
@@ -259,7 +249,7 @@ print(42)
 private fun deadParamConfig(a) = 0
 deadParamConfig(42)
 //│ dead-param-elim > >>> dead-param-elim results >>>
-//│ dead-param-elim > prodfun deadParamConfig#0 @ <root> -> eliminable: {1}
+//│ dead-param-elim > prodfun deadParamConfig#0 @ <root> -> eliminable: {0}
 //│ dead-param-elim > <<< dead-param-elim results <<<
 //│ = 0
 
@@ -280,16 +270,13 @@ fstConfig(Pair(1, 2))
 //│ deforest > 	fields: p⁰.a⁰
 //│ deforest > 	fields: p⁰.b⁰
 //│ deforest > <<< fusing <<<
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (HandlerLowering.scala:137)
-//│ ═══[WARNING] This function is not CPS-transformed because it has more than one parameter list.
 //│ = 1
 
 #config(deforest: None)
 
 fun fstConfig(p) = if p is Pair(x, y) then x
 fstConfig(Pair(1, 2))
-//│ = Pair(fun cpsCont, 1)
+//│ = 1
 
 
 #config(deforest: Some(Deforest(debug: false, logNonAffine: true)))
@@ -308,14 +295,4 @@ applyTwice(fst, Pair(1, 2))
 //│ deforest > x_for_applyTwice@23
 //│ deforest > x_for_applyTwice@54
 //│ deforest > <<< non-affine syms <<<
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.300: 	fun applyTwice(f, x) = f(x) + f(x)
-//│ ╙──       	                       ^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.300: 	fun applyTwice(f, x) = f(x) + f(x)
-//│ ╙──       	                              ^^^^
-//│ = Pair(fun cpsCont, 1)
+//│ = 2

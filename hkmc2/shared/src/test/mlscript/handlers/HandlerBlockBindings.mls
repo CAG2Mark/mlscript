@@ -13,11 +13,6 @@ handle h = Effect with
     "A"
 h.perform("B")
 let x = 123
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.14: 	h.perform("B")
-//│ ╙──      	^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
 //│ FAILURE INFO: Tuple2:
@@ -33,15 +28,15 @@ let x = 123
 //│           includeZero = false
 //│           defaultName = "tmp"
 //│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, tmp:block$res -> block$res, member:Handler$h$ -> Handler$h$1, member:Effect -> Effect1, class:Effect -> Effect, member:cpsCont -> cpsCont, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, member:cpsCont -> cpsCont1, tmp:Term -> Term, tmp:block$res -> block$res1, tmp:Block -> Block, tmp:option -> option, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res2, tmp:tmp -> tmp)
+//│         bindings = HashMap(member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, tmp:block$res -> block$res, member:Handler$h$ -> Handler$h$1, member:Effect -> Effect1, tmp:runtime -> runtime, class:Effect -> Effect, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res1, tmp:block$res -> block$res2, h -> h, class:Handler$h$ -> Handler$h$)
 //│       curThis = S of S of class:Handler$h$⁰
 //│       bindings = HashMap()
-//│     bindings = HashMap(arg -> arg, k -> k)
+//│     bindings = HashMap(arg -> arg)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ╙──       	^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
@@ -56,19 +51,19 @@ let x = 123
 //│       includeZero = false
 //│       defaultName = "tmp"
 //│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, tmp:block$res -> block$res, member:Handler$h$ -> Handler$h$1, member:Effect -> Effect1, class:Effect -> Effect, member:cpsCont -> cpsCont, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, member:cpsCont -> cpsCont1, tmp:Term -> Term, tmp:block$res -> block$res1, tmp:Block -> Block, tmp:option -> option, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res2, tmp:tmp -> tmp)
+//│     bindings = HashMap(member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, tmp:block$res -> block$res, member:Handler$h$ -> Handler$h$1, member:Effect -> Effect1, tmp:runtime -> runtime, class:Effect -> Effect, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res1, tmp:block$res -> block$res2, h -> h, class:Handler$h$ -> Handler$h$)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ║         	^^^^^^^^^^^
-//│ ║  l.281: 	    handle_suspension
+//│ ║  l.282: 	    handle_suspension
 //│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL13:1:1220
+//│     at REPL13:1:865
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -82,7 +77,7 @@ let x = 123
 :e
 x
 //│ ╔══[COMPILATION ERROR] Name not found: x
-//│ ║  l.83: 	x
+//│ ║  l.78: 	x
 //│ ╙──      	^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
@@ -108,16 +103,16 @@ x + 1
 //│             includeZero = false
 //│             defaultName = "tmp"
 //│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(member:handleBlock$ -> handleBlock$, member:cpsCont -> cpsCont3, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1, member:Handler$h$perform$ -> Handler$h$perform$, member:cpsCont -> cpsCont, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, member:cpsCont -> cpsCont1, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res4, tmp:block$res -> block$res2, tmp:block$res -> block$res3, h -> h1, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res, member:Effect -> Effect1, class:Effect -> Effect, tmp:block$res -> block$res1, tmp:tmp -> tmp1, member:handleBlock$ -> handleBlock$1, h -> h, class:Handler$h$ -> Handler$h$, member:Handler$h$ -> Handler$h$3, member:cpsCont -> cpsCont2, tmp:tmp -> tmp)
+//│           bindings = HashMap(member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res2, tmp:block$res -> block$res3, h -> h1, class:Handler$h$ -> Handler$h$2, member:handleBlock$ -> handleBlock$1, tmp:block$res -> block$res, member:Effect -> Effect1, class:Effect -> Effect, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$, tmp:block$res -> block$res1, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res4)
 //│         curThis = S of S of class:Handler$h$¹
 //│         bindings = HashMap()
-//│       bindings = HashMap(arg -> arg, k -> k)
+//│       bindings = HashMap(arg -> arg)
 //│     bindings = HashMap(tmp:Handler$h$perform$here -> Handler$h$perform$here)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ╙──       	^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
@@ -132,19 +127,19 @@ x + 1
 //│       includeZero = false
 //│       defaultName = "tmp"
 //│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(member:handleBlock$ -> handleBlock$, member:cpsCont -> cpsCont3, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1, member:Handler$h$perform$ -> Handler$h$perform$, member:cpsCont -> cpsCont, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, member:cpsCont -> cpsCont1, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res4, tmp:block$res -> block$res2, tmp:block$res -> block$res3, h -> h1, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res, member:Effect -> Effect1, class:Effect -> Effect, tmp:block$res -> block$res1, tmp:tmp -> tmp1, member:handleBlock$ -> handleBlock$1, h -> h, class:Handler$h$ -> Handler$h$, member:Handler$h$ -> Handler$h$3, member:cpsCont -> cpsCont2, tmp:tmp -> tmp)
+//│     bindings = HashMap(member:handleBlock$ -> handleBlock$, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res2, tmp:block$res -> block$res3, h -> h1, class:Handler$h$ -> Handler$h$2, member:handleBlock$ -> handleBlock$1, tmp:block$res -> block$res, member:Effect -> Effect1, class:Effect -> Effect, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$, tmp:block$res -> block$res1, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res4)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ║         	^^^^^^^^^^^
-//│ ║  l.281: 	    handle_suspension
+//│ ║  l.282: 	    handle_suspension
 //│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL19:1:1340
+//│     at REPL19:1:998
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -158,7 +153,7 @@ x + 1
 :e
 x
 //│ ╔══[COMPILATION ERROR] Name not found: x
-//│ ║  l.159: 	x
+//│ ║  l.154: 	x
 //│ ╙──       	^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
@@ -183,16 +178,16 @@ val y = 123
 //│             includeZero = false
 //│             defaultName = "tmp"
 //│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(member:handleBlock$ -> handleBlock$, member:cpsCont -> cpsCont3, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$perform$ -> Handler$h$perform$1, member:Handler$h$ -> Handler$h$1, member:Handler$h$perform$ -> Handler$h$perform$, member:cpsCont -> cpsCont, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, member:cpsCont -> cpsCont1, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res6, tmp:block$res -> block$res4, tmp:block$res -> block$res5, tmp:block$res -> block$res2, tmp:block$res -> block$res3, h -> h2, class:Handler$h$ -> Handler$h$4, h -> h1, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res, member:Effect -> Effect1, class:Effect -> Effect, tmp:tmp -> tmp2, tmp:block$res -> block$res1, member:handleBlock$ -> handleBlock$2, tmp:tmp -> tmp1, member:handleBlock$ -> handleBlock$1, h -> h, class:Handler$h$ -> Handler$h$, member:Handler$h$ -> Handler$h$5, member:Handler$h$ -> Handler$h$3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont5, tmp:tmp -> tmp)
+//│           bindings = HashMap(member:handleBlock$ -> handleBlock$, h -> h2, class:Handler$h$ -> Handler$h$4, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res2, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, h -> h1, class:Handler$h$ -> Handler$h$2, member:Handler$h$ -> Handler$h$5, member:Handler$h$perform$ -> Handler$h$perform$1, member:handleBlock$ -> handleBlock$1, tmp:block$res -> block$res, tmp:block$res -> block$res6, member:Effect -> Effect1, class:Effect -> Effect, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$, tmp:block$res -> block$res1, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res4, tmp:block$res -> block$res5)
 //│         curThis = S of S of class:Handler$h$²
 //│         bindings = HashMap()
-//│       bindings = HashMap(arg -> arg, k -> k)
+//│       bindings = HashMap(arg -> arg)
 //│     bindings = HashMap(tmp:Handler$h$perform$here -> Handler$h$perform$here)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ╙──       	^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
@@ -207,19 +202,19 @@ val y = 123
 //│       includeZero = false
 //│       defaultName = "tmp"
 //│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(member:handleBlock$ -> handleBlock$, member:cpsCont -> cpsCont3, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$perform$ -> Handler$h$perform$1, member:Handler$h$ -> Handler$h$1, member:Handler$h$perform$ -> Handler$h$perform$, member:cpsCont -> cpsCont, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, member:cpsCont -> cpsCont1, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res6, tmp:block$res -> block$res4, tmp:block$res -> block$res5, tmp:block$res -> block$res2, tmp:block$res -> block$res3, h -> h2, class:Handler$h$ -> Handler$h$4, h -> h1, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res, member:Effect -> Effect1, class:Effect -> Effect, tmp:tmp -> tmp2, tmp:block$res -> block$res1, member:handleBlock$ -> handleBlock$2, tmp:tmp -> tmp1, member:handleBlock$ -> handleBlock$1, h -> h, class:Handler$h$ -> Handler$h$, member:Handler$h$ -> Handler$h$5, member:Handler$h$ -> Handler$h$3, member:cpsCont -> cpsCont4, member:cpsCont -> cpsCont2, member:cpsCont -> cpsCont5, tmp:tmp -> tmp)
+//│     bindings = HashMap(member:handleBlock$ -> handleBlock$, h -> h2, class:Handler$h$ -> Handler$h$4, member:Handler$h$perform -> Handler$h$perform, member:Handler$h$ -> Handler$h$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res2, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res3, h -> h1, class:Handler$h$ -> Handler$h$2, member:Handler$h$ -> Handler$h$5, member:Handler$h$perform$ -> Handler$h$perform$1, member:handleBlock$ -> handleBlock$1, tmp:block$res -> block$res, tmp:block$res -> block$res6, member:Effect -> Effect1, class:Effect -> Effect, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$, tmp:block$res -> block$res1, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res4, tmp:block$res -> block$res5)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ║         	^^^^^^^^^^^
-//│ ║  l.281: 	    handle_suspension
+//│ ║  l.282: 	    handle_suspension
 //│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL25:1:1352
+//│     at REPL25:1:1010
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -233,7 +228,7 @@ val y = 123
 :e
 y
 //│ ╔══[COMPILATION ERROR] Name not found: y
-//│ ║  l.234: 	y
+//│ ║  l.229: 	y
 //│ ╙──       	^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 

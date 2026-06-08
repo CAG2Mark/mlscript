@@ -1,7 +1,7 @@
 package hkmc2
 package codegen
 
-import mlscript.utils.*, shorthands.*
+import hkmc2.utils.*, shorthands.*
 import utils.*
 
 import hkmc2.Message.MessageContext
@@ -118,6 +118,11 @@ sealed abstract class Block extends Product:
     case Define(defn, rest) =>
       s"""|Define(${defn.showDbg})
           |${rest.showDbg}""".stripMargin
+    case Throw(exc) => s"Throw(${exc.showDbg})"
+    case Scoped(syms, body) =>
+      s"""|Scoped(${syms.toList.map(_.showDbg).sorted.mkString(", ")}) {
+          |${body.showDbg}
+          |}""".stripMargin
   
   lazy val isAbortive: Bool = this match
     case _: End => false
@@ -142,7 +147,7 @@ sealed abstract class Block extends Product:
   lazy val definedVars: Set[BoundSymbol] = this match
     case _: Return | _: Throw | _: Unreachable => Set.empty
     case Begin(sub, rst) => sub.definedVars ++ rst.definedVars
-    case Assign(_: NoSymbol, r, rst) => rst.definedVars
+    case Assign(NoSymbol, r, rst) => rst.definedVars
     case Assign(l: LocalVarSymbol, r, rst) => rst.definedVars + l
     case AssignField(l, n, r, rst) => rst.definedVars
     case AssignDynField(l, n, ai, r, rst) => rst.definedVars
@@ -195,7 +200,7 @@ sealed abstract class Block extends Product:
     case Continue(label) => Set.single(label)
     case Begin(sub, rest) => sub.freeVars ++ rest.freeVars
     case TryBlock(sub, finallyDo, rest) => sub.freeVars ++ finallyDo.freeVars ++ rest.freeVars
-    case Assign(_: NoSymbol, rhs, rest) => rhs.freeVars ++ rest.freeVars
+    case Assign(NoSymbol, rhs, rest) => rhs.freeVars ++ rest.freeVars
     case Assign(lhs: LocalVarSymbol, rhs, rest) => Set.single(lhs) ++ rhs.freeVars ++ rest.freeVars
     case AssignField(lhs, nme, rhs, rest) => lhs.freeVars ++ rhs.freeVars ++ rest.freeVars
     case AssignDynField(lhs, fld, arrayIdx, rhs, rest) => lhs.freeVars ++ fld.freeVars ++ rhs.freeVars ++ rest.freeVars
@@ -429,14 +434,14 @@ object Assign:
     case Scoped(syms, body) => Scoped(syms, Assign(lhs, rhs, body))
     case _ =>
       lhs match
-      case _: NoSymbol =>
+      case NoSymbol =>
         if rhs.isPure then rest else new Assign(lhs, rhs, rest)
       case _ => new Assign(lhs, rhs, rest)
   def discard(res: Result, rest: Block)(using State): Block =
     res match
     case _: Value | _: Lambda => rest
     case p: Path if p.isPure => rest
-    case r => Assign(State.noSymbol, r, rest)
+    case r => Assign(NoSymbol, r, rest)
 object AssignField:
   def apply(lhs: Path, nme: Tree.Ident, rhs: Result, rest: Block)(symbol: Opt[MemberSymbol]): Block = rest match
     case Scoped(syms, body) => Scoped(syms, AssignField(lhs, nme, rhs, body)(symbol))
@@ -844,9 +849,9 @@ sealed abstract class Result extends AutoLocated:
 //   def extraInfo: Str = toLoc.toString
   
   def showDbg(using DebugPrinter): Str = this match
-    case Value.SimpleRef(l) => l.showAsPlain
-    case Value.MemberRef(l, disamb) => s"${l.showAsPlain}${s"‹${disamb.showAsPlain}›"}"
-    case Value.This(sym) => s"this[${sym.showAsPlain}]"
+    case Value.SimpleRef(l) => l.showDbg
+    case Value.MemberRef(l, disamb) => s"${l.showDbg}${s"‹${disamb.showDbg}›"}"
+    case Value.This(sym) => s"this[${sym.showDbg}]"
     case Value.Lit(lit) => lit.idStr
     case Select(q, n) => s"Select(${q.showDbg}, ${n.showDbg})"
     case DynSelect(q, fld, arrayIdx) => s"DynSelect(${q.showDbg}, ${fld.showDbg}, $arrayIdx)"
@@ -936,6 +941,57 @@ case class Call(fun: Path, argss: NELs[Ls[Arg]])(val isMlsFun: Bool, val mayRais
         case _ => false
     case _ => false
 
+object Call:
+  
+  def raw(fun: Path, argss: NELs[Ls[Arg]])(isMlsFun: Bool, mayRaiseEffects: Bool, explicitTailCall: Bool): Call =
+    new Call(fun, argss)(isMlsFun, mayRaiseEffects, explicitTailCall)
+  
+  def apply(fun: Path, argss: NELs[Ls[Arg]])(isMlsFun: Bool, mayRaiseEffects: Bool, explicitTailCall: Bool): Result =
+    fun match
+    case Value.SimpleRef(sym: BuiltinSymbol) =>
+      argss match
+      case (Arg(N, arg1: Value) :: Arg(N, arg2: Value) :: Nil) :: Nil =>
+        evalBuiltin(sym, arg1, arg2)(return _)
+      case (Arg(N, arg1: Value) :: Nil) :: Nil =>
+        evalBuiltin(sym, arg1)(return _)
+      case _ =>
+    case _ =>
+    raw(fun, argss)(isMlsFun, mayRaiseEffects, explicitTailCall)
+  
+  private def literalArgValues(args: Ls[Arg]): Opt[Ls[Value]] =
+    args.foldRight[Opt[Ls[Value]]](S(Nil)):
+      case (Arg(N, value: Value), S(acc)) => S(value :: acc)
+      case _ => N
+  
+  import Value.Lit
+  
+  private inline def evalBuiltin(sym: BuiltinSymbol, arg1: Value, arg2: Value)(inline k: Value => Unit): Unit =
+    (sym.nme, arg1, arg2) match
+    case ("+", Lit(Tree.IntLit(v1)), Lit(Tree.IntLit(v2))) => k(Lit(Tree.IntLit(v1 + v2)))
+    case ("-", Lit(Tree.IntLit(v1)), Lit(Tree.IntLit(v2))) => k(Lit(Tree.IntLit(v1 - v2)))
+    case ("*", Lit(Tree.IntLit(v1)), Lit(Tree.IntLit(v2))) => k(Lit(Tree.IntLit(v1 * v2)))
+    // * For "/", should check for 0 and return a DecLit.
+    case ("%", Lit(Tree.IntLit(v1)), Lit(Tree.IntLit(v2))) if v2 =/= 0 => k(Lit(Tree.IntLit(v1 % v2)))
+    case ("===", Lit(l1), Lit(l2)) => k(Lit(Tree.BoolLit(l1 == l2)))
+    case ("!==", Lit(l1), Lit(l2)) => k(Lit(Tree.BoolLit(l1 != l2)))
+    case ("<", Lit(Tree.IntLit(v1)), Lit(Tree.IntLit(v2))) => k(Lit(Tree.BoolLit(v1 < v2)))
+    case ("<=", Lit(Tree.IntLit(v1)), Lit(Tree.IntLit(v2))) => k(Lit(Tree.BoolLit(v1 <= v2)))
+    case (">", Lit(Tree.IntLit(v1)), Lit(Tree.IntLit(v2))) => k(Lit(Tree.BoolLit(v1 > v2)))
+    case (">=", Lit(Tree.IntLit(v1)), Lit(Tree.IntLit(v2))) => k(Lit(Tree.BoolLit(v1 >= v2)))
+    case ("&&", Lit(Tree.BoolLit(v1)), Lit(Tree.BoolLit(v2))) => k(Lit(Tree.BoolLit(v1 && v2)))
+    case ("||", Lit(Tree.BoolLit(v1)), Lit(Tree.BoolLit(v2))) => k(Lit(Tree.BoolLit(v1 || v2)))
+    case _ =>
+    
+  private inline def evalBuiltin(sym: BuiltinSymbol, arg1: Value)(inline k: Value => Unit): Unit =
+    (sym.nme, arg1) match
+    case ("+", Lit(Tree.IntLit(v1))) => k(Lit(Tree.IntLit(v1)))
+    case ("-", Lit(Tree.IntLit(v1))) => k(Lit(Tree.IntLit(-v1)))
+    case ("!", Lit(Tree.BoolLit(v))) => k(Lit(Tree.BoolLit(!v)))
+    case _ =>
+  
+end Call
+
+
 case class Instantiate(mut: Bool, cls: Path, argss: Ls[Ls[Arg]]) extends Result
 
 case class Lambda(params: ParamList, body: Block)(val annot: Ls[Annot]) extends Result:
@@ -995,7 +1051,7 @@ object Value:
 
   @deprecated("Use Value.SimpleRef, Value.MemberRef, or Value.This instead.")
   object Ref:
-    def apply(l: ValueSymbol | NoSymbol, disamb: Opt[DefinitionSymbol[?]]): Value.RefLike =
+    def apply(l: ValueSymbol | NoSymbol.type, disamb: Opt[DefinitionSymbol[?]]): Value.RefLike =
       l match
         case l: SimpleSymbol => l.asSimpleRef
         case l: TermSymbol => l.asPath
@@ -1003,7 +1059,7 @@ object Value:
           disamb.getOrElse:
             lastWords(s"Cannot disambiguate overloaded member symbol ${bms.nme}: no disambiguation provided")
         case sym: InnerSymbol => sym.asThis
-        case _: NoSymbol => lastWords("NoSymbol should not be used as a Path/Value")
+        case NoSymbol => lastWords("NoSymbol should not be used as a Path/Value")
     
     // * Some helper constructors that allow omitting the disambiguation symbol.
     // * If the ref itself is a DefinitionSymbol, then disambiguating it results in itself.

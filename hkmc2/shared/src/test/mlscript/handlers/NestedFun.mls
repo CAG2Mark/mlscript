@@ -12,32 +12,12 @@ fun foo(f) =
   bar()
   set y += 1
   lam()
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.9: 	    f()
-//│ ╙──     	    ^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.14: 	  lam()
-//│ ╙──      	  ^^^^^
 
 
 :expect 3
 handle h = Object with
   fun f()(k) = k(())
 foo(() => h.f())
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.29: 	  fun f()(k) = k(())
-//│ ╙──      	               ^^^^^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (HandlerLowering.scala:156)
-//│ ╔══[WARNING] This call is not CPS-transformed. The calling convention is ambiguous because it does not necessarily call a MLS function.
-//│ ║  l.30: 	foo(() => h.f())
-//│ ╙──      	          ^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
 //│ FAILURE INFO: Tuple2:
@@ -53,15 +33,15 @@ foo(() => h.f())
 //│           includeZero = false
 //│           defaultName = "tmp"
 //│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(h -> h, class:Capture$scope0 -> Capture$scope0, class:Handler$h$ -> Handler$h$, member:cpsCont -> cpsCont1, tmp:block$res -> block$res, member:foo -> foo, member:Capture$scope0 -> Capture$scope01, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:tmp -> tmp, tmp:Term -> Term, tmp:Block -> Block, member:lambda -> lambda, tmp:option -> option, member:handleBlock$ -> handleBlock$, member:lam$ -> lam$, member:Handler$h$f -> Handler$h$f, tmp:block$res -> block$res2, member:Handler$h$ -> Handler$h$1, member:cpsCont -> cpsCont, tmp:block$res -> block$res1)
+//│         bindings = HashMap(tmp:block$res -> block$res1, member:Capture$scope0 -> Capture$scope01, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res, member:foo -> foo, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:block$res -> block$res2, tmp:Block -> Block, tmp:option -> option, member:handleBlock$ -> handleBlock$, member:Handler$h$f -> Handler$h$f, member:Handler$h$ -> Handler$h$1, class:Capture$scope0 -> Capture$scope0)
 //│       curThis = S of S of class:Handler$h$⁰
 //│       bindings = HashMap()
-//│     bindings = HashMap(k -> k)
+//│     bindings = HashMap()
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ╙──       	^^^^^^^^^^^
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
@@ -76,19 +56,19 @@ foo(() => h.f())
 //│       includeZero = false
 //│       defaultName = "tmp"
 //│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(h -> h, class:Capture$scope0 -> Capture$scope0, class:Handler$h$ -> Handler$h$, member:cpsCont -> cpsCont1, tmp:block$res -> block$res, member:foo -> foo, member:Capture$scope0 -> Capture$scope01, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:tmp -> tmp, tmp:Term -> Term, tmp:Block -> Block, member:lambda -> lambda, tmp:option -> option, member:handleBlock$ -> handleBlock$, member:lam$ -> lam$, member:Handler$h$f -> Handler$h$f, tmp:block$res -> block$res2, member:Handler$h$ -> Handler$h$1, member:cpsCont -> cpsCont, tmp:block$res -> block$res1)
+//│     bindings = HashMap(tmp:block$res -> block$res1, member:Capture$scope0 -> Capture$scope01, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res, member:foo -> foo, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:block$res -> block$res2, tmp:Block -> Block, tmp:option -> option, member:handleBlock$ -> handleBlock$, member:Handler$h$f -> Handler$h$f, member:Handler$h$ -> Handler$h$1, class:Capture$scope0 -> Capture$scope0)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.279: 	  fun
+//│ ║  l.280: 	  fun
 //│ ║         	  ^^^
-//│ ║  l.280: 	    suspend
+//│ ║  l.281: 	    suspend
 //│ ║         	^^^^^^^^^^^
-//│ ║  l.281: 	    handle_suspension
+//│ ║  l.282: 	    handle_suspension
 //│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:271)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL13:1:1374
+//│     at REPL13:1:1045
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -99,7 +79,7 @@ foo(() => h.f())
 //│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
 //│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:311)
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
 //│ ═══[RUNTIME ERROR] Expected: '3', got: 'undefined'
 
 fun foo() =

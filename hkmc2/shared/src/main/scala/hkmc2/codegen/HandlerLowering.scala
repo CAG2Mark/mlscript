@@ -6,7 +6,7 @@ import scala.collection.mutable
 import scala.util.boundary
 import sourcecode.{ Line, FileName, Name }
 
-import mlscript.utils.*, shorthands.*
+import hkmc2.utils.*, shorthands.*
 import hkmc2.utils.*
 import hkmc2.utils.SymbolSubst
 import hkmc2.Message.MessageContext
@@ -87,6 +87,12 @@ object HandlerLowering:
     debugNme: Str,
     debugInfoPath: Path,
   )
+
+  object EffectfulResult:
+    def unapply(r: Result)(using Config): Bool = r match
+      case c: Call if c.mayRaiseEffects => true
+      case _: Instantiate if config.checkInstantiateEffect => true
+      case _ => false
   
   type StateId = BigInt
 
@@ -115,7 +121,7 @@ class HandlerPaths(using Elaborator.State):
 
 type StackSafetyMap = collection.Map[FnOrCls, (Int, Block)]
 
-class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise, Elaborator.State, Elaborator.Ctx):
+class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise, Elaborator.State, Elaborator.Ctx, Config):
   
   def mapTail(b: Block)(f: BlockTail => Block): Block = b match
     case b: BlockTail => f(b)
