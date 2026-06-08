@@ -129,41 +129,7 @@ fun foo(x) = { x.call(), print(42) }
 handle h = Object with {}
 print(h)
 //│
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Left of Cfg:
-//│       escapeChars = true
-//│       useSuperscripts = false
-//│       includeZero = false
-//│       defaultName = "tmp"
-//│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(tmp:block$res -> block$res7, member:foo -> foo1, tmp:runtime -> runtime, tmp:block$res -> block$res3, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:block$res -> block$res8, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, tmp:Term -> Term, h -> h, tmp:Block -> Block, member:test_reenabled -> test_reenabled, class:Handler$h$ -> Handler$h$, tmp:option -> option, member:handleBlock$ -> handleBlock$, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res9, tmp:block$res -> block$res5, member:foo -> foo, tmp:block$res -> block$res, member:test_before -> test_before, tmp:block$res -> block$res6, member:bar -> bar, tmp:block$res -> block$res1, tmp:block$res -> block$res2, member:test_after -> test_after)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL34:1:475
-//│     at ContextifyScript.runInThisContext (node:vm:137:12)
-//│     at defaultEval (node:repl:610:24)
-//│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│     at REPLServer.emit (node:events:509:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
-//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
+//│ > Handler$h$
 
 
 #config(effectHandlers: Some(EffectHandlers(stackSafety: Some(StackSafety(100)))))
@@ -174,66 +140,7 @@ fun foo(x) = { x.call(), print(42) }
 handle h = Object with
   fun call()(resume) = "Aborted!"
 foo(h)
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Left of Cfg:
-//│           escapeChars = true
-//│           useSuperscripts = false
-//│           includeZero = false
-//│           defaultName = "tmp"
-//│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(tmp:block$res -> block$res7, member:foo -> foo1, tmp:block$res -> block$res11, tmp:runtime -> runtime, tmp:block$res -> block$res3, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:block$res -> block$res8, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, tmp:Term -> Term, h -> h, tmp:Block -> Block, member:test_reenabled -> test_reenabled, class:Handler$h$ -> Handler$h$, tmp:option -> option, member:handleBlock$ -> handleBlock$, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res9, tmp:block$res -> block$res10, member:foo -> foo2, tmp:block$res -> block$res5, member:foo -> foo, tmp:block$res -> block$res, h -> h1, class:Handler$h$ -> Handler$h$2, member:test_before -> test_before, tmp:block$res -> block$res6, member:bar -> bar, member:handleBlock$ -> handleBlock$1, member:Handler$h$call -> Handler$h$call, tmp:block$res -> block$res1, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res2, member:test_after -> test_after)
-//│       curThis = S of S of class:Handler$h$⁰
-//│       bindings = HashMap()
-//│     bindings = HashMap()
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Left of Cfg:
-//│       escapeChars = true
-//│       useSuperscripts = false
-//│       includeZero = false
-//│       defaultName = "tmp"
-//│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(tmp:block$res -> block$res7, member:foo -> foo1, tmp:block$res -> block$res11, tmp:runtime -> runtime, tmp:block$res -> block$res3, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:block$res -> block$res8, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, tmp:Term -> Term, h -> h, tmp:Block -> Block, member:test_reenabled -> test_reenabled, class:Handler$h$ -> Handler$h$, tmp:option -> option, member:handleBlock$ -> handleBlock$, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res9, tmp:block$res -> block$res10, member:foo -> foo2, tmp:block$res -> block$res5, member:foo -> foo, tmp:block$res -> block$res, h -> h1, class:Handler$h$ -> Handler$h$2, member:test_before -> test_before, tmp:block$res -> block$res6, member:bar -> bar, member:handleBlock$ -> handleBlock$1, member:Handler$h$call -> Handler$h$call, tmp:block$res -> block$res1, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res2, member:test_after -> test_after)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL40:1:1063
-//│     at ContextifyScript.runInThisContext (node:vm:137:12)
-//│     at defaultEval (node:repl:610:24)
-//│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│     at REPLServer.emit (node:events:509:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
-//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
+//│ = "Aborted!"
 
 
 print(42)
@@ -249,7 +156,7 @@ print(42)
 private fun deadParamConfig(a) = 0
 deadParamConfig(42)
 //│ dead-param-elim > >>> dead-param-elim results >>>
-//│ dead-param-elim > prodfun deadParamConfig#0 @ <root> -> eliminable: {0}
+//│ dead-param-elim > prodfun deadParamConfig#0 @ <root> -> eliminable: {1}
 //│ dead-param-elim > <<< dead-param-elim results <<<
 //│ = 0
 
@@ -270,13 +177,16 @@ fstConfig(Pair(1, 2))
 //│ deforest > 	fields: p⁰.a⁰
 //│ deforest > 	fields: p⁰.b⁰
 //│ deforest > <<< fusing <<<
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (HandlerLowering.scala:217)
+//│ ═══[WARNING] This function is not CPS-transformed because it has more than one parameter list.
 //│ = 1
 
 #config(deforest: None)
 
 fun fstConfig(p) = if p is Pair(x, y) then x
 fstConfig(Pair(1, 2))
-//│ = 1
+//│ = Pair(fun cpsCont$0, 1)
 
 
 #config(deforest: Some(Deforest(debug: false, logNonAffine: true)))
@@ -295,4 +205,4 @@ applyTwice(fst, Pair(1, 2))
 //│ deforest > x_for_applyTwice@23
 //│ deforest > x_for_applyTwice@54
 //│ deforest > <<< non-affine syms <<<
-//│ = 2
+//│ = Pair(fun cpsCont$2, 1)

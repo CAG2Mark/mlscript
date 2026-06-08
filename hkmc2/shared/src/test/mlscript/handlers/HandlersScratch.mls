@@ -1,8 +1,33 @@
 :js
 :effectHandlers
-:lift
 
 abstract class Effect
 
 
 
+
+:lot
+String(0)
+//│ —————————————| Lowered IR Tree |————————————————————————————————————————————————————————————————————
+//│ Program:
+//│   main = Scoped(syms = {tmp:tmp⁰}):
+//│     body = Assign:
+//│       lhs = tmp:tmp⁰
+//│       rhs = Call:
+//│         fun = Select{sym=class:String⁰}:
+//│           qual = This of globalThis:globalThis⁰
+//│           name = Ident of "String"
+//│         argss = Ls of 
+//│           Ls of 
+//│             Arg:
+//│               value = Lit of IntLit of 0
+//│       rest = Return of Call:
+//│         fun = Select:
+//│           qual = SimpleRef of tmp:runtime⁰
+//│           name = Ident of "cpsId"
+//│         argss = Ls of 
+//│           Ls of 
+//│             Arg:
+//│               value = SimpleRef of tmp:tmp⁰
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
+//│ = "0"

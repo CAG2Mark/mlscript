@@ -167,16 +167,17 @@ object TopLevelHandler
 data class ContThunk(thunk)
 data class Suspend(k, tag, handlerFun)
 
-fun handlerTrampoline(k, tag, v) =
-  while v is
-    ContThunk(thunk) do set v = thunk()
-    Suspend(kk, tag', handlerFun) do
+fun handlerTrampoline(k, tag, cur) =
+  while cur is
+    ContThunk(thunk) do set cur = thunk()
+    Suspend(resume, tag', handlerFun) do
       if tag === TopLevelHandler do throw Error("unhandled effects")
       if tag' === tag then
-        let handlerFunCont = (k1, v) => k1(kk(v))
-        set v = handlerFun(cpsId, handlerFunCont)
-      else return Suspend(tag', handlerFun, r => handlerTrampoline(k, tag, kk(r)))
-  k(v)
+        let handlerFunCont = (k1, v) =>
+          handlerTrampoline(k1, tag, resume(v))
+        set cur = handlerFun(cpsId, handlerFunCont)
+      else return Suspend(r => handlerTrampoline(k, tag, resume(r)), tag', handlerFun)
+  k(cur)
 
 fun cpsHandlerImpl(k, tag, f) =
   handlerTrampoline(k, tag, f(cpsId))

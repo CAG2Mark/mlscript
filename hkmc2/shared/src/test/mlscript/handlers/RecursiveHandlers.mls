@@ -12,80 +12,21 @@ handle h1 = Effect with
     [k("ok")]
 h1.perform("hi")
 h1.perform("hello")
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(tmp:block$res -> block$res, member:Effect -> Effect1, member:handleBlock$ -> handleBlock$, tmp:runtime -> runtime, class:Effect -> Effect, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, tmp:block$res -> block$res1, member:Handler$h1$perform$ -> Handler$h1$perform$, h1 -> h1, class:Handler$h1$ -> Handler$h1$, tmp:block$res -> block$res2)
-//│         curThis = S of S of class:Handler$h1$⁰
-//│         bindings = HashMap()
-//│       bindings = HashMap(arg -> arg)
-//│     bindings = HashMap(tmp:Handler$h1$perform$here -> Handler$h1$perform$here)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Left of Cfg:
-//│       escapeChars = true
-//│       useSuperscripts = false
-//│       includeZero = false
-//│       defaultName = "tmp"
-//│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(tmp:block$res -> block$res, member:Effect -> Effect1, member:handleBlock$ -> handleBlock$, tmp:runtime -> runtime, class:Effect -> Effect, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, tmp:block$res -> block$res1, member:Handler$h1$perform$ -> Handler$h1$perform$, h1 -> h1, class:Handler$h1$ -> Handler$h1$, tmp:block$res -> block$res2)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL13:1:1414
-//│     at ContextifyScript.runInThisContext (node:vm:137:12)
-//│     at defaultEval (node:repl:610:24)
-//│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│     at REPLServer.emit (node:events:509:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
-//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
+//│ > performing hi
+//│ > performing hello
+//│ = [["ok"]]
 
 :e
 h1
 //│ ╔══[COMPILATION ERROR] Name not found: h1
-//│ ║  l.79: 	h1
+//│ ║  l.20: 	h1
 //│ ╙──      	^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 :e
 h1.perform("oops")
 //│ ╔══[COMPILATION ERROR] Name not found: h1
-//│ ║  l.86: 	h1.perform("oops")
+//│ ║  l.27: 	h1.perform("oops")
 //│ ╙──      	^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
@@ -96,56 +37,7 @@ handle h = Object with
     [x, k(())]
 h.write(1)
 h.write(2)
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(member:Handler$h$ -> Handler$h$1, member:Handler$h$write$ -> Handler$h$write$, member:handleBlock$ -> handleBlock$, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, member:Handler$h1$perform$ -> Handler$h1$perform$, tmp:block$res -> block$res2, tmp:block$res -> block$res5, tmp:block$res -> block$res3, tmp:block$res -> block$res4, h -> h, tmp:block$res -> block$res, class:Handler$h$ -> Handler$h$, member:Effect -> Effect1, class:Effect -> Effect, tmp:block$res -> block$res1, h1 -> h1, class:Handler$h1$ -> Handler$h1$, member:handleBlock$ -> handleBlock$1, member:Handler$h$write -> Handler$h$write)
-//│         curThis = S of S of class:Handler$h$⁰
-//│         bindings = HashMap()
-//│       bindings = HashMap(x -> x)
-//│     bindings = HashMap(tmp:Handler$h$write$here -> Handler$h$write$here)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Left of Cfg:
-//│       escapeChars = true
-//│       useSuperscripts = false
-//│       includeZero = false
-//│       defaultName = "tmp"
-//│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(member:Handler$h$ -> Handler$h$1, member:Handler$h$write$ -> Handler$h$write$, member:handleBlock$ -> handleBlock$, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, member:Handler$h1$perform$ -> Handler$h1$perform$, tmp:block$res -> block$res2, tmp:block$res -> block$res5, tmp:block$res -> block$res3, tmp:block$res -> block$res4, h -> h, tmp:block$res -> block$res, class:Handler$h$ -> Handler$h$, member:Effect -> Effect1, class:Effect -> Effect, tmp:block$res -> block$res1, h1 -> h1, class:Handler$h1$ -> Handler$h1$, member:handleBlock$ -> handleBlock$1, member:Handler$h$write -> Handler$h$write)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│ ═══[RUNTIME ERROR] Error: MLscript call unexpectedly returned `undefined`, the forbidden value.
 
 handle h = Object with
   fun write(x)(k) =
@@ -154,68 +46,20 @@ handle h = Object with
     [x, k(())]
 h.write(1)
 h.write(2)
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(member:Handler$h$write -> Handler$h$write1, member:Handler$h$ -> Handler$h$1, member:Handler$h$ -> Handler$h$3, member:Handler$h$write$ -> Handler$h$write$, member:handleBlock$ -> handleBlock$, member:Handler$h$write$ -> Handler$h$write$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, member:lambda$ -> lambda$, member:Handler$h1$perform$ -> Handler$h1$perform$, tmp:block$res -> block$res2, tmp:block$res -> block$res5, tmp:block$res -> block$res3, h -> h2, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res4, h -> h, tmp:block$res -> block$res, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:Effect -> Effect1, class:Effect -> Effect, tmp:block$res -> block$res1, h1 -> h1, class:Handler$h1$ -> Handler$h1$, member:handleBlock$ -> handleBlock$1, member:Handler$h$write -> Handler$h$write, member:handleBlock$ -> handleBlock$2)
-//│         curThis = S of S of class:Handler$h$¹
-//│         bindings = HashMap()
-//│       bindings = HashMap(x -> x)
-//│     bindings = HashMap(tmp:Handler$h$write$here -> Handler$h$write$here)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Left of Cfg:
-//│       escapeChars = true
-//│       useSuperscripts = false
-//│       includeZero = false
-//│       defaultName = "tmp"
-//│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(member:Handler$h$write -> Handler$h$write1, member:Handler$h$ -> Handler$h$1, member:Handler$h$ -> Handler$h$3, member:Handler$h$write$ -> Handler$h$write$, member:handleBlock$ -> handleBlock$, member:Handler$h$write$ -> Handler$h$write$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, member:lambda$ -> lambda$, member:Handler$h1$perform$ -> Handler$h1$perform$, tmp:block$res -> block$res2, tmp:block$res -> block$res5, tmp:block$res -> block$res3, h -> h2, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res4, h -> h, tmp:block$res -> block$res, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:Effect -> Effect1, class:Effect -> Effect, tmp:block$res -> block$res1, h1 -> h1, class:Handler$h1$ -> Handler$h1$, member:handleBlock$ -> handleBlock$1, member:Handler$h$write -> Handler$h$write, member:handleBlock$ -> handleBlock$2)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
+//│ > Suspend(undefined, Handler$h$, fun)
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL25:1:1819
+//│ ═══[RUNTIME ERROR] Error: Function 'rest' expected 4 arguments but got 3
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at rest (REPL25:1:1329)
+//│     at Handler$h$write (REPL25:1:2256)
+//│     at REPL25:1:1713
+//│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:901:48)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:916:20)
+//│     at REPL25:1:3493
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│     at REPLServer.emit (node:events:509:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
-//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 handle h = Object with
   fun write(x)(k) = enterHandleBlock of this, () =>
@@ -223,68 +67,19 @@ handle h = Object with
     [x, k(())]
 h.write(1)
 h.write(2)
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(member:Handler$h$write -> Handler$h$write1, member:Handler$h$ -> Handler$h$1, member:lambda -> lambda, member:Handler$h$ -> Handler$h$3, member:handleBlock$ -> handleBlock$3, member:Handler$h$write$ -> Handler$h$write$, member:handleBlock$ -> handleBlock$, member:Handler$h$write$ -> Handler$h$write$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, member:Handler$h$ -> Handler$h$5, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, member:lambda$ -> lambda$, member:Handler$h$write$ -> Handler$h$write$2, member:Handler$h1$perform$ -> Handler$h1$perform$, member:lambda$ -> lambda$1, tmp:block$res -> block$res2, tmp:block$res -> block$res5, tmp:block$res -> block$res3, h -> h2, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res4, h -> h, tmp:block$res -> block$res, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:Effect -> Effect1, class:Effect -> Effect, h -> h3, class:Handler$h$ -> Handler$h$4, tmp:block$res -> block$res1, h1 -> h1, class:Handler$h1$ -> Handler$h1$, tmp:block$res -> block$res7, member:handleBlock$ -> handleBlock$1, member:Handler$h$write -> Handler$h$write, member:handleBlock$ -> handleBlock$2)
-//│         curThis = S of S of class:Handler$h$²
-//│         bindings = HashMap()
-//│       bindings = HashMap(x -> x)
-//│     bindings = HashMap(tmp:Handler$h$write$here -> Handler$h$write$here)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Left of Cfg:
-//│       escapeChars = true
-//│       useSuperscripts = false
-//│       includeZero = false
-//│       defaultName = "tmp"
-//│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(member:Handler$h$write -> Handler$h$write1, member:Handler$h$ -> Handler$h$1, member:lambda -> lambda, member:Handler$h$ -> Handler$h$3, member:handleBlock$ -> handleBlock$3, member:Handler$h$write$ -> Handler$h$write$, member:handleBlock$ -> handleBlock$, member:Handler$h$write$ -> Handler$h$write$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, member:Handler$h$ -> Handler$h$5, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, member:lambda$ -> lambda$, member:Handler$h$write$ -> Handler$h$write$2, member:Handler$h1$perform$ -> Handler$h1$perform$, member:lambda$ -> lambda$1, tmp:block$res -> block$res2, tmp:block$res -> block$res5, tmp:block$res -> block$res3, h -> h2, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res4, h -> h, tmp:block$res -> block$res, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:Effect -> Effect1, class:Effect -> Effect, h -> h3, class:Handler$h$ -> Handler$h$4, tmp:block$res -> block$res1, h1 -> h1, class:Handler$h1$ -> Handler$h1$, tmp:block$res -> block$res7, member:handleBlock$ -> handleBlock$1, member:Handler$h$write -> Handler$h$write, member:handleBlock$ -> handleBlock$2)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL28:1:1738
+//│ ═══[RUNTIME ERROR] Error: MLscript call unexpectedly returned `undefined`, the forbidden value.
+//│     at Runtime.checkCall (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:847:41)
+//│     at REPL28:1:1773
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1183:28)
+//│     at Predef.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Predef.mjs:327:37)
+//│     at Handler$h$write (REPL28:1:2710)
+//│     at REPL28:1:2402
+//│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:901:48)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:916:20)
+//│     at REPL28:1:3959
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
-//│     at defaultEval (node:repl:610:24)
-//│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│     at REPLServer.emit (node:events:509:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
-//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 // deep handler
 :todo
@@ -301,26 +96,14 @@ handle h2 = Effect with
   h2.perform(3)
 ]
 //│ ╔══[COMPILATION ERROR] Name not found: h2
-//│ ║  l.295: 	      then h2.perform(arg - 1) + " " + arg
-//│ ╙──       	           ^^
+//│ ║  l.90: 	      then h2.perform(arg - 1) + " " + arg
+//│ ╙──      	           ^^
 //│ ╔══[COMPILATION ERROR] Illegal position for prefix keyword 'else'.
-//│ ║  l.296: 	      else "0"
-//│ ╙──       	      ^^^^
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│ ║  l.91: 	      else "0"
+//│ ╙──      	      ^^^^
+//│ > –––
+//│ > performing 2
+//│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 
 // passing additional handlers to the handler body
@@ -340,122 +123,13 @@ let res =
   g.perform("adios")
   g.perform("amigos")
 in res.toString()
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(member:Handler$h$write -> Handler$h$write1, member:Handler$h$ -> Handler$h$7, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$, member:handleBlock$ -> handleBlock$, member:Handler$h$write$ -> Handler$h$write$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, member:handleBlock$$ -> handleBlock$$, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, member:lambda$ -> lambda$, member:Handler$h1$perform$ -> Handler$h1$perform$, member:Handler$g$perform$ -> Handler$g$perform$, tmp:block$res -> block$res2, tmp:block$res -> block$res3, tmp:block$res -> block$res4, member:handleBlock$ -> handleBlock$4, member:Handler$h2$perform -> Handler$h2$perform, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:Handler$h2$ -> Handler$h2$1, h -> h3, class:Handler$h$ -> Handler$h$4, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res9, tmp:block$res -> block$res8, member:handleBlock$ -> handleBlock$1, member:Handler$h$write -> Handler$h$write, h -> h4, class:Handler$h$ -> Handler$h$6, member:Handler$h$ -> Handler$h$1, member:lambda -> lambda, member:handleBlock$ -> handleBlock$3, member:Handler$h$write$ -> Handler$h$write$, class:Handler$g$ -> Handler$g$, member:Handler$h$ -> Handler$h$5, member:Handler$h$write$ -> Handler$h$write$2, member:lambda$ -> lambda$1, tmp:block$res -> block$res5, h -> h2, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res, member:Effect -> Effect1, class:Effect -> Effect, tmp:block$res -> block$res1, member:Handler$g$perform -> Handler$g$perform, h1 -> h1, class:Handler$h1$ -> Handler$h1$, member:Handler$g$ -> Handler$g$1, tmp:block$res -> block$res7, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$5, h2 -> h21, class:Handler$h2$ -> Handler$h2$, member:Handler$h$perform -> Handler$h$perform, member:handleBlock$ -> handleBlock$2)
-//│         curThis = S of S of class:Handler$g$⁰
-//│         bindings = HashMap(arg -> arg)
-//│       bindings = HashMap(arg1 -> arg1)
-//│     bindings = HashMap(tmp:Handler$g$perform$here -> Handler$g$perform$here)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Left of Cfg:
-//│           escapeChars = true
-//│           useSuperscripts = false
-//│           includeZero = false
-//│           defaultName = "tmp"
-//│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(member:Handler$h$write -> Handler$h$write1, member:Handler$h$ -> Handler$h$7, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$, member:handleBlock$ -> handleBlock$, member:Handler$h$write$ -> Handler$h$write$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, member:handleBlock$$ -> handleBlock$$, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, member:lambda$ -> lambda$, member:Handler$h1$perform$ -> Handler$h1$perform$, member:Handler$g$perform$ -> Handler$g$perform$, tmp:block$res -> block$res2, tmp:block$res -> block$res3, tmp:block$res -> block$res4, member:handleBlock$ -> handleBlock$4, member:Handler$h2$perform -> Handler$h2$perform, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:Handler$h2$ -> Handler$h2$1, h -> h3, class:Handler$h$ -> Handler$h$4, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res9, tmp:block$res -> block$res8, member:handleBlock$ -> handleBlock$1, member:Handler$h$write -> Handler$h$write, h -> h4, class:Handler$h$ -> Handler$h$6, member:Handler$h$ -> Handler$h$1, member:lambda -> lambda, member:handleBlock$ -> handleBlock$3, member:Handler$h$write$ -> Handler$h$write$, class:Handler$g$ -> Handler$g$, member:Handler$h$ -> Handler$h$5, member:Handler$h$write$ -> Handler$h$write$2, member:lambda$ -> lambda$1, tmp:block$res -> block$res5, h -> h2, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res, member:Effect -> Effect1, class:Effect -> Effect, tmp:block$res -> block$res1, member:Handler$g$perform -> Handler$g$perform, h1 -> h1, class:Handler$h1$ -> Handler$h1$, member:Handler$g$ -> Handler$g$1, tmp:block$res -> block$res7, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$5, h2 -> h21, class:Handler$h2$ -> Handler$h2$, member:Handler$h$perform -> Handler$h$perform, member:handleBlock$ -> handleBlock$2)
-//│       curThis = S of N
-//│       bindings = HashMap(arg -> arg, k -> k)
-//│     bindings = HashMap(tmp:handleBlock$$here -> handleBlock$$here, g -> g, tmp:tmp -> tmp1)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(member:Handler$h$write -> Handler$h$write1, member:Handler$h$ -> Handler$h$7, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$, member:handleBlock$ -> handleBlock$, member:Handler$h$write$ -> Handler$h$write$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, member:handleBlock$$ -> handleBlock$$, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, member:lambda$ -> lambda$, member:Handler$h1$perform$ -> Handler$h1$perform$, member:Handler$g$perform$ -> Handler$g$perform$, tmp:block$res -> block$res2, tmp:block$res -> block$res3, tmp:block$res -> block$res4, member:handleBlock$ -> handleBlock$4, member:Handler$h2$perform -> Handler$h2$perform, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:Handler$h2$ -> Handler$h2$1, h -> h3, class:Handler$h$ -> Handler$h$4, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res9, tmp:block$res -> block$res8, member:handleBlock$ -> handleBlock$1, member:Handler$h$write -> Handler$h$write, h -> h4, class:Handler$h$ -> Handler$h$6, member:Handler$h$ -> Handler$h$1, member:lambda -> lambda, member:handleBlock$ -> handleBlock$3, member:Handler$h$write$ -> Handler$h$write$, class:Handler$g$ -> Handler$g$, member:Handler$h$ -> Handler$h$5, member:Handler$h$write$ -> Handler$h$write$2, member:lambda$ -> lambda$1, tmp:block$res -> block$res5, h -> h2, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res, member:Effect -> Effect1, class:Effect -> Effect, tmp:block$res -> block$res1, member:Handler$g$perform -> Handler$g$perform, h1 -> h1, class:Handler$h1$ -> Handler$h1$, member:Handler$g$ -> Handler$g$1, tmp:block$res -> block$res7, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$5, h2 -> h21, class:Handler$h2$ -> Handler$h2$, member:Handler$h$perform -> Handler$h$perform, member:handleBlock$ -> handleBlock$2)
-//│         curThis = S of S of class:Handler$h$³
-//│         bindings = HashMap()
-//│       bindings = HashMap(arg -> arg)
-//│     bindings = HashMap(tmp:Handler$h$perform$here -> Handler$h$perform$here)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Left of Cfg:
-//│       escapeChars = true
-//│       useSuperscripts = false
-//│       includeZero = false
-//│       defaultName = "tmp"
-//│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(member:Handler$h$write -> Handler$h$write1, member:Handler$h$ -> Handler$h$7, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$, member:handleBlock$ -> handleBlock$, member:Handler$h$write$ -> Handler$h$write$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, member:handleBlock$$ -> handleBlock$$, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, member:lambda$ -> lambda$, member:Handler$h1$perform$ -> Handler$h1$perform$, member:Handler$g$perform$ -> Handler$g$perform$, tmp:block$res -> block$res2, tmp:block$res -> block$res3, tmp:block$res -> block$res4, member:handleBlock$ -> handleBlock$4, member:Handler$h2$perform -> Handler$h2$perform, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:Handler$h2$ -> Handler$h2$1, h -> h3, class:Handler$h$ -> Handler$h$4, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res9, tmp:block$res -> block$res8, member:handleBlock$ -> handleBlock$1, member:Handler$h$write -> Handler$h$write, h -> h4, class:Handler$h$ -> Handler$h$6, member:Handler$h$ -> Handler$h$1, member:lambda -> lambda, member:handleBlock$ -> handleBlock$3, member:Handler$h$write$ -> Handler$h$write$, class:Handler$g$ -> Handler$g$, member:Handler$h$ -> Handler$h$5, member:Handler$h$write$ -> Handler$h$write$2, member:lambda$ -> lambda$1, tmp:block$res -> block$res5, h -> h2, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res, member:Effect -> Effect1, class:Effect -> Effect, tmp:block$res -> block$res1, member:Handler$g$perform -> Handler$g$perform, h1 -> h1, class:Handler$h1$ -> Handler$h1$, member:Handler$g$ -> Handler$g$1, tmp:block$res -> block$res7, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$5, h2 -> h21, class:Handler$h2$ -> Handler$h2$, member:Handler$h$perform -> Handler$h$perform, member:handleBlock$ -> handleBlock$2)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL34:1:3217
-//│     at ContextifyScript.runInThisContext (node:vm:137:12)
-//│     at defaultEval (node:repl:610:24)
-//│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│     at REPLServer.emit (node:events:509:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
-//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
+//│ > A hi
+//│ > B undefined bye
+//│ > B undefined friend
+//│ > A hola
+//│ > B undefined adios
+//│ > B undefined amigos
+//│ = "‹,‹,‹,‹,(),amigos,›,adios,›,friend,›,bye,›"
 
 
 // This is equivalent to the above, with all calls to h.perform expanded
@@ -479,123 +153,13 @@ let res =
     )()]
   )()]
 in res.toString()
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(member:Handler$h$write -> Handler$h$write1, member:Handler$g$perform -> Handler$g$perform1, member:Handler$h$ -> Handler$h$7, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$, member:Handler$g$ -> Handler$g$3, member:Handler$g$perform$ -> Handler$g$perform$1, member:handleBlock$ -> handleBlock$, member:Handler$h$write$ -> Handler$h$write$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, member:handleBlock$$ -> handleBlock$$, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, member:lambda$ -> lambda$, member:Handler$h1$perform$ -> Handler$h1$perform$, member:handleBlock$$ -> handleBlock$$1, member:Handler$g$perform$ -> Handler$g$perform$, tmp:block$res -> block$res2, tmp:block$res -> block$res3, tmp:block$res -> block$res4, member:handleBlock$ -> handleBlock$4, member:Handler$g2$perform$ -> Handler$g2$perform$, member:Handler$h2$perform -> Handler$h2$perform, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:Handler$h2$ -> Handler$h2$1, h -> h3, class:Handler$h$ -> Handler$h$4, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res9, g -> g, class:Handler$g$ -> Handler$g$2, tmp:block$res -> block$res10, tmp:block$res -> block$res8, member:handleBlock$ -> handleBlock$1, member:Handler$h$write -> Handler$h$write, h -> h4, class:Handler$h$ -> Handler$h$6, member:Handler$h$ -> Handler$h$1, member:lambda -> lambda, member:handleBlock$ -> handleBlock$3, member:Handler$h$write$ -> Handler$h$write$, class:Handler$g$ -> Handler$g$, member:Handler$h$ -> Handler$h$5, class:Handler$g2$ -> Handler$g2$, member:Handler$h$write$ -> Handler$h$write$2, member:lambda$ -> lambda$1, tmp:block$res -> block$res5, h -> h2, class:Handler$h$ -> Handler$h$2, tmp:tmp -> tmp1, tmp:block$res -> block$res, member:Effect -> Effect1, tmp:tmp -> tmp2, class:Effect -> Effect, tmp:block$res -> block$res1, member:Handler$g$perform -> Handler$g$perform, member:handleBlock$ -> handleBlock$6, h1 -> h1, class:Handler$h1$ -> Handler$h1$, member:Handler$g2$perform -> Handler$g2$perform, member:Handler$g$ -> Handler$g$1, tmp:block$res -> block$res7, tmp:tmp -> tmp, member:Handler$g2$ -> Handler$g2$1, member:handleBlock$ -> handleBlock$5, h2 -> h21, class:Handler$h2$ -> Handler$h2$, member:Handler$h$perform -> Handler$h$perform, member:handleBlock$ -> handleBlock$2, member:handleBlock$ -> handleBlock$7)
-//│         curThis = S of S of class:Handler$g2$⁰
-//│         bindings = HashMap()
-//│       bindings = HashMap(arg1 -> arg1)
-//│     bindings = HashMap(tmp:Handler$g2$perform$here -> Handler$g2$perform$here)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(member:Handler$h$write -> Handler$h$write1, member:Handler$g$perform -> Handler$g$perform1, member:Handler$h$ -> Handler$h$7, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$, member:Handler$g$ -> Handler$g$3, member:Handler$g$perform$ -> Handler$g$perform$1, member:handleBlock$ -> handleBlock$, member:Handler$h$write$ -> Handler$h$write$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, member:handleBlock$$ -> handleBlock$$, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, member:lambda$ -> lambda$, member:Handler$h1$perform$ -> Handler$h1$perform$, member:handleBlock$$ -> handleBlock$$1, member:Handler$g$perform$ -> Handler$g$perform$, tmp:block$res -> block$res2, tmp:block$res -> block$res3, tmp:block$res -> block$res4, member:handleBlock$ -> handleBlock$4, member:Handler$g2$perform$ -> Handler$g2$perform$, member:Handler$h2$perform -> Handler$h2$perform, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:Handler$h2$ -> Handler$h2$1, h -> h3, class:Handler$h$ -> Handler$h$4, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res9, g -> g, class:Handler$g$ -> Handler$g$2, tmp:block$res -> block$res10, tmp:block$res -> block$res8, member:handleBlock$ -> handleBlock$1, member:Handler$h$write -> Handler$h$write, h -> h4, class:Handler$h$ -> Handler$h$6, member:Handler$h$ -> Handler$h$1, member:lambda -> lambda, member:handleBlock$ -> handleBlock$3, member:Handler$h$write$ -> Handler$h$write$, class:Handler$g$ -> Handler$g$, member:Handler$h$ -> Handler$h$5, class:Handler$g2$ -> Handler$g2$, member:Handler$h$write$ -> Handler$h$write$2, member:lambda$ -> lambda$1, tmp:block$res -> block$res5, h -> h2, class:Handler$h$ -> Handler$h$2, tmp:tmp -> tmp1, tmp:block$res -> block$res, member:Effect -> Effect1, tmp:tmp -> tmp2, class:Effect -> Effect, tmp:block$res -> block$res1, member:Handler$g$perform -> Handler$g$perform, member:handleBlock$ -> handleBlock$6, h1 -> h1, class:Handler$h1$ -> Handler$h1$, member:Handler$g2$perform -> Handler$g2$perform, member:Handler$g$ -> Handler$g$1, tmp:block$res -> block$res7, tmp:tmp -> tmp, member:Handler$g2$ -> Handler$g2$1, member:handleBlock$ -> handleBlock$5, h2 -> h21, class:Handler$h2$ -> Handler$h2$, member:Handler$h$perform -> Handler$h$perform, member:handleBlock$ -> handleBlock$2, member:handleBlock$ -> handleBlock$7)
-//│         curThis = S of S of class:Handler$g$¹
-//│         bindings = HashMap()
-//│       bindings = HashMap(arg1 -> arg1)
-//│     bindings = HashMap(tmp:Handler$g$perform$here -> Handler$g$perform$here)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Left of Cfg:
-//│           escapeChars = true
-//│           useSuperscripts = false
-//│           includeZero = false
-//│           defaultName = "tmp"
-//│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(member:Handler$h$write -> Handler$h$write1, member:Handler$g$perform -> Handler$g$perform1, member:Handler$h$ -> Handler$h$7, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$, member:Handler$g$ -> Handler$g$3, member:Handler$g$perform$ -> Handler$g$perform$1, member:handleBlock$ -> handleBlock$, member:Handler$h$write$ -> Handler$h$write$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, member:handleBlock$$ -> handleBlock$$, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, member:lambda$ -> lambda$, member:Handler$h1$perform$ -> Handler$h1$perform$, member:handleBlock$$ -> handleBlock$$1, member:Handler$g$perform$ -> Handler$g$perform$, tmp:block$res -> block$res2, tmp:block$res -> block$res3, tmp:block$res -> block$res4, member:handleBlock$ -> handleBlock$4, member:Handler$g2$perform$ -> Handler$g2$perform$, member:Handler$h2$perform -> Handler$h2$perform, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:Handler$h2$ -> Handler$h2$1, h -> h3, class:Handler$h$ -> Handler$h$4, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res9, g -> g, class:Handler$g$ -> Handler$g$2, tmp:block$res -> block$res10, tmp:block$res -> block$res8, member:handleBlock$ -> handleBlock$1, member:Handler$h$write -> Handler$h$write, h -> h4, class:Handler$h$ -> Handler$h$6, member:Handler$h$ -> Handler$h$1, member:lambda -> lambda, member:handleBlock$ -> handleBlock$3, member:Handler$h$write$ -> Handler$h$write$, class:Handler$g$ -> Handler$g$, member:Handler$h$ -> Handler$h$5, class:Handler$g2$ -> Handler$g2$, member:Handler$h$write$ -> Handler$h$write$2, member:lambda$ -> lambda$1, tmp:block$res -> block$res5, h -> h2, class:Handler$h$ -> Handler$h$2, tmp:tmp -> tmp1, tmp:block$res -> block$res, member:Effect -> Effect1, tmp:tmp -> tmp2, class:Effect -> Effect, tmp:block$res -> block$res1, member:Handler$g$perform -> Handler$g$perform, member:handleBlock$ -> handleBlock$6, h1 -> h1, class:Handler$h1$ -> Handler$h1$, member:Handler$g2$perform -> Handler$g2$perform, member:Handler$g$ -> Handler$g$1, tmp:block$res -> block$res7, tmp:tmp -> tmp, member:Handler$g2$ -> Handler$g2$1, member:handleBlock$ -> handleBlock$5, h2 -> h21, class:Handler$h2$ -> Handler$h2$, member:Handler$h$perform -> Handler$h$perform, member:handleBlock$ -> handleBlock$2, member:handleBlock$ -> handleBlock$7)
-//│       curThis = S of N
-//│       bindings = HashMap()
-//│     bindings = HashMap(tmp:inlinedVal -> inlinedVal, g2 -> g2, tmp:tmp -> tmp3, tmp:handleBlock$$here -> handleBlock$$here)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Left of Cfg:
-//│       escapeChars = true
-//│       useSuperscripts = false
-//│       includeZero = false
-//│       defaultName = "tmp"
-//│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(member:Handler$h$write -> Handler$h$write1, member:Handler$g$perform -> Handler$g$perform1, member:Handler$h$ -> Handler$h$7, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$, member:Handler$g$ -> Handler$g$3, member:Handler$g$perform$ -> Handler$g$perform$1, member:handleBlock$ -> handleBlock$, member:Handler$h$write$ -> Handler$h$write$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, member:handleBlock$$ -> handleBlock$$, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, member:lambda$ -> lambda$, member:Handler$h1$perform$ -> Handler$h1$perform$, member:handleBlock$$ -> handleBlock$$1, member:Handler$g$perform$ -> Handler$g$perform$, tmp:block$res -> block$res2, tmp:block$res -> block$res3, tmp:block$res -> block$res4, member:handleBlock$ -> handleBlock$4, member:Handler$g2$perform$ -> Handler$g2$perform$, member:Handler$h2$perform -> Handler$h2$perform, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:Handler$h2$ -> Handler$h2$1, h -> h3, class:Handler$h$ -> Handler$h$4, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res9, g -> g, class:Handler$g$ -> Handler$g$2, tmp:block$res -> block$res10, tmp:block$res -> block$res8, member:handleBlock$ -> handleBlock$1, member:Handler$h$write -> Handler$h$write, h -> h4, class:Handler$h$ -> Handler$h$6, member:Handler$h$ -> Handler$h$1, member:lambda -> lambda, member:handleBlock$ -> handleBlock$3, member:Handler$h$write$ -> Handler$h$write$, class:Handler$g$ -> Handler$g$, member:Handler$h$ -> Handler$h$5, class:Handler$g2$ -> Handler$g2$, member:Handler$h$write$ -> Handler$h$write$2, member:lambda$ -> lambda$1, tmp:block$res -> block$res5, h -> h2, class:Handler$h$ -> Handler$h$2, tmp:tmp -> tmp1, tmp:block$res -> block$res, member:Effect -> Effect1, tmp:tmp -> tmp2, class:Effect -> Effect, tmp:block$res -> block$res1, member:Handler$g$perform -> Handler$g$perform, member:handleBlock$ -> handleBlock$6, h1 -> h1, class:Handler$h1$ -> Handler$h1$, member:Handler$g2$perform -> Handler$g2$perform, member:Handler$g$ -> Handler$g$1, tmp:block$res -> block$res7, tmp:tmp -> tmp, member:Handler$g2$ -> Handler$g2$1, member:handleBlock$ -> handleBlock$5, h2 -> h21, class:Handler$h2$ -> Handler$h2$, member:Handler$h$perform -> Handler$h$perform, member:handleBlock$ -> handleBlock$2, member:handleBlock$ -> handleBlock$7)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ > A hi
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL37:1:3620
-//│     at ContextifyScript.runInThisContext (node:vm:137:12)
-//│     at defaultEval (node:repl:610:24)
-//│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│     at REPLServer.emit (node:events:509:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
-//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
+//│ > B hi bye
+//│ > B hi friend
+//│ > A hola
+//│ > B hola adios
+//│ > B hola amigos
+//│ = "‹,‹,‹,‹,hola,amigos,›,adios,›,friend,›,bye,›"
 
 :sjs
 let str = ""
@@ -613,166 +177,118 @@ if true do
   h2.perform(())
   h1.perform(())
 str
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Right of Scope:
-//│             parentOrCfg = Left of Cfg:
-//│               escapeChars = true
-//│               useSuperscripts = false
-//│               includeZero = false
-//│               defaultName = "tmp"
-//│             curThis = S of S of globalThis:globalThis⁰
-//│             bindings = HashMap(member:Handler$h$write -> Handler$h$write1, member:Handler$g$perform -> Handler$g$perform1, member:Handler$h$ -> Handler$h$7, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$, member:Handler$g$ -> Handler$g$3, member:Handler$g$perform$ -> Handler$g$perform$1, member:handleBlock$ -> handleBlock$, member:Handler$h$write$ -> Handler$h$write$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, member:handleBlock$$ -> handleBlock$$, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, member:lambda$ -> lambda$, member:Handler$h1$perform$ -> Handler$h1$perform$, member:handleBlock$$ -> handleBlock$$1, member:Handler$g$perform$ -> Handler$g$perform$, tmp:block$res -> block$res2, tmp:block$res -> block$res3, tmp:block$res -> block$res4, member:handleBlock$ -> handleBlock$4, member:Handler$g2$perform$ -> Handler$g2$perform$, member:Handler$h2$perform -> Handler$h2$perform, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:Handler$h2$ -> Handler$h2$1, h -> h3, class:Handler$h$ -> Handler$h$4, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res9, g -> g, class:Handler$g$ -> Handler$g$2, tmp:block$res -> block$res10, tmp:block$res -> block$res8, member:handleBlock$ -> handleBlock$1, member:Handler$h$write -> Handler$h$write, h -> h4, class:Handler$h$ -> Handler$h$6, member:Handler$h$ -> Handler$h$1, member:lambda -> lambda, member:handleBlock$ -> handleBlock$3, member:Handler$h$write$ -> Handler$h$write$, class:Handler$g$ -> Handler$g$, member:Handler$h$ -> Handler$h$5, class:Handler$g2$ -> Handler$g2$, member:Handler$h$write$ -> Handler$h$write$2, member:lambda$ -> lambda$1, tmp:block$res -> block$res5, h -> h2, class:Handler$h$ -> Handler$h$2, tmp:tmp -> tmp1, tmp:block$res -> block$res, member:Effect -> Effect1, tmp:tmp -> tmp2, class:Effect -> Effect, tmp:block$res -> block$res1, member:Handler$g$perform -> Handler$g$perform, member:handleBlock$ -> handleBlock$6, h1 -> h1, class:Handler$h1$ -> Handler$h1$, member:Handler$g2$perform -> Handler$g2$perform, member:Handler$g$ -> Handler$g$1, tmp:block$res -> block$res7, tmp:tmp -> tmp, member:Handler$g2$ -> Handler$g2$1, member:handleBlock$ -> handleBlock$5, h2 -> h21, class:Handler$h2$ -> Handler$h2$, member:Handler$h$perform -> Handler$h$perform, member:handleBlock$ -> handleBlock$2, member:handleBlock$ -> handleBlock$7)
-//│           bindings = HashMap(member:Handler$h2$perform$ -> Handler$h2$perform$1, member:Handler$h2$perform -> Handler$h2$perform1, class:Handler$h2$ -> Handler$h2$2, member:Handler$h2$ -> Handler$h2$3, member:handleBlock$ -> handleBlock$8, member:Handler$h1$perform -> Handler$h1$perform1, member:Handler$h1$perform$ -> Handler$h1$perform$1, member:Handler$h1$ -> Handler$h1$3, str -> str, member:handleBlock$$ -> handleBlock$$2, h1 -> h11, class:Handler$h1$ -> Handler$h1$2)
-//│         curThis = S of S of class:Handler$h2$⁰
-//│         bindings = HashMap()
-//│       bindings = HashMap(arg -> arg)
-//│     bindings = HashMap(tmp:Handler$h2$perform$here -> Handler$h2$perform$here)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Right of Scope:
-//│             parentOrCfg = Left of Cfg:
-//│               escapeChars = true
-//│               useSuperscripts = false
-//│               includeZero = false
-//│               defaultName = "tmp"
-//│             curThis = S of S of globalThis:globalThis⁰
-//│             bindings = HashMap(member:Handler$h$write -> Handler$h$write1, member:Handler$g$perform -> Handler$g$perform1, member:Handler$h$ -> Handler$h$7, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$, member:Handler$g$ -> Handler$g$3, member:Handler$g$perform$ -> Handler$g$perform$1, member:handleBlock$ -> handleBlock$, member:Handler$h$write$ -> Handler$h$write$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, member:handleBlock$$ -> handleBlock$$, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, member:lambda$ -> lambda$, member:Handler$h1$perform$ -> Handler$h1$perform$, member:handleBlock$$ -> handleBlock$$1, member:Handler$g$perform$ -> Handler$g$perform$, tmp:block$res -> block$res2, tmp:block$res -> block$res3, tmp:block$res -> block$res4, member:handleBlock$ -> handleBlock$4, member:Handler$g2$perform$ -> Handler$g2$perform$, member:Handler$h2$perform -> Handler$h2$perform, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:Handler$h2$ -> Handler$h2$1, h -> h3, class:Handler$h$ -> Handler$h$4, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res9, g -> g, class:Handler$g$ -> Handler$g$2, tmp:block$res -> block$res10, tmp:block$res -> block$res8, member:handleBlock$ -> handleBlock$1, member:Handler$h$write -> Handler$h$write, h -> h4, class:Handler$h$ -> Handler$h$6, member:Handler$h$ -> Handler$h$1, member:lambda -> lambda, member:handleBlock$ -> handleBlock$3, member:Handler$h$write$ -> Handler$h$write$, class:Handler$g$ -> Handler$g$, member:Handler$h$ -> Handler$h$5, class:Handler$g2$ -> Handler$g2$, member:Handler$h$write$ -> Handler$h$write$2, member:lambda$ -> lambda$1, tmp:block$res -> block$res5, h -> h2, class:Handler$h$ -> Handler$h$2, tmp:tmp -> tmp1, tmp:block$res -> block$res, member:Effect -> Effect1, tmp:tmp -> tmp2, class:Effect -> Effect, tmp:block$res -> block$res1, member:Handler$g$perform -> Handler$g$perform, member:handleBlock$ -> handleBlock$6, h1 -> h1, class:Handler$h1$ -> Handler$h1$, member:Handler$g2$perform -> Handler$g2$perform, member:Handler$g$ -> Handler$g$1, tmp:block$res -> block$res7, tmp:tmp -> tmp, member:Handler$g2$ -> Handler$g2$1, member:handleBlock$ -> handleBlock$5, h2 -> h21, class:Handler$h2$ -> Handler$h2$, member:Handler$h$perform -> Handler$h$perform, member:handleBlock$ -> handleBlock$2, member:handleBlock$ -> handleBlock$7)
-//│           bindings = HashMap(member:Handler$h2$perform$ -> Handler$h2$perform$1, member:Handler$h2$perform -> Handler$h2$perform1, class:Handler$h2$ -> Handler$h2$2, member:Handler$h2$ -> Handler$h2$3, member:handleBlock$ -> handleBlock$8, member:Handler$h1$perform -> Handler$h1$perform1, member:Handler$h1$perform$ -> Handler$h1$perform$1, member:Handler$h1$ -> Handler$h1$3, str -> str, member:handleBlock$$ -> handleBlock$$2, h1 -> h11, class:Handler$h1$ -> Handler$h1$2)
-//│         curThis = S of S of class:Handler$h1$¹
-//│         bindings = HashMap()
-//│       bindings = HashMap(arg -> arg)
-//│     bindings = HashMap(tmp:Handler$h1$perform$here -> Handler$h1$perform$here)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(member:Handler$h$write -> Handler$h$write1, member:Handler$g$perform -> Handler$g$perform1, member:Handler$h$ -> Handler$h$7, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$, member:Handler$g$ -> Handler$g$3, member:Handler$g$perform$ -> Handler$g$perform$1, member:handleBlock$ -> handleBlock$, member:Handler$h$write$ -> Handler$h$write$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, member:handleBlock$$ -> handleBlock$$, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, member:lambda$ -> lambda$, member:Handler$h1$perform$ -> Handler$h1$perform$, member:handleBlock$$ -> handleBlock$$1, member:Handler$g$perform$ -> Handler$g$perform$, tmp:block$res -> block$res2, tmp:block$res -> block$res3, tmp:block$res -> block$res4, member:handleBlock$ -> handleBlock$4, member:Handler$g2$perform$ -> Handler$g2$perform$, member:Handler$h2$perform -> Handler$h2$perform, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:Handler$h2$ -> Handler$h2$1, h -> h3, class:Handler$h$ -> Handler$h$4, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res9, g -> g, class:Handler$g$ -> Handler$g$2, tmp:block$res -> block$res10, tmp:block$res -> block$res8, member:handleBlock$ -> handleBlock$1, member:Handler$h$write -> Handler$h$write, h -> h4, class:Handler$h$ -> Handler$h$6, member:Handler$h$ -> Handler$h$1, member:lambda -> lambda, member:handleBlock$ -> handleBlock$3, member:Handler$h$write$ -> Handler$h$write$, class:Handler$g$ -> Handler$g$, member:Handler$h$ -> Handler$h$5, class:Handler$g2$ -> Handler$g2$, member:Handler$h$write$ -> Handler$h$write$2, member:lambda$ -> lambda$1, tmp:block$res -> block$res5, h -> h2, class:Handler$h$ -> Handler$h$2, tmp:tmp -> tmp1, tmp:block$res -> block$res, member:Effect -> Effect1, tmp:tmp -> tmp2, class:Effect -> Effect, tmp:block$res -> block$res1, member:Handler$g$perform -> Handler$g$perform, member:handleBlock$ -> handleBlock$6, h1 -> h1, class:Handler$h1$ -> Handler$h1$, member:Handler$g2$perform -> Handler$g2$perform, member:Handler$g$ -> Handler$g$1, tmp:block$res -> block$res7, tmp:tmp -> tmp, member:Handler$g2$ -> Handler$g2$1, member:handleBlock$ -> handleBlock$5, h2 -> h21, class:Handler$h2$ -> Handler$h2$, member:Handler$h$perform -> Handler$h$perform, member:handleBlock$ -> handleBlock$2, member:handleBlock$ -> handleBlock$7)
-//│         bindings = HashMap(member:Handler$h2$perform$ -> Handler$h2$perform$1, member:Handler$h2$perform -> Handler$h2$perform1, class:Handler$h2$ -> Handler$h2$2, member:Handler$h2$ -> Handler$h2$3, member:handleBlock$ -> handleBlock$8, member:Handler$h1$perform -> Handler$h1$perform1, member:Handler$h1$perform$ -> Handler$h1$perform$1, member:Handler$h1$ -> Handler$h1$3, str -> str, member:handleBlock$$ -> handleBlock$$2, h1 -> h11, class:Handler$h1$ -> Handler$h1$2)
-//│       curThis = S of N
-//│       bindings = HashMap()
-//│     bindings = HashMap(tmp:handleBlock$$here -> handleBlock$$here, h2 -> h22)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Left of Cfg:
-//│         escapeChars = true
-//│         useSuperscripts = false
-//│         includeZero = false
-//│         defaultName = "tmp"
-//│       curThis = S of S of globalThis:globalThis⁰
-//│       bindings = HashMap(member:Handler$h$write -> Handler$h$write1, member:Handler$g$perform -> Handler$g$perform1, member:Handler$h$ -> Handler$h$7, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$, member:Handler$g$ -> Handler$g$3, member:Handler$g$perform$ -> Handler$g$perform$1, member:handleBlock$ -> handleBlock$, member:Handler$h$write$ -> Handler$h$write$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, member:Handler$h1$perform -> Handler$h1$perform, member:handleBlock$$ -> handleBlock$$, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h1$ -> Handler$h1$1, member:lambda$ -> lambda$, member:Handler$h1$perform$ -> Handler$h1$perform$, member:handleBlock$$ -> handleBlock$$1, member:Handler$g$perform$ -> Handler$g$perform$, tmp:block$res -> block$res2, tmp:block$res -> block$res3, tmp:block$res -> block$res4, member:handleBlock$ -> handleBlock$4, member:Handler$g2$perform$ -> Handler$g2$perform$, member:Handler$h2$perform -> Handler$h2$perform, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res6, member:Handler$h2$ -> Handler$h2$1, h -> h3, class:Handler$h$ -> Handler$h$4, member:Handler$h2$perform$ -> Handler$h2$perform$, tmp:block$res -> block$res9, g -> g, class:Handler$g$ -> Handler$g$2, tmp:block$res -> block$res10, tmp:block$res -> block$res8, member:handleBlock$ -> handleBlock$1, member:Handler$h$write -> Handler$h$write, h -> h4, class:Handler$h$ -> Handler$h$6, member:Handler$h$ -> Handler$h$1, member:lambda -> lambda, member:handleBlock$ -> handleBlock$3, member:Handler$h$write$ -> Handler$h$write$, class:Handler$g$ -> Handler$g$, member:Handler$h$ -> Handler$h$5, class:Handler$g2$ -> Handler$g2$, member:Handler$h$write$ -> Handler$h$write$2, member:lambda$ -> lambda$1, tmp:block$res -> block$res5, h -> h2, class:Handler$h$ -> Handler$h$2, tmp:tmp -> tmp1, tmp:block$res -> block$res, member:Effect -> Effect1, tmp:tmp -> tmp2, class:Effect -> Effect, tmp:block$res -> block$res1, member:Handler$g$perform -> Handler$g$perform, member:handleBlock$ -> handleBlock$6, h1 -> h1, class:Handler$h1$ -> Handler$h1$, member:Handler$g2$perform -> Handler$g2$perform, member:Handler$g$ -> Handler$g$1, tmp:block$res -> block$res7, tmp:tmp -> tmp, member:Handler$g2$ -> Handler$g2$1, member:handleBlock$ -> handleBlock$5, h2 -> h21, class:Handler$h2$ -> Handler$h2$, member:Handler$h$perform -> Handler$h$perform, member:handleBlock$ -> handleBlock$2, member:handleBlock$ -> handleBlock$7)
-//│     bindings = HashMap(member:Handler$h2$perform$ -> Handler$h2$perform$1, member:Handler$h2$perform -> Handler$h2$perform1, class:Handler$h2$ -> Handler$h2$2, member:Handler$h2$ -> Handler$h2$3, member:handleBlock$ -> handleBlock$8, member:Handler$h1$perform -> Handler$h1$perform1, member:Handler$h1$perform$ -> Handler$h1$perform$1, member:Handler$h1$ -> Handler$h1$3, str -> str, member:handleBlock$$ -> handleBlock$$2, h1 -> h11, class:Handler$h1$ -> Handler$h1$2)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let str, h11, Handler$h2$perform1, Handler$h2$3, handleBlock$8, Handler$h1$perform1, Handler$h1$3, handleBlock$$2, Handler$h2$perform$1, Handler$h1$perform$1;
-//│ Handler$h1$perform$1 = function Handler$h1$perform$(arg) {
-//│   return (k) => {
-//│     return Handler$h1$perform1(arg, k)
+//│ let str, h11, Handler$h2$perform1, Handler$h2$3, handleBlock$9, Handler$h1$perform1, Handler$h1$3, cpsCont$07, cpsCont$15, cpsCont$25, cpsCont$34, cpsCont$61, Capture$scope11, cpsCont$5$2, handleBlock$$2, cpsCont$4$1, Handler$h2$perform$1, Capture$scope53, cpsCont$2$5, Handler$h1$perform$1, Capture$scope83, cpsCont$0$6;
+//│ (class Capture$scope82 {
+//│   static {
+//│     Capture$scope83 = this
+//│   }
+//│   constructor(tmp$0) {
+//│     this.tmp$0 = tmp$0;
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Capture$scope8"];
+//│ });
+//│ cpsCont$0$6 = function cpsCont$0$(scope8$cap, k) {
+//│   return (retVal) => {
+//│     return cpsCont$07(scope8$cap, k, retVal)
 //│   }
 //│ };
-//│ Handler$h1$perform1 = function Handler$h1$perform(arg, k) {
-//│   let tmp3, tmp4;
-//│   tmp3 = str + "A";
-//│   str = tmp3;
-//│   runtime.safeCall(k(arg));
-//│   tmp4 = str + "A";
-//│   str = tmp4;
-//│   return runtime.Unit
+//│ cpsCont$07 = function cpsCont$0(scope8$cap, k, retVal) {
+//│   scope8$cap.tmp$0 = str + "A";
+//│   str = scope8$cap.tmp$0;
+//│   return k(runtime.Unit)
+//│ };
+//│ Handler$h1$perform$1 = function Handler$h1$perform$(arg) {
+//│   return (k, k1) => {
+//│     return Handler$h1$perform1(arg, k, k1)
+//│   }
+//│ };
+//│ Handler$h1$perform1 = function Handler$h1$perform(arg, k, k1) {
+//│   let tmp8, scope8$cap, cpsCont$0$here;
+//│   scope8$cap = new Capture$scope83(undefined);
+//│   tmp8 = str + "A";
+//│   str = tmp8;
+//│   cpsCont$0$here = cpsCont$0$6(scope8$cap, k);
+//│   return k1(cpsCont$0$here, arg)
+//│ };
+//│ cpsCont$15 = function cpsCont$1(retVal) {};
+//│ (class Capture$scope1 {
+//│   static {
+//│     Capture$scope11 = this
+//│   }
+//│   constructor(tmp$0) {
+//│     this.tmp$0 = tmp$0;
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Capture$scope1"];
+//│ });
+//│ (class Capture$scope52 {
+//│   static {
+//│     Capture$scope53 = this
+//│   }
+//│   constructor(tmp$0, tmp$1) {
+//│     this.tmp$1 = tmp$1;
+//│     this.tmp$0 = tmp$0;
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Capture$scope5"];
+//│ });
+//│ cpsCont$2$5 = function cpsCont$2$(scope5$cap, k) {
+//│   return (retVal) => {
+//│     return cpsCont$25(scope5$cap, k, retVal)
+//│   }
+//│ };
+//│ cpsCont$25 = function cpsCont$2(scope5$cap, k, retVal) {
+//│   scope5$cap.tmp$0 = str + "B";
+//│   scope5$cap.tmp$1 = str + scope5$cap.tmp$0;
+//│   str = scope5$cap.tmp$1;
+//│   return k(runtime.Unit)
 //│ };
 //│ Handler$h2$perform$1 = function Handler$h2$perform$(arg) {
-//│   return (k) => {
-//│     return Handler$h2$perform1(arg, k)
+//│   return (k, k1) => {
+//│     return Handler$h2$perform1(arg, k, k1)
 //│   }
 //│ };
-//│ Handler$h2$perform1 = function Handler$h2$perform(arg, k) {
-//│   let tmp3, tmp4, tmp5, tmp6;
-//│   tmp3 = str + "B";
-//│   tmp4 = str + tmp3;
-//│   str = tmp4;
-//│   runtime.safeCall(k(arg));
-//│   tmp5 = str + "B";
-//│   tmp6 = str + tmp5;
-//│   str = tmp6;
-//│   return runtime.Unit
+//│ Handler$h2$perform1 = function Handler$h2$perform(arg, k, k1) {
+//│   let tmp8, tmp9, scope5$cap, cpsCont$2$here;
+//│   scope5$cap = new Capture$scope53(undefined, undefined);
+//│   tmp8 = str + "B";
+//│   tmp9 = str + tmp8;
+//│   str = tmp9;
+//│   cpsCont$2$here = cpsCont$2$5(scope5$cap, k);
+//│   return k1(cpsCont$2$here, arg)
+//│ };
+//│ cpsCont$34 = function cpsCont$3(retVal) {};
+//│ cpsCont$4$1 = function cpsCont$4$(k) {
+//│   return (retVal) => {
+//│     return h11.perform(k, runtime.Unit)
+//│   }
 //│ };
 //│ handleBlock$$2 = (undefined, function (h22) {
-//│   return () => {
-//│     runtime.safeCall(h22.perform(runtime.Unit));
-//│     return runtime.safeCall(h11.perform(runtime.Unit))
+//│   return (k) => {
+//│     let cpsCont$4$here;
+//│     cpsCont$4$here = cpsCont$4$1(k);
+//│     return h22.perform(cpsCont$4$here, runtime.Unit)
 //│   }
 //│ });
+//│ cpsCont$5$2 = function cpsCont$5$(scope1$cap, k) {
+//│   return (retVal) => {
+//│     scope1$cap.tmp$0 = retVal;
+//│     return k(scope1$cap.tmp$0)
+//│   }
+//│ };
 //│ (class Handler$h2$2 extends Effect1 {
 //│   static {
 //│     Handler$h2$3 = this
 //│   }
 //│   constructor() {
-//│     super();
+//│     return super(cpsCont$34);
 //│   }
-//│   perform(arg) {
+//│   perform(k, arg) {
 //│     let Handler$h2$perform$here;
 //│     Handler$h2$perform$here = Handler$h2$perform$1(arg);
-//│     return suspend(this, Handler$h2$perform$here)
+//│     return new runtime.Suspend(k, this, Handler$h2$perform$here)
 //│   }
 //│   toString() { return runtime.render(this); }
 //│   static [definitionMetadata] = ["class", "Handler$h2$"];
@@ -782,41 +298,33 @@ str
 //│     Handler$h1$3 = this
 //│   }
 //│   constructor() {
-//│     super();
+//│     return super(cpsCont$15);
 //│   }
-//│   perform(arg) {
+//│   perform(k, arg) {
 //│     let Handler$h1$perform$here;
 //│     Handler$h1$perform$here = Handler$h1$perform$1(arg);
-//│     return suspend(this, Handler$h1$perform$here)
+//│     return new runtime.Suspend(k, this, Handler$h1$perform$here)
 //│   }
 //│   toString() { return runtime.render(this); }
 //│   static [definitionMetadata] = ["class", "Handler$h1$"];
 //│ });
-//│ handleBlock$8 = (undefined, function () {
-//│   let h22, handleBlock$$here;
+//│ handleBlock$9 = (undefined, function (k) {
+//│   let h22, scope1$cap, cpsCont$5$here, handleBlock$$here;
+//│   scope1$cap = new Capture$scope11(undefined);
 //│   h22 = new Handler$h2$3();
+//│   cpsCont$5$here = cpsCont$5$2(scope1$cap, k);
 //│   handleBlock$$here = handleBlock$$2(h22);
-//│   return handle_suspension(h22, handleBlock$$here)
+//│   return runtime.cpsHandlerImpl(cpsCont$5$here, h22, handleBlock$$here)
 //│ });
+//│ cpsCont$61 = function cpsCont$6(retVal) {
+//│   return runtime.cpsId(str)
+//│ };
 //│ str = "";
 //│ if (true === true) {
 //│   h11 = new Handler$h1$3();
-//│   handle_suspension(h11, handleBlock$8);
-//│   return str
+//│   return runtime.cpsHandlerImpl(cpsCont$61, h11, handleBlock$9)
 //│ }
-//│ return str;
+//│ return runtime.cpsId(str);
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL40:1:2947
-//│     at ContextifyScript.runInThisContext (node:vm:137:12)
-//│     at defaultEval (node:repl:610:24)
-//│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│     at REPLServer.emit (node:events:509:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
-//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
-//│ str = ""
+//│ = "BABABA"
+//│ str = "BABABA"

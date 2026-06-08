@@ -11,7 +11,26 @@ abstract class Effect with
 data class Lol(h) with
   print(h.perform("k"))
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let Lol1;
+//│ let Lol1, cpsCont$0, Capture$scope01, cpsCont$0$;
+//│ (class Capture$scope0 {
+//│   static {
+//│     Capture$scope01 = this
+//│   }
+//│   constructor(tmp$0) {
+//│     this.tmp$0 = tmp$0;
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Capture$scope0"];
+//│ });
+//│ cpsCont$0$ = function cpsCont$0$(scope0$cap) {
+//│   return (retVal) => {
+//│     return cpsCont$0(scope0$cap, retVal)
+//│   }
+//│ };
+//│ cpsCont$0 = function cpsCont$0(scope0$cap, retVal) {
+//│   scope0$cap.tmp$0 = retVal;
+//│   Predef.print(scope0$cap.tmp$0);
+//│ };
 //│ Lol1 = function Lol(h) {
 //│   return globalThis.Object.freeze(new Lol.class(h));
 //│ };
@@ -20,10 +39,11 @@ data class Lol(h) with
 //│     Lol1.class = this
 //│   }
 //│   constructor(h) {
-//│     let tmp;
+//│     let scope0$cap, cpsCont$0$here;
+//│     scope0$cap = new Capture$scope01(undefined);
 //│     this.h = h;
-//│     tmp = runtime.safeCall(this.h.perform("k"));
-//│     Predef.print(tmp);
+//│     cpsCont$0$here = cpsCont$0$(scope0$cap);
+//│     return this.h.perform(cpsCont$0$here, "k");
 //│   }
 //│   toString() { return runtime.render(this); }
 //│   static [definitionMetadata] = ["class", "Lol", ["h"]];
@@ -47,35 +67,7 @@ handle k = Eff with
   fun test()(k) = k()
 k.test()
 print("test")
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│ ═══[RUNTIME ERROR] TypeError: k.test is not a function
 
 
 
@@ -86,26 +78,13 @@ let oops =
       print(arg)
       "b"
   Lol(h)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│ ═══[RUNTIME ERROR] TypeError: this.h.perform is not a function
 //│ oops = undefined
 
 :fixme
 :expect "b"
 oops
+//│ ═══[RUNTIME ERROR] Error: MLscript call unexpectedly returned `undefined`, the forbidden value.
 //│ ═══[RUNTIME ERROR] Expected: '"b"', got: 'undefined'
 
 :fixme
@@ -115,27 +94,15 @@ let oops =
       print(arg)
       "b"
   new Lol(h)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│ oops = undefined
+//│ > k
+//│ oops = "b"
+//│ FAILURE: Unexpected lack of error to fix
 
 :fixme
 :expect "b"
 oops
-//│ ═══[RUNTIME ERROR] Expected: '"b"', got: 'undefined'
+//│ = "b"
+//│ FAILURE: Unexpected lack of error to fix
 
 
 :fixme
@@ -145,21 +112,7 @@ let oops =
       print(arg)
       k("b")
   Lol(h)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│ ═══[RUNTIME ERROR] TypeError: this.h.perform is not a function
 //│ oops = undefined
 
 :fixme
@@ -174,77 +127,20 @@ handle h = Effect with
     k()
     print(arg)
 set obj.s = h.perform("k")
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(member:Handler$h$perform$ -> Handler$h$perform$4, tmp:block$res -> block$res2, tmp:block$res -> block$res4, tmp:block$res -> block$res5, member:Eff -> Eff1, oops -> oops1, tmp:runtime -> runtime, h -> h, h -> h2, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, class:Handler$h$ -> Handler$h$, class:Handler$h$ -> Handler$h$4, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:block$res -> block$res11, tmp:option -> option, tmp:tmp -> tmp1, class:Eff -> Eff, member:handleBlock$ -> handleBlock$3, member:Handler$h$ -> Handler$h$5, class:Handler$k$ -> Handler$k$, member:Handler$h$perform$ -> Handler$h$perform$2, member:handleBlock$ -> handleBlock$, tmp:block$res -> block$res6, member:Handler$k$test -> Handler$k$test, tmp:block$res -> block$res7, oops -> oops2, member:Handler$k$ -> Handler$k$1, h -> h3, member:handleBlock$ -> handleBlock$1, class:Handler$h$ -> Handler$h$6, member:Handler$h$ -> Handler$h$1, member:Handler$h$perform$ -> Handler$h$perform$, tmp:tmp -> tmp2, member:handleBlock$ -> handleBlock$4, member:handleBlock$$ -> handleBlock$$, member:Handler$h$ -> Handler$h$7, member:Handler$h$perform$ -> Handler$h$perform$3, tmp:block$res -> block$res8, tmp:selRes -> selRes, tmp:block$res -> block$res3, tmp:block$res -> block$res9, oops -> oops, h -> h1, obj -> obj, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res10, h -> h4, tmp:block$res -> block$res, class:Handler$h$ -> Handler$h$8, member:Effect -> Effect1, class:Effect -> Effect, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res1, member:Lol -> Lol1, class:Lol -> Lol, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$1, member:handleBlock$ -> handleBlock$5, member:Handler$h$ -> Handler$h$9)
-//│         curThis = S of S of class:Handler$h$⁰
-//│         bindings = HashMap()
-//│       bindings = HashMap(arg -> arg)
-//│     bindings = HashMap(tmp:Handler$h$perform$here -> Handler$h$perform$here)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Left of Cfg:
-//│       escapeChars = true
-//│       useSuperscripts = false
-//│       includeZero = false
-//│       defaultName = "tmp"
-//│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(member:Handler$h$perform$ -> Handler$h$perform$4, tmp:block$res -> block$res2, tmp:block$res -> block$res4, tmp:block$res -> block$res5, member:Eff -> Eff1, oops -> oops1, tmp:runtime -> runtime, h -> h, h -> h2, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, class:Handler$h$ -> Handler$h$, class:Handler$h$ -> Handler$h$4, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:block$res -> block$res11, tmp:option -> option, tmp:tmp -> tmp1, class:Eff -> Eff, member:handleBlock$ -> handleBlock$3, member:Handler$h$ -> Handler$h$5, class:Handler$k$ -> Handler$k$, member:Handler$h$perform$ -> Handler$h$perform$2, member:handleBlock$ -> handleBlock$, tmp:block$res -> block$res6, member:Handler$k$test -> Handler$k$test, tmp:block$res -> block$res7, oops -> oops2, member:Handler$k$ -> Handler$k$1, h -> h3, member:handleBlock$ -> handleBlock$1, class:Handler$h$ -> Handler$h$6, member:Handler$h$ -> Handler$h$1, member:Handler$h$perform$ -> Handler$h$perform$, tmp:tmp -> tmp2, member:handleBlock$ -> handleBlock$4, member:handleBlock$$ -> handleBlock$$, member:Handler$h$ -> Handler$h$7, member:Handler$h$perform$ -> Handler$h$perform$3, tmp:block$res -> block$res8, tmp:selRes -> selRes, tmp:block$res -> block$res3, tmp:block$res -> block$res9, oops -> oops, h -> h1, obj -> obj, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res10, h -> h4, tmp:block$res -> block$res, class:Handler$h$ -> Handler$h$8, member:Effect -> Effect1, class:Effect -> Effect, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$2, tmp:block$res -> block$res1, member:Lol -> Lol1, class:Lol -> Lol, member:Handler$h$ -> Handler$h$3, member:Handler$h$perform$ -> Handler$h$perform$1, member:handleBlock$ -> handleBlock$5, member:Handler$h$ -> Handler$h$9)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL44:1:1110
-//│     at ContextifyScript.runInThisContext (node:vm:137:12)
-//│     at defaultEval (node:repl:610:24)
-//│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│     at REPLServer.emit (node:events:509:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
-//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
+//│ > k
 
 fun f() = ()
 
 module A with
   f()
   () // defeats tail call optimization
+//│ > let A1;try { globalThis.Object.freeze(class A {   static {     A1 = this   }   static {     return;   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "A"]; });; undefined } catch (e) { console.log('\u200B' + (e.stack ?? e) + '\u200B'); }
+//│ >                                                                                             ^^^^^^
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:272)
+//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Illegal return statement
 
 let obj = new Object with
   fun foo() = print("Hello")
   foo()
-//│ > Hello
 //│ obj = $anon

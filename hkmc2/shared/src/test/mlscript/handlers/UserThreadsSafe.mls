@@ -19,6 +19,11 @@ fun f(h, x)() =
   print("f " + x)
   h.yld()
   print("f " + x)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (HandlerLowering.scala:217)
+//│ ╔══[WARNING] This function is not CPS-transformed because it has more than one parameter list.
+//│ ║  l.16: 	fun f(h, x)() =
+//│ ╙──      	    ^
 
 fun main(h) =
   print("main start")
@@ -40,83 +45,8 @@ handle h = ThreadEffect with
     this.drain()
 in
   main(h)
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(member:handleBlock$ -> handleBlock$, member:Handler$h$fork -> Handler$h$fork, member:f$worker -> f$worker, tmp:block$res -> block$res2, member:Handler$h$yld -> Handler$h$yld, member:main -> main, member:Handler$h$ -> Handler$h$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h$fork$ -> Handler$h$fork$, member:Handler$h$yld$ -> Handler$h$yld$, tmp:block$res -> block$res3, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res1, tmp:block$res -> block$res4, tmp:block$res -> block$res, member:f -> f, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect)
-//│         curThis = S of S of class:Handler$h$⁰
-//│         bindings = HashMap()
-//│       bindings = HashMap(thread -> thread)
-//│     bindings = HashMap(tmp:Handler$h$fork$here -> Handler$h$fork$here)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(member:handleBlock$ -> handleBlock$, member:Handler$h$fork -> Handler$h$fork, member:f$worker -> f$worker, tmp:block$res -> block$res2, member:Handler$h$yld -> Handler$h$yld, member:main -> main, member:Handler$h$ -> Handler$h$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h$fork$ -> Handler$h$fork$, member:Handler$h$yld$ -> Handler$h$yld$, tmp:block$res -> block$res3, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res1, tmp:block$res -> block$res4, tmp:block$res -> block$res, member:f -> f, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect)
-//│         curThis = S of S of class:Handler$h$⁰
-//│         bindings = HashMap()
-//│       bindings = HashMap()
-//│     bindings = HashMap(tmp:Handler$h$yld$here -> Handler$h$yld$here)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Left of Cfg:
-//│       escapeChars = true
-//│       useSuperscripts = false
-//│       includeZero = false
-//│       defaultName = "tmp"
-//│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(member:handleBlock$ -> handleBlock$, member:Handler$h$fork -> Handler$h$fork, member:f$worker -> f$worker, tmp:block$res -> block$res2, member:Handler$h$yld -> Handler$h$yld, member:main -> main, member:Handler$h$ -> Handler$h$1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Handler$h$fork$ -> Handler$h$fork$, member:Handler$h$yld$ -> Handler$h$yld$, tmp:block$res -> block$res3, h -> h, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res1, tmp:block$res -> block$res4, tmp:block$res -> block$res, member:f -> f, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│ > main start
+//│ ═══[RUNTIME ERROR] Error: Function 'f' expected 2 arguments but got 3
 
 
 // FIFO
@@ -131,82 +61,7 @@ handle h = ThreadEffect with
     this.drain()
 in
   main(h)
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(member:handleBlock$ -> handleBlock$, member:Handler$h$fork -> Handler$h$fork, member:f$worker -> f$worker, tmp:block$res -> block$res2, member:Handler$h$yld -> Handler$h$yld, member:main -> main, member:handleBlock$ -> handleBlock$1, member:Handler$h$ -> Handler$h$1, member:Handler$h$fork -> Handler$h$fork1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:Handler$h$yld -> Handler$h$yld1, tmp:Block -> Block, tmp:option -> option, member:Handler$h$fork$ -> Handler$h$fork$, member:Handler$h$ -> Handler$h$3, member:Handler$h$fork$ -> Handler$h$fork$1, member:Handler$h$yld$ -> Handler$h$yld$, tmp:block$res -> block$res3, h -> h, class:Handler$h$ -> Handler$h$, member:Handler$h$yld$ -> Handler$h$yld$1, tmp:block$res -> block$res1, tmp:block$res -> block$res4, tmp:block$res -> block$res, member:f -> f, h -> h1, class:Handler$h$ -> Handler$h$2, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, tmp:block$res -> block$res5)
-//│         curThis = S of S of class:Handler$h$¹
-//│         bindings = HashMap()
-//│       bindings = HashMap(thread -> thread)
-//│     bindings = HashMap(tmp:Handler$h$fork$here -> Handler$h$fork$here)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(member:handleBlock$ -> handleBlock$, member:Handler$h$fork -> Handler$h$fork, member:f$worker -> f$worker, tmp:block$res -> block$res2, member:Handler$h$yld -> Handler$h$yld, member:main -> main, member:handleBlock$ -> handleBlock$1, member:Handler$h$ -> Handler$h$1, member:Handler$h$fork -> Handler$h$fork1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:Handler$h$yld -> Handler$h$yld1, tmp:Block -> Block, tmp:option -> option, member:Handler$h$fork$ -> Handler$h$fork$, member:Handler$h$ -> Handler$h$3, member:Handler$h$fork$ -> Handler$h$fork$1, member:Handler$h$yld$ -> Handler$h$yld$, tmp:block$res -> block$res3, h -> h, class:Handler$h$ -> Handler$h$, member:Handler$h$yld$ -> Handler$h$yld$1, tmp:block$res -> block$res1, tmp:block$res -> block$res4, tmp:block$res -> block$res, member:f -> f, h -> h1, class:Handler$h$ -> Handler$h$2, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, tmp:block$res -> block$res5)
-//│         curThis = S of S of class:Handler$h$¹
-//│         bindings = HashMap()
-//│       bindings = HashMap()
-//│     bindings = HashMap(tmp:Handler$h$yld$here -> Handler$h$yld$here)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Left of Cfg:
-//│       escapeChars = true
-//│       useSuperscripts = false
-//│       includeZero = false
-//│       defaultName = "tmp"
-//│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(member:handleBlock$ -> handleBlock$, member:Handler$h$fork -> Handler$h$fork, member:f$worker -> f$worker, tmp:block$res -> block$res2, member:Handler$h$yld -> Handler$h$yld, member:main -> main, member:handleBlock$ -> handleBlock$1, member:Handler$h$ -> Handler$h$1, member:Handler$h$fork -> Handler$h$fork1, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:Handler$h$yld -> Handler$h$yld1, tmp:Block -> Block, tmp:option -> option, member:Handler$h$fork$ -> Handler$h$fork$, member:Handler$h$ -> Handler$h$3, member:Handler$h$fork$ -> Handler$h$fork$1, member:Handler$h$yld$ -> Handler$h$yld$, tmp:block$res -> block$res3, h -> h, class:Handler$h$ -> Handler$h$, member:Handler$h$yld$ -> Handler$h$yld$1, tmp:block$res -> block$res1, tmp:block$res -> block$res4, tmp:block$res -> block$res, member:f -> f, h -> h1, class:Handler$h$ -> Handler$h$2, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, tmp:block$res -> block$res5)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
+//│ > main start
+//│ ═══[RUNTIME ERROR] Error: Function 'f' expected 2 arguments but got 3
 
 

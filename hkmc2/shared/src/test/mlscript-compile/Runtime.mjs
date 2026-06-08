@@ -64,11 +64,11 @@ lambda = (undefined, function (l) {
   tmp1 = Rendering.render(l.value);
   return tmp + tmp1
 });
-handlerFunCont$ = function handlerFunCont$(kk) {
+handlerFunCont$ = function handlerFunCont$(Runtime2, tag, resume) {
   return (k1, v) => {
     let tmp;
-    tmp = runtime.safeCall(kk(v));
-    return runtime.safeCall(k1(tmp))
+    tmp = runtime.safeCall(resume(v));
+    return Runtime2.handlerTrampoline(k1, tag, tmp)
   }
 };
 (class Capture$scope22 {
@@ -83,10 +83,10 @@ handlerFunCont$ = function handlerFunCont$(kk) {
   toString() { return runtime.render(this); }
   static [definitionMetadata] = ["class", "Capture$scope22"];
 });
-lambda$2 = (undefined, function (Runtime2, k, tag, kk) {
+lambda$2 = (undefined, function (Runtime2, k, tag, resume) {
   return (r) => {
     let tmp;
-    tmp = runtime.safeCall(kk(r));
+    tmp = runtime.safeCall(resume(r));
     return Runtime2.handlerTrampoline(k, tag, tmp)
   }
 });
@@ -94,8 +94,8 @@ lambda$2 = (undefined, function (Runtime2, k, tag, kk) {
   static {
     Capture$handlerTrampoline1 = this
   }
-  constructor(v$0) {
-    this.v$0 = v$0;
+  constructor(cur$0) {
+    this.cur$0 = cur$0;
   }
   toString() { return runtime.render(this); }
   static [definitionMetadata] = ["class", "Capture$handlerTrampoline"];
@@ -876,39 +876,39 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
     tmp = runtime.safeCall(Runtime.render(x, rcd));
     return runtime.safeCall(globalThis.console.log(tmp))
   }
-  static handlerTrampoline(k, tag, v) {
+  static handlerTrampoline(k, tag, cur) {
     let handlerTrampoline$cap;
-    handlerTrampoline$cap = new Capture$handlerTrampoline1(v);
+    handlerTrampoline$cap = new Capture$handlerTrampoline1(cur);
     lbl: while (true) {
       let scrut, scrut1, arg$Suspend$0$, arg$Suspend$1$, arg$Suspend$2$, arg$ContThunk$0$, tmp, scope22$cap, lambda$here;
       scope22$cap = new Capture$scope221(undefined, undefined, undefined);
-      if (handlerTrampoline$cap.v$0 instanceof Runtime.ContThunk.class) {
-        arg$ContThunk$0$ = handlerTrampoline$cap.v$0.thunk;
+      if (handlerTrampoline$cap.cur$0 instanceof Runtime.ContThunk.class) {
+        arg$ContThunk$0$ = handlerTrampoline$cap.cur$0.thunk;
         tmp = runtime.safeCall(arg$ContThunk$0$());
-        handlerTrampoline$cap.v$0 = tmp;
+        handlerTrampoline$cap.cur$0 = tmp;
         continue lbl
-      } else if (handlerTrampoline$cap.v$0 instanceof Runtime.Suspend.class) {
-        arg$Suspend$0$ = handlerTrampoline$cap.v$0.k;
-        arg$Suspend$1$ = handlerTrampoline$cap.v$0.tag;
-        arg$Suspend$2$ = handlerTrampoline$cap.v$0.handlerFun;
+      } else if (handlerTrampoline$cap.cur$0 instanceof Runtime.Suspend.class) {
+        arg$Suspend$0$ = handlerTrampoline$cap.cur$0.k;
+        arg$Suspend$1$ = handlerTrampoline$cap.cur$0.tag;
+        arg$Suspend$2$ = handlerTrampoline$cap.cur$0.handlerFun;
         scrut = tag === Runtime.TopLevelHandler;
         if (scrut === true) {
           throw runtime.safeCall(globalThis.Error("unhandled effects"))
         }
         scrut1 = arg$Suspend$1$ === tag;
         if (scrut1 === true) {
-          scope22$cap.handlerFunCont$0 = handlerFunCont$(arg$Suspend$0$);
+          scope22$cap.handlerFunCont$0 = handlerFunCont$(Runtime, tag, arg$Suspend$0$);
           scope22$cap.tmp$1 = runtime.safeCall(arg$Suspend$2$(Runtime.cpsId, scope22$cap.handlerFunCont$0));
-          handlerTrampoline$cap.v$0 = scope22$cap.tmp$1;
+          handlerTrampoline$cap.cur$0 = scope22$cap.tmp$1;
           scope22$cap.tmp$2 = runtime.Unit;
           continue lbl
         }
         lambda$here = lambda$2(Runtime, k, tag, arg$Suspend$0$);
-        return Runtime.Suspend(arg$Suspend$1$, arg$Suspend$2$, lambda$here);
+        return Runtime.Suspend(lambda$here, arg$Suspend$1$, arg$Suspend$2$);
       }
       break;
     }
-    return runtime.safeCall(k(handlerTrampoline$cap.v$0))
+    return runtime.safeCall(k(handlerTrampoline$cap.cur$0))
   }
   static cpsHandlerImpl(k, tag, f) {
     let tmp;

@@ -39,95 +39,19 @@ fun breakFromNestedFunctionWithEffects() =
     fun escape() = root.break(42)
     escape()
 breakFromNestedFunctionWithEffects()
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(tmp:handleBlock$$here -> handleBlock$$here, class:NonLocalLabelEffect -> NonLocalLabelEffect, tmp:block$res -> block$res2, tmp:block$res -> block$res, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, tmp:block$res -> block$res4, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res3, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res1, tmp:nonLocalHandler$root -> nonLocalHandler$root)
-//│         curThis = S of S of class:NonLocalLabelEffect⁰
-//│         bindings = HashMap()
-//│       bindings = HashMap(value -> value)
-//│     bindings = HashMap(tmp:NonLocalLabelEffectbreak$here -> NonLocalLabelEffectbreak$here)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Left of Cfg:
-//│           escapeChars = true
-//│           useSuperscripts = false
-//│           includeZero = false
-//│           defaultName = "tmp"
-//│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(tmp:handleBlock$$here -> handleBlock$$here, class:NonLocalLabelEffect -> NonLocalLabelEffect, tmp:block$res -> block$res2, tmp:block$res -> block$res, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, tmp:block$res -> block$res4, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res3, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res1, tmp:nonLocalHandler$root -> nonLocalHandler$root)
-//│       curThis = S of N
-//│       bindings = HashMap()
-//│     bindings = HashMap(tmp:nonLocalHandler$root -> nonLocalHandler$root1, tmp:handleBlock$$here -> handleBlock$$here1)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Left of Cfg:
-//│       escapeChars = true
-//│       useSuperscripts = false
-//│       includeZero = false
-//│       defaultName = "tmp"
-//│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(tmp:handleBlock$$here -> handleBlock$$here, class:NonLocalLabelEffect -> NonLocalLabelEffect, tmp:block$res -> block$res2, tmp:block$res -> block$res, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, tmp:block$res -> block$res4, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res3, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res1, tmp:nonLocalHandler$root -> nonLocalHandler$root)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL19:1:1797
+//│ ═══[RUNTIME ERROR] Error: Function 'rest' expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at rest (REPL19:1:1341)
+//│     at cpsCont$1 (REPL19:1:2355)
+//│     at REPL19:1:1248
+//│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:911:29)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:916:20)
+//│     at REPL19:1:3345
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│     at REPLServer.emit (node:events:509:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
-//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 
 fun breakFromNestedLambdaWithEffects() =
@@ -135,95 +59,19 @@ fun breakFromNestedLambdaWithEffects() =
     let escape = () => root.break(42)
     escape()
 breakFromNestedLambdaWithEffects()
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(tmp:block$res -> block$res2, member:NonLocalLabelEffect -> NonLocalLabelEffect3, tmp:block$res -> block$res5, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, tmp:runtime -> runtime, member:handleBlock$$ -> handleBlock$$1, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, tmp:nonLocalHandler$root -> nonLocalHandler$root, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, tmp:handleBlock$$here -> handleBlock$$here, class:NonLocalLabelEffect -> NonLocalLabelEffect, tmp:block$res -> block$res, tmp:block$res -> block$res4, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:handleBlock$$ -> handleBlock$$, class:NonLocalLabelEffect -> NonLocalLabelEffect2, tmp:block$res -> block$res1, tmp:nonLocalHandler$root -> nonLocalHandler$root1, tmp:handleBlock$$here -> handleBlock$$here1)
-//│         curThis = S of S of class:NonLocalLabelEffect¹
-//│         bindings = HashMap()
-//│       bindings = HashMap(value -> value)
-//│     bindings = HashMap(tmp:NonLocalLabelEffectbreak$here -> NonLocalLabelEffectbreak$here)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Left of Cfg:
-//│           escapeChars = true
-//│           useSuperscripts = false
-//│           includeZero = false
-//│           defaultName = "tmp"
-//│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(tmp:block$res -> block$res2, member:NonLocalLabelEffect -> NonLocalLabelEffect3, tmp:block$res -> block$res5, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, tmp:runtime -> runtime, member:handleBlock$$ -> handleBlock$$1, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, tmp:nonLocalHandler$root -> nonLocalHandler$root, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, tmp:handleBlock$$here -> handleBlock$$here, class:NonLocalLabelEffect -> NonLocalLabelEffect, tmp:block$res -> block$res, tmp:block$res -> block$res4, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:handleBlock$$ -> handleBlock$$, class:NonLocalLabelEffect -> NonLocalLabelEffect2, tmp:block$res -> block$res1, tmp:nonLocalHandler$root -> nonLocalHandler$root1, tmp:handleBlock$$here -> handleBlock$$here1)
-//│       curThis = S of N
-//│       bindings = HashMap()
-//│     bindings = HashMap(tmp:handleBlock$$here -> handleBlock$$here2, tmp:nonLocalHandler$root -> nonLocalHandler$root2)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Left of Cfg:
-//│       escapeChars = true
-//│       useSuperscripts = false
-//│       includeZero = false
-//│       defaultName = "tmp"
-//│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(tmp:block$res -> block$res2, member:NonLocalLabelEffect -> NonLocalLabelEffect3, tmp:block$res -> block$res5, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, tmp:runtime -> runtime, member:handleBlock$$ -> handleBlock$$1, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, tmp:nonLocalHandler$root -> nonLocalHandler$root, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, tmp:handleBlock$$here -> handleBlock$$here, class:NonLocalLabelEffect -> NonLocalLabelEffect, tmp:block$res -> block$res, tmp:block$res -> block$res4, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:handleBlock$$ -> handleBlock$$, class:NonLocalLabelEffect -> NonLocalLabelEffect2, tmp:block$res -> block$res1, tmp:nonLocalHandler$root -> nonLocalHandler$root1, tmp:handleBlock$$here -> handleBlock$$here1)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL22:1:1802
+//│ ═══[RUNTIME ERROR] Error: Function 'rest' expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at rest (REPL22:1:1357)
+//│     at cpsCont$1 (REPL22:1:2375)
+//│     at REPL22:1:1262
+//│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:911:29)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:916:20)
+//│     at REPL22:1:3372
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│     at REPLServer.emit (node:events:509:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
-//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 
 fun breakFromNestedFunctionAndLambdaWithEffects() =
@@ -231,95 +79,19 @@ fun breakFromNestedFunctionAndLambdaWithEffects() =
     fun makeBreaker() = () => root.break(7)
     makeBreaker()()
 breakFromNestedFunctionAndLambdaWithEffects()
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:suspend⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(tmp:block$res -> block$res2, member:NonLocalLabelEffect -> NonLocalLabelEffect3, tmp:block$res -> block$res5, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, tmp:runtime -> runtime, member:handleBlock$$ -> handleBlock$$1, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, class:NonLocalLabelEffect -> NonLocalLabelEffect4, tmp:nonLocalHandler$root -> nonLocalHandler$root, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, tmp:handleBlock$$here -> handleBlock$$here, class:NonLocalLabelEffect -> NonLocalLabelEffect, tmp:nonLocalHandler$root -> nonLocalHandler$root2, tmp:handleBlock$$here -> handleBlock$$here2, tmp:block$res -> block$res, tmp:block$res -> block$res4, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, member:handleBlock$$ -> handleBlock$$2, tmp:block$res -> block$res6, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:handleBlock$$ -> handleBlock$$, class:NonLocalLabelEffect -> NonLocalLabelEffect2, tmp:block$res -> block$res1, tmp:nonLocalHandler$root -> nonLocalHandler$root1, tmp:handleBlock$$here -> handleBlock$$here1)
-//│         curThis = S of S of class:NonLocalLabelEffect²
-//│         bindings = HashMap()
-//│       bindings = HashMap(value -> value)
-//│     bindings = HashMap(tmp:NonLocalLabelEffectbreak$here -> NonLocalLabelEffectbreak$here)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'suspend'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ╙──       	^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Left of Cfg:
-//│           escapeChars = true
-//│           useSuperscripts = false
-//│           includeZero = false
-//│           defaultName = "tmp"
-//│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(tmp:block$res -> block$res2, member:NonLocalLabelEffect -> NonLocalLabelEffect3, tmp:block$res -> block$res5, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, tmp:runtime -> runtime, member:handleBlock$$ -> handleBlock$$1, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, class:NonLocalLabelEffect -> NonLocalLabelEffect4, tmp:nonLocalHandler$root -> nonLocalHandler$root, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, tmp:handleBlock$$here -> handleBlock$$here, class:NonLocalLabelEffect -> NonLocalLabelEffect, tmp:nonLocalHandler$root -> nonLocalHandler$root2, tmp:handleBlock$$here -> handleBlock$$here2, tmp:block$res -> block$res, tmp:block$res -> block$res4, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, member:handleBlock$$ -> handleBlock$$2, tmp:block$res -> block$res6, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:handleBlock$$ -> handleBlock$$, class:NonLocalLabelEffect -> NonLocalLabelEffect2, tmp:block$res -> block$res1, tmp:nonLocalHandler$root -> nonLocalHandler$root1, tmp:handleBlock$$here -> handleBlock$$here1)
-//│       curThis = S of N
-//│       bindings = HashMap()
-//│     bindings = HashMap(tmp:handleBlock$$here -> handleBlock$$here3, tmp:nonLocalHandler$root -> nonLocalHandler$root3)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:handle_suspension⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Left of Cfg:
-//│       escapeChars = true
-//│       useSuperscripts = false
-//│       includeZero = false
-//│       defaultName = "tmp"
-//│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(tmp:block$res -> block$res2, member:NonLocalLabelEffect -> NonLocalLabelEffect3, tmp:block$res -> block$res5, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$2, member:breakFromNestedFunctionAndLambdaWithEffects -> breakFromNestedFunctionAndLambdaWithEffects, tmp:runtime -> runtime, member:handleBlock$$ -> handleBlock$$1, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res3, member:breakFromNestedFunctionWithEffects -> breakFromNestedFunctionWithEffects, class:NonLocalLabelEffect -> NonLocalLabelEffect4, tmp:nonLocalHandler$root -> nonLocalHandler$root, member:NonLocalLabelEffectbreak$ -> NonLocalLabelEffectbreak$1, tmp:handleBlock$$here -> handleBlock$$here, class:NonLocalLabelEffect -> NonLocalLabelEffect, tmp:nonLocalHandler$root -> nonLocalHandler$root2, tmp:handleBlock$$here -> handleBlock$$here2, tmp:block$res -> block$res, tmp:block$res -> block$res4, member:NonLocalLabelEffect -> NonLocalLabelEffect5, member:breakFromNestedLambdaWithEffects -> breakFromNestedLambdaWithEffects, member:handleBlock$$ -> handleBlock$$2, tmp:block$res -> block$res6, member:NonLocalLabelEffect -> NonLocalLabelEffect1, member:handleBlock$$ -> handleBlock$$, class:NonLocalLabelEffect -> NonLocalLabelEffect2, tmp:block$res -> block$res1, tmp:nonLocalHandler$root -> nonLocalHandler$root1, tmp:handleBlock$$here -> handleBlock$$here1)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
-//│ ╟── which references the symbol introduced here
-//│ ║  l.280: 	  fun
-//│ ║         	  ^^^
-//│ ║  l.281: 	    suspend
-//│ ║         	^^^^^^^^^^^
-//│ ║  l.282: 	    handle_suspension
-//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
-//│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at REPL25:1:1845
+//│ ═══[RUNTIME ERROR] Error: Function 'rest' expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at rest (REPL25:1:1875)
+//│     at cpsCont$2 (REPL25:1:3210)
+//│     at REPL25:1:1781
+//│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:911:29)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:916:20)
+//│     at REPL25:1:4237
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│     at REPLServer.emit (node:events:509:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
-//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 
 :sir
@@ -334,11 +106,11 @@ continueFromNestedFunctionWithEffects()
 //│ FAILURE: Unexpected exception
 //│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
 //│ 	at: scala.Predef$.$qmark$qmark$qmark(Predef.scala:383)
-//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyBlock(HandlerLowering.scala:193)
-//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.$anonfun$1(HandlerLowering.scala:151)
+//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyBlock(HandlerLowering.scala:195)
+//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.$anonfun$1(HandlerLowering.scala:153)
 //│ 	at: scala.collection.immutable.List.loop$3(List.scala:466)
 //│ 	at: scala.collection.immutable.List.mapConserve(List.scala:491)
-//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyBlock(HandlerLowering.scala:151)
+//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyBlock(HandlerLowering.scala:153)
 //│ 	at: hkmc2.codegen.BlockTransformer.applySubBlock(BlockTransformer.scala:29)
 //│ 	at: hkmc2.codegen.BlockTransformer.applyBlock$$anonfun$4(BlockTransformer.scala:85)
 //│ 	at: hkmc2.codegen.BlockTransformer.applyResult$$anonfun$1$$anonfun$2(BlockTransformer.scala:167)
@@ -356,11 +128,11 @@ continueFromNestedLambdaWithEffects()
 //│ FAILURE: Unexpected exception
 //│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
 //│ 	at: scala.Predef$.$qmark$qmark$qmark(Predef.scala:383)
-//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyBlock(HandlerLowering.scala:193)
-//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.$anonfun$1(HandlerLowering.scala:151)
+//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyBlock(HandlerLowering.scala:195)
+//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.$anonfun$1(HandlerLowering.scala:153)
 //│ 	at: scala.collection.immutable.List.loop$3(List.scala:466)
 //│ 	at: scala.collection.immutable.List.mapConserve(List.scala:491)
-//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyBlock(HandlerLowering.scala:151)
+//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyBlock(HandlerLowering.scala:153)
 //│ 	at: hkmc2.codegen.BlockTransformer.applySubBlock(BlockTransformer.scala:29)
 //│ 	at: hkmc2.codegen.BlockTransformer.applyBlock$$anonfun$4(BlockTransformer.scala:85)
 //│ 	at: hkmc2.codegen.BlockTransformer.applyResult$$anonfun$1$$anonfun$2(BlockTransformer.scala:167)
@@ -379,11 +151,11 @@ continueFromNestedFunctionAndLambdaWithEffects()
 //│ FAILURE: Unexpected exception
 //│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
 //│ 	at: scala.Predef$.$qmark$qmark$qmark(Predef.scala:383)
-//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyBlock(HandlerLowering.scala:193)
-//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.$anonfun$1(HandlerLowering.scala:151)
+//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyBlock(HandlerLowering.scala:195)
+//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.$anonfun$1(HandlerLowering.scala:153)
 //│ 	at: scala.collection.immutable.List.loop$3(List.scala:466)
 //│ 	at: scala.collection.immutable.List.mapConserve(List.scala:491)
-//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyBlock(HandlerLowering.scala:151)
+//│ 	at: hkmc2.codegen.HandlerLowering$$anon$2.applyBlock(HandlerLowering.scala:153)
 //│ 	at: hkmc2.codegen.BlockTransformer.applySubBlock(BlockTransformer.scala:29)
 //│ 	at: hkmc2.codegen.BlockTransformer.applyBlock$$anonfun$4(BlockTransformer.scala:85)
 //│ 	at: hkmc2.codegen.BlockTransformer.applyResult$$anonfun$1$$anonfun$2(BlockTransformer.scala:167)

@@ -21,5 +21,33 @@ fun g() =
       2
   a
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let g; g = function g() { if (true === true) { return 1 } return 2; };
+//│ let g, rest, Capture$scope01;
+//│ (class Capture$scope0 {
+//│   static {
+//│     Capture$scope01 = this
+//│   }
+//│   constructor(a$0, scrut$1, tmp$2) {
+//│     this.tmp$2 = tmp$2;
+//│     this.scrut$1 = scrut$1;
+//│     this.a$0 = a$0;
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Capture$scope0"];
+//│ });
+//│ rest = function rest(scope0$cap, k) {
+//│   scope0$cap.a$0 = scope0$cap.tmp$2;
+//│   return k(scope0$cap.a$0)
+//│ };
+//│ g = function g(k) {
+//│   let scope0$cap;
+//│   scope0$cap = new Capture$scope01(undefined, undefined, undefined);
+//│   scope0$cap.scrut$1 = true;
+//│   if (scope0$cap.scrut$1 === true) {
+//│     let tmp;
+//│     scope0$cap.tmp$2 = 1;
+//│     tmp = rest(scope0$cap);
+//│     return k(tmp)
+//│   }
+//│   { let tmp; scope0$cap.tmp$2 = 2; tmp = rest(scope0$cap); return k(tmp); }
+//│ };
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————

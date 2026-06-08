@@ -123,6 +123,8 @@ type StackSafetyMap = collection.Map[FnOrCls, (Int, Block)]
 
 class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise, Elaborator.State, Elaborator.Ctx, Config):
   
+  var cpsId = 0
+  
   def mapTail(b: Block)(f: BlockTail => Block): Block = b match
     case b: BlockTail => f(b)
     case Match(scrut, arms, dflt, rest) => Match(scrut, arms, dflt, mapTail(rest)(f))
@@ -194,7 +196,6 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
       
       
       case _ => super.applyBlock(b)
-    
   
   val cpsTransformer = new BlockTransformer(SymbolSubst()):
     
@@ -225,19 +226,19 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
           body = applyCpsOnFun(fun.body, contSym.asPath)
         )(fun.configOverride, fun.annotations)
     
-    def checkCall(c: Call) = 
+    def checkCall(c: Call) =
+      println(c.fun)
       if c.argss.size != 1 then
         raise(WarningReport(
           msg"This call is not CPS-transformed because it has more than one argument list." -> c.toLoc :: Nil,
           source = Source.Compilation))
         false
-      else if !c.isMlsFun then
-        raise(WarningReport(
-          msg"This call is CPS-transformed, but the calling convention is ambiguous because it does not necessarily call a MLS function." -> c.toLoc :: Nil,
-          source = Source.Compilation))
-        true
       else
-        true
+        c.fun match
+          case Select(Value.MemberRef(bms, disamb), _) if bms.nme === "Predef" => false
+          case Select(Value.This(inner), _) if inner.nme == "globalThis" => false
+          case _ => true
+        
     
     override def applyPath(p: Path)(k: Path => Block): Block = p match
       case Value.RefLike(Elaborator.ctx.builtins.runtime.handle_suspension) =>
@@ -249,7 +250,8 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         val paramSym = VarSymbol(Tree.Ident("retVal"))
         val pList = PlainParamList.simple(paramSym :: Nil)
         val bod = k(paramSym.asPath)
-        val (cpsCont, rest) = createNestedFn("cpsCont", pList, bod)
+        val (cpsCont, rest) = createNestedFn("cpsCont$" + cpsId, pList, bod)
+        cpsId += 1
         val call = Instantiate(
           true,
           State.runtimeSymbol.asPath.selN(Tree.Ident("Suspend")),
@@ -257,14 +259,14 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         rest(Return(call))
       // case c @ Call(Value.RefLike(Elaborator.ctx.builtins.runtime.handle_suspension), (tag :: bodyFun :: Nil) :: Nil) =>
       case c @ Call(path, args) if c.mayRaiseEffects =>
-        println(path)
         if !checkCall(c) then
           super.applyResult(r)(k)
         else
           val paramSym = VarSymbol(Tree.Ident("retVal"))
           val pList = PlainParamList.simple(paramSym :: Nil)
           val bod = k(paramSym.asPath)
-          val (cpsCont, rest) = createNestedFn("cpsCont", pList, bod)
+          val (cpsCont, rest) = createNestedFn("cpsCont$" + cpsId, pList, bod)
+          cpsId += 1
           applyPath(path): path =>
             val call = Call(path, (cpsCont.asPath.asArg :: args.head) ne_:: Nil)(true, false, false)
             rest(Return(call))
