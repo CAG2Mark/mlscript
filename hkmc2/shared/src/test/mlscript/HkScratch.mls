@@ -3,158 +3,34 @@
 // :sjs
 // :pt
 // :elt
-
-:global
 // :d
 // :todo
-
 :effectHandlers
-:expect "321"
-:sjs
-let result = ""
-handle h = Object with
-  fun perform(arg)(k) =
-    let v = k(arg)
-    result = result + arg
-    v
-in
-  h.perform("1")
-  h.perform("2")
-  h.perform("3")
-result
-//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let result, h, handleBlock$, Handler$h$1, cpsCont$4;
-//│ result = "";
-//│ (class Handler$h$ extends globalThis.Object {
-//│   static {
-//│     Handler$h$1 = this
-//│   }
-//│   constructor() {
-//│     let cpsCont$1;
-//│     cpsCont$1 = function cpsCont$1(retVal) {};
-//│     return super(cpsCont$1);
-//│   }
-//│   perform(k, arg) {
-//│     let Handler$h$perform;
-//│     Handler$h$perform = function Handler$h$perform(k1, k2) {
-//│       let v, cpsCont$0;
-//│       cpsCont$0 = function cpsCont$0(retVal) {
-//│         v = retVal;
-//│         result = result + arg;
-//│         return k1(v)
-//│       };
-//│       return k2(cpsCont$0, arg)
-//│     };
-//│     return new runtime.Suspend(k, this, Handler$h$perform)
-//│   }
-//│   toString() { return runtime.render(this); }
-//│   static [definitionMetadata] = ["class", "Handler$h$"];
-//│ });
-//│ h = new Handler$h$1();
-//│ handleBlock$ = (undefined, function (k) {
-//│   let cpsCont$3;
-//│   cpsCont$3 = function cpsCont$3(retVal) {
-//│     let cpsCont$2;
-//│     cpsCont$2 = function cpsCont$2(retVal1) {
-//│       return h.perform(k, "3")
-//│     };
-//│     return h.perform(cpsCont$2, "2")
-//│   };
-//│   return h.perform(cpsCont$3, "1")
-//│ });
-//│ cpsCont$4 = function cpsCont$4(retVal) {
-//│   return runtime.cpsId(result)
-//│ };
-//│ return runtime.cpsHandlerImpl(cpsCont$4, h, handleBlock$)
-//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ = "321"
-//│ result = "321"
+:lift
+
+class Eff with
+  fun perform(): ()
+data class Box(n)
+let box = new mut Box(0)
+//│ box = Box(0)
 
 
-let id = 0
-//│ id = 0
-
-class MaybeStop with
-  fun f(x: Bool): ()
-
-:effectHandlers
-:sjs
-fun handleEffects() =
-  handle h1 = MaybeStop with
-    fun f(x)(k) =
-      if x then
-        print("h1 stop")
-      else
-        set id += 1
-        let cur = id
-        print("h1 start " + String(cur))
-        let result = k(x)
-        print("h1 end " + String(cur))
-        result
-  h1.f(false)
-//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let handleEffects;
-//│ handleEffects = function handleEffects(k) {
-//│   let h1, tmp, handleBlock$1, Handler$h1$1, cpsCont$2;
-//│   (class Handler$h1$ extends MaybeStop1 {
-//│     static {
-//│       Handler$h1$1 = this
-//│     }
-//│     constructor() {
-//│       let cpsCont$1;
-//│       cpsCont$1 = function cpsCont$1(retVal) {};
-//│       return super(cpsCont$1);
-//│     }
-//│     f(k1, x) {
-//│       let Handler$h1$f;
-//│       Handler$h1$f = function Handler$h1$f(k2, k3) {
-//│         let cur, result1, tmp1, tmp2, tmp3, tmp4, tmp5;
-//│         if (x === true) {
-//│           let tmp6;
-//│           tmp6 = Predef.print("h1 stop");
-//│           return k2(tmp6)
-//│         }
-//│         {
-//│           let cpsCont$0;
-//│           tmp1 = id + 1;
-//│           id = tmp1;
-//│           cur = id;
-//│           tmp2 = runtime.safeCall(globalThis.String(cur));
-//│           tmp3 = "h1 start " + tmp2;
-//│           Predef.print(tmp3);
-//│           cpsCont$0 = function cpsCont$0(retVal) {
-//│             result1 = retVal;
-//│             tmp4 = runtime.safeCall(globalThis.String(cur));
-//│             tmp5 = "h1 end " + tmp4;
-//│             Predef.print(tmp5);
-//│             return k2(result1)
-//│           };
-//│           return k3(cpsCont$0, x);
-//│         }
-//│       };
-//│       return new runtime.Suspend(k1, this, Handler$h1$f)
-//│     }
-//│     toString() { return runtime.render(this); }
-//│     static [definitionMetadata] = ["class", "Handler$h1$"];
-//│   });
-//│   h1 = new Handler$h1$1();
-//│   handleBlock$1 = (undefined, function (k1) {
-//│     return h1.f(k1, false)
-//│   });
-//│   cpsCont$2 = function cpsCont$2(retVal) {
-//│     tmp = retVal;
-//│     return k(tmp)
-//│   };
-//│   return runtime.cpsHandlerImpl(cpsCont$2, h1, handleBlock$1)
-//│ };
-//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-
-:effectHandlers
-:sjs
-handleEffects()
-//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ return handleEffects(runtime.cpsId)
-//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ > h1 start 1
-//│ > h1 end 1
-//│ = false
+:expect 5120
+fun f(h, box, n) =
+  if n <= 1 then
+    h.perform()
+  else
+    handle h2 = Eff with
+      fun perform()(k) =
+        set box.n = box.n + 1
+        h.perform()
+        k()
+    f(h2, box, n - 1)
+    f(h2, box, n - 1)
+handle h = Eff with
+  fun perform()(k) =
+    set box.n = box.n + 1
+    k()
+f(h, box, 10)
+box.n
+//│ = 5120

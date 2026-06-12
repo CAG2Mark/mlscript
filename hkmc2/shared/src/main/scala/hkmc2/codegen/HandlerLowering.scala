@@ -237,6 +237,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         c.fun match
           case Select(Value.MemberRef(bms, disamb), _) if bms.nme === "Predef" => false
           case Select(Value.This(inner), _) if inner.nme == "globalThis" => false
+          case Value.RefLike(State.superSymbol) => false
           case _ => true
         
     
