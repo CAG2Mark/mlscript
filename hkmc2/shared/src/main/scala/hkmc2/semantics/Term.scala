@@ -26,6 +26,7 @@ enum Annot extends AutoLocated:
   // it only affects whether a warning is thrown if the function/call is not actually tail-recursive.
   case TailRec
   case TailCall
+  case Native
   case Inline
   // Whether the function is guaranteed to not raise effects.
   case MayNotRaiseEffects
@@ -48,13 +49,13 @@ enum Annot extends AutoLocated:
   
   def subTerms: Vector[Term] = this match
     case Trm(trm) => Vector.single(trm)
-    case _: Modifier | Untyped | TailRec | TailCall | Inline
+    case _: Modifier | Untyped | TailRec | TailCall | Inline | Native
       | MayNotRaiseEffects | _: Config | _: Affine => Vector.empty
   
   def children: Vector[Located] = this match
     case Trm(trm) => Vector.single(trm)
     // case Modifier(kw) => Vector.single(kw) // TODO: make `kw` a `Keywrd`
-    case _: Modifier | Untyped | TailRec | TailCall | Inline
+    case _: Modifier | Untyped | TailRec | TailCall | Inline | Native
       | MayNotRaiseEffects | _: Config | _: Affine => Vector.empty
   
   def show(using Scope, ShowCfg, Raise): Document = this match
@@ -63,6 +64,7 @@ enum Annot extends AutoLocated:
     case TailRec => doc"@tailrec"
     case TailCall => doc"@tailcall"
     case Affine(n) => doc"@affine($n)"
+    case Native => doc"@native"
     case Modifier(mod) => doc"@${mod.name}"
     case MayNotRaiseEffects => doc"@mayNotRaiseEffects"
     case Trm(trm) => doc"@${trm.show}"
@@ -70,6 +72,7 @@ enum Annot extends AutoLocated:
   
   def mkClone(using State): Annot = this match
     case Untyped => Untyped
+    case Native => Native
     case Modifier(mod) => Modifier(mod)
     case Trm(trm) => Trm(trm.mkClone)
     case TailRec => TailRec
@@ -1399,6 +1402,8 @@ object PlainParamList:
   def unapply(pl: ParamList): Opt[Ls[Param]] = pl match
     case ParamList(ParamListFlags.empty, params, N) => S(params)
     case _ => N
+  def simple(params: Ls[VarSymbol]) =
+    ParamList(ParamListFlags.empty, params.map(Param.simple(_)), N)
 
 final case class ParamListFlags(ctx: Bool):
   def show: Str = (if ctx then "ctx " else "")

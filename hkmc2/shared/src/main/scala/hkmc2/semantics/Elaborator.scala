@@ -275,6 +275,7 @@ object Elaborator:
         val untyped = assumeObject("untyped")
         val tailrec = assumeObject("tailrec")
         val tailcall = assumeObject("tailcall")
+        val native = assumeObject("native")
         val inline = assumeObject("inline")
         val compile = assumeObject("compile")
         val buffered = assumeObject("buffered")
@@ -509,6 +510,8 @@ extends Importer with ucs.SplitElaborator:
             return S(Annot.TailCall)
           case ctx.builtins.annotations.tailrec =>
             return S(Annot.TailRec)
+          case ctx.builtins.annotations.native =>
+            return S(Annot.Native)
           case ctx.builtins.annotations.inline =>
             return S(Annot.Inline)
           case ctx.builtins.annotations.mayNotRaiseEffects =>

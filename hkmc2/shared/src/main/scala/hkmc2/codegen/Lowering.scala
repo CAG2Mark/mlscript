@@ -1349,11 +1349,11 @@ class Lowering()(using Config, TL, Raise, State, Ctx, SymbolPrinter):
       else scopeFlattened
     
     val (withHandlers2, stackSafetyInfo) = config.effectHandlers.fold((lifted, Map.empty)): opt =>
-      HandlerLowering(handlerPaths, opt).translateTopLevel(lifted)
+      CpsHandlerLowering(handlerPaths, opt).translateTopLevel(lifted)
     
     val stackSafe = config.stackSafety match
       case N => withHandlers2
-      case S(sts) => StackSafeTransform(sts.stackLimit, handlerPaths, stackSafetyInfo).transformTopLevel(withHandlers2)
+      case S(sts) => withHandlers2 // StackSafeTransform(sts.stackLimit, handlerPaths, stackSafetyInfo).transformTopLevel(withHandlers2)
     
     val flattened = stackSafe.flattened
     
@@ -1445,6 +1445,7 @@ class Lowering()(using Config, TL, Raise, State, Ctx, SymbolPrinter):
         case st.App(_, _) | New(_, _, _) | DynNew(_, _) | Mut(_: New | _: DynNew) => ()
         case st.Resolved(_, defnSym) if isImplicitNullaryCall(defnSym) => ()
         case _ => warn(annot)
+      case a @ Annot.Native => ()
       case a @ Annot.TailCall => receiver match
         case st.App(Ref(_: BuiltinSymbol), _) => warn(a, S(msg"The @tailcall annotation has no effect on calls to built-in symbols."))
         case st.App(_, _) => ()

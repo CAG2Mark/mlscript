@@ -12,6 +12,8 @@ module Runtime with ...
 object Unit with
   fun toString() = "()"
 
+fun cpsId(x) = x
+
 // This object is used as a marker for non-local label continues.
 object Continue
 
@@ -159,6 +161,27 @@ mut val resumePc = -1
 
 object FatalEffect
 object PrintStackEffect
+
+
+object TopLevelHandler
+
+data class ContThunk(thunk)
+data class Suspend(k, tag, handlerFun)
+
+fun handlerTrampoline(k, tag, cur) =
+  while cur is
+    ContThunk(thunk) do set cur = thunk()
+    Suspend(resume, tag', handlerFun) do
+      if tag === TopLevelHandler do throw Error("unhandled effects")
+      if tag' === tag then
+        let handlerFunCont = (k1, v) =>
+          handlerTrampoline(k1, tag, resume(v))
+        set cur = handlerFun(cpsId, handlerFunCont)
+      else return Suspend(r => handlerTrampoline(k, tag, resume(r)), tag', handlerFun)
+  k(cur)
+
+fun cpsHandlerImpl(k, tag, f) =
+  handlerTrampoline(k, tag, f(cpsId))
 
 data class FunctionContFrame(next, saved) with
   fun resume(value) =
