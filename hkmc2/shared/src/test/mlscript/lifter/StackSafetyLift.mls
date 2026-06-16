@@ -24,39 +24,18 @@ fun hi(n) =
   else hi(n - 1)
 hi(0)
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let tmp, ‹stack safe body›;
-//│ do runtime⁰.resetEffects﹖();
-//│ define hi⁰ as fun hi¹(n) {
-//│   let stackDelayRes;
-//│   set runtime⁰.stackDepth﹖ = +⁰(runtime⁰.stackDepth﹖, 1);
-//│   set stackDelayRes = runtime⁰.checkDepth﹖();
-//│   match runtime⁰.curEffect﹖
-//│     null =>
-//│       let scrut, tmp1;
-//│       set scrut = ===⁰(n, 0);
-//│       match scrut
-//│         true =>
-//│           return 0
-//│         else
-//│           let res;
-//│           set tmp1 = -⁰(n, 1);
-//│           return hi¹(tmp1)
-//│       end
+//│ define hi⁰ as fun hi¹(k, n) {
+//│   let scrut, tmp;
+//│   set scrut = ===⁰(n, 0);
+//│   match scrut
+//│     true =>
+//│       return k(0)
 //│     else
-//│       return runtime⁰.unwind﹖(hi¹, -1, "StackSafetyLift.mls:22:1", null, null, 1, 1, n, 0)
+//│       set tmp = -⁰(n, 1);
+//│       return hi¹(k, tmp)
 //│   end
 //│ };
-//│ define ‹stack safe body› as fun ‹stack safe body›⁰() {
-//│   return hi¹(0)
-//│ };
-//│ set tmp = runtime⁰.runStackSafe﹖(6, ‹stack safe body›⁰);
-//│ match runtime⁰.curEffect﹖
-//│   null =>
-//│     return tmp
-//│   else
-//│     set tmp = runtime⁰.topLevelEffect﹖(false);
-//│     return tmp
-//│ end
+//│ return hi¹(runtime⁰.cpsId﹖, 0)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 0
 
@@ -70,74 +49,42 @@ fun sum(n) =
     n + sum(n - 1)
 sum(10000)
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let tmp, ‹stack safe body›;
-//│ do runtime⁰.resetEffects﹖();
-//│ define sum⁰ as fun sum¹(n) {
-//│   let curDepth, stackDelayRes;
-//│   set runtime⁰.stackDepth﹖ = +⁰(runtime⁰.stackDepth﹖, 1);
-//│   set curDepth = runtime⁰.stackDepth﹖;
-//│   set stackDelayRes = runtime⁰.checkDepth﹖();
-//│   match runtime⁰.curEffect﹖
-//│     null =>
-//│       let scrut, tmp1, tmp2, pc;
-//│       match runtime⁰.resumePc﹖
-//│         -1 =>
-//│           set pc = 0;
-//│           end
-//│         else
-//│           let saveOffset;
-//│           set pc = runtime⁰.resumePc﹖;
-//│           set runtime⁰.resumePc﹖ = -1;
-//│           end
-//│       loop main:
-//│         match pc
-//│           0 =>
-//│             block brk0:
-//│               set scrut = ===⁰(n, 0);
-//│               match scrut
-//│                 true =>
-//│                   return 0
-//│                 else
-//│                   let res;
-//│                   set tmp1 = -⁰(n, 1);
-//│                   set res = sum¹(tmp1);
-//│                   set runtime⁰.stackDepth﹖ = curDepth;
-//│                   set runtime⁰.resumeValue﹖ = res;
-//│                   match runtime⁰.curEffect﹖
-//│                     null =>
-//│                       break brk0
-//│                     else
-//│                       let res1;
-//│                       return runtime⁰.unwind﹖(sum¹, 1, "StackSafetyLift.mls:70:9", null, null, 1, 1, n, 0)
-//│                   end
-//│               end
-//│             set pc = 1;
-//│             end
-//│         match pc
-//│           1 =>
-//│             set tmp2 = runtime⁰.resumeValue﹖;
-//│             return +⁰(n, tmp2)
-//│           else
-//│             end
-//│         end
-//│       end
+//│ define sum⁰ as fun sum¹(k, n) {
+//│   let scrut, tmp, tmp1;
+//│   set scrut = ===⁰(n, 0);
+//│   match scrut
+//│     true =>
+//│       return k(0)
 //│     else
-//│       return runtime⁰.unwind﹖(sum¹, -1, "StackSafetyLift.mls:67:1", null, null, 1, 1, n, 0)
+//│       let cpsCont$1;
+//│       set tmp = -⁰(n, 1);
+//│       define cpsCont$1 as fun cpsCont$1⁰(retVal) {
+//│         let tmp2;
+//│         set tmp1 = retVal;
+//│         set tmp2 = +⁰(n, tmp1);
+//│         return k(tmp2)
+//│       };
+//│       return sum¹(cpsCont$1⁰, tmp)
 //│   end
 //│ };
-//│ define ‹stack safe body› as fun ‹stack safe body›¹() {
-//│   return sum¹(10000)
-//│ };
-//│ set tmp = runtime⁰.runStackSafe﹖(1000, ‹stack safe body›¹);
-//│ match runtime⁰.curEffect﹖
-//│   null =>
-//│     return tmp
-//│   else
-//│     set tmp = runtime⁰.topLevelEffect﹖(false);
-//│     return tmp
-//│ end
+//│ return sum¹(runtime⁰.cpsId﹖, 10000)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ = 50005000
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:795:19)
+//│     at sum (REPL16:1:54)
+//│     at sum (REPL16:1:491)
+//│     at sum (REPL16:1:491)
+//│     at sum (REPL16:1:491)
+//│     at sum (REPL16:1:491)
+//│     at sum (REPL16:1:491)
+//│     at sum (REPL16:1:491)
+//│     at sum (REPL16:1:491)
+//│     at sum (REPL16:1:491)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '50005000', got: 'undefined'
 
 // stack-overflows without :stackSafe
 :re
@@ -158,8 +105,20 @@ fun foo(f) =
     set ctr += 1
     dummy(f(f))
 foo(foo)
-//│ = 0
-//│ ctr = 10001
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+//│     at foo (REPL22:1:169)
+//│     at foo (REPL22:1:652)
+//│     at foo (REPL22:1:652)
+//│     at foo (REPL22:1:652)
+//│     at foo (REPL22:1:652)
+//│     at foo (REPL22:1:652)
+//│     at foo (REPL22:1:652)
+//│     at foo (REPL22:1:652)
+//│     at foo (REPL22:1:652)
+//│     at foo (REPL22:1:652)
+//│ ctr = 5581
 
 :stackSafe
 :effectHandlers
@@ -170,8 +129,23 @@ val foo =
     else n + f(n-1)
   f(10000)
 foo
-//│ = 50005000
-//│ foo = 50005000
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+//│     at lambda (REPL26:1:73)
+//│     at lambda (REPL26:1:527)
+//│     at lambda (REPL26:1:527)
+//│     at lambda (REPL26:1:527)
+//│     at lambda (REPL26:1:527)
+//│     at lambda (REPL26:1:527)
+//│     at lambda (REPL26:1:527)
+//│     at lambda (REPL26:1:527)
+//│     at lambda (REPL26:1:527)
+//│     at lambda (REPL26:1:527)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '50005000', got: 'undefined'
+//│ foo = undefined
 
 :re
 fun foo() =
@@ -199,7 +173,25 @@ handle h = Eff with
       else n + f(n-1)
     resume(f(10000))
 foo(h)
-//│ = 50005000
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:lambda$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+//│     at lambda2 (REPL36:1:619)
+//│     at Capture$scope1.f$0 (REPL36:1:510)
+//│     at lambda2 (REPL36:1:1065)
+//│     at Capture$scope1.f$0 (REPL36:1:510)
+//│     at lambda2 (REPL36:1:1065)
+//│     at Capture$scope1.f$0 (REPL36:1:510)
+//│     at lambda2 (REPL36:1:1065)
+//│     at Capture$scope1.f$0 (REPL36:1:510)
+//│     at lambda2 (REPL36:1:1065)
+//│     at Capture$scope1.f$0 (REPL36:1:510)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '50005000', got: 'undefined'
 
 // function call and defn inside handler
 :effectHandlers
@@ -215,7 +207,25 @@ handle h = Eff with
 in
   fun foo(h) = h.perform()
   foo(h)
-//│ = 50005000
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:lambda$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+//│     at lambda3 (REPL39:1:617)
+//│     at Capture$scope2.f$0 (REPL39:1:508)
+//│     at lambda3 (REPL39:1:1063)
+//│     at Capture$scope2.f$0 (REPL39:1:508)
+//│     at lambda3 (REPL39:1:1063)
+//│     at Capture$scope2.f$0 (REPL39:1:508)
+//│     at lambda3 (REPL39:1:1063)
+//│     at Capture$scope2.f$0 (REPL39:1:508)
+//│     at lambda3 (REPL39:1:1063)
+//│     at Capture$scope2.f$0 (REPL39:1:508)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '50005000', got: 'undefined'
 
 :re
 :effectHandlers
@@ -228,6 +238,9 @@ handle h = Eff with
       else n + f(n-1)
     resume(f(10000))
 foo(h)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:lambda$ is not CPS-transformed because it has more than one parameter list.
 //│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
 
 :effectHandlers
@@ -235,15 +248,14 @@ foo(h)
 :sir
 fun max(a, b) = if a < b then b else a
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ do runtime⁰.resetEffects﹖();
-//│ define max⁰ as fun max¹(a, b) {
+//│ define max⁰ as fun max¹(k, a, b) {
 //│   let scrut;
 //│   set scrut = <⁰(a, b);
 //│   match scrut
 //│     true =>
-//│       return b
+//│       return k(b)
 //│     else
-//│       return a
+//│       return k(a)
 //│   end
 //│ };
 //│ end
@@ -275,4 +287,19 @@ fun sum(n) =
     n + sum(n - 1)
 fun bad() = sum(10000) + sum(10000)
 bad()
-//│ = 100010000
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+//│     at sum (REPL54:1:66)
+//│     at sum (REPL54:1:527)
+//│     at sum (REPL54:1:527)
+//│     at sum (REPL54:1:527)
+//│     at sum (REPL54:1:527)
+//│     at sum (REPL54:1:527)
+//│     at sum (REPL54:1:527)
+//│     at sum (REPL54:1:527)
+//│     at sum (REPL54:1:527)
+//│     at sum (REPL54:1:527)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '100010000', got: 'undefined'

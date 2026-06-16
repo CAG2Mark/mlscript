@@ -21,3 +21,64 @@ module M with
 //│ let tmp; tmp = Predef.id(0); return runtime.cpsId(tmp)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 0
+
+:effectHandlers
+:sjs
+fun f(...args) = args
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let f; f = function f(k, ...args) { return k(args) };
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
+
+
+type Stack[A] = Cons[A] | Nil
+data class (::) Cons[A](head: A, tail: Stack[A])
+object Nil
+
+:sjs
+fun foo(...args) = if args is
+  [] then 0
+  [x, ...xs] then foo(...xs)
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let foo;
+//│ foo = function foo(...args) {
+//│   loopLabel: while (true) {
+//│     let middleElements;
+//│     if (runtime.Tuple.isArrayLike(args) && args.length === 0) {
+//│       return 0
+//│     } else if (runtime.Tuple.isArrayLike(args) && args.length >= 1) {
+//│       runtime.Tuple.get(args, 0);
+//│       middleElements = runtime.Tuple.slice(args, 1, 0);
+//│       args = middleElements;
+//│       continue loopLabel
+//│     }
+//│     throw globalThis.Object.freeze(new globalThis.Error("match error"));
+//│   }
+//│ };
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
+
+:sjs
+:noOpt
+fun foo(...args)(...args2) = if args is
+  [] then args2
+  [x, ...xs] then foo(...xs)(...xs)
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let foo1, foo$tailrec;
+//│ foo$tailrec = function foo$tailrec(args, args2) {
+//│   loopLabel: while (true) {
+//│     let x, xs, middleElements, element0$;
+//│     if (runtime.Tuple.isArrayLike(args) && args.length === 0) {
+//│       return args2
+//│     } else if (runtime.Tuple.isArrayLike(args) && args.length >= 1) {
+//│       element0$ = runtime.Tuple.get(args, 0);
+//│       middleElements = runtime.Tuple.slice(args, 1, 0);
+//│       xs = middleElements;
+//│       x = element0$;
+//│       args = xs;
+//│       args2 = xs;
+//│       continue loopLabel
+//│     }
+//│     throw globalThis.Object.freeze(new globalThis.Error("match error"));
+//│   }
+//│ };
+//│ foo1 = function foo(...args) { return (...args2) => { return foo$tailrec(args, args2) } };
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————

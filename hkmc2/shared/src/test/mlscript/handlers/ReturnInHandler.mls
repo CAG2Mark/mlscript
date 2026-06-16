@@ -16,6 +16,15 @@ fun f() =
   h.foo()
   return 3 // Note: changing this to just `3` leads to `print("Bye!")` executing
 f()
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:‹non-local return effect›ret$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ = 3
 
 fun f() =
@@ -28,6 +37,15 @@ fun f() =
     h.foo()
     return 3
   10
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:‹non-local return effect›ret$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 
 :expect 3
 f()
@@ -40,7 +58,7 @@ let l = () =>
   return 3
   4
 //│ ╔══[COMPILATION ERROR] Return statements are not allowed outside of functions.
-//│ ║  l.40: 	  return 3
+//│ ║  l.58: 	  return 3
 //│ ╙──      	  ^^^^^^^^
 //│ l = fun
 
@@ -59,7 +77,7 @@ let l = () =>
   4
 l()
 //│ ╔══[COMPILATION ERROR] Return statements are not allowed outside of functions.
-//│ ║  l.58: 	  return 3
+//│ ║  l.76: 	  return 3
 //│ ╙──      	  ^^^^^^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 

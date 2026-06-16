@@ -209,10 +209,31 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
       else
         val contSym = VarSymbol(Tree.Ident("k"))
         val ogParams = fun.params.head
-        fun.copy(
-          params = ogParams.copy(params = Param.simple(contSym) :: ogParams.params) :: Nil,
-          body = applyCpsOnFun(fun.body, contSym.asPath)
-        )(fun.configOverride, fun.annotations)
+        val cpsBod = applyCpsOnFun(fun.body, contSym.asPath)
+        
+        if fun.dSym.name === "main" then // hack
+          // make a non-cps forwarder
+          val nestedFun = FunDefn(
+            N, BlockMemberSymbol("main_cps", Nil, true),
+            TermSymbol(syntax.Fun, N, Tree.Ident("main_cps")),
+            PlainParamList(Param.simple(contSym) :: Nil) :: Nil,
+            cpsBod
+          )(N, Nil)
+          val newBod = blockBuilder
+            .scopedVars(Set(nestedFun.sym))
+            .define(nestedFun)
+            .ret(Call(nestedFun.asPath, (idPath.asArg :: Nil) ne_:: Nil)(CallMetadata.defaultMlsFun))
+          FunDefn(
+            fun.owner, fun.sym, fun.dSym, fun.params, newBod
+          )(fun.configOverride, fun.annotations)
+        else
+          if fun.dSym.name == "list" then
+            println(ogParams)
+            println(ogParams.copy(params = Param.simple(contSym) :: ogParams.params) :: Nil)
+          fun.copy(
+            params = ogParams.copy(params = Param.simple(contSym) :: ogParams.params) :: Nil,
+            body = applyCpsOnFun(fun.body, contSym.asPath)
+          )(fun.configOverride, fun.annotations)
     
     def checkCall(c: Call) =
       if c.argss.size != 1 then
@@ -226,6 +247,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
         c.fun match
           case Value.MemberRef(_, c: ClassCtorSymbol) => false
           case s: Select if s.symbol.map(x => x.isInstanceOf[ClassCtorSymbol]).getOrElse(false) => false 
+          case s: Select if s.name.name === "toString" => false
           case Select(Value.MemberRef(bms, disamb), _) if bms.nme === "Predef" => false
           case Value.RefLike(State.superSymbol) => false
           case _ => true

@@ -12,7 +12,6 @@ data class Lol(h) with
   print(h.perform("k"))
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Lol1;
-//│ runtime.resetEffects();
 //│ Lol1 = function Lol(h) {
 //│   return globalThis.Object.freeze(new Lol.class(h));
 //│ };
@@ -23,14 +22,8 @@ data class Lol(h) with
 //│   constructor(h) {
 //│     let tmp;
 //│     this.h = h;
-//│     tmp = runtime.safeCall(this.h.perform("k"));
-//│     if (runtime.curEffect !== null) {
-//│       tmp = runtime.illegalEffect("in a constructor");
-//│     }
+//│     tmp = this.h.perform(runtime.cpsId, "k");
 //│     Predef.print(tmp);
-//│     if (runtime.curEffect !== null) {
-//│       runtime.illegalEffect("in a constructor");
-//│     }
 //│   }
 //│   toString() { return runtime.render(this); }
 //│   static [definitionMetadata] = ["class", "Lol", ["h"]];
@@ -54,7 +47,9 @@ handle k = Eff with
   fun test()(k) = k()
 k.test()
 print("test")
-//│ ═══[RUNTIME ERROR] Error: Effect Handler$h$ is raised in a constructor
+//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
+//│ > test
 
 
 
@@ -65,13 +60,15 @@ let oops =
       print(arg)
       "b"
   Lol(h)
-//│ ═══[RUNTIME ERROR] Error: Effect Handler$h$2 is raised in a constructor
-//│ oops = undefined
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
+//│ > Suspend(fun cpsId, Handler$h$, fun)
+//│ oops = Lol(Handler$h$)
 
 :fixme
 :expect "b"
 oops
-//│ ═══[RUNTIME ERROR] Expected: '"b"', got: 'undefined'
+//│ ═══[RUNTIME ERROR] Expected: '"b"', got: 'Lol(Handler$h$)'
+//│ = Lol(Handler$h$)
 
 :fixme
 let oops = 
@@ -80,13 +77,15 @@ let oops =
       print(arg)
       "b"
   new Lol(h)
-//│ ═══[RUNTIME ERROR] Error: Effect Handler$h$4 is raised in a constructor
-//│ oops = undefined
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
+//│ > Suspend(fun cpsId, Handler$h$, fun)
+//│ oops = Lol(Handler$h$)
 
 :fixme
 :expect "b"
 oops
-//│ ═══[RUNTIME ERROR] Expected: '"b"', got: 'undefined'
+//│ ═══[RUNTIME ERROR] Expected: '"b"', got: 'Lol(Handler$h$)'
+//│ = Lol(Handler$h$)
 
 
 :fixme
@@ -96,12 +95,14 @@ let oops =
       print(arg)
       k("b")
   Lol(h)
-//│ ═══[RUNTIME ERROR] Error: Effect Handler$h$6 is raised in a constructor
-//│ oops = undefined
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
+//│ > Suspend(fun cpsId, Handler$h$, fun)
+//│ oops = Lol(Handler$h$)
 
 :fixme
 oops.h
-//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'h')
+//│ = Handler$h$
+//│ FAILURE: Unexpected lack of error to fix
 
 let obj = mut {s: undefined}
 //│ obj = {s: undefined}
@@ -111,7 +112,10 @@ handle h = Effect with
     k()
     print(arg)
 set obj.s = h.perform("k")
-//│ > k
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
+//│ = fun cpsCont$1
 
 fun f() = ()
 

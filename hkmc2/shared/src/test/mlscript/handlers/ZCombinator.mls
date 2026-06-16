@@ -9,51 +9,119 @@ let selfApp(f) = f(f)
 fun mkrec(g) =
   selfApp of self =>
     g of y => self(self)(y)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:lambda$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:lambda$ is not CPS-transformed because it has more than one parameter list.
 
 let fact = mkrec of self => x =>
   if x == 0 then 1 else self(x - 1) * x
-//│ fact = fun
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:lambda$ is not CPS-transformed because it has more than one parameter list.
+//│ = fun
+//│ fact = undefined
 
 fact(3)
-//│ = 6
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] TypeError: fact is not a function
+//│     at REPL21:1:38
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 fact(10)
-//│ = 3628800
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] TypeError: fact is not a function
+//│     at REPL24:1:38
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 :re
 :stackSafe off
 fact(10000)
-//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+//│ ═══[RUNTIME ERROR] TypeError: fact is not a function
 
 :stackSafe
 fun mkrec(g) =
   selfApp of self =>
     g of y => selfApp(self)(y)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:lambda$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:lambda$ is not CPS-transformed because it has more than one parameter list.
 
 // * FIXME: Why doesn't the following work when using Predef function `(==) equals`?
 let fact = mkrec of self => x =>
   if x === 0 then 1 
   else self(x - 1) * x
-//│ fact = fun
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:lambda$ is not CPS-transformed because it has more than one parameter list.
+//│ = fun
+//│ fact = undefined
 
 :stackSafe
 fact(10000)
-//│ = Infinity
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] TypeError: fact1 is not a function
+//│     at REPL37:1:38
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 // * Without `:stackSafe`, gives `RangeError: Maximum call stack size exceeded`
 :re
 :stackSafe off
 fact(10000)
-//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+//│ ═══[RUNTIME ERROR] TypeError: fact1 is not a function
 
 :stackSafe
 fact(10000)
-//│ = Infinity
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] TypeError: fact1 is not a function
+//│     at REPL43:1:39
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 :re
 :stackSafe off
 fact(10000)
-//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+//│ ═══[RUNTIME ERROR] TypeError: fact1 is not a function
 
 
 :stackSafe 6
@@ -61,14 +129,41 @@ set selfApp = f => f(f)
 
 :expect 3628800
 fact(10)
-//│ = 3628800
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] TypeError: fact1 is not a function
+//│     at REPL52:1:39
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '3628800', got: 'undefined'
 
 
 :stackSafe 6
 set selfApp = f => f(f)
 
 fact(1000)
-//│ = Infinity
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] TypeError: fact1 is not a function
+//│     at REPL58:1:39
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
 
 // simplified version without lambdas for easier debugging
 :stackSafe 6
@@ -77,6 +172,12 @@ fun mkrec(g) =
     fun b(y) = selfApp(self)(y)
     g(b)
   selfApp(a)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:b$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:a$ is not CPS-transformed because it has more than one parameter list.
 
 :stackSafe 6
 import "../../mlscript-compile/Runtime.mls"
@@ -89,19 +190,28 @@ let fact =
         x * prev
     b
   mkrec(a)
-//│ fact = fun
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:b$ is not CPS-transformed because it has more than one parameter list.
+//│ = fun
+//│ fact = undefined
 
 :expect 3628800
 :stackSafe 6
 fact(10)
-//│ > resumed: 1
-//│ > resumed: 2
-//│ > resumed: 3
-//│ > resumed: 4
-//│ > resumed: 5
-//│ > resumed: 6
-//│ > resumed: 7
-//│ > resumed: 8
-//│ > resumed: 9
-//│ > resumed: 10
-//│ = 3628800
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] TypeError: fact2 is not a function
+//│     at REPL68:1:39
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:647:22)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '3628800', got: 'undefined'

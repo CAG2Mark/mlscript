@@ -28,12 +28,15 @@ handle h = Effect with
     print(arg)
 let x = 123
 x + 1
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ = 124
 
 :e
 x
 //│ ╔══[COMPILATION ERROR] Name not found: x
-//│ ║  l.34: 	x
+//│ ║  l.37: 	x
 //│ ╙──      	^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
@@ -42,11 +45,14 @@ handle h = Effect with
   fun perform(arg)(k) =
     print(arg)
 val y = 123
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
 
 :e
 y
 //│ ╔══[COMPILATION ERROR] Name not found: y
-//│ ║  l.47: 	y
+//│ ║  l.53: 	y
 //│ ╙──      	^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 

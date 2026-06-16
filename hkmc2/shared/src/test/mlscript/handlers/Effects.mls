@@ -26,13 +26,22 @@ h.perform("k")
 handle h = Effect with
   fun perform(arg)(k) = arg
 h.perform("k")
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ = "k"
 
 :expect "k"
 handle h = Effect with
   fun perform(arg)(k) = k(arg)
 h.perform("k")
-//│ = "k"
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '"k"', got: 'fun cpsId'
+//│ = fun cpsId
 
 :expect "hi"
 fun foo(e) = e.perform("hi")
@@ -41,8 +50,14 @@ handle h = Effect with
     print(arg)
     k(arg)
 foo(h)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ > hi
-//│ = "hi"
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '"hi"', got: 'fun cpsId'
+//│ = fun cpsId
 
 fun foo(e) = e.perform("hi")
 
@@ -52,8 +67,14 @@ handle h = Effect with
     print(arg)
     k(arg)
 (() => h.perform("Hello") + " World!")()
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ > Hello
-//│ = "Hello World!"
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '"Hello World!"', got: 'fun cpsId'
+//│ = fun cpsId
 
 :expect "54321"
 :sjs
@@ -70,35 +91,24 @@ in
   h.perform("4")
   h.perform("5")
 result
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let result, h7, handleBlock$7, Handler$h$perform5, Handler$h$15, Handler$h$perform$4;
-//│ runtime.resetEffects();
+//│ let result, h7, handleBlock$7, Handler$h$perform3, Handler$h$15, Handler$h$perform$4, cpsCont$10;
 //│ Handler$h$perform$4 = function Handler$h$perform$(arg) {
 //│   return (k) => {
-//│     return Handler$h$perform5(arg, k)
+//│     return Handler$h$perform3(runtime.cpsId, arg, k)
 //│   }
 //│ };
-//│ Handler$h$perform5 = function Handler$h$perform(arg, k) {
-//│   let v, pc;
-//│   if (runtime.resumePc === -1) {
-//│     pc = 0;
-//│   } else {
-//│     pc = runtime.resumePc;
-//│     runtime.resumePc = -1;
-//│   }
-//│   switch (pc) {
-//│     case 0:
-//│       runtime.resumeValue = runtime.safeCall(k(arg));
-//│       if (runtime.curEffect === null) {
-//│         pc = 1;
-//│       } else {
-//│         return runtime.unwind(Handler$h$perform5, 1, "Effects.mls:63:13", null, null, 1, 2, arg, k, 0)
-//│       }
-//│     case 1:
-//│       v = runtime.resumeValue;
-//│       result = result + arg;
-//│       return v;
-//│   }
+//│ Handler$h$perform3 = function Handler$h$perform(k, arg, k1) {
+//│   let v, cpsCont$1;
+//│   cpsCont$1 = function cpsCont$1(retVal) {
+//│     v = retVal;
+//│     result = result + arg;
+//│     return k(v)
+//│   };
+//│   return k1(cpsCont$1, arg)
 //│ };
 //│ result = "";
 //│ (class Handler$h$14 extends Effect1 {
@@ -107,71 +117,48 @@ result
 //│   }
 //│   constructor() {
 //│     super();
-//│     if (runtime.curEffect !== null) {
-//│       runtime.illegalEffect("in a constructor");
-//│     }
 //│   }
-//│   perform(arg) {
+//│   perform(k, arg) {
 //│     let Handler$h$perform$here;
 //│     Handler$h$perform$here = Handler$h$perform$4(arg);
-//│     return runtime.mkEffect(this, Handler$h$perform$here)
+//│     return new runtime.Suspend(k, this, Handler$h$perform$here)
 //│   }
 //│   toString() { return runtime.render(this); }
 //│   static [definitionMetadata] = ["class", "Handler$h$"];
 //│ });
 //│ h7 = new Handler$h$15();
-//│ handleBlock$7 = (undefined, function () {
-//│   let pc;
-//│   if (runtime.resumePc === -1) {
-//│     pc = 0;
-//│   } else {
-//│     pc = runtime.resumePc;
-//│     runtime.resumePc = -1;
-//│   }
-//│   switch (pc) {
-//│     case 0:
-//│       runtime.resumeValue = runtime.safeCall(h7.perform("1"));
-//│       if (runtime.curEffect === null) {
-//│         pc = 4;
-//│       } else {
-//│         return runtime.unwind(handleBlock$7, 4, "Effects.mls:67:3", null, null, 1, 0, 0)
-//│       }
-//│     case 4:
-//│       runtime.resumeValue;
-//│       runtime.resumeValue = runtime.safeCall(h7.perform("2"));
-//│       if (runtime.curEffect === null) {
-//│         pc = 3;
-//│       } else {
-//│         return runtime.unwind(handleBlock$7, 3, "Effects.mls:68:3", null, null, 1, 0, 0)
-//│       }
-//│     case 3:
-//│       runtime.resumeValue;
-//│       runtime.resumeValue = runtime.safeCall(h7.perform("3"));
-//│       if (runtime.curEffect === null) {
-//│         pc = 2;
-//│       } else {
-//│         return runtime.unwind(handleBlock$7, 2, "Effects.mls:69:3", null, null, 1, 0, 0)
-//│       }
-//│     case 2:
-//│       runtime.resumeValue;
-//│       runtime.resumeValue = runtime.safeCall(h7.perform("4"));
-//│       if (runtime.curEffect === null) {
-//│         pc = 1;
-//│       } else {
-//│         return runtime.unwind(handleBlock$7, 1, "Effects.mls:70:3", null, null, 1, 0, 0)
-//│       }
-//│     case 1:
-//│       runtime.resumeValue;
-//│       return runtime.safeCall(h7.perform("5"));
-//│   }
+//│ handleBlock$7 = (undefined, function (k) {
+//│   let cpsCont$9;
+//│   cpsCont$9 = function cpsCont$9(retVal) {
+//│     let cpsCont$8;
+//│     cpsCont$8 = function cpsCont$8(retVal1) {
+//│       let cpsCont$7;
+//│       cpsCont$7 = function cpsCont$7(retVal2) {
+//│         let cpsCont$6;
+//│         cpsCont$6 = function cpsCont$6(retVal3) {
+//│           return h7.perform(k, "5")
+//│         };
+//│         return h7.perform(cpsCont$6, "4")
+//│       };
+//│       return h7.perform(cpsCont$7, "3")
+//│     };
+//│     return h7.perform(cpsCont$8, "2")
+//│   };
+//│   return h7.perform(cpsCont$9, "1")
 //│ });
-//│ runtime.enterHandleBlock(h7, handleBlock$7);
-//│ if (runtime.curEffect === null) { return result }
-//│ runtime.topLevelEffect(false);
-//│ return result;
+//│ cpsCont$10 = function cpsCont$10(retVal) {
+//│   return runtime.cpsId(result)
+//│ };
+//│ return runtime.cpsHandlerImpl(cpsCont$10, h7, handleBlock$7)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ = "54321"
-//│ result = "54321"
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '"54321"', got: '""'
+//│ = ""
+//│ result = ""
 
 
 // Tuple matches will not be instrumented
@@ -180,21 +167,20 @@ result
 fun f() = case [...x, y, z] then x
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
 //│ let lambda;
-//│ do runtime⁰.resetEffects﹖();
 //│ @private
-//│ define lambda as fun lambda⁰(caseScrut) {
+//│ define lambda as fun lambda⁰(k, caseScrut) {
 //│   let middleElements;
 //│   match caseScrut
 //│     Array(2+) =>
 //│       set middleElements = runtime⁰.Tuple⁰.slice⁰(caseScrut, 0, 2);
 //│       do runtime⁰.Tuple⁰.get⁰(caseScrut, -2);
 //│       do runtime⁰.Tuple⁰.get⁰(caseScrut, -1);
-//│       return middleElements
+//│       return k(middleElements)
 //│     else
 //│       throw new globalThis⁰.Error⁰("match error")
 //│   end
 //│ };
-//│ define f⁰ as fun f¹() { return lambda⁰ };
+//│ define f⁰ as fun f¹(k) { return k(lambda⁰) };
 //│ end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
@@ -204,6 +190,9 @@ handle h = Effect with
     print(arg)
     "b"
 h.perform("t")
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ > t
 //│ = "b"
 
@@ -218,9 +207,14 @@ if false || h.perform("hello") then
   3
 else
   0
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ > hello
-//│ > hello
-//│ = 3
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '3', got: 'fun cpsCont$1'
+//│ = fun cpsCont$1
 
 :expect "Hello World!"
 fun foo(h) =
@@ -239,15 +233,16 @@ print("mainbody start")
 let result = foo(h) + " World!"
 print("mainbody end")
 result
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ > mainbody start
 //│ > Entering foo
 //│ > handler called
-//│ > handler called
-//│ > Exiting foo
-//│ > mainbody end
-//│ > handler finished
-//│ > handler finished
-//│ = "Hello World!"
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '"Hello World!"', got: 'fun cpsCont$1'
+//│ = fun cpsCont$1
 
 :expect "Hello World!"
 fun foo(h) =
@@ -276,19 +271,18 @@ print("mainbody start")
 let result = foobar(h)
 print("mainbody end")
 result
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ > mainbody start
 //│ > Entering foobar
 //│ > Entering bar
 //│ > Entering foo
 //│ > handler called
-//│ > handler called
-//│ > Exiting foo
-//│ > Exiting bar
-//│ > Exiting foobar
-//│ > mainbody end
-//│ > handler finished
-//│ > handler finished
-//│ = "Hello World!"
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '"Hello World!"', got: 'fun cpsCont$1'
+//│ = fun cpsCont$1
 
 // Float out definitions
 handle h = Effect with
@@ -296,6 +290,9 @@ handle h = Effect with
 if true do
   fun f() = 3
   print(f())
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ > 3
 
 module A with
@@ -313,6 +310,12 @@ fun f(perform) =
     fun perform(arg)(k) = arg
   perform()
 f(() => 3)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ = 3
 
 abstract class Cell with
@@ -328,8 +331,11 @@ handle h = Cell with
 print(h.getVal())
 h.setVal(1)
 print(h.getVal())
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$setVal$ is not CPS-transformed because it has more than one parameter list.
 //│ > 0
-//│ > 1
+//│ = fun cpsId
 //│ x = 1
 
 
@@ -378,7 +384,22 @@ fun sum(depth, x) =
     x + sum(new_depth, x - 1)
   else 0
 sum(0, 30000)
-//│ = 450015000
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+//│     at cpsCont$4 (REPL87:1:536)
+//│     at cpsCont$4 (REPL87:1:718)
+//│     at cpsCont$4 (REPL87:1:718)
+//│     at cpsCont$4 (REPL87:1:718)
+//│     at cpsCont$4 (REPL87:1:718)
+//│     at cpsCont$4 (REPL87:1:718)
+//│     at cpsCont$4 (REPL87:1:718)
+//│     at cpsCont$4 (REPL87:1:718)
+//│     at cpsCont$4 (REPL87:1:718)
+//│     at cpsCont$4 (REPL87:1:718)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '450015000', got: 'undefined'
 
 :re
 fun sum(x) =
@@ -468,28 +489,16 @@ handle h = Eff with
   fun perform()(k) = k(())
 foo(h)
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.463: 	    module A with
+//│ ║  l.484: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.459: 	    module A with
+//│ ║  l.480: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.455: 	    module A with
+//│ ║  l.476: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.451: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.451: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.455: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.459: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.463: 	    module A with
+//│ ║  l.472: 	    module A with
 //│ ╙──       	           ^
 //│ = 123
 
@@ -501,4 +510,10 @@ class A with
 handle h2 = A with
   fun perf()(k) = k(this.x)
 h2.perf()
-//│ = 2
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h2$perf$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
+//│ = fun cpsId

@@ -19,6 +19,11 @@ fun f(h, x)() =
   print("f " + x)
   h.yld()
   print("f " + x)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ╔══[WARNING] The function term:f is not CPS-transformed because it has more than one parameter list.
+//│ ║  l.16: 	fun f(h, x)() =
+//│ ╙──      	    ^
 
 fun main(h) =
   print("main start")
@@ -40,15 +45,13 @@ handle h = ThreadEffect with
     this.drain()
 in
   main(h)
-//│ > main start
-//│ > main end
-//│ > f 2
-//│ ═══[RUNTIME ERROR] Error: Unhandled effect Handler$h$
-//│ 	at f (UserThreadsSafe.mls:18:3)
-//│ 	at while (UserThreadsSafe.mls:11:7)
-//│ 	at ThreadEffect#drain (pc=1)
-//│ 	at Handler$h$fork (UserThreadsSafe.mls:36:5)
-//│ 	at Handler$h$fork (UserThreadsSafe.mls:36:5)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$yld$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$fork$ is not CPS-transformed because it has more than one parameter list.
+//│ ═══[RUNTIME ERROR] Error: Function 'main' expected 1 argument but got 2
 
 
 // FIFO
@@ -63,14 +66,12 @@ handle h = ThreadEffect with
     this.drain()
 in
   main(h)
-//│ > main start
-//│ > main end
-//│ > f 0
-//│ ═══[RUNTIME ERROR] Error: Unhandled effect Handler$h$2
-//│ 	at f (UserThreadsSafe.mls:18:3)
-//│ 	at while (UserThreadsSafe.mls:11:7)
-//│ 	at ThreadEffect#drain (pc=1)
-//│ 	at Handler$h$fork (UserThreadsSafe.mls:59:5)
-//│ 	at Handler$h$fork (UserThreadsSafe.mls:59:5)
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$yld$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$fork$ is not CPS-transformed because it has more than one parameter list.
+//│ ═══[RUNTIME ERROR] Error: Function 'main' expected 1 argument but got 2
 
 

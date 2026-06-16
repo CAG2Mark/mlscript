@@ -12,21 +12,23 @@ handle h1 = Effect with
     [k("ok")]
 h1.perform("hi")
 h1.perform("hello")
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h1$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ > performing hi
-//│ > performing hello
-//│ = [["ok"]]
+//│ = fun cpsCont$1
 
 :e
 h1
 //│ ╔══[COMPILATION ERROR] Name not found: h1
-//│ ║  l.20: 	h1
+//│ ║  l.22: 	h1
 //│ ╙──      	^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 :e
 h1.perform("oops")
 //│ ╔══[COMPILATION ERROR] Name not found: h1
-//│ ║  l.27: 	h1.perform("oops")
+//│ ║  l.29: 	h1.perform("oops")
 //│ ╙──      	^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
@@ -37,7 +39,10 @@ handle h = Object with
     [x, k(())]
 h.write(1)
 h.write(2)
-//│ ═══[RUNTIME ERROR] Error: Unhandled effect Handler$h$
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$write$ is not CPS-transformed because it has more than one parameter list.
+//│ ═══[RUNTIME ERROR] Error: MLscript call unexpectedly returned `undefined`, the forbidden value.
 
 handle h = Object with
   fun write(x)(k) =
@@ -46,9 +51,14 @@ handle h = Object with
     [x, k(())]
 h.write(1)
 h.write(2)
-//│ > [10, ()]
-//│ > [10, ()]
-//│ = [1, [2, ()]]
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:lambda$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$write$ is not CPS-transformed because it has more than one parameter list.
+//│ > Suspend(fun cpsId, Handler$h$, fun)
+//│ = fun cpsCont$3
 
 handle h = Object with
   fun write(x)(k) = enterHandleBlock of this, () =>
@@ -56,7 +66,25 @@ handle h = Object with
     [x, k(())]
 h.write(1)
 h.write(2)
-//│ = [10, [1, [10, [2, ()]]]]
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:lambda$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$write$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: MLscript call unexpectedly returned `undefined`, the forbidden value.
+//│     at Runtime.checkCall (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:847:41)
+//│     at REPL28:1:257
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1181:28)
+//│     at Predef.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Predef.mjs:327:37)
+//│     at Handler$h$write (REPL28:1:1584)
+//│     at REPL28:1:1265
+//│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:901:48)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:916:20)
+//│     at REPL28:1:2802
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
 
 // deep handler
 :todo
@@ -73,11 +101,12 @@ handle h2 = Effect with
   h2.perform(3)
 ]
 //│ ╔══[COMPILATION ERROR] Name not found: h2
-//│ ║  l.67: 	      then h2.perform(arg - 1) + " " + arg
+//│ ║  l.95: 	      then h2.perform(arg - 1) + " " + arg
 //│ ╙──      	           ^^
 //│ ╔══[COMPILATION ERROR] Illegal position for prefix keyword 'else'.
-//│ ║  l.68: 	      else "0"
+//│ ║  l.96: 	      else "0"
 //│ ╙──      	      ^^^^
+//│ ═══[WARNING] The function term:Handler$h2$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ > –––
 //│ > performing 2
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
@@ -100,13 +129,17 @@ let res =
   g.perform("adios")
   g.perform("amigos")
 in res.toString()
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$g$perform$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ > A hi
-//│ > B hi bye
-//│ > B hi friend
-//│ > A hola
-//│ > B hola adios
-//│ > B hola amigos
-//│ = "‹,‹,‹,‹,hola,amigos,›,adios,›,friend,›,bye,›"
+//│ = "function cpsCont$3(retVal) {     runtime.checkArgs(\"cpsCont$3\", 1, true, arguments.length);     let tmp7;     tmp6 = retVal;     tmp7 = globalThis.Object.freeze([       tmp6     ]);     return runtime.checkCall(k(tmp7))   }"
 
 
 // This is equivalent to the above, with all calls to h.perform expanded
@@ -130,13 +163,18 @@ let res =
     )()]
   )()]
 in res.toString()
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$g2$perform$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$g$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ > A hi
 //│ > B hi bye
-//│ > B hi friend
-//│ > A hola
-//│ > B hola adios
-//│ > B hola amigos
-//│ = "‹,‹,‹,‹,hola,amigos,›,adios,›,friend,›,bye,›"
+//│ = "function cpsCont$13(retVal) {     runtime.checkArgs(\"cpsCont$13\", 1, true, arguments.length);     let tmp12;     tmp11 = retVal;     tmp12 = globalThis.Object.freeze([       \"\\u2039\",       tmp11,       arg1,       \"\\u203A\"     ]);     return runtime.checkCall(k(tmp12))   }"
 
 :sjs
 let str = ""
@@ -154,74 +192,54 @@ if true do
   h2.perform(())
   h1.perform(())
 str
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h1$perform$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h2$perform$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let str, h11, handleBlock$9, Handler$h2$perform1, Handler$h2$3, handleBlock$10, Handler$h1$perform1, Handler$h1$3, handleBlock$$2, Handler$h2$perform$1, Handler$h1$perform$1;
-//│ runtime.resetEffects();
 //│ Handler$h1$perform$1 = function Handler$h1$perform$(arg) {
 //│   return (k) => {
-//│     return Handler$h1$perform1(arg, k)
+//│     return Handler$h1$perform1(runtime.cpsId, arg, k)
 //│   }
 //│ };
-//│ Handler$h1$perform1 = function Handler$h1$perform(arg, k) {
-//│   let tmp10, tmp11, pc;
-//│   if (runtime.resumePc === -1) {
-//│     pc = 0;
-//│   } else {
-//│     pc = runtime.resumePc;
-//│     runtime.resumePc = -1;
-//│   }
-//│   switch (pc) {
-//│     case 0:
-//│       tmp10 = str + "A";
-//│       str = tmp10;
-//│       runtime.resumeValue = runtime.safeCall(k(arg));
-//│       if (runtime.curEffect === null) {
-//│         pc = 1;
-//│       } else {
-//│         return runtime.unwind(Handler$h1$perform1, 1, "RecursiveHandlers.mls:147:7", null, null, 1, 2, arg, k, 0)
-//│       }
-//│     case 1:
-//│       runtime.resumeValue;
-//│       tmp11 = str + "A";
-//│       str = tmp11;
-//│       return runtime.Unit;
-//│   }
+//│ Handler$h1$perform1 = function Handler$h1$perform(k, arg, k1) {
+//│   let tmp8, tmp9, cpsCont$1;
+//│   tmp8 = str + "A";
+//│   str = tmp8;
+//│   cpsCont$1 = function cpsCont$1(retVal) {
+//│     tmp9 = str + "A";
+//│     str = tmp9;
+//│     return k(runtime.Unit)
+//│   };
+//│   return k1(cpsCont$1, arg)
 //│ };
 //│ Handler$h2$perform$1 = function Handler$h2$perform$(arg) {
 //│   return (k) => {
-//│     return Handler$h2$perform1(arg, k)
+//│     return Handler$h2$perform1(runtime.cpsId, arg, k)
 //│   }
 //│ };
-//│ Handler$h2$perform1 = function Handler$h2$perform(arg, k) {
-//│   let tmp10, tmp11, tmp12, tmp13, pc;
-//│   if (runtime.resumePc === -1) {
-//│     pc = 0;
-//│   } else {
-//│     pc = runtime.resumePc;
-//│     runtime.resumePc = -1;
-//│   }
-//│   switch (pc) {
-//│     case 0:
-//│       tmp10 = str + "B";
-//│       tmp11 = str + tmp10;
-//│       str = tmp11;
-//│       runtime.resumeValue = runtime.safeCall(k(arg));
-//│       if (runtime.curEffect === null) {
-//│         pc = 1;
-//│       } else {
-//│         return runtime.unwind(Handler$h2$perform1, 1, "RecursiveHandlers.mls:152:7", null, null, 1, 2, arg, k, 0)
-//│       }
-//│     case 1:
-//│       runtime.resumeValue;
-//│       tmp12 = str + "B";
-//│       tmp13 = str + tmp12;
-//│       str = tmp13;
-//│       return runtime.Unit;
-//│   }
+//│ Handler$h2$perform1 = function Handler$h2$perform(k, arg, k1) {
+//│   let tmp8, tmp9, tmp10, tmp11, cpsCont$3;
+//│   tmp8 = str + "B";
+//│   tmp9 = str + tmp8;
+//│   str = tmp9;
+//│   cpsCont$3 = function cpsCont$3(retVal) {
+//│     tmp10 = str + "B";
+//│     tmp11 = str + tmp10;
+//│     str = tmp11;
+//│     return k(runtime.Unit)
+//│   };
+//│   return k1(cpsCont$3, arg)
 //│ };
 //│ handleBlock$$2 = (undefined, function (h22) {
 //│   return () => {
-//│     return handleBlock$9(h22)
+//│     return handleBlock$9(runtime.cpsId, h22)
 //│   }
 //│ });
 //│ (class Handler$h2$2 extends Effect1 {
@@ -230,38 +248,21 @@ str
 //│   }
 //│   constructor() {
 //│     super();
-//│     if (runtime.curEffect !== null) {
-//│       runtime.illegalEffect("in a constructor");
-//│     }
 //│   }
-//│   perform(arg) {
+//│   perform(k, arg) {
 //│     let Handler$h2$perform$here;
 //│     Handler$h2$perform$here = Handler$h2$perform$1(arg);
-//│     return runtime.mkEffect(this, Handler$h2$perform$here)
+//│     return new runtime.Suspend(k, this, Handler$h2$perform$here)
 //│   }
 //│   toString() { return runtime.render(this); }
 //│   static [definitionMetadata] = ["class", "Handler$h2$"];
 //│ });
-//│ handleBlock$9 = (undefined, function (h22) {
-//│   let pc;
-//│   if (runtime.resumePc === -1) {
-//│     pc = 0;
-//│   } else {
-//│     pc = runtime.resumePc;
-//│     runtime.resumePc = -1;
-//│   }
-//│   switch (pc) {
-//│     case 0:
-//│       runtime.resumeValue = runtime.safeCall(h22.perform(runtime.Unit));
-//│       if (runtime.curEffect === null) {
-//│         pc = 1;
-//│       } else {
-//│         return runtime.unwind(handleBlock$9, 1, "RecursiveHandlers.mls:154:3", null, null, 1, 1, h22, 0)
-//│       }
-//│     case 1:
-//│       runtime.resumeValue;
-//│       return runtime.safeCall(h11.perform(runtime.Unit));
-//│   }
+//│ handleBlock$9 = (undefined, function (k, h22) {
+//│   let cpsCont$5;
+//│   cpsCont$5 = function cpsCont$5(retVal) {
+//│     return h11.perform(k, runtime.Unit)
+//│   };
+//│   return h22.perform(cpsCont$5, runtime.Unit)
 //│ });
 //│ (class Handler$h1$2 extends Effect1 {
 //│   static {
@@ -269,51 +270,44 @@ str
 //│   }
 //│   constructor() {
 //│     super();
-//│     if (runtime.curEffect !== null) {
-//│       runtime.illegalEffect("in a constructor");
-//│     }
 //│   }
-//│   perform(arg) {
+//│   perform(k, arg) {
 //│     let Handler$h1$perform$here;
 //│     Handler$h1$perform$here = Handler$h1$perform$1(arg);
-//│     return runtime.mkEffect(this, Handler$h1$perform$here)
+//│     return new runtime.Suspend(k, this, Handler$h1$perform$here)
 //│   }
 //│   toString() { return runtime.render(this); }
 //│   static [definitionMetadata] = ["class", "Handler$h1$"];
 //│ });
-//│ handleBlock$10 = (undefined, function () {
-//│   let h22, handleBlock$$here, pc;
-//│   if (runtime.resumePc === -1) {
-//│     pc = 0;
-//│   } else {
-//│     pc = runtime.resumePc;
-//│     runtime.resumePc = -1;
-//│   }
-//│   switch (pc) {
-//│     case 0:
-//│       h22 = new Handler$h2$3();
-//│       handleBlock$$here = handleBlock$$2(h22);
-//│       runtime.resumeValue = runtime.enterHandleBlock(h22, handleBlock$$here);
-//│       if (runtime.curEffect === null) {
-//│         pc = 1;
-//│       } else {
-//│         return runtime.unwind(handleBlock$10, 1, null, null, null, 1, 0, 0)
-//│       }
-//│     case 1:
-//│       return runtime.resumeValue;
-//│   }
+//│ handleBlock$10 = (undefined, function (k) {
+//│   let h22, tmp8, handleBlock$$here, cpsCont$7;
+//│   h22 = new Handler$h2$3();
+//│   handleBlock$$here = handleBlock$$2(h22);
+//│   cpsCont$7 = function cpsCont$7(retVal) {
+//│     tmp8 = retVal;
+//│     return k(tmp8)
+//│   };
+//│   return runtime.cpsHandlerImpl(cpsCont$7, h22, handleBlock$$here)
 //│ });
 //│ str = "";
 //│ if (true === true) {
+//│   let cpsCont$82;
 //│   h11 = new Handler$h1$3();
-//│   runtime.enterHandleBlock(h11, handleBlock$10);
-//│   if (runtime.curEffect === null) {
-//│     return str
-//│   }
-//│   runtime.topLevelEffect(false);
-//│   return str;
+//│   cpsCont$82 = function cpsCont$8(retVal) {
+//│     return runtime.cpsId(str)
+//│   };
+//│   return runtime.cpsHandlerImpl(cpsCont$82, h11, handleBlock$10)
 //│ }
-//│ return str;
+//│ return runtime.cpsId(str);
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h1$perform$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:Handler$h2$perform$ is not CPS-transformed because it has more than one parameter list.
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ = "BABABA"
-//│ str = "BABABA"
+//│ = "B"
+//│ str = "B"

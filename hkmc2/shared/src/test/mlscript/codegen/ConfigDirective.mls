@@ -156,7 +156,7 @@ print(42)
 private fun deadParamConfig(a) = 0
 deadParamConfig(42)
 //│ dead-param-elim > >>> dead-param-elim results >>>
-//│ dead-param-elim > prodfun deadParamConfig#0 @ <root> -> eliminable: {0}
+//│ dead-param-elim > prodfun deadParamConfig#0 @ <root> -> eliminable: {1}
 //│ dead-param-elim > <<< dead-param-elim results <<<
 //│ = 0
 
@@ -177,6 +177,9 @@ fstConfig(Pair(1, 2))
 //│ deforest > 	fields: p⁰.a⁰
 //│ deforest > 	fields: p⁰.b⁰
 //│ deforest > <<< fusing <<<
+//│ FAILURE: Unexpected warning
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
+//│ ═══[WARNING] The function term:fstConfig_5$p_Pair is not CPS-transformed because it has more than one parameter list.
 //│ = 1
 
 #config(deforest: None)
@@ -195,11 +198,11 @@ fun applyTwice(f, x) = f(x) + f(x)
 applyTwice(fst, Pair(1, 2))
 //│ deforest > >>> non-affine syms >>>
 //│ deforest > cap_ub_(term:fst,0)_for_fst@35
-//│ deforest > f_for_applyTwice@23
-//│ deforest > f_for_applyTwice@54
+//│ deforest > f_for_applyTwice@24
+//│ deforest > f_for_applyTwice@55
 //│ deforest > fst_for_fst@32
 //│ deforest > tmp@1
-//│ deforest > x_for_applyTwice@24
-//│ deforest > x_for_applyTwice@55
+//│ deforest > x_for_applyTwice@23
+//│ deforest > x_for_applyTwice@54
 //│ deforest > <<< non-affine syms <<<
 //│ = 2
