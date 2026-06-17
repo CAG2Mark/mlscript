@@ -248,6 +248,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
           case Value.MemberRef(_, c: ClassCtorSymbol) => false
           case s: Select if s.symbol.map(x => x.isInstanceOf[ClassCtorSymbol]).getOrElse(false) => false 
           case s: Select if s.name.name === "toString" => false
+          case s: Select if s.symbol.isEmpty => false
           case Select(Value.MemberRef(bms, disamb), _) if bms.nme === "Predef" => false
           case Value.RefLike(State.superSymbol) => false
           case _ => true
