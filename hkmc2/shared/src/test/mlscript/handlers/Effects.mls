@@ -14,13 +14,43 @@ handle h = Effect with
 handle h = Effect with
   fun perform()(k) = k(42)
 h.perform()
-//│ = 42
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 1 argument but got 0
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$2.perform (REPL16:1:493)
+//│     at handleBlock$1 (REPL16:1:873)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL16:1:1135
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '42', got: 'undefined'
 
 :expect "b"
 handle h = Effect with
   fun perform(arg)(k) = "b"
 h.perform("k")
-//│ = "b"
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$4.perform (REPL19:1:495)
+//│     at handleBlock$2 (REPL19:1:875)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL19:1:1140
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '"b"', got: 'undefined'
 
 :expect "k"
 handle h = Effect with
@@ -29,7 +59,22 @@ h.perform("k")
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
 //│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ = "k"
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$6.perform (REPL22:1:556)
+//│     at handleBlock$3 (REPL22:1:1045)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL22:1:1310
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '"k"', got: 'undefined'
 
 :expect "k"
 handle h = Effect with
@@ -39,9 +84,21 @@ h.perform("k")
 //│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
 //│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$8.perform (REPL25:1:561)
+//│     at handleBlock$4 (REPL25:1:1051)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL25:1:1316
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
-//│ ═══[RUNTIME ERROR] Expected: '"k"', got: 'fun cpsId'
-//│ = fun cpsId
+//│ ═══[RUNTIME ERROR] Expected: '"k"', got: 'undefined'
 
 :expect "hi"
 fun foo(e) = e.perform("hi")
@@ -53,11 +110,22 @@ foo(h)
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
 //│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ > hi
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$10.perform (REPL28:1:788)
+//│     at handleBlock$5 (REPL28:1:1291)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL28:1:1557
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
-//│ ═══[RUNTIME ERROR] Expected: '"hi"', got: 'fun cpsId'
-//│ = fun cpsId
+//│ ═══[RUNTIME ERROR] Expected: '"hi"', got: 'undefined'
 
 fun foo(e) = e.perform("hi")
 
@@ -70,11 +138,22 @@ handle h = Effect with
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
 //│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ > Hello
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$12.perform (REPL34:1:606)
+//│     at handleBlock$6 (REPL34:1:1103)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL34:1:1399
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
-//│ ═══[RUNTIME ERROR] Expected: '"Hello World!"', got: 'fun cpsId'
-//│ = fun cpsId
+//│ ═══[RUNTIME ERROR] Expected: '"Hello World!"', got: 'undefined'
 
 :expect "54321"
 :sjs
@@ -95,13 +174,12 @@ result
 //│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
 //│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let result, h7, handleBlock$7, Handler$h$perform3, Handler$h$15, Handler$h$perform$4, cpsCont$10;
+//│ let result, h7, handleBlock$7, Handler$h$perform3, Handler$h$15, Handler$h$perform$4, cpsCont$2;
 //│ Handler$h$perform$4 = function Handler$h$perform$(arg) {
 //│   return (k) => {
 //│     return Handler$h$perform3(runtime.cpsId, arg, k)
 //│   }
 //│ };
-<<<<<<< HEAD
 //│ Handler$h$perform3 = function Handler$h$perform(k, arg, k1) {
 //│   let v, cpsCont$1;
 //│   cpsCont$1 = function cpsCont$1(retVal) {
@@ -110,35 +188,6 @@ result
 //│     return k(v)
 //│   };
 //│   return k1(cpsCont$1, arg)
-=======
-//│ Handler$h$perform5 = function Handler$h$perform(arg, k) {
-//│   let v, pc;
-//│   if (runtime.resumePc === -1) {
-//│     pc = 0;
-//│     runtime.resumeValue = runtime.safeCall(k(arg));
-//│     if (runtime.curEffect === null) {
-//│       pc = 1;
-//│     } else {
-//│       return runtime.unwind(Handler$h$perform5, 1, "Effects.mls:63:13", null, null, 1, 2, arg, k, 0)
-//│     }
-//│   } else {
-//│     pc = runtime.resumePc;
-//│     runtime.resumePc = -1;
-//│     if (pc === 0) {
-//│       runtime.resumeValue = runtime.safeCall(k(arg));
-//│       if (runtime.curEffect === null) {
-//│         pc = 1;
-//│       } else {
-//│         return runtime.unwind(Handler$h$perform5, 1, "Effects.mls:63:13", null, null, 1, 2, arg, k, 0)
-//│       }
-//│     }
-//│   }
-//│   if (pc === 1) {
-//│     v = runtime.resumeValue;
-//│     result = result + arg;
-//│     return v
-//│   }
->>>>>>> hkmc2
 //│ };
 //│ result = "";
 //│ (class Handler$h$14 extends Effect1 {
@@ -157,91 +206,39 @@ result
 //│   static [definitionMetadata] = ["class", "Handler$h$"];
 //│ });
 //│ h7 = new Handler$h$15();
-<<<<<<< HEAD
 //│ handleBlock$7 = (undefined, function (k) {
-//│   let cpsCont$9;
-//│   cpsCont$9 = function cpsCont$9(retVal) {
-//│     let cpsCont$8;
-//│     cpsCont$8 = function cpsCont$8(retVal1) {
-//│       let cpsCont$7;
-//│       cpsCont$7 = function cpsCont$7(retVal2) {
-//│         let cpsCont$6;
-//│         cpsCont$6 = function cpsCont$6(retVal3) {
-//│           return h7.perform(k, "5")
-//│         };
-//│         return h7.perform(cpsCont$6, "4")
-//│       };
-//│       return h7.perform(cpsCont$7, "3")
-//│     };
-//│     return h7.perform(cpsCont$8, "2")
-//│   };
-//│   return h7.perform(cpsCont$9, "1")
-=======
-//│ handleBlock$7 = (undefined, function () {
-//│   let pc;
-//│   if (runtime.resumePc === -1) {
-//│     pc = 0;
-//│     runtime.resumeValue = runtime.safeCall(h7.perform("1"));
-//│     if (runtime.curEffect === null) {
-//│       pc = 4;
-//│     } else {
-//│       return runtime.unwind(handleBlock$7, 4, "Effects.mls:67:3", null, null, 1, 0, 0)
-//│     }
-//│   } else {
-//│     pc = runtime.resumePc;
-//│     runtime.resumePc = -1;
-//│     if (pc === 0) {
-//│       runtime.resumeValue = runtime.safeCall(h7.perform("1"));
-//│       if (runtime.curEffect === null) {
-//│         pc = 4;
-//│       } else {
-//│         return runtime.unwind(handleBlock$7, 4, "Effects.mls:67:3", null, null, 1, 0, 0)
-//│       }
-//│     }
-//│   }
-//│   switch (pc) {
-//│     case 4:
-//│       runtime.resumeValue;
-//│       runtime.resumeValue = runtime.safeCall(h7.perform("2"));
-//│       if (runtime.curEffect === null) {
-//│         pc = 3;
-//│       } else {
-//│         return runtime.unwind(handleBlock$7, 3, "Effects.mls:68:3", null, null, 1, 0, 0)
-//│       }
-//│     case 3:
-//│       runtime.resumeValue;
-//│       runtime.resumeValue = runtime.safeCall(h7.perform("3"));
-//│       if (runtime.curEffect === null) {
-//│         pc = 2;
-//│       } else {
-//│         return runtime.unwind(handleBlock$7, 2, "Effects.mls:69:3", null, null, 1, 0, 0)
-//│       }
-//│     case 2:
-//│       runtime.resumeValue;
-//│       runtime.resumeValue = runtime.safeCall(h7.perform("4"));
-//│       if (runtime.curEffect === null) {
-//│         pc = 1;
-//│       } else {
-//│         return runtime.unwind(handleBlock$7, 1, "Effects.mls:70:3", null, null, 1, 0, 0)
-//│       }
-//│     case 1:
-//│       runtime.resumeValue;
-//│       return runtime.safeCall(h7.perform("5"));
-//│   }
->>>>>>> hkmc2
+//│   let tmp7;
+//│   runtime.safeCall(h7.perform("1"));
+//│   runtime.safeCall(h7.perform("2"));
+//│   runtime.safeCall(h7.perform("3"));
+//│   runtime.safeCall(h7.perform("4"));
+//│   tmp7 = runtime.safeCall(h7.perform("5"));
+//│   return k(tmp7)
 //│ });
-//│ cpsCont$10 = function cpsCont$10(retVal) {
+//│ cpsCont$2 = function cpsCont$2(retVal) {
 //│   return runtime.cpsId(result)
 //│ };
-//│ return runtime.cpsHandlerImpl(cpsCont$10, h7, handleBlock$7)
+//│ return runtime.cpsHandlerImpl(cpsCont$2, h7, handleBlock$7)
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
 //│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$14.perform (REPL37:1:983)
+//│     at handleBlock$7 (REPL37:1:1467)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL37:1:1872
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
-//│ ═══[RUNTIME ERROR] Expected: '"54321"', got: '""'
-//│ = ""
+//│ ═══[RUNTIME ERROR] Expected: '"54321"', got: 'undefined'
 //│ result = ""
 
 
@@ -277,8 +274,22 @@ h.perform("t")
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
 //│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ > t
-//│ = "b"
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$16.perform (REPL44:1:603)
+//│     at handleBlock$8 (REPL44:1:1094)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL44:1:1360
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '"b"', got: 'undefined'
 
 :expect 3
 handle h = Effect with
@@ -294,11 +305,22 @@ else
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
 //│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ > hello
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$18.perform (REPL47:1:1025)
+//│     at handleBlock$9 (REPL47:1:1543)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL47:1:1996
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
-//│ ═══[RUNTIME ERROR] Expected: '3', got: 'fun cpsCont$1'
-//│ = fun cpsCont$1
+//│ ═══[RUNTIME ERROR] Expected: '3', got: 'undefined'
 
 :expect "Hello World!"
 fun foo(h) =
@@ -322,11 +344,22 @@ result
 //│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ > mainbody start
 //│ > Entering foo
-//│ > handler called
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$20.perform (REPL50:1:1410)
+//│     at foo (REPL50:1:1008)
+//│     at handleBlock$10 (REPL50:1:2233)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL50:1:2469
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
-//│ ═══[RUNTIME ERROR] Expected: '"Hello World!"', got: 'fun cpsCont$1'
-//│ = fun cpsCont$1
+//│ ═══[RUNTIME ERROR] Expected: '"Hello World!"', got: 'undefined'
 
 :expect "Hello World!"
 fun foo(h) =
@@ -362,11 +395,22 @@ result
 //│ > Entering foobar
 //│ > Entering bar
 //│ > Entering foo
-//│ > handler called
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$22.perform (REPL53:1:2389)
+//│     at foo (REPL53:1:1022)
+//│     at bar (REPL53:1:1626)
+//│     at foobar (REPL53:1:2112)
+//│     at handleBlock$11 (REPL53:1:3174)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL53:1:3414
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
-//│ ═══[RUNTIME ERROR] Expected: '"Hello World!"', got: 'fun cpsCont$1'
-//│ = fun cpsCont$1
+//│ ═══[RUNTIME ERROR] Expected: '"Hello World!"', got: 'undefined'
 
 // Float out definitions
 handle h = Effect with
@@ -387,7 +431,19 @@ module A with
 handle h = A.Effect(3) with
   fun perform()(k) = 0
 h.perform()
-//│ = 0
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 1 argument but got 0
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$26.perform (REPL62:1:503)
+//│     at handleBlock$13 (REPL62:1:889)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL62:1:1155
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
 
 fun f(perform) =
   handle h = Effect with
@@ -418,9 +474,20 @@ print(h.getVal())
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
 //│ ═══[WARNING] The function term:Handler$h$setVal$ is not CPS-transformed because it has more than one parameter list.
-//│ > 0
-//│ = fun cpsId
-//│ x = 1
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'getVal' expected 1 argument but got 0
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$30.getVal (REPL71:1:856)
+//│     at handleBlock$14 (REPL71:1:1509)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL71:1:1944
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│ x = 0
 
 
 abstract class Eff with
@@ -434,7 +501,22 @@ fun fact(e, factvalue) =
 handle h = Eff with
   fun get()(k) = k(1)
 fact(h, 5)
-//│ = 120
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'get' expected 1 argument but got 0
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$32.get (REPL78:1:1354)
+//│     at fact (REPL78:1:973)
+//│     at handleBlock$15 (REPL78:1:1716)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL78:1:1951
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '120', got: 'undefined'
 
 abstract class StackDelay with
   fun raise(): ()
@@ -455,7 +537,22 @@ fun sum(depth, x) =
     x + sum(new_depth, x - 1)
   else 0
 sum(0, 100)
-//│ = 5050
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'raise' expected 1 argument but got 0
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$34.raise (REPL84:1:1425)
+//│     at sum (REPL84:1:901)
+//│     at rest (REPL84:1:762)
+//│     at sum (REPL84:1:1002)
+//│     at rest (REPL84:1:762)
+//│     at sum (REPL84:1:1002)
+//│     at rest (REPL84:1:762)
+//│     at sum (REPL84:1:1002)
+//│     at rest (REPL84:1:762)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '5050', got: 'undefined'
 
 // stack safe recursion
 :expect 450015000
@@ -470,17 +567,17 @@ fun sum(depth, x) =
 sum(0, 30000)
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
-//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
-//│     at cpsCont$4 (REPL87:1:536)
-//│     at cpsCont$4 (REPL87:1:718)
-//│     at cpsCont$4 (REPL87:1:718)
-//│     at cpsCont$4 (REPL87:1:718)
-//│     at cpsCont$4 (REPL87:1:718)
-//│     at cpsCont$4 (REPL87:1:718)
-//│     at cpsCont$4 (REPL87:1:718)
-//│     at cpsCont$4 (REPL87:1:718)
-//│     at cpsCont$4 (REPL87:1:718)
-//│     at cpsCont$4 (REPL87:1:718)
+//│ ═══[RUNTIME ERROR] Error: Function 'raise' expected 1 argument but got 0
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$36.raise (REPL87:1:1432)
+//│     at sum (REPL87:1:907)
+//│     at rest (REPL87:1:767)
+//│     at sum (REPL87:1:1008)
+//│     at rest (REPL87:1:767)
+//│     at sum (REPL87:1:1008)
+//│     at rest (REPL87:1:767)
+//│     at sum (REPL87:1:1008)
+//│     at rest (REPL87:1:767)
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
 //│ ═══[RUNTIME ERROR] Expected: '450015000', got: 'undefined'
@@ -505,7 +602,22 @@ fun foo(h) =
 handle h = Eff with
   fun perform()(k) = k(())
 foo(h)
-//│ = 2
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 1 argument but got 0
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$38.perform (REPL93:1:738)
+//│     at handleBlock$18 (REPL93:1:1129)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL93:1:1457
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '2', got: 'undefined'
 
 :expect 3
 fun foo(h) =
@@ -519,7 +631,22 @@ fun foo(h) =
 handle h = Eff with
   fun perform()(k) = k(())
 foo(h)
-//│ = 3
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 1 argument but got 0
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$40.perform (REPL96:1:739)
+//│     at handleBlock$19 (REPL96:1:1130)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL96:1:1459
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '3', got: 'undefined'
 
 :expect 123
 fun foo(h) =
@@ -545,7 +672,22 @@ fun foo(h) =
 handle h = Eff with
   fun perform()(k) = k(())
 foo(h) 
-//│ = 123
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 1 argument but got 0
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$42.perform (REPL99:1:4191)
+//│     at foo (REPL99:1:2151)
+//│     at handleBlock$20 (REPL99:1:4563)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL99:1:4797
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
+//│ ═══[RUNTIME ERROR] Expected: '123', got: 'undefined'
 
 :fixme
 :expect 123
@@ -573,43 +715,19 @@ handle h = Eff with
   fun perform()(k) = k(())
 foo(h)
 //│ ╔══[WARNING] Modules are not yet lifted.
-<<<<<<< HEAD
-//│ ║  l.484: 	    module A with
+//│ ║  l.820: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.480: 	    module A with
+//│ ║  l.816: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.476: 	    module A with
+//│ ║  l.812: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.472: 	    module A with
-=======
-//│ ║  l.476: 	    module A with
+//│ ║  l.808: 	    module A with
 //│ ╙──       	           ^
-//│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.472: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.468: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.464: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.464: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.468: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.472: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.476: 	    module A with
->>>>>>> hkmc2
-//│ ╙──       	           ^
-//│ = 123
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 1 argument but got 0
+//│ ═══[RUNTIME ERROR] Expected: '123', got: 'undefined'
 
 // Access superclass fields
 handle h1 = Object with
@@ -625,4 +743,16 @@ h2.perf()
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
 //│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
-//│ = fun cpsId
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'perf' expected 1 argument but got 0
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h2$.perf (REPL105:1:1473)
+//│     at REPL105:1:977
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at handleBlock$22 (REPL105:1:2893)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL105:1:3163
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)

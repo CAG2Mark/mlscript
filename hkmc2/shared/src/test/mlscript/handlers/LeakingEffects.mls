@@ -34,54 +34,29 @@ while
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
 //│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
-//│ > B a
-//│ = 2
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$g$.perform (REPL13:1:1073)
+//│     at handleBlock$ (REPL13:1:1556)
+//│     at REPL13:1:782
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at main (REPL13:1:2350)
+//│     at REPL13:1:3410
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
 //│ count = 0
-//│ xs = [fun cpsId, fun cpsId]
+//│ xs = []
 
 // * Notes:
 (mut []).pop() === undefined
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
-//│ ═══[RUNTIME ERROR] Error: MLscript call unexpectedly returned `undefined`, the forbidden value.
-//│     at Runtime.checkCall (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:847:41)
-//│     at REPL18:1:274
-//│     at ContextifyScript.runInThisContext (node:vm:137:12)
-//│     at defaultEval (node:repl:610:24)
-//│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│     at REPLServer.emit (node:events:509:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│ = false
 (mut []).pop() === null
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
-//│ ═══[RUNTIME ERROR] Error: MLscript call unexpectedly returned `undefined`, the forbidden value.
-//│     at Runtime.checkCall (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:847:41)
-//│     at REPL21:1:273
-//│     at ContextifyScript.runInThisContext (node:vm:137:12)
-//│     at defaultEval (node:repl:610:24)
-//│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│     at REPLServer.emit (node:events:509:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│ = false
 (mut []).pop() === ()
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
-//│ ═══[RUNTIME ERROR] Error: MLscript call unexpectedly returned `undefined`, the forbidden value.
-//│     at Runtime.checkCall (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:847:41)
-//│     at REPL24:1:281
-//│     at ContextifyScript.runInThisContext (node:vm:137:12)
-//│     at defaultEval (node:repl:610:24)
-//│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│     at REPLServer.emit (node:events:509:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:465:12)
+//│ = true
 
 
 // g is non-resumptive, which means g.perform("a") does not resume
@@ -120,10 +95,21 @@ print(g.perform("c"))
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
 //│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ > A hi
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$.perform (REPL27:1:4770)
+//│     at handleBlock$2 (REPL27:1:5279)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL27:1:5901
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
-//│ ═══[RUNTIME ERROR] Expected: '1', got: 'fun cpsCont$7'
-//│ = fun cpsCont$7
+//│ ═══[RUNTIME ERROR] Expected: '1', got: 'undefined'
 
 

@@ -22,7 +22,7 @@ data class Lol(h) with
 //│   constructor(h) {
 //│     let tmp;
 //│     this.h = h;
-//│     tmp = this.h.perform(runtime.cpsId, "k");
+//│     tmp = runtime.safeCall(this.h.perform("k"));
 //│     Predef.print(tmp);
 //│   }
 //│   toString() { return runtime.render(this); }
@@ -49,7 +49,7 @@ k.test()
 print("test")
 //│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ > test
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 2 arguments but got 1
 
 
 
@@ -61,14 +61,14 @@ let oops =
       "b"
   Lol(h)
 //│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ > Suspend(fun cpsId, Handler$h$, fun)
-//│ oops = Lol(Handler$h$)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 2 arguments but got 1
+//│ oops = undefined
 
 :fixme
 :expect "b"
 oops
-//│ ═══[RUNTIME ERROR] Expected: '"b"', got: 'Lol(Handler$h$)'
-//│ = Lol(Handler$h$)
+//│ ═══[RUNTIME ERROR] Error: MLscript call unexpectedly returned `undefined`, the forbidden value.
+//│ ═══[RUNTIME ERROR] Expected: '"b"', got: 'undefined'
 
 :fixme
 let oops = 
@@ -78,14 +78,14 @@ let oops =
       "b"
   new Lol(h)
 //│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ > Suspend(fun cpsId, Handler$h$, fun)
-//│ oops = Lol(Handler$h$)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 2 arguments but got 1
+//│ oops = undefined
 
 :fixme
 :expect "b"
 oops
-//│ ═══[RUNTIME ERROR] Expected: '"b"', got: 'Lol(Handler$h$)'
-//│ = Lol(Handler$h$)
+//│ ═══[RUNTIME ERROR] Error: MLscript call unexpectedly returned `undefined`, the forbidden value.
+//│ ═══[RUNTIME ERROR] Expected: '"b"', got: 'undefined'
 
 
 :fixme
@@ -96,13 +96,12 @@ let oops =
       k("b")
   Lol(h)
 //│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ > Suspend(fun cpsId, Handler$h$, fun)
-//│ oops = Lol(Handler$h$)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 2 arguments but got 1
+//│ oops = undefined
 
 :fixme
 oops.h
-//│ = Handler$h$
-//│ FAILURE: Unexpected lack of error to fix
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'h')
 
 let obj = mut {s: undefined}
 //│ obj = {s: undefined}
@@ -115,7 +114,19 @@ set obj.s = h.perform("k")
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
 //│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ = fun cpsCont$1
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'perform' expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at Handler$h$8.perform (REPL44:1:978)
+//│     at handleBlock$5 (REPL44:1:1468)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:915:28)
+//│     at REPL44:1:1758
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
 
 fun f() = ()
 
@@ -126,5 +137,17 @@ module A with
 let obj = new Object with
   fun foo() = print("Hello")
   foo()
-//│ > Hello
-//│ obj = $anon
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ ═══[RUNTIME ERROR] Error: Function 'foo' expected 1 argument but got 0
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:835:41)
+//│     at $anon.foo (REPL53:1:286)
+//│     at new $anon (REPL53:1:179)
+//│     at REPL53:1:573
+//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:65:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│ obj = undefined
