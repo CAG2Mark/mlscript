@@ -1,6 +1,7 @@
 :js
 :effectHandlers
-:lift
+
+open annotations
 
 abstract class Generator with
   fun produce(result): ()
@@ -10,48 +11,32 @@ fun permutations_impl(gen, l1, l2) =
     [f, ...t] do
       handle genWithPrefix = Generator with
         fun produce(result)(resume) =
-          result.unshift(f)
+          @native result.unshift(f)
           gen.produce(result)
           resume(())
       permutations_impl(genWithPrefix, mut [], l1.concat(t))
-      l1.push(f)
+      @native l1.push(f)
       permutations_impl(gen, l1, t)
     [] and l1 is [] do
       gen.produce(mut [])
 fun permutations(gen, l) =
   permutations_impl(gen, mut [], l)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$genWithPrefix$produce$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 
 let res = mut []
 handle gen = Generator with
   fun produce(result)(resume) =
-    res.push(result)
+    @native res.push(result)
     resume(())
 in permutations(gen, [1, 2, 3, 4])
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$gen$produce$ is not CPS-transformed because it has more than one parameter list.
 //│ res = []
 
-fun permutations_foreach(l, f) =
+fun permutations_foreach(l) =
   handle gen = Generator with
     fun produce(result)(resume) =
-      f(result)
+      @native print(result)
       resume(())
   permutations(gen, l)
-permutations_foreach([1, 2, 3], print)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$gen$produce$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
-
+permutations_foreach([1, 2, 3])
 
 fun permutations_impl(gen, l1, l2) =
   if l2 is
@@ -61,28 +46,19 @@ fun permutations_impl(gen, l1, l2) =
           gen.produce([f, ...result])
           let x = resume(())
           x
-      permutations_impl(genWithPrefix, mut [], l1.concat(t))
-      l1.push(f)
+      permutations_impl(genWithPrefix, mut [], @native l1.concat(t))
+      @native l1.push(f)
       permutations_impl(gen, l1, t)
     [] and l1 is [] do
       gen.produce([])
 fun permutations(gen, l) =
   permutations_impl(gen, mut [], l)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$genWithPrefix$produce$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 
 let res = mut []
 handle gen = Generator with
   fun produce(result)(resume) =
-    res.push(result)
+    @native res.push(result)
     let x = resume(())
     x
 in permutations(gen, [1, 2, 3])
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$gen$produce$ is not CPS-transformed because it has more than one parameter list.
-//│ res = []
+//│ res = [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
