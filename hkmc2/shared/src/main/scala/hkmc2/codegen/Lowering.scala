@@ -959,6 +959,8 @@ class Lowering()(using Config, TL, Raise, State, Ctx, SymbolPrinter):
     case iftrm: st.IfLike => ucs.Normalization(this)(iftrm)(k)
     
     case iftrm: st.SynthIf => ucs.Normalization(this)(iftrm)(k)
+
+    case whltrm: st.SynthWhile => ucs.Normalization(this)(whltrm)(k)
       
     case sel @ Sel(prefix, nme) =>
       setupSelection(prefix, nme, N)(k)
@@ -1414,10 +1416,11 @@ class Lowering()(using Config, TL, Raise, State, Ctx, SymbolPrinter):
         case N => WarningReport(msg"This annotation has no effect." -> annot.toLoc :: Nil)
     annotations.foreach:
       case Annot.Untyped => ()
-      case a @ (Annot.TailRec | Annot.Inline) =>
+      case a @ (Annot.TailRec | Annot.Inline | Annot.NoInline) =>
         val annot = a match
           case Annot.TailRec => "@tailrec"
           case Annot.Inline => "@inline"
+          case Annot.NoInline => "@noInline"
         target match
           case TermDefinition(body = S(bod), k = syntax.Fun) => ()
           case TermDefinition(k = syntax.Fun) => warn(a, S(msg"Only functions with a body may be marked as $annot."))
@@ -1574,18 +1577,13 @@ object TrivialStatementsAndMatch:
         val newR = k.getOrElse(identity: Block => Block)(r)
         assign(newR)
       S(S(newK), m)
-    
     b match
-      case m: Match => S(N, m)
-      case Assign(lhs, rhs: Path, TrivialStatementsAndMatch(k, m)) =>
-        handleAssignAndMatch(r => Assign(lhs, rhs, r), m, k)
-      case a@AssignField(lhs, nme, rhs: Path, TrivialStatementsAndMatch(k, m)) =>
-        handleAssignAndMatch(r => AssignField(lhs, nme, rhs, r)(a.symbol), m, k)
-      case AssignDynField(lhs, fld, arrayIdx, rhs: Path, TrivialStatementsAndMatch(k, m)) =>
-        handleAssignAndMatch(r =>  AssignDynField(lhs, fld, arrayIdx, rhs, r), m, k)
-      case Define(defn, TrivialStatementsAndMatch(k, m)) => 
-        handleAssignAndMatch(r => Define(defn, r), m, k)
-      case _ => N
+    case m: Match => S(N, m)
+    case Assign(lhs, rhs, TrivialStatementsAndMatch(k, m)) if rhs.isPure =>
+      handleAssignAndMatch(r => Assign(lhs, rhs, r), m, k)
+    case Define(defn, TrivialStatementsAndMatch(k, m)) if defn.isPure =>
+      handleAssignAndMatch(r => Define(defn, r), m, k)
+    case _ => N
 
 
 object MergeMatchArmTransformer extends BlockTransformer(SymbolSubst.Id):

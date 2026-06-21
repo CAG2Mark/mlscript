@@ -277,6 +277,7 @@ object Elaborator:
         val tailcall = assumeObject("tailcall")
         val native = assumeObject("native")
         val inline = assumeObject("inline")
+        val noInline = assumeObject("noInline")
         val compile = assumeObject("compile")
         val buffered = assumeObject("buffered")
         val bufferable = assumeObject("bufferable")
@@ -514,6 +515,8 @@ extends Importer with ucs.SplitElaborator:
             return S(Annot.Native)
           case ctx.builtins.annotations.inline =>
             return S(Annot.Inline)
+          case ctx.builtins.annotations.noInline =>
+            return S(Annot.NoInline)
           case ctx.builtins.annotations.mayNotRaiseEffects =>
             return S(Annot.MayNotRaiseEffects)
           case _ => ()
@@ -1859,6 +1862,10 @@ extends Importer with ucs.SplitElaborator:
       case Directive(Ident("config"), Tup(args)) :: sts =>
         reportUnusedAnnotations
         val modify = ConfigParser.parseOverrides(args)
+        go(sts, Nil, SetConfig(modify) :: acc)
+      case Directive(Ident("lang"), Tup(args)) :: sts =>
+        reportUnusedAnnotations
+        val modify = ConfigParser.parseLanguageDirective(args)
         go(sts, Nil, SetConfig(modify) :: acc)
       case Directive(Ident(name), _) :: sts =>
         raise(ErrorReport(
