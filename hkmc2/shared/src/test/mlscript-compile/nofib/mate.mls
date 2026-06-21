@@ -101,11 +101,11 @@ fun maybe(d, f, x) = if x is
   None then d
   Some(x) then f(x)
 
-fun isUpper(c) = let x = c.charCodeAt(0) in (x >= 65 and x <= 90)
+fun isUpper(c) = let x = @native c.charCodeAt(0) in (x >= 65 and x <= 90)
 
-fun isLower(c) = let x = c.charCodeAt(0) in (x >= 97 and x <= 122)
+fun isLower(c) = let x = @native c.charCodeAt(0) in (x >= 97 and x <= 122)
 
-fun toLower(c) = if isUpper(c) then String.fromCharCode(c.charCodeAt(0) + 32) else c
+fun toLower(c) = if isUpper(c) then @native String.fromCharCode((@native c.charCodeAt(0)) + 32) else c
 
 fun words(s) = if leaveWhile(x => x === " ", s) is
   Nil then Nil
