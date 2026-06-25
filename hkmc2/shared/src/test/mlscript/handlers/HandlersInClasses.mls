@@ -1,6 +1,5 @@
 :js
 :effectHandlers
-:lift
 
 
 abstract class Effect with
@@ -18,12 +17,6 @@ object Lol with
       "B"
   print(h.perform("A"))
   val x = 123
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
 //│ FAILURE INFO: Tuple2:
@@ -39,10 +32,10 @@ object Lol with
 //│           includeZero = false
 //│           defaultName = "tmp"
 //│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(class:Handler$h$ -> Handler$h$, member:Handler$h$perform$ -> Handler$h$perform$, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Effect -> Effect1, class:Effect -> Effect, member:handleBlock$ -> handleBlock$, tmp:block$res -> block$res1, member:Handler$h$ -> Handler$h$1, member:Lol -> Lol1, object:Lol -> Lol, member:handleBlock$$ -> handleBlock$$, tmp:block$res -> block$res2)
+//│         bindings = HashMap(tmp:block$res -> block$res2, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Effect -> Effect1, class:Effect -> Effect, tmp:block$res -> block$res1, member:Lol -> Lol1, object:Lol -> Lol, class:Handler$h$ -> Handler$h$)
 //│       curThis = S of S of object:Lol⁰
 //│       bindings = HashMap()
-//│     bindings = HashMap(tmp:handleBlock$$here -> handleBlock$$here, h -> h)
+//│     bindings = HashMap(member:handleBlock$ -> handleBlock$, member:Handler$h$ -> Handler$h$1, h -> h)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
 //│ ╟── which references the symbol introduced here
 //│ ║  l.282: 	  fun
@@ -54,9 +47,9 @@ object Lol with
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at new Lol (REPL13:1:1729)
-//│     at <static_initializer> (REPL13:1:1551)
-//│     at REPL13:1:1960
+//│     at new Lol (REPL13:1:1433)
+//│     at <static_initializer> (REPL13:1:68)
+//│     at REPL13:1:1659
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -69,7 +62,7 @@ object Lol with
 :re
 Lol.x
 //│ ╔══[COMPILATION ERROR] Object 'Lol' does not contain member 'x'
-//│ ║  l.70: 	Lol.x
+//│ ║  l.63: 	Lol.x
 //│ ╙──      	   ^^
 //│ ═══[RUNTIME ERROR] Error: Access to required field 'x' yielded 'undefined'
 
@@ -81,12 +74,6 @@ object Lol with
       k("B")
   print(h.perform("A"))
   val x = 123
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
 //│ FAILURE INFO: Tuple2:
@@ -102,10 +89,10 @@ object Lol with
 //│           includeZero = false
 //│           defaultName = "tmp"
 //│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(class:Handler$h$ -> Handler$h$, tmp:selRes -> selRes, tmp:block$res -> block$res3, member:Lol -> Lol3, object:Lol -> Lol2, tmp:runtime -> runtime, tmp:block$res -> block$res4, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, class:Handler$h$ -> Handler$h$2, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:handleBlock$ -> handleBlock$, member:Handler$h$ -> Handler$h$1, member:handleBlock$$ -> handleBlock$$, member:handleBlock$ -> handleBlock$1, member:Handler$h$perform$ -> Handler$h$perform$, member:Handler$h$ -> Handler$h$3, member:handleBlock$$ -> handleBlock$$1, tmp:block$res -> block$res, member:Effect -> Effect1, class:Effect -> Effect, member:Handler$h$perform$ -> Handler$h$perform$1, tmp:block$res -> block$res1, member:Lol -> Lol1, object:Lol -> Lol, tmp:block$res -> block$res2)
+//│         bindings = HashMap(tmp:block$res -> block$res2, tmp:selRes -> selRes, tmp:block$res -> block$res3, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res, tmp:Term -> Term, member:Lol -> Lol3, tmp:Block -> Block, object:Lol -> Lol2, tmp:option -> option, member:Effect -> Effect1, class:Effect -> Effect, class:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res1, tmp:block$res -> block$res4, member:Lol -> Lol1, object:Lol -> Lol, class:Handler$h$ -> Handler$h$)
 //│       curThis = S of S of object:Lol¹
 //│       bindings = HashMap()
-//│     bindings = HashMap(tmp:handleBlock$$here -> handleBlock$$here, h -> h)
+//│     bindings = HashMap(h -> h, member:handleBlock$ -> handleBlock$, member:Handler$h$ -> Handler$h$2)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
 //│ ╟── which references the symbol introduced here
 //│ ║  l.282: 	  fun
@@ -117,9 +104,9 @@ object Lol with
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at new Lol2 (REPL19:1:1743)
-//│     at <static_initializer> (REPL19:1:1564)
-//│     at REPL19:1:1975
+//│     at new Lol2 (REPL19:1:1439)
+//│     at <static_initializer> (REPL19:1:69)
+//│     at REPL19:1:1666
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -132,7 +119,7 @@ object Lol with
 :re
 Lol.x
 //│ ╔══[COMPILATION ERROR] Object 'Lol' does not contain member 'x'
-//│ ║  l.133: 	Lol.x
+//│ ║  l.120: 	Lol.x
 //│ ╙──       	   ^^
 //│ ═══[RUNTIME ERROR] Error: Access to required field 'x' yielded 'undefined'
 
@@ -144,12 +131,6 @@ data class Lol() with
       "B"
   print(h.perform("A"))
   val x = 123
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ FAILURE: Unexpected compilation error
 //│ FAILURE LOCATION: lookup_! (Scope.scala:135)
 //│ FAILURE INFO: Tuple2:
@@ -165,10 +146,10 @@ data class Lol() with
 //│           includeZero = false
 //│           defaultName = "tmp"
 //│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(class:Handler$h$ -> Handler$h$, tmp:selRes -> selRes, member:Handler$h$perform$ -> Handler$h$perform$2, tmp:block$res -> block$res3, member:Lol -> Lol3, object:Lol -> Lol2, tmp:runtime -> runtime, tmp:block$res -> block$res4, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, class:Handler$h$ -> Handler$h$2, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:selRes -> selRes1, tmp:option -> option, tmp:block$res -> block$res5, member:handleBlock$ -> handleBlock$, member:Lol -> Lol5, class:Lol -> Lol4, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res6, class:Handler$h$ -> Handler$h$4, member:handleBlock$$ -> handleBlock$$, member:handleBlock$ -> handleBlock$1, member:Handler$h$perform$ -> Handler$h$perform$, member:Handler$h$ -> Handler$h$3, member:handleBlock$$ -> handleBlock$$1, tmp:block$res -> block$res, member:handleBlock$ -> handleBlock$2, member:Effect -> Effect1, class:Effect -> Effect, member:Handler$h$perform$ -> Handler$h$perform$1, member:Handler$h$ -> Handler$h$5, tmp:block$res -> block$res1, member:handleBlock$$ -> handleBlock$$2, member:Lol -> Lol1, object:Lol -> Lol, tmp:block$res -> block$res2)
+//│         bindings = HashMap(tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:Predef -> Predef, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res6, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res4, tmp:selRes -> selRes1, tmp:block$res -> block$res5, tmp:block$res -> block$res2, member:Lol -> Lol5, class:Lol -> Lol4, tmp:selRes -> selRes, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res3, tmp:block$res -> block$res, member:Lol -> Lol3, object:Lol -> Lol2, member:Effect -> Effect1, class:Effect -> Effect, class:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res1, member:Lol -> Lol1, object:Lol -> Lol, class:Handler$h$ -> Handler$h$)
 //│       curThis = S of S of class:Lol²
 //│       bindings = HashMap()
-//│     bindings = HashMap(h -> h, tmp:handleBlock$$here -> handleBlock$$here)
+//│     bindings = HashMap(member:Handler$h$ -> Handler$h$3, h -> h, member:handleBlock$ -> handleBlock$)
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'handle_suspension'
 //│ ╟── which references the symbol introduced here
 //│ ║  l.282: 	  fun
@@ -183,8 +164,8 @@ let oops = Lol()
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
 //│ ═══[RUNTIME ERROR] ReferenceError: handle_suspension is not defined
-//│     at new Lol4 (REPL25:1:1811)
-//│     at Lol (REPL25:1:1566)
+//│     at new Lol4 (REPL25:1:1506)
+//│     at Lol (REPL25:1:74)
 //│     at REPL28:1:41
 //│     at ContextifyScript.runInThisContext (node:vm:137:12)
 //│     at defaultEval (node:repl:610:24)
