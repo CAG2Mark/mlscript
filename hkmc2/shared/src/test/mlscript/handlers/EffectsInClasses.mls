@@ -1,6 +1,5 @@
 :js
 :effectHandlers
-:lift
 
 
 abstract class Effect with
@@ -47,9 +46,8 @@ handle k = Eff with
   fun test()(k) = k()
 k.test()
 print("test")
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
-//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ > test
+//│ FAILURE: Unexpected lack of error to fix
 
 
 
@@ -60,9 +58,9 @@ let oops =
       print(arg)
       "b"
   Lol(h)
-//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ > Suspend(fun cpsId, Handler$h$, fun)
+//│ > Suspend(fun cpsId, Handler$h$, fun Handler$h$perform)
 //│ oops = Lol(Handler$h$)
+//│ FAILURE: Unexpected lack of error to fix
 
 :fixme
 :expect "b"
@@ -77,9 +75,9 @@ let oops =
       print(arg)
       "b"
   new Lol(h)
-//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ > Suspend(fun cpsId, Handler$h$, fun)
+//│ > Suspend(fun cpsId, Handler$h$, fun Handler$h$perform)
 //│ oops = Lol(Handler$h$)
+//│ FAILURE: Unexpected lack of error to fix
 
 :fixme
 :expect "b"
@@ -95,9 +93,9 @@ let oops =
       print(arg)
       k("b")
   Lol(h)
-//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ > Suspend(fun cpsId, Handler$h$, fun)
+//│ > Suspend(fun cpsId, Handler$h$, fun Handler$h$perform)
 //│ oops = Lol(Handler$h$)
+//│ FAILURE: Unexpected lack of error to fix
 
 :fixme
 oops.h
@@ -112,10 +110,7 @@ handle h = Effect with
     k()
     print(arg)
 set obj.s = h.perform("k")
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ = fun cpsCont$1
+//│ > k
 
 fun f() = ()
 

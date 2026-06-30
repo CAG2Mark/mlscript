@@ -1,6 +1,5 @@
 :js
 :effectHandlers
-:lift
 
 class PrintEffect with
   fun p(s: String): ()
@@ -18,14 +17,11 @@ handle h = PrintEffect with
     h.p(x)
 h.aux(3)
 //│ ╔══[COMPILATION ERROR] Name not found: h
-//│ ║  l.16: 	    h.p(x)
+//│ ║  l.15: 	    h.p(x)
 //│ ╙──      	    ^
 //│ ╔══[COMPILATION ERROR] Name not found: h
-//│ ║  l.18: 	    h.p(x)
+//│ ║  l.17: 	    h.p(x)
 //│ ╙──      	    ^
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h$p$ is not CPS-transformed because it has more than one parameter list.
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 handle h1 = PrintEffect with
@@ -44,17 +40,7 @@ handle h2 = PrintEffect with
 h1.p(4)
 h2.aux(3)
 h1.p(4)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h2$aux$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h2$p$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h1$p$ is not CPS-transformed because it has more than one parameter list.
 //│ > 4
-//│ = fun cpsId
+//│ > 3
+//│ > 4
+//│ > 3
