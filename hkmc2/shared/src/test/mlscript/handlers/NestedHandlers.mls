@@ -1,6 +1,7 @@
 :js
 :effectHandlers
-:lift
+
+open annotations
 
 let id = 0
 //│ id = 0
@@ -17,9 +18,9 @@ fun handleEffects(g) =
       else
         set id += 1
         let cur = id
-        print("h1 start " + String(cur))
+        print("h1 start " + @native String(cur))
         let result = k(x)
-        print("h1 end " + String(cur))
+        print("h1 end " + @native String(cur))
         result
   handle h2 = MaybeStop with
     fun f(x)(k) =
@@ -28,23 +29,11 @@ fun handleEffects(g) =
       else
         set id += 1
         let cur = id
-        print("h2 start " + String(cur))
+        print("h2 start " + @native String(cur))
         let result = k(x)
-        print("h2 end " + String(cur))
+        print("h2 end " + @native String(cur))
         result
   g(h1, h2)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h1$f$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h2$f$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 
 
 fun f(h1, h2) =
@@ -55,7 +44,19 @@ fun f(h1, h2) =
   h1.f(false)
   h2.f(false)
 handleEffects(f)
-//│ = "function cpsCont$5(retVal) {       runtime.checkArgs(\"cpsCont$5\", 1, true, arguments.length);       let cpsCont$4;       tmp1 = retVal;       tmp2 = \"h1 start \" + tmp1;       runtime.checkCall(Predef.print(tmp2));       cpsCont$4 = function cpsCont$4(retVal1) {         runtime.checkArgs(\"cpsCont$4\", 1, true, arguments.length);         let cpsCont$3;         result = retVal1;         cpsCont$3 = function cpsCont$3(retVal2) {           runtime.checkArgs(\"cpsCont$3\", 1, true, arguments.length);           tmp3 = retVal2;           tmp4 = \"h1 end \" + tmp3;           runtime.checkCall(Predef.print(tmp4));           return runtime.checkCall(k(result))         };         return runtime.checkCall(globalThis.String(cpsCont$3, cur))       };       return runtime.checkCall(k1(cpsCont$4, x))     }"
+//│ > h1 start 1
+//│ > h2 start 2
+//│ > h1 start 3
+//│ > h2 start 4
+//│ > h1 start 5
+//│ > h2 start 6
+//│ > h2 end 6
+//│ > h2 end 4
+//│ > h2 end 2
+//│ > h1 end 5
+//│ > h1 end 3
+//│ > h1 end 1
+//│ = false
 
 
 fun f(h1, h2) =
@@ -66,7 +67,13 @@ fun f(h1, h2) =
   h1.f(false)
   h2.f(false)
 handleEffects(f)
-//│ = "function cpsCont$5(retVal) {       runtime.checkArgs(\"cpsCont$5\", 1, true, arguments.length);       let cpsCont$4;       tmp1 = retVal;       tmp2 = \"h1 start \" + tmp1;       runtime.checkCall(Predef.print(tmp2));       cpsCont$4 = function cpsCont$4(retVal1) {         runtime.checkArgs(\"cpsCont$4\", 1, true, arguments.length);         let cpsCont$3;         result = retVal1;         cpsCont$3 = function cpsCont$3(retVal2) {           runtime.checkArgs(\"cpsCont$3\", 1, true, arguments.length);           tmp3 = retVal2;           tmp4 = \"h1 end \" + tmp3;           runtime.checkCall(Predef.print(tmp4));           return runtime.checkCall(k(result))         };         return runtime.checkCall(globalThis.String(cpsCont$3, cur))       };       return runtime.checkCall(k1(cpsCont$4, x))     }"
+//│ > h1 start 7
+//│ > h2 start 8
+//│ > h1 start 9
+//│ > h2 stop
+//│ > h2 end 8
+//│ > h1 end 9
+//│ > h1 end 7
 
 
 fun f(h1, h2) =
@@ -77,7 +84,10 @@ fun f(h1, h2) =
   h1.f(false)
   h2.f(false)
 handleEffects(f)
-//│ = "function cpsCont$5(retVal) {       runtime.checkArgs(\"cpsCont$5\", 1, true, arguments.length);       let cpsCont$4;       tmp1 = retVal;       tmp2 = \"h1 start \" + tmp1;       runtime.checkCall(Predef.print(tmp2));       cpsCont$4 = function cpsCont$4(retVal1) {         runtime.checkArgs(\"cpsCont$4\", 1, true, arguments.length);         let cpsCont$3;         result = retVal1;         cpsCont$3 = function cpsCont$3(retVal2) {           runtime.checkArgs(\"cpsCont$3\", 1, true, arguments.length);           tmp3 = retVal2;           tmp4 = \"h1 end \" + tmp3;           runtime.checkCall(Predef.print(tmp4));           return runtime.checkCall(k(result))         };         return runtime.checkCall(globalThis.String(cpsCont$3, cur))       };       return runtime.checkCall(k1(cpsCont$4, x))     }"
+//│ > h1 start 10
+//│ > h2 start 11
+//│ > h1 stop
+//│ > h1 end 10
 
 
 class Eff with
@@ -105,16 +115,7 @@ handle h = Eff with
     k()
 f(h, box, 10)
 box.n
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h2$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:316)
-//│ ═══[RUNTIME ERROR] Expected: '5120', got: '10'
-//│ = 10
+//│ = 5120
 
 handle h1 = Eff with
   fun perform()(k) =
@@ -132,9 +133,6 @@ handle h2 = Eff with
 h2.perform()
 h2.perform()
 h2.perform()
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ > h2
 //│ > h1
 //│ > h2
@@ -165,26 +163,17 @@ handle h3 = Eff with
     k()
 h1.perform()
 h3.perform()
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h3$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ > h1
 //│ > h3
 //│ > h2
 //│ > h1
-//│ = fun cpsId
 
 
 let d = 0
 //│ d = 0
 
 
+:rewriteWhile
 :expect 11
 handle h1 = Eff with
   fun perform()(k) =
@@ -200,9 +189,6 @@ while i < 10 do
   h2.perform()
   set i = i + 1
 d
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ = 11
 
 abstract class Eff2 with
@@ -228,9 +214,6 @@ handle h2 = Eff2 with
     h1.f1()
 h2.f2()
 h2.f1()
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ > h2.f2 pre
 //│ > h2.f1
 //│ > h2.f2 post

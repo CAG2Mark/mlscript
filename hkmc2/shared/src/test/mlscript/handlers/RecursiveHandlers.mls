@@ -73,18 +73,18 @@ h.write(2)
 //│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
 //│ ═══[WARNING] The function term:Handler$h$write$ is not CPS-transformed because it has more than one parameter list.
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:276)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:254)
 //│ ═══[RUNTIME ERROR] Error: MLscript call unexpectedly returned `undefined`, the forbidden value.
-//│     at Runtime.checkCall (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:847:41)
+//│     at Runtime.checkCall (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:859:41)
 //│     at REPL28:1:257
-//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1181:28)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1192:28)
 //│     at Predef.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Predef.mjs:314:37)
 //│     at Handler$h$write (REPL28:1:1584)
 //│     at REPL28:1:1265
-//│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:901:48)
-//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:916:20)
+//│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:913:48)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:928:20)
 //│     at REPL28:1:2802
-//│     at ContextifyScript.runInThisContext (node:vm:137:12)
+//│     at ContextifyScript.runInThisContext (node:vm:138:12)
 
 // deep handler
 :todo
@@ -174,7 +174,7 @@ in res.toString()
 //│ ═══[WARNING] The function term:Handler$g$perform$ is not CPS-transformed because it has more than one parameter list.
 //│ > A hi
 //│ > B hi bye
-//│ = "function cpsCont$13(retVal) {     runtime.checkArgs(\"cpsCont$13\", 1, true, arguments.length);     let tmp12;     tmp11 = retVal;     tmp12 = globalThis.Object.freeze([       \"\\u2039\",       tmp11,       arg1,       \"\\u203A\"     ]);     return runtime.checkCall(k(tmp12))   }"
+//│ = "function cpsCont$13(retVal) {     runtime.checkArgs(\"cpsCont$13\", 1, true, arguments.length);     let tmp9;     tmp8 = retVal;     tmp9 = globalThis.Object.freeze([       \"\\u2039\",       tmp8,       arg1,       \"\\u203A\"     ]);     return runtime.checkCall(k(tmp9))   }"
 
 :sjs
 let str = ""
@@ -209,12 +209,12 @@ str
 //│   }
 //│ };
 //│ Handler$h1$perform1 = function Handler$h1$perform(k, arg, k1) {
-//│   let tmp8, tmp9, cpsCont$1;
-//│   tmp8 = str + "A";
-//│   str = tmp8;
+//│   let tmp7, tmp8, cpsCont$1;
+//│   tmp7 = str + "A";
+//│   str = tmp7;
 //│   cpsCont$1 = function cpsCont$1(retVal) {
-//│     tmp9 = str + "A";
-//│     str = tmp9;
+//│     tmp8 = str + "A";
+//│     str = tmp8;
 //│     return k(runtime.Unit)
 //│   };
 //│   return k1(cpsCont$1, arg)
@@ -225,14 +225,14 @@ str
 //│   }
 //│ };
 //│ Handler$h2$perform1 = function Handler$h2$perform(k, arg, k1) {
-//│   let tmp8, tmp9, tmp10, tmp11, cpsCont$3;
-//│   tmp8 = str + "B";
-//│   tmp9 = str + tmp8;
-//│   str = tmp9;
+//│   let tmp7, tmp8, tmp9, tmp10, cpsCont$3;
+//│   tmp7 = str + "B";
+//│   tmp8 = str + tmp7;
+//│   str = tmp8;
 //│   cpsCont$3 = function cpsCont$3(retVal) {
-//│     tmp10 = str + "B";
-//│     tmp11 = str + tmp10;
-//│     str = tmp11;
+//│     tmp9 = str + "B";
+//│     tmp10 = str + tmp9;
+//│     str = tmp10;
 //│     return k(runtime.Unit)
 //│   };
 //│   return k1(cpsCont$3, arg)
@@ -280,12 +280,12 @@ str
 //│   static [definitionMetadata] = ["class", "Handler$h1$"];
 //│ });
 //│ handleBlock$10 = (undefined, function (k) {
-//│   let h22, tmp8, handleBlock$$here, cpsCont$7;
+//│   let h22, tmp7, handleBlock$$here, cpsCont$7;
 //│   h22 = new Handler$h2$3();
 //│   handleBlock$$here = handleBlock$$2(h22);
 //│   cpsCont$7 = function cpsCont$7(retVal) {
-//│     tmp8 = retVal;
-//│     return k(tmp8)
+//│     tmp7 = retVal;
+//│     return k(tmp7)
 //│   };
 //│   return runtime.cpsHandlerImpl(cpsCont$7, h22, handleBlock$$here)
 //│ });
@@ -299,15 +299,6 @@ str
 //│   return runtime.cpsHandlerImpl(cpsCont$82, h11, handleBlock$10)
 //│ }
 //│ return runtime.cpsId(str);
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h1$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h2$perform$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = "B"
 //│ str = "B"

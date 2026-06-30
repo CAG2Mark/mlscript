@@ -251,7 +251,8 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
           case s: Select if s.symbol.isEmpty => 
             /*raise(WarningReport(
               msg"Ambiguous call." -> c.toLoc :: Nil,
-              source = Source.Compilation))*/
+              source = Source.Compilation))
+            */
             true
           case Select(Value.MemberRef(bms, disamb), _) if bms.nme === "Predef" => false
           case Value.RefLike(State.superSymbol) => false
@@ -337,7 +338,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
     val blk = (rest: Block) => Scoped(Set(bms), Define(fnDef, rest))
     (fnDef, blk)
   
-  def translateTopLevel(b: Block): (Block, StackSafetyMap) =
-    (cpsTransformer.applyBlock(blockNormalizer.applyBlock(b)), Map.empty)
-    // (blockNormalizer.applyBlock(b), Map.empty)
+  def translateTopLevel(b: Block): Block =
+    cpsTransformer.applyBlock(blockNormalizer.applyBlock(b))
+    // blockNormalizer.applyBlock(b)
   

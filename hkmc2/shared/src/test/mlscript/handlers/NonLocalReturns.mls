@@ -149,12 +149,24 @@ if true do
 //│ ╔══[COMPILATION ERROR] Return statements are not allowed outside of functions.
 //│ ║  l.148: 	    let f = () => return 100
 //│ ╙──       	                  ^^^^^^^^^^
+//│ FAILURE: Unexpected exception
+//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
+//│ 	at: scala.Predef$.$qmark$qmark$qmark(Predef.scala:383)
+//│ 	at: hkmc2.codegen.CpsHandlerLowering$$anon$2.applyBlock(CpsHandlerLowering.scala:119)
+//│ 	at: hkmc2.codegen.CpsHandlerLowering$$anon$2.$anonfun$12(CpsHandlerLowering.scala:80)
+//│ 	at: scala.collection.immutable.List.loop$3(List.scala:466)
+//│ 	at: scala.collection.immutable.List.mapConserve(List.scala:491)
+//│ 	at: hkmc2.codegen.CpsHandlerLowering$$anon$2.applyBlock(CpsHandlerLowering.scala:80)
+//│ 	at: hkmc2.codegen.BlockTransformer.applySubBlock(BlockTransformer.scala:29)
+//│ 	at: hkmc2.codegen.BlockTransformer.applyBlock$$anonfun$4(BlockTransformer.scala:85)
+//│ 	at: hkmc2.codegen.BlockTransformer.applyValue(BlockTransformer.scala:204)
+//│ 	at: hkmc2.codegen.BlockTransformer.applyPath(BlockTransformer.scala:191)
 
 :e
 fun f() =
   type A = return "lol"
 //│ ╔══[COMPILATION ERROR] Return statements are not allowed in this context.
-//│ ║  l.155: 	  type A = return "lol"
+//│ ║  l.167: 	  type A = return "lol"
 //│ ╙──       	           ^^^^^^^^^^^^
 
 
@@ -170,18 +182,19 @@ fun f() =
     f()
     print("Bad")
 f()
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:‹non-local return effect›ret$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:lambda$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
-//│ = 100
+//│ FAILURE: Unexpected exception
+//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
+//│ 	at: scala.Predef$.$qmark$qmark$qmark(Predef.scala:383)
+//│ 	at: hkmc2.codegen.CpsHandlerLowering$$anon$2.applyBlock(CpsHandlerLowering.scala:119)
+//│ 	at: hkmc2.codegen.BlockTransformer.applySubBlock(BlockTransformer.scala:29)
+//│ 	at: hkmc2.codegen.BlockTransformer.applyBlock$$anonfun$4(BlockTransformer.scala:85)
+//│ 	at: hkmc2.codegen.BlockTransformer.applyValue(BlockTransformer.scala:204)
+//│ 	at: hkmc2.codegen.BlockTransformer.applyPath(BlockTransformer.scala:191)
+//│ 	at: hkmc2.codegen.BlockTransformer.applyResult(BlockTransformer.scala:180)
+//│ 	at: hkmc2.codegen.BlockTransformer.applyBlock(BlockTransformer.scala:83)
+//│ 	at: hkmc2.codegen.CpsHandlerLowering$$anon$2.applyBlock(CpsHandlerLowering.scala:125)
+//│ 	at: hkmc2.codegen.BlockTransformer.applySubBlock(BlockTransformer.scala:29)
 
-// TODO(inliner): something is wrong here
 // broken due to handlers currently not handling `object` properly
 :fixme
 :expect 100
@@ -191,7 +204,7 @@ fun f() =
   4
 f()
 //│ ╔══[WARNING] Objects are not yet lifted.
-//│ ║  l.189: 	  object A with
+//│ ║  l.202: 	  object A with
 //│ ╙──       	         ^
 //│ ═══[WARNING] The function term:‹non-local return effect›ret$ is not CPS-transformed because it has more than one parameter list.
 //│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
@@ -219,7 +232,7 @@ fun f() =
   4
 f()
 //│ ╔══[WARNING] Objects are not yet lifted.
-//│ ║  l.217: 	  object A with
+//│ ║  l.246: 	  object A with
 //│ ╙──       	         ^
 //│ ═══[WARNING] The function term:‹non-local return effect›ret$ is not CPS-transformed because it has more than one parameter list.
 //│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
