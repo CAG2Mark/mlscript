@@ -14,7 +14,7 @@ fun permutations_impl(gen, l1, l2) =
           @native result.unshift(f)
           gen.produce(result)
           resume(())
-      permutations_impl(genWithPrefix, mut [], l1.concat(t))
+      permutations_impl(genWithPrefix, mut [], @native l1.concat(t))
       @native l1.push(f)
       permutations_impl(gen, l1, t)
     [] and l1 is [] do
@@ -28,7 +28,32 @@ handle gen = Generator with
     @native res.push(result)
     resume(())
 in permutations(gen, [1, 2, 3, 4])
-//│ res = []
+//│ res = [
+//│   [1, 2, 3, 4],
+//│   [1, 2, 4, 3],
+//│   [1, 3, 2, 4],
+//│   [1, 3, 4, 2],
+//│   [1, 4, 2, 3],
+//│   [1, 4, 3, 2],
+//│   [2, 1, 3, 4],
+//│   [2, 1, 4, 3],
+//│   [2, 3, 1, 4],
+//│   [2, 3, 4, 1],
+//│   [2, 4, 1, 3],
+//│   [2, 4, 3, 1],
+//│   [3, 1, 2, 4],
+//│   [3, 1, 4, 2],
+//│   [3, 2, 1, 4],
+//│   [3, 2, 4, 1],
+//│   [3, 4, 1, 2],
+//│   [3, 4, 2, 1],
+//│   [4, 1, 2, 3],
+//│   [4, 1, 3, 2],
+//│   [4, 2, 1, 3],
+//│   [4, 2, 3, 1],
+//│   [4, 3, 1, 2],
+//│   [4, 3, 2, 1]
+//│ ]
 
 fun permutations_foreach(l) =
   handle gen = Generator with
@@ -37,6 +62,12 @@ fun permutations_foreach(l) =
       resume(())
   permutations(gen, l)
 permutations_foreach([1, 2, 3])
+//│ > [1, 2, 3]
+//│ > [1, 3, 2]
+//│ > [2, 1, 3]
+//│ > [2, 3, 1]
+//│ > [3, 1, 2]
+//│ > [3, 2, 1]
 
 fun permutations_impl(gen, l1, l2) =
   if l2 is
