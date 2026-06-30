@@ -1,6 +1,6 @@
 :js
 :effectHandlers debug
-:lift
+:rewriteWhile
 
 
 class ThreadEffect with
@@ -11,33 +11,16 @@ class ThreadEffect with
       tasks.pop()()
   fun fork(thread: () -> ()): ()
   fun yld(): ()
-//│ FAILURE: Unexpected exception
-//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
-//│ 	at: scala.Predef$.$qmark$qmark$qmark(Predef.scala:383)
-//│ 	at: hkmc2.codegen.CpsHandlerLowering$$anon$2.applyBlock(CpsHandlerLowering.scala:119)
-//│ 	at: hkmc2.codegen.BlockTransformer.applySubBlock(BlockTransformer.scala:29)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyScopedBlock(BlockTransformer.scala:134)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyFunBodyLikeBlock(BlockTransformer.scala:109)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyFunDefn(BlockTransformer.scala:225)
-//│ 	at: hkmc2.codegen.BlockTransformer.$anonfun$16(BlockTransformer.scala:264)
-//│ 	at: scala.collection.immutable.List.loop$3(List.scala:466)
-//│ 	at: scala.collection.immutable.List.mapConserve(List.scala:491)
-//│ 	at: hkmc2.codegen.BlockTransformer.helper$1(BlockTransformer.scala:264)
 
 
-fun f(h, x)() =
+fun f(h, x) = () =>
   print("f " + x)
   h.yld()
   print("f " + x)
   h.yld()
   print("f " + x)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ╔══[WARNING] The function term:f is not CPS-transformed because it has more than one parameter list.
-//│ ║  l.28: 	fun f(h, x)() =
-//│ ╙──      	    ^
 
-fun main(h) =
+fun mainn(h) =
   print("main start")
   h.fork(f(h, 0))
   h.fork(f(h, 1))
@@ -56,45 +39,10 @@ handle h = ThreadEffect with
     this.tasks.unshift(k)
     this.drain()
 in
-  main(h)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h$yld$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h$fork$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:ThreadEffect⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Left of Cfg:
-//│         escapeChars = true
-//│         useSuperscripts = false
-//│         includeZero = false
-//│         defaultName = "tmp"
-//│       curThis = S of S of globalThis:globalThis⁰
-//│       bindings = HashMap(tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:f -> f, member:cpsCont$6 -> cpsCont$6, tmp:block$res -> block$res3, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$h$fork -> Handler$h$fork, member:Predef -> Predef, member:Handler$h$yld -> Handler$h$yld, member:Handler$h$ -> Handler$h$1, member:Handler$h$fork$ -> Handler$h$fork$, tmp:block$res -> block$res, member:f$worker -> f$worker, tmp:block$res -> block$res1, member:Handler$h$yld$ -> Handler$h$yld$, member:main -> main, tmp:block$res -> block$res2, h -> h, class:Handler$h$ -> Handler$h$)
-//│     curThis = S of S of class:Handler$h$⁰
-//│     bindings = HashMap()
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'ThreadEffect'
-//│ ║  l.50: 	handle h = ThreadEffect with
-//│ ║        	           ^^^^^^^^^^^^
-//│ ╟── which references the symbol introduced here
-//│ ║  l.6: 	class ThreadEffect with
-//│ ║       	      ^^^^^^^^^^^^^^^^^
-//│ ║  l.7: 	  // task queue
-//│ ║       	^^^^^^^^^^^^^^^
-//│ ║  l.8: 	  val tasks = mut []
-//│ ║       	^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.9: 	  fun drain() =
-//│ ║       	^^^^^^^^^^^^^^^
-//│ ║  l.10: 	... (more lines omitted) ...
-//│ ╙──      	^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ═══[RUNTIME ERROR] ReferenceError: ThreadEffect is not defined
+  mainn(h)
+//│ > main start
+//│ = 2
+//│ FAILURE: Unexpected lack of runtime error
 
 
 // FIFO
@@ -108,44 +56,9 @@ handle h = ThreadEffect with
     this.tasks.unshift(k)
     this.drain()
 in
-  main(h)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h$yld$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h$fork$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:ThreadEffect⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Left of Cfg:
-//│         escapeChars = true
-//│         useSuperscripts = false
-//│         includeZero = false
-//│         defaultName = "tmp"
-//│       curThis = S of S of globalThis:globalThis⁰
-//│       bindings = HashMap(tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, member:Handler$h$yld$ -> Handler$h$yld$1, tmp:Block -> Block, tmp:option -> option, member:f -> f, member:cpsCont$6 -> cpsCont$6, tmp:block$res -> block$res3, tmp:tmp -> tmp, h -> h1, member:handleBlock$ -> handleBlock$, class:Handler$h$ -> Handler$h$2, member:Handler$h$fork -> Handler$h$fork, member:Predef -> Predef, member:Handler$h$yld -> Handler$h$yld, member:Handler$h$ -> Handler$h$1, member:Handler$h$fork$ -> Handler$h$fork$, tmp:block$res -> block$res, member:cpsCont$6 -> cpsCont$61, member:f$worker -> f$worker, tmp:block$res -> block$res4, tmp:block$res -> block$res1, member:Handler$h$yld$ -> Handler$h$yld$, member:main -> main, tmp:tmp -> tmp1, member:handleBlock$ -> handleBlock$1, member:Handler$h$fork -> Handler$h$fork1, tmp:block$res -> block$res2, member:Handler$h$yld -> Handler$h$yld1, h -> h, class:Handler$h$ -> Handler$h$, member:Handler$h$ -> Handler$h$3, member:Handler$h$fork$ -> Handler$h$fork$1)
-//│     curThis = S of S of class:Handler$h$¹
-//│     bindings = HashMap()
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'ThreadEffect'
-//│ ║  l.120: 	handle h = ThreadEffect with
-//│ ║         	           ^^^^^^^^^^^^
-//│ ╟── which references the symbol introduced here
-//│ ║  l.6: 	class ThreadEffect with
-//│ ║       	      ^^^^^^^^^^^^^^^^^
-//│ ║  l.7: 	  // task queue
-//│ ║       	^^^^^^^^^^^^^^^
-//│ ║  l.8: 	  val tasks = mut []
-//│ ║       	^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.9: 	  fun drain() =
-//│ ║       	^^^^^^^^^^^^^^^
-//│ ║  l.10: 	... (more lines omitted) ...
-//│ ╙──      	^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ═══[RUNTIME ERROR] ReferenceError: ThreadEffect is not defined
+  mainn(h)
+//│ > main start
+//│ = 2
+//│ FAILURE: Unexpected lack of runtime error
 
 

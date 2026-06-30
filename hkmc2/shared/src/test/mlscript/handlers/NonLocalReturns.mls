@@ -1,33 +1,18 @@
 :js
 :effectHandlers
-:lift
+:rewriteWhile
 
 
 fun f() =
   (() => return 100)()
   print("Bad")
 f()
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:‹non-local return effect›ret$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ = 100
 
 
 fun foo(x) =
   let xs = [() => return x + 1]
   xs.0()
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:‹non-local return effect›ret$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:lambda$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 
 foo(123)
 //│ = 124
@@ -46,24 +31,6 @@ fun f() =
   print("Bad")
   100
 f()
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:‹non-local return effect›ret$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:‹non-local return effect›ret$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:lam2$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:lam$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ > Ok
 //│ = 123
 
@@ -80,24 +47,6 @@ fun f() =
   print("Continue")
   100
 f()
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:‹non-local return effect›ret$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:‹non-local return effect›ret$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:lam2$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:lam$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ > Ok
 //│ > 200
 //│ > Continue
@@ -107,30 +56,12 @@ f()
 :re
 fun f() = () => return 3
 f()()
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:‹non-local return effect›ret$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:lambda$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ = Suspend(fun cpsId, ‹non-local return effect›, fun)
 //│ FAILURE: Unexpected lack of runtime error
 
 :re
 fun f(): () -> Int = () => return () => 3
 f()()
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:‹non-local return effect›ret$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:lambda$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ = Suspend(fun cpsId, ‹non-local return effect›, fun)
 //│ FAILURE: Unexpected lack of runtime error
 
@@ -138,8 +69,8 @@ f()()
 :e
 return 100
 //│ ╔══[COMPILATION ERROR] Return statements are not allowed outside of functions.
-//│ ║  l.139: 	return 100
-//│ ╙──       	^^^^^^^^^^
+//│ ║  l.70: 	return 100
+//│ ╙──      	^^^^^^^^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 :e
@@ -147,27 +78,15 @@ if true do
   while false do
     let f = () => return 100
 //│ ╔══[COMPILATION ERROR] Return statements are not allowed outside of functions.
-//│ ║  l.148: 	    let f = () => return 100
-//│ ╙──       	                  ^^^^^^^^^^
-//│ FAILURE: Unexpected exception
-//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
-//│ 	at: scala.Predef$.$qmark$qmark$qmark(Predef.scala:383)
-//│ 	at: hkmc2.codegen.CpsHandlerLowering$$anon$2.applyBlock(CpsHandlerLowering.scala:119)
-//│ 	at: hkmc2.codegen.CpsHandlerLowering$$anon$2.$anonfun$12(CpsHandlerLowering.scala:80)
-//│ 	at: scala.collection.immutable.List.loop$3(List.scala:466)
-//│ 	at: scala.collection.immutable.List.mapConserve(List.scala:491)
-//│ 	at: hkmc2.codegen.CpsHandlerLowering$$anon$2.applyBlock(CpsHandlerLowering.scala:80)
-//│ 	at: hkmc2.codegen.BlockTransformer.applySubBlock(BlockTransformer.scala:29)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyBlock$$anonfun$4(BlockTransformer.scala:85)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyValue(BlockTransformer.scala:204)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyPath(BlockTransformer.scala:191)
+//│ ║  l.79: 	    let f = () => return 100
+//│ ╙──      	                  ^^^^^^^^^^
 
 :e
 fun f() =
   type A = return "lol"
 //│ ╔══[COMPILATION ERROR] Return statements are not allowed in this context.
-//│ ║  l.167: 	  type A = return "lol"
-//│ ╙──       	           ^^^^^^^^^^^^
+//│ ║  l.86: 	  type A = return "lol"
+//│ ╙──      	           ^^^^^^^^^^^^
 
 
 :expect 100
@@ -182,18 +101,7 @@ fun f() =
     f()
     print("Bad")
 f()
-//│ FAILURE: Unexpected exception
-//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
-//│ 	at: scala.Predef$.$qmark$qmark$qmark(Predef.scala:383)
-//│ 	at: hkmc2.codegen.CpsHandlerLowering$$anon$2.applyBlock(CpsHandlerLowering.scala:119)
-//│ 	at: hkmc2.codegen.BlockTransformer.applySubBlock(BlockTransformer.scala:29)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyBlock$$anonfun$4(BlockTransformer.scala:85)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyValue(BlockTransformer.scala:204)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyPath(BlockTransformer.scala:191)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyResult(BlockTransformer.scala:180)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyBlock(BlockTransformer.scala:83)
-//│ 	at: hkmc2.codegen.CpsHandlerLowering$$anon$2.applyBlock(CpsHandlerLowering.scala:125)
-//│ 	at: hkmc2.codegen.BlockTransformer.applySubBlock(BlockTransformer.scala:29)
+//│ = 100
 
 // broken due to handlers currently not handling `object` properly
 :fixme
@@ -203,11 +111,6 @@ fun f() =
     return 100
   4
 f()
-//│ ╔══[WARNING] Objects are not yet lifted.
-//│ ║  l.202: 	  object A with
-//│ ╙──       	         ^
-//│ ═══[WARNING] The function term:‹non-local return effect›ret$ is not CPS-transformed because it has more than one parameter list.
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ ═══[RUNTIME ERROR] Expected: '100', got: '4'
 //│ = 4
 
@@ -219,8 +122,6 @@ fun f() =
     return 100
   new A
 f()
-//│ ═══[WARNING] The function term:‹non-local return effect›ret$ is not CPS-transformed because it has more than one parameter list.
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ ═══[RUNTIME ERROR] Expected: '100', got: 'A'
 //│ = A
 
@@ -231,11 +132,6 @@ fun f() =
     (() => return 100)()
   4
 f()
-//│ ╔══[WARNING] Objects are not yet lifted.
-//│ ║  l.246: 	  object A with
-//│ ╙──       	         ^
-//│ ═══[WARNING] The function term:‹non-local return effect›ret$ is not CPS-transformed because it has more than one parameter list.
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ ═══[RUNTIME ERROR] Expected: '100', got: '4'
 //│ = 4
 
@@ -247,7 +143,5 @@ fun f() =
   new A
   4
 f()
-//│ ═══[WARNING] The function term:‹non-local return effect›ret$ is not CPS-transformed because it has more than one parameter list.
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ ═══[RUNTIME ERROR] Expected: '100', got: '4'
 //│ = 4

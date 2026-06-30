@@ -1,31 +1,25 @@
 :js
 :effectHandlers debug
-:lift
-
+:rewriteWhile
 
 class ThreadEffect with
   fun fork(thread: () -> ()): ()
   fun yld(): ()
 
 
-fun f(h, x)() =
+fun f(h, x) = () =>
   print("f " + x)
   h.yld()
   print("f " + x)
   h.yld()
   print("f " + x)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ╔══[WARNING] The function term:f is not CPS-transformed because it has more than one parameter list.
-//│ ║  l.11: 	fun f(h, x)() =
-//│ ╙──      	    ^
 
-fun main(h) =
-  print("main start")
+fun mainn(h) =
+  print("mainn start")
   h.fork(f(h, 0))
   h.fork(f(h, 1))
   h.fork(f(h, 2))
-  print("main end")
+  print("mainn end")
 
 
 // task queue
@@ -33,18 +27,7 @@ let tasks = mut []
 fun drain() =
   while tasks.length != 0 do
     tasks.pop()()
-//│ FAILURE: Unexpected exception
-//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
-//│ 	at: scala.Predef$.$qmark$qmark$qmark(Predef.scala:383)
-//│ 	at: hkmc2.codegen.CpsHandlerLowering$$anon$2.applyBlock(CpsHandlerLowering.scala:119)
-//│ 	at: hkmc2.codegen.BlockTransformer.applySubBlock(BlockTransformer.scala:29)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyScopedBlock(BlockTransformer.scala:134)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyFunBodyLikeBlock(BlockTransformer.scala:109)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyFunDefn(BlockTransformer.scala:225)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyDefn(BlockTransformer.scala:289)
-//│ 	at: hkmc2.codegen.BlockTransformer.applyBlock(BlockTransformer.scala:95)
-//│ 	at: hkmc2.codegen.CpsHandlerLowering$$anon$2.applyBlock(CpsHandlerLowering.scala:125)
-//│ 	at: hkmc2.codegen.CpsHandlerLowering.translateTopLevel(CpsHandlerLowering.scala:341)
+//│ tasks = []
 
 
 // LIFO
@@ -58,130 +41,10 @@ handle h = ThreadEffect with
     tasks.unshift(k)
     drain()
 in
-  main(h)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h$fork$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:drain⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(tmp:block$res -> block$res4, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$h$fork -> Handler$h$fork, member:Handler$h$yld -> Handler$h$yld, member:f$worker -> f$worker, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res2, member:main -> main, member:Handler$h$fork$ -> Handler$h$fork$, member:Predef -> Predef, tmp:block$res -> block$res3, tmp:block$res -> block$res, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, tmp:block$res -> block$res1, member:f -> f, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont$6 -> cpsCont$6)
-//│         curThis = S of N
-//│         bindings = HashMap(k -> k1, k -> k)
-//│       bindings = HashMap(member:cpsCont$1 -> cpsCont$1)
-//│     curThis = S of N
-//│     bindings = HashMap(retVal -> retVal)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'drain'
-//│ ║  l.59: 	    drain()
-//│ ║        	    ^^^^^
-//│ ╟── which references the symbol introduced here
-//│ ║  l.33: 	fun drain() =
-//│ ║        	^^^^^^^^^^^^^
-//│ ║  l.34: 	  while tasks.length != 0 do
-//│ ║        	^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.35: 	    tasks.pop()()
-//│ ╙──      	^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = tasks⁰
-//│     _2 = class hkmc2.semantics.VarSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Left of Cfg:
-//│           escapeChars = true
-//│           useSuperscripts = false
-//│           includeZero = false
-//│           defaultName = "tmp"
-//│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(tmp:block$res -> block$res4, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$h$fork -> Handler$h$fork, member:Handler$h$yld -> Handler$h$yld, member:f$worker -> f$worker, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res2, member:main -> main, member:Handler$h$fork$ -> Handler$h$fork$, member:Predef -> Predef, tmp:block$res -> block$res3, tmp:block$res -> block$res, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, tmp:block$res -> block$res1, member:f -> f, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont$6 -> cpsCont$6)
-//│       curThis = S of N
-//│       bindings = HashMap(k -> k1, k -> k)
-//│     bindings = HashMap(member:cpsCont$1 -> cpsCont$1)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'tasks'
-//│ ║  l.58: 	    tasks.unshift(k)
-//│ ║        	    ^^^^^
-//│ ╟── which references the symbol introduced here
-//│ ║  l.32: 	let tasks = mut []
-//│ ╙──      	    ^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:drain⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Right of Scope:
-//│             parentOrCfg = Right of Scope:
-//│               parentOrCfg = Left of Cfg:
-//│                 escapeChars = true
-//│                 useSuperscripts = false
-//│                 includeZero = false
-//│                 defaultName = "tmp"
-//│               curThis = S of S of globalThis:globalThis⁰
-//│               bindings = HashMap(tmp:block$res -> block$res4, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$h$fork -> Handler$h$fork, member:Handler$h$yld -> Handler$h$yld, member:f$worker -> f$worker, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res2, member:main -> main, member:Handler$h$fork$ -> Handler$h$fork$, member:Predef -> Predef, tmp:block$res -> block$res3, tmp:block$res -> block$res, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, tmp:block$res -> block$res1, member:f -> f, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont$6 -> cpsCont$6)
-//│             curThis = S of N
-//│             bindings = HashMap(thread -> thread, k -> k1, k -> k)
-//│           bindings = HashMap(member:cpsCont$5 -> cpsCont$5)
-//│         curThis = S of N
-//│         bindings = HashMap(retVal -> retVal)
-//│       bindings = HashMap(member:cpsCont$4 -> cpsCont$4)
-//│     curThis = S of N
-//│     bindings = HashMap(retVal -> retVal1)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'drain'
-//│ ║  l.56: 	    drain()
-//│ ║        	    ^^^^^
-//│ ╟── which references the symbol introduced here
-//│ ║  l.33: 	fun drain() =
-//│ ║        	^^^^^^^^^^^^^
-//│ ║  l.34: 	  while tasks.length != 0 do
-//│ ║        	^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.35: 	    tasks.pop()()
-//│ ╙──      	^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = tasks⁰
-//│     _2 = class hkmc2.semantics.VarSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Left of Cfg:
-//│           escapeChars = true
-//│           useSuperscripts = false
-//│           includeZero = false
-//│           defaultName = "tmp"
-//│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(tmp:block$res -> block$res4, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$h$fork -> Handler$h$fork, member:Handler$h$yld -> Handler$h$yld, member:f$worker -> f$worker, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res2, member:main -> main, member:Handler$h$fork$ -> Handler$h$fork$, member:Predef -> Predef, tmp:block$res -> block$res3, tmp:block$res -> block$res, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, tmp:block$res -> block$res1, member:f -> f, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont$6 -> cpsCont$6)
-//│       curThis = S of N
-//│       bindings = HashMap(thread -> thread, k -> k1, k -> k)
-//│     bindings = HashMap(member:cpsCont$5 -> cpsCont$5)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'tasks'
-//│ ║  l.54: 	    tasks.push(thread)
-//│ ║        	    ^^^^^
-//│ ╟── which references the symbol introduced here
-//│ ║  l.32: 	let tasks = mut []
-//│ ╙──      	    ^^^^^
-//│ ═══[RUNTIME ERROR] Error: Function 'main' expected 1 argument but got 2
+  mainn(h)
+//│ > mainn start
+//│ = 2
+//│ FAILURE: Unexpected lack of runtime error
 
 
 // FIFO
@@ -195,129 +58,9 @@ handle h = ThreadEffect with
     tasks.unshift(k)
     drain()
 in
-  main(h)
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h$fork$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:drain⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Left of Cfg:
-//│             escapeChars = true
-//│             useSuperscripts = false
-//│             includeZero = false
-//│             defaultName = "tmp"
-//│           curThis = S of S of globalThis:globalThis⁰
-//│           bindings = HashMap(tmp:block$res -> block$res4, tmp:runtime -> runtime, h -> h1, tmp:definitionMetadata -> definitionMetadata, class:Handler$h$ -> Handler$h$2, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$h$fork -> Handler$h$fork, member:cpsCont$6 -> cpsCont$61, member:Handler$h$yld -> Handler$h$yld, tmp:block$res -> block$res5, member:f$worker -> f$worker, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res2, member:main -> main, member:Handler$h$fork$ -> Handler$h$fork$, member:Predef -> Predef, tmp:tmp -> tmp1, member:handleBlock$ -> handleBlock$1, tmp:block$res -> block$res3, member:Handler$h$fork -> Handler$h$fork1, member:Handler$h$yld -> Handler$h$yld1, tmp:block$res -> block$res, member:Handler$h$ -> Handler$h$3, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, member:Handler$h$fork$ -> Handler$h$fork$1, tmp:block$res -> block$res1, member:f -> f, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont$6 -> cpsCont$6)
-//│         curThis = S of N
-//│         bindings = HashMap(k -> k1, k -> k)
-//│       bindings = HashMap(member:cpsCont$1 -> cpsCont$1)
-//│     curThis = S of N
-//│     bindings = HashMap(retVal -> retVal)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'drain'
-//│ ║  l.211: 	    drain()
-//│ ║         	    ^^^^^
-//│ ╟── which references the symbol introduced here
-//│ ║  l.33: 	fun drain() =
-//│ ║        	^^^^^^^^^^^^^
-//│ ║  l.34: 	  while tasks.length != 0 do
-//│ ║        	^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.35: 	    tasks.pop()()
-//│ ╙──      	^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = tasks⁰
-//│     _2 = class hkmc2.semantics.VarSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Left of Cfg:
-//│           escapeChars = true
-//│           useSuperscripts = false
-//│           includeZero = false
-//│           defaultName = "tmp"
-//│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(tmp:block$res -> block$res4, tmp:runtime -> runtime, h -> h1, tmp:definitionMetadata -> definitionMetadata, class:Handler$h$ -> Handler$h$2, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$h$fork -> Handler$h$fork, member:cpsCont$6 -> cpsCont$61, member:Handler$h$yld -> Handler$h$yld, tmp:block$res -> block$res5, member:f$worker -> f$worker, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res2, member:main -> main, member:Handler$h$fork$ -> Handler$h$fork$, member:Predef -> Predef, tmp:tmp -> tmp1, member:handleBlock$ -> handleBlock$1, tmp:block$res -> block$res3, member:Handler$h$fork -> Handler$h$fork1, member:Handler$h$yld -> Handler$h$yld1, tmp:block$res -> block$res, member:Handler$h$ -> Handler$h$3, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, member:Handler$h$fork$ -> Handler$h$fork$1, tmp:block$res -> block$res1, member:f -> f, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont$6 -> cpsCont$6)
-//│       curThis = S of N
-//│       bindings = HashMap(k -> k1, k -> k)
-//│     bindings = HashMap(member:cpsCont$1 -> cpsCont$1)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'tasks'
-//│ ║  l.210: 	    tasks.unshift(k)
-//│ ║         	    ^^^^^
-//│ ╟── which references the symbol introduced here
-//│ ║  l.32: 	let tasks = mut []
-//│ ╙──      	    ^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = member:drain⁰
-//│     _2 = class hkmc2.semantics.BlockMemberSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Right of Scope:
-//│           parentOrCfg = Right of Scope:
-//│             parentOrCfg = Right of Scope:
-//│               parentOrCfg = Left of Cfg:
-//│                 escapeChars = true
-//│                 useSuperscripts = false
-//│                 includeZero = false
-//│                 defaultName = "tmp"
-//│               curThis = S of S of globalThis:globalThis⁰
-//│               bindings = HashMap(tmp:block$res -> block$res4, tmp:runtime -> runtime, h -> h1, tmp:definitionMetadata -> definitionMetadata, class:Handler$h$ -> Handler$h$2, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$h$fork -> Handler$h$fork, member:cpsCont$6 -> cpsCont$61, member:Handler$h$yld -> Handler$h$yld, tmp:block$res -> block$res5, member:f$worker -> f$worker, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res2, member:main -> main, member:Handler$h$fork$ -> Handler$h$fork$, member:Predef -> Predef, tmp:tmp -> tmp1, member:handleBlock$ -> handleBlock$1, tmp:block$res -> block$res3, member:Handler$h$fork -> Handler$h$fork1, member:Handler$h$yld -> Handler$h$yld1, tmp:block$res -> block$res, member:Handler$h$ -> Handler$h$3, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, member:Handler$h$fork$ -> Handler$h$fork$1, tmp:block$res -> block$res1, member:f -> f, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont$6 -> cpsCont$6)
-//│             curThis = S of N
-//│             bindings = HashMap(thread -> thread, k -> k1, k -> k)
-//│           bindings = HashMap(member:cpsCont$5 -> cpsCont$5)
-//│         curThis = S of N
-//│         bindings = HashMap(retVal -> retVal)
-//│       bindings = HashMap(member:cpsCont$4 -> cpsCont$4)
-//│     curThis = S of N
-//│     bindings = HashMap(retVal -> retVal1)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'drain'
-//│ ║  l.208: 	    drain()
-//│ ║         	    ^^^^^
-//│ ╟── which references the symbol introduced here
-//│ ║  l.33: 	fun drain() =
-//│ ║        	^^^^^^^^^^^^^
-//│ ║  l.34: 	  while tasks.length != 0 do
-//│ ║        	^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.35: 	    tasks.pop()()
-//│ ╙──      	^^^^^^^^^^^^^^^^^
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: lookup_! (Scope.scala:135)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Tuple2:
-//│     _1 = tasks⁰
-//│     _2 = class hkmc2.semantics.VarSymbol
-//│   _2 = Scope:
-//│     parentOrCfg = Right of Scope:
-//│       parentOrCfg = Right of Scope:
-//│         parentOrCfg = Left of Cfg:
-//│           escapeChars = true
-//│           useSuperscripts = false
-//│           includeZero = false
-//│           defaultName = "tmp"
-//│         curThis = S of S of globalThis:globalThis⁰
-//│         bindings = HashMap(tmp:block$res -> block$res4, tmp:runtime -> runtime, h -> h1, tmp:definitionMetadata -> definitionMetadata, class:Handler$h$ -> Handler$h$2, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:tmp -> tmp, member:handleBlock$ -> handleBlock$, member:Handler$h$fork -> Handler$h$fork, member:cpsCont$6 -> cpsCont$61, member:Handler$h$yld -> Handler$h$yld, tmp:block$res -> block$res5, member:f$worker -> f$worker, member:Handler$h$ -> Handler$h$1, tmp:block$res -> block$res2, member:main -> main, member:Handler$h$fork$ -> Handler$h$fork$, member:Predef -> Predef, tmp:tmp -> tmp1, member:handleBlock$ -> handleBlock$1, tmp:block$res -> block$res3, member:Handler$h$fork -> Handler$h$fork1, member:Handler$h$yld -> Handler$h$yld1, tmp:block$res -> block$res, member:Handler$h$ -> Handler$h$3, member:ThreadEffect -> ThreadEffect1, class:ThreadEffect -> ThreadEffect, member:Handler$h$fork$ -> Handler$h$fork$1, tmp:block$res -> block$res1, member:f -> f, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont$6 -> cpsCont$6)
-//│       curThis = S of N
-//│       bindings = HashMap(thread -> thread, k -> k1, k -> k)
-//│     bindings = HashMap(member:cpsCont$5 -> cpsCont$5)
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'tasks'
-//│ ║  l.206: 	    tasks.unshift(thread)
-//│ ║         	    ^^^^^
-//│ ╟── which references the symbol introduced here
-//│ ║  l.32: 	let tasks = mut []
-//│ ╙──      	    ^^^^^
-//│ ═══[RUNTIME ERROR] Error: Function 'main' expected 1 argument but got 2
+  mainn(h)
+//│ > mainn start
+//│ = 4
+//│ FAILURE: Unexpected lack of runtime error
 
 

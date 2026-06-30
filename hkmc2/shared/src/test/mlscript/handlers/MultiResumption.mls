@@ -1,23 +1,16 @@
 :js
 :effectHandlers
-:lift
 
 class Logger with
   fun info(s: Str): ()
 
-:re
 handle h = Logger with
   fun info(s)(k) =
     print(s)
     k()
     k()
 h.info("a")
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h$info$ is not CPS-transformed because it has more than one parameter list.
 //│ > a
-//│ = fun cpsCont$1
-//│ FAILURE: Unexpected lack of runtime error
 
 
 handle h = Logger with
@@ -26,7 +19,4 @@ handle h = Logger with
     k()
     k()
 123
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:Handler$h$info$ is not CPS-transformed because it has more than one parameter list.
 //│ = 123

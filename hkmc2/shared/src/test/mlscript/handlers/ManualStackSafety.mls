@@ -9,7 +9,8 @@ open annotations
 // * It is notably interesting in that it demonstrates the ability to preserve tail calls.
 // * The original function can be found in `hkmc2/shared/src/test/mlscript/handlers/ZCombinator.mls`
 
-:sjs
+:sir
+:noOpt
 fun test(n, stackLimit) =
   let stackDepth = 0
   let stackOffset = 0
@@ -63,197 +64,234 @@ fun test(n, stackLimit) =
   let ans = fact(n)
   set stackDepth = 0
   ans
-//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let test;
-//│ test = function test(k, n, stackLimit) {
-//│   let StackDelay1, stackDepth, stackOffset, h, tmp, handleBlock$, Handler$h$1, cpsCont$201;
-//│   stackDepth = 0;
-//│   stackOffset = 0;
-//│   (class StackDelay {
-//│     static {
-//│       StackDelay1 = this
-//│     }
-//│     toString() { return runtime.render(this); }
-//│     static [definitionMetadata] = ["class", "StackDelay"];
-//│   });
-//│   (class Handler$h$ extends StackDelay1 {
-//│     static {
-//│       Handler$h$1 = this
-//│     }
-//│     constructor() {
-//│       super();
-//│     }
-//│     perform(k1) {
-//│       let Handler$h$perform;
-//│       Handler$h$perform = function Handler$h$perform(k2, resume) {
+//│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
+//│ define test⁰ as fun test¹(k, n, stackLimit) {
+//│   let StackDelay, stackDepth, stackOffset, h, tmp, handleBlock$, Handler$h$, cpsCont$201;
+//│   set stackDepth = 0;
+//│   set stackOffset = 0;
+//│   @abstract
+//│   define StackDelay as class StackDelay⁰;
+//│   define Handler$h$ as class Handler$h$⁰ extends StackDelay⁰ {
+//│     method perform⁰ = fun perform¹(k1) {
+//│       let Handler$h$perform, suspendRes;
+//│       define Handler$h$perform as fun Handler$h$perform⁰(k2, resume) {
 //│         let curOffset, tmp1, cpsCont$104;
-//│         curOffset = stackOffset;
-//│         stackOffset = stackDepth;
-//│         runtime.safeCall(globalThis.console.log("resuming at offset:", curOffset));
-//│         cpsCont$104 = function cpsCont$104(retVal) {
-//│           tmp1 = retVal;
-//│           runtime.safeCall(globalThis.console.log("finished at offset:", curOffset));
-//│           stackOffset = curOffset;
+//│         set curOffset = stackOffset;
+//│         set stackOffset = stackDepth;
+//│         do @native globalThis⁰.console⁰.log⁰("resuming at offset:", curOffset);
+//│         define cpsCont$104 as fun cpsCont$104⁰(retVal) {
+//│           set tmp1 = retVal;
+//│           do @native globalThis⁰.console⁰.log⁰("finished at offset:", curOffset);
+//│           set stackOffset = curOffset;
 //│           return k2(tmp1)
 //│         };
-//│         return resume(cpsCont$104)
+//│         return resume(cpsCont$104⁰)
 //│       };
-//│       return new runtime.Suspend(k1, this, Handler$h$perform)
+//│       return new mut runtime⁰.Suspend﹖(k1, Handler$h$⁰.this, Handler$h$perform⁰)
 //│     }
-//│     toString() { return runtime.render(this); }
-//│     static [definitionMetadata] = ["class", "Handler$h$"];
-//│   });
-//│   h = new Handler$h$1();
-//│   handleBlock$ = (undefined, function (k1) {
-//│     let a, selfApp, fact, ans, cpsCont$200, k2, g, a1, scrut, tmp1, tmp2;
-//│     selfApp = function selfApp(k3, f) {
-//│       let scrut1, tmp3, tmp4;
-//│       tmp3 = stackDepth - stackOffset;
-//│       scrut1 = tmp3 >= stackLimit;
-//│       if (scrut1 === true) {
-//│         let cpsCont$154;
-//│         cpsCont$154 = function cpsCont$154(retVal) {
-//│           let k4;
-//│           k4 = k3;
-//│           tmp4 = stackDepth + 1;
-//│           stackDepth = tmp4;
-//│           return f(k4, f)
-//│         };
-//│         return h.perform(cpsCont$154)
-//│       }
-//│     };
-//│     a = function a(k3, self) {
-//│       let b, scrut1, tmp3;
-//│       b = function b(k4, x) {
-//│         let scrut2, scrut3, tmp4, prev, tmp5, tmp6, tmp7;
-//│         tmp5 = stackDepth - stackOffset;
-//│         scrut2 = tmp5 >= stackLimit;
-//│         if (scrut2 === true) {
-//│           let cpsCont$197;
-//│           cpsCont$197 = function cpsCont$197(retVal) {
-//│             let k5;
-//│             k5 = k4;
-//│             scrut3 = Predef.equals(x, 0);
-//│             if (scrut3 === true) {
-//│               return k5(1)
-//│             }
-//│             {
-//│               let cpsCont$196;
-//│               runtime.safeCall(globalThis.console.log(stackDepth, stackOffset));
-//│               tmp4 = stackDepth;
-//│               tmp6 = stackDepth + 1;
-//│               stackDepth = tmp6;
-//│               tmp7 = x - 1;
-//│               cpsCont$196 = function cpsCont$196(retVal1) {
-//│                 let tmp8;
-//│                 prev = retVal1;
-//│                 stackDepth = tmp4;
-//│                 runtime.safeCall(globalThis.console.log("resumed:", x));
-//│                 tmp8 = x * prev;
-//│                 return k5(tmp8)
-//│               };
-//│               return self(cpsCont$196, tmp7);
-//│             }
+//│   };
+//│   set h = new mut Handler$h$⁰();
+//│   define handleBlock$ as fun handleBlock$⁰(k1) {
+//│     let a, mkrec, selfApp, fact, ans, cpsCont$200;
+//│     define selfApp as fun selfApp⁰(k2, f) {
+//│       let scrut, tmp1, tmp2, rest;
+//│       set tmp1 = -⁰(stackDepth, stackOffset);
+//│       set scrut = >=⁰(tmp1, stackLimit);
+//│       define rest as fun rest⁰(k3) {
+//│         set tmp2 = +⁰(stackDepth, 1);
+//│         set stackDepth = tmp2;
+//│         return f(k3, f)
+//│       };
+//│       match scrut
+//│         true =>
+//│           let cpsCont$154;
+//│           define cpsCont$154 as fun cpsCont$154⁰(retVal) {
+//│             return rest⁰(k2)
 //│           };
-//│           return h.perform(cpsCont$197)
-//│         }
-//│       };
-//│       tmp3 = stackDepth - stackOffset;
-//│       scrut1 = tmp3 >= stackLimit;
-//│       if (scrut1 === true) {
-//│         let cpsCont$198;
-//│         cpsCont$198 = function cpsCont$198(retVal) {
-//│           return k3(b)
-//│         };
-//│         return h.perform(cpsCont$198)
-//│       }
-//│       return k3(b);
+//│           return h.perform﹖(cpsCont$154⁰)
+//│         else
+//│           end
+//│       end
 //│     };
-//│     cpsCont$200 = function cpsCont$200(retVal) {
-//│       let cpsCont$199;
-//│       fact = retVal;
-//│       stackDepth = 1;
-//│       cpsCont$199 = function cpsCont$199(retVal1) {
-//│         ans = retVal1;
-//│         stackDepth = 0;
-//│         return k1(ans)
-//│       };
-//│       return fact(cpsCont$199, n)
-//│     };
-//│     k2 = cpsCont$200;
-//│     g = a;
-//│     a1 = function a(k3, self) {
-//│       let b, scrut1, tmp3, tmp4;
-//│       b = function b(k4, y) {
-//│         let scrut2, tmp5, res, tmp6, tmp7, tmp8;
-//│         tmp6 = stackDepth - stackOffset;
-//│         scrut2 = tmp6 >= stackLimit;
-//│         if (scrut2 === true) {
-//│           let cpsCont$182;
-//│           cpsCont$182 = function cpsCont$182(retVal) {
-//│             let k5, cpsCont$181;
-//│             k5 = k4;
-//│             tmp5 = stackDepth;
-//│             tmp7 = stackDepth + 1;
-//│             stackDepth = tmp7;
-//│             cpsCont$181 = function cpsCont$181(retVal1) {
-//│               res = retVal1;
-//│               stackDepth = tmp5;
-//│               tmp8 = stackDepth + 1;
-//│               stackDepth = tmp8;
+//│     define mkrec as fun mkrec⁰(k2, g) {
+//│       let a1, scrut, tmp1, tmp2, rest;
+//│       define a1 as fun a⁰(k3, self) {
+//│         let b, scrut1, tmp3, tmp4, rest1;
+//│         define b as fun b⁰(k4, y) {
+//│           let scrut2, tmp5, res, tmp6, tmp7, tmp8, rest2;
+//│           set tmp6 = -⁰(stackDepth, stackOffset);
+//│           set scrut2 = >=⁰(tmp6, stackLimit);
+//│           define rest2 as fun rest¹(k5) {
+//│             let cpsCont$181;
+//│             set tmp5 = stackDepth;
+//│             set tmp7 = +⁰(stackDepth, 1);
+//│             set stackDepth = tmp7;
+//│             define cpsCont$181 as fun cpsCont$181⁰(retVal) {
+//│               set res = retVal;
+//│               set stackDepth = tmp5;
+//│               set tmp8 = +⁰(stackDepth, 1);
+//│               set stackDepth = tmp8;
 //│               return res(k5, y)
 //│             };
-//│             return selfApp(cpsCont$181, self)
+//│             return selfApp⁰(cpsCont$181⁰, self)
 //│           };
-//│           return h.perform(cpsCont$182)
-//│         }
-//│       };
-//│       tmp3 = stackDepth - stackOffset;
-//│       scrut1 = tmp3 >= stackLimit;
-//│       if (scrut1 === true) {
-//│         let cpsCont$183;
-//│         cpsCont$183 = function cpsCont$183(retVal) {
-//│           let k4;
-//│           k4 = k3;
-//│           tmp4 = stackDepth + 1;
-//│           stackDepth = tmp4;
-//│           return g(k4, b)
+//│           match scrut2
+//│             true =>
+//│               let cpsCont$182;
+//│               define cpsCont$182 as fun cpsCont$182⁰(retVal) {
+//│                 return rest¹(k4)
+//│               };
+//│               return h.perform﹖(cpsCont$182⁰)
+//│             else
+//│               end
+//│           end
 //│         };
-//│         return h.perform(cpsCont$183)
-//│       }
-//│     };
-//│     tmp1 = stackDepth - stackOffset;
-//│     scrut = tmp1 >= stackLimit;
-//│     if (scrut === true) {
-//│       let cpsCont$184;
-//│       cpsCont$184 = function cpsCont$184(retVal) {
-//│         let k3;
-//│         k3 = k2;
-//│         tmp2 = stackDepth + 1;
-//│         stackDepth = tmp2;
-//│         return selfApp(k3, a1)
+//│         set tmp3 = -⁰(stackDepth, stackOffset);
+//│         set scrut1 = >=⁰(tmp3, stackLimit);
+//│         define rest1 as fun rest²(k4) {
+//│           set tmp4 = +⁰(stackDepth, 1);
+//│           set stackDepth = tmp4;
+//│           return g(k4, b⁰)
+//│         };
+//│         match scrut1
+//│           true =>
+//│             let cpsCont$183;
+//│             define cpsCont$183 as fun cpsCont$183⁰(retVal) {
+//│               return rest²(k3)
+//│             };
+//│             return h.perform﹖(cpsCont$183⁰)
+//│           else
+//│             end
+//│         end
 //│       };
-//│       return h.perform(cpsCont$184)
-//│     }
-//│     return runtime.Unit;
-//│   });
-//│   cpsCont$201 = function cpsCont$201(retVal) {
-//│     tmp = retVal;
+//│       set tmp1 = -⁰(stackDepth, stackOffset);
+//│       set scrut = >=⁰(tmp1, stackLimit);
+//│       define rest as fun rest³(k3) {
+//│         set tmp2 = +⁰(stackDepth, 1);
+//│         set stackDepth = tmp2;
+//│         return selfApp⁰(k3, a⁰)
+//│       };
+//│       match scrut
+//│         true =>
+//│           let cpsCont$184;
+//│           define cpsCont$184 as fun cpsCont$184⁰(retVal) {
+//│             return rest³(k2)
+//│           };
+//│           return h.perform﹖(cpsCont$184⁰)
+//│         else
+//│           end
+//│       end
+//│     };
+//│     define a as fun a¹(k2, self) {
+//│       let b, scrut, tmp1;
+//│       define b as fun b¹(k3, x) {
+//│         let scrut1, scrut2, tmp2, prev, tmp3, tmp4, tmp5, rest;
+//│         set tmp3 = -⁰(stackDepth, stackOffset);
+//│         set scrut1 = >=⁰(tmp3, stackLimit);
+//│         define rest as fun rest⁴(k4) {
+//│           set scrut2 = Predef⁰.equals⁰(x, 0);
+//│           match scrut2
+//│             true =>
+//│               return k4(1)
+//│             else
+//│               let cpsCont$196;
+//│               do @native globalThis⁰.console⁰.log⁰(stackDepth, stackOffset);
+//│               set tmp2 = stackDepth;
+//│               set tmp4 = +⁰(stackDepth, 1);
+//│               set stackDepth = tmp4;
+//│               set tmp5 = -⁰(x, 1);
+//│               define cpsCont$196 as fun cpsCont$196⁰(retVal) {
+//│                 let tmp6;
+//│                 set prev = retVal;
+//│                 set stackDepth = tmp2;
+//│                 do @native globalThis⁰.console⁰.log⁰("resumed:", x);
+//│                 set tmp6 = *⁰(x, prev);
+//│                 return k4(tmp6)
+//│               };
+//│               return self(cpsCont$196⁰, tmp5)
+//│           end
+//│         };
+//│         match scrut1
+//│           true =>
+//│             let cpsCont$197;
+//│             define cpsCont$197 as fun cpsCont$197⁰(retVal) {
+//│               return rest⁴(k3)
+//│             };
+//│             return h.perform﹖(cpsCont$197⁰)
+//│           else
+//│             end
+//│         end
+//│       };
+//│       set tmp1 = -⁰(stackDepth, stackOffset);
+//│       set scrut = >=⁰(tmp1, stackLimit);
+//│       match scrut
+//│         true =>
+//│           let cpsCont$198;
+//│           define cpsCont$198 as fun cpsCont$198⁰(retVal) {
+//│             return k2(b¹)
+//│           };
+//│           return h.perform﹖(cpsCont$198⁰)
+//│         else
+//│           return k2(b¹)
+//│       end
+//│     };
+//│     define cpsCont$200 as fun cpsCont$200⁰(retVal) {
+//│       let cpsCont$199;
+//│       set fact = retVal;
+//│       set stackDepth = 1;
+//│       define cpsCont$199 as fun cpsCont$199⁰(retVal1) {
+//│         set ans = retVal1;
+//│         set stackDepth = 0;
+//│         return k1(ans)
+//│       };
+//│       return fact(cpsCont$199⁰, n)
+//│     };
+//│     return mkrec⁰(cpsCont$200⁰, a¹)
+//│   };
+//│   define cpsCont$201 as fun cpsCont$201⁰(retVal) {
+//│     set tmp = retVal;
 //│     return k(tmp)
 //│   };
-//│   return runtime.cpsHandlerImpl(cpsCont$201, h, handleBlock$)
+//│   return runtime⁰.cpsHandlerImpl﹖(cpsCont$201⁰, h, handleBlock$⁰)
 //│ };
+//│ end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 :expect 3628800
 test(10, 10000)
 //│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:254)
+//│ ═══[RUNTIME ERROR] Error: MLscript call unexpectedly returned `undefined`, the forbidden value.
+//│     at Runtime.checkCall (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:859:41)
+//│     at handleBlock$ (REPL13:1:7812)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:927:28)
+//│     at test (REPL13:1:8058)
+//│     at REPL16:1:38
+//│     at ContextifyScript.runInThisContext (node:vm:138:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:66:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:294)
-//│ ═══[RUNTIME ERROR] Expected: '3628800', got: '()'
+//│ ═══[RUNTIME ERROR] Expected: '3628800', got: 'undefined'
 
 :expect 3628800
 test(10, 5)
 //│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:254)
+//│ ═══[RUNTIME ERROR] Error: MLscript call unexpectedly returned `undefined`, the forbidden value.
+//│     at Runtime.checkCall (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:859:41)
+//│     at handleBlock$ (REPL13:1:7812)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:927:28)
+//│     at test (REPL13:1:8058)
+//│     at REPL19:1:38
+//│     at ContextifyScript.runInThisContext (node:vm:138:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:66:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:294)
-//│ ═══[RUNTIME ERROR] Expected: '3628800', got: '()'
+//│ ═══[RUNTIME ERROR] Expected: '3628800', got: 'undefined'
 

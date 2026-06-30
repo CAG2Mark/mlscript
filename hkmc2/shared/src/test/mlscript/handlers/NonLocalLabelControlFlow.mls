@@ -31,7 +31,7 @@ do root:
 
 :global
 :effectHandlers
-:lift
+:rewriteWhile
 
 
 fun breakFromNestedFunctionWithEffects() =
@@ -39,12 +39,6 @@ fun breakFromNestedFunctionWithEffects() =
     fun escape() = root.break(42)
     escape()
 breakFromNestedFunctionWithEffects()
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:NonLocalLabelEffectbreak$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ = 42
 
 
@@ -53,15 +47,6 @@ fun breakFromNestedLambdaWithEffects() =
     let escape = () => root.break(42)
     escape()
 breakFromNestedLambdaWithEffects()
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:NonLocalLabelEffectbreak$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:escape$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ = 42
 
 
@@ -70,15 +55,6 @@ fun breakFromNestedFunctionAndLambdaWithEffects() =
     fun makeBreaker() = () => root.break(7)
     makeBreaker()()
 breakFromNestedFunctionAndLambdaWithEffects()
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:NonLocalLabelEffectbreak$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:lambda$ is not CPS-transformed because it has more than one parameter list.
-//│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:205)
-//│ ═══[WARNING] The function term:handleBlock$$ is not CPS-transformed because it has more than one parameter list.
 //│ = 7
 
 
