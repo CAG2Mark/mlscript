@@ -342,3 +342,11 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
     cpsTransformer.applyBlock(blockNormalizer.applyBlock(b))
     // blockNormalizer.applyBlock(b)
   
+  def translateProgram(prog: Program): Program =
+    val transformed = translateTopLevel(prog.main)
+    if transformed is prog.main then prog
+    else
+      Program(
+        prog.imports,
+        transformed
+      )
