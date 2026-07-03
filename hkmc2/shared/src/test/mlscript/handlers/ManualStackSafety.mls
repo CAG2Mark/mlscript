@@ -9,7 +9,6 @@ open annotations
 // * It is notably interesting in that it demonstrates the ability to preserve tail calls.
 // * The original function can be found in `hkmc2/shared/src/test/mlscript/handlers/ZCombinator.mls`
 
-:sir
 :noOpt
 fun test(n, stackLimit) =
   let stackDepth = 0
@@ -64,208 +63,60 @@ fun test(n, stackLimit) =
   let ans = fact(n)
   set stackDepth = 0
   ans
-//│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define test⁰ as fun test¹(k, n, stackLimit) {
-//│   let StackDelay, stackDepth, stackOffset, h, tmp, handleBlock$, Handler$h$, cpsCont$201;
-//│   set stackDepth = 0;
-//│   set stackOffset = 0;
-//│   @abstract
-//│   define StackDelay as class StackDelay⁰;
-//│   define Handler$h$ as class Handler$h$⁰ extends StackDelay⁰ {
-//│     method perform⁰ = fun perform¹(k1) {
-//│       let Handler$h$perform, suspendRes;
-//│       define Handler$h$perform as fun Handler$h$perform⁰(k2, resume) {
-//│         let curOffset, tmp1, cpsCont$104;
-//│         set curOffset = stackOffset;
-//│         set stackOffset = stackDepth;
-//│         do @native globalThis⁰.console⁰.log⁰("resuming at offset:", curOffset);
-//│         define cpsCont$104 as fun cpsCont$104⁰(retVal) {
-//│           set tmp1 = retVal;
-//│           do @native globalThis⁰.console⁰.log⁰("finished at offset:", curOffset);
-//│           set stackOffset = curOffset;
-//│           return k2(tmp1)
-//│         };
-//│         return resume(cpsCont$104⁰)
-//│       };
-//│       return new mut runtime⁰.Suspend﹖(k1, Handler$h$⁰.this, Handler$h$perform⁰)
-//│     }
-//│   };
-//│   set h = new mut Handler$h$⁰();
-//│   define handleBlock$ as fun handleBlock$⁰(k1) {
-//│     let a, mkrec, selfApp, fact, ans, cpsCont$200;
-//│     define selfApp as fun selfApp⁰(k2, f) {
-//│       let scrut, tmp1, tmp2, rest;
-//│       set tmp1 = -⁰(stackDepth, stackOffset);
-//│       set scrut = >=⁰(tmp1, stackLimit);
-//│       define rest as fun rest⁰(k3) {
-//│         set tmp2 = +⁰(stackDepth, 1);
-//│         set stackDepth = tmp2;
-//│         return f(k3, f)
-//│       };
-//│       match scrut
-//│         true =>
-//│           let cpsCont$154;
-//│           define cpsCont$154 as fun cpsCont$154⁰(retVal) {
-//│             return rest⁰(k2)
-//│           };
-//│           return h.perform﹖(cpsCont$154⁰)
-//│         else
-//│           end
-//│       end
-//│     };
-//│     define mkrec as fun mkrec⁰(k2, g) {
-//│       let a1, scrut, tmp1, tmp2, rest;
-//│       define a1 as fun a⁰(k3, self) {
-//│         let b, scrut1, tmp3, tmp4, rest1;
-//│         define b as fun b⁰(k4, y) {
-//│           let scrut2, tmp5, res, tmp6, tmp7, tmp8, rest2;
-//│           set tmp6 = -⁰(stackDepth, stackOffset);
-//│           set scrut2 = >=⁰(tmp6, stackLimit);
-//│           define rest2 as fun rest¹(k5) {
-//│             let cpsCont$181;
-//│             set tmp5 = stackDepth;
-//│             set tmp7 = +⁰(stackDepth, 1);
-//│             set stackDepth = tmp7;
-//│             define cpsCont$181 as fun cpsCont$181⁰(retVal) {
-//│               set res = retVal;
-//│               set stackDepth = tmp5;
-//│               set tmp8 = +⁰(stackDepth, 1);
-//│               set stackDepth = tmp8;
-//│               return res(k5, y)
-//│             };
-//│             return selfApp⁰(cpsCont$181⁰, self)
-//│           };
-//│           match scrut2
-//│             true =>
-//│               let cpsCont$182;
-//│               define cpsCont$182 as fun cpsCont$182⁰(retVal) {
-//│                 return rest¹(k4)
-//│               };
-//│               return h.perform﹖(cpsCont$182⁰)
-//│             else
-//│               end
-//│           end
-//│         };
-//│         set tmp3 = -⁰(stackDepth, stackOffset);
-//│         set scrut1 = >=⁰(tmp3, stackLimit);
-//│         define rest1 as fun rest²(k4) {
-//│           set tmp4 = +⁰(stackDepth, 1);
-//│           set stackDepth = tmp4;
-//│           return g(k4, b⁰)
-//│         };
-//│         match scrut1
-//│           true =>
-//│             let cpsCont$183;
-//│             define cpsCont$183 as fun cpsCont$183⁰(retVal) {
-//│               return rest²(k3)
-//│             };
-//│             return h.perform﹖(cpsCont$183⁰)
-//│           else
-//│             end
-//│         end
-//│       };
-//│       set tmp1 = -⁰(stackDepth, stackOffset);
-//│       set scrut = >=⁰(tmp1, stackLimit);
-//│       define rest as fun rest³(k3) {
-//│         set tmp2 = +⁰(stackDepth, 1);
-//│         set stackDepth = tmp2;
-//│         return selfApp⁰(k3, a⁰)
-//│       };
-//│       match scrut
-//│         true =>
-//│           let cpsCont$184;
-//│           define cpsCont$184 as fun cpsCont$184⁰(retVal) {
-//│             return rest³(k2)
-//│           };
-//│           return h.perform﹖(cpsCont$184⁰)
-//│         else
-//│           end
-//│       end
-//│     };
-//│     define a as fun a¹(k2, self) {
-//│       let b, scrut, tmp1;
-//│       define b as fun b¹(k3, x) {
-//│         let scrut1, scrut2, tmp2, prev, tmp3, tmp4, tmp5, rest;
-//│         set tmp3 = -⁰(stackDepth, stackOffset);
-//│         set scrut1 = >=⁰(tmp3, stackLimit);
-//│         define rest as fun rest⁴(k4) {
-//│           set scrut2 = Predef⁰.equals⁰(x, 0);
-//│           match scrut2
-//│             true =>
-//│               return k4(1)
-//│             else
-//│               let cpsCont$196;
-//│               do @native globalThis⁰.console⁰.log⁰(stackDepth, stackOffset);
-//│               set tmp2 = stackDepth;
-//│               set tmp4 = +⁰(stackDepth, 1);
-//│               set stackDepth = tmp4;
-//│               set tmp5 = -⁰(x, 1);
-//│               define cpsCont$196 as fun cpsCont$196⁰(retVal) {
-//│                 let tmp6;
-//│                 set prev = retVal;
-//│                 set stackDepth = tmp2;
-//│                 do @native globalThis⁰.console⁰.log⁰("resumed:", x);
-//│                 set tmp6 = *⁰(x, prev);
-//│                 return k4(tmp6)
-//│               };
-//│               return self(cpsCont$196⁰, tmp5)
-//│           end
-//│         };
-//│         match scrut1
-//│           true =>
-//│             let cpsCont$197;
-//│             define cpsCont$197 as fun cpsCont$197⁰(retVal) {
-//│               return rest⁴(k3)
-//│             };
-//│             return h.perform﹖(cpsCont$197⁰)
-//│           else
-//│             end
-//│         end
-//│       };
-//│       set tmp1 = -⁰(stackDepth, stackOffset);
-//│       set scrut = >=⁰(tmp1, stackLimit);
-//│       match scrut
-//│         true =>
-//│           let cpsCont$198;
-//│           define cpsCont$198 as fun cpsCont$198⁰(retVal) {
-//│             return k2(b¹)
-//│           };
-//│           return h.perform﹖(cpsCont$198⁰)
-//│         else
-//│           return k2(b¹)
-//│       end
-//│     };
-//│     define cpsCont$200 as fun cpsCont$200⁰(retVal) {
-//│       let cpsCont$199;
-//│       set fact = retVal;
-//│       set stackDepth = 1;
-//│       define cpsCont$199 as fun cpsCont$199⁰(retVal1) {
-//│         set ans = retVal1;
-//│         set stackDepth = 0;
-//│         return k1(ans)
-//│       };
-//│       return fact(cpsCont$199⁰, n)
-//│     };
-//│     return mkrec⁰(cpsCont$200⁰, a¹)
-//│   };
-//│   define cpsCont$201 as fun cpsCont$201⁰(retVal) {
-//│     set tmp = retVal;
-//│     return k(tmp)
-//│   };
-//│   return runtime⁰.cpsHandlerImpl﹖(cpsCont$201⁰, h, handleBlock$⁰)
-//│ };
-//│ end
-//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 :expect 3628800
 test(10, 10000)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
-//│ ═══[RUNTIME ERROR] Expected: '3628800', got: '()'
+//│ > 1 0
+//│ > 3 0
+//│ > 5 0
+//│ > 7 0
+//│ > 9 0
+//│ > 11 0
+//│ > 13 0
+//│ > 15 0
+//│ > 17 0
+//│ > 19 0
+//│ > resumed: 1
+//│ > resumed: 2
+//│ > resumed: 3
+//│ > resumed: 4
+//│ > resumed: 5
+//│ > resumed: 6
+//│ > resumed: 7
+//│ > resumed: 8
+//│ > resumed: 9
+//│ > resumed: 10
+//│ = 3628800
 
 :expect 3628800
 test(10, 5)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
-//│ ═══[RUNTIME ERROR] Expected: '3628800', got: '()'
+//│ > 1 0
+//│ > resuming at offset: 0
+//│ > 3 5
+//│ > 5 5
+//│ > 7 5
+//│ > resuming at offset: 5
+//│ > 9 10
+//│ > 11 10
+//│ > resuming at offset: 10
+//│ > 13 15
+//│ > 15 15
+//│ > 17 15
+//│ > resuming at offset: 15
+//│ > 19 20
+//│ > resumed: 1
+//│ > resumed: 2
+//│ > resumed: 3
+//│ > resumed: 4
+//│ > resumed: 5
+//│ > resumed: 6
+//│ > resumed: 7
+//│ > resumed: 8
+//│ > resumed: 9
+//│ > resumed: 10
+//│ > finished at offset: 15
+//│ > finished at offset: 10
+//│ > finished at offset: 5
+//│ > finished at offset: 0
+//│ = 3628800
 

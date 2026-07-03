@@ -71,16 +71,17 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
       case m @ Match(scrut, arms, dflt, rest) =>
         var used = false
         val (dfn, blk) = createNestedFn("rest", PlainParamList(Nil), applyBlock(rest), true)
+        def mkCall = Return(Call(dfn.asPath, Nil ne_:: Nil)(CallMetadata.mlsFunWithEffect))
         def rewriteTail(arm: Block) = mapTail(arm):
           case End(_) =>
             used = true
-            Return(Call(dfn.asPath, Nil ne_:: Nil)(CallMetadata.mlsFunWithEffect))
+            mkCall
           case arm => arm
         val newArms = arms.mapConserve:
           case (c, b_) => (c, applyBlock(rewriteTail(b_)))
         val newDflt = dflt.mapConserve(b_ => applyBlock(rewriteTail(b_)))
         // Match(scrut, arms, dflt, rest)
-        val ret = Match(scrut, newArms, newDflt, End())
+        val ret = Match(scrut, newArms, newDflt, mkCall)
         if used then
           blk(ret)
         else ret
