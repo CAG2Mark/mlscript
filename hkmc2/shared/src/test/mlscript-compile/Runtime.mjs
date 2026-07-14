@@ -393,33 +393,6 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
       toString() { return runtime.render(this); }
       static [definitionMetadata] = ["object", "PrintStackEffect"];
     });
-    (class TopLevelHandler {
-      static {
-        new this
-      }
-      constructor() {
-        Runtime.TopLevelHandler = this;
-        Object.defineProperty(this, "class", {
-          value: TopLevelHandler
-        });
-        globalThis.Object.freeze(this);
-      }
-      toString() { return runtime.render(this); }
-      static [definitionMetadata] = ["object", "TopLevelHandler"];
-    });
-    Runtime.ContThunk = function ContThunk(thunk) {
-      return globalThis.Object.freeze(new ContThunk.class(thunk));
-    };
-    (class ContThunk {
-      static {
-        Runtime.ContThunk.class = this
-      }
-      constructor(thunk) {
-        this.thunk = thunk;
-      }
-      toString() { return runtime.render(this); }
-      static [definitionMetadata] = ["class", "ContThunk", ["thunk"]];
-    });
     Runtime.Suspend = function Suspend(k, tag, handlerFun) {
       return globalThis.Object.freeze(new Suspend.class(k, tag, handlerFun));
     };
@@ -434,6 +407,21 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
       }
       toString() { return runtime.render(this); }
       static [definitionMetadata] = ["class", "Suspend", ["k", "tag", "handlerFun"]];
+    });
+    Runtime.StackSuspend = function StackSuspend(k, tag, retVal) {
+      return globalThis.Object.freeze(new StackSuspend.class(k, tag, retVal));
+    };
+    (class StackSuspend {
+      static {
+        Runtime.StackSuspend.class = this
+      }
+      constructor(k, tag, retVal) {
+        this.k = k;
+        this.tag = tag;
+        this.retVal = retVal;
+      }
+      toString() { return runtime.render(this); }
+      static [definitionMetadata] = ["class", "StackSuspend", ["k", "tag", "retVal"]];
     });
     Runtime.FunctionContFrame = function FunctionContFrame(next, saved) {
       return globalThis.Object.freeze(new FunctionContFrame.class(next, saved));
@@ -673,8 +661,8 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
         });
         globalThis.Object.freeze(this);
       }
-      delay(k) {
-        return Runtime.Suspend(k, Runtime.stackHandler, runtime.Unit)
+      delay(k, retVal) {
+        return globalThis.Object.freeze(new Runtime.StackSuspend.class(k, Runtime.stackHandler, retVal))
       }
       toString() { return runtime.render(this); }
       static [definitionMetadata] = ["object", "StackDelayCpsHandler"];
@@ -819,23 +807,14 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
     let handlerTrampoline$cap;
     handlerTrampoline$cap = new Capture$handlerTrampoline1(cur);
     lbl: while (true) {
-      let scrut, scrut1, arg$Suspend$0$, arg$Suspend$1$, arg$Suspend$2$, arg$ContThunk$0$, tmp, scope23$cap, lambda$here;
+      let scrut, arg$Suspend$0$, arg$Suspend$1$, arg$Suspend$2$, scope23$cap, lambda$here;
       scope23$cap = new Capture$scope231(undefined, undefined, undefined);
-      if (handlerTrampoline$cap.cur$0 instanceof Runtime.ContThunk.class) {
-        arg$ContThunk$0$ = handlerTrampoline$cap.cur$0.thunk;
-        tmp = runtime.safeCall(arg$ContThunk$0$());
-        handlerTrampoline$cap.cur$0 = tmp;
-        continue lbl
-      } else if (handlerTrampoline$cap.cur$0 instanceof Runtime.Suspend.class) {
+      if (handlerTrampoline$cap.cur$0 instanceof Runtime.Suspend.class) {
         arg$Suspend$0$ = handlerTrampoline$cap.cur$0.k;
         arg$Suspend$1$ = handlerTrampoline$cap.cur$0.tag;
         arg$Suspend$2$ = handlerTrampoline$cap.cur$0.handlerFun;
-        scrut = tag === Runtime.TopLevelHandler;
+        scrut = arg$Suspend$1$ === tag;
         if (scrut === true) {
-          throw runtime.safeCall(globalThis.Error("unhandled effects"))
-        }
-        scrut1 = arg$Suspend$1$ === tag;
-        if (scrut1 === true) {
           scope23$cap.handlerFunCont$0 = handlerFunCont$(Runtime, tag, arg$Suspend$0$);
           scope23$cap.tmp$1 = runtime.safeCall(arg$Suspend$2$(Runtime.cpsId, scope23$cap.handlerFunCont$0));
           handlerTrampoline$cap.cur$0 = scope23$cap.tmp$1;
@@ -1264,17 +1243,18 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
     }
     return runtime.Unit;
   }
-  static checkDepthCps(k) {
+  static cpsSetCheckDepth() {
     let tmp, tmp1;
-    tmp = Runtime.stackDepth >= Runtime.stackLimit;
-    if (tmp === true) {
-      tmp1 = Runtime.stackHandler !== null;
-      if (tmp1 === true) {
-        return runtime.safeCall(Runtime.stackHandler.delay(k))
-      }
-      return runtime.safeCall(k());
+    tmp = Runtime.stackDepth + 1;
+    Runtime.stackDepth = tmp;
+    tmp1 = Runtime.stackDepth >= Runtime.stackLimit;
+    if (tmp1 === true) {
+      return Runtime.stackHandler !== null
     }
-    return runtime.safeCall(k());
+    return false;
+  }
+  static cpsRaiseStack(k, retVal) {
+    return runtime.safeCall(Runtime.stackHandler.delay(k, retVal))
   }
   static runStackSafe(limit, f) {
     let old, old1, old2, result, scrut, tmp, tmp1, tmp2;
@@ -1306,6 +1286,48 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
                 throw globalThis.Object.freeze(new globalThis.Error("Effect crossed through stack safe boundary"))
               }
               continue lbl;
+            }
+            break;
+          }
+          tmp2 = result;
+        } finally {
+          Runtime.stackHandler = old2;
+        }
+        tmp1 = tmp2;
+      } finally {
+        Runtime.stackDepth = old1;
+      }
+      tmp = tmp1;
+    } finally {
+      Runtime.stackLimit = old;
+    }
+    return tmp
+  }
+  static runStackSafeCps(limit, f) {
+    let old, old1, old2, result, tmp, tmp1, tmp2;
+    old = Runtime.stackLimit;
+    try {
+      Runtime.stackLimit = limit;
+      old1 = Runtime.stackDepth;
+      try {
+        Runtime.stackDepth = 1;
+        old2 = Runtime.stackHandler;
+        try {
+          Runtime.stackHandler = Runtime.StackDelayCpsHandler;
+          result = runtime.safeCall(f());
+          lbl: while (true) {
+            let old3, arg$StackSuspend$0$, arg$StackSuspend$2$;
+            if (result instanceof Runtime.StackSuspend.class) {
+              arg$StackSuspend$0$ = result.k;
+              arg$StackSuspend$2$ = result.retVal;
+              old3 = Runtime.stackDepth;
+              try {
+                Runtime.stackDepth = 1;
+                result = runtime.safeCall(arg$StackSuspend$0$(arg$StackSuspend$2$));
+              } finally {
+                Runtime.stackDepth = old3;
+              }
+              continue lbl
             }
             break;
           }

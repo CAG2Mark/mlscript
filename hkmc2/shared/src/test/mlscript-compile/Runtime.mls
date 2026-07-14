@@ -169,17 +169,12 @@ mut val resumePc = -1
 object FatalEffect
 object PrintStackEffect
 
-
-object TopLevelHandler
-
-data class ContThunk(thunk)
 data class Suspend(k, tag, handlerFun)
+data class StackSuspend(k, tag, retVal)
 
 fun handlerTrampoline(k, tag, cur) =
   while cur is
-    ContThunk(thunk) do set cur = thunk()
     Suspend(resume, tag', handlerFun) do
-      if tag === TopLevelHandler do throw Error("unhandled effects")
       if tag' === tag then
         let handlerFunCont = (k1, v) =>
           handlerTrampoline(k1, tag, resume(v))
@@ -503,7 +498,7 @@ object StackDelayHandler with
     set stackResume = k
 
 object StackDelayCpsHandler with
-  fun delay(k) = Suspend(k, stackHandler, ())
+  fun delay(k, retVal) = new StackSuspend(k, stackHandler, retVal)
 
 fun checkDepth() =
   if stackDepth >= stackLimit && stackHandler !== null then
@@ -512,11 +507,12 @@ fun checkDepth() =
   else
     ()
 
-fun checkDepthCps(k) =
-  if stackDepth >= stackLimit && stackHandler !== null then
-    stackHandler.delay(k)
-  else
-    k()
+fun cpsSetCheckDepth() =
+  set stackDepth += 1
+  stackDepth >= stackLimit && stackHandler !== null
+
+fun cpsRaiseStack(k, retVal) =
+  stackHandler.delay(k, retVal)
 
 fun runStackSafe(limit, f) =
   set stackLimit = limit in...
@@ -533,6 +529,17 @@ fun runStackSafe(limit, f) =
       result = saved(())
     if curEffect !== null do
       throw new Error("Effect crossed through stack safe boundary")
+  result
+
+fun runStackSafeCps(limit, f) =
+  set stackLimit = limit in...
+  set stackDepth = 1 in...
+  set stackHandler = StackDelayCpsHandler in...
+  let result = f()
+  while result is 
+    StackSuspend(k, tag, retVal) do
+      set stackDepth = 1 in...
+      result = k(retVal)
   result
 
 class Int31(v) with
