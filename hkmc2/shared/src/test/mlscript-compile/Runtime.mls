@@ -502,12 +502,21 @@ object StackDelayHandler with
   fun delay() = mkEffect of this, k =>
     set stackResume = k
 
+object StackDelayCpsHandler with
+  fun delay(k) = Suspend(k, stackHandler, ())
+
 fun checkDepth() =
   if stackDepth >= stackLimit && stackHandler !== null then
     // this is a tail call to effectful function
     stackHandler.delay()
   else
     ()
+
+fun checkDepthCps(k) =
+  if stackDepth >= stackLimit && stackHandler !== null then
+    stackHandler.delay(k)
+  else
+    k()
 
 fun runStackSafe(limit, f) =
   set stackLimit = limit in...

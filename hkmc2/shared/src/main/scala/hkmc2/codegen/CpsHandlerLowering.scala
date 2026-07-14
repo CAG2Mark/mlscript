@@ -228,12 +228,9 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
             fun.owner, fun.sym, fun.dSym, fun.params, newBod
           )(fun.configOverride, fun.annotations)
         else
-          if fun.dSym.name == "list" then
-            println(ogParams)
-            println(ogParams.copy(params = Param.simple(contSym) :: ogParams.params) :: Nil)
           fun.copy(
             params = ogParams.copy(params = Param.simple(contSym) :: ogParams.params) :: Nil,
-            body = applyCpsOnFun(fun.body, contSym.asPath)
+            body = cpsBod
           )(fun.configOverride, fun.annotations)
     
     def checkCall(c: Call) =

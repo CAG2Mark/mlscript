@@ -5,12 +5,44 @@
 // :elt
 
 :global
+:effectHandlers
 // :d
 // :todo
 
 class Effect
 
-
+:sjs
+handle h = Object with
+  fun f()(k) = k(0)
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let h, tmp, handleBlock$, Handler$h$1, cpsCont$0;
+//│ (class Handler$h$ extends globalThis.Object {
+//│   static {
+//│     Handler$h$1 = this
+//│   }
+//│   constructor() {
+//│     super();
+//│   }
+//│   f(k) {
+//│     let Handler$h$f;
+//│     Handler$h$f = function Handler$h$f(k1, k2) {
+//│       return k2(k1, 0)
+//│     };
+//│     return new runtime.Suspend(k, this, Handler$h$f)
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Handler$h$"];
+//│ });
+//│ h = new Handler$h$1();
+//│ handleBlock$ = (undefined, function (k) {
+//│   return k(runtime.Unit)
+//│ });
+//│ cpsCont$0 = function cpsCont$0(retVal) {
+//│   tmp = retVal;
+//│   return runtime.cpsId(tmp)
+//│ };
+//│ return runtime.cpsHandlerImpl(cpsCont$0, h, handleBlock$)
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 open annotations
 

@@ -662,6 +662,23 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
       toString() { return runtime.render(this); }
       static [definitionMetadata] = ["object", "StackDelayHandler"];
     });
+    (class StackDelayCpsHandler {
+      static {
+        new this
+      }
+      constructor() {
+        Runtime.StackDelayCpsHandler = this;
+        Object.defineProperty(this, "class", {
+          value: StackDelayCpsHandler
+        });
+        globalThis.Object.freeze(this);
+      }
+      delay(k) {
+        return Runtime.Suspend(k, Runtime.stackHandler, runtime.Unit)
+      }
+      toString() { return runtime.render(this); }
+      static [definitionMetadata] = ["object", "StackDelayCpsHandler"];
+    });
     Runtime.Int31 = function Int31(v) {
       return globalThis.Object.freeze(new Int31.class(v));
     };
@@ -1246,6 +1263,18 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
       return runtime.Unit;
     }
     return runtime.Unit;
+  }
+  static checkDepthCps(k) {
+    let tmp, tmp1;
+    tmp = Runtime.stackDepth >= Runtime.stackLimit;
+    if (tmp === true) {
+      tmp1 = Runtime.stackHandler !== null;
+      if (tmp1 === true) {
+        return runtime.safeCall(Runtime.stackHandler.delay(k))
+      }
+      return runtime.safeCall(k());
+    }
+    return runtime.safeCall(k());
   }
   static runStackSafe(limit, f) {
     let old, old1, old2, result, scrut, tmp, tmp1, tmp2;
