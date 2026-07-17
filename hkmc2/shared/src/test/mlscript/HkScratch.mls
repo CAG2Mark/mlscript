@@ -11,63 +11,22 @@
 
 class Effect
 
-:sjs
-:noInline
-:stackSafe 6
-fun id(x) = x
-fun f(x) =
-  id(id(x))
-f(100)
-//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let f, id, $_stack$_safe$_body$_;
-//│ $_stack$_safe$_body$_ = (undefined, function () {
-//│   id = function id(k, x) {
-//│     let cpsCont$0, tmp;
-//│     cpsCont$0 = function cpsCont$0(retVal) {
-//│       let tmp1;
-//│       tmp1 = runtime.cpsSetCheckDepth();
-//│       if (tmp1 === true) {
-//│         return runtime.cpsRaiseStack(cpsCont$0, retVal)
-//│       }
-//│       return k(x);
-//│     };
-//│     tmp = runtime.cpsSetCheckDepth();
-//│     if (tmp === true) {
-//│       return runtime.cpsRaiseStack(cpsCont$0, undefined)
-//│     }
-//│     return cpsCont$0(undefined);
-//│   };
-//│   f = function f(k, x) {
-//│     let cpsCont$4, tmp;
-//│     cpsCont$4 = function cpsCont$4(retVal) {
-//│       let tmp1;
-//│       tmp1 = runtime.cpsSetCheckDepth();
-//│       if (tmp1 === true) {
-//│         return runtime.cpsRaiseStack(cpsCont$4, retVal)
-//│       }
-//│       {
-//│         let tmp2, cpsCont$2;
-//│         cpsCont$2 = function cpsCont$2(retVal1) {
-//│           let tmp3;
-//│           tmp3 = runtime.cpsSetCheckDepth();
-//│           if (tmp3 === true) {
-//│             return runtime.cpsRaiseStack(cpsCont$2, retVal1)
-//│           }
-//│           tmp2 = retVal1;
-//│           return id(k, tmp2);
-//│         };
-//│         return id(cpsCont$2, x);
-//│       }
-//│     };
-//│     tmp = runtime.cpsSetCheckDepth();
-//│     if (tmp === true) {
-//│       return runtime.cpsRaiseStack(cpsCont$4, undefined)
-//│     }
-//│     return cpsCont$4(undefined);
-//│   };
-//│   return f(runtime.cpsId, 100)
-//│ });
-//│ return runtime.runStackSafeCps(6, $_stack$_safe$_body$_)
-//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ = 100
 
+:rewriteWhile
+:stackSafe 1000
+:expect 10000
+fun dummy = ()
+fun f(h) =
+  let n = 0
+  while n < 200 do
+    h.perform()
+    set n += 1
+  n
+handle h = Object with
+  fun perform()(k) =
+    k()
+f(h)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
+//│ ═══[RUNTIME ERROR] Expected: '10000', got: '200'
+//│ = 200

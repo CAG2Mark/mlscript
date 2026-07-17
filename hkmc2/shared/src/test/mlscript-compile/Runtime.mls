@@ -173,6 +173,8 @@ data class Suspend(k, tag, handlerFun)
 data class StackSuspend(k, tag, retVal)
 
 fun handlerTrampoline(k, tag, cur) =
+  if cpsSetCheckDepth() do
+    return cpsRaiseStack((_) => handlerTrampoline(k, tag, cur), ())
   while cur is
     Suspend(resume, tag', handlerFun) do
       if tag' === tag then
@@ -180,6 +182,8 @@ fun handlerTrampoline(k, tag, cur) =
           handlerTrampoline(k1, tag, resume(v))
         set cur = handlerFun(cpsId, handlerFunCont)
       else return Suspend(r => handlerTrampoline(k, tag, resume(r)), tag', handlerFun)
+    StackSuspend(resume, tag', resumeVal) do
+      return StackSuspend(r => handlerTrampoline(k, tag, resume(r)), tag', resumeVal)
   k(cur)
 
 fun cpsHandlerImpl(k, tag, f) =
