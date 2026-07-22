@@ -525,8 +525,70 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
    *    b) partitioning
    *    c) translate code in current block (post translate)
    */
+  
+  case class VarClassInfo(cls: ClsLikeDefn, mp: Map[LocalVarSymbol, BlockMemberSymbol -> TermSymbol]):
+    def select(varClassPath: Path)(local: LocalVarSymbol) =
+      val (_, sym) = mp(local)
+      Select(varClassPath, sym.id)(S(sym))(false)
+    def assign(varClassPath: Path)(local: LocalVarSymbol, value: Result, rest: Block) =
+      val (_, sym) = mp(local)
+      AssignField(varClassPath, sym.id, value, rest)(S(sym))
+    def instantiate = 
+      Instantiate(
+        true, 
+        Value.MemberRef(cls.sym, cls.isym),
+        mp.keySet.toArray.sortBy(_.uid).map(_.asPath.asArg).toList :: Nil
+      )
+    
+  private def createVarClass(nme: String, vars: Iterable[LocalVarSymbol]): VarClassInfo =
+    val clsSym = ClassSymbol(
+      Tree.DummyTypeDef(syntax.Cls),
+      Tree.Ident(nme)
+    )
 
-  private def translateBlock(blk: Block, h: HandlerCtx, scopedVars: collection.Set[ScopedSymbol]): Block =
+    val fresh = new Uid.Symbol.State
+    
+    val sortedVars: Array[(ctorSyms: (local: LocalVarSymbol, vs: VarSymbol), param: Param, valDefn: ValDefn)] =
+      vars.toArray.sortBy(_.uid).map: sym =>
+        val id = fresh.nextUid.asInt
+        val nme = sym.nme + "$" + id
+        
+        val ident = new Tree.Ident(nme)
+        val varSym = VarSymbol(ident)
+        val fldSym = BlockMemberSymbol(nme, Nil)
+        val tSym = TermSymbol(syntax.MutVal, S(clsSym), ident)
+        
+        val p = Param(FldFlags.empty.copy(isVal = true), varSym, N, Modulefulness.none)
+        varSym.decl = S(p) // * Currently this is only accessed to create the class' toString method
+        
+        val vd = ValDefn(
+          tSym,
+          fldSym,
+          varSym.asSimpleRef
+        )(N, Nil)
+        
+        (sym -> varSym, p, vd)
+    
+    val defn = ClsLikeDefn(
+      None, clsSym, BlockMemberSymbol(nme, Nil),
+      S(ClassCtorSymbol(syntax.Fun, N, clsSym)),
+      syntax.Cls,
+      N,
+      PlainParamList(sortedVars.iterator.map(_.param).toList) :: Nil, None, Nil, Nil, 
+      Nil,
+      End(),
+      sortedVars.iterator.foldLeft[Block](End()):
+        case (acc, (_, _, vd)) => Define(vd, acc),
+      N,
+      N,
+    )(N, Nil)
+    
+    val mp = sortedVars.iterator.map: x =>
+        x.ctorSyms.local -> (x.valDefn.sym -> x.valDefn.tsym)
+      .toMap
+    VarClassInfo(defn, mp)
+
+  private def translateBlock(nme: String, blk: Block, h: HandlerCtx, scopedVars: collection.Set[ScopedSymbol]): Block =
     given HandlerCtx = h
 
     def translateFunLike(fun: FunDefn, funcPath: Path, thisPath: Option[Path], debugNme: Str) =
@@ -544,7 +606,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         intLit(pl.params.length) :: pl.params.map(p => p.sym.asSimpleRef)
       val newCtx = HandlerCtx.FunctionLike(FunctionCtx(funcPath, thisPath, ResumeInfo(rtArgLists, sortedVars, L(fun.sym)),
         DebugInfo(debugNme, if opt.debug then debugInfoSym.asSimpleRef else unit), thisPath.isDefined && fun.params.isEmpty))
-      val bod2 = translateBlock(fun.body, newCtx, scopedVars)
+      val bod2 = translateBlock(fun.dSym.nme, fun.body, newCtx, scopedVars)
       val fun2 = if fun.body is bod2 then fun else
         FunDefn(fun.owner, fun.sym, fun.dSym, fun.params, bod2)(fun.configOverride, fun.annotations)
       (debugInfoSym, debugInfo, fun2)
@@ -609,6 +671,8 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     if oneState && !parts.containsError && !needsStackSafety then
       return b
     val vars = if opt.debug then ctx.resumeInfo.currentLocals else computeRestoreList(parts)
+    
+    val varClsInfo = createVarClass("VarsClass", vars)
 
     val pcVar = freshTmp("pc")
     val curDepth = freshTmp("curDepth")
@@ -616,6 +680,17 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
 
     val edges = computeEdges(parts)
     val straightLines = computeStraightLines(parts.entry, edges)
+    
+    def rewriteVars(varsInfo: VarClassInfo, varsClsPath: LocalVarSymbol) =
+      val sel = varsInfo.select(varsClsPath.asPath)
+      val assign = varsInfo.assign(varsClsPath.asPath)
+      val rewriter = new BlockTransformerShallow(SymbolSubst.Id):
+        override def applyPath(p: Path)(k: Path => Block): Block = p match
+          case Value.SimpleRef(sym: LocalVarSymbol) => k(sel(sym))
+          case _ => super.applyPath(p)(k)
+        override def applyBlock(b: Block): Block = b match
+          case Assign(s: LocalVarSymbol, rhs, rest) => assign(s, rhs, rest)
+          case _ => super.applyBlock(b)
 
     def postTransform(transition: BigInt => Block) = new BlockTransformerShallow(SymbolSubst.Id):
       override def applyBlock(b: Block) = b match
@@ -727,7 +802,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
       mainBody)
   
   private def translateCtorLike(b: Block, thisPath: Path, isModCtor: Bool)(using h: HandlerCtx): Block =
-    translateBlock(b, if isModCtor then HandlerCtx.ModCtor(h.currentBlockIsTrulyNested) else HandlerCtx.Ctor, Set.empty)
+    translateBlock("ctor", b, if isModCtor then HandlerCtx.ModCtor(h.currentBlockIsTrulyNested) else HandlerCtx.Ctor, Set.empty)
     
   /**
    * These functions does not recurse into nested definitions
@@ -784,7 +859,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
           !opt.doNotInstrumentTopLevelModCtor,
           _.assign(NoSymbol, Call(paths.resetEffects, Nil ne_:: Nil)(CallMetadata.defaultMlsFun))
         )
-        .rest(translateBlock(prog.main, ctx, Set.empty))
+        .rest(translateBlock("main", prog.main, ctx, Set.empty))
     if transformed is prog.main then prog
     else
       Program(

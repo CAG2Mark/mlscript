@@ -5,4 +5,44 @@
 abstract class Effect
 
 
-
+:sjs
+fun f(x) =
+  let y = x + x
+  let z = x + x + x
+  let a = f(x - 1)
+  a + y + z
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let f;
+//│ runtime.resetEffects();
+//│ f = function f(x) {
+//│   let y, z, a, tmp, tmp1, tmp2, pc;
+//│   if (runtime.resumePc === -1) {
+//│     pc = 0;
+//│   } else {
+//│     let saveOffset;
+//│     pc = runtime.resumePc;
+//│     saveOffset = runtime.resumeIdx;
+//│     y = runtime.resumeArr.at(saveOffset);
+//│     saveOffset = saveOffset + 1;
+//│     z = runtime.resumeArr.at(saveOffset);
+//│     runtime.resumePc = -1;
+//│   }
+//│   switch (pc) {
+//│     case 0:
+//│       y = x + x;
+//│       tmp = x + x;
+//│       z = tmp + x;
+//│       tmp1 = x - 1;
+//│       runtime.resumeValue = f(tmp1);
+//│       if (runtime.curEffect === null) {
+//│         pc = 1;
+//│       } else {
+//│         return runtime.unwind(f, 1, "HandlersScratch.mls:12:11", null, null, 1, 1, x, 2, y, z)
+//│       }
+//│     case 1:
+//│       a = runtime.resumeValue;
+//│       tmp2 = a + y;
+//│       return tmp2 + z;
+//│   }
+//│ };
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
