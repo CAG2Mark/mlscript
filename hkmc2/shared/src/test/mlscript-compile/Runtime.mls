@@ -13,6 +13,7 @@ object Unit with
   fun toString() = "()"
 
 fun cpsId(x) = x
+fun cpsId2(k, x) = k(x)
 
 // This object is used as a marker for non-local label continues.
 object Continue
@@ -173,8 +174,6 @@ data class Suspend(k, tag, handlerFun)
 data class StackSuspend(k, tag, retVal)
 
 fun handlerTrampoline(k, tag, cur) =
-  if cpsSetCheckDepth() do
-    return cpsRaiseStack((_) => handlerTrampoline(k, tag, cur), ())
   while cur is
     Suspend(resume, tag', handlerFun) do
       if tag' === tag then
@@ -182,12 +181,48 @@ fun handlerTrampoline(k, tag, cur) =
           handlerTrampoline(k1, tag, resume(v))
         set cur = handlerFun(cpsId, handlerFunCont)
       else return Suspend(r => handlerTrampoline(k, tag, resume(r)), tag', handlerFun)
-    StackSuspend(resume, tag', resumeVal) do
-      return StackSuspend(r => handlerTrampoline(k, tag, resume(r)), tag', resumeVal)
   k(cur)
 
 fun cpsHandlerImpl(k, tag, f) =
   handlerTrampoline(k, tag, f(cpsId))
+
+fun ss_handlerTrampoline(ss_k, k, tag, cur) =
+  if cpsSetCheckDepth() then
+    return cpsRaiseStack(_ => cpsSetCheckDepth(); ss_handlerTrampoline(ss_k, k, tag, cur), ())
+  fun loop(ss_k1, cur) =
+    if cpsSetCheckDepth() then
+      return cpsRaiseStack(_ => cpsSetCheckDepth(); loop(ss_k1, cur), ())
+    if cur is
+      Suspend(resume, tag', handlerFun) then
+        if tag' === tag then
+          fun handlerFunCont(hfc_k, k1, v) =
+            if cpsSetCheckDepth() then
+              return cpsRaiseStack(_ => cpsSetCheckDepth(); handlerFunCont(hfc_k, k1, v), ())
+            fun resumeCont(resume_r) =
+              if cpsSetCheckDepth() then
+                return cpsRaiseStack(resumeCont, resume_r)
+              ss_handlerTrampoline(hfc_k, k1, tag, resume_r)
+            resume(resumeCont)
+          fun cont(r) =
+            if cpsSetCheckDepth() then
+              return cpsRaiseStack(cont, r)
+            loop(ss_k1, r)
+          handlerFun(cont, cpsId, handlerFunCont)
+        else
+          fun suspendCont1(resume_k, r) =
+            if cpsSetCheckDepth() then
+              return cpsRaiseStack(_ => cpsSetCheckDepth(); suspendCont1(resume_k, r), ())
+            fun resumeCont1(resume_r) =
+              if cpsSetCheckDepth() then
+                return cpsRaiseStack(resumeCont1, resume_r)
+              ss_handlerTrampoline(resume_k, k, tag, resume_r)
+            resume(resumeCont1)
+          ss_k1 of Suspend(suspendCont1, tag', handlerFun)
+      else k(ss_k1, cur)
+  loop(ss_k, cur)
+
+fun ss_cpsHandlerImpl(ss_k, k, tag, f) =
+  f(res => ss_handlerTrampoline(ss_k, k, tag, f(cpsId)), cpsId)
 
 data class FunctionContFrame(next, saved) with
   fun resume(value) =

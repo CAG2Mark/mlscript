@@ -55,6 +55,11 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
   val checkDepthCpsPath: Path = paths.runtimePath.selN(Tree.Ident("cpsSetCheckDepth"))
   val raiseStackPath: Path = paths.runtimePath.selN(Tree.Ident("cpsRaiseStack"))
   val runStackSafeCpsPath: Path = paths.runtimePath.selN(Tree.Ident("runStackSafeCps"))
+  val cpsHandlerImplPath: Path = 
+    if opt.stackSafety.isDefined then
+      paths.runtimePath.selN(Tree.Ident("ss_cpsHandlerImpl"))
+    else
+      paths.runtimePath.selN(Tree.Ident("cpsHandlerImpl"))
   
   extension (builder: Block => Block)
     def stackSafePre(cont: Path, retVal: Path) =
@@ -137,9 +142,10 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
       
       case _ => super.applyBlock(b)
   
-  val cpsTransformer = new BlockTransformer(SymbolSubst()):
+  class CpsTransformer(isStackSafetyPass: Bool) extends BlockTransformer(SymbolSubst()):
     
-    val idPath = State.runtimeSymbol.asPath.selN(Tree.Ident("cpsId"))
+    val idPath = if opt.stackSafety.isDefined && !isStackSafetyPass then paths.runtimePath.selN(Tree.Ident("cpsId2")) else paths.runtimePath.selN(Tree.Ident("cpsId"))
+    val resMetadata = if opt.stackSafety.isDefined && !isStackSafetyPass then CallMetadata.mlsFunWithEffect else CallMetadata.defaultMlsFun
     
     var curContPath: Path = idPath
     var isTopLevel = true
@@ -227,12 +233,12 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
         val paramSym = VarSymbol(Tree.Ident("retVal")) // will always receive unit
         val pList = PlainParamList.simple(paramSym :: Nil)
         
-        val mainBod = if opt.stackSafety.isEmpty then cpsBod else
+        val mainBod = if !isStackSafetyPass then cpsBod else
           val (cpsCont, rest) = createCpsCont(pList, cpsBod, paramSym)
           cpsId += 1
           val bod = blockBuilder
             .stackSafePre(cpsCont.asPath, Value.Lit(Tree.UnitLit(false)))
-            .ret(Call(cpsCont.asPath, (Value.Lit(Tree.UnitLit(false)).asArg :: Nil) ne_:: Nil)(CallMetadata.defaultMlsFun))
+            .ret(Call(cpsCont.asPath, (Value.Lit(Tree.UnitLit(false)).asArg :: Nil) ne_:: Nil)(resMetadata))
           rest(bod)
         
         if fun.dSym.name === "main" then // hack
@@ -246,7 +252,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
           val newBod = blockBuilder
             .scopedVars(Set(nestedFun.sym))
             .define(nestedFun)
-            .ret(Call(nestedFun.asPath, (idPath.asArg :: Nil) ne_:: Nil)(CallMetadata.defaultMlsFun))
+            .ret(Call(nestedFun.asPath, (idPath.asArg :: Nil) ne_:: Nil)(resMetadata))
           FunDefn(
             fun.owner, fun.sym, fun.dSym, fun.params, newBod
           )(fun.configOverride, fun.annotations)
@@ -282,13 +288,13 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
     
     override def applyPath(p: Path)(k: Path => Block): Block = p match
       case Value.RefLike(Elaborator.ctx.builtins.runtime.handle_suspension) =>
-        k(State.runtimeSymbol.asPath.selN(Tree.Ident("cpsHandlerImpl")))
+        k(cpsHandlerImplPath)
       case _ => super.applyPath(p)(k)
     
     def createCpsCont(pList: ParamList, bod: Block, param: VarSymbol) =
       val nme = "cpsCont$" + cpsId
       cpsId += 1
-      if opt.stackSafety.isEmpty then 
+      if !isStackSafetyPass then 
         val (cpsCont, rest) = createNestedFn(nme, pList, bod)
         cpsId += 1
         (cpsCont, rest)
@@ -301,13 +307,12 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
         val fnDef = FunDefn(N, bms, tSym, pList :: Nil, bodd)(N, Nil)
         val blk = (rest: Block) => Scoped(Set(bms), Define(fnDef, rest))
         (fnDef, blk)
-          
-      
+    
     override def applyResult(r: Result)(k: Result => Block): Block =
       
       if inCtor then r match
         case c: Call if c.metadata.mayRaiseEffects && checkCall(c) =>
-          k(Call(c.fun, (idPath.asArg :: c.argss.head) ne_:: Nil)(CallMetadata.defaultMlsFun))
+          k(Call(c.fun, (idPath.asArg :: c.argss.head) ne_:: Nil)(resMetadata))
         case _ => super.applyResult(r)(k)
       else r match
       case c @ Call(Value.RefLike(Elaborator.ctx.builtins.runtime.suspend), (tag :: handlerFun :: Nil) :: Nil) =>
@@ -332,7 +337,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
           val (cpsCont, rest) = createCpsCont(pList, bod, paramSym)
           cpsId += 1
           applyPath(path): path =>
-            val call = Call(path, (cpsCont.asPath.asArg :: args.head) ne_:: Nil)(CallMetadata.defaultMlsFun)
+            val call = Call(path, (cpsCont.asPath.asArg :: args.head) ne_:: Nil)(resMetadata)
             rest(Return(call))
       case _ => super.applyResult(r)(k)
     
@@ -342,7 +347,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
         case _ =>
           val tmp = TempSymbol(N)
           (tmp.asPath, blockBuilder.assignScoped(tmp, r))
-      rst.ret(Call(curContPath, (pth.asArg :: Nil) ne_:: Nil)(CallMetadata.defaultMlsFun))
+      rst.ret(Call(curContPath, (pth.asArg :: Nil) ne_:: Nil)(resMetadata))
     
     override def applyBlock(b: Block): Block =
       
@@ -357,7 +362,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
         if !checkCall(c) then
           retResult(c)
         else
-          Return(Call(c.fun, (curContPath.asArg :: c.argss.head) ne_:: Nil)(CallMetadata.defaultMlsFun))
+          Return(Call(c.fun, (curContPath.asArg :: c.argss.head) ne_:: Nil)(resMetadata))
       case Return(r: Result) => retResult(r)
       case _: Label => lastWords("undesugared label")
       case b: Begin =>
@@ -378,11 +383,13 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
     (fnDef, blk)
   
   def translateTopLevel(b: Block): Block =
+    val cpsTransformer = new CpsTransformer(false)
     val ret = cpsTransformer.applyBlock(blockNormalizer.applyBlock(b))
     // blockNormalizer.applyBlock(b)
     opt.stackSafety match
       case Some(ss) =>
-        val (fn, rest) = createNestedFn("‹stack safe body›", PlainParamList(List.empty), ret, true)
+        val ssCpsTransformer = new CpsTransformer(true)
+        val (fn, rest) = createNestedFn("‹stack safe body›", PlainParamList(List.empty), ssCpsTransformer.applyBlock(ret), true)
         rest(Return(Call(
           runStackSafeCpsPath,
           (Value.Lit(Tree.IntLit(ss.stackLimit)).asArg :: fn.asPath.asArg :: Nil) ne_:: Nil

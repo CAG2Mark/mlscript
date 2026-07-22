@@ -16,7 +16,7 @@ hi(0)
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let hi, $_stack$_safe$_body$_;
 //│ $_stack$_safe$_body$_ = (undefined, function () {
-//│   hi = function hi(k, n) {
+//│   hi = function hi(k, k1, n) {
 //│     let cpsCont$0, tmp;
 //│     cpsCont$0 = function cpsCont$0(retVal) {
 //│       let tmp1;
@@ -28,10 +28,10 @@ hi(0)
 //│         let scrut, tmp2;
 //│         scrut = n === 0;
 //│         if (scrut === true) {
-//│           return k(0)
+//│           return k1(k, 0)
 //│         }
 //│         tmp2 = n - 1;
-//│         return hi(k, tmp2);
+//│         return hi(k, k1, tmp2);
 //│       }
 //│     };
 //│     tmp = runtime.cpsSetCheckDepth();
@@ -48,14 +48,14 @@ hi(0)
 //│         let scrut, tmp2;
 //│         scrut = n === 0;
 //│         if (scrut === true) {
-//│           return k(0)
+//│           return k1(k, 0)
 //│         }
 //│         tmp2 = n - 1;
-//│         return hi(k, tmp2);
+//│         return hi(k, k1, tmp2);
 //│       }
 //│     }
 //│   };
-//│   return hi(runtime.cpsId, 0)
+//│   return hi(runtime.cpsId, runtime.cpsId2, 0)
 //│ });
 //│ return runtime.runStackSafeCps(6, $_stack$_safe$_body$_)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
@@ -72,47 +72,67 @@ sum(10000)
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let sum, $_stack$_safe$_body$_1;
 //│ $_stack$_safe$_body$_1 = (undefined, function () {
-//│   sum = function sum(k, n) {
-//│     let cpsCont$2, tmp;
-//│     cpsCont$2 = function cpsCont$2(retVal) {
+//│   sum = function sum(k, k1, n) {
+//│     let cpsCont$5, tmp;
+//│     cpsCont$5 = function cpsCont$5(retVal) {
 //│       let tmp1;
 //│       tmp1 = runtime.cpsSetCheckDepth();
 //│       if (tmp1 === true) {
-//│         return runtime.cpsRaiseStack(cpsCont$2, retVal)
+//│         return runtime.cpsRaiseStack(cpsCont$5, retVal)
 //│       }
 //│       {
 //│         let scrut, tmp2, tmp3;
 //│         scrut = n === 0;
 //│         if (scrut === true) {
-//│           return k(0)
+//│           return k1(k, 0)
 //│         }
 //│         {
 //│           let cpsCont$0;
 //│           tmp2 = n - 1;
-//│           cpsCont$0 = function cpsCont$0(retVal1) {
-//│             let tmp4;
+//│           cpsCont$0 = function cpsCont$0(k2, retVal1) {
+//│             let cpsCont$3, tmp4;
+//│             cpsCont$3 = function cpsCont$3(retVal2) {
+//│               let tmp5;
+//│               tmp5 = runtime.cpsSetCheckDepth();
+//│               if (tmp5 === true) {
+//│                 return runtime.cpsRaiseStack(cpsCont$3, retVal2)
+//│               }
+//│               {
+//│                 let tmp6;
+//│                 tmp3 = retVal1;
+//│                 tmp6 = n + tmp3;
+//│                 return k1(k2, tmp6);
+//│               }
+//│             };
 //│             tmp4 = runtime.cpsSetCheckDepth();
 //│             if (tmp4 === true) {
-//│               return runtime.cpsRaiseStack(cpsCont$0, retVal1)
+//│               return runtime.cpsRaiseStack(cpsCont$3, undefined)
 //│             }
 //│             {
 //│               let tmp5;
-//│               tmp3 = retVal1;
-//│               tmp5 = n + tmp3;
-//│               return k(tmp5);
+//│               tmp5 = runtime.cpsSetCheckDepth();
+//│               if (tmp5 === true) {
+//│                 return runtime.cpsRaiseStack(cpsCont$3, undefined)
+//│               }
+//│               {
+//│                 let tmp6;
+//│                 tmp3 = retVal1;
+//│                 tmp6 = n + tmp3;
+//│                 return k1(k2, tmp6);
+//│               }
 //│             }
 //│           };
-//│           return sum(cpsCont$0, tmp2);
+//│           return sum(k, cpsCont$0, tmp2);
 //│         }
 //│       }
 //│     };
 //│     tmp = runtime.cpsSetCheckDepth();
 //│     if (tmp === true) {
-//│       return runtime.cpsRaiseStack(cpsCont$2, undefined)
+//│       return runtime.cpsRaiseStack(cpsCont$5, undefined)
 //│     }
-//│     return cpsCont$2(undefined);
+//│     return cpsCont$5(undefined);
 //│   };
-//│   return sum(runtime.cpsId, 10000)
+//│   return sum(runtime.cpsId, runtime.cpsId2, 10000)
 //│ });
 //│ return runtime.runStackSafeCps(1000, $_stack$_safe$_body$_1)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
@@ -139,8 +159,18 @@ val foo =
     else n + f(n-1)
   f(10000)
 foo
-//│ = 50005000
-//│ foo = 50005000
+//│ FAILURE: Unexpected exception
+//│ /!!!\ Uncaught error: java.lang.AssertionError: assertion failed: BlockMemberSymbol member:foo for ValDefn is a free variable for this block
+//│ 	at: scala.runtime.Scala3RunTime$.assertFailed(Scala3RunTime.scala:10)
+//│ 	at: hkmc2.codegen.SymbolRefresherWalker.applyValDefn(SymbolRefresher.scala:89)
+//│ 	at: hkmc2.codegen.BlockTraverser.applyDefn(BlockTraverser.scala:116)
+//│ 	at: hkmc2.codegen.BlockTraverser.applyBlock(BlockTraverser.scala:53)
+//│ 	at: hkmc2.codegen.SymbolRefresherWalker.applyBlock(SymbolRefresher.scala:78)
+//│ 	at: hkmc2.codegen.BlockTraverser.applySubBlock(BlockTraverser.scala:33)
+//│ 	at: hkmc2.codegen.BlockTraverser.applyBlock(BlockTraverser.scala:50)
+//│ 	at: hkmc2.codegen.SymbolRefresherWalker.applyBlock(SymbolRefresher.scala:78)
+//│ 	at: hkmc2.codegen.BlockTraverser.applySubBlock(BlockTraverser.scala:33)
+//│ 	at: hkmc2.codegen.BlockTraverser.applyBlock$$anonfun$2(BlockTraverser.scala:45)
 
 :stackSafe
 :expect 50005000
@@ -161,8 +191,18 @@ val foo =
     else n + f(n-1)
   f(10000)
 foo
-//│ = 50005000
-//│ foo = 50005000
+//│ FAILURE: Unexpected exception
+//│ /!!!\ Uncaught error: java.lang.AssertionError: assertion failed: BlockMemberSymbol member:foo for ValDefn is a free variable for this block
+//│ 	at: scala.runtime.Scala3RunTime$.assertFailed(Scala3RunTime.scala:10)
+//│ 	at: hkmc2.codegen.SymbolRefresherWalker.applyValDefn(SymbolRefresher.scala:89)
+//│ 	at: hkmc2.codegen.BlockTraverser.applyDefn(BlockTraverser.scala:116)
+//│ 	at: hkmc2.codegen.BlockTraverser.applyBlock(BlockTraverser.scala:53)
+//│ 	at: hkmc2.codegen.SymbolRefresherWalker.applyBlock(SymbolRefresher.scala:78)
+//│ 	at: hkmc2.codegen.BlockTraverser.applySubBlock(BlockTraverser.scala:33)
+//│ 	at: hkmc2.codegen.BlockTraverser.applyBlock(BlockTraverser.scala:50)
+//│ 	at: hkmc2.codegen.SymbolRefresherWalker.applyBlock(SymbolRefresher.scala:78)
+//│ 	at: hkmc2.codegen.BlockTraverser.applySubBlock(BlockTraverser.scala:33)
+//│ 	at: hkmc2.codegen.BlockTraverser.applyBlock$$anonfun$2(BlockTraverser.scala:45)
 
 abstract class Eff with
   fun perform(a): ()
@@ -179,7 +219,22 @@ handle h = Eff with
       else n + f(n-1)
     resume(f(10000))
 foo(h)
-//│ = 50005000
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ ═══[RUNTIME ERROR] Error: Function expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:781:41)
+//│     at handleBlock$ (REPL26:1:8048)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:70:28
+//│     at cpsCont$19 (REPL26:1:7586)
+//│     at Handler$h$.perform (REPL26:1:7820)
+//│     at foo (REPL26:1:1089)
+//│     at handleBlock$ (REPL26:1:8864)
+//│     at Runtime.ss_cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:879:29)
+//│     at $_stack$_safe$_body$_4 (REPL26:1:9897)
+//│     at Runtime.runStackSafeCps (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1362:37)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
+//│ ═══[RUNTIME ERROR] Expected: '50005000', got: 'undefined'
 
 // function call and defn inside handler
 :stackSafe 100
@@ -194,7 +249,22 @@ handle h = Eff with
 in
   fun foo(h) = h.perform()
   foo(h)
-//│ = 50005000
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ ═══[RUNTIME ERROR] Error: Function expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:781:41)
+//│     at handleBlock$ (REPL29:1:7143)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:70:28
+//│     at cpsCont$17 (REPL29:1:6681)
+//│     at Handler$h$1.perform (REPL29:1:6915)
+//│     at cpsCont$21 (REPL29:1:8447)
+//│     at handleBlock$ (REPL29:1:8685)
+//│     at Runtime.ss_cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:879:29)
+//│     at $_stack$_safe$_body$_5 (REPL29:1:9719)
+//│     at Runtime.runStackSafeCps (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1362:37)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
+//│ ═══[RUNTIME ERROR] Expected: '50005000', got: 'undefined'
 
 :stackSafe 100
 :expect 50005000
@@ -222,9 +292,9 @@ foo(h)
 :sjs
 fun max(a, b) = if a < b then b else a
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let max, $_stack$_safe$_body$_9;
-//│ $_stack$_safe$_body$_9 = (undefined, function () {
-//│   max = function max(k, a, b) {
+//│ let max, $_stack$_safe$_body$_7;
+//│ $_stack$_safe$_body$_7 = (undefined, function () {
+//│   max = function max(k, k1, a, b) {
 //│     let cpsCont$0, tmp1;
 //│     cpsCont$0 = function cpsCont$0(retVal) {
 //│       let tmp2;
@@ -236,9 +306,9 @@ fun max(a, b) = if a < b then b else a
 //│         let scrut;
 //│         scrut = a < b;
 //│         if (scrut === true) {
-//│           return k(b)
+//│           return k1(k, b)
 //│         }
-//│         return k(a);
+//│         return k1(k, a);
 //│       }
 //│     };
 //│     tmp1 = runtime.cpsSetCheckDepth();
@@ -255,14 +325,14 @@ fun max(a, b) = if a < b then b else a
 //│         let scrut;
 //│         scrut = a < b;
 //│         if (scrut === true) {
-//│           return k(b)
+//│           return k1(k, b)
 //│         }
-//│         return k(a);
+//│         return k1(k, a);
 //│       }
 //│     }
 //│   };
 //│ });
-//│ return runtime.runStackSafeCps(1000, $_stack$_safe$_body$_9)
+//│ return runtime.runStackSafeCps(1000, $_stack$_safe$_body$_7)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 
@@ -290,21 +360,21 @@ handle h = Object with
 h.whoops()
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
-//│ ═══[RUNTIME ERROR] Error: Function expected 1 argument but got 0
-//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:750:41)
-//│     at lambda (REPL52:1:1909)
-//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1098:28)
-//│     at Predef.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Predef.mjs:314:37)
-//│     at cpsCont$2 (REPL52:1:3191)
-//│     at Handler$h$whoops (REPL52:1:3572)
-//│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:819:48)
-//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:834:20)
-//│     at $_stack$_safe$_body$_11 (REPL52:1:5363)
-//│     at Runtime.runStackSafeCps (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1317:37)
+//│ ═══[RUNTIME ERROR] Error: Function expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:781:41)
+//│     at handleBlock$1 (REPL44:1:4220)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:70:28
+//│     at cpsCont$7 (REPL44:1:3758)
+//│     at Handler$h$4.whoops (REPL44:1:3991)
+//│     at handleBlock$1 (REPL44:1:5034)
+//│     at Runtime.ss_cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:879:29)
+//│     at $_stack$_safe$_body$_9 (REPL44:1:6070)
+//│     at Runtime.runStackSafeCps (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1362:37)
+//│     at REPL44:1:6178
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
 //│ ═══[RUNTIME ERROR] Expected: '0', got: 'undefined'
-//│ depth = 1
+//│ depth = 0
 
 // TODO: the stack depth is not accurately tracked in the runtime functions
 // for now this works, but it's not very safe
@@ -322,9 +392,21 @@ handle h = Object with
     k()
 f(h)
 //│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ ═══[RUNTIME ERROR] Error: Function expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:781:41)
+//│     at handleBlock$1 (REPL48:1:8239)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:70:28
+//│     at cpsCont$21 (REPL48:1:7775)
+//│     at Handler$h$5.perform (REPL48:1:8009)
+//│     at cpsCont$13 (REPL48:1:3687)
+//│     at while1 (REPL48:1:4044)
+//│     at cpsCont$17 (REPL48:1:5514)
+//│     at f (REPL48:1:5747)
+//│     at handleBlock$1 (REPL48:1:9053)
+//│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
-//│ ═══[RUNTIME ERROR] Expected: '10000', got: 'Suspend(fun cpsCont$2, Handler$h$, fun Handler$h$perform)'
-//│ = Suspend(fun cpsCont$2, Handler$h$, fun Handler$h$perform)
+//│ ═══[RUNTIME ERROR] Expected: '10000', got: 'undefined'
 
 :stackSafe
 fun trivial() = ()
@@ -379,4 +461,16 @@ fun handler_stack(n) =
     handler_stack(n - 1)
   "ok"
 handler_stack(M)
-//│ = "ok"
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ ═══[RUNTIME ERROR] Error: Function expected 2 arguments but got 1
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:781:41)
+//│     at handleBlock$1 (REPL62:1:4856)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:70:28
+//│     at cpsCont$13 (REPL62:1:4306)
+//│     at Handler$h$7.raise (REPL62:1:4583)
+//│     at cpsCont$19 (REPL62:1:7916)
+//│     at handleBlock$1 (REPL62:1:8191)
+//│     at Runtime.ss_cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:879:29)
+//│     at cpsCont$23 (REPL62:1:9386)
+//│     at handler_stack (REPL62:1:9650)
