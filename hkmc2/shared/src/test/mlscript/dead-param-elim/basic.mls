@@ -258,7 +258,7 @@ fun f() = case [...x, y, z] then x
 //│ define ‹stack safe body› as fun ‹stack safe body›⁰() {
 //│   let lambda;
 //│   @private
-//│   define lambda as fun lambda⁰(k, caseScrut) {
+//│   define lambda as fun lambda⁰(k, k1, caseScrut) {
 //│     let cpsCont$0, tmp;
 //│     define cpsCont$0 as fun cpsCont$0⁰(retVal) {
 //│       let tmp1;
@@ -276,7 +276,7 @@ fun f() = case [...x, y, z] then x
 //│               set y = lastElement1$;
 //│               set z = lastElement2$;
 //│               set x = middleElements;
-//│               return k(x)
+//│               return k1(k, x)
 //│             else
 //│               throw new globalThis⁰.Error⁰("match error")
 //│           end
@@ -290,7 +290,7 @@ fun f() = case [...x, y, z] then x
 //│         return cpsCont$0⁰(undefined)
 //│     end
 //│   };
-//│   define f²¹ as fun f²²(k) {
+//│   define f²¹ as fun f²²(k, k1) {
 //│     let cpsCont$2, tmp;
 //│     define cpsCont$2 as fun cpsCont$2⁰(retVal) {
 //│       let tmp1;
@@ -299,7 +299,7 @@ fun f() = case [...x, y, z] then x
 //│         true =>
 //│           return runtime⁰.cpsRaiseStack﹖(cpsCont$2⁰, retVal)
 //│         else
-//│           return k(lambda⁰)
+//│           return k1(k, lambda⁰)
 //│       end
 //│     };
 //│     set tmp = runtime⁰.cpsSetCheckDepth﹖();
@@ -329,7 +329,7 @@ fun f(c) = Runtime.Tuple.get(c, 1) + 1
 //│ import "..." as Runtime;
 //│ let ‹stack safe body›;
 //│ define ‹stack safe body› as fun ‹stack safe body›¹() {
-//│   define f²³ as fun f²⁴(k, c) {
+//│   define f²³ as fun f²⁴(k, k1, c) {
 //│     let cpsCont$0, tmp;
 //│     define cpsCont$0 as fun cpsCont$0¹(retVal) {
 //│       let tmp1;
@@ -341,7 +341,7 @@ fun f(c) = Runtime.Tuple.get(c, 1) + 1
 //│           let tmp2, tmp3;
 //│           set tmp2 = Runtime⁰.Tuple⁰.get⁰(c, 1);
 //│           set tmp3 = +⁰(tmp2, 1);
-//│           return k(tmp3)
+//│           return k1(k, tmp3)
 //│       end
 //│     };
 //│     set tmp = runtime⁰.cpsSetCheckDepth﹖();

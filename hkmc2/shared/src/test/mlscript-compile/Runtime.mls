@@ -187,42 +187,44 @@ fun cpsHandlerImpl(k, tag, f) =
   handlerTrampoline(k, tag, f(cpsId))
 
 fun ss_handlerTrampoline(ss_k, k, tag, cur) =
-  if cpsSetCheckDepth() then
+  if cpsSetCheckDepth() do
     return cpsRaiseStack(_ => cpsSetCheckDepth(); ss_handlerTrampoline(ss_k, k, tag, cur), ())
   fun loop(ss_k1, cur) =
-    if cpsSetCheckDepth() then
+    if cpsSetCheckDepth() do
       return cpsRaiseStack(_ => cpsSetCheckDepth(); loop(ss_k1, cur), ())
     if cur is
       Suspend(resume, tag', handlerFun) then
         if tag' === tag then
           fun handlerFunCont(hfc_k, k1, v) =
-            if cpsSetCheckDepth() then
+            if cpsSetCheckDepth() do
               return cpsRaiseStack(_ => cpsSetCheckDepth(); handlerFunCont(hfc_k, k1, v), ())
             fun resumeCont(resume_r) =
-              if cpsSetCheckDepth() then
+              if cpsSetCheckDepth() do
                 return cpsRaiseStack(resumeCont, resume_r)
               ss_handlerTrampoline(hfc_k, k1, tag, resume_r)
-            resume(resumeCont)
+            resume(resumeCont, v)
           fun cont(r) =
-            if cpsSetCheckDepth() then
+            if cpsSetCheckDepth() do
               return cpsRaiseStack(cont, r)
             loop(ss_k1, r)
-          handlerFun(cont, cpsId, handlerFunCont)
+          handlerFun(cont, cpsId2, handlerFunCont)
         else
           fun suspendCont1(resume_k, r) =
-            if cpsSetCheckDepth() then
+            if cpsSetCheckDepth() do
               return cpsRaiseStack(_ => cpsSetCheckDepth(); suspendCont1(resume_k, r), ())
             fun resumeCont1(resume_r) =
-              if cpsSetCheckDepth() then
+              if cpsSetCheckDepth() do
                 return cpsRaiseStack(resumeCont1, resume_r)
               ss_handlerTrampoline(resume_k, k, tag, resume_r)
-            resume(resumeCont1)
+            resume(resumeCont1, r)
           ss_k1 of Suspend(suspendCont1, tag', handlerFun)
-      else k(ss_k1, cur)
+      else
+        k(ss_k1, cur)
   loop(ss_k, cur)
 
 fun ss_cpsHandlerImpl(ss_k, k, tag, f) =
-  f(res => ss_handlerTrampoline(ss_k, k, tag, f(cpsId)), cpsId)
+  let res = f(res => ss_handlerTrampoline(ss_k, k, tag, res), cpsId2)
+  res
 
 data class FunctionContFrame(next, saved) with
   fun resume(value) =

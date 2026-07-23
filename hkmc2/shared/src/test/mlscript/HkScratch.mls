@@ -11,34 +11,68 @@
 
 class Effect
 
-
-:rewriteWhile
-:stackSafe 1000
-:expect 10000
-fun dummy = ()
-fun f(h) =
-  let n = 0
-  while n < 200 do
-    h.perform()
-    set n += 1
-  n
-handle h = Object with
-  fun perform()(k) =
-    k()
-f(h)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
-//│ ═══[RUNTIME ERROR] Error: Function expected 2 arguments but got 1
-//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:781:41)
-//│     at handleBlock$ (REPL13:1:8218)
-//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:70:28
-//│     at cpsCont$21 (REPL13:1:7756)
-//│     at Handler$h$.perform (REPL13:1:7990)
-//│     at cpsCont$13 (REPL13:1:3669)
-//│     at while1 (REPL13:1:4026)
-//│     at cpsCont$17 (REPL13:1:5496)
-//│     at f (REPL13:1:5729)
-//│     at handleBlock$ (REPL13:1:9031)
+:stackSafe
+:expect 50005000
+:noOpt
+:noInline
+:sir
+val foo =
+  val f = n => n
+  f(10000)
+foo
+//│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
+//│ let ‹stack safe body›;
+//│ define ‹stack safe body› as fun ‹stack safe body›⁰() {
+//│   let f, lambda, tmp, cpsCont$0;
+//│   define lambda as fun lambda⁰(k, k1, n) {
+//│     let cpsCont$3, tmp1;
+//│     define cpsCont$3 as fun cpsCont$3⁰(retVal) {
+//│       let tmp2;
+//│       set tmp2 = runtime⁰.cpsSetCheckDepth﹖();
+//│       match tmp2
+//│         true =>
+//│           return runtime⁰.cpsRaiseStack﹖(cpsCont$3⁰, retVal)
+//│         else
+//│           return k1(k, n)
+//│       end
+//│     };
+//│     set tmp1 = runtime⁰.cpsSetCheckDepth﹖();
+//│     match tmp1
+//│       true =>
+//│         return runtime⁰.cpsRaiseStack﹖(cpsCont$3⁰, undefined)
+//│       else
+//│         return cpsCont$3⁰(undefined)
+//│     end
+//│   };
+//│   define f as val f⁰ = lambda⁰;
+//│   define cpsCont$0 as fun cpsCont$0⁰(k, retVal) {
+//│     let cpsCont$5, tmp1;
+//│     define cpsCont$5 as fun cpsCont$5⁰(retVal1) {
+//│       let tmp2;
+//│       set tmp2 = runtime⁰.cpsSetCheckDepth﹖();
+//│       match tmp2
+//│         true =>
+//│           return runtime⁰.cpsRaiseStack﹖(cpsCont$5⁰, retVal1)
+//│         else
+//│           set tmp = retVal;
+//│           define foo⁰ as val foo¹ = tmp;
+//│           return runtime⁰.cpsId2﹖(k, foo¹)
+//│       end
+//│     };
+//│     set tmp1 = runtime⁰.cpsSetCheckDepth﹖();
+//│     match tmp1
+//│       true =>
+//│         return runtime⁰.cpsRaiseStack﹖(cpsCont$5⁰, undefined)
+//│       else
+//│         return cpsCont$5⁰(undefined)
+//│     end
+//│   };
+//│   return f⁰(runtime⁰.cpsId﹖, cpsCont$0⁰, 10000)
+//│ };
+//│ return runtime⁰.runStackSafeCps﹖(1000, ‹stack safe body›⁰)
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
-//│ ═══[RUNTIME ERROR] Expected: '10000', got: 'undefined'
+//│ ═══[RUNTIME ERROR] Expected: '50005000', got: '10000'
+//│ = 10000
+//│ foo = 10000

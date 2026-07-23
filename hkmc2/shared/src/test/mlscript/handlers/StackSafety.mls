@@ -219,22 +219,7 @@ handle h = Eff with
       else n + f(n-1)
     resume(f(10000))
 foo(h)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
-//│ ═══[RUNTIME ERROR] Error: Function expected 2 arguments but got 1
-//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:781:41)
-//│     at handleBlock$ (REPL26:1:8048)
-//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:70:28
-//│     at cpsCont$19 (REPL26:1:7586)
-//│     at Handler$h$.perform (REPL26:1:7820)
-//│     at foo (REPL26:1:1089)
-//│     at handleBlock$ (REPL26:1:8864)
-//│     at Runtime.ss_cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:879:29)
-//│     at $_stack$_safe$_body$_4 (REPL26:1:9897)
-//│     at Runtime.runStackSafeCps (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1362:37)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
-//│ ═══[RUNTIME ERROR] Expected: '50005000', got: 'undefined'
+//│ = 50005000
 
 // function call and defn inside handler
 :stackSafe 100
@@ -249,22 +234,7 @@ handle h = Eff with
 in
   fun foo(h) = h.perform()
   foo(h)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
-//│ ═══[RUNTIME ERROR] Error: Function expected 2 arguments but got 1
-//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:781:41)
-//│     at handleBlock$ (REPL29:1:7143)
-//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:70:28
-//│     at cpsCont$17 (REPL29:1:6681)
-//│     at Handler$h$1.perform (REPL29:1:6915)
-//│     at cpsCont$21 (REPL29:1:8447)
-//│     at handleBlock$ (REPL29:1:8685)
-//│     at Runtime.ss_cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:879:29)
-//│     at $_stack$_safe$_body$_5 (REPL29:1:9719)
-//│     at Runtime.runStackSafeCps (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1362:37)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
-//│ ═══[RUNTIME ERROR] Expected: '50005000', got: 'undefined'
+//│ = 50005000
 
 :stackSafe 100
 :expect 50005000
@@ -360,21 +330,21 @@ handle h = Object with
 h.whoops()
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
-//│ ═══[RUNTIME ERROR] Error: Function expected 2 arguments but got 1
-//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:781:41)
-//│     at handleBlock$1 (REPL44:1:4220)
-//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:70:28
+//│ ═══[RUNTIME ERROR] Error: Function expected 2 arguments but got 0
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:877:41)
+//│     at lambda (REPL44:1:1929)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at Predef.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Predef.mjs:314:37)
+//│     at cpsCont$5 (REPL44:1:3225)
+//│     at Handler$h$whoops (REPL44:1:3610)
+//│     at loop (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:183:31)
+//│     at Runtime.ss_handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:970:12)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:69:21
 //│     at cpsCont$7 (REPL44:1:3758)
-//│     at Handler$h$4.whoops (REPL44:1:3991)
-//│     at handleBlock$1 (REPL44:1:5034)
-//│     at Runtime.ss_cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:879:29)
-//│     at $_stack$_safe$_body$_9 (REPL44:1:6070)
-//│     at Runtime.runStackSafeCps (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1362:37)
-//│     at REPL44:1:6178
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
 //│ ═══[RUNTIME ERROR] Expected: '0', got: 'undefined'
-//│ depth = 0
+//│ depth = 1
 
 // TODO: the stack depth is not accurately tracked in the runtime functions
 // for now this works, but it's not very safe
@@ -391,22 +361,7 @@ handle h = Object with
   fun perform()(k) =
     k()
 f(h)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
-//│ ═══[RUNTIME ERROR] Error: Function expected 2 arguments but got 1
-//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:781:41)
-//│     at handleBlock$1 (REPL48:1:8239)
-//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:70:28
-//│     at cpsCont$21 (REPL48:1:7775)
-//│     at Handler$h$5.perform (REPL48:1:8009)
-//│     at cpsCont$13 (REPL48:1:3687)
-//│     at while1 (REPL48:1:4044)
-//│     at cpsCont$17 (REPL48:1:5514)
-//│     at f (REPL48:1:5747)
-//│     at handleBlock$1 (REPL48:1:9053)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
-//│ ═══[RUNTIME ERROR] Expected: '10000', got: 'undefined'
+//│ = 10000
 
 :stackSafe
 fun trivial() = ()
@@ -461,16 +416,4 @@ fun handler_stack(n) =
     handler_stack(n - 1)
   "ok"
 handler_stack(M)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
-//│ ═══[RUNTIME ERROR] Error: Function expected 2 arguments but got 1
-//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:781:41)
-//│     at handleBlock$1 (REPL62:1:4856)
-//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:70:28
-//│     at cpsCont$13 (REPL62:1:4306)
-//│     at Handler$h$7.raise (REPL62:1:4583)
-//│     at cpsCont$19 (REPL62:1:7916)
-//│     at handleBlock$1 (REPL62:1:8191)
-//│     at Runtime.ss_cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:879:29)
-//│     at cpsCont$23 (REPL62:1:9386)
-//│     at handler_stack (REPL62:1:9650)
+//│ = "ok"
