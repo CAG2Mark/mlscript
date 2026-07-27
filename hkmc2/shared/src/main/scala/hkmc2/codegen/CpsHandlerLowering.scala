@@ -161,15 +161,16 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
       inCtor = savedInCtor
       ret
     
-    def applyCpsOnFun(b: Block, contPath: Path): Block = preserve:
+    // isMain is a hack!
+    def applyCpsOnFun(b: Block, contPath: Path, isMain: Bool): Block = preserve:
       curContPath = contPath
-      isTopLevel = false
+      isTopLevel = isMain || false
       inCtor = false
       applyScopedBlock(b)
     
-    def applyCpsOnCtor(b: Block): Block = preserve:
+    def applyCpsOnCtor(b: Block, isMod: Bool): Block = preserve:
       curContPath = idPath
-      isTopLevel = false
+      if !isMod then isTopLevel = false
       inCtor = true
       applyScopedBlock(b)
     
@@ -178,7 +179,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
       val methods2 = defn.methods.mapConserve(applyFunDefn)
       val privateFields2 = defn.privateFields.mapConserve(_.subst)
       val publicFields2 = defn.publicFields.mapConserve(applyPublicField)
-      val ctor2 = applyCpsOnCtor(defn.ctor)
+      val ctor2 = applyCpsOnCtor(defn.ctor, true)
       if (methods2 is defn.methods) &&
           (privateFields2 is defn.privateFields) &&
           (publicFields2 is defn.publicFields) &&
@@ -198,8 +199,8 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
         val methods2 = methods.mapConserve(applyFunDefn)
         val privateFields2 = privateFields.mapConserve(_.subst)
         val publicFields2 = publicFields.mapConserve(applyPublicField)
-        val preCtor2 = applyCpsOnCtor(preCtor)
-        val ctor2 = applyCpsOnCtor(ctor)
+        val preCtor2 = applyCpsOnCtor(preCtor, false)
+        val ctor2 = applyCpsOnCtor(ctor, false)
         val mod2 = mod.mapConserve(applyObjBody)
         k:
           if (own2 is own) && (isym2 is isym) && (sym2 is sym) && (ctorSym2 is ctorSym) &&
@@ -228,7 +229,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
       else
         val contSym = VarSymbol(Tree.Ident("k"))
         val ogParams = fun.params.head
-        val cpsBod = applyCpsOnFun(fun.body, contSym.asPath)
+        val cpsBod = applyCpsOnFun(fun.body, contSym.asPath, fun.dSym.name === "main")
         
         val paramSym = VarSymbol(Tree.Ident("retVal")) // will always receive unit
         val pList = PlainParamList.simple(paramSym :: Nil)
@@ -312,7 +313,16 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
       
       if inCtor || isTopLevel then r match
         case c: Call if c.metadata.mayRaiseEffects && checkCall(c) => applyPath(c.fun): newFun =>
-          k(Call(newFun, (idPath.asArg :: c.argss.head) ne_:: Nil)(resMetadata))
+          val newCall = Call(newFun, (idPath.asArg :: c.argss.head) ne_:: Nil)(resMetadata)
+          opt.stackSafety match
+            case S(ss) if isTopLevel && isStackSafetyPass =>
+              val (fn, rest) = createNestedFn("‹stack safe body›", PlainParamList(List.empty), Return(newCall), true)
+              rest(k(Call(
+                runStackSafeCpsPath,
+                (Value.Lit(Tree.IntLit(ss.stackLimit)).asArg :: fn.asPath.asArg :: Nil) ne_:: Nil
+                )(CallMetadata.defaultMlsFun)
+              ))
+            case _ => k(newCall)
         case _ => super.applyResult(r)(k)
       else r match
       case c @ Call(Value.RefLike(Elaborator.ctx.builtins.runtime.suspend), (tag :: handlerFun :: Nil) :: Nil) =>
@@ -389,12 +399,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
     opt.stackSafety match
       case Some(ss) =>
         val ssCpsTransformer = new CpsTransformer(true)
-        val (fn, rest) = createNestedFn("‹stack safe body›", PlainParamList(List.empty), ssCpsTransformer.applyBlock(ret), true)
-        rest(Return(Call(
-          runStackSafeCpsPath,
-          (Value.Lit(Tree.IntLit(ss.stackLimit)).asArg :: fn.asPath.asArg :: Nil) ne_:: Nil
-          )(CallMetadata.defaultMlsFun)
-        ))
+        ssCpsTransformer.applyBlock(ret)
       case None => ret
     
   def translateProgram(prog: Program): Program =

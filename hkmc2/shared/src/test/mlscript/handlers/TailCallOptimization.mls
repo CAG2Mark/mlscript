@@ -33,9 +33,12 @@ fun hi(n) =
 hi(0)
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let hi, $_stack$_safe$_body$_;
-//│ $_stack$_safe$_body$_ = (undefined, function () {
-//│   hi = function hi(k, k1, n) {
-//│     let cpsCont$0, tmp;
+//│ hi = function hi(k, k1, n) {
+//│   loopLabel: while (true) {
+//│     let cpsCont$0, tmp, n1, k2, k3;
+//│     n1 = n;
+//│     k3 = k1;
+//│     k2 = k;
 //│     cpsCont$0 = function cpsCont$0(retVal) {
 //│       let tmp1;
 //│       tmp1 = runtime.cpsSetCheckDepth();
@@ -44,12 +47,12 @@ hi(0)
 //│       }
 //│       {
 //│         let scrut, tmp2;
-//│         scrut = n === 0;
+//│         scrut = n1 === 0;
 //│         if (scrut === true) {
-//│           return k1(k, 0)
+//│           return k3(k2, 0)
 //│         }
-//│         tmp2 = n - 1;
-//│         return hi(k, k1, tmp2);
+//│         tmp2 = n1 - 1;
+//│         return hi(k2, k3, tmp2);
 //│       }
 //│     };
 //│     tmp = runtime.cpsSetCheckDepth();
@@ -64,15 +67,20 @@ hi(0)
 //│       }
 //│       {
 //│         let scrut, tmp2;
-//│         scrut = n === 0;
+//│         scrut = n1 === 0;
 //│         if (scrut === true) {
-//│           return k1(k, 0)
+//│           return k3(k2, 0)
 //│         }
-//│         tmp2 = n - 1;
-//│         return hi(k, k1, tmp2);
+//│         tmp2 = n1 - 1;
+//│         k = k2;
+//│         k1 = k3;
+//│         n = tmp2;
+//│         continue loopLabel;
 //│       }
 //│     }
-//│   };
+//│   }
+//│ };
+//│ $_stack$_safe$_body$_ = (undefined, function () {
 //│   return hi(runtime.cpsId, runtime.cpsId2, 0)
 //│ });
 //│ return runtime.runStackSafeCps(1000, $_stack$_safe$_body$_)

@@ -16,80 +16,32 @@ class Effect
 :noOpt
 :noInline
 :sir
-handle h = Object with
-  fun perform()(k) = k(2)
-0
+fun f(x) = 0
+f(0)
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
 //│ let ‹stack safe body›;
-//│ define ‹stack safe body› as fun ‹stack safe body›⁰() {
-//│   let h, tmp, handleBlock$, Handler$h$;
-//│   define Handler$h$ as class Handler$h$⁰ extends globalThis⁰.Object⁰ {
-//│     method perform⁰ = fun perform¹(k, k1) {
-//│       let cpsCont$2, tmp1;
-//│       define cpsCont$2 as fun cpsCont$2⁰(retVal) {
-//│         let tmp2;
-//│         set tmp2 = runtime⁰.cpsSetCheckDepth﹖();
-//│         match tmp2
-//│           true =>
-//│             return runtime⁰.cpsRaiseStack﹖(cpsCont$2⁰, retVal)
-//│           else
-//│             let Handler$h$perform, suspendRes, tmp3;
-//│             define Handler$h$perform as fun Handler$h$perform⁰(k2, k3, k4) {
-//│               let cpsCont$0, tmp4;
-//│               define cpsCont$0 as fun cpsCont$0⁰(retVal1) {
-//│                 let tmp5;
-//│                 set tmp5 = runtime⁰.cpsSetCheckDepth﹖();
-//│                 match tmp5
-//│                   true =>
-//│                     return runtime⁰.cpsRaiseStack﹖(cpsCont$0⁰, retVal1)
-//│                   else
-//│                     return k4(k2, k3, 2)
-//│                 end
-//│               };
-//│               set tmp4 = runtime⁰.cpsSetCheckDepth﹖();
-//│               match tmp4
-//│                 true =>
-//│                   return runtime⁰.cpsRaiseStack﹖(cpsCont$0⁰, undefined)
-//│                 else
-//│                   return cpsCont$0⁰(undefined)
-//│               end
-//│             };
-//│             set tmp3 = new mut runtime⁰.Suspend﹖(k1, Handler$h$⁰.this, Handler$h$perform⁰);
-//│             return k(tmp3)
-//│         end
-//│       };
-//│       set tmp1 = runtime⁰.cpsSetCheckDepth﹖();
-//│       match tmp1
-//│         true =>
-//│           return runtime⁰.cpsRaiseStack﹖(cpsCont$2⁰, undefined)
-//│         else
-//│           return cpsCont$2⁰(undefined)
-//│       end
-//│     }
-//│   };
-//│   set h = new mut Handler$h$⁰();
-//│   define handleBlock$ as fun handleBlock$⁰(k, k1) {
-//│     let cpsCont$4, tmp1;
-//│     define cpsCont$4 as fun cpsCont$4⁰(retVal) {
-//│       let tmp2;
-//│       set tmp2 = runtime⁰.cpsSetCheckDepth﹖();
-//│       match tmp2
-//│         true =>
-//│           return runtime⁰.cpsRaiseStack﹖(cpsCont$4⁰, retVal)
-//│         else
-//│           return k1(k, 0)
-//│       end
-//│     };
+//│ define f⁰ as fun f¹(k, k1, x) {
+//│   let cpsCont$0, tmp;
+//│   define cpsCont$0 as fun cpsCont$0⁰(retVal) {
+//│     let tmp1;
 //│     set tmp1 = runtime⁰.cpsSetCheckDepth﹖();
 //│     match tmp1
 //│       true =>
-//│         return runtime⁰.cpsRaiseStack﹖(cpsCont$4⁰, undefined)
+//│         return runtime⁰.cpsRaiseStack﹖(cpsCont$0⁰, retVal)
 //│       else
-//│         return cpsCont$4⁰(undefined)
+//│         return k1(k, 0)
 //│     end
 //│   };
-//│   set tmp = runtime⁰.ss_cpsHandlerImpl﹖(runtime⁰.cpsId﹖, runtime⁰.cpsId2﹖, h, handleBlock$⁰);
-//│   return tmp
+//│   set tmp = runtime⁰.cpsSetCheckDepth﹖();
+//│   match tmp
+//│     true =>
+//│       return runtime⁰.cpsRaiseStack﹖(cpsCont$0⁰, undefined)
+//│     else
+//│       return cpsCont$0⁰(undefined)
+//│   end
+//│ };
+//│ define ‹stack safe body› as fun ‹stack safe body›⁰() {
+//│   return f¹(runtime⁰.cpsId﹖, runtime⁰.cpsId2﹖, 0)
 //│ };
 //│ return runtime⁰.runStackSafeCps﹖(1000, ‹stack safe body›⁰)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
