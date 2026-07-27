@@ -16,63 +16,84 @@ class Effect
 :noOpt
 :noInline
 :sir
-val foo =
-  val f = n => n
-  f(10000)
-foo
+handle h = Object with
+  fun perform()(k) = k(2)
+0
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
 //│ let ‹stack safe body›;
 //│ define ‹stack safe body› as fun ‹stack safe body›⁰() {
-//│   let f, lambda, tmp, cpsCont$0;
-//│   define lambda as fun lambda⁰(k, k1, n) {
-//│     let cpsCont$3, tmp1;
-//│     define cpsCont$3 as fun cpsCont$3⁰(retVal) {
+//│   let h, tmp, handleBlock$, Handler$h$;
+//│   define Handler$h$ as class Handler$h$⁰ extends globalThis⁰.Object⁰ {
+//│     method perform⁰ = fun perform¹(k, k1) {
+//│       let cpsCont$2, tmp1;
+//│       define cpsCont$2 as fun cpsCont$2⁰(retVal) {
+//│         let tmp2;
+//│         set tmp2 = runtime⁰.cpsSetCheckDepth﹖();
+//│         match tmp2
+//│           true =>
+//│             return runtime⁰.cpsRaiseStack﹖(cpsCont$2⁰, retVal)
+//│           else
+//│             let Handler$h$perform, suspendRes, tmp3;
+//│             define Handler$h$perform as fun Handler$h$perform⁰(k2, k3, k4) {
+//│               let cpsCont$0, tmp4;
+//│               define cpsCont$0 as fun cpsCont$0⁰(retVal1) {
+//│                 let tmp5;
+//│                 set tmp5 = runtime⁰.cpsSetCheckDepth﹖();
+//│                 match tmp5
+//│                   true =>
+//│                     return runtime⁰.cpsRaiseStack﹖(cpsCont$0⁰, retVal1)
+//│                   else
+//│                     return k4(k2, k3, 2)
+//│                 end
+//│               };
+//│               set tmp4 = runtime⁰.cpsSetCheckDepth﹖();
+//│               match tmp4
+//│                 true =>
+//│                   return runtime⁰.cpsRaiseStack﹖(cpsCont$0⁰, undefined)
+//│                 else
+//│                   return cpsCont$0⁰(undefined)
+//│               end
+//│             };
+//│             set tmp3 = new mut runtime⁰.Suspend﹖(k1, Handler$h$⁰.this, Handler$h$perform⁰);
+//│             return k(tmp3)
+//│         end
+//│       };
+//│       set tmp1 = runtime⁰.cpsSetCheckDepth﹖();
+//│       match tmp1
+//│         true =>
+//│           return runtime⁰.cpsRaiseStack﹖(cpsCont$2⁰, undefined)
+//│         else
+//│           return cpsCont$2⁰(undefined)
+//│       end
+//│     }
+//│   };
+//│   set h = new mut Handler$h$⁰();
+//│   define handleBlock$ as fun handleBlock$⁰(k, k1) {
+//│     let cpsCont$4, tmp1;
+//│     define cpsCont$4 as fun cpsCont$4⁰(retVal) {
 //│       let tmp2;
 //│       set tmp2 = runtime⁰.cpsSetCheckDepth﹖();
 //│       match tmp2
 //│         true =>
-//│           return runtime⁰.cpsRaiseStack﹖(cpsCont$3⁰, retVal)
+//│           return runtime⁰.cpsRaiseStack﹖(cpsCont$4⁰, retVal)
 //│         else
-//│           return k1(k, n)
+//│           return k1(k, 0)
 //│       end
 //│     };
 //│     set tmp1 = runtime⁰.cpsSetCheckDepth﹖();
 //│     match tmp1
 //│       true =>
-//│         return runtime⁰.cpsRaiseStack﹖(cpsCont$3⁰, undefined)
+//│         return runtime⁰.cpsRaiseStack﹖(cpsCont$4⁰, undefined)
 //│       else
-//│         return cpsCont$3⁰(undefined)
+//│         return cpsCont$4⁰(undefined)
 //│     end
 //│   };
-//│   define f as val f⁰ = lambda⁰;
-//│   define cpsCont$0 as fun cpsCont$0⁰(k, retVal) {
-//│     let cpsCont$5, tmp1;
-//│     define cpsCont$5 as fun cpsCont$5⁰(retVal1) {
-//│       let tmp2;
-//│       set tmp2 = runtime⁰.cpsSetCheckDepth﹖();
-//│       match tmp2
-//│         true =>
-//│           return runtime⁰.cpsRaiseStack﹖(cpsCont$5⁰, retVal1)
-//│         else
-//│           set tmp = retVal;
-//│           define foo⁰ as val foo¹ = tmp;
-//│           return runtime⁰.cpsId2﹖(k, foo¹)
-//│       end
-//│     };
-//│     set tmp1 = runtime⁰.cpsSetCheckDepth﹖();
-//│     match tmp1
-//│       true =>
-//│         return runtime⁰.cpsRaiseStack﹖(cpsCont$5⁰, undefined)
-//│       else
-//│         return cpsCont$5⁰(undefined)
-//│     end
-//│   };
-//│   return f⁰(runtime⁰.cpsId﹖, cpsCont$0⁰, 10000)
+//│   set tmp = runtime⁰.ss_cpsHandlerImpl﹖(runtime⁰.cpsId﹖, runtime⁰.cpsId2﹖, h, handleBlock$⁰);
+//│   return tmp
 //│ };
 //│ return runtime⁰.runStackSafeCps﹖(1000, ‹stack safe body›⁰)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
-//│ ═══[RUNTIME ERROR] Expected: '50005000', got: '10000'
-//│ = 10000
-//│ foo = 10000
+//│ ═══[RUNTIME ERROR] Expected: '50005000', got: '0'
+//│ = 0

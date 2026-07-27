@@ -310,9 +310,9 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
     
     override def applyResult(r: Result)(k: Result => Block): Block =
       
-      if inCtor then r match
-        case c: Call if c.metadata.mayRaiseEffects && checkCall(c) =>
-          k(Call(c.fun, (idPath.asArg :: c.argss.head) ne_:: Nil)(resMetadata))
+      if inCtor || isTopLevel then r match
+        case c: Call if c.metadata.mayRaiseEffects && checkCall(c) => applyPath(c.fun): newFun =>
+          k(Call(newFun, (idPath.asArg :: c.argss.head) ne_:: Nil)(resMetadata))
         case _ => super.applyResult(r)(k)
       else r match
       case c @ Call(Value.RefLike(Elaborator.ctx.builtins.runtime.suspend), (tag :: handlerFun :: Nil) :: Nil) =>
@@ -351,7 +351,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
     
     override def applyBlock(b: Block): Block =
       
-      if inCtor then super.applyBlock(b)
+      if inCtor || isTopLevel then super.applyBlock(b)
       else b match
       case Return(Call(Value.RefLike(Elaborator.ctx.builtins.runtime.suspend), args :: Nil)) =>
         Return(Instantiate(

@@ -94,19 +94,24 @@ let fact =
         x * prev
     b
   mkrec(a)
-//│ fact = fun b
+//│ fact = StackSuspend(fun cpsCont$7, StackDelayCpsHandler, undefined)
 
 :expect 3628800
 :stackSafe 6
 fact(10)
-//│ > resumed: 1
-//│ > resumed: 2
-//│ > resumed: 3
-//│ > resumed: 4
-//│ > resumed: 5
-//│ > resumed: 6
-//│ > resumed: 7
-//│ > resumed: 8
-//│ > resumed: 9
-//│ > resumed: 10
-//│ = 3628800
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ ═══[RUNTIME ERROR] TypeError: fact2 is not a function
+//│     at $_stack$_safe$_body$_17 (REPL71:1:195)
+//│     at Runtime.runStackSafeCps (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1458:37)
+//│     at REPL71:1:281
+//│     at ContextifyScript.runInThisContext (node:vm:138:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:66:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
+//│ ═══[RUNTIME ERROR] Expected: '3628800', got: 'undefined'

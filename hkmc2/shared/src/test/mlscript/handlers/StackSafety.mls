@@ -159,18 +159,8 @@ val foo =
     else n + f(n-1)
   f(10000)
 foo
-//│ FAILURE: Unexpected exception
-//│ /!!!\ Uncaught error: java.lang.AssertionError: assertion failed: BlockMemberSymbol member:foo for ValDefn is a free variable for this block
-//│ 	at: scala.runtime.Scala3RunTime$.assertFailed(Scala3RunTime.scala:10)
-//│ 	at: hkmc2.codegen.SymbolRefresherWalker.applyValDefn(SymbolRefresher.scala:89)
-//│ 	at: hkmc2.codegen.BlockTraverser.applyDefn(BlockTraverser.scala:116)
-//│ 	at: hkmc2.codegen.BlockTraverser.applyBlock(BlockTraverser.scala:53)
-//│ 	at: hkmc2.codegen.SymbolRefresherWalker.applyBlock(SymbolRefresher.scala:78)
-//│ 	at: hkmc2.codegen.BlockTraverser.applySubBlock(BlockTraverser.scala:33)
-//│ 	at: hkmc2.codegen.BlockTraverser.applyBlock(BlockTraverser.scala:50)
-//│ 	at: hkmc2.codegen.SymbolRefresherWalker.applyBlock(SymbolRefresher.scala:78)
-//│ 	at: hkmc2.codegen.BlockTraverser.applySubBlock(BlockTraverser.scala:33)
-//│ 	at: hkmc2.codegen.BlockTraverser.applyBlock$$anonfun$2(BlockTraverser.scala:45)
+//│ = 50005000
+//│ foo = StackSuspend(fun cpsCont$5, StackDelayCpsHandler, undefined)
 
 :stackSafe
 :expect 50005000
@@ -191,18 +181,8 @@ val foo =
     else n + f(n-1)
   f(10000)
 foo
-//│ FAILURE: Unexpected exception
-//│ /!!!\ Uncaught error: java.lang.AssertionError: assertion failed: BlockMemberSymbol member:foo for ValDefn is a free variable for this block
-//│ 	at: scala.runtime.Scala3RunTime$.assertFailed(Scala3RunTime.scala:10)
-//│ 	at: hkmc2.codegen.SymbolRefresherWalker.applyValDefn(SymbolRefresher.scala:89)
-//│ 	at: hkmc2.codegen.BlockTraverser.applyDefn(BlockTraverser.scala:116)
-//│ 	at: hkmc2.codegen.BlockTraverser.applyBlock(BlockTraverser.scala:53)
-//│ 	at: hkmc2.codegen.SymbolRefresherWalker.applyBlock(SymbolRefresher.scala:78)
-//│ 	at: hkmc2.codegen.BlockTraverser.applySubBlock(BlockTraverser.scala:33)
-//│ 	at: hkmc2.codegen.BlockTraverser.applyBlock(BlockTraverser.scala:50)
-//│ 	at: hkmc2.codegen.SymbolRefresherWalker.applyBlock(SymbolRefresher.scala:78)
-//│ 	at: hkmc2.codegen.BlockTraverser.applySubBlock(BlockTraverser.scala:33)
-//│ 	at: hkmc2.codegen.BlockTraverser.applyBlock$$anonfun$2(BlockTraverser.scala:45)
+//│ = 50005000
+//│ foo = StackSuspend(fun cpsCont$5, StackDelayCpsHandler, undefined)
 
 abstract class Eff with
   fun perform(a): ()
@@ -262,14 +242,14 @@ foo(h)
 :sjs
 fun max(a, b) = if a < b then b else a
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let max, $_stack$_safe$_body$_7;
-//│ $_stack$_safe$_body$_7 = (undefined, function () {
+//│ let max, $_stack$_safe$_body$_9;
+//│ $_stack$_safe$_body$_9 = (undefined, function () {
 //│   max = function max(k, k1, a, b) {
-//│     let cpsCont$0, tmp1;
+//│     let cpsCont$0, tmp;
 //│     cpsCont$0 = function cpsCont$0(retVal) {
-//│       let tmp2;
-//│       tmp2 = runtime.cpsSetCheckDepth();
-//│       if (tmp2 === true) {
+//│       let tmp1;
+//│       tmp1 = runtime.cpsSetCheckDepth();
+//│       if (tmp1 === true) {
 //│         return runtime.cpsRaiseStack(cpsCont$0, retVal)
 //│       }
 //│       {
@@ -281,14 +261,14 @@ fun max(a, b) = if a < b then b else a
 //│         return k1(k, a);
 //│       }
 //│     };
-//│     tmp1 = runtime.cpsSetCheckDepth();
-//│     if (tmp1 === true) {
+//│     tmp = runtime.cpsSetCheckDepth();
+//│     if (tmp === true) {
 //│       return runtime.cpsRaiseStack(cpsCont$0, undefined)
 //│     }
 //│     {
-//│       let tmp2;
-//│       tmp2 = runtime.cpsSetCheckDepth();
-//│       if (tmp2 === true) {
+//│       let tmp1;
+//│       tmp1 = runtime.cpsSetCheckDepth();
+//│       if (tmp1 === true) {
 //│         return runtime.cpsRaiseStack(cpsCont$0, undefined)
 //│       }
 //│       {
@@ -302,7 +282,7 @@ fun max(a, b) = if a < b then b else a
 //│     }
 //│   };
 //│ });
-//│ return runtime.runStackSafeCps(1000, $_stack$_safe$_body$_7)
+//│ return runtime.runStackSafeCps(1000, $_stack$_safe$_body$_9)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 
@@ -332,15 +312,15 @@ h.whoops()
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
 //│ ═══[RUNTIME ERROR] Error: Function expected 2 arguments but got 0
 //│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:877:41)
-//│     at lambda (REPL44:1:1929)
+//│     at lambda (REPL52:1:1913)
 //│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
 //│     at Predef.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Predef.mjs:314:37)
-//│     at cpsCont$5 (REPL44:1:3225)
-//│     at Handler$h$whoops (REPL44:1:3610)
+//│     at cpsCont$2 (REPL52:1:3203)
+//│     at Handler$h$whoops (REPL52:1:3588)
 //│     at loop (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:183:31)
 //│     at Runtime.ss_handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:970:12)
 //│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:69:21
-//│     at cpsCont$7 (REPL44:1:3758)
+//│     at cpsCont$4 (REPL52:1:3736)
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
 //│ ═══[RUNTIME ERROR] Expected: '0', got: 'undefined'
