@@ -26,10 +26,10 @@ fun force(x) = if x is Lazy then x.Lazy#get()
 
 abstract class List[out T]: Cons[T] | Nil
 data class (::) Cons[out T](head: T, tail: List[T]) extends List[T] with
-  fun toString() =
+  fun toStringImpl() =
     "[" + _internal_cons_to_str(Cons(head, tail)) + "]"
 object Nil extends List with
-  fun toString() = "[]"
+  fun toStringImpl() = "[]"
 fun _internal_cons_to_str(ls) = if ls is
   Nil then ""
   h :: Nil then render(h)
