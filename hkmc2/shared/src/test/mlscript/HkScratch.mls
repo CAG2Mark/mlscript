@@ -11,35 +11,32 @@
 :lift
 
 :sjs
-:noOpt
-:noInline
 :noTailRec
 fun fact(bruh) =
   if bruh === 0 then 1 else bruh * fact(bruh - 1)
 fact(10)
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let fact, VarsClass1, fact$worker, tmp;
+//│ let fact, VarsClass1, fact$worker, inlinedVal, tmp;
 //│ fact$worker = function fact$worker(fact$varsClass) {
 //│   let scrut, tmp1, tmp2, pc;
 //│   pc = 0;
-//│   main: while (true) {
-//│     switch (pc) {
-//│       case 0:
-//│         brk0: {
-//│           scrut = fact$varsClass.bruh$0 === 0;
-//│           if (scrut === true) {
-//│             return 1
-//│           }
-//│           tmp1 = fact$varsClass.bruh$0 - 1;
-//│           runtime.resumeValue = fact(tmp1);
-//│           break brk0;
-//│         }
-//│         pc = 1;
-//│       case 1:
-//│         tmp2 = runtime.resumeValue;
-//│         return fact$varsClass.bruh$0 * tmp2;
+//│   if (0 === 0) {
+//│     scrut = fact$varsClass.bruh$0 === 0;
+//│     if (scrut === true) {
+//│       return 1
 //│     }
-//│     break;
+//│     {
+//│       let inlinedVal1, tmp3;
+//│       tmp1 = fact$varsClass.bruh$0 - 1;
+//│       tmp3 = new VarsClass1(tmp1);
+//│       inlinedVal1 = fact$worker(tmp3);
+//│       runtime.resumeValue = inlinedVal1;
+//│       pc = 1;
+//│     }
+//│   }
+//│   if (pc === 1) {
+//│     tmp2 = runtime.resumeValue;
+//│     return fact$varsClass.bruh$0 * tmp2
 //│   }
 //│ };
 //│ (class VarsClass {
@@ -58,9 +55,9 @@ fact(10)
 //│   tmp1 = new VarsClass1(bruh);
 //│   return fact$worker(tmp1)
 //│ };
-//│ tmp = fact(10);
-//│ if (runtime.curEffect === null) { return tmp }
-//│ tmp = runtime.topLevelEffect(false);
-//│ return tmp;
+//│ tmp = new VarsClass1(10);
+//│ inlinedVal = fact$worker(tmp);
+//│ if (runtime.curEffect === null) { return inlinedVal }
+//│ return runtime.topLevelEffect(false);
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 3628800

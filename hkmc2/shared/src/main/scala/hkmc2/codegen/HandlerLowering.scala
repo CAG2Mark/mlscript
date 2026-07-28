@@ -605,7 +605,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         DebugInfo(debugNme, if opt.debug then debugInfoSym.asSimpleRef else unit), thisPath.isDefined && fun.params.isEmpty))
       val bod2 = translateBlock(fun.dSym.nme, fun.body, newCtx, scopedVars, fun.params.flatMap(_.paramSyms))
       val fun2 = if fun.body is bod2 then fun else
-        FunDefn(fun.owner, fun.sym, fun.dSym, fun.params, bod2)(fun.configOverride, fun.annotations)
+        FunDefn(fun.owner, fun.sym, fun.dSym, fun.params, bod2)(fun.configOverride, Annot.Inline :: fun.annotations)
       (debugInfoSym, debugInfo, fun2)
 
     // transform inner function/class and effect handler intrinsics to the runtime functions.
