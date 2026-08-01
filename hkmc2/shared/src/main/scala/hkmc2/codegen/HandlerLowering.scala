@@ -521,7 +521,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
    *    c) translate code in current block (post translate)
    */
   
-  case class VarClassInfo(cls: ClsLikeDefn, mp: Map[LocalVarSymbol, BlockMemberSymbol -> TermSymbol]):
+  case class VarClassInfo(cls: ClsLikeDefn, pcVar: TermSymbol, mp: Map[LocalVarSymbol, BlockMemberSymbol -> TermSymbol]):
     def select(varClassPath: Path)(local: LocalVarSymbol) =
       val (_, sym) = mp(local)
       Select(varClassPath, sym.id)(S(sym))(false)
@@ -534,6 +534,8 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         Value.MemberRef(cls.sym, cls.isym),
         mp.keySet.toArray.sortBy(_.uid).map(_.asPath.asArg).toList :: Nil
       )(InstantiateMetadata.empty)
+    def readPc(varClassPath: Path) = Select(varClassPath, pcVar.id)(S(pcVar))(false)
+    def assignPc(varClassPath: Path)(value: Path, rest: Block) = AssignField(varClassPath, pcVar.id, value, rest)(S(pcVar))
     
   private def createVarClass(nme: String, vars: Iterable[LocalVarSymbol]): VarClassInfo =
     val clsSym = ClassSymbol(
@@ -564,16 +566,22 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         
         (sym -> varSym, p, vd)
     
+    val pcTsym = TermSymbol(syntax.MutVal, S(clsSym), Tree.Ident("pc$"))
+    val pcBsym = BlockMemberSymbol("pc$", Nil, true)
+    
+    val ctor = sortedVars.iterator.foldLeft[Block](End()):
+        case (acc, (_, _, vd)) => Define(vd, acc)
+    val ctorWithPc = Define(ValDefn(pcTsym, pcBsym, Value.Lit(Tree.IntLit(0)))(N, Nil), ctor)
+    
     val defn = ClsLikeDefn(
       None, clsSym, BlockMemberSymbol(nme, Nil),
       S(ClassCtorSymbol(syntax.Fun, N, clsSym)),
       syntax.Cls,
       N,
       PlainParamList(sortedVars.iterator.map(_.param).toList) :: Nil, None, Nil, Nil, 
-      Nil,
+      (pcBsym, pcTsym) :: sortedVars.map(v => (v.valDefn.sym, v.valDefn.tsym)).toList,
       End(),
-      sortedVars.iterator.foldLeft[Block](End()):
-        case (acc, (_, _, vd)) => Define(vd, acc),
+      ctorWithPc,
       N,
       N,
     )(N, Nil)
@@ -581,7 +589,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     val mp = sortedVars.iterator.map: x =>
         x.ctorSyms.local -> (x.valDefn.sym -> x.valDefn.tsym)
       .toMap
-    VarClassInfo(defn, mp)
+    VarClassInfo(defn, pcTsym, mp)
   
   private val extraDefns: ListBuffer[Defn] = ListBuffer()
 
@@ -670,9 +678,16 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     val vars = extraRestoreVars ::: (if opt.debug then ctx.resumeInfo.currentLocals else computeRestoreList(parts))
     val varsSet = vars.toSet
     
-    val varClsInfo = createVarClass("VarsClass", vars)
-
-    val pcVar = freshTmp("pc")
+    val varClsInfo = createVarClass("VarsClass$" + nme, vars)
+    val varsClsSym = VarSymbol(Tree.Ident(nme + "$varsClass"))
+    
+    val pcVar = VarSymbol(Tree.Ident("pc"))
+    
+    val pcPath = pcVar.asPath
+    val pcAssign_ = varClsInfo.assignPc(varsClsSym.asPath)
+    def pcAssign(value: Path, rest: Block) =
+      Assign(pcVar, value, pcAssign_(value, rest))
+    
     val curDepth = freshTmp("curDepth")
     val mainLoopLbl = freshLabel("main")
 
@@ -701,7 +716,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
           AssignField(paths.runtimePath, paths.stackDepthIdent, curDepth.asSimpleRef, super.applyResult(r)(k))(N)
         case _ => super.applyResult(r)(k)
     // The fallback form which always works
-    val fallbackPostTransform = postTransform(id => Assign(pcVar, intLit(id), Continue(mainLoopLbl)))
+    val fallbackPostTransform = postTransform(id => pcAssign(intLit(id), Continue(mainLoopLbl)))
     // Note: `line` has the last state as the head, and the first state at the end
     def straightLineToArms(line: List[StateId]): Block => Block =
       def transformState(state: StateId) =
@@ -715,21 +730,21 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         val transform = postTransform: uid =>
           assert(uid === nextState)
           if isSimple then
-            Assign(pcVar, Value.Lit(Tree.IntLit(uid)), End())
+            pcAssign(Value.Lit(Tree.IntLit(uid)), End())
           else
             Break(lblSym)
         val transformed = transform.applyBlock(blk.blk)
         if isSimple then transformed
         else Label(
           lblSym, false, transformed,
-          Assign(pcVar, Value.Lit(Tree.IntLit(nextState)), End())
+          pcAssign(Value.Lit(Tree.IntLit(nextState)), End())
         )
       line match
         case head :: next =>
           val headTransformed = fallbackPostTransform.applyBlock(parts.states(head).blk)
           val initial: Block => Block = blk =>
             Match(
-              pcVar.asSimpleRef,
+              pcPath,
               Case.Lit(Tree.IntLit(head)) -> headTransformed :: Nil,
               N,
               blk
@@ -741,7 +756,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
               val transformed = transformState(uid)
               blk =>
               Match(
-                pcVar.asSimpleRef,
+                pcPath,
                 Case.Lit(Tree.IntLit(uid)) -> transformed :: Nil,
                 N,
                 acc(blk)
@@ -756,10 +771,8 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
           case (acc, f) => f(acc)
         Label(mainLoopLbl, true, matches, End())
     
-    mainBody = Assign(pcVar, Value.Lit(Tree.IntLit(0)), mainBody)
-    
-    val varsClsSym = VarSymbol(Tree.Ident(nme + "$varsClass"))
     mainBody = varRewriter(varClsInfo, varsClsSym).applyBlock(mainBody)
+    mainBody = Assign(pcVar, varClsInfo.readPc(varsClsSym.asPath), mainBody)
         
     val getSavedTmp = freshTmp("saveOffset")
     def getSaved(off: BigInt): (Block => Block, Path) =
@@ -770,20 +783,13 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
 
     val resumeArrIndexed = DynSelect(paths.runtimePath.selSN("resumeArr"), getSavedTmp.asSimpleRef, true)
     val plus = State.builtinOpsMap("+").asSimpleRef
-    val preRestore = blockBuilder
-        .assign(pcVar, paths.resumePc)
-        .scopedVars(Set(getSavedTmp))
-    val restoreVars = vars.zipWithIndex.foldLeft(preRestore):
-      case (builder, (local, idx)) => builder
-        .assign(getSavedTmp, if idx == 0 then paths.resumeIdx else Call(plus, (getSavedTmp.asSimpleRef.asArg :: intLit(1).asArg :: Nil) ne_:: Nil)(CallMetadata.defaultFun))
-        .assign(local, resumeArrIndexed)
     
     if needsStackSafety then
       mainBody = blockBuilder
         .assign(NoSymbol, PureCall(paths.checkDepthPath, Nil))
         .ifthen(paths.curEffect, Case.Lit(Tree.UnitLit(true)), End(), S(
           ctx.doUnwind(ctx.resumeInfo.currentStackSafetySym.fold(_.toLoc, _.toLoc).fold(unit)(locToStr(_)), 
-          if oneState then intLit(-1) else pcVar.asSimpleRef, vars)(using paths)))
+          if oneState then intLit(-1) else pcPath, vars)(using paths)))
         .assign(curDepth, Call(plus, (paths.stackDepthPath.asArg :: intLit(1).asArg :: Nil) ne_:: Nil)(CallMetadata.defaultFun))
         .rest(mainBody)
     

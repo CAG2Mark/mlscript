@@ -16,46 +16,54 @@ fun fact(bruh) =
   if bruh === 0 then 1 else bruh * fact(bruh - 1)
 fact(10)
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let fact, VarsClass1, fact$worker, inlinedVal, tmp;
+//│ let fact, VarsClass$fact1, fact$worker, inlinedVal, tmp;
 //│ fact$worker = function fact$worker(fact$varsClass) {
 //│   let scrut, tmp1, tmp2, pc;
-//│   pc = 0;
-//│   if (0 === 0) {
-//│     scrut = fact$varsClass.bruh$0 === 0;
-//│     if (scrut === true) {
-//│       return 1
-//│     }
-//│     {
-//│       let inlinedVal1, tmp3;
-//│       tmp1 = fact$varsClass.bruh$0 - 1;
-//│       tmp3 = new VarsClass1(tmp1);
-//│       inlinedVal1 = fact$worker(tmp3);
-//│       runtime.resumeValue = inlinedVal1;
-//│       pc = 1;
-//│     }
-//│   }
-//│   if (pc === 1) {
-//│     tmp2 = runtime.resumeValue;
-//│     return fact$varsClass.bruh$0 * tmp2
+//│   pc = fact$varsClass.pc$;
+//│   switch (pc) {
+//│     case 0:
+//│       scrut = fact$varsClass.bruh$0 === 0;
+//│       if (scrut === true) {
+//│         return 1
+//│       }
+//│       {
+//│         let inlinedVal1, tmp3;
+//│         tmp1 = fact$varsClass.bruh$0 - 1;
+//│         tmp3 = new VarsClass$fact1(tmp1);
+//│         inlinedVal1 = fact$worker(tmp3);
+//│         runtime.resumeValue = inlinedVal1;
+//│         pc = 1;
+//│         fact$varsClass.pc$ = 1;
+//│       }
+//│     case 1:
+//│       tmp2 = runtime.resumeValue;
+//│       return fact$varsClass.bruh$0 * tmp2;
 //│   }
 //│ };
-//│ (class VarsClass {
+//│ (class VarsClass$fact {
 //│   static {
-//│     VarsClass1 = this
+//│     VarsClass$fact1 = this
 //│   }
 //│   constructor(bruh$0) {
+//│     this.pc$ = 0;
 //│     this.bruh$0 = bruh$0;
 //│   }
+//│   #pc$;
+//│   #bruh$0;
+//│   get pc$() { return this.#pc$; }
+//│   set pc$(value) { this.#pc$ = value; }
+//│   get bruh$0() { return this.#bruh$0; }
+//│   set bruh$0(value) { this.#bruh$0 = value; }
 //│   toString() { return runtime.render(this); }
-//│   static [definitionMetadata] = ["class", "VarsClass"];
+//│   static [definitionMetadata] = ["class", "VarsClass$fact"];
 //│ });
 //│ runtime.resetEffects();
 //│ fact = function fact(bruh) {
 //│   let tmp1;
-//│   tmp1 = new VarsClass1(bruh);
+//│   tmp1 = new VarsClass$fact1(bruh);
 //│   return fact$worker(tmp1)
 //│ };
-//│ tmp = new VarsClass1(10);
+//│ tmp = new VarsClass$fact1(10);
 //│ inlinedVal = fact$worker(tmp);
 //│ if (runtime.curEffect === null) { return inlinedVal }
 //│ return runtime.topLevelEffect(false);
