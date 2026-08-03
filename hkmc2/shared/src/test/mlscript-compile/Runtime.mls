@@ -176,7 +176,7 @@ data class FunctionContFrame(next, fn, varsClass) with
 
 data class HandlerContFrame(next, nextHandler, handler)
 
-data class EffectSig(contTrace, handler, handlerFun)
+data class EffectSig(contTrace, handler, handlerFun, id)
 
 class NonLocalReturn with
   fun ret(value)
@@ -324,21 +324,23 @@ fun debugEff(eff) =
 //
 fun pushFrame(fn, vars) =
   let newFrame = new mut FunctionContFrame(curContTrace.next, fn, vars)
-  if curContTrace.next === null do
+  if curContTrace.last === null do
     set curContTrace.last = newFrame
   set curContTrace.next = new mut FunctionContFrame(curContTrace.next, fn, vars)
 
 fun popFrame() =
   set curContTrace.next = curContTrace.next.next
 
-object EffectRaised
+data class EffectRaised(str)
 
+mut val latestId = 0
 fun mkEffect(handler, handlerFun) =
-  let res = new mut EffectSig(curContTrace, handler, handlerFun)
+  let res = new mut EffectSig(curContTrace, handler, handlerFun, latestId)
+  set latestId += 1
   set
     curEffect = res
     curContTrace = new mut ContTrace(null, null, null, null, false)
-  throw EffectRaised
+  throw EffectRaised("mkEffect")
 
 fun handleBlockImpl(cur) =
   handleEffects(cur)
@@ -364,15 +366,24 @@ fun enterHandleBlock(handler, body) =
   set
     curContTrace.nextHandler = handlerFrame
     curContTrace.next = null
+  if curContTrace.lastHandler === null do
+    set curContTrace.lastHandler = handlerFrame
+  if curContTrace.last === null do
+    set curContTrace.last = handlerFrame
   RuntimeJS.try_catch(body, err => handleBlockImpl(curEffect))
+  popHandler()
 
+mut val handleEffectsCall = 0
 fun handleEffects(cur) =
+  let curCall = handleEffectsCall
+  set handleEffectsCall += 1
   while cur is
     EffectSig then
       let nxt = handleEffect(cur)
+      console.log("handleEffects #", curCall, "|", cur.id, nxt.id)
       if cur === nxt then
         set curEffect = cur
-        throw EffectRaised
+        throw throw EffectRaised("handleEffects")
       else
         set cur = nxt
     else
@@ -380,6 +391,8 @@ fun handleEffects(cur) =
 
 // return either new effect, final result or the same continuation if there is no handler
 fun handleEffect(cur) =
+  console.log("handleEffect:")
+  console.log(cur)
   // debugEff(cur)
   // find the handle block corresponding to the current effect
   let prevHandlerFrame = cur.contTrace
@@ -406,11 +419,17 @@ fun handleEffect(cur) =
     cur.contTrace.lastHandler = handlerFrame
     handlerFrame.next = null
     handlerFrame.nextHandler = null
+  
+  console.log("resuming with:")
+  console.log(cur)
 
   // handle the effect
   set curEffect = null
   let tmp = set stackDepth += 2 in RuntimeJS.try_catch(() => cur.handlerFun(resume(cur.contTrace)), err => ())
   if curEffect !== null then
+    console.log("relinking")
+    console.log(saved)
+    console.log(curEffect)
     set cur = curEffect
     // relink the saved frames
     if saved.next !== null do
@@ -430,7 +449,7 @@ fun resume(contTrace)(value) =
   if contTrace.resumed do
     throw Error("Multiple resumption")
   set contTrace.resumed = true
-  handleEffects(resumeContTrace(contTrace, value))
+  RuntimeJS.try_catch(() => handleEffects(resumeContTrace(contTrace, value)), (e) => throw EffectRaised("resume"))
 
 fun resumeContTrace(contTrace, value) =
   let cont = contTrace.next
@@ -442,6 +461,10 @@ fun resumeContTrace(contTrace, value) =
       if curEffect !== null do
         set value = curEffect
       if value is EffectSig then
+        console.log("combining:")
+        console.log(cont)
+        console.log(value.contTrace.lastHandler.nextHandler)
+        console.log(handlerCont)
         set
           value.contTrace.last.next = cont.next
           value.contTrace.lastHandler.nextHandler = handlerCont

@@ -572,8 +572,8 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         
         (sym -> varSym, p, vd)
     
-    val pcTsym = TermSymbol(syntax.MutVal, S(clsSym), Tree.Ident("pc$"))
-    val pcBsym = BlockMemberSymbol("pc$", Nil, true)
+    val pcTsym = TermSymbol(syntax.MutVal, S(clsSym), Tree.Ident("pc"))
+    val pcBsym = BlockMemberSymbol("pc", Nil, true)
     
     val ctor = sortedVars.iterator.foldLeft[Block](End()):
         case (acc, (_, _, vd)) => Define(vd, acc)
