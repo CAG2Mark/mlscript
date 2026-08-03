@@ -43,19 +43,10 @@ fun f(h1, h2) =
   h1.f(false)
   h2.f(false)
 handleEffects(f)
-//│ > h1 start 1
-//│ > h2 start 2
-//│ > h1 start 3
-//│ > h2 start 4
-//│ > h1 start 5
-//│ > h2 start 6
-//│ > h2 end 6
-//│ > h2 end 4
-//│ > h2 end 2
-//│ > h1 end 5
-//│ > h1 end 3
-//│ > h1 end 1
-//│ = false
+//│ > h1 start undefined
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ ═══[RUNTIME ERROR] EffectRaised
 
 
 fun f(h1, h2) =
@@ -66,13 +57,10 @@ fun f(h1, h2) =
   h1.f(false)
   h2.f(false)
 handleEffects(f)
-//│ > h1 start 7
-//│ > h2 start 8
-//│ > h1 start 9
-//│ > h2 stop
-//│ > h2 end 8
-//│ > h1 end 9
-//│ > h1 end 7
+//│ > h1 start undefined
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ ═══[RUNTIME ERROR] EffectRaised
 
 
 fun f(h1, h2) =
@@ -83,10 +71,10 @@ fun f(h1, h2) =
   h1.f(false)
   h2.f(false)
 handleEffects(f)
-//│ > h1 start 10
-//│ > h2 start 11
-//│ > h1 stop
-//│ > h1 end 10
+//│ > h1 start undefined
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ ═══[RUNTIME ERROR] EffectRaised
 
 
 class Eff with
@@ -114,7 +102,12 @@ handle h = Eff with
     k()
 f(h, box, 10)
 box.n
-//│ = 5120
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ ═══[RUNTIME ERROR] EffectRaised
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
+//│ ═══[RUNTIME ERROR] Expected: '5120', got: 'undefined'
 
 handle h1 = Eff with
   fun perform()(k) =
@@ -133,17 +126,9 @@ h2.perform()
 h2.perform()
 h2.perform()
 //│ > h2
-//│ > h1
-//│ > h2
-//│ > h1
-//│ > h2
-//│ > h1
-//│ > h2 end
-//│ > h2 end
-//│ > h2 end
-//│ > h1 end
-//│ > h1 end
-//│ > h1 end
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ ═══[RUNTIME ERROR] EffectRaised
 
 
 handle h1 = Eff with
@@ -163,9 +148,9 @@ handle h3 = Eff with
 h1.perform()
 h3.perform()
 //│ > h1
-//│ > h3
-//│ > h2
-//│ > h1
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ ═══[RUNTIME ERROR] EffectRaised
 
 
 let d = 0
@@ -187,7 +172,10 @@ while i < 10 do
   h2.perform()
   set i = i + 1
 d
-//│ = 11
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
+//│ ═══[RUNTIME ERROR] Expected: '11', got: 'null'
+//│ = null
 
 abstract class Eff2 with
   fun f1(): ()
@@ -213,7 +201,6 @@ handle h2 = Eff2 with
 h2.f2()
 h2.f1()
 //│ > h2.f2 pre
-//│ > h2.f1
-//│ > h2.f2 post
-//│ > h1.f1 pre
-//│ > h1.f1 post
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ ═══[RUNTIME ERROR] EffectRaised

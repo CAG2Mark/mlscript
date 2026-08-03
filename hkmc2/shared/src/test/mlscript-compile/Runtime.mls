@@ -331,12 +331,14 @@ fun pushFrame(fn, vars) =
 fun popFrame() =
   set curContTrace.next = curContTrace.next.next
 
+object EffectRaised
+
 fun mkEffect(handler, handlerFun) =
   let res = new mut EffectSig(curContTrace, handler, handlerFun)
   set
     curEffect = res
-    curContTrace = new ContTrace(null, null, null, null, false)
-  throw ()
+    curContTrace = new mut ContTrace(null, null, null, null, false)
+  throw EffectRaised
 
 fun handleBlockImpl(cur) =
   handleEffects(cur)
@@ -370,7 +372,7 @@ fun handleEffects(cur) =
       let nxt = handleEffect(cur)
       if cur === nxt then
         set curEffect = cur
-        throw ()
+        throw EffectRaised
       else
         set cur = nxt
     else
@@ -407,7 +409,7 @@ fun handleEffect(cur) =
 
   // handle the effect
   set curEffect = null
-  let tmp = set stackDepth += 2 in cur.handlerFun(resume(cur.contTrace))
+  let tmp = set stackDepth += 2 in RuntimeJS.try_catch(() => cur.handlerFun(resume(cur.contTrace)), err => ())
   if curEffect !== null then
     set cur = curEffect
     // relink the saved frames
@@ -436,7 +438,7 @@ fun resumeContTrace(contTrace, value) =
   while
     cont is FunctionContFrame then
       set curEffect = null
-      set value = set stackDepth += 3 in cont.resume(value)
+      set value = set stackDepth += 3 in RuntimeJS.try_catch(() => cont.resume(value), err => ())
       if curEffect !== null do
         set value = curEffect
       if value is EffectSig then

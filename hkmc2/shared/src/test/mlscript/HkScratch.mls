@@ -10,91 +10,13 @@
 :effectHandlers
 :lift
 
-:sjs
 :noInline
 :noOpt
 :noTailRec
-module M with
-  fun fact(bruh) =
-    if bruh === 0 then 1 else bruh * fact(bruh - 1)
-M.fact(10)
-//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let M1, VarsClass$fact1, fact$worker, tmp;
-//│ fact$worker = function fact$worker(fact$varsClass) {
-//│   let scrut, tmp1, tmp2, pc;
-//│   runtime.pushFrame(fact$worker, fact$varsClass);
-//│   pc = fact$varsClass.pc$;
-//│   main: while (true) {
-//│     switch (pc) {
-//│       case 0:
-//│         brk0: {
-//│           scrut = fact$varsClass.bruh$0 === 0;
-//│           if (scrut === true) {
-//│             runtime.popFrame();
-//│             return 1
-//│           }
-//│           tmp1 = fact$varsClass.bruh$0 - 1;
-//│           runtime.resumeValue = M.fact(tmp1);
-//│           break brk0;
-//│         }
-//│         pc = 1;
-//│         fact$varsClass.pc$ = 1;
-//│       case 1:
-//│         tmp2 = runtime.resumeValue;
-//│         runtime.popFrame();
-//│         return fact$varsClass.bruh$0 * tmp2;
-//│     }
-//│     break;
-//│   }
-//│ };
-//│ (class VarsClass$fact {
-//│   static {
-//│     VarsClass$fact1 = this
-//│   }
-//│   constructor(bruh$0) {
-//│     this.pc$ = 0;
-//│     this.bruh$0 = bruh$0;
-//│   }
-//│   #pc$;
-//│   #bruh$0;
-//│   get pc$() { return this.#pc$; }
-//│   set pc$(value) { this.#pc$ = value; }
-//│   get bruh$0() { return this.#bruh$0; }
-//│   set bruh$0(value) { this.#bruh$0 = value; }
-//│   toString() { return runtime.render(this); }
-//│   static [definitionMetadata] = ["class", "VarsClass$fact"];
-//│ });
-//│ runtime.resetEffects();
-//│ (class M {
-//│   static {
-//│     M1 = this
-//│   }
-//│   static fact(bruh) {
-//│     let tmp1;
-//│     tmp1 = new VarsClass$fact1(bruh);
-//│     return fact$worker(tmp1)
-//│   }
-//│   toString() { return runtime.render(this); }
-//│   static [definitionMetadata] = ["class", "M"];
-//│ });
-//│ tmp = M1.fact(10);
-//│ if (runtime.curEffect === null) { return tmp }
-//│ tmp = runtime.topLevelEffect(false);
-//│ return tmp;
-//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
-//│ ═══[RUNTIME ERROR] ReferenceError: M is not defined
-//│     at fact$worker (REPL10:1:618)
-//│     at M.fact (REPL10:1:1605)
-//│     at REPL10:1:1753
-//│     at ContextifyScript.runInThisContext (node:vm:138:12)
-//│     at defaultEval (node:repl:610:24)
-//│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:66:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│     at REPLServer.emit (node:events:509:20)
+fun fact(bruh) =
+  if bruh === 0 then 1 else bruh * fact(bruh - 1)
+fact(10)
+//│ = 3628800
 
 :sjs
 fun f(x) = if x > 0 then f(x - 1) else return 0
@@ -113,69 +35,131 @@ fun f(x) = if x > 0 then f(x - 1) else return 0
 
 fun one = 1
 
-:sir
+:sjs
 :noOpt
 :noInline
 :noTailRec
-fun fact(bruh) =
-  if bruh === 0 then one else bruh * fact(bruh - 1)
-fact(10)
-//│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let VarsClass$fact, fact$worker, tmp;
-//│ define fact$worker as fun fact$worker⁰(fact$varsClass) {
-//│   let scrut, tmp1, tmp2, pc;
-//│   do runtime⁰.pushFrame﹖(fact$worker⁰, fact$varsClass);
-//│   set pc = fact$varsClass.pc$⁰;
-//│   loop main:
-//│     match pc
-//│       0 =>
-//│         block brk0:
-//│           set scrut = ===⁰(fact$varsClass.bruh$0⁰, 0);
-//│           match scrut
-//│             true =>
-//│               do runtime⁰.popFrame﹖();
-//│               return one⁰()
-//│             else
-//│               set tmp1 = -⁰(fact$varsClass.bruh$0⁰, 1);
-//│               set runtime⁰.resumeValue﹖ = fact⁰(tmp1);
-//│               break brk0
-//│           end
-//│         set pc = 1;
-//│         set fact$varsClass.pc$⁰ = 1;
-//│         end
-//│     match pc
-//│       1 =>
-//│         set tmp2 = runtime⁰.resumeValue﹖;
-//│         do runtime⁰.popFrame﹖();
-//│         return *⁰(fact$varsClass.bruh$0⁰, tmp2)
-//│       else
-//│         end
-//│     end
-//│   end
-//│ };
-//│ define VarsClass$fact as class VarsClass$fact¹ {
-//│   val pc$¹;
-//│   val bruh$0¹;
-//│   constructor VarsClass$fact⁰(bruh$0) {
-//│     define pc$¹ as val pc$⁰ = 0;
-//│     define bruh$0¹ as val bruh$0⁰ = bruh$0;
-//│     end
+:expect "Hello World!"
+handle h = Object with
+  fun perform(arg)(k) =
+    print(arg)
+    k(arg)
+fun myFun() = h.perform("Hello") + " World!"
+myFun()
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let myFun, h, tmp1, handleBlock$, Handler$h$perform, Handler$h$1, Handler$h$perform$, VarsClass$myFun1, myFun$worker, VarsClass$Handler$h$perform1, Handler$h$perform$worker;
+//│ Handler$h$perform$worker = function Handler$h$perform$worker(Handler$h$perform$varsClass) {
+//│   let pc;
+//│   runtime.pushFrame(Handler$h$perform$worker, Handler$h$perform$varsClass);
+//│   pc = Handler$h$perform$varsClass.pc$;
+//│   main: while (true) {
+//│     switch (pc) {
+//│       case 0:
+//│         Handler$h$perform$varsClass.pc$ = 1;
+//│         runtime.resumeValue = Predef.print(Handler$h$perform$varsClass.arg$1);
+//│         pc = 1;
+//│       case 1:
+//│         runtime.resumeValue;
+//│         runtime.popFrame();
+//│         return runtime.safeCall(Handler$h$perform$varsClass.k$0(Handler$h$perform$varsClass.arg$1));
+//│     }
+//│     break;
 //│   }
 //│ };
-//│ do runtime⁰.resetEffects﹖();
-//│ @inline
-//│ define fact¹ as fun fact⁰(bruh) {
-//│   let tmp1;
-//│   set tmp1 = new mut VarsClass$fact¹(bruh);
-//│   return fact$worker⁰(tmp1)
+//│ (class VarsClass$Handler$h$perform {
+//│   static {
+//│     VarsClass$Handler$h$perform1 = this
+//│   }
+//│   constructor(k$0, arg$1) {
+//│     this.pc$ = 0;
+//│     this.arg$1 = arg$1;
+//│     this.k$0 = k$0;
+//│   }
+//│   #pc$;
+//│   #k$0;
+//│   #arg$1;
+//│   get pc$() { return this.#pc$; }
+//│   set pc$(value) { this.#pc$ = value; }
+//│   get k$0() { return this.#k$0; }
+//│   set k$0(value) { this.#k$0 = value; }
+//│   get arg$1() { return this.#arg$1; }
+//│   set arg$1(value) { this.#arg$1 = value; }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "VarsClass$Handler$h$perform"];
+//│ });
+//│ myFun$worker = function myFun$worker(myFun$varsClass) {
+//│   let tmp2, pc;
+//│   runtime.pushFrame(myFun$worker, myFun$varsClass);
+//│   pc = myFun$varsClass.pc$;
+//│   main: while (true) {
+//│     switch (pc) {
+//│       case 0:
+//│         myFun$varsClass.pc$ = 1;
+//│         runtime.resumeValue = runtime.safeCall(h.perform("Hello"));
+//│         pc = 1;
+//│       case 1:
+//│         tmp2 = runtime.resumeValue;
+//│         runtime.popFrame();
+//│         return tmp2 + " World!";
+//│     }
+//│     break;
+//│   }
 //│ };
-//│ set tmp = fact⁰(10);
-//│ match runtime⁰.curEffect﹖
-//│   null =>
-//│     return tmp
-//│   else
-//│     set tmp = runtime⁰.topLevelEffect﹖(false);
-//│     return tmp
-//│ end
+//│ (class VarsClass$myFun {
+//│   static {
+//│     VarsClass$myFun1 = this
+//│   }
+//│   constructor() {
+//│     this.pc$ = 0;
+//│   }
+//│   #pc$;
+//│   get pc$() { return this.#pc$; }
+//│   set pc$(value) { this.#pc$ = value; }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "VarsClass$myFun"];
+//│ });
+//│ runtime.resetEffects();
+//│ myFun = function myFun() {
+//│   let tmp2;
+//│   tmp2 = new VarsClass$myFun1();
+//│   return myFun$worker(tmp2)
+//│ };
+//│ Handler$h$perform$ = function Handler$h$perform$(arg) {
+//│   return (k) => {
+//│     return Handler$h$perform(arg, k)
+//│   }
+//│ };
+//│ Handler$h$perform = function Handler$h$perform(arg, k) {
+//│   let tmp2;
+//│   tmp2 = new VarsClass$Handler$h$perform1(k, arg);
+//│   return Handler$h$perform$worker(tmp2)
+//│ };
+//│ (class Handler$h$ extends globalThis.Object {
+//│   static {
+//│     Handler$h$1 = this
+//│   }
+//│   constructor() {
+//│     super();
+//│     if (runtime.curEffect !== null) {
+//│       runtime.illegalEffect("in a constructor");
+//│     }
+//│   }
+//│   perform(arg) {
+//│     let Handler$h$perform$here;
+//│     Handler$h$perform$here = Handler$h$perform$(arg);
+//│     return runtime.mkEffect(this, Handler$h$perform$here)
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Handler$h$"];
+//│ });
+//│ h = new Handler$h$1();
+//│ handleBlock$ = (undefined, function () {
+//│   return myFun()
+//│ });
+//│ tmp1 = runtime.enterHandleBlock(h, handleBlock$);
+//│ if (runtime.curEffect === null) { return tmp1 }
+//│ tmp1 = runtime.topLevelEffect(false);
+//│ return tmp1;
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ = 3628800
+//│ > Hello
+//│ = "Hello World!"

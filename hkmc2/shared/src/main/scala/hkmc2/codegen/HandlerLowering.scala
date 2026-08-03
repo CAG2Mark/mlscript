@@ -129,6 +129,21 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         .map((fun, _))
       case _ => N
   
+  object CombinedStateTransition:
+    def apply(uid: StateId) = PreStateTransition(uid, StateTransition(uid))
+  
+  object PreStateTransition:
+    private val transitionSymbol = freshTmp("preTransition")
+    def apply(uid: StateId, rest: Block) =
+      Assign(NoSymbol, PureCall(transitionSymbol.asSimpleRef, List(Value.Lit(Tree.IntLit(uid)))), rest)
+    def unapply(blk: Block) = blk match
+      case Assign(NoSymbol, PureCall(Value.SimpleRef(`transitionSymbol`), List(Value.Lit(Tree.IntLit(uid)))), rest) =>
+        S(uid, rest)
+      case _ => N
+  
+  extension (k: Block => Block)
+    def preStateTransition(uid: StateId) = k.chain(PreStateTransition(uid, _))
+  
   object StateTransition:
     private val transitionSymbol = freshTmp("transition")
     def apply(uid: StateId) =
@@ -150,7 +165,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
   abstract class LazyId extends Lazy[StateId]:
     def isUsed: Bool = !isEmpty
     def transitionOrBlk(blk: => Block) =
-      if isEmpty then blk else StateTransition(force_!)
+      if isEmpty then blk else CombinedStateTransition(force_!)
   
   private class IdAllocator:
     var id: Int = 0
@@ -199,6 +214,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
       def doNewEffectPartition(res: Result, rst: Block) =
         val stateId = forceId(go(rst)(using partitioned = true), true)
         val newBlock = blockBuilder
+          .preStateTransition(stateId)
           .assignFieldN(paths.runtimePath, paths.resumeValueIdent, res)
           .rest(StateTransition(stateId))
         boundary.break(newBlock)
@@ -238,8 +254,8 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         val newBody = go(body)(using S(restId))
         if startId.isUsed then
           // We break down the label, and force the usage of rest so that all Break will be rewritten later
-          result(startId.force_!) = BlockPartition(Begin(newBody, StateTransition(restId.force_!)), false)
-          StateTransition(startId.force_!)
+          result(startId.force_!) = BlockPartition(Begin(newBody, CombinedStateTransition(restId.force_!)), false)
+          CombinedStateTransition(startId.force_!)
         else
           Label(label, loop, newBody, restId.transitionSoft)
 
@@ -252,7 +268,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
             return blk
           case S(value) => value
         if partitioned then
-          StateTransition(end.force_!)
+          CombinedStateTransition(end.force_!)
         else
           // We might still need to do a StateTransition if the label is broken down.
           // This is done afterwards in a replacement pass.
@@ -267,7 +283,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
             return blk
           case S(value) => value
         if partitioned then
-          StateTransition(start.force_!)
+          CombinedStateTransition(start.force_!)
         else
           // Same as above.
           Continue(label)
@@ -281,7 +297,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
       
       case End(_) =>
         if partitioned then
-          afterEnd.fold(blk)(id => StateTransition(id.force_!))
+          afterEnd.fold(blk)(id => CombinedStateTransition(id.force_!))
         else
           blk
 
@@ -310,8 +326,8 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
 
     val replaceStaleLabels = new BlockTransformerShallow(SymbolSubst.Id):
       override def applyBlock(b: Block): Block = b match
-        case Break(label) if labelIds(label)._2.isUsed => StateTransition(labelIds(label)._2.force_!)
-        case Continue(label) if labelIds(label)._1.isUsed => StateTransition(labelIds(label)._1.force_!)
+        case Break(label) if labelIds(label)._2.isUsed => CombinedStateTransition(labelIds(label)._2.force_!)
+        case Continue(label) if labelIds(label)._1.isUsed => CombinedStateTransition(labelIds(label)._1.force_!)
         case _ => super.applyBlock(b)
     val newMap = Map.from(result.map: (id, part) =>
       id -> BlockPartition(replaceStaleLabels.applyBlock(part.blk), part.resumable))
@@ -676,7 +692,9 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     val pcPath = pcVar.asPath
     val pcAssign_ = varClsInfo.assignPc(varsClsSym.asPath)
     def pcAssign(value: Path, rest: Block) =
-      Assign(pcVar, value, pcAssign_(value, rest))
+      Assign(pcVar, value, rest)
+    def prePcAssign(value: Path, rest: Block) =
+      pcAssign_(value, rest)
     
     val curDepth = freshTmp("curDepth")
     val mainLoopLbl = freshLabel("main")
@@ -697,6 +715,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
 
     def postTransform(transition: BigInt => Block) = new BlockTransformerShallow(SymbolSubst.Id):
       override def applyBlock(b: Block) = b match
+        case PreStateTransition(uid, rest) => prePcAssign(Value.Lit(Tree.IntLit(uid)), applyBlock(rest))
         case StateTransition(uid) => transition(uid)
         case r: Return =>
           Assign(NoSymbol, Call(paths.popFramePath, Nil ne_:: Nil)(CallMetadata.defaultMlsFun), r)
