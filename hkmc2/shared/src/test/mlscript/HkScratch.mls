@@ -11,33 +11,40 @@
 :lift
 
 :sjs
+:noInline
+:noOpt
 :noTailRec
-fun fact(bruh) =
-  if bruh === 0 then 1 else bruh * fact(bruh - 1)
-fact(10)
+module M with
+  fun fact(bruh) =
+    if bruh === 0 then 1 else bruh * fact(bruh - 1)
+M.fact(10)
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let fact, VarsClass$fact1, fact$worker, inlinedVal, tmp;
+//│ let M1, VarsClass$fact1, fact$worker, tmp;
 //│ fact$worker = function fact$worker(fact$varsClass) {
 //│   let scrut, tmp1, tmp2, pc;
+//│   runtime.pushFrame(fact$worker, fact$varsClass);
 //│   pc = fact$varsClass.pc$;
-//│   switch (pc) {
-//│     case 0:
-//│       scrut = fact$varsClass.bruh$0 === 0;
-//│       if (scrut === true) {
-//│         return 1
-//│       }
-//│       {
-//│         let inlinedVal1, tmp3;
-//│         tmp1 = fact$varsClass.bruh$0 - 1;
-//│         tmp3 = new VarsClass$fact1(tmp1);
-//│         inlinedVal1 = fact$worker(tmp3);
-//│         runtime.resumeValue = inlinedVal1;
+//│   main: while (true) {
+//│     switch (pc) {
+//│       case 0:
+//│         brk0: {
+//│           scrut = fact$varsClass.bruh$0 === 0;
+//│           if (scrut === true) {
+//│             runtime.popFrame();
+//│             return 1
+//│           }
+//│           tmp1 = fact$varsClass.bruh$0 - 1;
+//│           runtime.resumeValue = M.fact(tmp1);
+//│           break brk0;
+//│         }
 //│         pc = 1;
 //│         fact$varsClass.pc$ = 1;
-//│       }
-//│     case 1:
-//│       tmp2 = runtime.resumeValue;
-//│       return fact$varsClass.bruh$0 * tmp2;
+//│       case 1:
+//│         tmp2 = runtime.resumeValue;
+//│         runtime.popFrame();
+//│         return fact$varsClass.bruh$0 * tmp2;
+//│     }
+//│     break;
 //│   }
 //│ };
 //│ (class VarsClass$fact {
@@ -58,14 +65,117 @@ fact(10)
 //│   static [definitionMetadata] = ["class", "VarsClass$fact"];
 //│ });
 //│ runtime.resetEffects();
-//│ fact = function fact(bruh) {
-//│   let tmp1;
-//│   tmp1 = new VarsClass$fact1(bruh);
-//│   return fact$worker(tmp1)
+//│ (class M {
+//│   static {
+//│     M1 = this
+//│   }
+//│   static fact(bruh) {
+//│     let tmp1;
+//│     tmp1 = new VarsClass$fact1(bruh);
+//│     return fact$worker(tmp1)
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "M"];
+//│ });
+//│ tmp = M1.fact(10);
+//│ if (runtime.curEffect === null) { return tmp }
+//│ tmp = runtime.topLevelEffect(false);
+//│ return tmp;
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ ═══[RUNTIME ERROR] ReferenceError: M is not defined
+//│     at fact$worker (REPL10:1:618)
+//│     at M.fact (REPL10:1:1605)
+//│     at REPL10:1:1753
+//│     at ContextifyScript.runInThisContext (node:vm:138:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:66:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:509:20)
+
+:sjs
+fun f(x) = if x > 0 then f(x - 1) else return 0
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let f;
+//│ runtime.resetEffects();
+//│ f = function f(x) {
+//│   loopLabel: while (true) {
+//│     let scrut, tmp1;
+//│     scrut = x > 0;
+//│     if (scrut === true) { tmp1 = x - 1; x = tmp1; continue loopLabel }
+//│     return 0;
+//│   }
 //│ };
-//│ tmp = new VarsClass$fact1(10);
-//│ inlinedVal = fact$worker(tmp);
-//│ if (runtime.curEffect === null) { return inlinedVal }
-//│ return runtime.topLevelEffect(false);
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
+
+fun one = 1
+
+:sir
+:noOpt
+:noInline
+:noTailRec
+fun fact(bruh) =
+  if bruh === 0 then one else bruh * fact(bruh - 1)
+fact(10)
+//│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
+//│ let VarsClass$fact, fact$worker, tmp;
+//│ define fact$worker as fun fact$worker⁰(fact$varsClass) {
+//│   let scrut, tmp1, tmp2, pc;
+//│   do runtime⁰.pushFrame﹖(fact$worker⁰, fact$varsClass);
+//│   set pc = fact$varsClass.pc$⁰;
+//│   loop main:
+//│     match pc
+//│       0 =>
+//│         block brk0:
+//│           set scrut = ===⁰(fact$varsClass.bruh$0⁰, 0);
+//│           match scrut
+//│             true =>
+//│               do runtime⁰.popFrame﹖();
+//│               return one⁰()
+//│             else
+//│               set tmp1 = -⁰(fact$varsClass.bruh$0⁰, 1);
+//│               set runtime⁰.resumeValue﹖ = fact⁰(tmp1);
+//│               break brk0
+//│           end
+//│         set pc = 1;
+//│         set fact$varsClass.pc$⁰ = 1;
+//│         end
+//│     match pc
+//│       1 =>
+//│         set tmp2 = runtime⁰.resumeValue﹖;
+//│         do runtime⁰.popFrame﹖();
+//│         return *⁰(fact$varsClass.bruh$0⁰, tmp2)
+//│       else
+//│         end
+//│     end
+//│   end
+//│ };
+//│ define VarsClass$fact as class VarsClass$fact¹ {
+//│   val pc$¹;
+//│   val bruh$0¹;
+//│   constructor VarsClass$fact⁰(bruh$0) {
+//│     define pc$¹ as val pc$⁰ = 0;
+//│     define bruh$0¹ as val bruh$0⁰ = bruh$0;
+//│     end
+//│   }
+//│ };
+//│ do runtime⁰.resetEffects﹖();
+//│ @inline
+//│ define fact¹ as fun fact⁰(bruh) {
+//│   let tmp1;
+//│   set tmp1 = new mut VarsClass$fact¹(bruh);
+//│   return fact$worker⁰(tmp1)
+//│ };
+//│ set tmp = fact⁰(10);
+//│ match runtime⁰.curEffect﹖
+//│   null =>
+//│     return tmp
+//│   else
+//│     set tmp = runtime⁰.topLevelEffect﹖(false);
+//│     return tmp
+//│ end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 3628800

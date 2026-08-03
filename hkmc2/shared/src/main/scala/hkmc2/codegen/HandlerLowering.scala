@@ -58,18 +58,7 @@ object HandlerLowering:
   
   // currentFun: path to the current function for resumption
   // thisPath: path to `this` binding if the function is a method, `this` will be rebinded on resumption
-  private case class FunctionCtx(currentFun: Path, thisPath: Option[Path], resumeInfo: ResumeInfo, debugInfo: DebugInfo, inGetter: Bool):
-    def doUnwind(loc: Value, state: Path, restoreList: List[LocalVarSymbol])(using paths: HandlerPaths) =
-      Return(Call(paths.unwindPath, (
-        currentFun ::
-        state ::
-        loc ::
-        debugInfo.debugInfoPath ::
-        thisPath.getOrElse(unit) ::
-        resumeInfo.argLists ++:
-        (intLit(restoreList.length) ::
-        restoreList.map(_.asPath))
-      ).map(_.asArg) ne_:: Nil)(CallMetadata.mlsFunWithEffect))
+  private case class FunctionCtx(currentFun: Path, thisPath: Option[Path], resumeInfo: ResumeInfo, debugInfo: DebugInfo, inGetter: Bool)
   
   // argLists: length-encoded argument list used for resumption.
   // currentLocals: All locals to be saved and reloaded, this cannot include any variables in outer scopes
@@ -111,7 +100,8 @@ class HandlerPaths(using Elaborator.State):
   val fnLocalsPath: Path = runtimePath.selSN("FnLocalsInfo").selSN("class")
   val localVarInfoPath: Path = runtimePath.selSN("LocalVarInfo").selSN("class")
   val curEffect: Path = runtimePath.selSN("curEffect")
-  val unwindPath: Path = runtimePath.selSN("unwind")
+  val pushFramePath: Path = runtimePath.selSN("pushFrame")
+  val popFramePath: Path = runtimePath.selSN("popFrame")
   val resetEffects: Path = runtimePath.selSN("resetEffects")
   val resumePc: Path = runtimePath.selSN("resumePc")
   val resumeIdx: Path = runtimePath.selSN("resumeIdx")
@@ -708,8 +698,8 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     def postTransform(transition: BigInt => Block) = new BlockTransformerShallow(SymbolSubst.Id):
       override def applyBlock(b: Block) = b match
         case StateTransition(uid) => transition(uid)
-        case Unwind(uid, loc) =>
-          ctx.doUnwind(loc, intLit(uid), vars)(using paths)
+        case r: Return =>
+          Assign(NoSymbol, Call(paths.popFramePath, Nil ne_:: Nil)(CallMetadata.defaultMlsFun), r)
         case _ => super.applyBlock(b)
       override def applyResult(r: Result)(k: Result => Block): Block = r match
         case EffectfulResult() if needsStackSafety =>
@@ -771,8 +761,20 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
           case (acc, f) => f(acc)
         Label(mainLoopLbl, true, matches, End())
     
+    // worker defn symbols
+    val workerDfnBms = BlockMemberSymbol(nme + "$worker", Nil, true)
+    val workerDfnSym = TermSymbol(syntax.Fun, N, Tree.Ident(nme + "$worker"))
+    
     mainBody = varRewriter(varClsInfo, varsClsSym).applyBlock(mainBody)
     mainBody = Assign(pcVar, varClsInfo.readPc(varsClsSym.asPath), mainBody)
+    mainBody = Assign(
+      NoSymbol, 
+      Call(
+        paths.pushFramePath,
+        (Value.MemberRef(workerDfnBms, workerDfnSym).asArg :: varsClsSym.asPath.asArg :: Nil) ne_:: Nil
+      )(CallMetadata.defaultMlsFun),
+      mainBody
+    )
         
     val getSavedTmp = freshTmp("saveOffset")
     def getSaved(off: BigInt): (Block => Block, Path) =
@@ -784,12 +786,10 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     val resumeArrIndexed = DynSelect(paths.runtimePath.selSN("resumeArr"), getSavedTmp.asSimpleRef, true)
     val plus = State.builtinOpsMap("+").asSimpleRef
     
+    // TODO(dyn)
     if needsStackSafety then
       mainBody = blockBuilder
         .assign(NoSymbol, PureCall(paths.checkDepthPath, Nil))
-        .ifthen(paths.curEffect, Case.Lit(Tree.UnitLit(true)), End(), S(
-          ctx.doUnwind(ctx.resumeInfo.currentStackSafetySym.fold(_.toLoc, _.toLoc).fold(unit)(locToStr(_)), 
-          if oneState then intLit(-1) else pcPath, vars)(using paths)))
         .assign(curDepth, Call(plus, (paths.stackDepthPath.asArg :: intLit(1).asArg :: Nil) ne_:: Nil)(CallMetadata.defaultFun))
         .rest(mainBody)
     
@@ -800,8 +800,6 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
       mainBody)
     
     // create worker definition
-    val workerDfnBms = BlockMemberSymbol(nme + "$worker", Nil, true)
-    val workerDfnSym = TermSymbol(syntax.Fun, N, Tree.Ident(nme + "$worker"))
     val workerDefn = FunDefn(
       N, workerDfnBms, workerDfnSym, PlainParamList(Param.simple(varsClsSym) :: Nil) :: Nil, mainBody
     )(N, Nil)

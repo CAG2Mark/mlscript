@@ -271,6 +271,10 @@ class TailRecOpt(checkAnnotations: Bool)(using State, TL, Raise):
       case c: CallEdge.NormalCall => c.f2 -> c.call
     val nonTailCalls = nonTailCallsLs.toMap
     
+    val tailCallsLs = calls.count:
+      case c: CallEdge.TailCall => true
+      case _ => false
+    
     if calls.isEmpty then
       if checkAnnotations then for f <- funs if f.tailRec do
         raise(WarningReport(msg"This function is marked @tailrec but has no direct self-recursion." -> f.dSym.toLoc :: Nil))
@@ -287,6 +291,9 @@ class TailRecOpt(checkAnnotations: Bool)(using State, TL, Raise):
             :: msg"It could self-recurse through this call, which is not a tail call." -> reportLoc
             :: Nil
           ))
+    
+    if tailCallsLs === 0 then
+      return (N, funs)
 
     val maxParamLen = maxInt(funs, paramsLen)
     val paramSyms =
