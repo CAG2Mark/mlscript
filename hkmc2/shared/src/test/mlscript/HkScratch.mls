@@ -15,6 +15,7 @@
 fun g(h) =
   h.perform(0)
   h.perform(1)
+  2
 handle h = Object with
   fun perform(arg)(k) =
     k(arg)
@@ -84,57 +85,70 @@ in
 //│ >   fn: [Function: g$worker],
 //│ >   varsClass: VarsClass$g {}
 //│ > }
-//│ > relinking
-//│ > ContTrace {
+//│ > null
+//│ > HandlerContFrame {
 //│ >   next: null,
-//│ >   last: HandlerContFrame {
-//│ >     next: null,
-//│ >     nextHandler: null,
-//│ >     handler: Handler$h$ {}
-//│ >   },
 //│ >   nextHandler: null,
-//│ >   lastHandler: HandlerContFrame {
-//│ >     next: null,
-//│ >     nextHandler: null,
-//│ >     handler: Handler$h$ {}
-//│ >   },
-//│ >   resumed: false
+//│ >   handler: Handler$h$ {}
 //│ > }
-//│ > EffectSig {
-//│ >   contTrace: ContTrace {
-//│ >     next: null,
-//│ >     last: FunctionContFrame {
-//│ >       next: null,
-//│ >       fn: [Function: g$worker],
-//│ >       varsClass: VarsClass$g {}
-//│ >     },
-//│ >     nextHandler: null,
-//│ >     lastHandler: null,
-//│ >     resumed: false
-//│ >   },
-//│ >   handler: Handler$h$ {},
-//│ >   handlerFun: [Function (anonymous)],
-//│ >   id: 1
-//│ > }
-//│ > handleEffects # 0 | 0 1
 //│ > handleEffect:
 //│ > EffectSig {
 //│ >   contTrace: ContTrace {
-//│ >     next: null,
-//│ >     last: FunctionContFrame {
+//│ >     next: FunctionContFrame {
 //│ >       next: null,
 //│ >       fn: [Function: g$worker],
 //│ >       varsClass: VarsClass$g {}
 //│ >     },
-//│ >     nextHandler: null,
-//│ >     lastHandler: null,
+//│ >     last: HandlerContFrame {
+//│ >       next: null,
+//│ >       nextHandler: null,
+//│ >       handler: Handler$h$ {}
+//│ >     },
+//│ >     nextHandler: HandlerContFrame {
+//│ >       next: null,
+//│ >       nextHandler: null,
+//│ >       handler: Handler$h$ {}
+//│ >     },
+//│ >     lastHandler: HandlerContFrame {
+//│ >       next: null,
+//│ >       nextHandler: null,
+//│ >       handler: Handler$h$ {}
+//│ >     },
 //│ >     resumed: false
 //│ >   },
 //│ >   handler: Handler$h$ {},
 //│ >   handlerFun: [Function (anonymous)],
 //│ >   id: 1
 //│ > }
-//│ > handleEffects # 0 | 1 1
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
-//│ ═══[RUNTIME ERROR] EffectRaised("handleEffects")
+//│ > resuming with:
+//│ > EffectSig {
+//│ >   contTrace: ContTrace {
+//│ >     next: FunctionContFrame {
+//│ >       next: null,
+//│ >       fn: [Function: g$worker],
+//│ >       varsClass: VarsClass$g {}
+//│ >     },
+//│ >     last: HandlerContFrame {
+//│ >       next: null,
+//│ >       nextHandler: null,
+//│ >       handler: Handler$h$ {}
+//│ >     },
+//│ >     nextHandler: HandlerContFrame {
+//│ >       next: null,
+//│ >       nextHandler: null,
+//│ >       handler: Handler$h$ {}
+//│ >     },
+//│ >     lastHandler: HandlerContFrame {
+//│ >       next: null,
+//│ >       nextHandler: null,
+//│ >       handler: Handler$h$ {}
+//│ >     },
+//│ >     resumed: false
+//│ >   },
+//│ >   handler: Handler$h$ {},
+//│ >   handlerFun: [Function (anonymous)],
+//│ >   id: 1
+//│ > }
+//│ > handleEffects # 1 | 1 undefined
+//│ > handleEffects # 0 | 0 undefined
+//│ = 2

@@ -163,6 +163,16 @@ mut val resumeArr = null
 mut val resumeIdx = null
 mut val resumePc = -1
 
+fun makeNewContTrace() =
+  set curContTrace = new mut ContTrace(null, null, null, null, false)
+  set
+    curContTrace.last = curContTrace
+    curContTrace.lastHandler = curContTrace
+
+set
+  curContTrace.last = curContTrace
+  curContTrace.lastHandler = curContTrace
+
 object FatalEffect
 object PrintStackEffect
 
@@ -324,7 +334,7 @@ fun debugEff(eff) =
 //
 fun pushFrame(fn, vars) =
   let newFrame = new mut FunctionContFrame(curContTrace.next, fn, vars)
-  if curContTrace.last === null do
+  if curContTrace.last === curContTrace do
     set curContTrace.last = newFrame
   set curContTrace.next = new mut FunctionContFrame(curContTrace.next, fn, vars)
 
@@ -337,9 +347,8 @@ mut val latestId = 0
 fun mkEffect(handler, handlerFun) =
   let res = new mut EffectSig(curContTrace, handler, handlerFun, latestId)
   set latestId += 1
-  set
-    curEffect = res
-    curContTrace = new mut ContTrace(null, null, null, null, false)
+  set curEffect = res
+  makeNewContTrace()
   throw EffectRaised("mkEffect")
 
 fun handleBlockImpl(cur) =
@@ -351,7 +360,7 @@ fun popHandler() =
 //
 //  contTrace  --> f3 --> f4 --> ...
 //      v
-//      h1     --> f1 --> f2 --> ...
+//      h1     --> f2 --> f1 --> ...
 //
 //  becomes:
 // 
@@ -366,12 +375,12 @@ fun enterHandleBlock(handler, body) =
   set
     curContTrace.nextHandler = handlerFrame
     curContTrace.next = null
-  if curContTrace.lastHandler === null do
+  if curContTrace.lastHandler === curContTrace do
     set curContTrace.lastHandler = handlerFrame
-  if curContTrace.last === null do
+  if curContTrace.last === curContTrace do
     set curContTrace.last = handlerFrame
   RuntimeJS.try_catch(body, err => handleBlockImpl(curEffect))
-  popHandler()
+  // popHandler()
 
 mut val handleEffectsCall = 0
 fun handleEffects(cur) =
