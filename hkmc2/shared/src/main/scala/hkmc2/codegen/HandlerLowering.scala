@@ -527,75 +527,24 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
    *    c) translate code in current block (post translate)
    */
   
-  case class VarClassInfo(cls: ClsLikeDefn, pcVar: TermSymbol, mp: Map[LocalVarSymbol, BlockMemberSymbol -> TermSymbol]):
+  case class VarsArrayInfo(mp: Map[LocalVarSymbol, Int]):
     def select(varClassPath: Path)(local: LocalVarSymbol) =
-      val (_, sym) = mp(local)
-      Select(varClassPath, sym.id)(S(sym))(false)
+      DynSelect(varClassPath, Value.Lit(Tree.IntLit(mp(local))), true)
     def assign(varClassPath: Path)(local: LocalVarSymbol, value: Result, rest: Block) =
-      val (_, sym) = mp(local)
-      AssignField(varClassPath, sym.id, value, rest)(S(sym))
-    def instantiate = 
-      Instantiate(
-        true, 
-        Value.MemberRef(cls.sym, cls.isym),
-        mp.keySet.toArray.sortBy(_.uid).map(_.asPath.asArg).toList :: Nil
-      )(InstantiateMetadata.empty)
-    def readPc(varClassPath: Path) = Select(varClassPath, pcVar.id)(S(pcVar))(false)
-    def assignPc(varClassPath: Path)(value: Path, rest: Block) = AssignField(varClassPath, pcVar.id, value, rest)(S(pcVar))
+      AssignDynField(varClassPath, Value.Lit(Tree.IntLit(mp(local))), true, value, rest)
+    def instantiate =
+      val inv = mp.toList.iterator.map((a, b) => (b, a)).toMap
+      val pcArg = Value.Lit(Tree.IntLit(0)).asArg
+      val args = pcArg :: (1 until mp.size + 1).map(inv(_).asPath.asArg).toList
+      Tuple(true, args)
+    def readPc(varClassPath: Path) = DynSelect(varClassPath, Value.Lit(Tree.IntLit(0)), true)
+    def assignPc(varClassPath: Path)(value: Path, rest: Block) = AssignDynField(varClassPath, Value.Lit(Tree.IntLit(0)), true, value, rest)
     
-  private def createVarClass(nme: String, vars: Iterable[LocalVarSymbol]): VarClassInfo =
-    val clsSym = ClassSymbol(
-      Tree.DummyTypeDef(syntax.Cls),
-      Tree.Ident(nme)
-    )
-
-    val fresh = new Uid.Symbol.State
-    
-    val sortedVars: Array[(ctorSyms: (local: LocalVarSymbol, vs: VarSymbol), param: Param, valDefn: ValDefn)] =
-      vars.toArray.sortBy(_.uid).map: sym =>
-        val id = fresh.nextUid.asInt
-        val nme = sym.nme + "$" + id
-        
-        val ident = new Tree.Ident(nme)
-        val varSym = VarSymbol(ident)
-        val fldSym = BlockMemberSymbol(nme, Nil)
-        val tSym = TermSymbol(syntax.MutVal, S(clsSym), ident)
-        
-        val p = Param(FldFlags.empty.copy(isVal = true), varSym, N, Modulefulness.none)
-        varSym.decl = S(p) // * Currently this is only accessed to create the class' toString method
-        
-        val vd = ValDefn(
-          tSym,
-          fldSym,
-          varSym.asSimpleRef
-        )(N, Nil)
-        
-        (sym -> varSym, p, vd)
-    
-    val pcTsym = TermSymbol(syntax.MutVal, S(clsSym), Tree.Ident("pc"))
-    val pcBsym = BlockMemberSymbol("pc", Nil, true)
-    
-    val ctor = sortedVars.iterator.foldLeft[Block](End()):
-        case (acc, (_, _, vd)) => Define(vd, acc)
-    val ctorWithPc = Define(ValDefn(pcTsym, pcBsym, Value.Lit(Tree.IntLit(0)))(N, Nil), ctor)
-    
-    val defn = ClsLikeDefn(
-      None, clsSym, BlockMemberSymbol(nme, Nil),
-      S(ClassCtorSymbol(syntax.Fun, N, clsSym)),
-      syntax.Cls,
-      N,
-      PlainParamList(sortedVars.iterator.map(_.param).toList) :: Nil, None, Nil, Nil, 
-      (pcBsym, pcTsym) :: sortedVars.map(v => (v.valDefn.sym, v.valDefn.tsym)).toList,
-      End(),
-      ctorWithPc,
-      N,
-      N,
-    )(N, Nil)
-    
-    val mp = sortedVars.iterator.map: x =>
-        x.ctorSyms.local -> (x.valDefn.sym -> x.valDefn.tsym)
+  private def createVarClass(nme: String, vars: Iterable[LocalVarSymbol]): VarsArrayInfo =
+    val mp = vars.toArray.sortBy(_.uid).zipWithIndex.map:
+        case (sym, idx) => (sym, idx + 1)
       .toMap
-    VarClassInfo(defn, pcTsym, mp)
+    VarsArrayInfo(mp)
   
   private val extraDefns: ListBuffer[Defn] = ListBuffer()
 
@@ -702,7 +651,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     val edges = computeEdges(parts)
     val straightLines = computeStraightLines(parts.entry, edges)
     
-    def varRewriter(varsInfo: VarClassInfo, varsClsSym: LocalVarSymbol) =
+    def varRewriter(varsInfo: VarsArrayInfo, varsClsSym: LocalVarSymbol) =
       val sel = varsInfo.select(varsClsSym.asPath)
       val assign = varsInfo.assign(varsClsSym.asPath)
       new BlockTransformerShallow(SymbolSubst.Id):
@@ -824,8 +773,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     )(N, Nil)
 
     val tmp = TempSymbol(N)
-
-    extraDefns.addOne(varClsInfo.cls)
+    
     extraDefns.addOne(workerDefn)
 
     blockBuilder
