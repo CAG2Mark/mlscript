@@ -43,18 +43,18 @@ fun f(h1, h2) =
   h1.f(false)
   h2.f(false)
 handleEffects(f)
-//│ > h1 start undefined
-//│ > h2 start undefined
-//│ > h1 start undefined
-//│ > h2 start undefined
-//│ > h1 start undefined
-//│ > h2 start undefined
-//│ > h2 end undefined
-//│ > h2 end undefined
-//│ > h2 end undefined
-//│ > h1 end undefined
-//│ > h1 end undefined
-//│ > h1 end undefined
+//│ > h1 start 1
+//│ > h2 start 2
+//│ > h1 start 3
+//│ > h2 start 4
+//│ > h1 start 5
+//│ > h2 start 6
+//│ > h2 end 6
+//│ > h2 end 4
+//│ > h2 end 2
+//│ > h1 end 5
+//│ > h1 end 3
+//│ > h1 end 1
 //│ = false
 
 
@@ -66,13 +66,13 @@ fun f(h1, h2) =
   h1.f(false)
   h2.f(false)
 handleEffects(f)
-//│ > h1 start undefined
-//│ > h2 start undefined
-//│ > h1 start undefined
+//│ > h1 start 7
+//│ > h2 start 8
+//│ > h1 start 9
 //│ > h2 stop
-//│ > h2 end undefined
-//│ > h1 end undefined
-//│ > h1 end undefined
+//│ > h2 end 8
+//│ > h1 end 9
+//│ > h1 end 7
 
 
 fun f(h1, h2) =
@@ -83,10 +83,10 @@ fun f(h1, h2) =
   h1.f(false)
   h2.f(false)
 handleEffects(f)
-//│ > h1 start undefined
-//│ > h2 start undefined
+//│ > h1 start 10
+//│ > h2 start 11
 //│ > h1 stop
-//│ > h1 end undefined
+//│ > h1 end 10
 
 
 class Eff with
@@ -187,9 +187,11 @@ while i < 10 do
   set i = i + 1
 d
 //│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ ═══[RUNTIME ERROR] EffectRaised("resumeContTrace")
+//│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
-//│ ═══[RUNTIME ERROR] Expected: '11', got: 'null'
-//│ = null
+//│ ═══[RUNTIME ERROR] Expected: '11', got: 'undefined'
 
 abstract class Eff2 with
   fun f1(): ()

@@ -763,24 +763,25 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
       scopedVars ++ extraVars,
       mainBody)
     
-    // create worker definition
-    val workerDefn = FunDefn(
-      N, workerDfnBms, workerDfnSym, PlainParamList(Param.simple(varsClsSym) :: Nil) :: Nil, mainBody
-    )(N, Nil)
+    if mainBody is blk then blk else
+      // create worker definition
+      val workerDefn = FunDefn(
+        N, workerDfnBms, workerDfnSym, PlainParamList(Param.simple(varsClsSym) :: Nil) :: Nil, mainBody
+      )(N, Nil)
 
-    val tmp = TempSymbol(N)
-    
-    extraDefns.addOne(workerDefn)
+      val tmp = TempSymbol(N)
+      
+      extraDefns.addOne(workerDefn)
 
-    blockBuilder
-      .assignScoped(tmp, varClsInfo.instantiate)
-      .assign(NoSymbol, 
-        Call(
-          paths.pushFramePath,
-          (Value.MemberRef(workerDfnBms, workerDfnSym).asArg :: tmp.asPath.asArg :: Nil) ne_:: Nil
-        )(CallMetadata.defaultMlsFun)
-      )
-      .ret(Call(workerDefn.asPath, (tmp.asPath.asArg :: Nil) ne_:: Nil)(CallMetadata.defaultMlsFun))
+      blockBuilder
+        .assignScoped(tmp, varClsInfo.instantiate)
+        .assign(NoSymbol, 
+          Call(
+            paths.pushFramePath,
+            (Value.MemberRef(workerDfnBms, workerDfnSym).asArg :: tmp.asPath.asArg :: Nil) ne_:: Nil
+          )(CallMetadata.defaultMlsFun)
+        )
+        .ret(Call(workerDefn.asPath, (tmp.asPath.asArg :: Nil) ne_:: Nil)(CallMetadata.defaultMlsFun))
   
   private def translateCtorLike(b: Block, thisPath: Path, isModCtor: Bool)(using h: HandlerCtx): Block =
     translateBlock("ctor", b, if isModCtor then HandlerCtx.ModCtor(h.currentBlockIsTrulyNested) else HandlerCtx.Ctor, Set.empty, List.empty)
@@ -806,7 +807,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         case None => Value.Lit(Tree.UnitLit(false))
       
       if isTopLevel then
-        val bodSym = BlockMemberSymbol("effectful body›", Nil, false)
+        val bodSym = BlockMemberSymbol("‹effectful body›", Nil, false)
         val bodFun = FunDefn.withFreshSymbol(N, bodSym, ParamList(ParamListFlags.empty, Nil, N) :: Nil, Ret(r))(configOverride = N, annotations = Nil)
         blockBuilder
           .scopedVars(Set.single(bodSym))

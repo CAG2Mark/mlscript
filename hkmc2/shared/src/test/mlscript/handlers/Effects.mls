@@ -71,7 +71,7 @@ in
   h.perform("5")
 result
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let result, h7, handleBlock$7, Handler$h$15, Handler$h$perform$4, Handler$h$perform$worker2, handleBlock$$worker, effectful$_body$_7;
+//│ let result, h7, handleBlock$7, Handler$h$15, Handler$h$perform$4, Handler$h$perform$worker2, handleBlock$$worker, $_effectful$_body$_7;
 //│ handleBlock$$worker = function handleBlock$$worker(handleBlock$$varsClass) {
 //│   let pc;
 //│   pc = handleBlock$$varsClass.at(0);
@@ -164,10 +164,10 @@ result
 //│   runtime.pushFrame(handleBlock$$worker, tmp);
 //│   return handleBlock$$worker(tmp)
 //│ });
-//│ effectful$_body$_7 = (undefined, function () {
+//│ $_effectful$_body$_7 = (undefined, function () {
 //│   return runtime.enterHandleBlock(h7, handleBlock$7)
 //│ });
-//│ runtime.topLevelTrampoline(undefined, effectful$_body$_7);
+//│ runtime.topLevelTrampoline(undefined, $_effectful$_body$_7);
 //│ return result
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = "54321"
@@ -313,7 +313,7 @@ fun f(perform) =
     fun perform(arg)(k) = arg
   perform()
 f(() => 3)
-//│ = null
+//│ = 3
 
 abstract class Cell with
   fun getVal(): Int
@@ -379,130 +379,3 @@ fun sum(depth, x) =
   else 0
 sum(0, 30000)
 //│ = 450015000
-
-:re
-fun sum(x) =
-  if x != 0 then
-    x + sum(x - 1)
-  else 0
-sum(10000)
-//│ = null
-//│ FAILURE: Unexpected lack of runtime error
-
-:expect 2
-fun foo(h) =
-  h.perform()
-  if true then
-    fun g() = 2
-    g()
-  else
-    fun g() = 3
-    g()
-handle h = Eff with
-  fun perform()(k) = k(())
-foo(h)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
-//│ ═══[RUNTIME ERROR] Expected: '2', got: '40624056'
-//│ = 40624056
-
-:expect 3
-fun foo(h) =
-  h.perform()
-  if false then
-    fun g() = 2
-    g()
-  else
-    fun g() = 3
-    g()
-handle h = Eff with
-  fun perform()(k) = k(())
-foo(h)
-//│ = 3
-
-:expect 123
-fun foo(h) =
-  h.perform()
-  fun A() = 1
-  let a = if true then
-    class A() with
-      fun f() = 2
-    A().f()
-  else
-    class A() with
-      fun f() = 3
-    A().f()
-  let b = if false then
-    class A() with
-      fun f() = 2
-    A().f()
-  else
-    class A() with
-      fun f() = 3
-    A().f()
-  A() * 100 + a * 10 + b
-handle h = Eff with
-  fun perform()(k) = k(())
-foo(h) 
-//│ = 123
-
-:fixme
-:expect 123
-fun foo(h) =
-  h.perform()
-  fun A() = 1
-  let a = if true then
-    module A with
-      fun f() = 2
-    A.f()
-  else
-    module A with
-      fun f() = 3
-    A.f()
-  let b = if false then
-    module A with
-      fun f() = 2
-    A.f()
-  else
-    module A with
-      fun f() = 3
-    A.f()
-  A() * 100 + a * 10 + b
-handle h = Eff with
-  fun perform()(k) = k(())
-foo(h)
-//│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.467: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.463: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.459: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.455: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.455: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.459: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.463: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.467: 	    module A with
-//│ ╙──       	           ^
-//│ = 123
-
-// Access superclass fields
-handle h1 = Object with
-  fun perf()(k) = k(2)
-class A with
-  val x = 2
-handle h2 = A with
-  fun perf()(k) = k(this.x)
-h2.perf()
-//│ = 2

@@ -211,6 +211,7 @@ fun raisePrintStackEffect(showLocals) =
 
 fun topLevelTrampoline(stackLimit, body) =
   RuntimeJS.try_catch(body, (err) =>
+    if curEffect === null do throw err
     handleEffects(curEffect)
   )
 
@@ -362,12 +363,28 @@ fun mkEffect(handler, handlerFun) =
   makeNewContTrace()
   throw EffectRaised("mkEffect")
 
+
+// 
+//  contTrace  --> null
+//      v
+//      h2     --> f3 --> f4 --> ...
+//      v
+//      h1     --> f1 --> f2 --> ...
+//
+//  becomes:
+//
+//  contTrace  --> f3 --> f4 --> ...
+//      v
+//      h1     --> f2 --> f1 --> ...
+//
 fun popHandler() =
   if curContTrace.lastHandler === curContTrace.nextHandler do
     set curContTrace.lastHandler = curContTrace
     if curContTrace.last === curContTrace.nextHandler do
       set curContTrace.last = curContTrace
-  set curContTrace.nextHandler = curContTrace.nextHandler.nextHandler
+  set
+    curContTrace.next = curContTrace.nextHandler.next
+    curContTrace.nextHandler = curContTrace.nextHandler.nextHandler
 
 //
 //  contTrace  --> f3 --> f4 --> ...

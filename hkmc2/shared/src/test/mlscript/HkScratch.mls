@@ -13,125 +13,101 @@
 class Effect
 
 :expect 3
-:sir
-handle h = Effect with
-  fun perform(arg)(k) =
-    print(arg)
-    let r = k(true)
-    print(arg)
-    r
-if false || h.perform("hello") then
+:sjs
+fun f() =
+  handle h = Effect with
+    fun perform(arg)(k) = console.log("aa")
   3
-else
-  0
-//│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let h, tmp, handleBlock$, Handler$h$perform, Handler$h$, Handler$h$perform$, Handler$h$perform$worker, handleBlock$$worker, effectful body›;
-//│ define handleBlock$$worker as fun handleBlock$$worker⁰(handleBlock$$varsClass) {
-//│   let scrut, tmp1, pc;
-//│   set pc = handleBlock$$varsClass.0;
-//│   loop main:
-//│     match pc
-//│       2 =>
-//│         set tmp1 = runtime⁰.resumeValue﹖;
-//│         set handleBlock$$varsClass.0 = 1;
-//│         set pc = 1;
-//│         end
-//│     match pc
-//│       1 =>
-//│         set scrut = tmp1;
-//│         match scrut
-//│           true =>
-//│             do runtime⁰.popFrame﹖();
-//│             return 3
-//│           else
-//│             do runtime⁰.popFrame﹖();
-//│             return 0
-//│         end
-//│       0 =>
-//│         match false
-//│           false =>
-//│             set handleBlock$$varsClass.0 = 2;
-//│             set runtime⁰.resumeValue﹖ = h.perform﹖("hello");
-//│             set pc = 2;
-//│             continue main
-//│           else
-//│             set tmp1 = true;
-//│             set handleBlock$$varsClass.0 = 1;
-//│             set pc = 1;
-//│             continue main
-//│         end
-//│       else
-//│         end
-//│     end
-//│   end
-//│ };
-//│ define Handler$h$perform$worker as fun Handler$h$perform$worker⁰(Handler$h$perform$varsClass) {
-//│   let r, pc;
-//│   set pc = Handler$h$perform$varsClass.0;
-//│   loop main:
-//│     match pc
-//│       0 =>
-//│         set Handler$h$perform$varsClass.0 = 3;
-//│         set runtime⁰.resumeValue﹖ = Predef⁰.print⁰(Handler$h$perform$varsClass.3);
-//│         set pc = 3;
-//│         end
-//│     match pc
-//│       3 =>
-//│         do runtime⁰.resumeValue﹖;
-//│         set Handler$h$perform$varsClass.0 = 2;
-//│         set runtime⁰.resumeValue﹖ = Handler$h$perform$varsClass.1(true);
-//│         set pc = 2;
-//│         end
-//│     match pc
-//│       2 =>
-//│         set Handler$h$perform$varsClass.2 = runtime⁰.resumeValue﹖;
-//│         set Handler$h$perform$varsClass.0 = 1;
-//│         set runtime⁰.resumeValue﹖ = Predef⁰.print⁰(Handler$h$perform$varsClass.3);
-//│         set pc = 1;
-//│         end
-//│     match pc
-//│       1 =>
-//│         do runtime⁰.resumeValue﹖;
-//│         do runtime⁰.popFrame﹖();
-//│         return Handler$h$perform$varsClass.2
-//│       else
-//│         end
-//│     end
-//│   end
-//│ };
-//│ do runtime⁰.resetEffects﹖();
-//│ @inline
-//│ define Handler$h$perform$ as fun Handler$h$perform$⁰(arg)(k) {
-//│   return Handler$h$perform⁰(arg, k)
-//│ };
-//│ @inline
-//│ define Handler$h$perform as fun Handler$h$perform⁰(arg, k) {
-//│   let tmp1;
-//│   set tmp1 = mut [0, k, r⁰, arg];
-//│   do runtime⁰.pushFrame﹖(Handler$h$perform$worker⁰, tmp1);
-//│   return Handler$h$perform$worker⁰(tmp1)
-//│ };
-//│ define Handler$h$ as class Handler$h$⁰ extends Effect⁰ {
-//│   method perform⁰ = fun perform¹(arg) {
-//│     let suspendRes, Handler$h$perform$here;
-//│     set Handler$h$perform$here = Handler$h$perform$⁰(arg);
-//│     return runtime⁰.mkEffect﹖(Handler$h$⁰.this, Handler$h$perform$here)
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let f, handleBlock$, Handler$h$perform, Handler$h$1, f$worker;
+//│ f$worker = function f$worker(f$varsClass) {
+//│   let h, tmp, pc;
+//│   pc = f$varsClass.at(0);
+//│   switch (pc) {
+//│     case 0:
+//│       h = new Handler$h$1();
+//│       f$varsClass[0] = 1;
+//│       runtime.resumeValue = runtime.enterHandleBlock(h, handleBlock$);
+//│       pc = 1;
+//│     case 1:
+//│       tmp = runtime.resumeValue;
+//│       runtime.popFrame();
+//│       return tmp;
 //│   }
 //│ };
-//│ set h = new mut Handler$h$⁰();
-//│ @inline
-//│ define handleBlock$ as fun handleBlock$⁰() {
-//│   let tmp1;
-//│   set tmp1 = mut [0];
-//│   do runtime⁰.pushFrame﹖(handleBlock$$worker⁰, tmp1);
-//│   return handleBlock$$worker⁰(tmp1)
+//│ runtime.resetEffects();
+//│ Handler$h$perform = function Handler$h$perform(k) {
+//│   return runtime.safeCall(globalThis.console.log("aa"))
 //│ };
-//│ define effectful body› as fun effectful body›⁰() {
-//│   return runtime⁰.enterHandleBlock﹖(h, handleBlock$⁰)
+//│ (class Handler$h$ extends Effect1 {
+//│   static {
+//│     Handler$h$1 = this
+//│   }
+//│   constructor() {
+//│     super();
+//│   }
+//│   perform(arg) {
+//│     return runtime.mkEffect(this, Handler$h$perform)
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Handler$h$"];
+//│ });
+//│ handleBlock$ = (undefined, function () {
+//│   return 3
+//│ });
+//│ f = function f() { let tmp; tmp = [ 0 ]; runtime.pushFrame(f$worker, tmp); return f$worker(tmp) };
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
+//│ ═══[RUNTIME ERROR] Expected: '3', got: 'undefined'
+
+:sir
+f()
+//│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
+//│ let tmp, ‹effectful body›;
+//│ do runtime⁰.resetEffects﹖();
+//│ define ‹effectful body› as fun ‹effectful body›⁰() {
+//│   return f⁰()
 //│ };
-//│ set tmp = runtime⁰.topLevelTrampoline﹖(undefined, effectful body›⁰);
+//│ set tmp = runtime⁰.topLevelTrampoline﹖(undefined, ‹effectful body›⁰);
 //│ return tmp
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ > hello
-//│ > hello
+//│ > after pushFrame
+//│ > <ref *1> ContTrace {
+//│ >   next: FunctionContFrame {
+//│ >     next: null,
+//│ >     fn: [Function: f$worker],
+//│ >     varsClass: [ 0 ],
+//│ >     id: 0
+//│ >   },
+//│ >   last: FunctionContFrame {
+//│ >     next: null,
+//│ >     fn: [Function: f$worker],
+//│ >     varsClass: [ 0 ],
+//│ >     id: 0
+//│ >   },
+//│ >   nextHandler: null,
+//│ >   lastHandler: [Circular *1],
+//│ >   resumed: false
+//│ > }
+//│ > enterHandleBlock
+//│ > ret:  3
+//│ > before popFrame
+//│ > <ref *1> ContTrace {
+//│ >   next: FunctionContFrame {
+//│ >     next: null,
+//│ >     fn: [Function: f$worker],
+//│ >     varsClass: [ 1 ],
+//│ >     id: 0
+//│ >   },
+//│ >   last: FunctionContFrame {
+//│ >     next: null,
+//│ >     fn: [Function: f$worker],
+//│ >     varsClass: [ 1 ],
+//│ >     id: 0
+//│ >   },
+//│ >   nextHandler: null,
+//│ >   lastHandler: [Circular *1],
+//│ >   resumed: false
+//│ > }
 //│ = 3
