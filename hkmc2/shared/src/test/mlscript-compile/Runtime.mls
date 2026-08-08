@@ -176,7 +176,11 @@ set
 object FatalEffect
 object PrintStackEffect
 
+let fcfid = 0
 data class FunctionContFrame(next, fn, varsClass) with
+  val id = fcfid
+  myDebug("constructed: " + id)
+  set fcfid += 1
   fun resume(value) =
     set resumeValue = value
     fn(varsClass)
@@ -204,6 +208,11 @@ fun resetEffects() =
 
 fun raisePrintStackEffect(showLocals) =
   mkEffect(PrintStackEffect, showLocals)
+
+fun topLevelTrampoline(stackLimit, body) =
+  RuntimeJS.try_catch(body, (err) =>
+    handleEffects(curEffect)
+  )
 
 fun topLevelEffect(debug) =
   let tr = curEffect
@@ -287,8 +296,8 @@ fun showHandlerContChain(cont, hl, vis, reps) =
   else
     "(NOT HANDLER CONT)"
 
-fun debugCont(cont) = console.log(showFunctionContChain(cont, new Map(), new Set(), 0))
-fun debugHandler(cont) = console.log(showHandlerContChain(cont, new Map(), new Set(), 0))
+fun debugCont(cont) = myDebug(showFunctionContChain(cont, new Map(), new Set(), 0))
+fun debugHandler(cont) = myDebug(showHandlerContChain(cont, new Map(), new Set(), 0))
 
 fun debugContTrace(contTrace) =
   if contTrace is ContTrace then
@@ -336,9 +345,11 @@ fun pushFrame(fn, vars) =
   let newFrame = new mut FunctionContFrame(curContTrace.next, fn, vars)
   if curContTrace.last === curContTrace do
     set curContTrace.last = newFrame
-  set curContTrace.next = new mut FunctionContFrame(curContTrace.next, fn, vars)
+  set curContTrace.next = newFrame
 
 fun popFrame() =
+  if curContTrace.next === curContTrace.last do
+    set curContTrace.last = curContTrace
   set curContTrace.next = curContTrace.next.next
 
 data class EffectRaised(str)
@@ -351,10 +362,11 @@ fun mkEffect(handler, handlerFun) =
   makeNewContTrace()
   throw EffectRaised("mkEffect")
 
-fun handleBlockImpl(cur) =
-  handleEffects(cur)
-
 fun popHandler() =
+  if curContTrace.lastHandler === curContTrace.nextHandler do
+    set curContTrace.lastHandler = curContTrace
+    if curContTrace.last === curContTrace.nextHandler do
+      set curContTrace.last = curContTrace
   set curContTrace.nextHandler = curContTrace.nextHandler.nextHandler
 
 //
@@ -379,8 +391,13 @@ fun enterHandleBlock(handler, body) =
     set curContTrace.lastHandler = handlerFrame
   if curContTrace.last === curContTrace do
     set curContTrace.last = handlerFrame
-  RuntimeJS.try_catch(body, err => handleBlockImpl(curEffect))
-  // popHandler()
+  let ret = body()
+  popHandler()
+  ret
+
+fun myDebug(arg) =
+  if false then console.dir(arg, {depth:10})
+  else ()
 
 mut val handleEffectsCall = 0
 fun handleEffects(cur) =
@@ -389,7 +406,6 @@ fun handleEffects(cur) =
   while cur is
     EffectSig then
       let nxt = handleEffect(cur)
-      console.log("handleEffects #", curCall, "|", cur.id, nxt.id)
       if cur === nxt then
         set curEffect = cur
         throw throw EffectRaised("handleEffects")
@@ -400,8 +416,6 @@ fun handleEffects(cur) =
 
 // return either new effect, final result or the same continuation if there is no handler
 fun handleEffect(cur) =
-  console.log("handleEffect:")
-  console.log(cur)
   // debugEff(cur)
   // find the handle block corresponding to the current effect
   let prevHandlerFrame = cur.contTrace
@@ -414,6 +428,9 @@ fun handleEffect(cur) =
 
   // the matching handle block
   let handlerFrame = prevHandlerFrame.nextHandler
+  
+  myDebug("before split:")
+  myDebug(cur.contTrace)
 
   // unlink and save frames
   let saved = new mut ContTrace(
@@ -423,23 +440,27 @@ fun handleEffect(cur) =
     cur.contTrace.lastHandler,
     false
   )
+  if cur.contTrace.last === handlerFrame do set saved.last = saved
+  if cur.contTrace.lastHandler === handlerFrame do set saved.lastHandler = saved
   set
     cur.contTrace.last = handlerFrame
     cur.contTrace.lastHandler = handlerFrame
     handlerFrame.next = null
     handlerFrame.nextHandler = null
   
-  console.log("resuming with:")
-  console.log(cur)
-
   // handle the effect
   set curEffect = null
-  let tmp = set stackDepth += 2 in RuntimeJS.try_catch(() => cur.handlerFun(resume(cur.contTrace)), err => ())
+  myDebug("calling handler fun:")
+  myDebug(cur.handlerFun)
+  let tmp = set stackDepth += 2 in RuntimeJS.try_catch(() => cur.handlerFun(resume(cur.contTrace)), err => if curEffect === null do console.log("unhandled error in handleEffect"); throw err)
+  myDebug("done handler fun")
   if curEffect !== null then
-    console.log("relinking")
-    console.log(saved)
-    console.log(curEffect)
+    myDebug("effect raised in handler fun")
     set cur = curEffect
+    myDebug("saved:")
+    myDebug(saved)
+    myDebug("curContTrace:")
+    myDebug(cur.contTrace)
     // relink the saved frames
     if saved.next !== null do
       set
@@ -449,6 +470,9 @@ fun handleEffect(cur) =
       set
         cur.contTrace.lastHandler.nextHandler = saved.nextHandler
         cur.contTrace.lastHandler = saved.lastHandler
+    myDebug("result:")
+    myDebug(cur.contTrace)
+    myDebug("-----------------------------")
     cur
   else
     // resume the unlinked handle blocks
@@ -458,36 +482,39 @@ fun resume(contTrace)(value) =
   if contTrace.resumed do
     throw Error("Multiple resumption")
   set contTrace.resumed = true
-  RuntimeJS.try_catch(() => handleEffects(resumeContTrace(contTrace, value)), (e) => throw EffectRaised("resume"))
+  resumeContTrace(contTrace, value)
 
 fun resumeContTrace(contTrace, value) =
-  let cont = contTrace.next
-  let handlerCont = contTrace.nextHandler
+  // Append these onto the resume frames later
+  let savedResumeFrames = curContTrace
+  set curContTrace = contTrace
+  
   while
-    cont is FunctionContFrame then
+    contTrace.next is FunctionContFrame then
+      let curFrame = contTrace.next
+      myDebug("resuming frame:")
+      myDebug(curFrame)
       set curEffect = null
-      set value = set stackDepth += 3 in RuntimeJS.try_catch(() => cont.resume(value), err => ())
+      set value = set stackDepth += 3 in RuntimeJS.try_catch(() => curFrame.resume(value), err => if curEffect === null do console.log("unhandled error in resumeContTrace"); throw err)
       if curEffect !== null do
         set value = curEffect
       if value is EffectSig then
-        console.log("combining:")
-        console.log(cont)
-        console.log(value.contTrace.lastHandler.nextHandler)
-        console.log(handlerCont)
+        // add savedResumeFrames to the *bottom* of the current cont trace
         set
-          value.contTrace.last.next = cont.next
-          value.contTrace.lastHandler.nextHandler = handlerCont
-        if contTrace.last !== cont do
-          set value.contTrace.last = contTrace.last
-        if handlerCont !== null do
-          set value.contTrace.lastHandler = contTrace.lastHandler
-        return value
-      else
-        set cont = cont.next
-    handlerCont is HandlerContFrame then
-      set cont = handlerCont.next
-      set handlerCont = handlerCont.nextHandler
+          contTrace.resumed = false
+          contTrace.last.next = savedResumeFrames.next
+          contTrace.lastHandler.nextHandler = savedResumeFrames.nextHandler
+        if savedResumeFrames.last !== savedResumeFrames do
+          set contTrace.last = savedResumeFrames.last
+        if savedResumeFrames.lastHandler !== savedResumeFrames do
+          set contTrace.lastHandler = savedResumeFrames.lastHandler
+        throw EffectRaised("resumeContTrace")
+      else () // The frame is popped by the function upon returning
+    contTrace.nextHandler is HandlerContFrame then
+      set contTrace.next = contTrace.nextHandler.next
+      set contTrace.nextHandler = contTrace.nextHandler.nextHandler
     else
+      set curContTrace = savedResumeFrames
       return value
 
 // stack safety

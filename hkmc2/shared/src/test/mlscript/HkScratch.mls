@@ -10,200 +10,97 @@
 :effectHandlers
 :lift
 
-:noOpt
+:expect "54321"
+:sjs
 :noInline
-fun g(h) =
-  h.perform(0)
-  h.perform(1)
-  2
+let result = ""
 handle h = Object with
   fun perform(arg)(k) =
-    k(arg)
+    let v = k(arg)
+    result = result + arg
+    v
 in
-  g(h)
-//│ > handleEffect:
-//│ > EffectSig {
-//│ >   contTrace: ContTrace {
-//│ >     next: FunctionContFrame {
-//│ >       next: null,
-//│ >       fn: [Function: g$worker],
-//│ >       varsClass: [Array]
-//│ >     },
-//│ >     last: HandlerContFrame {
-//│ >       next: null,
-//│ >       nextHandler: null,
-//│ >       handler: Handler$h$ {}
-//│ >     },
-//│ >     nextHandler: HandlerContFrame {
-//│ >       next: null,
-//│ >       nextHandler: null,
-//│ >       handler: Handler$h$ {}
-//│ >     },
-//│ >     lastHandler: HandlerContFrame {
-//│ >       next: null,
-//│ >       nextHandler: null,
-//│ >       handler: Handler$h$ {}
-//│ >     },
-//│ >     resumed: false
-//│ >   },
-//│ >   handler: Handler$h$ {},
-//│ >   handlerFun: [Function (anonymous)],
-//│ >   id: 0
-//│ > }
-//│ > resuming with:
-//│ > EffectSig {
-//│ >   contTrace: ContTrace {
-//│ >     next: FunctionContFrame {
-//│ >       next: null,
-//│ >       fn: [Function: g$worker],
-//│ >       varsClass: [Array]
-//│ >     },
-//│ >     last: HandlerContFrame {
-//│ >       next: null,
-//│ >       nextHandler: null,
-//│ >       handler: Handler$h$ {}
-//│ >     },
-//│ >     nextHandler: HandlerContFrame {
-//│ >       next: null,
-//│ >       nextHandler: null,
-//│ >       handler: Handler$h$ {}
-//│ >     },
-//│ >     lastHandler: HandlerContFrame {
-//│ >       next: null,
-//│ >       nextHandler: null,
-//│ >       handler: Handler$h$ {}
-//│ >     },
-//│ >     resumed: false
-//│ >   },
-//│ >   handler: Handler$h$ {},
-//│ >   handlerFun: [Function (anonymous)],
-//│ >   id: 0
-//│ > }
-//│ > combining:
-//│ > FunctionContFrame {
-//│ >   next: null,
-//│ >   fn: [Function: g$worker],
-//│ >   varsClass: [ 1, Handler$h$ {} ]
-//│ > }
-//│ > null
-//│ > HandlerContFrame {
-//│ >   next: null,
-//│ >   nextHandler: null,
-//│ >   handler: Handler$h$ {}
-//│ > }
-//│ > handleEffect:
-//│ > EffectSig {
-//│ >   contTrace: ContTrace {
-//│ >     next: FunctionContFrame {
-//│ >       next: null,
-//│ >       fn: [Function: g$worker],
-//│ >       varsClass: [Array]
-//│ >     },
-//│ >     last: HandlerContFrame {
-//│ >       next: null,
-//│ >       nextHandler: null,
-//│ >       handler: Handler$h$ {}
-//│ >     },
-//│ >     nextHandler: HandlerContFrame {
-//│ >       next: null,
-//│ >       nextHandler: null,
-//│ >       handler: Handler$h$ {}
-//│ >     },
-//│ >     lastHandler: HandlerContFrame {
-//│ >       next: null,
-//│ >       nextHandler: null,
-//│ >       handler: Handler$h$ {}
-//│ >     },
-//│ >     resumed: false
-//│ >   },
-//│ >   handler: Handler$h$ {},
-//│ >   handlerFun: [Function (anonymous)],
-//│ >   id: 1
-//│ > }
-//│ > resuming with:
-//│ > EffectSig {
-//│ >   contTrace: ContTrace {
-//│ >     next: FunctionContFrame {
-//│ >       next: null,
-//│ >       fn: [Function: g$worker],
-//│ >       varsClass: [Array]
-//│ >     },
-//│ >     last: HandlerContFrame {
-//│ >       next: null,
-//│ >       nextHandler: null,
-//│ >       handler: Handler$h$ {}
-//│ >     },
-//│ >     nextHandler: HandlerContFrame {
-//│ >       next: null,
-//│ >       nextHandler: null,
-//│ >       handler: Handler$h$ {}
-//│ >     },
-//│ >     lastHandler: HandlerContFrame {
-//│ >       next: null,
-//│ >       nextHandler: null,
-//│ >       handler: Handler$h$ {}
-//│ >     },
-//│ >     resumed: false
-//│ >   },
-//│ >   handler: Handler$h$ {},
-//│ >   handlerFun: [Function (anonymous)],
-//│ >   id: 1
-//│ > }
-//│ > handleEffects # 1 | 1 undefined
-//│ > handleEffects # 0 | 0 undefined
-//│ = 2
-
-:sjs
-:noTailRec
-fun fact(x) =
-  if x === 0 then 1 else x * fact(x - 1)
-fact(10)
+  h.perform("1")
+  0
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let fact, fact$worker, inlinedVal, tmp1;
-//│ fact$worker = function fact$worker(fact$varsClass) {
-//│   let scrut, tmp2, tmp3, pc;
-//│   runtime.pushFrame(fact$worker, fact$varsClass);
-//│   pc = fact$varsClass.at(0);
+//│ let result, h, handleBlock$, Handler$h$perform, Handler$h$1, Handler$h$perform$, Handler$h$perform$worker, handleBlock$$worker, effectful$_body$_;
+//│ handleBlock$$worker = function handleBlock$$worker(handleBlock$$varsClass) {
+//│   let pc;
+//│   pc = handleBlock$$varsClass.at(0);
 //│   switch (pc) {
 //│     case 0:
-//│       scrut = fact$varsClass.at(1) === 0;
-//│       if (scrut === true) {
-//│         runtime.popFrame();
-//│         return 1
-//│       }
-//│       {
-//│         let inlinedVal1, tmp4;
-//│         tmp2 = fact$varsClass.at(1) - 1;
-//│         fact$varsClass[0] = 1;
-//│         tmp4 = [
-//│           0,
-//│           tmp2
-//│         ];
-//│         inlinedVal1 = fact$worker(tmp4);
-//│         runtime.resumeValue = inlinedVal1;
-//│         pc = 1;
-//│       }
+//│       handleBlock$$varsClass[0] = 1;
+//│       runtime.resumeValue = runtime.safeCall(h.perform("1"));
+//│       pc = 1;
 //│     case 1:
-//│       tmp3 = runtime.resumeValue;
+//│       runtime.resumeValue;
 //│       runtime.popFrame();
-//│       return fact$varsClass.at(1) * tmp3;
+//│       return 0;
+//│   }
+//│ };
+//│ Handler$h$perform$worker = function Handler$h$perform$worker(Handler$h$perform$varsClass) {
+//│   let v, pc;
+//│   pc = Handler$h$perform$varsClass.at(0);
+//│   switch (pc) {
+//│     case 0:
+//│       Handler$h$perform$varsClass[0] = 1;
+//│       runtime.resumeValue = runtime.safeCall(Handler$h$perform$varsClass.at(1)(Handler$h$perform$varsClass.at(2)));
+//│       pc = 1;
+//│     case 1:
+//│       v = runtime.resumeValue;
+//│       result = result + Handler$h$perform$varsClass.at(2);
+//│       runtime.popFrame();
+//│       return v;
 //│   }
 //│ };
 //│ runtime.resetEffects();
-//│ fact = function fact(x) {
-//│   let tmp2;
-//│   tmp2 = [
-//│     0,
-//│     x
-//│   ];
-//│   return fact$worker(tmp2)
+//│ Handler$h$perform$ = function Handler$h$perform$(arg) {
+//│   return (k) => {
+//│     return Handler$h$perform(arg, k)
+//│   }
 //│ };
-//│ tmp1 = [
-//│   0,
-//│   10
-//│ ];
-//│ inlinedVal = fact$worker(tmp1);
-//│ if (runtime.curEffect === null) { return inlinedVal }
-//│ return runtime.topLevelEffect(false);
+//│ Handler$h$perform = function Handler$h$perform(arg, k) {
+//│   let tmp;
+//│   tmp = [
+//│     0,
+//│     k,
+//│     arg
+//│   ];
+//│   runtime.pushFrame(Handler$h$perform$worker, tmp);
+//│   return Handler$h$perform$worker(tmp)
+//│ };
+//│ result = "";
+//│ (class Handler$h$ extends globalThis.Object {
+//│   static {
+//│     Handler$h$1 = this
+//│   }
+//│   constructor() {
+//│     super();
+//│   }
+//│   perform(arg) {
+//│     let Handler$h$perform$here;
+//│     Handler$h$perform$here = Handler$h$perform$(arg);
+//│     return runtime.mkEffect(this, Handler$h$perform$here)
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Handler$h$"];
+//│ });
+//│ h = new Handler$h$1();
+//│ handleBlock$ = (undefined, function () {
+//│   let tmp;
+//│   tmp = [
+//│     0
+//│   ];
+//│   runtime.pushFrame(handleBlock$$worker, tmp);
+//│   return handleBlock$$worker(tmp)
+//│ });
+//│ effectful$_body$_ = (undefined, function () {
+//│   return runtime.enterHandleBlock(h, handleBlock$)
+//│ });
+//│ return runtime.topLevelTrampoline(undefined, effectful$_body$_)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ = 3628800
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
+//│ ═══[RUNTIME ERROR] Expected: '"54321"', got: '0'
+//│ = 0
+//│ result = "1"

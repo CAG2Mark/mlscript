@@ -97,6 +97,7 @@ class HandlerPaths(using Elaborator.State):
   val stackDepthPath: Path = runtimePath.selN(stackDepthIdent)
   val checkDepthPath: Path = runtimePath.selN(Tree.Ident("checkDepth"))
   val runStackSafePath: Path = runtimePath.selN(Tree.Ident("runStackSafe"))
+  val trampolinePath: Path = runtimePath.selN(Tree.Ident("topLevelTrampoline"))
   val fnLocalsPath: Path = runtimePath.selSN("FnLocalsInfo").selSN("class")
   val localVarInfoPath: Path = runtimePath.selSN("LocalVarInfo").selSN("class")
   val curEffect: Path = runtimePath.selSN("curEffect")
@@ -735,14 +736,6 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     
     mainBody = varRewriter(varClsInfo, varsClsSym).applyBlock(mainBody)
     mainBody = Assign(pcVar, varClsInfo.readPc(varsClsSym.asPath), mainBody)
-    mainBody = Assign(
-      NoSymbol, 
-      Call(
-        paths.pushFramePath,
-        (Value.MemberRef(workerDfnBms, workerDfnSym).asArg :: varsClsSym.asPath.asArg :: Nil) ne_:: Nil
-      )(CallMetadata.defaultMlsFun),
-      mainBody
-    )
         
     val getSavedTmp = freshTmp("saveOffset")
     def getSaved(off: BigInt): (Block => Block, Path) =
@@ -778,6 +771,12 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
 
     blockBuilder
       .assignScoped(tmp, varClsInfo.instantiate)
+      .assign(NoSymbol, 
+        Call(
+          paths.pushFramePath,
+          (Value.MemberRef(workerDfnBms, workerDfnSym).asArg :: tmp.asPath.asArg :: Nil) ne_:: Nil
+        )(CallMetadata.defaultMlsFun)
+      )
       .ret(Call(workerDefn.asPath, (tmp.asPath.asArg :: Nil) ne_:: Nil)(CallMetadata.defaultMlsFun))
   
   private def translateCtorLike(b: Block, thisPath: Path, isModCtor: Bool)(using h: HandlerCtx): Block =
@@ -788,34 +787,31 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
    */
 
   private def postTranslateTopLevelCtx(b: Block)(using HandlerCtx): Block =
-    postTranslateIllegalEffectCtx(b, Call.raw(paths.topLevelEffectPath, (Value.Lit(Tree.BoolLit(opt.debug)).asArg :: Nil) ne_:: Nil)(CallMetadata.defaultMlsFun), opt.stackSafety.map(_.stackLimit))
+    postTranslateIllegalEffectCtx(b, Call.raw(paths.topLevelEffectPath, (Value.Lit(Tree.BoolLit(opt.debug)).asArg :: Nil) ne_:: Nil)(CallMetadata.defaultMlsFun), true, opt.stackSafety.map(_.stackLimit))
 
   private def postTranslateIllegalEffectCtx(b: Block, reason: Str)(using HandlerCtx): Block =
-    postTranslateIllegalEffectCtx(b, Call.raw(paths.illegalEffectPath, (Value.Lit(Tree.StrLit(reason)).asArg :: Nil) ne_:: Nil)(CallMetadata.defaultMlsFun), N)
+    postTranslateIllegalEffectCtx(b, Call.raw(paths.illegalEffectPath, (Value.Lit(Tree.StrLit(reason)).asArg :: Nil) ne_:: Nil)(CallMetadata.defaultMlsFun), false, N)
 
   /**
     * Translate the block and apply stack safety wrapper if needed. If needsStackSafety is true,
     * it is assumed that the current block is at top level and lambda definition will be created for each call
     */
-  private def postTranslateIllegalEffectCtx(b: Block, onEffect: Call, needsStackSafety: Opt[Int])(using HandlerCtx): Block =
+  private def postTranslateIllegalEffectCtx(b: Block, onEffect: Call, isTopLevel: Bool, needsStackSafety: Opt[Int])(using HandlerCtx): Block =
     def effectCheck(l: Assignable, r: Result, rst: Block): Block =
-      val withStackSafe = needsStackSafety match
-        case S(stackLimit) =>
-          val bodSym = BlockMemberSymbol("‹stack safe body›", Nil, false)
-          val bodFun = FunDefn.withFreshSymbol(N, bodSym, ParamList(ParamListFlags.empty, Nil, N) :: Nil, Ret(r))(configOverride = N, annotations = Nil)
-          blockBuilder
-            .scopedVars(Set.single(bodSym))
-            .define(bodFun)
-            .assign(l, Call(paths.runStackSafePath, (intLit(stackLimit).asArg :: Value.MemberRef(bodSym, bodFun.dSym).asArg :: Nil) ne_:: Nil)(CallMetadata.defaultMlsFun))
-        case N =>
-          blockBuilder.assign(l, r)
-      withStackSafe
-        .ifthen(
-          paths.curEffect,
-          Case.Lit(Tree.UnitLit(true)),
-          End(),
-          S(Assign(l, onEffect, End())))
-        .rest(rst)
+      val stackLimit: Path = needsStackSafety match
+        case Some(value) => intLit(value)
+        case None => Value.Lit(Tree.UnitLit(false))
+      
+      if isTopLevel then
+        val bodSym = BlockMemberSymbol("effectful body›", Nil, false)
+        val bodFun = FunDefn.withFreshSymbol(N, bodSym, ParamList(ParamListFlags.empty, Nil, N) :: Nil, Ret(r))(configOverride = N, annotations = Nil)
+        blockBuilder
+          .scopedVars(Set.single(bodSym))
+          .define(bodFun)
+          .assign(l, Call(paths.trampolinePath, (stackLimit.asArg :: Value.MemberRef(bodSym, bodFun.dSym).asArg :: Nil) ne_:: Nil)(CallMetadata.defaultMlsFun))
+          .rest(rst)
+      else
+        rst
     val topLevelPostTransform = new BlockTransformerShallow(SymbolSubst.Id):
       override def applyBlock(b: Block) = b match
         case Assign(lhs, r @ EffectfulResult(), rest) =>
