@@ -660,7 +660,10 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
           case Value.SimpleRef(sym: LocalVarSymbol) => if varsSet.contains(sym) then k(sel(sym)) else super.applyPath(p)(k)
           case _ => super.applyPath(p)(k)
         override def applyBlock(b: Block): Block = b match
-          case Assign(s: LocalVarSymbol, rhs, rest) => if varsSet.contains(s) then assign(s, rhs, rest) else super.applyBlock(b)
+          case Assign(s: LocalVarSymbol, rhs, rest) => 
+            if varsSet.contains(s) then applyResult(rhs): newRhs =>
+              assign(s, newRhs, applyBlock(rest))
+            else super.applyBlock(b)
           case _ => super.applyBlock(b)
 
     def postTransform(transition: BigInt => Block) = new BlockTransformerShallow(SymbolSubst.Id):
