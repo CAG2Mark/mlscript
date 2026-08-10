@@ -265,7 +265,7 @@ fun showStackTrace(header, tr, debug, showLocals) =
 
 fun showFunctionContChain(cont, hl, vis, reps) =
   if cont is FunctionContFrame then
-    let result = cont.constructor.name + "(pc=" + cont.saved.[1]
+    let result = cont.constructor.name + "(" + cont.fn.name + ", pc=" + cont.varsClass.[0]
     hl.forEach((m, marker) => if m.has(cont) do set result += ", " + marker)
     if vis.has(cont) then
       set reps = reps + 1
@@ -311,9 +311,10 @@ fun debugContTrace(contTrace) =
     let hl = new Map()
     hl.set("last", new Set([contTrace.last]))
     hl.set("last-handler", new Set([contTrace.lastHandler]))
-    console.log(showFunctionContChain(contTrace.next, hl, vis, 0))
+    console.log("ContTrace -> " + showFunctionContChain(contTrace.next, hl, vis, 0))
     let cur = contTrace.nextHandler
     while cur !== null do
+      console.log("v")
       console.log(showHandlerContChain(cur, hl, vis, 0))
       set cur = cur.nextHandler
     console.log()
@@ -431,6 +432,16 @@ fun handleEffects(cur) =
     else
       return cur
 
+fun checkUnhandledErr(err) =
+  if curEffect === null do
+    console.log("unhandled error")
+    throw err
+
+// calling conventions:
+// resume, resumeContTrace: throw exceptions when raising an effect, will link the newly called functions to the existing cont trace if an effect is raised
+// handleEffect: does not throw exceptions, returns either a value or a cont trace
+// handleEffects: throws an exception if their is an unhandled effect
+
 // return either new effect, final result or the same continuation if there is no handler
 fun handleEffect(cur) =
   // debugEff(cur)
@@ -469,7 +480,7 @@ fun handleEffect(cur) =
   set curEffect = null
   myDebug("calling handler fun:")
   myDebug(cur.handlerFun)
-  let tmp = set stackDepth += 2 in RuntimeJS.try_catch(() => cur.handlerFun(resume(cur.contTrace)), err => if curEffect === null do console.log("unhandled error in handleEffect"); throw err)
+  let tmp = set stackDepth += 2 in RuntimeJS.try_catch(() => cur.handlerFun(resume(cur.contTrace)), checkUnhandledErr)
   myDebug("done handler fun")
   if curEffect !== null then
     myDebug("effect raised in handler fun")
@@ -493,7 +504,9 @@ fun handleEffect(cur) =
     cur
   else
     // resume the unlinked handle blocks
-    resumeContTrace(saved, tmp)
+    let retVal = RuntimeJS.try_catch(() => resumeContTrace(saved, tmp), checkUnhandledErr)
+    if curEffect !== null then curEffect
+    else retVal
 
 fun resume(contTrace)(value) =
   if contTrace.resumed do
@@ -512,7 +525,7 @@ fun resumeContTrace(contTrace, value) =
       myDebug("resuming frame:")
       myDebug(curFrame)
       set curEffect = null
-      set value = set stackDepth += 3 in RuntimeJS.try_catch(() => curFrame.resume(value), err => if curEffect === null do console.log("unhandled error in resumeContTrace"); throw err)
+      set value = set stackDepth += 3 in RuntimeJS.try_catch(() => curFrame.resume(value), checkUnhandledErr)
       if curEffect !== null do
         set value = curEffect
       if value is EffectSig then

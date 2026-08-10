@@ -37,7 +37,7 @@ handle h = Object with
     [x, k(())]
 h.write(1)
 h.write(2)
-//│ ═══[RUNTIME ERROR] Error: Unhandled effect Handler$h$
+//│ ═══[RUNTIME ERROR] EffectRaised("handleEffects")
 
 handle h = Object with
   fun write(x)(k) =
@@ -80,6 +80,7 @@ handle h2 = Effect with
 //│ ╙──      	      ^^^^
 //│ > –––
 //│ > performing 2
+//│ > unhandled error
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 
@@ -106,7 +107,11 @@ in res.toString()
 //│ > A hola
 //│ > B hola adios
 //│ > B hola amigos
-//│ = "‹,‹,‹,‹,hola,amigos,›,adios,›,friend,›,bye,›"
+//│ > unhandled error
+//│ > unhandled error
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 
 // This is equivalent to the above, with all calls to h.perform expanded
@@ -136,7 +141,11 @@ in res.toString()
 //│ > A hola
 //│ > B hola adios
 //│ > B hola amigos
-//│ = "‹,‹,‹,‹,hola,amigos,›,adios,›,friend,›,bye,›"
+//│ > unhandled error
+//│ > unhandled error
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 :sjs
 let str = ""
@@ -155,73 +164,120 @@ if true do
   h1.perform(())
 str
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let str, h11, handleBlock$9, Handler$h2$perform1, Handler$h2$3, handleBlock$10, Handler$h1$perform1, Handler$h1$3, handleBlock$$2, Handler$h2$perform$1, Handler$h1$perform$1;
+//│ let str, h11, Handler$h2$3, handleBlock$7, Handler$h1$3, handleBlock$$2, Handler$h2$perform$1, Handler$h1$perform$1, Handler$h1$perform$worker1, Handler$h2$perform$worker1, handleBlock$$worker9, handleBlock$$worker10;
+//│ handleBlock$$worker10 = function handleBlock$$worker(handleBlock$$varsClass) {
+//│   let h22, tmp2, handleBlock$$here, pc;
+//│   pc = handleBlock$$varsClass.at(0);
+//│   switch (pc) {
+//│     case 0:
+//│       h22 = new Handler$h2$3();
+//│       handleBlock$$here = handleBlock$$2(h22);
+//│       handleBlock$$varsClass[0] = 1;
+//│       runtime.resumeValue = runtime.enterHandleBlock(h22, handleBlock$$here);
+//│       pc = 1;
+//│     case 1:
+//│       tmp2 = runtime.resumeValue;
+//│       runtime.popFrame();
+//│       return tmp2;
+//│   }
+//│ };
+//│ handleBlock$$worker9 = function handleBlock$$worker(handleBlock$$varsClass) {
+//│   let pc;
+//│   pc = handleBlock$$varsClass.at(0);
+//│   switch (pc) {
+//│     case 0:
+//│       handleBlock$$varsClass[0] = 1;
+//│       runtime.resumeValue = runtime.safeCall(handleBlock$$varsClass.at(1).perform(runtime.Unit));
+//│       runtime.resumeValue;
+//│       runtime.popFrame();
+//│       return runtime.safeCall(h11.perform(runtime.Unit));
+//│     case 1:
+//│       runtime.resumeValue;
+//│       runtime.popFrame();
+//│       return runtime.safeCall(h11.perform(runtime.Unit));
+//│   }
+//│ };
+//│ Handler$h2$perform$worker1 = function Handler$h2$perform$worker(Handler$h2$perform$varsClass) {
+//│   let tmp2, tmp3, tmp4, tmp5, pc;
+//│   pc = Handler$h2$perform$varsClass.at(0);
+//│   switch (pc) {
+//│     case 0:
+//│       tmp2 = str + "B";
+//│       tmp3 = str + tmp2;
+//│       str = tmp3;
+//│       Handler$h2$perform$varsClass[0] = 1;
+//│       runtime.resumeValue = runtime.safeCall(Handler$h2$perform$varsClass.at(1)(Handler$h2$perform$varsClass.at(2)));
+//│       runtime.resumeValue;
+//│       tmp4 = str + "B";
+//│       tmp5 = str + tmp4;
+//│       str = tmp5;
+//│       runtime.popFrame();
+//│       return runtime.Unit;
+//│     case 1:
+//│       runtime.resumeValue;
+//│       tmp4 = str + "B";
+//│       tmp5 = str + tmp4;
+//│       str = tmp5;
+//│       runtime.popFrame();
+//│       return runtime.Unit;
+//│   }
+//│ };
+//│ Handler$h1$perform$worker1 = function Handler$h1$perform$worker(Handler$h1$perform$varsClass) {
+//│   let tmp2, tmp3, pc;
+//│   pc = Handler$h1$perform$varsClass.at(0);
+//│   switch (pc) {
+//│     case 0:
+//│       tmp2 = str + "A";
+//│       str = tmp2;
+//│       Handler$h1$perform$varsClass[0] = 1;
+//│       runtime.resumeValue = runtime.safeCall(Handler$h1$perform$varsClass.at(1)(Handler$h1$perform$varsClass.at(2)));
+//│       runtime.resumeValue;
+//│       tmp3 = str + "A";
+//│       str = tmp3;
+//│       runtime.popFrame();
+//│       return runtime.Unit;
+//│     case 1:
+//│       runtime.resumeValue;
+//│       tmp3 = str + "A";
+//│       str = tmp3;
+//│       runtime.popFrame();
+//│       return runtime.Unit;
+//│   }
+//│ };
 //│ runtime.resetEffects();
 //│ Handler$h1$perform$1 = function Handler$h1$perform$(arg) {
 //│   return (k) => {
-//│     return Handler$h1$perform1(arg, k)
-//│   }
-//│ };
-//│ Handler$h1$perform1 = function Handler$h1$perform(arg, k) {
-//│   let tmp9, tmp10, pc;
-//│   if (runtime.resumePc === -1) {
-//│     pc = 0;
-//│   } else {
-//│     pc = runtime.resumePc;
-//│     runtime.resumePc = -1;
-//│   }
-//│   switch (pc) {
-//│     case 0:
-//│       tmp9 = str + "A";
-//│       str = tmp9;
-//│       runtime.resumeValue = runtime.safeCall(k(arg));
-//│       if (runtime.curEffect === null) {
-//│         pc = 1;
-//│       } else {
-//│         return runtime.unwind(Handler$h1$perform1, 1, "RecursiveHandlers.mls:147:7", null, null, 1, 2, arg, k, 0)
-//│       }
-//│     case 1:
-//│       runtime.resumeValue;
-//│       tmp10 = str + "A";
-//│       str = tmp10;
-//│       return runtime.Unit;
+//│     let tmp2;
+//│     tmp2 = [
+//│       0,
+//│       k,
+//│       arg
+//│     ];
+//│     runtime.pushFrame(Handler$h1$perform$worker1, tmp2);
+//│     return Handler$h1$perform$worker1(tmp2)
 //│   }
 //│ };
 //│ Handler$h2$perform$1 = function Handler$h2$perform$(arg) {
 //│   return (k) => {
-//│     return Handler$h2$perform1(arg, k)
-//│   }
-//│ };
-//│ Handler$h2$perform1 = function Handler$h2$perform(arg, k) {
-//│   let tmp9, tmp10, tmp11, tmp12, pc;
-//│   if (runtime.resumePc === -1) {
-//│     pc = 0;
-//│   } else {
-//│     pc = runtime.resumePc;
-//│     runtime.resumePc = -1;
-//│   }
-//│   switch (pc) {
-//│     case 0:
-//│       tmp9 = str + "B";
-//│       tmp10 = str + tmp9;
-//│       str = tmp10;
-//│       runtime.resumeValue = runtime.safeCall(k(arg));
-//│       if (runtime.curEffect === null) {
-//│         pc = 1;
-//│       } else {
-//│         return runtime.unwind(Handler$h2$perform1, 1, "RecursiveHandlers.mls:152:7", null, null, 1, 2, arg, k, 0)
-//│       }
-//│     case 1:
-//│       runtime.resumeValue;
-//│       tmp11 = str + "B";
-//│       tmp12 = str + tmp11;
-//│       str = tmp12;
-//│       return runtime.Unit;
+//│     let tmp2;
+//│     tmp2 = [
+//│       0,
+//│       k,
+//│       arg
+//│     ];
+//│     runtime.pushFrame(Handler$h2$perform$worker1, tmp2);
+//│     return Handler$h2$perform$worker1(tmp2)
 //│   }
 //│ };
 //│ handleBlock$$2 = (undefined, function (h22) {
 //│   return () => {
-//│     return handleBlock$9(h22)
+//│     let tmp2;
+//│     tmp2 = [
+//│       0,
+//│       h22
+//│     ];
+//│     runtime.pushFrame(handleBlock$$worker9, tmp2);
+//│     return handleBlock$$worker9(tmp2)
 //│   }
 //│ });
 //│ (class Handler$h2$2 extends Effect1 {
@@ -230,9 +286,6 @@ str
 //│   }
 //│   constructor() {
 //│     super();
-//│     if (runtime.curEffect !== null) {
-//│       runtime.illegalEffect("in a constructor");
-//│     }
 //│   }
 //│   perform(arg) {
 //│     let Handler$h2$perform$here;
@@ -242,36 +295,12 @@ str
 //│   toString() { return runtime.render(this); }
 //│   static [definitionMetadata] = ["class", "Handler$h2$"];
 //│ });
-//│ handleBlock$9 = (undefined, function (h22) {
-//│   let pc;
-//│   if (runtime.resumePc === -1) {
-//│     pc = 0;
-//│   } else {
-//│     pc = runtime.resumePc;
-//│     runtime.resumePc = -1;
-//│   }
-//│   switch (pc) {
-//│     case 0:
-//│       runtime.resumeValue = runtime.safeCall(h22.perform(runtime.Unit));
-//│       if (runtime.curEffect === null) {
-//│         pc = 1;
-//│       } else {
-//│         return runtime.unwind(handleBlock$9, 1, "RecursiveHandlers.mls:154:3", null, null, 1, 1, h22, 0)
-//│       }
-//│     case 1:
-//│       runtime.resumeValue;
-//│       return runtime.safeCall(h11.perform(runtime.Unit));
-//│   }
-//│ });
 //│ (class Handler$h1$2 extends Effect1 {
 //│   static {
 //│     Handler$h1$3 = this
 //│   }
 //│   constructor() {
 //│     super();
-//│     if (runtime.curEffect !== null) {
-//│       runtime.illegalEffect("in a constructor");
-//│     }
 //│   }
 //│   perform(arg) {
 //│     let Handler$h1$perform$here;
@@ -281,47 +310,29 @@ str
 //│   toString() { return runtime.render(this); }
 //│   static [definitionMetadata] = ["class", "Handler$h1$"];
 //│ });
-//│ handleBlock$10 = (undefined, function () {
-//│   let h22, handleBlock$$here, pc;
-//│   if (runtime.resumePc === -1) {
-//│     pc = 0;
-//│     h22 = new Handler$h2$3();
-//│     handleBlock$$here = handleBlock$$2(h22);
-//│     runtime.resumeValue = runtime.enterHandleBlock(h22, handleBlock$$here);
-//│     if (runtime.curEffect === null) {
-//│       pc = 1;
-//│     } else {
-//│       return runtime.unwind(handleBlock$10, 1, null, null, null, 1, 0, 0)
-//│     }
-//│   } else {
-//│     pc = runtime.resumePc;
-//│     runtime.resumePc = -1;
-//│     if (pc === 0) {
-//│       h22 = new Handler$h2$3();
-//│       handleBlock$$here = handleBlock$$2(h22);
-//│       runtime.resumeValue = runtime.enterHandleBlock(h22, handleBlock$$here);
-//│       if (runtime.curEffect === null) {
-//│         pc = 1;
-//│       } else {
-//│         return runtime.unwind(handleBlock$10, 1, null, null, null, 1, 0, 0)
-//│       }
-//│     }
-//│   }
-//│   if (pc === 1) {
-//│     return runtime.resumeValue
-//│   }
+//│ handleBlock$7 = (undefined, function () {
+//│   let tmp2;
+//│   tmp2 = [
+//│     0
+//│   ];
+//│   runtime.pushFrame(handleBlock$$worker10, tmp2);
+//│   return handleBlock$$worker10(tmp2)
 //│ });
 //│ str = "";
 //│ if (true === true) {
+//│   let $_effectful$_body$_10;
 //│   h11 = new Handler$h1$3();
-//│   runtime.enterHandleBlock(h11, handleBlock$10);
-//│   if (runtime.curEffect === null) {
-//│     return str
-//│   }
-//│   runtime.topLevelEffect(false);
-//│   return str;
+//│   $_effectful$_body$_10 = (undefined, function () {
+//│     return runtime.enterHandleBlock(h11, handleBlock$7)
+//│   });
+//│   runtime.topLevelTrampoline(undefined, $_effectful$_body$_10);
+//│   return str
 //│ }
 //│ return str;
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ = "BABABA"
+//│ > unhandled error
+//│ > unhandled error
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 //│ str = "BABABA"

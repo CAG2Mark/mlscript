@@ -5,25 +5,11 @@ import RuntimeJS from "./RuntimeJS.mjs";
 import Rendering from "./Rendering.mjs";
 import LazyArray from "./LazyArray.mjs";
 import Iter from "./Iter.mjs";
-let Runtime1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda$, lambda$1, lambda$2, Capture$scope291, lambda$3, Capture$scope311, lambda$4, Capture$handleEffect1, lambda$5, lambda$6, Capture$resumeContTrace1, lambda$7, lambda$8;
-lambda$8 = (undefined, function (resumeContTrace$cap, curFrame) {
+let Runtime1, lambda, lambda1, lambda2, lambda3, lambda$, lambda$1, lambda$2, Capture$scope291, lambda$3, Capture$scope311, lambda$4, Capture$handleEffect1, lambda$5, lambda$6, Capture$resumeContTrace1, lambda$7;
+lambda$7 = (undefined, function (resumeContTrace$cap, curFrame) {
   return () => {
     return runtime.safeCall(curFrame.resume(resumeContTrace$cap.value$0))
   }
-});
-lambda$7 = (undefined, function (Runtime2) {
-  return (err) => {
-    return lambda5(Runtime2, err)
-  }
-});
-lambda5 = (undefined, function (Runtime2, err) {
-  let scrut;
-  scrut = Runtime2.curEffect === null;
-  if (scrut === true) {
-    runtime.safeCall(globalThis.console.log("unhandled error in resumeContTrace"));
-    throw err
-  }
-  return runtime.Unit;
 });
 (class Capture$resumeContTrace {
   static {
@@ -42,19 +28,10 @@ lambda$6 = (undefined, function (handleEffect$cap, Runtime2) {
     return runtime.safeCall(handleEffect$cap.cur$0.handlerFun(tmp))
   }
 });
-lambda$5 = (undefined, function (Runtime2) {
-  return (err) => {
-    return lambda4(Runtime2, err)
+lambda$5 = (undefined, function (Runtime2, saved, tmp) {
+  return () => {
+    return Runtime2.resumeContTrace(saved, tmp)
   }
-});
-lambda4 = (undefined, function (Runtime2, err) {
-  let scrut;
-  scrut = Runtime2.curEffect === null;
-  if (scrut === true) {
-    runtime.safeCall(globalThis.console.log("unhandled error in handleEffect"));
-    throw err
-  }
-  return runtime.Unit;
 });
 (class Capture$handleEffect {
   static {
@@ -872,29 +849,31 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
     return header;
   }
   static showFunctionContChain(cont, hl, vis, reps) {
-    let scrut, scrut1, scrut2, tmp, tmp1, tmp2, tmp3, tmp4, scope29$cap, lambda$here;
+    let scrut, scrut1, scrut2, tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, scope29$cap, lambda$here;
     scope29$cap = new Capture$scope291(undefined);
     if (cont instanceof Runtime.FunctionContFrame.class) {
-      tmp = cont.constructor.name + "(pc=";
-      scope29$cap.result$0 = tmp + cont.saved.at(1);
+      tmp = cont.constructor.name + "(";
+      tmp1 = tmp + cont.fn.name;
+      tmp2 = tmp1 + ", pc=";
+      scope29$cap.result$0 = tmp2 + cont.varsClass.at(0);
       lambda$here = lambda$3(scope29$cap, cont);
       runtime.safeCall(hl.forEach(lambda$here));
       scrut = runtime.safeCall(vis.has(cont));
       if (scrut === true) {
-        tmp1 = reps + 1;
-        reps = tmp1;
-        scrut1 = tmp1 > 10;
+        tmp3 = reps + 1;
+        reps = tmp3;
+        scrut1 = tmp3 > 10;
         if (scrut1 === true) {
           throw runtime.safeCall(globalThis.Error("10 repeated continuation frame (loop?)"))
         }
-        tmp2 = scope29$cap.result$0 + ", REPEAT";
-        scope29$cap.result$0 = tmp2;
+        tmp4 = scope29$cap.result$0 + ", REPEAT";
+        scope29$cap.result$0 = tmp4;
       } else {
         runtime.safeCall(vis.add(cont));
       }
-      tmp3 = scope29$cap.result$0 + ") -> ";
-      tmp4 = Runtime.showFunctionContChain(cont.next, hl, vis, reps);
-      return tmp3 + tmp4
+      tmp5 = scope29$cap.result$0 + ") -> ";
+      tmp6 = Runtime.showFunctionContChain(cont.next, hl, vis, reps);
+      return tmp5 + tmp6
     }
     scrut2 = cont === null;
     if (scrut2 === true) {
@@ -947,7 +926,7 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
     return Runtime.myDebug(tmp2)
   }
   static debugContTrace(contTrace) {
-    let scrut, scrut1, vis, hl, cur, tmp, tmp1, tmp2, tmp3, tmp4;
+    let scrut, scrut1, vis, hl, cur, tmp, tmp1, tmp2, tmp3, tmp4, tmp5;
     if (contTrace instanceof Runtime.ContTrace.class) {
       runtime.safeCall(globalThis.console.log("resumed: ", contTrace.resumed));
       scrut = contTrace.last === contTrace;
@@ -971,14 +950,16 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
       tmp3 = globalThis.Object.freeze(new globalThis.Set(tmp2));
       runtime.safeCall(hl.set("last-handler", tmp3));
       tmp4 = Runtime.showFunctionContChain(contTrace.next, hl, vis, 0);
-      runtime.safeCall(globalThis.console.log(tmp4));
+      tmp5 = "ContTrace -> " + tmp4;
+      runtime.safeCall(globalThis.console.log(tmp5));
       cur = contTrace.nextHandler;
       lbl: while (true) {
-        let scrut2, tmp5;
+        let scrut2, tmp6;
         scrut2 = cur !== null;
         if (scrut2 === true) {
-          tmp5 = Runtime.showHandlerContChain(cur, hl, vis, 0);
-          runtime.safeCall(globalThis.console.log(tmp5));
+          runtime.safeCall(globalThis.console.log("v"));
+          tmp6 = Runtime.showHandlerContChain(cur, hl, vis, 0);
+          runtime.safeCall(globalThis.console.log(tmp6));
           cur = cur.nextHandler;
           continue lbl
         }
@@ -1087,16 +1068,25 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
       return cur;
     }
   }
+  static checkUnhandledErr(err) {
+    let scrut;
+    scrut = Runtime.curEffect === null;
+    if (scrut === true) {
+      runtime.safeCall(globalThis.console.log("unhandled error"));
+      throw err
+    }
+    return runtime.Unit;
+  }
   static handleEffect(cur) {
-    let prevHandlerFrame, scrut, handlerFrame, saved, scrut1, scrut2, old, scrut3, scrut4, scrut5, tmp, tmp1, tmp2, handleEffect$cap, lambda$here, lambda$here1;
+    let prevHandlerFrame, scrut, handlerFrame, saved, scrut1, scrut2, old, scrut3, scrut4, scrut5, retVal, scrut6, tmp, tmp1, tmp2, handleEffect$cap, lambda$here, lambda$here1;
     handleEffect$cap = new Capture$handleEffect1(cur);
     prevHandlerFrame = handleEffect$cap.cur$0.contTrace;
     lbl: while (true) {
-      let scrut6, scrut7;
-      scrut6 = prevHandlerFrame.nextHandler !== null;
-      if (scrut6 === true) {
-        scrut7 = prevHandlerFrame.nextHandler.handler !== handleEffect$cap.cur$0.handler;
-        if (scrut7 === true) {
+      let scrut7, scrut8;
+      scrut7 = prevHandlerFrame.nextHandler !== null;
+      if (scrut7 === true) {
+        scrut8 = prevHandlerFrame.nextHandler.handler !== handleEffect$cap.cur$0.handler;
+        if (scrut8 === true) {
           prevHandlerFrame = prevHandlerFrame.nextHandler;
           continue lbl
         }
@@ -1131,8 +1121,7 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
       tmp1 = Runtime.stackDepth + 2;
       Runtime.stackDepth = tmp1;
       lambda$here = lambda$6(handleEffect$cap, Runtime);
-      lambda$here1 = lambda$5(Runtime);
-      tmp2 = runtime.safeCall(RuntimeJS.try_catch(lambda$here, lambda$here1));
+      tmp2 = runtime.safeCall(RuntimeJS.try_catch(lambda$here, Runtime.checkUnhandledErr));
       tmp = tmp2;
     } finally {
       Runtime.stackDepth = old;
@@ -1161,7 +1150,13 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
       Runtime.myDebug("-----------------------------");
       return handleEffect$cap.cur$0
     }
-    return Runtime.resumeContTrace(saved, tmp);
+    lambda$here1 = lambda$5(Runtime, saved, tmp);
+    retVal = runtime.safeCall(RuntimeJS.try_catch(lambda$here1, Runtime.checkUnhandledErr));
+    scrut6 = Runtime.curEffect !== null;
+    if (scrut6 === true) {
+      return Runtime.curEffect
+    }
+    return retVal;
   }
   static resume(contTrace) {
     return (value) => {
@@ -1180,7 +1175,7 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
     savedResumeFrames = Runtime.curContTrace;
     Runtime.curContTrace = contTrace;
     lbl: while (true) {
-      let scrut, curFrame, old, scrut1, scrut2, scrut3, scrut4, tmp, tmp1, tmp2, lambda$here, lambda$here1;
+      let scrut, curFrame, old, scrut1, scrut2, scrut3, scrut4, tmp, tmp1, tmp2, lambda$here;
       scrut = contTrace.next;
       if (scrut instanceof Runtime.FunctionContFrame.class) {
         curFrame = contTrace.next;
@@ -1191,9 +1186,8 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
         try {
           tmp1 = Runtime.stackDepth + 3;
           Runtime.stackDepth = tmp1;
-          lambda$here = lambda$8(resumeContTrace$cap, curFrame);
-          lambda$here1 = lambda$7(Runtime);
-          tmp2 = runtime.safeCall(RuntimeJS.try_catch(lambda$here, lambda$here1));
+          lambda$here = lambda$7(resumeContTrace$cap, curFrame);
+          tmp2 = runtime.safeCall(RuntimeJS.try_catch(lambda$here, Runtime.checkUnhandledErr));
           tmp = tmp2;
         } finally {
           Runtime.stackDepth = old;

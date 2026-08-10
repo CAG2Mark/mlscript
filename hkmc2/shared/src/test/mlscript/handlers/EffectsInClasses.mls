@@ -21,16 +21,7 @@ data class Lol(h) with
 //│     Lol1.class = this
 //│   }
 //│   constructor(h) {
-//│     let tmp;
 //│     this.h = h;
-//│     tmp = runtime.safeCall(this.h.perform("k"));
-//│     if (runtime.curEffect !== null) {
-//│       tmp = runtime.illegalEffect("in a constructor");
-//│     }
-//│     Predef.print(tmp);
-//│     if (runtime.curEffect !== null) {
-//│       runtime.illegalEffect("in a constructor");
-//│     }
 //│   }
 //│   toString() { return runtime.render(this); }
 //│   static [definitionMetadata] = ["class", "Lol", ["h"]];
@@ -54,7 +45,8 @@ handle k = Eff with
   fun test()(k) = k()
 k.test()
 print("test")
-//│ ═══[RUNTIME ERROR] Error: Effect Handler$h$ is raised in a constructor
+//│ > test
+//│ FAILURE: Unexpected lack of error to fix
 
 
 
@@ -65,13 +57,14 @@ let oops =
       print(arg)
       "b"
   Lol(h)
-//│ ═══[RUNTIME ERROR] Error: Effect Handler$h$2 is raised in a constructor
-//│ oops = undefined
+//│ oops = Lol(Handler$h$)
+//│ FAILURE: Unexpected lack of error to fix
 
 :fixme
 :expect "b"
 oops
-//│ ═══[RUNTIME ERROR] Expected: '"b"', got: 'undefined'
+//│ ═══[RUNTIME ERROR] Expected: '"b"', got: 'Lol(Handler$h$)'
+//│ = Lol(Handler$h$)
 
 :fixme
 let oops = 
@@ -80,13 +73,14 @@ let oops =
       print(arg)
       "b"
   new Lol(h)
-//│ ═══[RUNTIME ERROR] Error: Effect Handler$h$4 is raised in a constructor
-//│ oops = undefined
+//│ oops = Lol(Handler$h$)
+//│ FAILURE: Unexpected lack of error to fix
 
 :fixme
 :expect "b"
 oops
-//│ ═══[RUNTIME ERROR] Expected: '"b"', got: 'undefined'
+//│ ═══[RUNTIME ERROR] Expected: '"b"', got: 'Lol(Handler$h$)'
+//│ = Lol(Handler$h$)
 
 
 :fixme
@@ -96,12 +90,13 @@ let oops =
       print(arg)
       k("b")
   Lol(h)
-//│ ═══[RUNTIME ERROR] Error: Effect Handler$h$6 is raised in a constructor
-//│ oops = undefined
+//│ oops = Lol(Handler$h$)
+//│ FAILURE: Unexpected lack of error to fix
 
 :fixme
 oops.h
-//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'h')
+//│ = Handler$h$
+//│ FAILURE: Unexpected lack of error to fix
 
 let obj = mut {s: undefined}
 //│ obj = {s: undefined}
@@ -122,5 +117,4 @@ module A with
 let obj = new Object with
   fun foo() = print("Hello")
   foo()
-//│ > Hello
 //│ obj = $anon

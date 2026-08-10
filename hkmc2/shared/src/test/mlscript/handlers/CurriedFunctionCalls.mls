@@ -14,16 +14,13 @@ fun f(x)(y) = x + y
 :sir
 f(1)(2)
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let tmp;
+//│ let tmp, ‹effectful body›;
 //│ do runtime⁰.resetEffects﹖();
-//│ set tmp = f¹(1)(2);
-//│ match runtime⁰.curEffect﹖
-//│   null =>
-//│     return tmp
-//│   else
-//│     set tmp = runtime⁰.topLevelEffect﹖(false);
-//│     return tmp
-//│ end
+//│ define ‹effectful body› as fun ‹effectful body›⁰() {
+//│   return f¹(1)(2)
+//│ };
+//│ set tmp = runtime⁰.topLevelTrampoline﹖(undefined, ‹effectful body›⁰);
+//│ return tmp
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 3
 
@@ -31,57 +28,56 @@ f(1)(2)
 :soir
 fun g(a)(b) = f(a)(b) + f(b)(a)
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
-//│ let g$worker;
-//│ do runtime⁰.resetEffects﹖();
-//│ @inline
-//│ define g⁰ as fun g¹(a)(b) {
-//│   return g$worker⁰(a, b)
-//│ };
-//│ define g$worker as fun g$worker⁰(a, b) {
-//│   let tmp, tmp1, pc;
-//│   match runtime⁰.resumePc﹖
-//│     -1 =>
-//│       set pc = 0;
-//│       end
-//│     else
-//│       let saveOffset;
-//│       set pc = runtime⁰.resumePc﹖;
-//│       set saveOffset = runtime⁰.resumeIdx﹖;
-//│       set tmp = runtime⁰.resumeArr﹖.saveOffset;
-//│       set runtime⁰.resumePc﹖ = -1;
-//│       end
+//│ let g$worker, g$worker1;
+//│ define g$worker as fun g$worker⁰(g$varsClass) {
+//│   let tmp, pc;
+//│   set pc = g$varsClass.0;
 //│   match pc
 //│     0 =>
-//│       let inlinedVal;
-//│       set inlinedVal = +⁰(a, b);
+//│       let x, y, inlinedVal, x1, y1, inlinedVal1;
+//│       set g$varsClass.0 = 2;
+//│       set x = g$varsClass.1;
+//│       set y = g$varsClass.2;
+//│       set inlinedVal = +⁰(x, y);
 //│       set runtime⁰.resumeValue﹖ = inlinedVal;
-//│       match runtime⁰.curEffect﹖
-//│         null =>
-//│           set pc = 2;
-//│           end
-//│         else
-//│           return runtime⁰.unwind﹖(g¹, 2, "CurriedFunctionCalls.mls:32:15", null, null, 2, 1, a, 1, b, 1, tmp)
-//│       end
-//│   match pc
-//│     2 =>
-//│       let inlinedVal;
+//│       set g$varsClass.3 = runtime⁰.resumeValue﹖;
+//│       set g$varsClass.0 = 1;
+//│       set x1 = g$varsClass.2;
+//│       set y1 = g$varsClass.1;
+//│       set inlinedVal1 = +⁰(x1, y1);
+//│       set runtime⁰.resumeValue﹖ = inlinedVal1;
 //│       set tmp = runtime⁰.resumeValue﹖;
-//│       set inlinedVal = +⁰(b, a);
+//│       do runtime⁰.popFrame﹖();
+//│       return +⁰(g$varsClass.3, tmp)
+//│     2 =>
+//│       let x, y, inlinedVal;
+//│       set g$varsClass.3 = runtime⁰.resumeValue﹖;
+//│       set g$varsClass.0 = 1;
+//│       set x = g$varsClass.2;
+//│       set y = g$varsClass.1;
+//│       set inlinedVal = +⁰(x, y);
 //│       set runtime⁰.resumeValue﹖ = inlinedVal;
-//│       match runtime⁰.curEffect﹖
-//│         null =>
-//│           set pc = 1;
-//│           end
-//│         else
-//│           return runtime⁰.unwind﹖(g¹, 1, "CurriedFunctionCalls.mls:32:25", null, null, 2, 1, a, 1, b, 1, tmp)
-//│       end
-//│   match pc
+//│       set tmp = runtime⁰.resumeValue﹖;
+//│       do runtime⁰.popFrame﹖();
+//│       return +⁰(g$varsClass.3, tmp)
 //│     1 =>
-//│       set tmp1 = runtime⁰.resumeValue﹖;
-//│       return +⁰(tmp, tmp1)
+//│       set tmp = runtime⁰.resumeValue﹖;
+//│       do runtime⁰.popFrame﹖();
+//│       return +⁰(g$varsClass.3, tmp)
 //│     else
 //│       end
 //│   end
+//│ };
+//│ do runtime⁰.resetEffects﹖();
+//│ @inline
+//│ define g⁰ as fun g¹(a)(b) {
+//│   return g$worker¹(a, b)
+//│ };
+//│ define g$worker1 as fun g$worker¹(a, b) {
+//│   let tmp;
+//│   set tmp = mut [0, a, b, undefined];
+//│   do runtime⁰.pushFrame﹖(g$worker⁰, tmp);
+//│   return g$worker⁰(tmp)
 //│ };
 //│ end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————

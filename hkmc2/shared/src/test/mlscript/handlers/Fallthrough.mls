@@ -15,78 +15,78 @@ fun f() =
   set x = g()
   return x
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let f;
-//│ runtime.resetEffects();
-//│ f = function f() {
-//│   let tmp, pc;
-//│   if (runtime.resumePc === -1) {
-//│     pc = 0;
-//│   } else {
-//│     let saveOffset;
-//│     pc = runtime.resumePc;
-//│     saveOffset = runtime.resumeIdx;
-//│     tmp = runtime.resumeArr.at(saveOffset);
-//│     runtime.resumePc = -1;
-//│   }
+//│ let f, f$worker;
+//│ f$worker = function f$worker(f$varsClass) {
+//│   let tmp, tmp1, pc;
+//│   pc = f$varsClass.at(0);
 //│   main: while (true) {
 //│     switch (pc) {
 //│       case 7:
+//│         f$varsClass[1] = runtime.resumeValue;
+//│         f$varsClass[0] = 6;
+//│         runtime.resumeValue = 0;
 //│         tmp = runtime.resumeValue;
-//│         runtime.resumeValue = 0;
-//│         if (runtime.curEffect === null) {
-//│           pc = 6;
-//│         } else {
-//│           return runtime.unwind(f, 6, "Fallthrough.mls:11:19", null, null, 1, 0, 1, tmp)
-//│         }
-//│       case 6:
-//│         runtime.resumeValue;
+//│         f$varsClass.at(1) + tmp;
+//│         f$varsClass[0] = 5;
 //│         pc = 5;
+//│         break;
+//│       case 6:
+//│         tmp = runtime.resumeValue;
+//│         f$varsClass.at(1) + tmp;
+//│         f$varsClass[0] = 5;
+//│         pc = 5;
+//│         break;
+//│     }
+//│     switch (pc) {
 //│       case 5:
+//│         f$varsClass[0] = 4;
 //│         runtime.resumeValue = 0;
-//│         if (runtime.curEffect === null) {
-//│           pc = 4;
-//│         } else {
-//│           return runtime.unwind(f, 4, "Fallthrough.mls:12:11", null, null, 1, 0, 1, tmp)
-//│         }
+//│         runtime.resumeValue;
+//│         f$varsClass[0] = 3;
+//│         runtime.resumeValue = 0;
+//│         pc = 3;
+//│         break;
 //│       case 4:
 //│         runtime.resumeValue;
+//│         f$varsClass[0] = 3;
 //│         runtime.resumeValue = 0;
-//│         if (runtime.curEffect === null) {
-//│           pc = 3;
-//│         } else {
-//│           return runtime.unwind(f, 3, "Fallthrough.mls:13:11", null, null, 1, 0, 1, tmp)
-//│         }
+//│         pc = 3;
+//│         break;
+//│     }
+//│     switch (pc) {
 //│       case 3:
 //│         runtime.resumeValue;
+//│         f$varsClass[0] = 2;
 //│         runtime.resumeValue = 0;
-//│         if (runtime.curEffect === null) {
-//│           pc = 2;
-//│         } else {
-//│           return runtime.unwind(f, 2, "Fallthrough.mls:14:11", null, null, 1, 0, 1, tmp)
-//│         }
+//│         pc = 2;
 //│       case 2:
 //│         runtime.resumeValue;
+//│         f$varsClass[0] = 1;
 //│         runtime.resumeValue = 0;
-//│         if (runtime.curEffect === null) {
-//│           pc = 1;
-//│         } else {
-//│           return runtime.unwind(f, 1, "Fallthrough.mls:15:11", null, null, 1, 0, 1, tmp)
-//│         }
+//│         pc = 1;
 //│       case 1:
-//│         return runtime.resumeValue;
+//│         tmp1 = runtime.resumeValue;
+//│         runtime.popFrame();
+//│         return tmp1;
 //│       case 0:
 //│         if (0 === 0) {
+//│           f$varsClass[0] = 7;
 //│           runtime.resumeValue = 0;
-//│           if (runtime.curEffect === null) {
-//│             pc = 7;
-//│             continue main
-//│           }
-//│           return runtime.unwind(f, 7, "Fallthrough.mls:11:13", null, null, 1, 0, 1, tmp);
+//│           pc = 7;
+//│           continue main
 //│         }
+//│         f$varsClass[0] = 5;
 //│         pc = 5;
 //│         continue main;
 //│     }
 //│     break;
 //│   }
+//│ };
+//│ runtime.resetEffects();
+//│ f = function f() {
+//│   let tmp;
+//│   tmp = [ 0, undefined ];
+//│   runtime.pushFrame(f$worker, tmp);
+//│   return f$worker(tmp)
 //│ };
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————

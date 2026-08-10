@@ -56,12 +56,12 @@ f()
 :re
 fun f() = () => return 3
 f()()
-//│ ═══[RUNTIME ERROR] Error: Unhandled effect $_non$_local$_return$_effect$_12
+//│ ═══[RUNTIME ERROR] EffectRaised("handleEffects")
 
 :re
 fun f(): () -> Int = () => return () => 3
 f()()
-//│ ═══[RUNTIME ERROR] Error: Unhandled effect $_non$_local$_return$_effect$_14
+//│ ═══[RUNTIME ERROR] EffectRaised("handleEffects")
 
 
 :e
@@ -115,8 +115,8 @@ f()
 //│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
 //│ ║  l.108: 	  object A with
 //│ ╙──       	         ^
-//│ ═══[RUNTIME ERROR] Error: Effect $_non$_local$_return$_effect$_18 is raised in a constructor
-//│ ═══[RUNTIME ERROR] Expected: '100', got: 'undefined'
+//│ ═══[RUNTIME ERROR] Expected: '100', got: '4'
+//│ = 4
 
 // ctor cannot raise effect, so error is expected.
 :fixme
@@ -126,8 +126,8 @@ fun f() =
     return 100
   new A
 f()
-//│ ═══[RUNTIME ERROR] Error: Effect $_non$_local$_return$_effect$_20 is raised in a constructor
-//│ ═══[RUNTIME ERROR] Expected: '100', got: 'undefined'
+//│ ═══[RUNTIME ERROR] Expected: '100', got: 'A'
+//│ = A
 
 :fixme
 :expect 100
@@ -142,8 +142,8 @@ f()
 //│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
 //│ ║  l.135: 	  object A with
 //│ ╙──       	         ^
-//│ ═══[RUNTIME ERROR] Error: Effect $_non$_local$_return$_effect$_22 is raised in a constructor
-//│ ═══[RUNTIME ERROR] Expected: '100', got: 'undefined'
+//│ ═══[RUNTIME ERROR] Expected: '100', got: '4'
+//│ = 4
 
 :fixme
 :expect 100
@@ -153,5 +153,5 @@ fun f() =
   new A
   4
 f()
-//│ ═══[RUNTIME ERROR] Error: Effect $_non$_local$_return$_effect$_24 is raised in a constructor
-//│ ═══[RUNTIME ERROR] Expected: '100', got: 'undefined'
+//│ ═══[RUNTIME ERROR] Expected: '100', got: '4'
+//│ = 4

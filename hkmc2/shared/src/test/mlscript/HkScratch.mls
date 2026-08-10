@@ -12,102 +12,14 @@
 
 class Effect
 
-:expect 3
-:sjs
+:noOpt
+:noInline
 fun f() =
-  handle h = Effect with
-    fun perform(arg)(k) = console.log("aa")
-  3
-//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let f, handleBlock$, Handler$h$perform, Handler$h$1, f$worker;
-//│ f$worker = function f$worker(f$varsClass) {
-//│   let h, tmp, pc;
-//│   pc = f$varsClass.at(0);
-//│   switch (pc) {
-//│     case 0:
-//│       h = new Handler$h$1();
-//│       f$varsClass[0] = 1;
-//│       runtime.resumeValue = runtime.enterHandleBlock(h, handleBlock$);
-//│       pc = 1;
-//│     case 1:
-//│       tmp = runtime.resumeValue;
-//│       runtime.popFrame();
-//│       return tmp;
-//│   }
-//│ };
-//│ runtime.resetEffects();
-//│ Handler$h$perform = function Handler$h$perform(k) {
-//│   return runtime.safeCall(globalThis.console.log("aa"))
-//│ };
-//│ (class Handler$h$ extends Effect1 {
-//│   static {
-//│     Handler$h$1 = this
-//│   }
-//│   constructor() {
-//│     super();
-//│   }
-//│   perform(arg) {
-//│     return runtime.mkEffect(this, Handler$h$perform)
-//│   }
-//│   toString() { return runtime.render(this); }
-//│   static [definitionMetadata] = ["class", "Handler$h$"];
-//│ });
-//│ handleBlock$ = (undefined, function () {
-//│   return 3
-//│ });
-//│ f = function f() { let tmp; tmp = [ 0 ]; runtime.pushFrame(f$worker, tmp); return f$worker(tmp) };
-//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
+  handle h1 = Effect with
+    fun f1()(k) =
+      k()
+  h1
+f().f1()
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
-//│ ═══[RUNTIME ERROR] Expected: '3', got: 'undefined'
-
-:sir
-f()
-//│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let tmp, ‹effectful body›;
-//│ do runtime⁰.resetEffects﹖();
-//│ define ‹effectful body› as fun ‹effectful body›⁰() {
-//│   return f⁰()
-//│ };
-//│ set tmp = runtime⁰.topLevelTrampoline﹖(undefined, ‹effectful body›⁰);
-//│ return tmp
-//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ > after pushFrame
-//│ > <ref *1> ContTrace {
-//│ >   next: FunctionContFrame {
-//│ >     next: null,
-//│ >     fn: [Function: f$worker],
-//│ >     varsClass: [ 0 ],
-//│ >     id: 0
-//│ >   },
-//│ >   last: FunctionContFrame {
-//│ >     next: null,
-//│ >     fn: [Function: f$worker],
-//│ >     varsClass: [ 0 ],
-//│ >     id: 0
-//│ >   },
-//│ >   nextHandler: null,
-//│ >   lastHandler: [Circular *1],
-//│ >   resumed: false
-//│ > }
-//│ > enterHandleBlock
-//│ > ret:  3
-//│ > before popFrame
-//│ > <ref *1> ContTrace {
-//│ >   next: FunctionContFrame {
-//│ >     next: null,
-//│ >     fn: [Function: f$worker],
-//│ >     varsClass: [ 1 ],
-//│ >     id: 0
-//│ >   },
-//│ >   last: FunctionContFrame {
-//│ >     next: null,
-//│ >     fn: [Function: f$worker],
-//│ >     varsClass: [ 1 ],
-//│ >     id: 0
-//│ >   },
-//│ >   nextHandler: null,
-//│ >   lastHandler: [Circular *1],
-//│ >   resumed: false
-//│ > }
-//│ = 3
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ ═══[RUNTIME ERROR] EffectRaised("handleEffects")

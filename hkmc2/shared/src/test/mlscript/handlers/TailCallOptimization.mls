@@ -33,31 +33,53 @@ fun hi(n) =
   else hi(n - 1)
 hi(0)
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let hi, tmp1, $_stack$_safe$_body$_;
-//│ runtime.resetEffects();
-//│ hi = function hi(n) {
+//│ let hi, hi$worker, $_effectful$_body$_1, hi_hi$worker;
+//│ hi_hi$worker = function hi_hi$worker(id, param0) {
 //│   loopLabel: while (true) {
-//│     let scrut, tmp2, curDepth;
-//│     runtime.checkDepth();
-//│     if (runtime.curEffect === null) {
-//│       curDepth = runtime.stackDepth + 1;
-//│       scrut = n === 0;
-//│       if (scrut === true) {
-//│         return 0
-//│       }
-//│       tmp2 = n - 1;
-//│       runtime.stackDepth = curDepth;
-//│       n = tmp2;
-//│       continue loopLabel;
+//│     switch (id) {
+//│       case 0:
+//│         {
+//│           let tmp;
+//│           tmp = [
+//│             0,
+//│             param0
+//│           ];
+//│           runtime.pushFrame(hi$worker, tmp);
+//│           param0 = tmp;
+//│           id = 1;
+//│           continue loopLabel;
+//│         }
+//│       case 1:
+//│         {
+//│           let scrut, tmp;
+//│           runtime.checkDepth();
+//│           runtime.stackDepth + 1;
+//│           param0.at(0);
+//│           scrut = param0.at(1) === 0;
+//│           if (scrut === true) {
+//│             runtime.popFrame();
+//│             return 0
+//│           }
+//│           tmp = param0.at(1) - 1;
+//│           runtime.popFrame();
+//│           param0 = tmp;
+//│           id = 0;
+//│           continue loopLabel;
+//│         }
 //│     }
-//│     return runtime.unwind(hi, -1, "TailCallOptimization.mls:31:1", null, null, 1, 1, n, 0);
+//│     break;
 //│   }
 //│ };
-//│ $_stack$_safe$_body$_ = (undefined, function () {
-//│   return hi(0)
+//│ hi$worker = function hi$worker(hi$varsClass) {
+//│   return hi_hi$worker(1, hi$varsClass)
+//│ };
+//│ runtime.resetEffects();
+//│ hi = function hi(n) {
+//│   return hi_hi$worker(0, n)
+//│ };
+//│ $_effectful$_body$_1 = (undefined, function () {
+//│   return hi_hi$worker(0, 0)
 //│ });
-//│ tmp1 = runtime.runStackSafe(1000, $_stack$_safe$_body$_);
-//│ if (runtime.curEffect === null) { return tmp1 }
-//│ return runtime.topLevelEffect(false);
+//│ return runtime.topLevelTrampoline(1000, $_effectful$_body$_1)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 0
