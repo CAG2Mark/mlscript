@@ -5,7 +5,7 @@ import RuntimeJS from "./RuntimeJS.mjs";
 import Rendering from "./Rendering.mjs";
 import LazyArray from "./LazyArray.mjs";
 import Iter from "./Iter.mjs";
-let Runtime1, lambda, lambda1, lambda2, lambda3, lambda$, lambda$1, lambda$2, Capture$scope291, lambda$3, Capture$scope311, lambda$4, Capture$handleEffect1, lambda$5, lambda$6, Capture$resumeContTrace1, lambda$7;
+let errorSep, Runtime1, lambda, lambda1, lambda2, lambda3, lambda$, lambda$1, lambda$2, Capture$scope291, lambda$3, Capture$scope311, lambda$4, Capture$handleEffect1, lambda$5, lambda$6, Capture$resumeContTrace1, lambda$7;
 lambda$7 = (undefined, function (resumeContTrace$cap, curFrame) {
   return () => {
     return runtime.safeCall(curFrame.resume(resumeContTrace$cap.value$0))
@@ -43,6 +43,12 @@ lambda$5 = (undefined, function (Runtime2, saved, tmp) {
   toString() { return runtime.render(this); }
   static [definitionMetadata] = ["class", "Capture$handleEffect"];
 });
+errorSep = function errorSep(loc) {
+  runtime.safeCall(globalThis.console.log("--------------------------------"));
+  runtime.safeCall(globalThis.console.log("!!! HANDLER VALIDATION ERROR !!!"));
+  runtime.safeCall(globalThis.console.log("--------------------------------"));
+  return runtime.safeCall(globalThis.console.log("at:", loc))
+};
 (class Capture$scope31 {
   static {
     Capture$scope311 = this
@@ -448,15 +454,13 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
         Runtime.FunctionContFrame.class = this
       }
       constructor(next, fn, varsClass) {
-        let tmp1, tmp2;
+        let tmp1;
         this.next = next;
         this.fn = fn;
         this.varsClass = varsClass;
         this.id = Runtime.#fcfid;
-        tmp1 = "constructed: " + this.id;
-        Runtime.myDebug(tmp1);
-        tmp2 = Runtime.#fcfid + 1;
-        Runtime.#fcfid = tmp2;
+        tmp1 = Runtime.#fcfid + 1;
+        Runtime.#fcfid = tmp1;
       }
       resume(value) {
         Runtime.resumeValue = value;
@@ -988,16 +992,17 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
       Runtime.curContTrace.last = newFrame;
     }
     Runtime.curContTrace.next = newFrame;
-    return runtime.Unit
+    return Runtime.validateContTrace(Runtime.curContTrace, "pushFrame")
   }
   static popFrame() {
     let scrut;
+    runtime.safeCall(globalThis.console.dir(Runtime.curContTrace));
     scrut = Runtime.curContTrace.next === Runtime.curContTrace.last;
     if (scrut === true) {
       Runtime.curContTrace.last = Runtime.curContTrace;
     }
     Runtime.curContTrace.next = Runtime.curContTrace.next.next;
-    return runtime.Unit
+    return Runtime.validateContTrace(Runtime.curContTrace, "popFrame")
   }
   static mkEffect(handler, handlerFun) {
     let res, tmp;
@@ -1020,7 +1025,58 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
     }
     Runtime.curContTrace.next = Runtime.curContTrace.nextHandler.next;
     Runtime.curContTrace.nextHandler = Runtime.curContTrace.nextHandler.nextHandler;
-    return runtime.Unit
+    return Runtime.validateContTrace(Runtime.curContTrace, "popHandler")
+  }
+  static validateContTrace(tr, loc) {
+    let remainIter, realLastHandler, realLast, scrut, scrut1, scrut2;
+    remainIter = 100000;
+    realLastHandler = tr;
+    lbl: while (true) {
+      let scrut3, scrut4, tmp;
+      scrut3 = remainIter >= 0;
+      if (scrut3 === true) {
+        scrut4 = realLastHandler.nextHandler !== null;
+        if (scrut4 === true) {
+          tmp = remainIter - 1;
+          remainIter = tmp;
+          realLastHandler = realLastHandler.nextHandler;
+          continue lbl
+        }
+      }
+      break;
+    }
+    realLast = realLastHandler;
+    lbl1: while (true) {
+      let scrut3, scrut4;
+      scrut3 = remainIter >= 0;
+      if (scrut3 === true) {
+        scrut4 = realLast.next !== null;
+        if (scrut4 === true) {
+          realLast = realLast.next;
+          continue lbl1
+        }
+      }
+      break;
+    }
+    scrut = remainIter < 0;
+    if (scrut === true) {
+      errorSep(loc);
+      throw "INVALID CONT TRACE: infinite loop"
+    }
+    scrut1 = realLast !== tr.last;
+    if (scrut1 === true) {
+      errorSep(loc);
+      runtime.safeCall(globalThis.console.log("expected last:", realLast));
+      runtime.safeCall(globalThis.console.dir(tr));
+      throw "INVALID CONT TRACE: last is incorrect"
+    }
+    scrut2 = realLastHandler !== tr.lastHandler;
+    if (scrut2 === true) {
+      errorSep(loc);
+      runtime.safeCall(globalThis.console.dir(tr));
+      throw "INVALID CONT TRACE: lastHandler is incorrect"
+    }
+    return runtime.Unit;
   }
   static enterHandleBlock(handler, body) {
     let handlerFrame, scrut, scrut1, ret;
@@ -1035,6 +1091,7 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
     if (scrut1 === true) {
       Runtime.curContTrace.last = handlerFrame;
     }
+    Runtime.validateContTrace(Runtime.curContTrace, "enterHandleBlock");
     ret = runtime.safeCall(body());
     Runtime.popHandler();
     return ret
@@ -1080,6 +1137,7 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
   static handleEffect(cur) {
     let prevHandlerFrame, scrut, handlerFrame, saved, scrut1, scrut2, old, scrut3, scrut4, scrut5, retVal, scrut6, tmp, tmp1, tmp2, handleEffect$cap, lambda$here, lambda$here1;
     handleEffect$cap = new Capture$handleEffect1(cur);
+    Runtime.validateContTrace(handleEffect$cap.cur$0.contTrace, "handleEffect start");
     prevHandlerFrame = handleEffect$cap.cur$0.contTrace;
     lbl: while (true) {
       let scrut7, scrut8;
@@ -1098,8 +1156,6 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
       return handleEffect$cap.cur$0
     }
     handlerFrame = prevHandlerFrame.nextHandler;
-    Runtime.myDebug("before split:");
-    Runtime.myDebug(handleEffect$cap.cur$0.contTrace);
     saved = new Runtime.ContTrace.class(handlerFrame.next, handleEffect$cap.cur$0.contTrace.last, handlerFrame.nextHandler, handleEffect$cap.cur$0.contTrace.lastHandler, false);
     scrut1 = handleEffect$cap.cur$0.contTrace.last === handlerFrame;
     if (scrut1 === true) {
@@ -1109,13 +1165,13 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
     if (scrut2 === true) {
       saved.lastHandler = saved;
     }
+    Runtime.validateContTrace(saved, "saved cont frame");
     handleEffect$cap.cur$0.contTrace.last = handlerFrame;
     handleEffect$cap.cur$0.contTrace.lastHandler = handlerFrame;
     handlerFrame.next = null;
     handlerFrame.nextHandler = null;
+    Runtime.validateContTrace(handleEffect$cap.cur$0.contTrace, "frames passed to handler");
     Runtime.curEffect = null;
-    Runtime.myDebug("calling handler fun:");
-    Runtime.myDebug(handleEffect$cap.cur$0.handlerFun);
     old = Runtime.stackDepth;
     try {
       tmp1 = Runtime.stackDepth + 2;
@@ -1126,15 +1182,10 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
     } finally {
       Runtime.stackDepth = old;
     }
-    Runtime.myDebug("done handler fun");
     scrut3 = Runtime.curEffect !== null;
     if (scrut3 === true) {
-      Runtime.myDebug("effect raised in handler fun");
       handleEffect$cap.cur$0 = Runtime.curEffect;
-      Runtime.myDebug("saved:");
-      Runtime.myDebug(saved);
-      Runtime.myDebug("curContTrace:");
-      Runtime.myDebug(handleEffect$cap.cur$0.contTrace);
+      Runtime.validateContTrace(handleEffect$cap.cur$0.contTrace, "frames after handling and effect raised");
       scrut4 = saved.next !== null;
       if (scrut4 === true) {
         handleEffect$cap.cur$0.contTrace.last.next = saved.next;
@@ -1145,9 +1196,7 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
         handleEffect$cap.cur$0.contTrace.lastHandler.nextHandler = saved.nextHandler;
         handleEffect$cap.cur$0.contTrace.lastHandler = saved.lastHandler;
       }
-      Runtime.myDebug("result:");
-      Runtime.myDebug(handleEffect$cap.cur$0.contTrace);
-      Runtime.myDebug("-----------------------------");
+      Runtime.validateContTrace(handleEffect$cap.cur$0.contTrace, "relinked");
       return handleEffect$cap.cur$0
     }
     lambda$here1 = lambda$5(Runtime, saved, tmp);
@@ -1179,8 +1228,6 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
       scrut = contTrace.next;
       if (scrut instanceof Runtime.FunctionContFrame.class) {
         curFrame = contTrace.next;
-        Runtime.myDebug("resuming frame:");
-        Runtime.myDebug(curFrame);
         Runtime.curEffect = null;
         old = Runtime.stackDepth;
         try {
@@ -1198,6 +1245,7 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
           resumeContTrace$cap.value$0 = Runtime.curEffect;
         }
         if (resumeContTrace$cap.value$0 instanceof Runtime.EffectSig.class) {
+          contTrace = Runtime.curEffect.contTrace;
           contTrace.resumed = false;
           contTrace.last.next = savedResumeFrames.next;
           contTrace.lastHandler.nextHandler = savedResumeFrames.nextHandler;
@@ -1209,6 +1257,7 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
           if (scrut3 === true) {
             contTrace.lastHandler = savedResumeFrames.lastHandler;
           }
+          Runtime.validateContTrace(Runtime.curEffect.contTrace, "resumeContTrace");
           throw Runtime.EffectRaised("resumeContTrace")
         }
         continue lbl;
@@ -1217,6 +1266,7 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
       if (scrut4 instanceof Runtime.HandlerContFrame.class) {
         contTrace.next = contTrace.nextHandler.next;
         contTrace.nextHandler = contTrace.nextHandler.nextHandler;
+        Runtime.validateContTrace(contTrace, "resumeContTrace handler case");
         continue lbl
       }
       Runtime.curContTrace = savedResumeFrames;

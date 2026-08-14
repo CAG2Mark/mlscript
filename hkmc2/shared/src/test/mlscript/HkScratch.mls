@@ -10,16 +10,283 @@
 :effectHandlers
 :lift
 
-class Effect
+abstract class Generator with
+  fun produce(result): ()
 
-:noOpt
-:noInline
-fun f() =
-  handle h1 = Effect with
-    fun f1()(k) =
-      k()
-  h1
-f().f1()
+let pad = ""
+fun permutations_impl(gen, l1, l2) =
+  let oldPad = pad
+  set pad += " |"
+  if l2 is
+    [f, ...t] do
+      handle genWithPrefix = Generator with
+        fun produce(result)(resume) =
+          result.unshift(f)
+          gen.produce(result)
+          resume(())
+      permutations_impl(genWithPrefix, mut [], l1.concat(t))
+      l1.push(f)
+      permutations_impl(gen, l1, t)
+    [] and l1 is [] do
+      gen.produce(mut [])
+  set pad = oldPad
+fun permutations(gen, l) =
+  permutations_impl(gen, mut [], l)
+//│ pad = ""
+
+class G with
+  fun produce(res) = console.log(res)
+
+fun permutations_foreach(l) =
+  permutations(new G, l)
+permutations_foreach([1, 2, 3, 4])
+//│ > [ 1, 2, 3, 4 ]
+//│ > <ref *1> ContTrace {
+//│ >   next: FunctionContFrame {
+//│ >     next: null,
+//│ >     fn: [Function: Handler$genWithPrefix$produce$worker],
+//│ >     varsClass: [ 1, [Function (anonymous)], G {}, 1, [Array] ],
+//│ >     id: 12
+//│ >   },
+//│ >   last: FunctionContFrame {
+//│ >     next: null,
+//│ >     fn: [Function: Handler$genWithPrefix$produce$worker],
+//│ >     varsClass: [ 1, [Function (anonymous)], G {}, 1, [Array] ],
+//│ >     id: 12
+//│ >   },
+//│ >   nextHandler: null,
+//│ >   lastHandler: [Circular *1],
+//│ >   resumed: false
+//│ > }
+//│ > ContTrace {
+//│ >   next: FunctionContFrame {
+//│ >     next: FunctionContFrame {
+//│ >       next: [FunctionContFrame],
+//│ >       fn: [Function: permutations_impl$worker],
+//│ >       varsClass: [Array],
+//│ >       id: 2
+//│ >     },
+//│ >     fn: [Function: Handler$genWithPrefix$produce$worker],
+//│ >     varsClass: [
+//│ >       1,
+//│ >       [Function (anonymous)],
+//│ >       Handler$genWithPrefix$ {},
+//│ >       2,
+//│ >       [Array]
+//│ >     ],
+//│ >     id: 11
+//│ >   },
+//│ >   last: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   nextHandler: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   lastHandler: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   resumed: true
+//│ > }
+//│ > ContTrace {
+//│ >   next: FunctionContFrame {
+//│ >     next: FunctionContFrame {
+//│ >       next: [FunctionContFrame],
+//│ >       fn: [Function: permutations_impl$worker],
+//│ >       varsClass: [Array],
+//│ >       id: 4
+//│ >     },
+//│ >     fn: [Function: Handler$genWithPrefix$produce$worker],
+//│ >     varsClass: [
+//│ >       1,
+//│ >       [Function (anonymous)],
+//│ >       Handler$genWithPrefix$ {},
+//│ >       3,
+//│ >       [Array]
+//│ >     ],
+//│ >     id: 10
+//│ >   },
+//│ >   last: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   nextHandler: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   lastHandler: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   resumed: true
+//│ > }
+//│ > ContTrace {
+//│ >   next: FunctionContFrame {
+//│ >     next: FunctionContFrame {
+//│ >       next: [FunctionContFrame],
+//│ >       fn: [Function: permutations_impl$worker],
+//│ >       varsClass: [Array],
+//│ >       id: 6
+//│ >     },
+//│ >     fn: [Function: Handler$genWithPrefix$produce$worker],
+//│ >     varsClass: [
+//│ >       1,
+//│ >       [Function (anonymous)],
+//│ >       Handler$genWithPrefix$ {},
+//│ >       4,
+//│ >       [Array]
+//│ >     ],
+//│ >     id: 9
+//│ >   },
+//│ >   last: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   nextHandler: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   lastHandler: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   resumed: true
+//│ > }
+//│ > ContTrace {
+//│ >   next: FunctionContFrame {
+//│ >     next: FunctionContFrame {
+//│ >       next: null,
+//│ >       fn: [Function: handleBlock$$worker],
+//│ >       varsClass: [Array],
+//│ >       id: 7
+//│ >     },
+//│ >     fn: [Function: permutations_impl$worker],
+//│ >     varsClass: [ 1, Handler$genWithPrefix$ {}, [], [], ' | | | |' ],
+//│ >     id: 8
+//│ >   },
+//│ >   last: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   nextHandler: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   lastHandler: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   resumed: true
+//│ > }
+//│ > ContTrace {
+//│ >   next: FunctionContFrame {
+//│ >     next: null,
+//│ >     fn: [Function: handleBlock$$worker],
+//│ >     varsClass: [
+//│ >       1,
+//│ >       [],
+//│ >       Handler$genWithPrefix$ {},
+//│ >       [Array],
+//│ >       [],
+//│ >       4,
+//│ >       Handler$genWithPrefix$ {}
+//│ >     ],
+//│ >     id: 7
+//│ >   },
+//│ >   last: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   nextHandler: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   lastHandler: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   resumed: true
+//│ > }
+//│ > ContTrace {
+//│ >   next: FunctionContFrame {
+//│ >     next: null,
+//│ >     fn: [Function: permutations_impl$worker],
+//│ >     varsClass: [ 1, Handler$genWithPrefix$ {}, [Array], [], ' | | | |' ],
+//│ >     id: 13
+//│ >   },
+//│ >   last: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   nextHandler: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   lastHandler: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   resumed: true
+//│ > }
+//│ > --------------------------------
+//│ > !!! HANDLER VALIDATION ERROR !!!
+//│ > --------------------------------
+//│ > at: resumeContTrace handler case
+//│ > expected last: ContTrace {
+//│ >   next: null,
+//│ >   last: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   nextHandler: null,
+//│ >   lastHandler: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   resumed: true
+//│ > }
+//│ > ContTrace {
+//│ >   next: null,
+//│ >   last: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   nextHandler: null,
+//│ >   lastHandler: HandlerContFrame {
+//│ >     next: null,
+//│ >     nextHandler: null,
+//│ >     handler: Handler$genWithPrefix$ {}
+//│ >   },
+//│ >   resumed: true
+//│ > }
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
-//│ ═══[RUNTIME ERROR] EffectRaised("handleEffects")
+//│ ═══[RUNTIME ERROR] INVALID CONT TRACE: last is incorrect
+ 
