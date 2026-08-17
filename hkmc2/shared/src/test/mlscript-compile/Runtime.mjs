@@ -5,11 +5,14 @@ import RuntimeJS from "./RuntimeJS.mjs";
 import Rendering from "./Rendering.mjs";
 import LazyArray from "./LazyArray.mjs";
 import Iter from "./Iter.mjs";
-let errorSep, Runtime1, lambda, lambda1, lambda2, lambda3, lambda$, lambda$1, lambda$2, Capture$scope291, lambda$3, Capture$scope311, lambda$4, Capture$handleEffect1, Capture$scope491, lambda$5, lambda$6, Capture$resumeContTrace1, lambda$7;
+let errorSep, Runtime1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda$, lambda$1, lambda$2, Capture$scope291, lambda$3, Capture$scope311, lambda$4, Capture$handleEffect1, Capture$scope491, lambda$5, lambda$6, Capture$resumeContTrace1, lambda$7;
 lambda$7 = (undefined, function (resumeContTrace$cap, curFrame) {
   return () => {
     return runtime.safeCall(curFrame.resume(resumeContTrace$cap.value$0))
   }
+});
+lambda6 = (undefined, function (resumeContTrace$cap, curFrame) {
+  return runtime.safeCall(curFrame.resume(resumeContTrace$cap.value$0))
 });
 (class Capture$resumeContTrace {
   static {
@@ -42,6 +45,14 @@ lambda$5 = (undefined, function (Runtime2, saved, tmp) {
   return () => {
     return Runtime2.resumeContTrace(saved, tmp)
   }
+});
+lambda4 = (undefined, function (handleEffect$cap, Runtime2) {
+  let tmp;
+  tmp = Runtime2.resume(handleEffect$cap.cur$0.contTrace);
+  return runtime.safeCall(handleEffect$cap.cur$0.handlerFun(tmp))
+});
+lambda5 = (undefined, function (Runtime2, saved, tmp) {
+  return Runtime2.resumeContTrace(saved, tmp)
 });
 (class Capture$handleEffect {
   static {
@@ -136,10 +147,17 @@ lambda$1 = (undefined, function (Runtime2) {
     return runtime.Unit
   }
 });
+lambda8 = (undefined, function (Runtime2, k) {
+  Runtime2.stackResume = k;
+  return runtime.Unit
+});
 lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
   return () => {
     return Runtime2.resume(EffectHandle1.reified.contTrace)(value)
   }
+});
+lambda7 = (undefined, function (Runtime2, EffectHandle1, value) {
+  return Runtime2.resume(EffectHandle1.reified.contTrace)(value)
 });
 (class Runtime {
   static {
@@ -1353,4 +1371,28 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
   toString() { return runtime.render(this); }
   static [definitionMetadata] = ["class", "Runtime"];
 });
+export { errorSep as _$_modulePrivate_$_errorSep };
+export { Runtime1 as _$_modulePrivate_$_Runtime };
+export { lambda as _$_modulePrivate_$_lambda };
+export { lambda1 as _$_modulePrivate_$_lambda1 };
+export { lambda2 as _$_modulePrivate_$_lambda2 };
+export { lambda3 as _$_modulePrivate_$_lambda3 };
+export { lambda4 as _$_modulePrivate_$_lambda4 };
+export { lambda5 as _$_modulePrivate_$_lambda5 };
+export { lambda6 as _$_modulePrivate_$_lambda6 };
+export { lambda7 as _$_modulePrivate_$_lambda7 };
+export { lambda8 as _$_modulePrivate_$_lambda8 };
+export { lambda$ as _$_modulePrivate_$_lambda$ };
+export { lambda$1 as _$_modulePrivate_$_lambda$1 };
+export { lambda$2 as _$_modulePrivate_$_lambda$2 };
+export { Capture$scope291 as _$_modulePrivate_$_Capture$scope29 };
+export { lambda$3 as _$_modulePrivate_$_lambda$3 };
+export { Capture$scope311 as _$_modulePrivate_$_Capture$scope31 };
+export { lambda$4 as _$_modulePrivate_$_lambda$4 };
+export { Capture$handleEffect1 as _$_modulePrivate_$_Capture$handleEffect };
+export { Capture$scope491 as _$_modulePrivate_$_Capture$scope49 };
+export { lambda$5 as _$_modulePrivate_$_lambda$5 };
+export { lambda$6 as _$_modulePrivate_$_lambda$6 };
+export { Capture$resumeContTrace1 as _$_modulePrivate_$_Capture$resumeContTrace };
+export { lambda$7 as _$_modulePrivate_$_lambda$7 };
 let Runtime = Runtime1; export default Runtime;
