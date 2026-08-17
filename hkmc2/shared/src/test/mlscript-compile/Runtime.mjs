@@ -777,6 +777,8 @@ lambda7 = (undefined, function (Runtime2, EffectHandle1, value) {
   }
   static topLevelTrampoline(stackLimit, body) {
     let lambda$here;
+    Runtime.makeNewContTrace();
+    Runtime.curEffect = null;
     lambda$here = lambda$2(Runtime);
     return runtime.safeCall(RuntimeJS.try_catch(body, lambda$here))
   }

@@ -390,21 +390,18 @@ sum(10000)
 //│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
 
 :expect 2
-fun foo(h) =
-  h.perform()
+fun foo(hh) =
+  hh.perform()
   if true then
     fun g() = 2
     g()
   else
     fun g() = 3
     g()
-handle h = Eff with
+handle hh = Eff with
   fun perform()(k) = k(())
-foo(h)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:299)
-//│ ═══[RUNTIME ERROR] Expected: '2', got: '43054146'
-//│ = 43054146
+foo(hh)
+//│ = 2
 
 :expect 3
 fun foo(h) =
@@ -472,28 +469,28 @@ handle h = Eff with
   fun perform()(k) = k(())
 foo(h)
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.467: 	    module A with
+//│ ║  l.464: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.463: 	    module A with
+//│ ║  l.460: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.459: 	    module A with
+//│ ║  l.456: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.455: 	    module A with
+//│ ║  l.452: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.455: 	    module A with
+//│ ║  l.452: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.459: 	    module A with
+//│ ║  l.456: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.463: 	    module A with
+//│ ║  l.460: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.467: 	    module A with
+//│ ║  l.464: 	    module A with
 //│ ╙──       	           ^
 //│ = 123
 

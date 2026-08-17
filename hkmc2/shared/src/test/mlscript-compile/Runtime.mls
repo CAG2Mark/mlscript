@@ -209,6 +209,8 @@ fun raisePrintStackEffect(showLocals) =
   mkEffect(PrintStackEffect, showLocals)
 
 fun topLevelTrampoline(stackLimit, body) =
+  makeNewContTrace()
+  set curEffect = null
   RuntimeJS.try_catch(body, (err) =>
     if curEffect === null do throw err
     handleEffects(curEffect)
