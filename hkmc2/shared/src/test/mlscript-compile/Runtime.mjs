@@ -5,7 +5,7 @@ import RuntimeJS from "./RuntimeJS.mjs";
 import Rendering from "./Rendering.mjs";
 import LazyArray from "./LazyArray.mjs";
 import Iter from "./Iter.mjs";
-let errorSep, Runtime1, lambda, lambda1, lambda2, lambda3, lambda$, lambda$1, lambda$2, Capture$scope291, lambda$3, Capture$scope311, lambda$4, Capture$handleEffect1, lambda$5, lambda$6, Capture$resumeContTrace1, lambda$7;
+let errorSep, Runtime1, lambda, lambda1, lambda2, lambda3, lambda$, lambda$1, lambda$2, Capture$scope291, lambda$3, Capture$scope311, lambda$4, Capture$handleEffect1, Capture$scope491, lambda$5, lambda$6, Capture$resumeContTrace1, lambda$7;
 lambda$7 = (undefined, function (resumeContTrace$cap, curFrame) {
   return () => {
     return runtime.safeCall(curFrame.resume(resumeContTrace$cap.value$0))
@@ -20,6 +20,16 @@ lambda$7 = (undefined, function (resumeContTrace$cap, curFrame) {
   }
   toString() { return runtime.render(this); }
   static [definitionMetadata] = ["class", "Capture$resumeContTrace"];
+});
+(class Capture$scope49 {
+  static {
+    Capture$scope491 = this
+  }
+  constructor(prevHandlerFrame$0) {
+    this.prevHandlerFrame$0 = prevHandlerFrame$0;
+  }
+  toString() { return runtime.render(this); }
+  static [definitionMetadata] = ["class", "Capture$scope49"];
 });
 lambda$6 = (undefined, function (handleEffect$cap, Runtime2) {
   return () => {
@@ -996,7 +1006,6 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
   }
   static popFrame() {
     let scrut;
-    runtime.safeCall(globalThis.console.dir(Runtime.curContTrace));
     scrut = Runtime.curContTrace.next === Runtime.curContTrace.last;
     if (scrut === true) {
       Runtime.curContTrace.last = Runtime.curContTrace;
@@ -1013,19 +1022,19 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
     Runtime.makeNewContTrace();
     throw Runtime.EffectRaised("mkEffect")
   }
-  static popHandler() {
+  static popHandler(tr) {
     let scrut, scrut1;
-    scrut = Runtime.curContTrace.lastHandler === Runtime.curContTrace.nextHandler;
+    scrut = tr.lastHandler === tr.nextHandler;
     if (scrut === true) {
-      Runtime.curContTrace.lastHandler = Runtime.curContTrace;
-      scrut1 = Runtime.curContTrace.last === Runtime.curContTrace.nextHandler;
+      tr.lastHandler = tr;
+      scrut1 = tr.last === tr.nextHandler;
       if (scrut1 === true) {
-        Runtime.curContTrace.last = Runtime.curContTrace;
+        tr.last = tr;
       }
     }
-    Runtime.curContTrace.next = Runtime.curContTrace.nextHandler.next;
-    Runtime.curContTrace.nextHandler = Runtime.curContTrace.nextHandler.nextHandler;
-    return Runtime.validateContTrace(Runtime.curContTrace, "popHandler")
+    tr.next = tr.nextHandler.next;
+    tr.nextHandler = tr.nextHandler.nextHandler;
+    return Runtime.validateContTrace(tr, "popHandler")
   }
   static validateContTrace(tr, loc) {
     let remainIter, realLastHandler, realLast, scrut, scrut1, scrut2;
@@ -1093,7 +1102,7 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
     }
     Runtime.validateContTrace(Runtime.curContTrace, "enterHandleBlock");
     ret = runtime.safeCall(body());
-    Runtime.popHandler();
+    Runtime.popHandler(Runtime.curContTrace);
     return ret
   }
   static myDebug(arg) {
@@ -1135,27 +1144,28 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
     return runtime.Unit;
   }
   static handleEffect(cur) {
-    let prevHandlerFrame, scrut, handlerFrame, saved, scrut1, scrut2, old, scrut3, scrut4, scrut5, retVal, scrut6, tmp, tmp1, tmp2, handleEffect$cap, lambda$here, lambda$here1;
+    let scrut, handlerFrame, saved, scrut1, scrut2, old, scrut3, scrut4, scrut5, retVal, scrut6, tmp, tmp1, tmp2, handleEffect$cap, scope49$cap, lambda$here, lambda$here1;
     handleEffect$cap = new Capture$handleEffect1(cur);
+    scope49$cap = new Capture$scope491(undefined);
     Runtime.validateContTrace(handleEffect$cap.cur$0.contTrace, "handleEffect start");
-    prevHandlerFrame = handleEffect$cap.cur$0.contTrace;
+    scope49$cap.prevHandlerFrame$0 = handleEffect$cap.cur$0.contTrace;
     lbl: while (true) {
       let scrut7, scrut8;
-      scrut7 = prevHandlerFrame.nextHandler !== null;
+      scrut7 = scope49$cap.prevHandlerFrame$0.nextHandler !== null;
       if (scrut7 === true) {
-        scrut8 = prevHandlerFrame.nextHandler.handler !== handleEffect$cap.cur$0.handler;
+        scrut8 = scope49$cap.prevHandlerFrame$0.nextHandler.handler !== handleEffect$cap.cur$0.handler;
         if (scrut8 === true) {
-          prevHandlerFrame = prevHandlerFrame.nextHandler;
+          scope49$cap.prevHandlerFrame$0 = scope49$cap.prevHandlerFrame$0.nextHandler;
           continue lbl
         }
       }
       break;
     }
-    scrut = prevHandlerFrame.nextHandler === null;
+    scrut = scope49$cap.prevHandlerFrame$0.nextHandler === null;
     if (scrut === true) {
       return handleEffect$cap.cur$0
     }
-    handlerFrame = prevHandlerFrame.nextHandler;
+    handlerFrame = scope49$cap.prevHandlerFrame$0.nextHandler;
     saved = new Runtime.ContTrace.class(handlerFrame.next, handleEffect$cap.cur$0.contTrace.last, handlerFrame.nextHandler, handleEffect$cap.cur$0.contTrace.lastHandler, false);
     scrut1 = handleEffect$cap.cur$0.contTrace.last === handlerFrame;
     if (scrut1 === true) {
@@ -1209,13 +1219,14 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
   }
   static resume(contTrace) {
     return (value) => {
-      let scrut;
+      let scrut, tmp;
       scrut = contTrace.resumed;
       if (scrut === true) {
         throw runtime.safeCall(globalThis.Error("Multiple resumption"))
       }
       contTrace.resumed = true;
-      return Runtime.resumeContTrace(contTrace, value);
+      tmp = Runtime.resumeContTrace(contTrace, value);
+      return Runtime.handleEffects(tmp);
     }
   }
   static resumeContTrace(contTrace, value) {
@@ -1264,9 +1275,7 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
       }
       scrut4 = contTrace.nextHandler;
       if (scrut4 instanceof Runtime.HandlerContFrame.class) {
-        contTrace.next = contTrace.nextHandler.next;
-        contTrace.nextHandler = contTrace.nextHandler.nextHandler;
-        Runtime.validateContTrace(contTrace, "resumeContTrace handler case");
+        Runtime.popHandler(contTrace);
         continue lbl
       }
       Runtime.curContTrace = savedResumeFrames;

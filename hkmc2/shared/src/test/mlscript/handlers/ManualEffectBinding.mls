@@ -39,7 +39,50 @@ enterHandleBlock(h1, () => enterHandleBlock(h2, () =>
 ))
 //│ > perform
 //│ > perform2
-//│ > perform
-//│ > perform-end2
-//│ > perform-end
-//│ > perform-end
+//│ > --------------------------------
+//│ > !!! HANDLER VALIDATION ERROR !!!
+//│ > --------------------------------
+//│ > at: relinked
+//│ > expected last: FunctionContFrame {
+//│ >   next: null,
+//│ >   fn: [Function: Handler$h$perform$worker],
+//│ >   varsClass: [ 1, [Function (anonymous)] ],
+//│ >   id: 2
+//│ > }
+//│ > ContTrace {
+//│ >   next: null,
+//│ >   last: FunctionContFrame {
+//│ >     next: null,
+//│ >     fn: [Function: Handler$h$perform$worker],
+//│ >     varsClass: [ 1, [Function (anonymous)] ],
+//│ >     id: 3
+//│ >   },
+//│ >   nextHandler: HandlerContFrame {
+//│ >     next: FunctionContFrame {
+//│ >       next: null,
+//│ >       fn: [Function: Handler$h$perform$worker],
+//│ >       varsClass: [Array],
+//│ >       id: 3
+//│ >     },
+//│ >     nextHandler: HandlerContFrame {
+//│ >       next: [FunctionContFrame],
+//│ >       nextHandler: null,
+//│ >       handler: Handler$h$ {}
+//│ >     },
+//│ >     handler: Handler$h$2 {}
+//│ >   },
+//│ >   lastHandler: HandlerContFrame {
+//│ >     next: FunctionContFrame {
+//│ >       next: null,
+//│ >       fn: [Function: Handler$h$perform$worker],
+//│ >       varsClass: [Array],
+//│ >       id: 2
+//│ >     },
+//│ >     nextHandler: null,
+//│ >     handler: Handler$h$ {}
+//│ >   },
+//│ >   resumed: false
+//│ > }
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ ═══[RUNTIME ERROR] INVALID CONT TRACE: last is incorrect

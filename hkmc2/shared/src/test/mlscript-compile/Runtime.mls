@@ -350,7 +350,6 @@ fun pushFrame(fn, vars) =
   validateContTrace(curContTrace, "pushFrame")
   
 fun popFrame() =
-  console.dir(curContTrace)
   if curContTrace.next === curContTrace.last do
     set curContTrace.last = curContTrace
   set curContTrace.next = curContTrace.next.next
@@ -367,7 +366,7 @@ fun mkEffect(handler, handlerFun) =
   throw EffectRaised("mkEffect")
 
 
-// 
+//
 //  contTrace  --> null
 //      v
 //      h2     --> f3 --> f4 --> ...
@@ -380,15 +379,15 @@ fun mkEffect(handler, handlerFun) =
 //      v
 //      h1     --> f2 --> f1 --> ...
 //
-fun popHandler() =
-  if curContTrace.lastHandler === curContTrace.nextHandler do
-    set curContTrace.lastHandler = curContTrace
-    if curContTrace.last === curContTrace.nextHandler do
-      set curContTrace.last = curContTrace
+fun popHandler(tr) =
+  if tr.lastHandler === tr.nextHandler do
+    set tr.lastHandler = tr
+    if tr.last === tr.nextHandler do
+      set tr.last = tr
   set
-    curContTrace.next = curContTrace.nextHandler.next
-    curContTrace.nextHandler = curContTrace.nextHandler.nextHandler
-  validateContTrace(curContTrace, "popHandler")
+    tr.next = tr.nextHandler.next
+    tr.nextHandler = tr.nextHandler.nextHandler
+  validateContTrace(tr, "popHandler")
 
 fun validateContTrace(tr, loc) =
   fun errorSep =
@@ -441,7 +440,7 @@ fun enterHandleBlock(handler, body) =
     set curContTrace.last = handlerFrame
   validateContTrace(curContTrace, "enterHandleBlock")
   let ret = body()
-  popHandler()
+  popHandler(curContTrace)
   ret
 
 fun myDebug(arg) =
@@ -471,7 +470,7 @@ fun checkUnhandledErr(err) =
 // calling conventions:
 // resume, resumeContTrace: throw exceptions when raising an effect, will link the newly called functions to the existing cont trace if an effect is raised
 // handleEffect: does not throw exceptions, returns either a value or a cont trace
-// handleEffects: throws an exception if their is an unhandled effect
+// handleEffects: throws an exception if there is an unhandled effect
 
 // return either new effect, final result or the same continuation if there is no handler
 fun handleEffect(cur) =
@@ -537,7 +536,7 @@ fun resume(contTrace)(value) =
   if contTrace.resumed do
     throw Error("Multiple resumption")
   set contTrace.resumed = true
-  resumeContTrace(contTrace, value)
+  handleEffects(resumeContTrace(contTrace, value))
 
 fun resumeContTrace(contTrace, value) =
   // Append these onto the resume frames later
@@ -566,9 +565,7 @@ fun resumeContTrace(contTrace, value) =
         throw EffectRaised("resumeContTrace")
       else () // The frame is popped by the function upon returning
     contTrace.nextHandler is HandlerContFrame then
-      set contTrace.next = contTrace.nextHandler.next
-      set contTrace.nextHandler = contTrace.nextHandler.nextHandler
-      validateContTrace(contTrace, "resumeContTrace handler case")
+      popHandler(contTrace)
     else
       set curContTrace = savedResumeFrames
       return value
