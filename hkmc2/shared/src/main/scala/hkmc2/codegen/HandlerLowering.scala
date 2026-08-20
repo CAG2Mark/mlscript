@@ -84,6 +84,9 @@ object HandlerLowering:
 
 import HandlerLowering.*
 
+// maps function symbol -> num param lists
+case class HandlerAnalysisRes(results: Map[DefinitionSymbol[?], Int])
+
 class HandlerPaths(using Elaborator.State):
   val runtimePath: Path = State.runtimeSymbol.asSimpleRef
   val contClsPath: Path = runtimePath.selSN("FunctionContFrame").selSN("class")
@@ -185,7 +188,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     containsError: Bool
   )
   
-  private def partitionBlock(blk: Block): PartitionedBlock =
+  private def partitionBlock(blk: Block)(using hRes: HandlerAnalysisRes): PartitionedBlock =
     val result = mutable.HashMap.empty[StateId, BlockPartition]
     val labelIds = mutable.HashMap.empty[LabelSymbol, (LazyId, LazyId)]
     val allocId = new IdAllocator()
@@ -203,7 +206,12 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
       // First check if the current block contain any non trivial call, if so we need a partition
 
       def forceId(blk: Block, resumable: Bool): StateId = blk match
+        // TODO: is this correct with the two kinds of state transitions?
         case StateTransition(uid) if result.contains(uid) =>
+          if !result(uid).resumable && resumable then
+            result(uid) = BlockPartition(result(uid).blk, true)
+          uid
+        case PreStateTransition(uid, StateTransition(uid1)) if uid === uid1 && result.contains(uid) =>
           if !result(uid).resumable && resumable then
             result(uid) = BlockPartition(result(uid).blk, true)
           uid
@@ -211,7 +219,18 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
           val id = allocId()
           result(id) = BlockPartition(blk, resumable)
           id
-
+      
+      def doNewRetryablePartition(res: Result, rst: Block): Nothing =
+        // return doNewEffectPartition(res: Result, rst: Block)
+        // TODO: stack safety global vars
+        val stateId = forceId(go(rst)(using partitioned = true), true)
+        val retryBlock = blockBuilder
+          .preStateTransition(stateId)
+          .assignFieldN(paths.runtimePath, paths.resumeValueIdent, res)
+          .rest(StateTransition(stateId))
+        val retryId = forceId(retryBlock, true)
+        val newBlock = CombinedStateTransition(retryId)
+        boundary.break(newBlock)
       def doNewEffectPartition(res: Result, rst: Block) =
         val stateId = forceId(go(rst)(using partitioned = true), true)
         val newBlock = blockBuilder
@@ -230,10 +249,26 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
             needsStackSafety = true
             b // Prevents the recursion into applyResult
           case _ => super.applyBlock(b)
-        override def applyResult(r: Result)(k: Result => Block) = r match
+        override def applyResult(r: Result)(k: Result => Block) =
+          def fallback = doNewRetryablePartition(r, k(paths.resumeValue))
+          // check if the call is fully applied
+          def check(sym: DefinitionSymbol[?], args: List[List[Arg]]) =
+            hRes.results.get(sym) match
+              case Some(argsLen) if args.size === argsLen => doNewEffectPartition(r, k(paths.resumeValue))
+              case _ => fallback
+          r match
           case r @ EffectfulResult() =>
             needsStackSafety = true
-            doNewEffectPartition(r, k(paths.resumeValue))
+            if !config.stackSafety.isDefined then doNewEffectPartition(r, k(paths.resumeValue)) else r match
+              case Call(Value.MemberRef(_, dsym), args) => check(dsym, args)
+              case Call(s: Select, args) => s.symbol match
+                case Some(sym) => check(sym, args)
+                case None => fallback
+              case _ => fallback
+          case Call(Value.SimpleRef(_: BuiltinSymbol), _) => super.applyResult(r)(k)
+          case _: Call =>
+            needsStackSafety = true
+            doNewRetryablePartition(r, k(paths.resumeValue))
           case _ => super.applyResult(r)(k)
       
       // If current block contains direct effectful result the following call will early exit.
@@ -549,7 +584,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
   
   private val extraDefns: ListBuffer[Defn] = ListBuffer()
 
-  private def translateBlock(nme: String, blk: Block, h: HandlerCtx, scopedVars: collection.Set[ScopedSymbol], extraRestoreVars: List[LocalVarSymbol]): Block =
+  private def translateBlock(nme: String, blk: Block, h: HandlerCtx, scopedVars: collection.Set[ScopedSymbol], extraRestoreVars: List[LocalVarSymbol])(using HandlerAnalysisRes): Block =
     given HandlerCtx = h
 
     def translateFunLike(fun: FunDefn, funcPath: Path, thisPath: Option[Path], debugNme: Str) =
@@ -783,7 +818,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         )
         .ret(Call(workerDefn.asPath, (tmp.asPath.asArg :: Nil) ne_:: Nil)(CallMetadata.defaultMlsFun))
   
-  private def translateCtorLike(b: Block, thisPath: Path, isModCtor: Bool)(using h: HandlerCtx): Block =
+  private def translateCtorLike(b: Block, thisPath: Path, isModCtor: Bool)(using h: HandlerCtx, r: HandlerAnalysisRes): Block =
     translateBlock("ctor", b, if isModCtor then HandlerCtx.ModCtor(h.currentBlockIsTrulyNested) else HandlerCtx.Ctor, Set.empty, List.empty)
     
   /**
@@ -829,11 +864,34 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
           Scoped(Set(l), effectCheck(l, r, k(l.asSimpleRef)))
         case _ => super.applyResult(r)(k)
     topLevelPostTransform.applyBlock(b)
-
+  
+  // conservatively find list of functions that will have the wrapper
+  // must be sound, i.e. if the function is found by this analysis, then it must be a wrapper that is inlined
+  def analyze(b: Block): HandlerAnalysisRes =
+    if !config.stackSafety.isDefined then return HandlerAnalysisRes(Map.empty)
+    var m: mutable.Map[TermSymbol, Int] = mutable.Map.empty
+    def isBlkTrivial(b: Block) = boundary:
+      new BlockTraverserShallow():
+        override def applyResult(r: Result): Unit = r match
+          case EffectfulResult() => boundary.break(false)
+          case Call(Value.SimpleRef(_: BuiltinSymbol), _) => super.applyResult(r)
+          case _: Call => boundary.break(false)
+          case _ => super.applyResult(r)
+        applyBlock(b)
+      true
+    new BlockTraverser():
+      override def applyFunDefn(fun: FunDefn): Unit =
+        // TODO: if the fun is owned by a class or a module, should we skip it?
+        if !isBlkTrivial(fun.body) then m.addOne(fun.dSym -> Math.min(fun.params.size, 1))
+        super.applyFunDefn(fun)
+      applyBlock(b)
+    HandlerAnalysisRes(m.toMap)
+    
 
   def translateProgram(prog: Program): Program =
     extraDefns.clear()
     val ctx = HandlerCtx.TopLevel
+    given HandlerAnalysisRes = analyze(prog.main)
     var transformed = blockBuilder
         .staticif(
           !opt.doNotInstrumentTopLevelModCtor,
