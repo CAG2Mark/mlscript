@@ -1058,6 +1058,9 @@ lambda7 = (undefined, function (Runtime2, EffectHandle1, value) {
   }
   static validateContTrace(tr, loc) {
     let remainIter, realLastHandler, realLast, scrut, scrut1, scrut2;
+    if (false === true) {
+      return runtime.Unit
+    }
     remainIter = 100000;
     realLastHandler = tr;
     lbl: while (true) {

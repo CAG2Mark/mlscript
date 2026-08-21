@@ -111,11 +111,61 @@ class HandlerPaths(using Elaborator.State):
   val resumeIdx: Path = runtimePath.selSN("resumeIdx")
   val resumeValueIdent = new Tree.Ident("resumeValue")
   val resumeValue: Path = runtimePath.selN(resumeValueIdent)
+  val oldPcIdent = new Tree.Ident("oldPc")
+  val oldPcValue: Path = runtimePath.selN(oldPcIdent)
+  val contTraceIdent = new Tree.Ident("curContTrace")
+  val contTraceValue: Path = runtimePath.selN(contTraceIdent)
 
 class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise, Elaborator.State, Elaborator.Ctx, Config):
   
   private def freshTmp(dbgNme: Str = "tmp") = new TempSymbol(N, dbgNme)
   private def freshLabel(nme: Str) = new LabelSymbol(N, nme)
+  
+  // inlined versions of the runtime functions for stack safety
+  
+  private def pushFrame(fnPath: Path, varsClsPath: Path, rest: Block): Block =
+    if config.stackSafety.isDefined then
+      val newFrameSym = TempSymbol(N, "newFrame")
+      val predSym = TempSymbol(N)
+      val pred = Call(
+          State.builtinOpsMap("===").asSimpleRef, 
+          (paths.contTraceValue.selN(lastIdent).asArg :: paths.contTraceValue.asArg :: Nil) ne_:: Nil
+        )(CallMetadata.defaultMlsFun)
+      val inst = Instantiate(
+          true,
+          paths.contClsPath,
+          (paths.contTraceValue.next.asArg :: fnPath.asArg :: varsClsPath.asArg :: Nil) :: Nil
+        )(InstantiateMetadata.empty)
+      blockBuilder
+        .assignScoped(newFrameSym, inst)
+        .assignScoped(predSym, pred)
+        .ifthen(predSym.asSimpleRef, Case.Lit(Tree.BoolLit(true)), AssignField(paths.contTraceValue, lastIdent, newFrameSym.asSimpleRef, End())(N))
+        .assignFieldN(paths.contTraceValue, nextIdent, newFrameSym.asSimpleRef)
+        .rest(rest)
+    else
+      Assign(
+        NoSymbol, 
+        Call(
+          paths.pushFramePath,
+          (fnPath.asArg :: varsClsPath.asArg :: Nil) ne_:: Nil
+        )(CallMetadata.defaultMlsFun),
+        rest
+      )
+        
+  private def popFrame(rest: Block): Block =
+    if config.stackSafety.isDefined then
+      val predSym = TempSymbol(N)
+      val pred = Call(
+          State.builtinOpsMap("===").asSimpleRef, 
+          (paths.contTraceValue.selN(nextIdent).asArg :: paths.contTraceValue.selN(lastIdent).asArg :: Nil) ne_:: Nil
+        )(CallMetadata.defaultMlsFun)
+      blockBuilder
+        .assignScoped(predSym, pred)
+        .ifthen(predSym.asSimpleRef, Case.Lit(Tree.BoolLit(true)), AssignField(paths.contTraceValue, lastIdent, paths.contTraceValue, End())(N), N)
+        .assignFieldN(paths.contTraceValue, nextIdent, paths.contTraceValue.selN(nextIdent).selN(nextIdent))
+        .rest(rest)
+    else
+      Assign(NoSymbol, Call(paths.popFramePath, Nil ne_:: Nil)(CallMetadata.defaultMlsFun), rest)
   
   private def rtThrowMsg(msg: Str) = Throw(
     Instantiate(mut = false, State.globalThisSymbol.asThis.selN(Tree.Ident("Error")),
@@ -134,27 +184,32 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
       case _ => N
   
   object CombinedStateTransition:
-    def apply(uid: StateId) = PreStateTransition(uid, StateTransition(uid))
+    def apply(uid: StateId) = PreStateTransition(uid, N, StateTransition(uid, false))
   
   object PreStateTransition:
     private val transitionSymbol = freshTmp("preTransition")
-    def apply(uid: StateId, rest: Block) =
-      Assign(NoSymbol, PureCall(transitionSymbol.asSimpleRef, List(Value.Lit(Tree.IntLit(uid)))), rest)
-    def unapply(blk: Block) = blk match
-      case Assign(NoSymbol, PureCall(Value.SimpleRef(`transitionSymbol`), List(Value.Lit(Tree.IntLit(uid)))), rest) =>
-        S(uid, rest)
+    def apply(uid: StateId, oldUid: Opt[StateId], rest: Block) = 
+      val args = oldUid match
+        case Some(value) => List(Value.Lit(Tree.IntLit(uid)), Value.Lit(Tree.IntLit(value)))
+        case None => List(Value.Lit(Tree.IntLit(uid)))
+      Assign(NoSymbol, PureCall(transitionSymbol.asSimpleRef, args), rest)
+    def unapply(blk: Block): Option[(StateId, Opt[StateId], Block)] = blk match
+      case Assign(NoSymbol, PureCall(Value.SimpleRef(`transitionSymbol`), args), rest) => args match
+        case Value.Lit(Tree.IntLit(uid)) :: Value.Lit(Tree.IntLit(oldUid)) :: Nil => S(uid, S(oldUid), rest)
+        case Value.Lit(Tree.IntLit(uid)) :: Nil => S(uid, N, rest)
+        case _ => N
       case _ => N
   
   extension (k: Block => Block)
-    def preStateTransition(uid: StateId) = k.chain(PreStateTransition(uid, _))
+    def preStateTransition(uid: StateId, oldUid: Opt[StateId]) = k.chain(PreStateTransition(uid, oldUid, _))
   
   object StateTransition:
     private val transitionSymbol = freshTmp("transition")
-    def apply(uid: StateId) =
-      Return(PureCall(transitionSymbol.asSimpleRef, List(Value.Lit(Tree.IntLit(uid)))))
+    def apply(uid: StateId, resetOld: Bool) =
+      Return(PureCall(transitionSymbol.asSimpleRef, List(Value.Lit(Tree.IntLit(uid)), Value.Lit(Tree.BoolLit(resetOld)))))
     def unapply(blk: Block) = blk match
-      case Return(PureCall(Value.SimpleRef(`transitionSymbol`), List(Value.Lit(Tree.IntLit(uid))))) =>
-        S(uid)
+      case Return(PureCall(Value.SimpleRef(`transitionSymbol`), List(Value.Lit(Tree.IntLit(uid)), Value.Lit(Tree.BoolLit(resetOld))))) =>
+        S(uid, resetOld)
       case _ => N
 
   object Unwind:
@@ -177,6 +232,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
       val tmp = id
       id += 1
       tmp
+    def peek() = id
   
   // blk: the block of code within this state
   private case class BlockPartition(blk: Block, resumable: Bool)
@@ -205,13 +261,13 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     def go(blk: Block)(using afterEnd: Option[LazyId], partitioned: Bool): Block = boundary:
       // First check if the current block contain any non trivial call, if so we need a partition
 
-      def forceId(blk: Block, resumable: Bool): StateId = blk match
+      def forceId(blk: Block, resumable: Bool, forceAlloc: Bool): StateId = blk match
         // TODO: is this correct with the two kinds of state transitions?
-        case StateTransition(uid) if result.contains(uid) =>
+        case StateTransition(uid, _) if result.contains(uid) && !forceAlloc =>
           if !result(uid).resumable && resumable then
             result(uid) = BlockPartition(result(uid).blk, true)
           uid
-        case PreStateTransition(uid, StateTransition(uid1)) if uid === uid1 && result.contains(uid) =>
+        case PreStateTransition(uid, _, StateTransition(uid1, _)) if uid === uid1 && result.contains(uid) && !forceAlloc =>
           if !result(uid).resumable && resumable then
             result(uid) = BlockPartition(result(uid).blk, true)
           uid
@@ -223,46 +279,57 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
       def doNewRetryablePartition(res: Result, rst: Block): Nothing =
         // return doNewEffectPartition(res: Result, rst: Block)
         // TODO: stack safety global vars
-        val stateId = forceId(go(rst)(using partitioned = true), true)
+        val stateId = forceId(go(rst)(using partitioned = true), true, false)
         val retryBlock = blockBuilder
-          .preStateTransition(stateId)
+          .preStateTransition(stateId, S(allocId.peek()))
           .assignFieldN(paths.runtimePath, paths.resumeValueIdent, res)
-          .rest(StateTransition(stateId))
-        val retryId = forceId(retryBlock, true)
+          .rest(StateTransition(stateId, true))
+        val retryId = forceId(retryBlock, true, true)
         val newBlock = CombinedStateTransition(retryId)
         boundary.break(newBlock)
       def doNewEffectPartition(res: Result, rst: Block) =
-        val stateId = forceId(go(rst)(using partitioned = true), true)
+        val stateId = forceId(go(rst)(using partitioned = true), true, false)
         val newBlock = blockBuilder
-          .preStateTransition(stateId)
+          .preStateTransition(stateId, N)
           .assignFieldN(paths.runtimePath, paths.resumeValueIdent, res)
-          .rest(StateTransition(stateId))
+          .rest(StateTransition(stateId, false))
         boundary.break(newBlock)
       class RestLazyId(rst: Block) extends LazyId:
-        def compute: StateId = forceId(go(rst)(using partitioned = true), false)
+        def compute: StateId = forceId(go(rst)(using partitioned = true), false, false)
         def transitionSoft: Block = transitionOrBlk(go(rst))
-
+      
+      def isKnownCall(sym: DefinitionSymbol[?], args: List[List[Arg]]) =
+        hRes.results.get(sym) match
+          case Some(argsLen) if args.size === argsLen => true
+          case _ => false
       val nonTrivialBlockChecker = new BlockDataTransformer(SymbolSubst.Id):
         override def applyBlock(b: Block) = b match
-          // Special handling for tail calls
+          // Special handling for tail calls.
+          // For tail calls to a non-inlined function, we put the current frame in a global variable.
+          // This global variable is cleared after returning from a non-tail-call.
+          // If the non-inlined function stack overflows, then we append that frame to the continuation trace
+          // in the runtime. This way, we can preserve this tail call.
           case Return(c @ Call(fun, args)) =>
             needsStackSafety = true
-            b // Prevents the recursion into applyResult
+            if !config.stackSafety.isDefined then b else
+            fun match
+              // TODO: do not preserve the tail call for now
+              case Value.MemberRef(_, dsym) => if isKnownCall(dsym, args) then b else applyResult(c)(Return(_)) // Prevents the recursion into applyResult
+              case _ => applyResult(c)(Return(_))
           case _ => super.applyBlock(b)
         override def applyResult(r: Result)(k: Result => Block) =
           def fallback = doNewRetryablePartition(r, k(paths.resumeValue))
           // check if the call is fully applied
-          def check(sym: DefinitionSymbol[?], args: List[List[Arg]]) =
-            hRes.results.get(sym) match
-              case Some(argsLen) if args.size === argsLen => doNewEffectPartition(r, k(paths.resumeValue))
-              case _ => fallback
+          def doCall(sym: DefinitionSymbol[?], args: List[List[Arg]]) =
+            if isKnownCall(sym, args) then doNewEffectPartition(r, k(paths.resumeValue))
+            else fallback
           r match
           case r @ EffectfulResult() =>
             needsStackSafety = true
             if !config.stackSafety.isDefined then doNewEffectPartition(r, k(paths.resumeValue)) else r match
-              case Call(Value.MemberRef(_, dsym), args) => check(dsym, args)
+              case Call(Value.MemberRef(_, dsym), args) => doCall(dsym, args)
               case Call(s: Select, args) => s.symbol match
-                case Some(sym) => check(sym, args)
+                case Some(sym) => doCall(sym, args)
                 case None => fallback
               case _ => fallback
           case Call(Value.SimpleRef(_: BuiltinSymbol), _) => super.applyResult(r)(k)
@@ -401,21 +468,21 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         applyBlock(blk)
         override def applyBlock(b: Block): Unit = b match
           case Unwind(uid, loc) => ()
-          case StateTransition(uid) =>
+          case StateTransition(uid, _) =>
             outgoing += uid
           case Match(scrut, arms, dflt, rest) =>
             applyPath(scrut)
             val restId = createState(rest)
             arms.foreach: arm =>
-              val newId = createState(Begin(arm._2, StateTransition(restId)))
+              val newId = createState(Begin(arm._2, StateTransition(restId, false)))
               outgoing += newId
             dflt match
               case N => outgoing += restId
               case S(blk) =>
-                outgoing += createState(Begin(blk, StateTransition(restId)))
+                outgoing += createState(Begin(blk, StateTransition(restId, false)))
           case Label(label, loop, body, rest) =>
             val restId = createState(rest)
-            val bodyId = createState(Begin(body, StateTransition(restId)))
+            val bodyId = createState(Begin(body, StateTransition(restId, false)))
             labelMap(label) = (bodyId, restId)
             outgoing += bodyId
           case Break(label) =>
@@ -489,7 +556,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     def findEdges(uid: StateId, b: Block) =
       new BlockTraverser:
         override def applyBlock(b: Block): Unit = b match
-          case StateTransition(uid2) => edges.addOne((uid, uid2))
+          case StateTransition(uid2, _) => edges.addOne((uid, uid2))
           case _ => super.applyBlock(b)
         applyBlock(b)
     for (uid, blk) <- parts.states do
@@ -678,8 +745,12 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     val pcAssign_ = varClsInfo.assignPc(varsClsSym.asPath)
     def pcAssign(value: Path, rest: Block) =
       Assign(pcVar, value, rest)
-    def prePcAssign(value: Path, rest: Block) =
-      pcAssign_(value, rest)
+    def prePcAssign(value: Path, oldUid: Opt[Path], rest: Block) =
+      oldUid match
+        case Some(oldValue) => blockBuilder
+          .assignFieldN(paths.runtimePath, paths.oldPcIdent, oldValue)
+          .rest(pcAssign_(value, rest))
+        case None => pcAssign_(value, rest)
     
     val curDepth = freshTmp("curDepth")
     val mainLoopLbl = freshLabel("main")
@@ -703,10 +774,15 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
 
     def postTransform(transition: BigInt => Block) = new BlockTransformerShallow(SymbolSubst.Id):
       override def applyBlock(b: Block) = b match
-        case PreStateTransition(uid, rest) => prePcAssign(Value.Lit(Tree.IntLit(uid)), applyBlock(rest))
-        case StateTransition(uid) => transition(uid)
-        case r: Return =>
-          Assign(NoSymbol, Call(paths.popFramePath, Nil ne_:: Nil)(CallMetadata.defaultMlsFun), r)
+        case PreStateTransition(uid, oldUid, rest) =>
+          prePcAssign(intLit(uid), oldUid.map(intLit(_)), applyBlock(rest))
+        case StateTransition(uid, resetOld) =>
+          if resetOld then
+            blockBuilder
+              .assignFieldN(paths.runtimePath, paths.oldPcIdent, intLit(-1))
+              .rest(transition(uid))
+          else transition(uid)
+        case r: Return => popFrame(r)
         case _ => super.applyBlock(b)
       override def applyResult(r: Result)(k: Result => Block): Block = r match
         case EffectfulResult() if needsStackSafety =>
@@ -785,38 +861,31 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     val resumeArrIndexed = DynSelect(paths.runtimePath.selSN("resumeArr"), getSavedTmp.asSimpleRef, true)
     val plus = State.builtinOpsMap("+").asSimpleRef
     
-    // TODO(dyn)
-    if needsStackSafety then
-      mainBody = blockBuilder
-        .assign(NoSymbol, PureCall(paths.checkDepthPath, Nil))
-        .assign(curDepth, Call(plus, (paths.stackDepthPath.asArg :: intLit(1).asArg :: Nil) ne_:: Nil)(CallMetadata.defaultFun))
-        .rest(mainBody)
-    
     val extraVars = if needsStackSafety then Set(pcVar, curDepth) else Set.single(pcVar)
 
     mainBody = Scoped(
       scopedVars ++ extraVars,
       mainBody)
     
-    if mainBody is blk then blk else
-      // create worker definition
-      val workerDefn = FunDefn(
-        N, workerDfnBms, workerDfnSym, PlainParamList(Param.simple(varsClsSym) :: Nil) :: Nil, mainBody
-      )(N, Nil)
+    // create worker definition
+    val workerDefn = FunDefn(
+      N, workerDfnBms, workerDfnSym, PlainParamList(Param.simple(varsClsSym) :: Nil) :: Nil, mainBody
+    )(N, Nil)
 
-      val tmp = TempSymbol(N)
-      
-      extraDefns.addOne(workerDefn)
+    val tmp = TempSymbol(N)
+    
+    extraDefns.addOne(workerDefn)
 
-      blockBuilder
-        .assignScoped(tmp, varClsInfo.instantiate)
-        .assign(NoSymbol, 
-          Call(
-            paths.pushFramePath,
-            (Value.MemberRef(workerDfnBms, workerDfnSym).asArg :: tmp.asPath.asArg :: Nil) ne_:: Nil
-          )(CallMetadata.defaultMlsFun)
-        )
-        .ret(Call(workerDefn.asPath, (tmp.asPath.asArg :: Nil) ne_:: Nil)(CallMetadata.defaultMlsFun))
+    var wrapperBod = blockBuilder
+      .assignScoped(tmp, varClsInfo.instantiate)
+      .chain: blk =>
+        pushFrame(Value.MemberRef(workerDfnBms, workerDfnSym), tmp.asPath, blk)
+      .ret(Call(workerDefn.asPath, (tmp.asPath.asArg :: Nil) ne_:: Nil)(CallMetadata.defaultMlsFun))
+    
+    if config.stackSafety.isDefined then
+      wrapperBod = AssignField(paths.runtimePath, paths.oldPcIdent, intLit(-1), wrapperBod)(N)
+    
+    wrapperBod
   
   private def translateCtorLike(b: Block, thisPath: Path, isModCtor: Bool)(using h: HandlerCtx, r: HandlerAnalysisRes): Block =
     translateBlock("ctor", b, if isModCtor then HandlerCtx.ModCtor(h.currentBlockIsTrulyNested) else HandlerCtx.Ctor, Set.empty, List.empty)
