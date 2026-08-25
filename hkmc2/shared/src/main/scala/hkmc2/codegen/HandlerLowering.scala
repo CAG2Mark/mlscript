@@ -207,6 +207,10 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
           if !result(uid).resumable && resumable then
             result(uid) = BlockPartition(result(uid).blk, true)
           uid
+        case PreStateTransition(uid, StateTransition(uid1)) if uid === uid1 && result.contains(uid) =>
+          if !result(uid).resumable && resumable then
+            result(uid) = BlockPartition(result(uid).blk, true)
+          uid
         case _ =>
           val id = allocId()
           result(id) = BlockPartition(blk, resumable)
