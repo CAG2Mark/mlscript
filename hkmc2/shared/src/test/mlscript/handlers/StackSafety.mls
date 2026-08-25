@@ -123,22 +123,7 @@ sum(10000)
 //│ });
 //│ return runtime.topLevelTrampoline(1000, $_effectful$_body$_1)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
-//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
-//│     at sum$worker (REPL13:1:630)
-//│     at sum$worker (REPL13:1:780)
-//│     at sum$worker (REPL13:1:780)
-//│     at sum$worker (REPL13:1:780)
-//│     at sum$worker (REPL13:1:780)
-//│     at sum$worker (REPL13:1:780)
-//│     at sum$worker (REPL13:1:780)
-//│     at sum$worker (REPL13:1:780)
-//│     at sum$worker (REPL13:1:780)
-//│     at sum$worker (REPL13:1:780)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:299)
-//│ ═══[RUNTIME ERROR] Expected: '50005000', got: 'undefined'
+//│ = 50005000
 
 
 :stackSafe
@@ -150,20 +135,8 @@ fun foo(f) =
     set ctr += 1
     dummy(f(f))
 foo(foo)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
-//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
-//│     at foo (REPL16:1:1030)
-//│     at foo$worker (REPL16:1:641)
-//│     at foo (REPL16:1:1140)
-//│     at foo$worker (REPL16:1:641)
-//│     at foo (REPL16:1:1140)
-//│     at foo$worker (REPL16:1:641)
-//│     at foo (REPL16:1:1140)
-//│     at foo$worker (REPL16:1:641)
-//│     at foo (REPL16:1:1140)
-//│     at foo$worker (REPL16:1:641)
-//│ ctr = 2854
+//│ = 0
+//│ ctr = 10001
 
 :stackSafe
 :expect 50005000
@@ -173,23 +146,8 @@ val foo =
     else n + f(n-1)
   f(10000)
 foo
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
-//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
-//│     at lambda (REPL20:1:979)
-//│     at lambda$worker (REPL20:1:668)
-//│     at lambda (REPL20:1:1094)
-//│     at lambda$worker (REPL20:1:668)
-//│     at lambda (REPL20:1:1094)
-//│     at lambda$worker (REPL20:1:668)
-//│     at lambda (REPL20:1:1094)
-//│     at lambda$worker (REPL20:1:668)
-//│     at lambda (REPL20:1:1094)
-//│     at lambda$worker (REPL20:1:668)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:299)
-//│ ═══[RUNTIME ERROR] Expected: '50005000', got: 'undefined'
-//│ foo = undefined
+//│ = 50005000
+//│ foo = 50005000
 
 :stackSafe
 :expect 50005000
@@ -200,22 +158,7 @@ fun foo() =
     else n + f(n-1)
   f(10000)
 foo()
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
-//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
-//│     at lambda$$worker1 (REPL24:1:2526)
-//│     at Capture$scope0.f$0 (REPL24:1:2338)
-//│     at lambda$worker (REPL24:1:1214)
-//│     at lambda$$worker1 (REPL24:1:2938)
-//│     at Capture$scope0.f$0 (REPL24:1:2338)
-//│     at lambda$worker (REPL24:1:1214)
-//│     at lambda$$worker1 (REPL24:1:2938)
-//│     at Capture$scope0.f$0 (REPL24:1:2338)
-//│     at lambda$worker (REPL24:1:1214)
-//│     at lambda$$worker1 (REPL24:1:2938)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:299)
-//│ ═══[RUNTIME ERROR] Expected: '50005000', got: 'undefined'
+//│ = 50005000
 
 :stackSafe 100
 :expect 50005000
@@ -225,23 +168,8 @@ val foo =
     else n + f(n-1)
   f(10000)
 foo
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
-//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
-//│     at lambda1 (REPL27:1:986)
-//│     at lambda$worker (REPL27:1:673)
-//│     at lambda1 (REPL27:1:1102)
-//│     at lambda$worker (REPL27:1:673)
-//│     at lambda1 (REPL27:1:1102)
-//│     at lambda$worker (REPL27:1:673)
-//│     at lambda1 (REPL27:1:1102)
-//│     at lambda$worker (REPL27:1:673)
-//│     at lambda1 (REPL27:1:1102)
-//│     at lambda$worker (REPL27:1:673)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:299)
-//│ ═══[RUNTIME ERROR] Expected: '50005000', got: 'undefined'
-//│ foo = undefined
+//│ = 50005000
+//│ foo = 50005000
 
 abstract class Eff with
   fun perform(a): ()
@@ -323,22 +251,7 @@ module A with
     else n + f(n-1)
   val x = f(10000)
 A.x
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
-//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
-//│     at lambda$$worker (REPL40:1:1720)
-//│     at A.f (REPL40:1:1543)
-//│     at lambda$worker (REPL40:1:697)
-//│     at lambda$$worker (REPL40:1:2107)
-//│     at A.f (REPL40:1:1543)
-//│     at lambda$worker (REPL40:1:697)
-//│     at lambda$$worker (REPL40:1:2107)
-//│     at A.f (REPL40:1:1543)
-//│     at lambda$worker (REPL40:1:697)
-//│     at lambda$$worker (REPL40:1:2107)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:299)
-//│ ═══[RUNTIME ERROR] Expected: '50005000', got: 'undefined'
+//│ = 50005000
 
 :re
 fun foo(h) = h.perform(2)
@@ -371,22 +284,7 @@ fun sum(n) =
     n + sum(n - 1)
 fun bad() = sum(10000) + sum(10000)
 bad()
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
-//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
-//│     at sum$worker (REPL49:1:2414)
-//│     at sum$worker (REPL49:1:2566)
-//│     at sum$worker (REPL49:1:2566)
-//│     at sum$worker (REPL49:1:2566)
-//│     at sum$worker (REPL49:1:2566)
-//│     at sum$worker (REPL49:1:2566)
-//│     at sum$worker (REPL49:1:2566)
-//│     at sum$worker (REPL49:1:2566)
-//│     at sum$worker (REPL49:1:2566)
-//│     at sum$worker (REPL49:1:2566)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:299)
-//│ ═══[RUNTIME ERROR] Expected: '100010000', got: 'undefined'
+//│ = 100010000
 
 
 
@@ -493,19 +391,6 @@ fun f(n) =
     f(n-1)
   trivial()
 f(10000)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
-//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
-//│     at f$worker (REPL59:1:777)
-//│     at f$worker (REPL59:1:927)
-//│     at f$worker (REPL59:1:927)
-//│     at f$worker (REPL59:1:927)
-//│     at f$worker (REPL59:1:927)
-//│     at f$worker (REPL59:1:927)
-//│     at f$worker (REPL59:1:927)
-//│     at f$worker (REPL59:1:927)
-//│     at f$worker (REPL59:1:927)
-//│     at f$worker (REPL59:1:927)
 
 abstract class Eff with
   fun raise()
@@ -525,6 +410,55 @@ fun handler_stack(n) =
     handler_stack(n - 1)
   "ok"
 handler_stack(100)
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
 //│ > unhandled error
 //│ > unhandled error
 //│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded

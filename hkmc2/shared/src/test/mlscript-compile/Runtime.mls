@@ -208,13 +208,30 @@ fun resetEffects() =
 fun raisePrintStackEffect(showLocals) =
   mkEffect(PrintStackEffect, showLocals)
 
-fun topLevelTrampoline(stackLimit, body) =
+fun topLevelTrampoline(limit, body) =
   makeNewContTrace()
-  set curEffect = null
-  RuntimeJS.try_catch(body, (err) =>
-    if curEffect === null do throw err
-    handleEffects(curEffect)
-  )
+  if limit !== undefined then
+    set curEffect = null
+    set stackLimit = limit in...
+    set stackDepth = 1 in...
+    set stackHandler = StackDelayHandler in...
+    let result = 
+      RuntimeJS.try_catch(() => enterHandleBlock(StackDelayHandler, body), (err) =>
+        if curEffect === null do throw new Error("Effect crossed through stack safe boundary")
+        handleEffects(curEffect)
+      )
+    while stackResume !== null do
+      let saved = stackResume
+      set
+        stackResume = null
+        stackDepth = 1
+      set result = RuntimeJS.try_catch(saved, err => console.log(curEffect))
+    result
+  else
+    RuntimeJS.try_catch(body, (err) =>
+      if curEffect === null do throw err
+      handleEffects(curEffect)
+    )
 
 fun topLevelEffect(debug) =
   let tr = curEffect
@@ -538,7 +555,9 @@ fun resume(contTrace)(value) =
   if contTrace.resumed do
     throw Error("Multiple resumption")
   set contTrace.resumed = true
-  handleEffects(resumeContTrace(contTrace, value))
+  RuntimeJS.try_catch(() => resumeContTrace(contTrace, value), err =>
+    handleEffects(curEffect)
+  )
 
 fun resumeContTrace(contTrace, value) =
   // Append these onto the resume frames later
