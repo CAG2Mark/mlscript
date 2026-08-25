@@ -334,10 +334,6 @@ fun debugEff(eff) =
     console.log("Not an effect:")
     console.log(eff)
 
-open annotations
-
-// must be inlined for stack safety!
-
 //
 //  contTrace  --> f3 --> f4 --> ...
 //      v
@@ -349,14 +345,14 @@ open annotations
 //      v
 //      h1     --> f1 --> f2 --> ...
 //
-@inline fun pushFrame(fn, vars) =
+fun pushFrame(fn, vars) =
   let newFrame = new mut FunctionContFrame(curContTrace.next, fn, vars)
   if curContTrace.last === curContTrace do
     set curContTrace.last = newFrame
   set curContTrace.next = newFrame
   validateContTrace(curContTrace, "pushFrame")
   
-@inline fun popFrame() =
+fun popFrame() =
   if curContTrace.next === curContTrace.last do
     set curContTrace.last = curContTrace
   set curContTrace.next = curContTrace.next.next
@@ -397,33 +393,31 @@ fun popHandler(tr) =
   validateContTrace(tr, "popHandler")
 
 fun validateContTrace(tr, loc) =
-  if false then ()
-  else
-    fun errorSep =
-      console.log("--------------------------------")
-      console.log("!!! HANDLER VALIDATION ERROR !!!")
-      console.log("--------------------------------")
-      console.log("at:", loc)
-    let remainIter = 100000
-    let realLastHandler = tr
-    while remainIter >= 0 and realLastHandler.nextHandler !== null do
-      set remainIter -= 1
-      set realLastHandler = realLastHandler.nextHandler
-    let realLast = realLastHandler
-    while remainIter >= 0 and realLast.next !== null do
-      set realLast = realLast.next
-    if remainIter < 0 do
-      errorSep
-      throw "INVALID CONT TRACE: infinite loop"
-    if realLast !== tr.last do
-      errorSep
-      console.log("expected last:", realLast)
-      console.dir(tr)
-      throw "INVALID CONT TRACE: last is incorrect"
-    if realLastHandler !== tr.lastHandler do
-      errorSep
-      console.dir(tr)
-      throw "INVALID CONT TRACE: lastHandler is incorrect"
+  fun errorSep =
+    console.log("--------------------------------")
+    console.log("!!! HANDLER VALIDATION ERROR !!!")
+    console.log("--------------------------------")
+    console.log("at:", loc)
+  let remainIter = 100000
+  let realLastHandler = tr
+  while remainIter >= 0 and realLastHandler.nextHandler !== null do
+    set remainIter -= 1
+    set realLastHandler = realLastHandler.nextHandler
+  let realLast = realLastHandler
+  while remainIter >= 0 and realLast.next !== null do
+    set realLast = realLast.next
+  if remainIter < 0 do
+    errorSep
+    throw "INVALID CONT TRACE: infinite loop"
+  if realLast !== tr.last do
+    errorSep
+    console.log("expected last:", realLast)
+    console.dir(tr)
+    throw "INVALID CONT TRACE: last is incorrect"
+  if realLastHandler !== tr.lastHandler do
+    errorSep
+    console.dir(tr)
+    throw "INVALID CONT TRACE: lastHandler is incorrect"
   
 //
 //  contTrace  --> f3 --> f4 --> ...
