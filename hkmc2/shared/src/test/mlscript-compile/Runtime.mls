@@ -217,7 +217,7 @@ fun topLevelTrampoline(limit, body) =
     set stackHandler = StackDelayHandler in...
     let result = 
       RuntimeJS.try_catch(() => enterHandleBlock(StackDelayHandler, body), (err) =>
-        if curEffect === null do throw new Error("Effect crossed through stack safe boundary")
+        checkUnhandledErr(err)
         handleEffects(curEffect)
       )
     while stackResume !== null do
@@ -225,11 +225,13 @@ fun topLevelTrampoline(limit, body) =
       set
         stackResume = null
         stackDepth = 1
-      set result = RuntimeJS.try_catch(saved, err => console.log(curEffect))
+        result = RuntimeJS.try_catch(saved, checkUnhandledErr)
+      if curEffect !== null do
+        set result = handleEffects(curEffect)
     result
   else
     RuntimeJS.try_catch(body, (err) =>
-      if curEffect === null do throw err
+      checkUnhandledErr(err)
       handleEffects(curEffect)
     )
 
@@ -283,7 +285,7 @@ fun showStackTrace(header, tr, debug, showLocals) =
 
 fun showFunctionContChain(cont, hl, vis, reps) =
   if cont is FunctionContFrame then
-    let result = cont.constructor.name + "(" + cont.fn.name + ", pc=" + cont.varsClass.[0]
+    let result = cont.constructor.name + "(" + cont.fn.name + ", pc=" + cont.varsClass.[0] + ", id=" + cont.id
     hl.forEach((m, marker) => if m.has(cont) do set result += ", " + marker)
     if vis.has(cont) then
       set reps = reps + 1
@@ -301,7 +303,7 @@ fun showFunctionContChain(cont, hl, vis, reps) =
 fun showHandlerContChain(cont, hl, vis, reps) =
   if cont is HandlerContFrame then
     let result = cont.handler.constructor.name
-    hl.forEach((m, marker) => if m.has(cont) do set result += ", " + marker)
+    // hl.forEach((m, marker) => if m.has(cont) do set result += ", " + marker)
     if vis.has(cont) then
       set reps = reps + 1
       if reps > 10 do
@@ -368,9 +370,9 @@ fun pushFrame(fn, vars) =
   set curContTrace.next = newFrame
   validateContTrace(curContTrace, "pushFrame")
   
-fun popFrame() =
+fun popFrame(id) =
   if curContTrace.next === null do
-    throw "INVALID CONT TRACE: next was null when popping"
+    throw "INVALID CONT TRACE: next was null when popping " + id
   if curContTrace.next === curContTrace.last do
     set curContTrace.last = curContTrace
   set curContTrace.next = curContTrace.next.next
@@ -409,6 +411,21 @@ fun popHandler(tr) =
     tr.next = tr.nextHandler.next
     tr.nextHandler = tr.nextHandler.nextHandler
   validateContTrace(tr, "popHandler")
+
+fun countFramesInTrace(tr) =
+  let cnt = 0
+  let curSegment = tr
+  fun cntSegment() =
+    while curSegment.next !== null do
+      set curSegment = curSegment.next
+      set cnt += 1
+  cntSegment()
+  while tr.nextHandler !== null do
+    set tr = tr.nextHandler
+    set curSegment = tr
+    cntSegment()
+    set cnt += 1
+  cnt
 
 fun validateContTrace(tr, loc) =
   fun errorSep =
@@ -465,7 +482,7 @@ fun enterHandleBlock(handler, body) =
   ret
 
 fun myDebug(arg) =
-  if false then console.dir(arg, {depth:10})
+  if true then console.dir(arg, {depth:10})
   else ()
 
 mut val handleEffectsCall = 0
@@ -485,8 +502,21 @@ fun handleEffects(cur) =
 
 fun checkUnhandledErr(err) =
   if curEffect === null do
-    console.log("unhandled error")
+    // console.log("unhandled error")
     throw err
+
+fun concatTraces(bottom, top) =
+  let expected = countFramesInTrace(bottom) + countFramesInTrace(top)
+  if bottom.next !== null do
+    set top.last.next = bottom.next
+  if bottom.last !== bottom do
+    set top.last = bottom.last
+  if bottom.nextHandler !== null do
+    set top.lastHandler.nextHandler = bottom.nextHandler
+  if bottom.lastHandler !== bottom do
+    set top.lastHandler = bottom.lastHandler
+  if countFramesInTrace(top) !== expected do
+    throw "Concat is wrong: incorrect number of frames"
 
 // calling conventions:
 // resume, resumeContTrace: throw exceptions when raising an effect, will link the newly called functions to the existing cont trace if an effect is raised
@@ -537,19 +567,8 @@ fun handleEffect(cur) =
     set cur = curEffect
     validateContTrace(cur.contTrace, "frames after handling and effect raised")
     // relink the saved frames
-    if saved.next !== null do
-      set cur.contTrace.last.next = saved.next
-    if saved.last !== saved do
-      set cur.contTrace.last = saved.last
-    if saved.nextHandler !== null do
-      set cur.contTrace.lastHandler.nextHandler = saved.nextHandler
-    if saved.lastHandler !== saved do
-      set cur.contTrace.lastHandler = saved.lastHandler
-    RuntimeJS.try_catch(() => validateContTrace(cur.contTrace, "relinked"), err =>
-      console.log("saved:")
-      console.dir(saved)
-      throw err
-    )
+    concatTraces(saved, cur.contTrace)
+    validateContTrace(cur.contTrace, "relinked")
     cur
   else
     // resume the unlinked handle blocks
@@ -561,9 +580,7 @@ fun resume(contTrace)(value) =
   if contTrace.resumed do
     throw Error("Multiple resumption")
   set contTrace.resumed = true
-  RuntimeJS.try_catch(() => resumeContTrace(contTrace, value), err =>
-    handleEffects(curEffect)
-  )
+  resumeContTrace(contTrace, value)
 
 fun resumeContTrace(contTrace, value) =
   // Append these onto the resume frames later
@@ -574,7 +591,8 @@ fun resumeContTrace(contTrace, value) =
     contTrace.next is FunctionContFrame then
       let curFrame = contTrace.next
       set curEffect = null
-      set value = set stackDepth += 3 in RuntimeJS.try_catch(() => curFrame.resume(value), checkUnhandledErr)
+      set value = set stackDepth += 3 in
+        RuntimeJS.try_catch(() => curFrame.resume(value), err => checkUnhandledErr)
       if curEffect !== null do
         set value = curEffect
       if value is EffectSig then
@@ -584,10 +602,7 @@ fun resumeContTrace(contTrace, value) =
           contTrace.resumed = false
           contTrace.last.next = savedResumeFrames.next
           contTrace.lastHandler.nextHandler = savedResumeFrames.nextHandler
-        if savedResumeFrames.last !== savedResumeFrames do
-          set contTrace.last = savedResumeFrames.last
-        if savedResumeFrames.lastHandler !== savedResumeFrames do
-          set contTrace.lastHandler = savedResumeFrames.lastHandler
+        concatTraces(savedResumeFrames, contTrace)
         validateContTrace(curEffect.contTrace, "resumeContTrace")
         throw EffectRaised("resumeContTrace")
       else () // The frame is popped by the function upon returning

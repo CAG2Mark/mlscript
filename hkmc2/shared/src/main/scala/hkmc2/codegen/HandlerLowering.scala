@@ -469,6 +469,8 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         .toList
         .distinct
   
+  private var popFrameId = 0
+  
   // Denotes whether a block transitions to another state only on the outer level,
   // i.e. should return false iff there is a state transition within an if, label, etc.
   // A precondition is that the state corresponding to the input block has an out-degree
@@ -670,13 +672,14 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
               assign(s, newRhs, applyBlock(rest))
             else super.applyBlock(b)
           case _ => super.applyBlock(b)
-
+    
     def postTransform(transition: BigInt => Block) = new BlockTransformerShallow(SymbolSubst.Id):
       override def applyBlock(b: Block) = b match
         case PreStateTransition(uid, rest) => prePcAssign(Value.Lit(Tree.IntLit(uid)), applyBlock(rest))
         case StateTransition(uid) => transition(uid)
         case r: Return =>
-          Assign(NoSymbol, Call(paths.popFramePath, Nil ne_:: Nil)(CallMetadata.defaultMlsFun), r)
+          popFrameId += 1
+          Assign(NoSymbol, Call(paths.popFramePath, Value.Lit(Tree.StrLit(nme)).asArg :: Nil ne_:: Nil)(CallMetadata.defaultMlsFun), r)
         case _ => super.applyBlock(b)
       override def applyResult(r: Result)(k: Result => Block): Block = r match
         case EffectfulResult() if needsStackSafety =>

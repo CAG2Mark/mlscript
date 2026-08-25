@@ -104,7 +104,7 @@ result
 //│       pc = 1;
 //│     case 1:
 //│       runtime.resumeValue;
-//│       runtime.popFrame();
+//│       runtime.popFrame("handleBlock$");
 //│       return runtime.safeCall(h7.perform("5"));
 //│   }
 //│ };
@@ -117,12 +117,12 @@ result
 //│       runtime.resumeValue = runtime.safeCall(Handler$h$perform$varsClass.at(1)(Handler$h$perform$varsClass.at(2)));
 //│       v = runtime.resumeValue;
 //│       result = result + Handler$h$perform$varsClass.at(2);
-//│       runtime.popFrame();
+//│       runtime.popFrame("Handler$h$perform");
 //│       return v;
 //│     case 1:
 //│       v = runtime.resumeValue;
 //│       result = result + Handler$h$perform$varsClass.at(2);
-//│       runtime.popFrame();
+//│       runtime.popFrame("Handler$h$perform");
 //│       return v;
 //│   }
 //│ };
@@ -170,17 +170,8 @@ result
 //│ runtime.topLevelTrampoline(undefined, $_effectful$_body$_7);
 //│ return result
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
-//│ ═══[RUNTIME ERROR] INVALID CONT TRACE: next was null when popping
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:299)
-//│ ═══[RUNTIME ERROR] Expected: '"54321"', got: 'undefined'
-//│ result = "544"
+//│ = "54321"
+//│ result = "54321"
 
 
 // Tuple matches will not be instrumented
@@ -257,14 +248,7 @@ result
 //│ > mainbody end
 //│ > handler finished
 //│ > handler finished
-//│ > handler finished
-//│ > unhandled error
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
-//│ ═══[RUNTIME ERROR] INVALID CONT TRACE: next was null when popping
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:299)
-//│ ═══[RUNTIME ERROR] Expected: '"Hello World!"', got: 'undefined'
+//│ = "Hello World!"
 
 :expect "Hello World!"
 fun foo(h) =
@@ -305,14 +289,7 @@ result
 //│ > mainbody end
 //│ > handler finished
 //│ > handler finished
-//│ > handler finished
-//│ > unhandled error
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
-//│ ═══[RUNTIME ERROR] INVALID CONT TRACE: next was null when popping
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:299)
-//│ ═══[RUNTIME ERROR] Expected: '"Hello World!"', got: 'undefined'
+//│ = "Hello World!"
 
 // Float out definitions
 handle h = Effect with
@@ -492,28 +469,28 @@ handle h = Eff with
   fun perform()(k) = k(())
 foo(h)
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.487: 	    module A with
+//│ ║  l.464: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.483: 	    module A with
+//│ ║  l.460: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.479: 	    module A with
+//│ ║  l.456: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.475: 	    module A with
+//│ ║  l.452: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.475: 	    module A with
+//│ ║  l.452: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.479: 	    module A with
+//│ ║  l.456: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.483: 	    module A with
+//│ ║  l.460: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.487: 	    module A with
+//│ ║  l.464: 	    module A with
 //│ ╙──       	           ^
 //│ = 123
 

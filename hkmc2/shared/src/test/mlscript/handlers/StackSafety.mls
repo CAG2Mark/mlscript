@@ -22,13 +22,13 @@ hi(0)
 //│   hi$varsClass.at(0);
 //│   scrut = hi$varsClass.at(1) === 0;
 //│   if (scrut === true) {
-//│     runtime.popFrame();
+//│     runtime.popFrame("hi");
 //│     return 0
 //│   }
 //│   {
 //│     let tmp1;
 //│     tmp = hi$varsClass.at(1) - 1;
-//│     runtime.popFrame();
+//│     runtime.popFrame("hi");
 //│     tmp1 = [
 //│       0,
 //│       tmp
@@ -79,7 +79,7 @@ sum(10000)
 //│     case 0:
 //│       scrut = sum$varsClass.at(1) === 0;
 //│       if (scrut === true) {
-//│         runtime.popFrame();
+//│         runtime.popFrame("sum");
 //│         return 0
 //│       }
 //│       {
@@ -98,7 +98,7 @@ sum(10000)
 //│       }
 //│     case 1:
 //│       tmp1 = runtime.resumeValue;
-//│       runtime.popFrame();
+//│       runtime.popFrame("sum");
 //│       return sum$varsClass.at(1) + tmp1;
 //│   }
 //│ };
@@ -223,7 +223,6 @@ handle h = Eff with
       else n + f(n-1)
     resume(f(10000))
 foo(h)
-//│ > unhandled error
 //│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
 
 :stackSafe
@@ -305,59 +304,8 @@ fun handler_stack(n) =
     handler_stack(n - 1)
   "ok"
 handler_stack(100)
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+//│ = "ok"
+//│ FAILURE: Unexpected lack of runtime error
 
 
 // This test was failing non-deterministically due to handler state not being properly reset.
@@ -383,66 +331,4 @@ fun handler_stack(n) =
     handler_stack(n - 1)
   "ok"
 handler_stack(M)
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ > unhandled error
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
-//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
-//│     at shift_stack$worker (REPL70:1:1514)
-//│     at shift_stack$worker (REPL70:1:1657)
-//│     at shift_stack$worker (REPL70:1:1657)
-//│     at shift_stack$worker (REPL70:1:1657)
-//│     at shift_stack$worker (REPL70:1:1657)
-//│     at shift_stack$worker (REPL70:1:1657)
-//│     at shift_stack$worker (REPL70:1:1657)
-//│     at shift_stack$worker (REPL70:1:1657)
-//│     at shift_stack$worker (REPL70:1:1657)
-//│     at shift_stack$worker (REPL70:1:1657)
+//│ = "ok"
