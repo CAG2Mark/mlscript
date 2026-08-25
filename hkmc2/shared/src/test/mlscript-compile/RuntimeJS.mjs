@@ -15,9 +15,6 @@ const RuntimeJS = {
     try { return computation() }
     catch (error) { return onError(error) }
   },
-  is_stackoverflow(err) {
-    return err instanceof RangeErrorreturn && err.message === "Maximum call stack size exceeded"
-  },
   symbols: {
     definitionMetadata: Symbol.for("mlscript.definitionMetadata"),
     prettyPrint: Symbol.for("mlscript.prettyPrint")

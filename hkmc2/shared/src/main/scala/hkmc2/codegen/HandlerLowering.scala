@@ -323,11 +323,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
           def doCall(sym: DefinitionSymbol[?], args: List[List[Arg]]) =
             if isKnownCall(sym, args) then doNewEffectPartition(r, k(paths.resumeValue))
             else fallback
-          val enterHandleBlockPath = paths.enterHandleBlockPath
           r match
-          case Call(`enterHandleBlockPath`, _) => // explicitly handle this case
-            needsStackSafety = true
-            fallback
           case r @ EffectfulResult() =>
             needsStackSafety = true
             if !config.stackSafety.isDefined then doNewEffectPartition(r, k(paths.resumeValue)) else r match
@@ -339,7 +335,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
           case Call(Value.SimpleRef(_: BuiltinSymbol), _) => super.applyResult(r)(k)
           case _: Call =>
             needsStackSafety = true
-            fallback
+            doNewRetryablePartition(r, k(paths.resumeValue))
           case _ => super.applyResult(r)(k)
       
       // If current block contains direct effectful result the following call will early exit.
