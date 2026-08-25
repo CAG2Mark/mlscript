@@ -532,10 +532,10 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
    *    c) translate code in current block (post translate)
    */
   
-  case class VarsArrayInfo(mp: Map[LocalVarSymbol, Int]):
-    def select(varClassPath: Path)(local: LocalVarSymbol) =
+  case class VarsArrayInfo(mp: Map[ValueSymbol, Int]):
+    def select(varClassPath: Path)(local: ValueSymbol) =
       DynSelect(varClassPath, Value.Lit(Tree.IntLit(mp(local))), true)
-    def assign(varClassPath: Path)(local: LocalVarSymbol, value: Result, rest: Block) =
+    def assign(varClassPath: Path)(local: ValueSymbol, value: Result, rest: Block) =
       AssignDynField(varClassPath, Value.Lit(Tree.IntLit(mp(local))), true, value, rest)
     def instantiate =
       val inv = mp.toList.iterator.map((a, b) => (b, a)).toMap
@@ -545,7 +545,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     def readPc(varClassPath: Path) = DynSelect(varClassPath, Value.Lit(Tree.IntLit(0)), true)
     def assignPc(varClassPath: Path)(value: Path, rest: Block) = AssignDynField(varClassPath, Value.Lit(Tree.IntLit(0)), true, value, rest)
     
-  private def createVarClass(nme: String, vars: Iterable[LocalVarSymbol]): VarsArrayInfo =
+  private def createVarClass(nme: String, vars: Iterable[ValueSymbol]): VarsArrayInfo =
     val mp = vars.toArray.sortBy(_.uid).zipWithIndex.map:
         case (sym, idx) => (sym, idx + 1)
       .toMap
@@ -553,10 +553,10 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
   
   private val extraDefns: ListBuffer[Defn] = ListBuffer()
 
-  private def translateBlock(nme: String, blk: Block, h: HandlerCtx, scopedVars: collection.Set[ScopedSymbol], extraRestoreVars: List[LocalVarSymbol]): Block =
+  private def translateBlock(nme: String, blk: Block, h: HandlerCtx, scopedVars: collection.Set[ScopedSymbol], extraRestoreVars: List[ValueSymbol]): Block =
     given HandlerCtx = h
 
-    def translateFunLike(fun: FunDefn, funcPath: Path, thisPath: Option[Path], debugNme: Str) =
+    def translateFunLike(fun: FunDefn, funcPath: Path, thisPath: Option[Path], debugNme: Str, extraRestoreVars: List[ValueSymbol]) =
       val scopedVars = fun.body.scopedVars
       val varList = scopedVars.collect:
         case sym: LocalVarSymbol => sym
@@ -571,7 +571,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         intLit(pl.params.length) :: pl.params.map(p => p.sym.asSimpleRef)
       val newCtx = HandlerCtx.FunctionLike(FunctionCtx(funcPath, thisPath, ResumeInfo(rtArgLists, sortedVars, L(fun.sym)),
         DebugInfo(debugNme, if opt.debug then debugInfoSym.asSimpleRef else unit), thisPath.isDefined && fun.params.isEmpty))
-      val bod2 = translateBlock(fun.dSym.nme, fun.body, newCtx, scopedVars, fun.params.flatMap(_.paramSyms))
+      val bod2 = translateBlock(fun.dSym.nme, fun.body, newCtx, scopedVars, extraRestoreVars ::: fun.params.flatMap(_.paramSyms))
       val fun2 = if fun.body is bod2 then fun else
         FunDefn(fun.owner, fun.sym, fun.dSym, fun.params, bod2)(fun.configOverride, Annot.Inline :: fun.annotations)
       (debugInfoSym, debugInfo, fun2)
@@ -588,7 +588,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         case fun: FunDefn =>
           if h.currentBlockIsTrulyNested then
             raise(lifterReport(msg"Unexpected nested function: lambdas may not function correctly." -> fun.sym.toLoc :: Nil))
-          val (debugInfoSym, debugInfo, fun2) = translateFunLike(fun, fun.sym.asMemberRef(fun.dSym), N, fun.sym.nme)
+          val (debugInfoSym, debugInfo, fun2) = translateFunLike(fun, fun.sym.asMemberRef(fun.dSym), N, fun.sym.nme, Nil)
           if opt.debug then Scoped(Set.single(debugInfoSym), Assign(debugInfoSym, Tuple(false, debugInfo), k(fun2))) else k(fun2)
         case defn @ ClsLikeDefn(owner, isym, sym, ctorSym, kind, paramsOpt, auxParams, parentPath, methods, privateFields, publicFields, preCtor, ctor, companion, bufferable) =>
           if h.currentBlockIsTrulyNested then
@@ -596,13 +596,13 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
           val debugInfos = mutable.ArrayBuffer.empty[(TempSymbol, List[Arg])]
           val newMtds = methods.map: f =>
             val (debugInfoSym, debugInfo, fun2) = translateFunLike(f, isym.asThis.sel(new Tree.Ident(f.sym.nme), f.dSym),
-              S(isym.asThis), s"${sym.nme}#${f.sym.nme}")
+              S(isym.asThis), s"${sym.nme}#${f.sym.nme}", isym :: Nil)
             debugInfos += debugInfoSym -> debugInfo
             fun2
           val companion2 = companion.map: bod =>
             val newMtds = bod.methods.map: f =>
               val (debugInfoSym, debugInfo, fun2) = translateFunLike(f, bod.isym.asThis.sel(new Tree.Ident(f.sym.nme), f.dSym),
-                S(bod.isym.asThis), s"${sym.nme}.${f.sym.nme}")
+                S(bod.isym.asThis), s"${sym.nme}.${f.sym.nme}", isym :: Nil)
               debugInfos += debugInfoSym -> debugInfo
               fun2
             // We cannot use this bc there is no subblock transform...
@@ -611,11 +611,11 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
             // However, JSBuilder inserts extra statements between preCtor and ctor and it's not possible to replicate the exact behavior
             // without many special handling.
             val newCtor = if opt.doNotInstrumentTopLevelModCtor && !h.currentBlockIsTrulyNested then bod.ctor else
-              translateCtorLike(bod.ctor, bod.isym.asThis, true)
+              translateCtorLike(bod.ctor, bod.isym, true)
             tl.log(s"companion name: ${bod.isym.nme}")
             ClsLikeBody(bod.isym, newMtds, bod.privateFields, bod.publicFields, newCtor, bod.annotations)
           val c2 = ClsLikeDefn(owner, isym, sym, ctorSym, kind, paramsOpt, auxParams, parentPath, newMtds, privateFields, publicFields,
-            translateCtorLike(preCtor, isym.asThis, false), translateCtorLike(ctor, isym.asThis, false), companion2, bufferable)(defn.configOverride, defn.annotations)
+            translateCtorLike(preCtor, isym, false), translateCtorLike(ctor, isym, false), companion2, bufferable)(defn.configOverride, defn.annotations)
           if opt.debug then
             Scoped(debugInfos.map(_._1).toSet, debugInfos.foldRight(k(c2)): (elem, blk) =>
               Assign(elem._1, Tuple(false, elem._2), blk))
@@ -662,6 +662,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
       new BlockTransformerShallow(SymbolSubst.Id):
         override def applyPath(p: Path)(k: Path => Block): Block = p match
           case Value.SimpleRef(sym: LocalVarSymbol) => if varsSet.contains(sym) then k(sel(sym)) else super.applyPath(p)(k)
+          case Value.This(sym: InnerSymbol) => if varsSet.contains(sym) then k(sel(sym)) else super.applyPath(p)(k)
           case _ => super.applyPath(p)(k)
         override def applyBlock(b: Block): Block = b match
           case Assign(s: LocalVarSymbol, rhs, rest) => 
@@ -787,8 +788,8 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
         )
         .ret(Call(workerDefn.asPath, (tmp.asPath.asArg :: Nil) ne_:: Nil)(CallMetadata.defaultMlsFun))
   
-  private def translateCtorLike(b: Block, thisPath: Path, isModCtor: Bool)(using h: HandlerCtx): Block =
-    translateBlock("ctor", b, if isModCtor then HandlerCtx.ModCtor(h.currentBlockIsTrulyNested) else HandlerCtx.Ctor, Set.empty, List.empty)
+  private def translateCtorLike(b: Block, thisSym: InnerSymbol, isModCtor: Bool)(using h: HandlerCtx): Block =
+    translateBlock("ctor", b, if isModCtor then HandlerCtx.ModCtor(h.currentBlockIsTrulyNested) else HandlerCtx.Ctor, Set.empty, thisSym :: Nil)
     
   /**
    * These functions does not recurse into nested definitions

@@ -10,26 +10,16 @@
 :effectHandlers
 :lift
 
-let r
-handle h = Object with
-  fun raise()(k) = set r = k
-fun f(x) =
-  h.raise()
-  h.raise()
-  h.raise()
-  h.raise()
-  print("hi")
-f(0)
-//│ r = fun
-
-r()
-r()
-r()
-r()
-//│ > hi
-
+// functions and lambdas inside handlers
 :stackSafe 100
-fun sum(n) =
-  if n <= 0 then 0 else n + sum(n - 1)
-sum(100000)
-//│ = 5000050000
+:expect 50005000
+fun foo(h) = h.perform()
+handle h = Object with
+  fun perform()(resume) =
+    let f = ()
+    set f = n =>
+      if n <= 0 then 0
+      else n + f(n-1)
+    resume(f(10000))
+foo(h)
+//│ = 50005000

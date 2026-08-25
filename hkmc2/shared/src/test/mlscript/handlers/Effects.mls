@@ -170,8 +170,17 @@ result
 //│ runtime.topLevelTrampoline(undefined, $_effectful$_body$_7);
 //│ return result
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ = "54321"
-//│ result = "54321"
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] INVALID CONT TRACE: next was null when popping
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:299)
+//│ ═══[RUNTIME ERROR] Expected: '"54321"', got: 'undefined'
+//│ result = "544"
 
 
 // Tuple matches will not be instrumented
@@ -248,7 +257,14 @@ result
 //│ > mainbody end
 //│ > handler finished
 //│ > handler finished
-//│ = "Hello World!"
+//│ > handler finished
+//│ > unhandled error
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] INVALID CONT TRACE: next was null when popping
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:299)
+//│ ═══[RUNTIME ERROR] Expected: '"Hello World!"', got: 'undefined'
 
 :expect "Hello World!"
 fun foo(h) =
@@ -289,7 +305,14 @@ result
 //│ > mainbody end
 //│ > handler finished
 //│ > handler finished
-//│ = "Hello World!"
+//│ > handler finished
+//│ > unhandled error
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] INVALID CONT TRACE: next was null when popping
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:299)
+//│ ═══[RUNTIME ERROR] Expected: '"Hello World!"', got: 'undefined'
 
 // Float out definitions
 handle h = Effect with
@@ -469,28 +492,28 @@ handle h = Eff with
   fun perform()(k) = k(())
 foo(h)
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.464: 	    module A with
+//│ ║  l.487: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.460: 	    module A with
+//│ ║  l.483: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.456: 	    module A with
+//│ ║  l.479: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.452: 	    module A with
+//│ ║  l.475: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.452: 	    module A with
+//│ ║  l.475: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.456: 	    module A with
+//│ ║  l.479: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.460: 	    module A with
+//│ ║  l.483: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[INTERNAL ERROR] Unexpected nested class: lambdas may not function correctly.
-//│ ║  l.464: 	    module A with
+//│ ║  l.487: 	    module A with
 //│ ╙──       	           ^
 //│ = 123
 

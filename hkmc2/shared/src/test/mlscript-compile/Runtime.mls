@@ -369,6 +369,8 @@ fun pushFrame(fn, vars) =
   validateContTrace(curContTrace, "pushFrame")
   
 fun popFrame() =
+  if curContTrace.next === null do
+    throw "INVALID CONT TRACE: next was null when popping"
   if curContTrace.next === curContTrace.last do
     set curContTrace.last = curContTrace
   set curContTrace.next = curContTrace.next.next
@@ -536,14 +538,18 @@ fun handleEffect(cur) =
     validateContTrace(cur.contTrace, "frames after handling and effect raised")
     // relink the saved frames
     if saved.next !== null do
-      set
-        cur.contTrace.last.next = saved.next
-        cur.contTrace.last = saved.last
+      set cur.contTrace.last.next = saved.next
+    if saved.last !== saved do
+      set cur.contTrace.last = saved.last
     if saved.nextHandler !== null do
-      set
-        cur.contTrace.lastHandler.nextHandler = saved.nextHandler
-        cur.contTrace.lastHandler = saved.lastHandler
-    validateContTrace(cur.contTrace, "relinked")
+      set cur.contTrace.lastHandler.nextHandler = saved.nextHandler
+    if saved.lastHandler !== saved do
+      set cur.contTrace.lastHandler = saved.lastHandler
+    RuntimeJS.try_catch(() => validateContTrace(cur.contTrace, "relinked"), err =>
+      console.log("saved:")
+      console.dir(saved)
+      throw err
+    )
     cur
   else
     // resume the unlinked handle blocks

@@ -14,19 +14,22 @@ h1.perform("hi")
 h1.perform("hello")
 //│ > performing hi
 //│ > performing hello
-//│ = [["ok"]]
+//│ > unhandled error
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] INVALID CONT TRACE: next was null when popping
 
 :e
 h1
 //│ ╔══[COMPILATION ERROR] Name not found: h1
-//│ ║  l.20: 	h1
+//│ ║  l.23: 	h1
 //│ ╙──      	^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 :e
 h1.perform("oops")
 //│ ╔══[COMPILATION ERROR] Name not found: h1
-//│ ║  l.27: 	h1.perform("oops")
+//│ ║  l.30: 	h1.perform("oops")
 //│ ╙──      	^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
@@ -48,7 +51,11 @@ h.write(1)
 h.write(2)
 //│ > [10, ()]
 //│ > [10, ()]
-//│ = [1, [2, ()]]
+//│ > unhandled error
+//│ > unhandled error
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] INVALID CONT TRACE: next was null when popping
 
 handle h = Object with
   fun write(x)(k) = enterHandleBlock of this, () =>
@@ -56,7 +63,11 @@ handle h = Object with
     [x, k(())]
 h.write(1)
 h.write(2)
-//│ = [10, [1, [10, [2, ()]]]]
+//│ > unhandled error
+//│ > unhandled error
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] INVALID CONT TRACE: next was null when popping
 
 // deep handler
 :todo
@@ -73,10 +84,10 @@ handle h2 = Effect with
   h2.perform(3)
 ]
 //│ ╔══[COMPILATION ERROR] Name not found: h2
-//│ ║  l.67: 	      then h2.perform(arg - 1) + " " + arg
+//│ ║  l.78: 	      then h2.perform(arg - 1) + " " + arg
 //│ ╙──      	           ^^
 //│ ╔══[COMPILATION ERROR] Illegal position for prefix keyword 'else'.
-//│ ║  l.68: 	      else "0"
+//│ ║  l.79: 	      else "0"
 //│ ╙──      	      ^^^^
 //│ > –––
 //│ > performing 2
@@ -109,9 +120,12 @@ in res.toString()
 //│ > B hola amigos
 //│ > unhandled error
 //│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
+//│ > unhandled error
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
-//│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
+//│ ═══[RUNTIME ERROR] INVALID CONT TRACE: next was null when popping
 
 
 // This is equivalent to the above, with all calls to h.perform expanded
@@ -143,9 +157,10 @@ in res.toString()
 //│ > B hola amigos
 //│ > unhandled error
 //│ > unhandled error
+//│ > unhandled error
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
-//│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
+//│ ═══[RUNTIME ERROR] INVALID CONT TRACE: next was null when popping
 
 :sjs
 let str = ""
@@ -330,9 +345,5 @@ str
 //│ }
 //│ return str;
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ > unhandled error
-//│ > unhandled error
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
-//│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
+//│ = "BABABA"
 //│ str = "BABABA"
