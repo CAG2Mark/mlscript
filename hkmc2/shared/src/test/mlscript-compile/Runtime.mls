@@ -368,7 +368,7 @@ fun pushFrame(fn, vars) =
   if curContTrace.last === curContTrace do
     set curContTrace.last = newFrame
   set curContTrace.next = newFrame
-  validateContTrace(curContTrace, "pushFrame")
+  // validateContTrace(curContTrace, "pushFrame")
   
 fun popFrame(id) =
   if curContTrace.next === null do
@@ -376,7 +376,7 @@ fun popFrame(id) =
   if curContTrace.next === curContTrace.last do
     set curContTrace.last = curContTrace
   set curContTrace.next = curContTrace.next.next
-  validateContTrace(curContTrace, "popFrame")
+  // validateContTrace(curContTrace, "popFrame")
 
 data class EffectRaised(str)
 
@@ -410,7 +410,7 @@ fun popHandler(tr) =
   set
     tr.next = tr.nextHandler.next
     tr.nextHandler = tr.nextHandler.nextHandler
-  validateContTrace(tr, "popHandler")
+  // validateContTrace(tr, "popHandler")
 
 fun countFramesInTrace(tr) =
   let cnt = 0
@@ -476,7 +476,7 @@ fun enterHandleBlock(handler, body) =
     set curContTrace.lastHandler = handlerFrame
   if curContTrace.last === curContTrace do
     set curContTrace.last = handlerFrame
-  validateContTrace(curContTrace, "enterHandleBlock")
+  // validateContTrace(curContTrace, "enterHandleBlock")
   let ret = body()
   popHandler(curContTrace)
   ret
@@ -525,7 +525,7 @@ fun concatTraces(bottom, top) =
 
 // return either new effect, final result or the same continuation if there is no handler
 fun handleEffect(cur) =
-  validateContTrace(cur.contTrace, "handleEffect start")
+  // validateContTrace(cur.contTrace, "handleEffect start")
   // debugEff(cur)
   // find the handle block corresponding to the current effect
   let prevHandlerFrame = cur.contTrace
@@ -550,7 +550,7 @@ fun handleEffect(cur) =
   if cur.contTrace.last === handlerFrame do set saved.last = saved
   if cur.contTrace.lastHandler === handlerFrame do set saved.lastHandler = saved
   
-  validateContTrace(saved, "saved cont frame")
+  // validateContTrace(saved, "saved cont frame")
   
   set
     cur.contTrace.last = handlerFrame
@@ -558,17 +558,17 @@ fun handleEffect(cur) =
     handlerFrame.next = null
     handlerFrame.nextHandler = null
   
-  validateContTrace(cur.contTrace, "frames passed to handler")
+  // validateContTrace(cur.contTrace, "frames passed to handler")
   
   // handle the effect
   set curEffect = null
   let tmp = set stackDepth += 2 in RuntimeJS.try_catch(() => cur.handlerFun(resume(cur.contTrace)), checkUnhandledErr)
   if curEffect !== null then
     set cur = curEffect
-    validateContTrace(cur.contTrace, "frames after handling and effect raised")
+    // validateContTrace(cur.contTrace, "frames after handling and effect raised")
     // relink the saved frames
     concatTraces(saved, cur.contTrace)
-    validateContTrace(cur.contTrace, "relinked")
+    // validateContTrace(cur.contTrace, "relinked")
     cur
   else
     // resume the unlinked handle blocks
@@ -603,7 +603,7 @@ fun resumeContTrace(contTrace, value) =
           contTrace.last.next = savedResumeFrames.next
           contTrace.lastHandler.nextHandler = savedResumeFrames.nextHandler
         concatTraces(savedResumeFrames, contTrace)
-        validateContTrace(curEffect.contTrace, "resumeContTrace")
+        // validateContTrace(curEffect.contTrace, "resumeContTrace")
         throw EffectRaised("resumeContTrace")
       else () // The frame is popped by the function upon returning
     contTrace.nextHandler is HandlerContFrame then
