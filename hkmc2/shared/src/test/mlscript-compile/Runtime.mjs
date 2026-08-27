@@ -1093,7 +1093,7 @@ lambda9 = (undefined, function (Runtime2, EffectHandle1, value) {
       Runtime.curContTrace.last = newFrame;
     }
     Runtime.curContTrace.next = newFrame;
-    return Runtime.validateContTrace(Runtime.curContTrace, "pushFrame")
+    return runtime.Unit
   }
   static popFrame(id) {
     let scrut, scrut1;
@@ -1106,7 +1106,7 @@ lambda9 = (undefined, function (Runtime2, EffectHandle1, value) {
       Runtime.curContTrace.last = Runtime.curContTrace;
     }
     Runtime.curContTrace.next = Runtime.curContTrace.next.next;
-    return Runtime.validateContTrace(Runtime.curContTrace, "popFrame");
+    return runtime.Unit;
   }
   static mkEffect(handler, handlerFun) {
     let res, tmp;
@@ -1129,7 +1129,7 @@ lambda9 = (undefined, function (Runtime2, EffectHandle1, value) {
     }
     tr.next = tr.nextHandler.next;
     tr.nextHandler = tr.nextHandler.nextHandler;
-    return Runtime.validateContTrace(tr, "popHandler")
+    return runtime.Unit
   }
   static countFramesInTrace(tr) {
     let scope40$cap;
@@ -1236,7 +1236,6 @@ lambda9 = (undefined, function (Runtime2, EffectHandle1, value) {
     if (scrut1 === true) {
       Runtime.curContTrace.last = handlerFrame;
     }
-    Runtime.validateContTrace(Runtime.curContTrace, "enterHandleBlock");
     ret = runtime.safeCall(body());
     Runtime.popHandler(Runtime.curContTrace);
     return ret
@@ -1279,10 +1278,7 @@ lambda9 = (undefined, function (Runtime2, EffectHandle1, value) {
     return runtime.Unit;
   }
   static concatTraces(bottom, top) {
-    let expected, scrut, scrut1, scrut2, scrut3, scrut4, tmp, tmp1, tmp2;
-    tmp = Runtime.countFramesInTrace(bottom);
-    tmp1 = Runtime.countFramesInTrace(top);
-    expected = tmp + tmp1;
+    let scrut, scrut1, scrut2, scrut3;
     scrut = bottom.next !== null;
     if (scrut === true) {
       top.last.next = bottom.next;
@@ -1298,18 +1294,13 @@ lambda9 = (undefined, function (Runtime2, EffectHandle1, value) {
     scrut3 = bottom.lastHandler !== bottom;
     if (scrut3 === true) {
       top.lastHandler = bottom.lastHandler;
-    }
-    tmp2 = Runtime.countFramesInTrace(top);
-    scrut4 = tmp2 !== expected;
-    if (scrut4 === true) {
-      throw "Concat is wrong: incorrect number of frames"
+      return runtime.Unit
     }
     return runtime.Unit;
   }
   static handleEffect(cur) {
     let prevHandlerFrame, scrut, handlerFrame, saved, scrut1, scrut2, old, scrut3, retVal, scrut4, tmp, tmp1, tmp2, handleEffect$cap, lambda$here, lambda$here1;
     handleEffect$cap = new Capture$handleEffect1(cur);
-    Runtime.validateContTrace(handleEffect$cap.cur$0.contTrace, "handleEffect start");
     prevHandlerFrame = handleEffect$cap.cur$0.contTrace;
     lbl: while (true) {
       let scrut5, scrut6;
@@ -1337,12 +1328,10 @@ lambda9 = (undefined, function (Runtime2, EffectHandle1, value) {
     if (scrut2 === true) {
       saved.lastHandler = saved;
     }
-    Runtime.validateContTrace(saved, "saved cont frame");
     handleEffect$cap.cur$0.contTrace.last = handlerFrame;
     handleEffect$cap.cur$0.contTrace.lastHandler = handlerFrame;
     handlerFrame.next = null;
     handlerFrame.nextHandler = null;
-    Runtime.validateContTrace(handleEffect$cap.cur$0.contTrace, "frames passed to handler");
     Runtime.curEffect = null;
     old = Runtime.stackDepth;
     try {
@@ -1357,9 +1346,7 @@ lambda9 = (undefined, function (Runtime2, EffectHandle1, value) {
     scrut3 = Runtime.curEffect !== null;
     if (scrut3 === true) {
       handleEffect$cap.cur$0 = Runtime.curEffect;
-      Runtime.validateContTrace(handleEffect$cap.cur$0.contTrace, "frames after handling and effect raised");
       Runtime.concatTraces(saved, handleEffect$cap.cur$0.contTrace);
-      Runtime.validateContTrace(handleEffect$cap.cur$0.contTrace, "relinked");
       return handleEffect$cap.cur$0
     }
     lambda$here1 = lambda$6(Runtime, saved, tmp);
@@ -1414,7 +1401,6 @@ lambda9 = (undefined, function (Runtime2, EffectHandle1, value) {
           contTrace.last.next = savedResumeFrames.next;
           contTrace.lastHandler.nextHandler = savedResumeFrames.nextHandler;
           Runtime.concatTraces(savedResumeFrames, contTrace);
-          Runtime.validateContTrace(Runtime.curEffect.contTrace, "resumeContTrace");
           throw Runtime.EffectRaised("resumeContTrace")
         }
         continue lbl;

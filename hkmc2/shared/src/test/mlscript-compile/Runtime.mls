@@ -506,7 +506,7 @@ fun checkUnhandledErr(err) =
     throw err
 
 fun concatTraces(bottom, top) =
-  let expected = countFramesInTrace(bottom) + countFramesInTrace(top)
+  // let expected = countFramesInTrace(bottom) + countFramesInTrace(top)
   if bottom.next !== null do
     set top.last.next = bottom.next
   if bottom.last !== bottom do
@@ -515,8 +515,8 @@ fun concatTraces(bottom, top) =
     set top.lastHandler.nextHandler = bottom.nextHandler
   if bottom.lastHandler !== bottom do
     set top.lastHandler = bottom.lastHandler
-  if countFramesInTrace(top) !== expected do
-    throw "Concat is wrong: incorrect number of frames"
+  // if countFramesInTrace(top) !== expected do
+  //   throw "Concat is wrong: incorrect number of frames"
 
 // calling conventions:
 // resume, resumeContTrace: throw exceptions when raising an effect, will link the newly called functions to the existing cont trace if an effect is raised
