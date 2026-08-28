@@ -604,7 +604,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
           val companion2 = companion.map: bod =>
             val newMtds = bod.methods.map: f =>
               val (debugInfoSym, debugInfo, fun2) = translateFunLike(f, bod.isym.asThis.sel(new Tree.Ident(f.sym.nme), f.dSym),
-                S(bod.isym.asThis), s"${sym.nme}.${f.sym.nme}", isym :: Nil)
+                S(bod.isym.asThis), s"${sym.nme}.${f.sym.nme}", bod.isym :: Nil)
               debugInfos += debugInfoSym -> debugInfo
               fun2
             // We cannot use this bc there is no subblock transform...
@@ -747,7 +747,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
     
     mainBody = varRewriter(varClsInfo, varsClsSym).applyBlock(mainBody)
     mainBody = Assign(pcVar, varClsInfo.readPc(varsClsSym.asPath), mainBody)
-        
+    
     val getSavedTmp = freshTmp("saveOffset")
     def getSaved(off: BigInt): (Block => Block, Path) =
       if off == 0 then
@@ -840,7 +840,6 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
 
 
   def translateProgram(prog: Program): Program =
-    println("doing handler lowering")
     extraDefns.clear()
     val ctx = HandlerCtx.TopLevel
     var transformed = blockBuilder

@@ -11,6 +11,8 @@ import Elaborator.*
 
 
 import CompilerCache.*
+import hkmc2.Config.EffectHandlers
+import hkmc2.Config.StackSafety
 
 
 class CompilerCtx(
@@ -72,8 +74,10 @@ class CompilerCtx(
       val state = new Elaborator.State
       given Elaborator.State = state
 
-      given Config = rootConfig
-
+      given Config = 
+        if file.segments.reverse.tail.head != "nofib" then rootConfig
+        else rootConfig.copy(effectHandlers = S(EffectHandlers(false, S(StackSafety(100)), doNotInstrumentTopLevelModCtor = false)))
+      
       given SymbolPrinter = new SymbolPrinter(
         Scope.empty(Scope.Cfg.default.copy(
           escapeChars = false,

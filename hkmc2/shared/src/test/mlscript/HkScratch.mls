@@ -15,36 +15,52 @@ module A with
   fun f(x) =
     A.f(0)
     A.f(0)
-//│ FAILURE: Unexpected internal error
-//│ FAILURE LOCATION: thisError (Scope.scala:56)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Scope:
-//│     parentOrCfg = Left of Cfg:
-//│       escapeChars = true
-//│       useSuperscripts = false
-//│       includeZero = false
-//│       defaultName = "tmp"
-//│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, tmp:block$res -> block$res1, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:Predef -> Predef)
-//│     defaultImportBindings = HashMap(/storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Predef.mjs -> Predef)
-//│   _2 = class:A⁰
-//│ ═══[INTERNAL ERROR] `this` not in scope: class:A
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let A1, f$worker;
 //│ f$worker = function f$worker(f$varsClass) {
-//│   let pc;
-//│   pc = f$varsClass.at(0);
-//│   switch (pc) {
-//│     case 0:
-//│       f$varsClass[0] = 1;
-//│       runtime.resumeValue = A.f(0);
-//│       runtime.resumeValue;
-//│       runtime.popFrame("f");
-//│       return A.f(0);
-//│     case 1:
-//│       runtime.resumeValue;
-//│       runtime.popFrame("f");
-//│       return A.f(0);
+//│   loopLabel: while (true) {
+//│     let pc;
+//│     pc = f$varsClass.at(0);
+//│     switch (pc) {
+//│       case 0:
+//│         {
+//│           let inlinedVal, tmp, tmp1;
+//│           f$varsClass[0] = 1;
+//│           tmp = [
+//│             0,
+//│             f$varsClass.at(1),
+//│             0
+//│           ];
+//│           runtime.pushFrame(f$worker, tmp);
+//│           inlinedVal = f$worker(tmp);
+//│           runtime.resumeValue = inlinedVal;
+//│           runtime.resumeValue;
+//│           runtime.popFrame("f");
+//│           tmp1 = [
+//│             0,
+//│             f$varsClass.at(1),
+//│             0
+//│           ];
+//│           runtime.pushFrame(f$worker, tmp1);
+//│           f$varsClass = tmp1;
+//│           continue loopLabel;
+//│         }
+//│       case 1:
+//│         {
+//│           let tmp;
+//│           runtime.resumeValue;
+//│           runtime.popFrame("f");
+//│           tmp = [
+//│             0,
+//│             f$varsClass.at(1),
+//│             0
+//│           ];
+//│           runtime.pushFrame(f$worker, tmp);
+//│           f$varsClass = tmp;
+//│           continue loopLabel;
+//│         }
+//│     }
+//│     break;
 //│   }
 //│ };
 //│ runtime.resetEffects();
@@ -56,8 +72,8 @@ module A with
 //│     let tmp;
 //│     tmp = [
 //│       0,
-//│       x,
-//│       ‹MISSING_THIS›
+//│       A,
+//│       x
 //│     ];
 //│     runtime.pushFrame(f$worker, tmp);
 //│     return f$worker(tmp)
@@ -65,22 +81,4 @@ module A with
 //│   toString() { return runtime.render(this); }
 //│   static [definitionMetadata] = ["class", "A"];
 //│ });
-//│ FAILURE: Unexpected internal error
-//│ FAILURE LOCATION: thisError (Scope.scala:56)
-//│ FAILURE INFO: Tuple2:
-//│   _1 = Scope:
-//│     parentOrCfg = Left of Cfg:
-//│       escapeChars = true
-//│       useSuperscripts = false
-//│       includeZero = false
-//│       defaultName = "tmp"
-//│     curThis = S of S of globalThis:globalThis⁰
-//│     bindings = HashMap(member:f$worker -> f$worker, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, tmp:block$res -> block$res1, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, member:A -> A1, module:A -> A, class:A -> A, member:Predef -> Predef)
-//│     defaultImportBindings = HashMap(/storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Predef.mjs -> Predef)
-//│   _2 = class:A⁰
-//│ ═══[INTERNAL ERROR] `this` not in scope: class:A
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ > let A1, f$worker;try { f$worker = function f$worker(f$varsClass) {   runtime.checkArgs("f$worker", 1, true, arguments.length);   let pc;   pc = f$varsClass.at(0);   switch (pc) {     case 0:       f$varsClass[0] = 1;       runtime.resumeValue = runtime.checkCall(A.f(0));       runtime.resumeValue;       runtime.checkCall(runtime.popFrame("f"));       return runtime.checkCall(A.f(0));     case 1:       runtime.resumeValue;       runtime.checkCall(runtime.popFrame("f"));       return runtime.checkCall(A.f(0));   } }; runtime.checkCall(runtime.resetEffects()); globalThis.Object.freeze(class A {   static {     A1 = this   }   static f(x) {     runtime.checkArgs("f", 1, true, arguments.length);     let tmp;     tmp = [       0,       x,       ‹MISSING_THIS›     ];     runtime.checkCall(runtime.pushFrame(f$worker, tmp));     return runtime.checkCall(f$worker(tmp))   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "A"]; });; undefined } catch (e) { console.log('\u200B' + (e.stack ?? e) + '\u200B'); }
-//│ FAILURE: Unexpected compilation error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
-//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Invalid or unexpected token

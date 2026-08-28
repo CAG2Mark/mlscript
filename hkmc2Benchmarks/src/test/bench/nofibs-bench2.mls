@@ -1,24 +1,74 @@
 :js
 :silent
+:effectHandlers
+:stackSafe 100
 
-
-// Comment to run the benchmarks
-:exit
-====================================================================================================
-
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
 
 import "../../../../hkmc2/shared/src/test/mlscript-compile/Benchmark.mls"
 open Benchmark
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
 
 
 let suite = mkSuite()
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:136)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = bm⁰
+//│     _2 = class hkmc2.semantics.VarSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Left of Cfg:
+//│         escapeChars = true
+//│         useSuperscripts = false
+//│         includeZero = false
+//│         defaultName = "tmp"
+//│       curThis = S of S of globalThis:globalThis⁰
+//│       bindings = HashMap(tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res, tmp:Term -> Term, tmp:Block -> Block, tmp:block$res -> block$res1, tmp:option -> option, suite -> suite, member:Benchmark -> Benchmark, member:‹effectful body› -> $_effectful$_body$_, tmp:block$res -> block$res2, member:Predef -> Predef)
+//│       defaultImportBindings = HashMap(/storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Predef.mjs -> Predef, /storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Benchmark.mjs -> Benchmark)
+//│     curThis = S of N
+//│     bindings = HashMap()
+//│     defaultImportBindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'bm'
+//│ ║  l.9: 	fun mkSuite() = new! mut bm.Suite()
+//│ ║       	                         ^^
+//│ ╟── which references the symbol introduced here
+//│ ║  l.2: 	let bm = benchmark
+//│ ╙──     	    ^^
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] ReferenceError: bm is not defined
+//│     at $_effectful$_body$_ (REPL11:1:215)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL11:1:279
+//│     at ContextifyScript.runInThisContext (node:vm:138:12)
+//│     at defaultEval (node:repl:608:24)
+//│     at REPLEvalInContext (node:repl:691:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:66:14)
 
 
 
 
 // need more stack space
-// import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/cryptarithm1.mls"
-// suite.add("cryptarithm1", () => cryptarithm1.main())
+import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/cryptarithm1.mls"
+suite.add("cryptarithm1", () => cryptarithm1.main())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'add')
+//│     at $_effectful$_body$_1 (REPL13:1:2098)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL13:1:2170
+//│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+//│     at async node:repl:658:31
 
 
 // =======================
@@ -26,6 +76,18 @@ let suite = mkSuite()
 
 import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/cryptarithm2.mls"
 suite.add("cryptarithm2", () => cryptarithm2.main())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'add')
+//│     at $_effectful$_body$_2 (REPL15:1:1396)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL15:1:1469
+//│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+//│     at async node:repl:658:31
 
 
 // =======================
@@ -33,6 +95,18 @@ suite.add("cryptarithm2", () => cryptarithm2.main())
 
 import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/cse.mls"
 suite.add("cse", () => cse.main())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'add')
+//│     at $_effectful$_body$_3 (REPL17:1:1342)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL17:1:1406
+//│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+//│     at async node:repl:658:31
 
 
 // =======================
@@ -40,6 +114,18 @@ suite.add("cse", () => cse.main())
 
 import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/eliza.mls"
 suite.add("eliza", () => eliza.main())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'add')
+//│     at $_effectful$_body$_4 (REPL19:1:1354)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL19:1:1420
+//│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+//│     at async node:repl:658:31
 
 
 // =======================
@@ -47,6 +133,18 @@ suite.add("eliza", () => eliza.main())
 
 import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/gcd.mls"
 suite.add("gcd", () => gcd.main())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'add')
+//│     at $_effectful$_body$_5 (REPL21:1:1834)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL21:1:1898
+//│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+//│     at async node:repl:658:31
 
 
 // =======================
@@ -54,6 +152,18 @@ suite.add("gcd", () => gcd.main())
 
 import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/integer.mls"
 suite.add("integer", () => integer.main())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'add')
+//│     at $_effectful$_body$_6 (REPL23:1:1366)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL23:1:1434
+//│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+//│     at async node:repl:658:31
 
 
 // =======================
@@ -61,6 +171,18 @@ suite.add("integer", () => integer.main())
 
 import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/knights.mls"
 suite.add("knights", () => knights.main())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'add')
+//│     at $_effectful$_body$_7 (REPL25:1:1381)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL25:1:1449
+//│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+//│     at async node:repl:658:31
 
 
 // =======================
@@ -68,6 +190,18 @@ suite.add("knights", () => knights.main())
 
 import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/lambda.mls"
 suite.add("lambda", () => lambda.main())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'add')
+//│     at $_effectful$_body$_8 (REPL27:1:1364)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL27:1:1432
+//│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+//│     at async node:repl:658:31
 
 
 // =======================
@@ -75,6 +209,18 @@ suite.add("lambda", () => lambda.main())
 
 import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/lastpiece.mls"
 suite.add("lastpiece", () => lastpiece.main())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'add')
+//│     at $_effectful$_body$_9 (REPL29:1:1378)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL29:1:1449
+//│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+//│     at async node:repl:658:31
 
 
 // =======================
@@ -82,6 +228,18 @@ suite.add("lastpiece", () => lastpiece.main())
 
 import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/life.mls"
 suite.add("life", () => life.main())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'add')
+//│     at $_effectful$_body$_10 (REPL31:1:1853)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL31:1:1920
+//│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+//│     at async node:repl:658:31
 
 
 // =======================
@@ -89,6 +247,18 @@ suite.add("life", () => life.main())
 
 import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/mandel.mls"
 suite.add("mandel", () => mandel.main())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'add')
+//│     at $_effectful$_body$_11 (REPL33:1:1887)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL33:1:1956
+//│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+//│     at async node:repl:658:31
 
 
 // =======================
@@ -96,6 +266,18 @@ suite.add("mandel", () => mandel.main())
 
 import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/mandel2.mls"
 suite.add("mandel2", () => mandel2.main())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'add')
+//│     at $_effectful$_body$_12 (REPL35:1:1915)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL35:1:1985
+//│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+//│     at async node:repl:658:31
 
 
 // =======================
@@ -103,6 +285,18 @@ suite.add("mandel2", () => mandel2.main())
 
 import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/mate.mls"
 suite.add("mate", () => mate.main())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'add')
+//│     at $_effectful$_body$_13 (REPL37:1:1364)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL37:1:1431
+//│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+//│     at async node:repl:658:31
 
 
 // =======================
@@ -110,6 +304,18 @@ suite.add("mate", () => mate.main())
 
 import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/minimax.mls"
 suite.add("minimax", () => minimax.main())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'add')
+//│     at $_effectful$_body$_14 (REPL39:1:1382)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL39:1:1452
+//│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+//│     at async node:repl:658:31
 
 
 // =======================
@@ -117,6 +323,18 @@ suite.add("minimax", () => minimax.main())
 
 import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/para.mls"
 suite.add("para", () => para.main())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'add')
+//│     at $_effectful$_body$_15 (REPL41:1:1364)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL41:1:1431
+//│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+//│     at async node:repl:658:31
 
 
 // =======================
@@ -124,6 +342,18 @@ suite.add("para", () => para.main())
 
 import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/power.mls"
 suite.add("power", () => power.main())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'add')
+//│     at $_effectful$_body$_16 (REPL43:1:1370)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL43:1:1438
+//│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+//│     at async node:repl:658:31
 
 
 // =======================
@@ -131,6 +361,18 @@ suite.add("power", () => power.main())
 
 import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/pretty.mls"
 suite.add("pretty", () => pretty.main())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'add')
+//│     at $_effectful$_body$_17 (REPL45:1:1376)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL45:1:1445
+//│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+//│     at async node:repl:658:31
 
 
 // =======================
@@ -138,14 +380,51 @@ suite.add("pretty", () => pretty.main())
 
 import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/primetest.mls"
 suite.add("primetest", () => primetest.main())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'add')
+//│     at $_effectful$_body$_18 (REPL47:1:1394)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL47:1:1466
+//│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+//│     at async node:repl:658:31
 
 
 // =======================
 
-// need more stack
-// import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/puzzle.mls"
-// suite.add("puzzle", () => puzzle.main())
+import "../../../../hkmc2/shared/src/test/mlscript-compile/nofib/puzzle.mls"
+suite.add("puzzle", () => puzzle.main())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'add')
+//│     at $_effectful$_body$_19 (REPL49:1:1376)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL49:1:1445
+//│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+//│     at async node:repl:658:31
 
 
 runSuite(suite)
 writeResults(suite, "nofibs2.json")
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'run')
+//│     at $_effectful$_body$_21 (REPL51:1:339)
+//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1239:28)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:130:21
+//│     at Object.try_catch (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/RuntimeJS.mjs:15:18)
+//│     at Runtime.topLevelTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:820:49)
+//│     at REPL51:1:384
+//│     at ContextifyScript.runInThisContext (node:vm:138:12)
+//│     at defaultEval (node:repl:608:24)
+//│     at REPLEvalInContext (node:repl:691:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:66:14)
