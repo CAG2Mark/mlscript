@@ -288,18 +288,23 @@ import "../../mlscript-compile/Runtime.mls"
 fun f(c) = Runtime.Tuple.get(c, 1) + 1
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
 //│ import "..." as Runtime;
-//│ do runtime⁰.resetEffects﹖();
-//│ define f²³ as fun f²⁴(c) {
+//│ let f$worker;
+//│ define f$worker as fun f$worker⁰(f$varsClass) {
 //│   let tmp, pc, curDepth;
 //│   do runtime⁰.checkDepth﹖();
-//│   match runtime⁰.curEffect﹖
-//│     null =>
-//│       set curDepth = +⁰(runtime⁰.stackDepth﹖, 1);
-//│       set tmp = Runtime⁰.Tuple⁰.get⁰(c, 1);
-//│       return +⁰(tmp, 1)
-//│     else
-//│       return runtime⁰.unwind﹖(f²⁴, -1, "basic.mls:288:1", null, null, 1, 1, c, 0)
-//│   end
+//│   set curDepth = +⁰(runtime⁰.stackDepth﹖, 1);
+//│   set pc = f$varsClass.0;
+//│   set tmp = Runtime⁰.Tuple⁰.get⁰(f$varsClass.1, 1);
+//│   do runtime⁰.popFrame﹖("f");
+//│   return +⁰(tmp, 1)
+//│ };
+//│ do runtime⁰.resetEffects﹖();
+//│ @inline
+//│ define f²³ as fun f²⁴(c) {
+//│   let tmp;
+//│   set tmp = mut [0, c];
+//│   do runtime⁰.pushFrame﹖(f$worker⁰, tmp);
+//│   return f$worker⁰(tmp)
 //│ };
 //│ end
 //│ dead-param-elim > >>> dead-param-elim results >>>
