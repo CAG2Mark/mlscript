@@ -802,6 +802,7 @@ lambda9 = (undefined, function (Runtime2, EffectHandle1, value) {
   }
   static topLevelTrampoline(limit, body) {
     let scrut, old, old1, old2, result, tmp, tmp1, tmp2, lambda$here, lambda$here1, lambda$here2;
+    Runtime.resetEffects();
     Runtime.makeNewContTrace();
     scrut = limit !== undefined;
     if (scrut === true) {
