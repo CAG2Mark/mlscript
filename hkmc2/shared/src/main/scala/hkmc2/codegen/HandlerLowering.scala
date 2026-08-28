@@ -840,6 +840,7 @@ class HandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise,
 
 
   def translateProgram(prog: Program): Program =
+    println("doing handler lowering")
     extraDefns.clear()
     val ctx = HandlerCtx.TopLevel
     var transformed = blockBuilder

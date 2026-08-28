@@ -6,6 +6,8 @@ import org.scalatest.concurrent.{TimeLimitedTests, Signaler}
 
 import hkmc2.utils.*, shorthands.*
 import io.PlatformPath.given
+import hkmc2.Config.EffectHandlers
+import hkmc2.Config.StackSafety
 
 
 // Reusable base class for compile test runners. Subclasses provide the
@@ -51,6 +53,13 @@ abstract class CompileTestRunnerBase(
         
         this.synchronized:
           println(s"Compiling: $relativeName")
+        
+        val segments = file.segments.toList.reverse
+        val isNofib = segments.length > 1 && segments.tail.head == "nofib"
+        
+        // * Stack safety relies on the fact that runtime uses while loops for resumption
+        // * and does not create extra stack depth. Hence, while loop rewriting should be disabled here.
+        // * (It used to be on by default, but now is off by default, so nothing to do.)
         
         // Synchronize diagnostic output to avoid interleaving since the compiler tests run in parallel.
         val wrap: (=> Unit) => Unit = body => this.synchronized(body)
