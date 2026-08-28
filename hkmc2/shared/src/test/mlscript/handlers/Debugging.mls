@@ -19,16 +19,16 @@ fun f() =
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let f;
 //│ f = function f(k) {
-//│   let scrut, tmp;
+//│   let scrut;
 //│   scrut = Predef.equals(0, 0);
 //│   if (scrut === true) {
-//│     let tmp1;
-//│     tmp = Predef.raiseUnhandledEffect();
-//│     Predef.print(tmp);
-//│     tmp1 = 100 / 0;
-//│     return k(tmp1)
+//│     let tmp, inlinedVal;
+//│     inlinedVal = runtime.safeCall(Runtime.mkEffect(Runtime.FatalEffect, null));
+//│     Predef.print(inlinedVal);
+//│     tmp = 100 / 0;
+//│     return k(tmp)
 //│   }
-//│   { let tmp1; tmp1 = 100 / 0; return k(tmp1); }
+//│   { let tmp; tmp = 100 / 0; return k(tmp); }
 //│ };
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
@@ -56,7 +56,7 @@ let res = Runtime._try(f)
 
 res.reified.contTrace.next.getLocals
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
 //│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of null (reading 'getLocals')
 //│     at REPL27:1:360
 //│     at ContextifyScript.runInThisContext (node:vm:138:12)
@@ -76,7 +76,7 @@ Runtime.debugEff(res.reified)
 :expect Infinity
 res.resumeWith(42)
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:299)
 //│ ═══[RUNTIME ERROR] Expected: 'Infinity', got: 'fun cpsId'
 //│ = fun cpsId
 
@@ -97,23 +97,23 @@ module Test with
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:225)
 //│ ╔══[WARNING] The function term:Test/test is not CPS-transformed because it has more than one parameter list.
-//│ ║  l.89: 	  fun test(j)(using dbg: Debugger) =
-//│ ╙──      	      ^^^^
+//│ ║  l.245: 	  fun test(j)(using dbg: Debugger) =
+//│ ╙──       	      ^^^^
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:225)
 //│ ╔══[WARNING] The function term:Test/main is not CPS-transformed because it has more than one parameter list.
-//│ ║  l.95: 	  fun main()(using Debugger) =
-//│ ╙──      	      ^^^^
+//│ ║  l.251: 	  fun main()(using Debugger) =
+//│ ╙──       	      ^^^^
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: checkCall (CpsHandlerLowering.scala:268)
 //│ ╔══[WARNING] This call is not CPS-transformed because it has more than one argument list.
-//│ ║  l.96: 	    test(12) + test(34)
-//│ ╙──      	    ^^^^^^^^
+//│ ║  l.252: 	    test(12) + test(34)
+//│ ╙──       	    ^^^^^^^^
 //│ FAILURE: Unexpected warning
 //│ FAILURE LOCATION: checkCall (CpsHandlerLowering.scala:268)
 //│ ╔══[WARNING] This call is not CPS-transformed because it has more than one argument list.
-//│ ║  l.96: 	    test(12) + test(34)
-//│ ╙──      	               ^^^^^^^^
+//│ ║  l.252: 	    test(12) + test(34)
+//│ ╙──       	               ^^^^^^^^
 
 // :rt
 // :lot
@@ -147,7 +147,7 @@ res.raise()
 
 set res = res.resumeWith(42)
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
 //│ ═══[RUNTIME ERROR] TypeError: res1.resumeWith is not a function
 //│     at REPL49:1:46
 //│     at ContextifyScript.runInThisContext (node:vm:138:12)
@@ -167,7 +167,7 @@ res.raise()
 :expect 0.33676533676533676
 res.resumeWith(666)
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:255)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
 //│ ═══[RUNTIME ERROR] TypeError: res1.resumeWith is not a function
 //│     at REPL55:1:44
 //│     at ContextifyScript.runInThisContext (node:vm:138:12)
@@ -180,7 +180,7 @@ res.resumeWith(666)
 //│     at [_onLine] [as _onLine] (node:internal/readline/interface:474:12)
 //│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:669:18)
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:299)
 //│ ═══[RUNTIME ERROR] Expected: '0.33676533676533676', got: 'undefined'
 
 let i = 100

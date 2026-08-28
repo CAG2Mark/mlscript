@@ -5,7 +5,7 @@ import RuntimeJS from "./RuntimeJS.mjs";
 import Rendering from "./Rendering.mjs";
 import LazyArray from "./LazyArray.mjs";
 import Iter from "./Iter.mjs";
-let resumeCont, handlerFunCont, cont, resumeCont1, suspendCont1, loop, Runtime1, lambda, lambda1, lambda2, lambda$, lambda$1, Capture$handlerTrampoline1, Capture$scope231, lambda$2, handlerFunCont$, lambda$3, suspendCont1$, cont$, handlerFunCont$1, lambda$4, lambda$5, resumeCont1$, lambda$6, resumeCont$, lambda$7, Capture$scope471, lambda$8, Capture$scope491, lambda$9;
+let resumeCont, handlerFunCont, cont, resumeCont1, suspendCont1, loop, Runtime1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, handlerFunCont1, lambda$, lambda$1, Capture$handlerTrampoline1, Capture$scope231, lambda$2, handlerFunCont$, lambda$3, suspendCont1$, cont$, handlerFunCont$1, lambda$4, lambda$5, resumeCont1$, lambda$6, resumeCont$, lambda$7, Capture$scope471, lambda$8, Capture$scope491, lambda$9;
 (class Capture$scope49 {
   static {
     Capture$scope491 = this
@@ -18,10 +18,10 @@ let resumeCont, handlerFunCont, cont, resumeCont1, suspendCont1, loop, Runtime1,
 });
 lambda$9 = (undefined, function (scope49$cap, cont1) {
   return (m, marker) => {
-    return lambda2(scope49$cap, cont1, m, marker)
+    return lambda8(scope49$cap, cont1, m, marker)
   }
 });
-lambda2 = (undefined, function (scope49$cap, cont1, m, marker) {
+lambda8 = (undefined, function (scope49$cap, cont1, m, marker) {
   let scrut, tmp, tmp1;
   scrut = runtime.safeCall(m.has(cont1));
   if (scrut === true) {
@@ -44,10 +44,10 @@ lambda2 = (undefined, function (scope49$cap, cont1, m, marker) {
 });
 lambda$8 = (undefined, function (scope47$cap, cont1) {
   return (m, marker) => {
-    return lambda1(scope47$cap, cont1, m, marker)
+    return lambda7(scope47$cap, cont1, m, marker)
   }
 });
-lambda1 = (undefined, function (scope47$cap, cont1, m, marker) {
+lambda7 = (undefined, function (scope47$cap, cont1, m, marker) {
   let scrut, tmp, tmp1;
   scrut = runtime.safeCall(m.has(cont1));
   if (scrut === true) {
@@ -58,7 +58,7 @@ lambda1 = (undefined, function (scope47$cap, cont1, m, marker) {
   }
   return runtime.Unit;
 });
-lambda = (undefined, function (l) {
+lambda6 = (undefined, function (l) {
   let tmp, tmp1;
   tmp = l.localName + "=";
   tmp1 = runtime.safeCall(Rendering.render(l.value));
@@ -69,10 +69,12 @@ lambda$7 = (undefined, function (Runtime2, ss_k, k, tag) {
     return Runtime2.ss_handlerTrampoline(ss_k, k, tag, res)
   }
 });
+lambda5 = (undefined, function (Runtime2, ss_k, k, tag, res) {
+  return Runtime2.ss_handlerTrampoline(ss_k, k, tag, res)
+});
 lambda$4 = (undefined, function (Runtime2, k, tag, ss_k1, cur, resume) {
   return (_) => {
-    Runtime2.cpsSetCheckDepth();
-    return loop(Runtime2, k, tag, ss_k1, cur)
+    return lambda1(Runtime2, k, tag, ss_k1, cur, resume, _)
   }
 });
 resumeCont$ = function resumeCont$(Runtime2, tag, hfc_k, k1) {
@@ -82,19 +84,31 @@ resumeCont$ = function resumeCont$(Runtime2, tag, hfc_k, k1) {
 };
 lambda$6 = (undefined, function (Runtime2, tag, resume, hfc_k, k1, v) {
   return (_) => {
-    Runtime2.cpsSetCheckDepth();
-    return handlerFunCont(Runtime2, tag, resume, hfc_k, k1, v)
+    return lambda2(Runtime2, tag, resume, hfc_k, k1, v, _)
   }
 });
 resumeCont = function resumeCont(Runtime2, tag, hfc_k, k1, resume_r) {
-  let scrut, resumeCont$here;
-  scrut = Runtime2.cpsSetCheckDepth();
-  if (scrut === true) {
-    resumeCont$here = resumeCont$(Runtime2, tag, hfc_k, k1);
-    return Runtime2.cpsRaiseStack(resumeCont$here, resume_r)
+  let inlinedVal, tmp, tmp1;
+  tmp = Runtime2.stackDepth + 1;
+  Runtime2.stackDepth = tmp;
+  tmp1 = Runtime2.stackDepth >= Runtime2.stackLimit;
+  if (tmp1 === true) {
+    inlinedVal = Runtime2.stackHandler !== null;
+    if (inlinedVal === true) {
+      let k;
+      k = resumeCont$(Runtime2, tag, hfc_k, k1);
+      return runtime.safeCall(Runtime2.stackHandler.delay(k, resume_r))
+    }
+    return Runtime2.ss_handlerTrampoline(hfc_k, k1, tag, resume_r);
   }
   return Runtime2.ss_handlerTrampoline(hfc_k, k1, tag, resume_r);
 };
+lambda2 = (undefined, function (Runtime2, tag, resume, hfc_k, k1, v, _) {
+  let tmp;
+  tmp = Runtime2.stackDepth + 1;
+  Runtime2.stackDepth = tmp;
+  return handlerFunCont(Runtime2, tag, resume, hfc_k, k1, v)
+});
 handlerFunCont$1 = function handlerFunCont$(Runtime2, tag, resume) {
   return (hfc_k, k1, v) => {
     return handlerFunCont(Runtime2, tag, resume, hfc_k, k1, v)
@@ -112,72 +126,123 @@ resumeCont1$ = function resumeCont1$(Runtime2, k, tag, resume_k) {
 };
 lambda$5 = (undefined, function (Runtime2, k, tag, resume, resume_k, r) {
   return (_) => {
-    Runtime2.cpsSetCheckDepth();
-    return suspendCont1(Runtime2, k, tag, resume, resume_k, r)
+    return lambda3(Runtime2, k, tag, resume, resume_k, r, _)
   }
 });
 resumeCont1 = function resumeCont1(Runtime2, k, tag, resume_k, resume_r) {
-  let scrut, resumeCont1$here;
-  scrut = Runtime2.cpsSetCheckDepth();
-  if (scrut === true) {
-    resumeCont1$here = resumeCont1$(Runtime2, k, tag, resume_k);
-    return Runtime2.cpsRaiseStack(resumeCont1$here, resume_r)
+  let inlinedVal, tmp, tmp1;
+  tmp = Runtime2.stackDepth + 1;
+  Runtime2.stackDepth = tmp;
+  tmp1 = Runtime2.stackDepth >= Runtime2.stackLimit;
+  if (tmp1 === true) {
+    inlinedVal = Runtime2.stackHandler !== null;
+    if (inlinedVal === true) {
+      let k1;
+      k1 = resumeCont1$(Runtime2, k, tag, resume_k);
+      return runtime.safeCall(Runtime2.stackHandler.delay(k1, resume_r))
+    }
+    return Runtime2.ss_handlerTrampoline(resume_k, k, tag, resume_r);
   }
   return Runtime2.ss_handlerTrampoline(resume_k, k, tag, resume_r);
 };
+lambda3 = (undefined, function (Runtime2, k, tag, resume, resume_k, r, _) {
+  let tmp;
+  tmp = Runtime2.stackDepth + 1;
+  Runtime2.stackDepth = tmp;
+  return suspendCont1(Runtime2, k, tag, resume, resume_k, r)
+});
 suspendCont1$ = function suspendCont1$(Runtime2, k, tag, resume) {
   return (resume_k, r) => {
     return suspendCont1(Runtime2, k, tag, resume, resume_k, r)
   }
 };
+lambda1 = (undefined, function (Runtime2, k, tag, ss_k1, cur, resume, _) {
+  let tmp;
+  tmp = Runtime2.stackDepth + 1;
+  Runtime2.stackDepth = tmp;
+  return loop(Runtime2, k, tag, ss_k1, cur)
+});
 handlerFunCont = function handlerFunCont(Runtime2, tag, resume, hfc_k, k1, v) {
-  let scrut, lambda$here, resumeCont$here;
-  scrut = Runtime2.cpsSetCheckDepth();
-  if (scrut === true) {
-    lambda$here = lambda$6(Runtime2, tag, resume, hfc_k, k1, v);
-    return Runtime2.cpsRaiseStack(lambda$here, runtime.Unit)
+  let resumeCont$here, inlinedVal, tmp, tmp1;
+  tmp = Runtime2.stackDepth + 1;
+  Runtime2.stackDepth = tmp;
+  tmp1 = Runtime2.stackDepth >= Runtime2.stackLimit;
+  if (tmp1 === true) {
+    inlinedVal = Runtime2.stackHandler !== null;
+    if (inlinedVal === true) {
+      let k, retVal;
+      k = lambda$6(Runtime2, tag, resume, hfc_k, k1, v);
+      retVal = runtime.Unit;
+      return runtime.safeCall(Runtime2.stackHandler.delay(k, retVal))
+    }
+    resumeCont$here = resumeCont$(Runtime2, tag, hfc_k, k1);
+    return runtime.safeCall(resume(resumeCont$here, v));
   }
   resumeCont$here = resumeCont$(Runtime2, tag, hfc_k, k1);
   return runtime.safeCall(resume(resumeCont$here, v));
 };
 cont = function cont(Runtime2, k, tag, ss_k1, cur, resume, r) {
-  let scrut, cont$here;
-  scrut = Runtime2.cpsSetCheckDepth();
-  if (scrut === true) {
-    cont$here = cont$(Runtime2, k, tag, ss_k1, cur, resume);
-    return Runtime2.cpsRaiseStack(cont$here, r)
+  let inlinedVal, tmp, tmp1;
+  tmp = Runtime2.stackDepth + 1;
+  Runtime2.stackDepth = tmp;
+  tmp1 = Runtime2.stackDepth >= Runtime2.stackLimit;
+  if (tmp1 === true) {
+    inlinedVal = Runtime2.stackHandler !== null;
+    if (inlinedVal === true) {
+      let k1;
+      k1 = cont$(Runtime2, k, tag, ss_k1, cur, resume);
+      return runtime.safeCall(Runtime2.stackHandler.delay(k1, r))
+    }
+    return loop(Runtime2, k, tag, ss_k1, r);
   }
   return loop(Runtime2, k, tag, ss_k1, r);
 };
 suspendCont1 = function suspendCont1(Runtime2, k, tag, resume, resume_k, r) {
-  let scrut, lambda$here, resumeCont1$here;
-  scrut = Runtime2.cpsSetCheckDepth();
-  if (scrut === true) {
-    lambda$here = lambda$5(Runtime2, k, tag, resume, resume_k, r);
-    return Runtime2.cpsRaiseStack(lambda$here, runtime.Unit)
+  let resumeCont1$here, inlinedVal, tmp, tmp1;
+  tmp = Runtime2.stackDepth + 1;
+  Runtime2.stackDepth = tmp;
+  tmp1 = Runtime2.stackDepth >= Runtime2.stackLimit;
+  if (tmp1 === true) {
+    inlinedVal = Runtime2.stackHandler !== null;
+    if (inlinedVal === true) {
+      let k1, retVal;
+      k1 = lambda$5(Runtime2, k, tag, resume, resume_k, r);
+      retVal = runtime.Unit;
+      return runtime.safeCall(Runtime2.stackHandler.delay(k1, retVal))
+    }
+    resumeCont1$here = resumeCont1$(Runtime2, k, tag, resume_k);
+    return runtime.safeCall(resume(resumeCont1$here, r));
   }
   resumeCont1$here = resumeCont1$(Runtime2, k, tag, resume_k);
   return runtime.safeCall(resume(resumeCont1$here, r));
 };
 lambda$3 = (undefined, function (Runtime2, ss_k, k, tag, cur) {
   return (_) => {
-    Runtime2.cpsSetCheckDepth();
-    return Runtime2.ss_handlerTrampoline(ss_k, k, tag, cur)
+    return lambda4(Runtime2, ss_k, k, tag, cur, _)
   }
 });
 loop = function loop(Runtime2, k, tag, ss_k1, cur) {
-  let scrut, scrut1, arg$Suspend$0$, arg$Suspend$1$, arg$Suspend$2$, tmp, lambda$here, cont$here, handlerFunCont$here, suspendCont1$here;
-  scrut = Runtime2.cpsSetCheckDepth();
-  if (scrut === true) {
-    lambda$here = lambda$4(Runtime2, k, tag, ss_k1, cur, undefined);
-    return Runtime2.cpsRaiseStack(lambda$here, runtime.Unit)
+  let scrut, arg$Suspend$0$, arg$Suspend$1$, arg$Suspend$2$, tmp, cont$here, handlerFunCont$here, suspendCont1$here, inlinedVal, tmp1, tmp2;
+  tmp1 = Runtime2.stackDepth + 1;
+  Runtime2.stackDepth = tmp1;
+  tmp2 = Runtime2.stackDepth >= Runtime2.stackLimit;
+  if (tmp2 === true) {
+    inlinedVal = Runtime2.stackHandler !== null;
+  } else {
+    inlinedVal = false;
+  }
+  if (inlinedVal === true) {
+    let k1, retVal;
+    k1 = lambda$4(Runtime2, k, tag, ss_k1, cur, undefined);
+    retVal = runtime.Unit;
+    return runtime.safeCall(Runtime2.stackHandler.delay(k1, retVal))
   }
   if (cur instanceof Runtime2.Suspend.class) {
     arg$Suspend$0$ = cur.k;
     arg$Suspend$1$ = cur.tag;
     arg$Suspend$2$ = cur.handlerFun;
-    scrut1 = arg$Suspend$1$ === tag;
-    if (scrut1 === true) {
+    scrut = arg$Suspend$1$ === tag;
+    if (scrut === true) {
       cont$here = cont$(Runtime2, k, tag, ss_k1, cur, arg$Suspend$0$);
       handlerFunCont$here = handlerFunCont$1(Runtime2, tag, arg$Suspend$0$);
       return runtime.safeCall(arg$Suspend$2$(cont$here, Runtime2.cpsId2, handlerFunCont$here))
@@ -188,12 +253,23 @@ loop = function loop(Runtime2, k, tag, ss_k1, cur) {
   }
   return runtime.safeCall(k(ss_k1, cur));
 };
+lambda4 = (undefined, function (Runtime2, ss_k, k, tag, cur, _) {
+  let tmp;
+  tmp = Runtime2.stackDepth + 1;
+  Runtime2.stackDepth = tmp;
+  return Runtime2.ss_handlerTrampoline(ss_k, k, tag, cur)
+});
 handlerFunCont$ = function handlerFunCont$(Runtime2, tag, resume) {
   return (k1, v) => {
     let tmp;
     tmp = runtime.safeCall(resume(v));
     return Runtime2.handlerTrampoline(k1, tag, tmp)
   }
+};
+handlerFunCont1 = function handlerFunCont(Runtime2, tag, resume, k1, v) {
+  let tmp;
+  tmp = runtime.safeCall(resume(v));
+  return Runtime2.handlerTrampoline(k1, tag, tmp)
 };
 (class Capture$scope23 {
   static {
@@ -214,6 +290,11 @@ lambda$2 = (undefined, function (Runtime2, k, tag, resume) {
     return Runtime2.handlerTrampoline(k, tag, tmp)
   }
 });
+lambda = (undefined, function (Runtime2, k, tag, resume, r) {
+  let tmp;
+  tmp = runtime.safeCall(resume(r));
+  return Runtime2.handlerTrampoline(k, tag, tmp)
+});
 (class Capture$handlerTrampoline {
   static {
     Capture$handlerTrampoline1 = this
@@ -230,10 +311,17 @@ lambda$1 = (undefined, function (Runtime2) {
     return runtime.Unit
   }
 });
+lambda10 = (undefined, function (Runtime2, k) {
+  Runtime2.stackResume = k;
+  return runtime.Unit
+});
 lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
   return () => {
     return Runtime2.resume(EffectHandle1.reified.contTrace)(value)
   }
+});
+lambda9 = (undefined, function (Runtime2, EffectHandle1, value) {
+  return Runtime2.resume(EffectHandle1.reified.contTrace)(value)
 });
 (class Runtime {
   static {
@@ -1040,7 +1128,7 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
               if (showLocals === true) {
                 scrut3 = curLocals.length > 0;
                 if (scrut3 === true) {
-                  tmp2 = runtime.safeCall(curLocals.map(lambda));
+                  tmp2 = runtime.safeCall(curLocals.map(lambda6));
                   tmp3 = runtime.safeCall(tmp2.join(", "));
                   tmp4 = " with locals: " + tmp3;
                 } else {
@@ -1260,14 +1348,14 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
     }
   }
   static handleEffect(cur) {
-    let prevHandlerFrame, scrut, handlerFrame, saved, old, scrut1, scrut2, scrut3, tmp, tmp1, tmp2, tmp3;
+    let prevHandlerFrame, scrut, handlerFrame, saved, scrut1, scrut2, old, scrut3, scrut4, scrut5, scrut6, tmp, tmp1, tmp2, tmp3;
     prevHandlerFrame = cur.contTrace;
     lbl: while (true) {
-      let scrut4, scrut5;
-      scrut4 = prevHandlerFrame.nextHandler !== null;
-      if (scrut4 === true) {
-        scrut5 = prevHandlerFrame.nextHandler.handler !== cur.handler;
-        if (scrut5 === true) {
+      let scrut7, scrut8;
+      scrut7 = prevHandlerFrame.nextHandler !== null;
+      if (scrut7 === true) {
+        scrut8 = prevHandlerFrame.nextHandler.handler !== cur.handler;
+        if (scrut8 === true) {
           prevHandlerFrame = prevHandlerFrame.nextHandler;
           continue lbl
         }
@@ -1280,6 +1368,14 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
     }
     handlerFrame = prevHandlerFrame.nextHandler;
     saved = new Runtime.ContTrace.class(handlerFrame.next, cur.contTrace.last, handlerFrame.nextHandler, cur.contTrace.lastHandler, false);
+    scrut1 = cur.contTrace.last === handlerFrame;
+    if (scrut1 === true) {
+      saved.last = saved;
+    }
+    scrut2 = cur.contTrace.lastHandler === handlerFrame;
+    if (scrut2 === true) {
+      saved.lastHandler = saved;
+    }
     cur.contTrace.last = handlerFrame;
     cur.contTrace.lastHandler = handlerFrame;
     handlerFrame.next = null;
@@ -1295,16 +1391,19 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
     } finally {
       Runtime.stackDepth = old;
     }
-    scrut1 = Runtime.curEffect !== null;
-    if (scrut1 === true) {
+    scrut3 = Runtime.curEffect !== null;
+    if (scrut3 === true) {
       cur = Runtime.curEffect;
-      scrut2 = saved.next !== null;
-      if (scrut2 === true) {
+      scrut4 = saved.next !== null;
+      if (scrut4 === true) {
         cur.contTrace.last.next = saved.next;
+      }
+      scrut5 = saved.last !== saved;
+      if (scrut5 === true) {
         cur.contTrace.last = saved.last;
       }
-      scrut3 = saved.nextHandler !== null;
-      if (scrut3 === true) {
+      scrut6 = saved.nextHandler !== null;
+      if (scrut6 === true) {
         cur.contTrace.lastHandler.nextHandler = saved.nextHandler;
         cur.contTrace.lastHandler = saved.lastHandler;
         return cur
@@ -1498,4 +1597,43 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
   toString() { return runtime.render(this); }
   static [definitionMetadata] = ["class", "Runtime"];
 });
+export { resumeCont as _$_modulePrivate_$_resumeCont };
+export { handlerFunCont as _$_modulePrivate_$_handlerFunCont };
+export { cont as _$_modulePrivate_$_cont };
+export { resumeCont1 as _$_modulePrivate_$_resumeCont1 };
+export { suspendCont1 as _$_modulePrivate_$_suspendCont1 };
+export { loop as _$_modulePrivate_$_loop };
+export { Runtime1 as _$_modulePrivate_$_Runtime };
+export { lambda as _$_modulePrivate_$_lambda };
+export { lambda1 as _$_modulePrivate_$_lambda1 };
+export { lambda2 as _$_modulePrivate_$_lambda2 };
+export { lambda3 as _$_modulePrivate_$_lambda3 };
+export { lambda4 as _$_modulePrivate_$_lambda4 };
+export { lambda5 as _$_modulePrivate_$_lambda5 };
+export { lambda6 as _$_modulePrivate_$_lambda6 };
+export { lambda7 as _$_modulePrivate_$_lambda7 };
+export { lambda8 as _$_modulePrivate_$_lambda8 };
+export { lambda9 as _$_modulePrivate_$_lambda9 };
+export { lambda10 as _$_modulePrivate_$_lambda10 };
+export { handlerFunCont1 as _$_modulePrivate_$_handlerFunCont1 };
+export { lambda$ as _$_modulePrivate_$_lambda$ };
+export { lambda$1 as _$_modulePrivate_$_lambda$1 };
+export { Capture$handlerTrampoline1 as _$_modulePrivate_$_Capture$handlerTrampoline };
+export { Capture$scope231 as _$_modulePrivate_$_Capture$scope23 };
+export { lambda$2 as _$_modulePrivate_$_lambda$2 };
+export { handlerFunCont$ as _$_modulePrivate_$_handlerFunCont$ };
+export { lambda$3 as _$_modulePrivate_$_lambda$3 };
+export { suspendCont1$ as _$_modulePrivate_$_suspendCont1$ };
+export { cont$ as _$_modulePrivate_$_cont$ };
+export { handlerFunCont$1 as _$_modulePrivate_$_handlerFunCont$1 };
+export { lambda$4 as _$_modulePrivate_$_lambda$4 };
+export { lambda$5 as _$_modulePrivate_$_lambda$5 };
+export { resumeCont1$ as _$_modulePrivate_$_resumeCont1$ };
+export { lambda$6 as _$_modulePrivate_$_lambda$6 };
+export { resumeCont$ as _$_modulePrivate_$_resumeCont$ };
+export { lambda$7 as _$_modulePrivate_$_lambda$7 };
+export { Capture$scope471 as _$_modulePrivate_$_Capture$scope47 };
+export { lambda$8 as _$_modulePrivate_$_lambda$8 };
+export { Capture$scope491 as _$_modulePrivate_$_Capture$scope49 };
+export { lambda$9 as _$_modulePrivate_$_lambda$9 };
 let Runtime = Runtime1; export default Runtime;
