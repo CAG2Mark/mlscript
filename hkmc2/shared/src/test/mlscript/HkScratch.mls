@@ -9,76 +9,29 @@
 // :todo
 :effectHandlers
 :lift
+:stackSafe 100
 
 :sjs
 module A with
   fun f(x) =
-    A.f(0)
-    A.f(0)
+    return 0
+A.f(0)
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let A1, f$worker;
-//│ f$worker = function f$worker(f$varsClass) {
-//│   loopLabel: while (true) {
-//│     let pc;
-//│     pc = f$varsClass.at(0);
-//│     switch (pc) {
-//│       case 0:
-//│         {
-//│           let inlinedVal, tmp, tmp1;
-//│           f$varsClass[0] = 1;
-//│           tmp = [
-//│             0,
-//│             f$varsClass.at(1),
-//│             0
-//│           ];
-//│           runtime.pushFrame(f$worker, tmp);
-//│           inlinedVal = f$worker(tmp);
-//│           runtime.resumeValue = inlinedVal;
-//│           runtime.resumeValue;
-//│           runtime.popFrame("f");
-//│           tmp1 = [
-//│             0,
-//│             f$varsClass.at(1),
-//│             0
-//│           ];
-//│           runtime.pushFrame(f$worker, tmp1);
-//│           f$varsClass = tmp1;
-//│           continue loopLabel;
-//│         }
-//│       case 1:
-//│         {
-//│           let tmp;
-//│           runtime.resumeValue;
-//│           runtime.popFrame("f");
-//│           tmp = [
-//│             0,
-//│             f$varsClass.at(1),
-//│             0
-//│           ];
-//│           runtime.pushFrame(f$worker, tmp);
-//│           f$varsClass = tmp;
-//│           continue loopLabel;
-//│         }
-//│     }
-//│     break;
-//│   }
-//│ };
+//│ let A1, $_effectful$_body$_;
 //│ runtime.resetEffects();
 //│ (class A {
 //│   static {
 //│     A1 = this
 //│   }
 //│   static f(x) {
-//│     let tmp;
-//│     tmp = [
-//│       0,
-//│       A,
-//│       x
-//│     ];
-//│     runtime.pushFrame(f$worker, tmp);
-//│     return f$worker(tmp)
+//│     return 0
 //│   }
 //│   toString() { return runtime.render(this); }
 //│   static [definitionMetadata] = ["class", "A"];
 //│ });
+//│ $_effectful$_body$_ = (undefined, function () {
+//│   return 0
+//│ });
+//│ return runtime.topLevelTrampoline(100, $_effectful$_body$_)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
+//│ = 0
