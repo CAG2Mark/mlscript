@@ -9,12 +9,32 @@
 :noModuleCheck
 module M with
   set this."name" = "oops"
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁰
+//│   ctor = AssignDynField:
+//│     lhs = This of module:M⁰
+//│     fld = Lit of StrLit of "name"
+//│     arrayIdx = false
+//│     rhs = Lit of StrLit of "oops"
 //│ ═══[RUNTIME ERROR] TypeError: Cannot assign to read only property 'name' of function 'class M {   static {     M1 = this   }   static {     M["name"] = "oops";   }   toString() { return runtime.ren...<omitted>... }'
 
 // * So we use `Object.defineProperty` instead:
 :sjs
 module M with
   val name = "Student"
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M¹
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:name⁰
+//│       _2 = term:M¹/name¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:M¹/name¹
+//│       sym = member:name⁰
+//│       rhs = Lit of StrLit of "Student"
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let M3;
 //│ (class M2 {
@@ -34,6 +54,20 @@ module M with
 :sjs
 class C with
   val name = "Student"
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C⁰
+//│   sym = member:C¹
+//│   k = Cls
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:name²
+//│       _2 = term:C⁰/name³
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C⁰/name³
+//│       sym = member:name²
+//│       rhs = Lit of StrLit of "Student"
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let C1;
 //│ (class C {

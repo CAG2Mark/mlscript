@@ -128,6 +128,29 @@ object Obj with
   fun test =
     print("hi")
     false
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Obj⁰
+//│   sym = member:Obj¹
+//│   k = Obj
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of object:Obj⁰
+//│       sym = member:test⁰
+//│       dSym = term:Obj⁰/test¹
+//│       body = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = Select{sym=term:Predef⁰/print⁰}:
+//│             qual = MemberRef{disamb=module:Predef⁰}:
+//│               bms = member:Predef¹
+//│               disamb = module:Predef⁰
+//│             name = Ident of "print"
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = Lit of StrLit of "hi"
+//│         rest = Return of Lit of BoolLit of false
 
 :sjs
 if Obj.test do ()

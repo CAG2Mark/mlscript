@@ -19,6 +19,58 @@ object O with
   let y = 1
   fun gy = y
   fun sy = set y += 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:O⁰
+//│   sym = member:O¹
+//│   k = Obj
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of object:O⁰
+//│       sym = member:gy⁰
+//│       dSym = term:O⁰/gy¹
+//│       body = Return of Select{sym=term:O⁰/y⁰}:
+//│         qual = This of object:O⁰
+//│         name = Ident of "y"
+//│     FunDefn:
+//│       owner = S of object:O⁰
+//│       sym = member:sy⁰
+//│       dSym = term:O⁰/sy¹
+//│       body = Scoped(syms = {tmp:tmp⁰}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁰
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:O⁰/y⁰}:
+//│                     qual = This of object:O⁰
+//│                     name = Ident of "y"
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = AssignField: \
+//│           lhs = This of object:O⁰
+//│           nme = Ident of "y"
+//│           rhs = SimpleRef of tmp:tmp⁰
+//│           rest = Return of Select{sym=object:Unit⁰}:
+//│             qual = SimpleRef of tmp:runtime⁰
+//│             name = Ident of "Unit"
+//│   privateFields = Ls of
+//│     term:O⁰/y⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁰
+//│       _2 = term:O⁰/x¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:O⁰/x¹
+//│       sym = member:x⁰
+//│       rhs = Lit of IntLit of 1
+//│     rest = AssignField: \
+//│     lhs = This of object:O⁰
+//│     nme = Ident of "y"
+//│     rhs = Lit of IntLit of 1
 
 set O.x = 2
 
@@ -33,11 +85,53 @@ O.gy
 
 :soir
 class Foo(x, val y, mut val z)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x²
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = y¹
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (mut, val)
+//│         sym = z⁰
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo⁰/x³
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:y²
+//│       _2 = term:Foo⁰/y³
+//│     Tuple2:
+//│       _1 = member:z¹
+//│       _2 = term:Foo⁰/z²
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo⁰
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x²
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/y³
+//│       sym = member:y²
+//│       rhs = SimpleRef of y¹
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/z²
+//│       sym = member:z¹
+//│       rhs = SimpleRef of z⁰
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
-//│ define Foo⁰ as class Foo² {
-//│   val y⁰;
-//│   val z⁰;
-//│   constructor Foo¹(x, y, z) { define y⁰ as val y¹ = y; define z⁰ as val z¹ = z; end }
+//│ define Foo¹ as class Foo⁰ {
+//│   val y²;
+//│   val z¹;
+//│   constructor Foo²(x, y, z) { define y² as val y³ = y; define z¹ as val z² = z; end }
 //│ };
 //│ end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
@@ -45,16 +139,72 @@ class Foo(x, val y, mut val z)
 :soir
 class Foo(x, val y, mut val z) with
   print(x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo³
+//│   sym = member:Foo⁴
+//│   ctorSym = S of term:Foo⁵
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁴
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = y⁴
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (mut, val)
+//│         sym = z³
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo³/x⁵
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:y⁵
+//│       _2 = term:Foo³/y⁶
+//│     Tuple2:
+//│       _1 = member:z⁴
+//│       _2 = term:Foo³/z⁵
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo³
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁴
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Foo³/y⁶
+//│       sym = member:y⁵
+//│       rhs = SimpleRef of y⁴
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Foo³/z⁵
+//│       sym = member:z⁴
+//│       rhs = SimpleRef of z³
+//│     rest = Assign: \
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Select{sym=term:Foo³/x⁵}:
+//│               qual = This of class:Foo³
+//│               name = Ident of "x"
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
-//│ define Foo³ as class Foo⁵ {
-//│   private val x⁰;
-//│   val y²;
-//│   val z²;
-//│   constructor Foo⁴(x, y, z) {
-//│     set Foo⁵.this.x⁰ = x;
-//│     define y² as val y³ = y;
-//│     define z² as val z³ = z;
-//│     do Predef⁰.print⁰(Foo⁵.this.x⁰);
+//│ define Foo⁴ as class Foo³ {
+//│   private val x⁵;
+//│   val y⁵;
+//│   val z⁴;
+//│   constructor Foo⁵(x, y, z) {
+//│     set Foo³.this.x⁵ = x;
+//│     define y⁵ as val y⁶ = y;
+//│     define z⁴ as val z⁵ = z;
+//│     do Predef⁰.print⁰(Foo³.this.x⁵);
 //│     end
 //│   }
 //│ };
@@ -75,6 +225,27 @@ f.z
 
 
 data class Foo(mut val x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁶
+//│   sym = member:Foo⁷
+//│   ctorSym = S of term:Foo⁸
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (mut, val)
+//│         sym = x⁶
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁷
+//│       _2 = term:Foo⁶/x⁸
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁶/x⁸
+//│       sym = member:x⁷
+//│       rhs = SimpleRef of x⁶
 
 let f = Foo(1)
 //│ f = Foo(1)

@@ -44,6 +44,56 @@ module Test with
     test(x)
   fun test2(x) =
     [this.a, x]
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Test⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Test⁰
+//│       sym = member:test1⁰
+//│       dSym = term:Test⁰/test1¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = MemberRef{disamb=term:test⁰}:
+//│           bms = member:test¹
+//│           disamb = term:test⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x⁰
+//│     FunDefn:
+//│       owner = S of module:Test⁰
+//│       sym = member:test2⁰
+//│       dSym = term:Test⁰/test2¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x¹
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Tuple:
+//│         mut = false
+//│         elems = Ls of
+//│           Arg:
+//│             value = Select{sym=term:Test⁰/a⁰}:
+//│               qual = This of module:Test⁰
+//│               name = Ident of "a"
+//│           Arg:
+//│             value = SimpleRef of x¹
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a¹
+//│       _2 = term:Test⁰/a⁰
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Test⁰/a⁰
+//│       sym = member:a¹
+//│       rhs = Lit of IntLit of 3
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Test1;
 //│ (class Test {
@@ -83,6 +133,23 @@ Test.test2(123)
 class A(x) with
   module M with
     print(x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁰
+//│   ctor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Select{sym=term:A⁰/x²}:
+//│               qual = This of class:A⁰
+//│               name = Ident of "x"
 
 A(42)
 //│ > 42

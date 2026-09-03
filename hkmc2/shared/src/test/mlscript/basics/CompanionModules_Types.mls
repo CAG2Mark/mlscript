@@ -4,6 +4,18 @@
 type Foo = Int
 module Foo with
   val default: Foo = 123
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Foo⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:default⁰
+//│       _2 = term:Foo⁰/default¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/default¹
+//│       sym = member:default⁰
+//│       rhs = Lit of IntLit of 123
 
 Foo.default
 //│ = 123
@@ -16,5 +28,45 @@ module List with
   fun map[A, B](f: A -> B, xs: List[A]): List[B] = if xs is
       Nil then Nil
       Cons(head, tail) then Cons(f(head), map(f, tail))
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Cons⁰
+//│   sym = member:Cons¹
+//│   ctorSym = S of term:Cons²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = head⁰
+//│         sign = S of Ref{sym=A⁰} of A⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = tail⁰
+//│         sign = S of TyApp{sym=type:List⁰}:
+//│           lhs = Resolved{sym=type:List⁰}:
+//│             t = Ref{sym=member:List¹} of member:List¹
+//│             sym = type:List⁰
+//│           targs = Ls of
+//│             Ref{sym=A⁰} of A⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:head¹
+//│       _2 = term:Cons⁰/head²
+//│     Tuple2:
+//│       _1 = member:tail¹
+//│       _2 = term:Cons⁰/tail²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Cons⁰/head²
+//│       sym = member:head¹
+//│       rhs = SimpleRef of head⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Cons⁰/tail²
+//│       sym = member:tail¹
+//│       rhs = SimpleRef of tail⁰
 
 

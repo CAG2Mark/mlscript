@@ -9,6 +9,71 @@ class Foo with
       fun test =
         set state += 1
         state
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:$anon)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:$anon⁰
+//│       sym = member:$anon¹
+//│       k = Cls
+//│       parentPath = S of Select{sym=class:Object⁰}:
+//│         qual = This of globalThis:globalThis⁰
+//│         name = Ident of "Object"
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:$anon⁰
+//│           sym = member:test⁰
+//│           dSym = term:$anon⁰/test¹
+//│           body = Scoped(syms = {tmp:tmp⁰}):
+//│             body = Assign:
+//│               lhs = tmp:tmp⁰
+//│               rhs = Call:
+//│                 fun = SimpleRef of builtin:+⁰
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = Select{sym=term:$anon⁰/state⁰}:
+//│                         qual = This of class:$anon⁰
+//│                         name = Ident of "state"
+//│                     Arg:
+//│                       value = Lit of IntLit of 1
+//│               rest = AssignField: \
+//│               lhs = This of class:$anon⁰
+//│               nme = Ident of "state"
+//│               rhs = SimpleRef of tmp:tmp⁰
+//│               rest = Return of Select{sym=term:$anon⁰/state⁰}:
+//│                 qual = This of class:$anon⁰
+//│                 name = Ident of "state"
+//│       privateFields = Ls of
+//│         term:$anon⁰/state⁰
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Nil
+//│       ctor = AssignField:
+//│         lhs = This of class:$anon⁰
+//│         nme = Ident of "state"
+//│         rhs = Lit of IntLit of 0
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Foo⁰
+//│       sym = member:Foo¹
+//│       k = Cls
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:Foo⁰
+//│           sym = member:foo⁰
+//│           dSym = term:Foo⁰/foo¹
+//│           body = Return of Instantiate:
+//│             mut = false
+//│             cls = MemberRef{disamb=class:$anon⁰}:
+//│               bms = member:$anon¹
+//│               disamb = class:$anon⁰
+//│             argss = Ls of
+//│               Nil
 
 let f = new Foo
 //│ f = Foo
@@ -36,34 +101,153 @@ class Foo(x) with
       fun test =
         set state += 1
         state + y
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:$anon)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:$anon²
+//│       sym = member:$anon³
+//│       k = Cls
+//│       auxParams = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = Foo²
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = y⁰
+//│               modulefulness = Modulefulness of N
+//│       parentPath = S of Select{sym=class:Object⁰}:
+//│         qual = This of globalThis:globalThis⁰
+//│         name = Ident of "Object"
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:$anon²
+//│           sym = member:test²
+//│           dSym = term:$anon²/test³
+//│           body = Scoped(syms = {tmp:tmp¹}):
+//│             body = Assign:
+//│               lhs = tmp:tmp¹
+//│               rhs = Call:
+//│                 fun = SimpleRef of builtin:+⁰
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = Select{sym=term:$anon²/state¹}:
+//│                         qual = This of class:$anon²
+//│                         name = Ident of "state"
+//│                     Arg:
+//│                       value = Lit of IntLit of 1
+//│               rest = AssignField: \
+//│               lhs = This of class:$anon²
+//│               nme = Ident of "state"
+//│               rhs = SimpleRef of tmp:tmp¹
+//│               rest = Return of Call:
+//│                 fun = SimpleRef of builtin:+⁰
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = Select{sym=term:$anon²/state¹}:
+//│                         qual = This of class:$anon²
+//│                         name = Ident of "state"
+//│                     Arg:
+//│                       value = Select{sym=term:$anon²/y¹}:
+//│                         qual = This of class:$anon²
+//│                         name = Ident of "y"
+//│       privateFields = Ls of
+//│         term:$anon²/Foo³
+//│         term:$anon²/y¹
+//│         term:$anon²/state¹
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Nil
+//│       ctor = AssignField:
+//│         lhs = This of class:$anon²
+//│         nme = Ident of "Foo"
+//│         rhs = SimpleRef of Foo²
+//│         rest = AssignField: \
+//│         lhs = This of class:$anon²
+//│         nme = Ident of "y"
+//│         rhs = SimpleRef of y⁰
+//│         rest = AssignField: \
+//│         lhs = This of class:$anon²
+//│         nme = Ident of "state"
+//│         rhs = Select{sym=term:Foo⁴/x⁰}:
+//│           qual = Select{sym=term:$anon²/Foo³}:
+//│             qual = This of class:$anon²
+//│             name = Ident of "Foo"
+//│           name = Ident of "x"
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Foo⁴
+//│       sym = member:Foo⁵
+//│       ctorSym = S of term:Foo⁶
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             sym = x¹
+//│             modulefulness = Modulefulness of N
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:Foo⁴
+//│           sym = member:foo²
+//│           dSym = term:Foo⁴/foo³
+//│           params = Ls of
+//│             ParamList:
+//│               params = Ls of
+//│                 Param:
+//│                   sym = y²
+//│                   modulefulness = Modulefulness of N
+//│           body = Return of Instantiate:
+//│             mut = false
+//│             cls = MemberRef{disamb=class:$anon²}:
+//│               bms = member:$anon³
+//│               disamb = class:$anon²
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = This of class:Foo⁴
+//│                 Arg:
+//│                   value = SimpleRef of y²
+//│       privateFields = Ls of
+//│         term:Foo⁴/x⁰
+//│       ctor = AssignField:
+//│         lhs = This of class:Foo⁴
+//│         nme = Ident of "x"
+//│         rhs = SimpleRef of x¹
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
 //│ let $anon;
-//│ define $anon as class $anon⁰ extends globalThis⁰.Object⁰ {
-//│   private val Foo⁰;
-//│   private val y⁰;
-//│   private val state⁰;
+//│ define $anon as class $anon² extends globalThis⁰.Object⁰ {
+//│   private val Foo³;
+//│   private val y¹;
+//│   private val state¹;
 //│   constructor(Foo, y) {
 //│     do super⁰();
 //│     end;
-//│     set $anon⁰.this.Foo⁰ = Foo;
-//│     set $anon⁰.this.y⁰ = y;
-//│     set $anon⁰.this.state⁰ = $anon⁰.this.Foo⁰.x⁰;
+//│     set $anon².this.Foo³ = Foo;
+//│     set $anon².this.y¹ = y;
+//│     set $anon².this.state¹ = $anon².this.Foo³.x⁰;
 //│     end
 //│   }
-//│   method test⁰ = fun test¹ {
+//│   method test² = fun test³ {
 //│     let tmp;
-//│     set tmp = +⁰($anon⁰.this.state⁰, 1);
-//│     set $anon⁰.this.state⁰ = tmp;
-//│     return +⁰($anon⁰.this.state⁰, $anon⁰.this.y⁰)
+//│     set tmp = +⁰($anon².this.state¹, 1);
+//│     set $anon².this.state¹ = tmp;
+//│     return +⁰($anon².this.state¹, $anon².this.y¹)
 //│   }
 //│ };
-//│ define Foo¹ as class Foo³ {
+//│ define Foo⁵ as class Foo⁴ {
 //│   private val x⁰;
-//│   constructor Foo²(x) {
-//│     set Foo³.this.x⁰ = x;
+//│   constructor Foo⁶(x) {
+//│     set Foo⁴.this.x⁰ = x;
 //│     end
 //│   }
-//│   method foo⁰ = fun foo¹(y) { return new $anon⁰(Foo³.this, y) }
+//│   method foo² = fun foo³(y) { return new $anon²(Foo⁴.this, y) }
 //│ };
 //│ end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
@@ -95,6 +279,91 @@ class AccessorBox with
       fun write(next) =
         set value = next
         value
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:$anon)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:$anon⁴
+//│       sym = member:$anon⁵
+//│       k = Cls
+//│       auxParams = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = AccessorBox⁰
+//│               modulefulness = Modulefulness of N
+//│       parentPath = S of Select{sym=class:Object⁰}:
+//│         qual = This of globalThis:globalThis⁰
+//│         name = Ident of "Object"
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:$anon⁴
+//│           sym = member:read⁰
+//│           dSym = term:$anon⁴/read¹
+//│           body = Return of Select{sym=term:AccessorBox¹/value⁰}:
+//│             qual = Select{sym=term:$anon⁴/AccessorBox²}:
+//│               qual = This of class:$anon⁴
+//│               name = Ident of "AccessorBox"
+//│             name = Ident of "value"
+//│         FunDefn:
+//│           owner = S of class:$anon⁴
+//│           sym = member:write⁰
+//│           dSym = term:$anon⁴/write¹
+//│           params = Ls of
+//│             ParamList:
+//│               params = Ls of
+//│                 Param:
+//│                   sym = next⁰
+//│                   modulefulness = Modulefulness of N
+//│           body = AssignField:
+//│             lhs = Select{sym=term:$anon⁴/AccessorBox²}:
+//│               qual = This of class:$anon⁴
+//│               name = Ident of "AccessorBox"
+//│             nme = Ident of "value"
+//│             rhs = SimpleRef of next⁰
+//│             rest = Return of Select{sym=term:AccessorBox¹/value⁰}:
+//│               qual = Select{sym=term:$anon⁴/AccessorBox²}:
+//│                 qual = This of class:$anon⁴
+//│                 name = Ident of "AccessorBox"
+//│               name = Ident of "value"
+//│       privateFields = Ls of
+//│         term:$anon⁴/AccessorBox²
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Nil
+//│       ctor = AssignField:
+//│         lhs = This of class:$anon⁴
+//│         nme = Ident of "AccessorBox"
+//│         rhs = SimpleRef of AccessorBox⁰
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:AccessorBox¹
+//│       sym = member:AccessorBox³
+//│       k = Cls
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:AccessorBox¹
+//│           sym = member:accessor⁰
+//│           dSym = term:AccessorBox¹/accessor¹
+//│           body = Return of Instantiate:
+//│             mut = false
+//│             cls = MemberRef{disamb=class:$anon⁴}:
+//│               bms = member:$anon⁵
+//│               disamb = class:$anon⁴
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = This of class:AccessorBox¹
+//│       privateFields = Ls of
+//│         term:AccessorBox¹/value⁰
+//│       ctor = AssignField:
+//│         lhs = This of class:AccessorBox¹
+//│         nme = Ident of "value"
+//│         rhs = Lit of IntLit of 1
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ const value$accessorSymbol = globalThis.Symbol("value");
 //│ let AccessorBox1, $anon5;
@@ -163,6 +432,175 @@ let f = c.f()
 f()
 f()
 c.a.get()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:A, member:g, member:g$)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:g$⁰
+//│       dSym = term:g$¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = C⁰
+//│               modulefulness = Modulefulness of N
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = MemberRef{disamb=term:g⁰}:
+//│           bms = member:g¹
+//│           disamb = term:g⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of C⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:g¹
+//│       dSym = term:g⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = C¹
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp²}):
+//│         body = Assign:
+//│           lhs = tmp:tmp²
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:C²/x²}:
+//│                     qual = SimpleRef of C¹
+//│                     name = Ident of "x"
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = AssignField: \
+//│           lhs = SimpleRef of C¹
+//│           nme = Ident of "x"
+//│           rhs = SimpleRef of tmp:tmp²
+//│           rest = Return of Select{sym=object:Unit⁰}:
+//│             qual = SimpleRef of tmp:runtime⁰
+//│             name = Ident of "Unit"
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:A⁰
+//│       sym = member:A¹
+//│       k = Cls
+//│       auxParams = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = C³
+//│               modulefulness = Modulefulness of N
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:A⁰
+//│           sym = member:get⁰
+//│           dSym = term:A⁰/get¹
+//│           params = Ls of
+//│             ParamList: ‹empty›
+//│           body = Return of Select{sym=term:C²/x²}:
+//│             qual = Select{sym=term:A⁰/C⁴}:
+//│               qual = This of class:A⁰
+//│               name = Ident of "C"
+//│             name = Ident of "x"
+//│       privateFields = Ls of
+//│         term:A⁰/C⁴
+//│       ctor = AssignField:
+//│         lhs = This of class:A⁰
+//│         nme = Ident of "C"
+//│         rhs = SimpleRef of C³
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:C²
+//│       sym = member:C⁵
+//│       ctorSym = S of term:C⁶
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             sym = x³
+//│             modulefulness = Modulefulness of N
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:C²
+//│           sym = member:f⁰
+//│           dSym = term:C²/f¹
+//│           params = Ls of
+//│             ParamList: ‹empty›
+//│           body = Scoped(syms = {tmp:g$here⁰}):
+//│             body = Assign:
+//│               lhs = tmp:g$here⁰
+//│               rhs = Call:
+//│                 fun = MemberRef{disamb=term:g$¹}:
+//│                   bms = member:g$⁰
+//│                   disamb = term:g$¹
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = This of class:C²
+//│               rest = Return of SimpleRef of tmp:g$here⁰
+//│         FunDefn:
+//│           owner = S of class:C²
+//│           sym = member:a⁰
+//│           dSym = term:C²/a¹
+//│           body = Return of Instantiate:
+//│             mut = false
+//│             cls = MemberRef{disamb=class:A⁰}:
+//│               bms = member:A¹
+//│               disamb = class:A⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = This of class:C²
+//│       privateFields = Ls of
+//│         term:C²/x²
+//│       ctor = AssignField:
+//│         lhs = This of class:C²
+//│         nme = Ident of "x"
+//│         rhs = SimpleRef of x³
+//│     rest = Assign: \
+//│     lhs = c⁰
+//│     rhs = Instantiate:
+//│       mut = false
+//│       cls = MemberRef{disamb=class:C²}:
+//│         bms = member:C⁵
+//│         disamb = class:C²
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 0
+//│     rest = Assign: \
+//│     lhs = f²
+//│     rhs = Call:
+//│       fun = Select:
+//│         qual = SimpleRef of c⁰
+//│         name = Ident of "f"
+//│       argss = Ls of
+//│         Nil
+//│     rest = Assign: \
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = SimpleRef of f²
+//│       argss = Ls of
+//│         Nil
+//│     rest = Assign: \
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = SimpleRef of f²
+//│       argss = Ls of
+//│         Nil
+//│     rest = Return of Call:
+//│       fun = Select:
+//│         qual = Select:
+//│           qual = SimpleRef of c⁰
+//│           name = Ident of "a"
+//│         name = Ident of "get"
+//│       argss = Ls of
+//│         Nil
 //│ = 2
 //│ c = C(_)
 //│ f = fun

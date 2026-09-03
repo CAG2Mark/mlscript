@@ -61,6 +61,28 @@ fun f(x) = if x is \( Int then 1, Bool then 2 )
 //│ ╙──      	                   ^
 
 class Box[T](val content: T)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Box⁰
+//│   sym = member:Box¹
+//│   ctorSym = S of term:Box²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = content⁰
+//│         sign = S of Ref{sym=T⁰} of T⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:content¹
+//│       _2 = term:Box⁰/content²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Box⁰/content²
+//│       sym = member:content¹
+//│       rhs = SimpleRef of content⁰
 
 :ucs desugared
 fun interesting(x) =

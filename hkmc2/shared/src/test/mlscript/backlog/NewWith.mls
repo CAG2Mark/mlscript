@@ -48,12 +48,45 @@ new Object with 1
 
 // TODO don't show as `$anon`
 new Object with { val x = 1 }
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:$anon)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:$anon⁰
+//│       sym = member:$anon¹
+//│       k = Cls
+//│       parentPath = S of Select{sym=class:Object⁰}:
+//│         qual = This of globalThis:globalThis⁰
+//│         name = Ident of "Object"
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:x⁰
+//│           _2 = term:$anon⁰/x¹
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Nil
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:$anon⁰/x¹
+//│           sym = member:x⁰
+//│           rhs = Lit of IntLit of 1
+//│     rest = Return of Instantiate:
+//│       mut = false
+//│       cls = MemberRef{disamb=class:$anon⁰}:
+//│         bms = member:$anon¹
+//│         disamb = class:$anon⁰
+//│       argss = Ls of
+//│         Nil
 //│ = $anon { x: 1 }
 
 :e
 new Object with { val x = 1 } with { val y = 1 }
 //│ ╔══[COMPILATION ERROR] Unexpected infix use of keyword 'with' here
-//│ ║  l.54: 	new Object with { val x = 1 } with { val y = 1 }
+//│ ║  l.87: 	new Object with { val x = 1 } with { val y = 1 }
 //│ ╙──      	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
@@ -61,6 +94,41 @@ new Object with { val x = 1 } with { val y = 1 }
 let obj =
   new Object with
     val x = 12
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:$anon)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:$anon²
+//│       sym = member:$anon³
+//│       k = Cls
+//│       parentPath = S of Select{sym=class:Object⁰}:
+//│         qual = This of globalThis:globalThis⁰
+//│         name = Ident of "Object"
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:x²
+//│           _2 = term:$anon²/x³
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Nil
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:$anon²/x³
+//│           sym = member:x²
+//│           rhs = Lit of IntLit of 12
+//│     rest = Assign: \
+//│     lhs = obj⁰
+//│     rhs = Instantiate:
+//│       mut = false
+//│       cls = MemberRef{disamb=class:$anon²}:
+//│         bms = member:$anon³
+//│         disamb = class:$anon²
+//│       argss = Ls of
+//│         Nil
 //│ obj = $anon { x: 12 }
 
 obj.x
@@ -70,6 +138,41 @@ obj.x
 let n =
   new with
     val x = 12
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:$anon)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:$anon⁴
+//│       sym = member:$anon⁵
+//│       k = Cls
+//│       parentPath = S of Select{sym=class:Object⁰}:
+//│         qual = This of globalThis:globalThis⁰
+//│         name = Ident of "Object"
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:x⁴
+//│           _2 = term:$anon⁴/x⁵
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Nil
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:$anon⁴/x⁵
+//│           sym = member:x⁴
+//│           rhs = Lit of IntLit of 12
+//│     rest = Assign: \
+//│     lhs = n⁰
+//│     rhs = Instantiate:
+//│       mut = false
+//│       cls = MemberRef{disamb=class:$anon⁴}:
+//│         bms = member:$anon⁵
+//│         disamb = class:$anon⁴
+//│       argss = Ls of
+//│         Nil
 //│ n = $anon { x: 12 }
 
 n.x
@@ -79,8 +182,92 @@ n.x
 class Foo(x) with
   fun foo = x + 1
   print("Foo", x, foo)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁶
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo⁰
+//│       sym = member:foo⁰
+//│       dSym = term:Foo⁰/foo¹
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:Foo⁰/x⁷}:
+//│                 qual = This of class:Foo⁰
+//│                 name = Ident of "x"
+//│             Arg:
+//│               value = Lit of IntLit of 1
+//│   privateFields = Ls of
+//│     term:Foo⁰/x⁷
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo⁰
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁶
+//│     rest = Assign: \
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of StrLit of "Foo"
+//│           Arg:
+//│             value = Select{sym=term:Foo⁰/x⁷}:
+//│               qual = This of class:Foo⁰
+//│               name = Ident of "x"
+//│           Arg:
+//│             value = Select{sym=term:Foo⁰/foo¹}:
+//│               qual = This of class:Foo⁰
+//│               name = Ident of "foo"
 
 new Foo(123) with { fun foo = 27 }
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:$anon)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:$anon⁶
+//│       sym = member:$anon⁷
+//│       k = Cls
+//│       parentPath = S of MemberRef{disamb=class:Foo⁰}:
+//│         bms = member:Foo¹
+//│         disamb = class:Foo⁰
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:$anon⁶
+//│           sym = member:foo²
+//│           dSym = term:$anon⁶/foo³
+//│           body = Return of Lit of IntLit of 27
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = Lit of IntLit of 123
+//│     rest = Return of Instantiate:
+//│       mut = false
+//│       cls = MemberRef{disamb=class:$anon⁶}:
+//│         bms = member:$anon⁷
+//│         disamb = class:$anon⁶
+//│       argss = Ls of
+//│         Nil
 //│ > Foo 123 27
 //│ = $anon
 
@@ -88,26 +275,102 @@ new Foo(123) with { fun foo = 27 }
 :re
 new (Foo(123)) with { fun foo = 27 }
 //│ ╔══[COMPILATION ERROR] Expected a statically known class; found application of type Foo.
-//│ ║  l.89: 	new (Foo(123)) with { fun foo = 27 }
-//│ ║        	     ^^^^^^^^
+//│ ║  l.276: 	new (Foo(123)) with { fun foo = 27 }
+//│ ║         	     ^^^^^^^^
 //│ ╙── The 'new' keyword requires a statically known class; use the 'new!' operator for dynamic instantiation.
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:tmp, member:$anon)
+//│   body = Assign:
+//│     lhs = tmp:tmp⁰
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:Foo²}:
+//│         bms = member:Foo¹
+//│         disamb = term:Foo²
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 123
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:$anon⁸
+//│       sym = member:$anon⁹
+//│       k = Cls
+//│       parentPath = S of SimpleRef of tmp:tmp⁰
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:$anon⁸
+//│           sym = member:foo⁴
+//│           dSym = term:$anon⁸/foo⁵
+//│           body = Return of Lit of IntLit of 27
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Nil
+//│     rest = Return of Instantiate:
+//│       mut = false
+//│       cls = MemberRef{disamb=class:$anon⁸}:
+//│         bms = member:$anon⁹
+//│         disamb = class:$anon⁸
+//│       argss = Ls of
+//│         Nil
 //│ > Foo 123 124
 //│ ═══[RUNTIME ERROR] TypeError: Class extends value [object Object] is not a constructor or null
 
 :e
 new! (Foo(123)) with { fun foo = 27 }
 //│ ╔══[COMPILATION ERROR] Unexpected infix use of keyword 'with' here
-//│ ║  l.98: 	new! (Foo(123)) with { fun foo = 27 }
-//│ ╙──      	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//│ ║  l.323: 	new! (Foo(123)) with { fun foo = 27 }
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 :e
 :re
 new {Foo(123)} with { fun foo = 27 }
 //│ ╔══[COMPILATION ERROR] Expected a statically known class; found application of type Foo.
-//│ ║  l.106: 	new {Foo(123)} with { fun foo = 27 }
+//│ ║  l.331: 	new {Foo(123)} with { fun foo = 27 }
 //│ ║         	     ^^^^^^^^
 //│ ╙── The 'new' keyword requires a statically known class; use the 'new!' operator for dynamic instantiation.
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:tmp, member:$anon)
+//│   body = Assign:
+//│     lhs = tmp:tmp¹
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:Foo²}:
+//│         bms = member:Foo¹
+//│         disamb = term:Foo²
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 123
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:$anon¹⁰
+//│       sym = member:$anon¹¹
+//│       k = Cls
+//│       parentPath = S of SimpleRef of tmp:tmp¹
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:$anon¹⁰
+//│           sym = member:foo⁶
+//│           dSym = term:$anon¹⁰/foo⁷
+//│           body = Return of Lit of IntLit of 27
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Nil
+//│     rest = Return of Instantiate:
+//│       mut = false
+//│       cls = MemberRef{disamb=class:$anon¹⁰}:
+//│         bms = member:$anon¹¹
+//│         disamb = class:$anon¹⁰
+//│       argss = Ls of
+//│         Nil
 //│ > Foo 123 124
 //│ ═══[RUNTIME ERROR] TypeError: Class extends value [object Object] is not a constructor or null
 
@@ -115,6 +378,54 @@ new Foo(123) with
   // fun foo = super.foo + 1 // TODO (super)
   fun foo = 27
   print("Bar", foo)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:$anon)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:$anon¹²
+//│       sym = member:$anon¹³
+//│       k = Cls
+//│       parentPath = S of MemberRef{disamb=class:Foo⁰}:
+//│         bms = member:Foo¹
+//│         disamb = class:Foo⁰
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:$anon¹²
+//│           sym = member:foo⁸
+//│           dSym = term:$anon¹²/foo⁹
+//│           body = Return of Lit of IntLit of 27
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = Lit of IntLit of 123
+//│       ctor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = Select:
+//│             qual = MemberRef{disamb=module:Predef⁰}:
+//│               bms = member:Predef¹
+//│               disamb = module:Predef⁰
+//│             name = Ident of "print"
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = Lit of StrLit of "Bar"
+//│               Arg:
+//│                 value = Select:
+//│                   qual = This of class:$anon¹²
+//│                   name = Ident of "foo"
+//│     rest = Return of Instantiate:
+//│       mut = false
+//│       cls = MemberRef{disamb=class:$anon¹²}:
+//│         bms = member:$anon¹³
+//│         disamb = class:$anon¹²
+//│       argss = Ls of
+//│         Nil
 //│ > Foo 123 27
 //│ > Bar 27
 //│ = $anon
@@ -122,7 +433,7 @@ new Foo(123) with
 :e
 new Foo(123) with 1
 //│ ╔══[COMPILATION ERROR] Unexpected infix use of keyword 'with' here
-//│ ║  l.123: 	new Foo(123) with 1
+//│ ║  l.434: 	new Foo(123) with 1
 //│ ╙──       	^^^^^^^^^^^^^^^^^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 

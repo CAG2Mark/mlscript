@@ -5,12 +5,80 @@
 
 module BaseLib0 with
   class Foo(val x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of module:BaseLib0⁰
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:BaseLib0⁰/Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:Foo⁰/x²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
 
 module DerivedLib1 with
   val BaseLib: module BaseLib0 = BaseLib0
   fun testFoo = case
     BaseLib.Foo then 1
     _ then 0
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:DerivedLib1⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:DerivedLib1⁰
+//│       sym = member:testFoo⁰
+//│       dSym = term:DerivedLib1⁰/testFoo¹
+//│       body = Scoped(syms = {member:lambda⁰}):
+//│         body = Define:
+//│           defn = FunDefn:
+//│             sym = member:lambda⁰
+//│             dSym = term:lambda¹
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = caseScrut⁰
+//│                     modulefulness = Modulefulness of N
+//│             body = Match:
+//│               scrut = SimpleRef of caseScrut⁰
+//│               arms = Ls of
+//│                 Tuple2:
+//│                   _1 = Cls:
+//│                     cls = class:Foo⁰
+//│                     path = Select{sym=class:Foo⁰}:
+//│                       qual = Select{sym=term:DerivedLib1⁰/BaseLib⁰}:
+//│                         qual = This of module:DerivedLib1⁰
+//│                         name = Ident of "BaseLib"
+//│                       name = Ident of "Foo"
+//│                   _2 = Return of Lit of IntLit of 1
+//│               dflt = S of Return of Lit of IntLit of 0
+//│           rest = Return of MemberRef{disamb=term:lambda¹}:
+//│             bms = member:lambda⁰
+//│             disamb = term:lambda¹
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:BaseLib¹
+//│       _2 = term:DerivedLib1⁰/BaseLib⁰
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:DerivedLib1⁰/BaseLib⁰
+//│       sym = member:BaseLib¹
+//│       rhs = MemberRef{disamb=module:BaseLib0⁰}:
+//│         bms = member:BaseLib0¹
+//│         disamb = module:BaseLib0⁰
 
 DerivedLib1.testFoo(new DerivedLib1.BaseLib.Foo(123))
 //│ = 1

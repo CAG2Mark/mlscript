@@ -4,6 +4,40 @@
 object Example with
   val a = 1
   fun f(x) = [x, a]
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Example⁰
+//│   sym = member:Example¹
+//│   k = Obj
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of object:Example⁰
+//│       sym = member:f⁰
+//│       dSym = term:Example⁰/f¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Tuple:
+//│         mut = false
+//│         elems = Ls of
+//│           Arg:
+//│             value = SimpleRef of x⁰
+//│           Arg:
+//│             value = Select{sym=term:Example⁰/a⁰}:
+//│               qual = This of object:Example⁰
+//│               name = Ident of "a"
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a¹
+//│       _2 = term:Example⁰/a⁰
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Example⁰/a⁰
+//│       sym = member:a¹
+//│       rhs = Lit of IntLit of 1
 
 Example.f(2)
 //│ = [2, 1]
@@ -60,11 +94,64 @@ data class Example2(val a) with
   fun f(inc) = Example2(a + inc)
 //│ ╔══[COMPILATION ERROR] Duplicate definition of member named 'a'.
 //│ ╟── Defined at: 
-//│ ║  l.58: 	data class Example2(val a) with
+//│ ║  l.92: 	data class Example2(val a) with
 //│ ║        	                        ^
 //│ ╟── Defined at: 
-//│ ║  l.59: 	  val a = 1
+//│ ║  l.93: 	  val a = 1
 //│ ╙──      	  ^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Example2⁰
+//│   sym = member:Example2¹
+//│   ctorSym = S of term:Example2²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = a²
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Example2⁰
+//│       sym = member:f²
+//│       dSym = term:Example2⁰/f³
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = inc⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp⁰}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁰
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:Example2⁰/a³}:
+//│                     qual = This of class:Example2⁰
+//│                     name = Ident of "a"
+//│                 Arg:
+//│                   value = SimpleRef of inc⁰
+//│           rest = Return of Call:
+//│             fun = MemberRef{disamb=term:Example2²}:
+//│               bms = member:Example2¹
+//│               disamb = term:Example2²
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a⁴
+//│       _2 = term:Example2⁰/a³
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Example2⁰/a³
+//│       sym = member:a⁴
+//│       rhs = Lit of IntLit of 1
 
 let oops2 = Example2(0).("f")
 //│ oops2 = fun f

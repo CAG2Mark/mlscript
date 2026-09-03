@@ -25,6 +25,27 @@ f(undefined)
 
 
 data class Box(x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Box⁰
+//│   sym = member:Box¹
+//│   ctorSym = S of term:Box²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:Box⁰/x²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Box⁰/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
 //│ dead-param-elim > >>> dead-param-elim results >>>
 //│ dead-param-elim > <<< dead-param-elim results <<<
 
@@ -39,11 +60,11 @@ if f(42) is Box(v) then 0
 //│ let scrut;
 //│ @private
 //│ define f² as fun f³() {
-//│   return Box⁰(undefined)
+//│   return Box²(undefined)
 //│ };
 //│ set scrut = f³();
 //│ match scrut
-//│   Box¹ =>
+//│   Box⁰ =>
 //│     return 0
 //│   else
 //│     throw new globalThis⁰.Error⁰("match error")

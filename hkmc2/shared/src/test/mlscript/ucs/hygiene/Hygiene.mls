@@ -4,6 +4,28 @@
 data class Left[out T](value: T)
 data class Some[out T](value: T)
 data class Right[out T](value: T)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Left⁰
+//│   sym = member:Left¹
+//│   ctorSym = S of term:Left²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = value⁰
+//│         sign = S of Ref{sym=T⁰} of T⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:value¹
+//│       _2 = term:Left⁰/value²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Left⁰/value²
+//│       sym = member:value¹
+//│       rhs = SimpleRef of value⁰
 
 
 fun foo(x) = if x is

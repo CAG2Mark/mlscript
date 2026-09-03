@@ -13,6 +13,11 @@ data class T(n, l, r)
 object L
 //│ deforest > >>> fusing >>>
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Nil⁰
+//│   sym = member:Nil¹
+//│   k = Obj
 
 
 
@@ -458,6 +463,39 @@ rev(map(incr, id(mk(3))), Nil)
 data class Pair(a, b)
 //│ deforest > >>> fusing >>>
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Pair⁰
+//│   sym = member:Pair¹
+//│   ctorSym = S of term:Pair²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = a⁷
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = b⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a⁸
+//│       _2 = term:Pair⁰/a⁹
+//│     Tuple2:
+//│       _1 = member:b¹
+//│       _2 = term:Pair⁰/b²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Pair⁰/a⁹
+//│       sym = member:a⁸
+//│       rhs = SimpleRef of a⁷
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Pair⁰/b²
+//│       sym = member:b¹
+//│       rhs = SimpleRef of b⁰
 
 
 fun pair_up(xs) =
@@ -519,7 +557,7 @@ count(0, rev(Nil, 1 :: 2 :: Nil))
 //│ deforest > >>> fusing >>>
 //│ deforest > Nil⁰ ->
 //│ deforest > 	match: xs⁰
-//│ deforest > Cons⁰(h¹, a⁷) ->
+//│ deforest > Cons⁰(h¹, a¹⁰) ->
 //│ deforest > 	match: xs⁰
 //│ deforest > 	fields: xs⁰.h⁰
 //│ deforest > 	fields: xs⁰.t⁰

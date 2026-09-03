@@ -29,6 +29,127 @@ data class A(x) with
     let t = this
     t.B(2).getB()
 A(1).getA()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(tmp:tmp, member:B)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:B⁰
+//│       sym = member:B¹
+//│       ctorSym = S of term:A⁰/B²
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = y⁰
+//│             modulefulness = Modulefulness of N
+//│       auxParams = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = A¹
+//│               modulefulness = Modulefulness of N
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:B⁰
+//│           sym = member:getB⁰
+//│           dSym = term:B⁰/getB¹
+//│           params = Ls of
+//│             ParamList: ‹empty›
+//│           body = Return of Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:A⁰/x⁰}:
+//│                     qual = Select{sym=term:B⁰/A²}:
+//│                       qual = This of class:B⁰
+//│                       name = Ident of "A"
+//│                     name = Ident of "x"
+//│                 Arg:
+//│                   value = Select{sym=term:B⁰/y¹}:
+//│                     qual = This of class:B⁰
+//│                     name = Ident of "y"
+//│       privateFields = Ls of
+//│         term:B⁰/A²
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:y²
+//│           _2 = term:B⁰/y¹
+//│       ctor = AssignField:
+//│         lhs = This of class:B⁰
+//│         nme = Ident of "A"
+//│         rhs = SimpleRef of A¹
+//│         rest = Define: \
+//│         defn = ValDefn:
+//│           tsym = term:B⁰/y¹
+//│           sym = member:y²
+//│           rhs = SimpleRef of y⁰
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:A⁰
+//│       sym = member:A³
+//│       ctorSym = S of term:A⁴
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = x¹
+//│             modulefulness = Modulefulness of N
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:A⁰
+//│           sym = member:getA⁰
+//│           dSym = term:A⁰/getA¹
+//│           params = Ls of
+//│             ParamList: ‹empty›
+//│           body = Scoped(syms = {t⁰, tmp:tmp⁰}):
+//│             body = Assign:
+//│               lhs = t⁰
+//│               rhs = This of class:A⁰
+//│               rest = Assign: \
+//│               lhs = tmp:tmp⁰
+//│               rhs = Call:
+//│                 fun = Select:
+//│                   qual = SimpleRef of t⁰
+//│                   name = Ident of "B"
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = Lit of IntLit of 2
+//│               rest = Return of Call:
+//│                 fun = Select:
+//│                   qual = SimpleRef of tmp:tmp⁰
+//│                   name = Ident of "getB"
+//│                 argss = Ls of
+//│                   Nil
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:x²
+//│           _2 = term:A⁰/x⁰
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:A⁰/x⁰
+//│           sym = member:x²
+//│           rhs = SimpleRef of x¹
+//│     rest = Assign: \
+//│     lhs = tmp:tmp¹
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:A⁴}:
+//│         bms = member:A³
+//│         disamb = term:A⁴
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 1
+//│     rest = Return of Call:
+//│       fun = Select{sym=term:A⁰/getA¹}:
+//│         qual = SimpleRef of tmp:tmp¹
+//│         name = Ident of "getA"
+//│       argss = Ls of
+//│         Nil
 //│ ═══[RUNTIME ERROR] TypeError: this.B is not a function
 //│ ═══[RUNTIME ERROR] Expected: '3', got: 'undefined'
 
@@ -37,6 +158,41 @@ class Test
 fun hello() =
   class Test2 extends Test
   new Test2
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:Test2)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:Test2⁰
+//│       sym = member:Test2¹
+//│       k = Cls
+//│       parentPath = S of MemberRef{disamb=class:Test⁰}:
+//│         bms = member:Test¹
+//│         disamb = class:Test⁰
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Nil
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:hello⁰
+//│       dSym = term:hello¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Instantiate:
+//│         mut = false
+//│         cls = MemberRef{disamb=class:Test2⁰}:
+//│           bms = member:Test2¹
+//│           disamb = class:Test2⁰
+//│         argss = Ls of
+//│           Nil
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Test⁰
+//│       sym = member:Test¹
+//│       k = Cls
 //│ ═══[RUNTIME ERROR] TypeError: Class extends value undefined is not a constructor or null
 
 /// The following are related to first-class classes, instance checks, and private fields. ///
@@ -53,6 +209,25 @@ fun foo1(x, n) =
 fun foo2() =
   class C()
   C
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:C)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:C⁰
+//│       sym = member:C¹
+//│       ctorSym = S of term:C²
+//│       k = Cls
+//│       paramsOpt = S of ParamList: ‹empty›
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:foo2⁰
+//│       dSym = term:foo2¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of MemberRef{disamb=term:C²}:
+//│         bms = member:C¹
+//│         disamb = term:C²
 
 :w
 fun foo3() =
@@ -89,8 +264,8 @@ fun foo(x, y) =
       x + y + test
   M.foo()
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.85: 	  module M with
-//│ ╙──      	         ^
+//│ ║  l.260: 	  module M with
+//│ ╙──       	         ^
 
 :expect 14
 foo(10, 0)
@@ -104,7 +279,7 @@ fun foo(x, y) =
   fun foo = M.foo()
   foo
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.100: 	  module M with
+//│ ║  l.275: 	  module M with
 //│ ╙──       	         ^
 
 :expect 12
@@ -117,8 +292,21 @@ data class A(x) with
     fun getB() = x
   fun getA() = M.getB()
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.116: 	  module M with
+//│ ║  l.291: 	  module M with
 //│ ╙──       	         ^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M⁰
+//│       sym = member:getB²
+//│       dSym = term:M⁰/getB³
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Select{sym=term:A⁵/x³}:
+//│         qual = This of class:A⁵
+//│         name = Ident of "x"
 
 :expect 2
 A(2).getA()
@@ -133,11 +321,11 @@ fun foo(x) =
   (new Bar).self2
 foo(2)
 //│ ╔══[COMPILATION ERROR] Expected a statically known class; found reference of type Foo.
-//│ ║  l.132: 	  class Bar extends Foo
+//│ ║  l.320: 	  class Bar extends Foo
 //│ ║         	                    ^^^
 //│ ╙── The 'new' keyword requires a statically known class; use the 'new!' operator for dynamic instantiation.
 //│ ╔══[WARNING] Objects are not yet lifted.
-//│ ║  l.129: 	  object Foo with
+//│ ║  l.317: 	  object Foo with
 //│ ╙──       	         ^^^
 //│ ═══[WARNING] Cannot yet lift definition `Bar` as it extends an unliftable class.
 //│ ═══[RUNTIME ERROR] TypeError: Class extends value [object Object] is not a constructor or null
@@ -153,19 +341,19 @@ fun f =
       h
   M.g
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.150: 	  module M with
+//│ ║  l.338: 	  module M with
 //│ ╙──       	         ^
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'M'
-//│ ║  l.152: 	      fun h = M.g
+//│ ║  l.340: 	      fun h = M.g
 //│ ║         	              ^
 //│ ╟── which references the symbol introduced here
-//│ ║  l.150: 	  module M with
+//│ ║  l.338: 	  module M with
 //│ ║         	         ^^^^^^
-//│ ║  l.151: 	    fun g =
+//│ ║  l.339: 	    fun g =
 //│ ║         	^^^^^^^^^^^
-//│ ║  l.152: 	      fun h = M.g
+//│ ║  l.340: 	      fun h = M.g
 //│ ║         	^^^^^^^^^^^^^^^^^
-//│ ║  l.153: 	      h
+//│ ║  l.341: 	      h
 //│ ╙──       	^^^^^^^
 
 

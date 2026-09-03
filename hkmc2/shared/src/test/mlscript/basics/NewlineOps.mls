@@ -350,6 +350,34 @@ let incr = _ + 1
 
 module Arr with
   val len = _.length
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Arr⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:len⁰
+//│       _2 = term:Arr⁰/len¹
+//│   ctor = Scoped(syms = {member:lambda⁰}):
+//│     body = Define:
+//│       defn = FunDefn:
+//│         sym = member:lambda⁰
+//│         dSym = term:lambda¹
+//│         params = Ls of
+//│           ParamList:
+//│             params = Ls of
+//│               Param:
+//│                 sym = _0⁰
+//│                 modulefulness = Modulefulness of N
+//│         body = Return of Select:
+//│           qual = SimpleRef of _0⁰
+//│           name = Ident of "length"
+//│       rest = Define: \
+//│       defn = ValDefn:
+//│         tsym = term:Arr⁰/len¹
+//│         sym = member:len⁰
+//│         rhs = MemberRef{disamb=term:lambda¹}:
+//│           bms = member:lambda⁰
+//│           disamb = term:lambda¹
 
 let
   xs = [1, 2]
@@ -379,9 +407,9 @@ xs |> Arr.len
 ,+
 ys |> Arr.len
 //│ ╔══[PARSE ERROR] Expected start of expression in this position; found new line instead
-//│ ║  l.379: 	,+
+//│ ║  l.407: 	,+
 //│ ║         	  ^
-//│ ║  l.380: 	ys |> Arr.len
+//│ ║  l.408: 	ys |> Arr.len
 //│ ╙──
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
@@ -395,9 +423,9 @@ xs |> Arr.len
 +,
 ys |> Arr.len
 //│ ╔══[PARSE ERROR] Expected start of expression in this position; found new line instead
-//│ ║  l.395: 	+,
+//│ ║  l.423: 	+,
 //│ ║         	  ^
-//│ ║  l.396: 	ys |> Arr.len
+//│ ║  l.424: 	ys |> Arr.len
 //│ ╙──
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
@@ -421,6 +449,23 @@ ys |> Arr.len
 
 
 class Foo(x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo⁰/x¹
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo⁰
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁰
 
 new Foo(1) is Foo
 //│ = true
@@ -428,10 +473,10 @@ new Foo(1) is Foo
 :fixme // ?
 new Foo(1) ,is Foo
 //│ ╔══[PARSE ERROR] Expected start of expression in this position; found 'is' keyword instead
-//│ ║  l.429: 	new Foo(1) ,is Foo
+//│ ║  l.474: 	new Foo(1) ,is Foo
 //│ ╙──       	            ^^
 //│ ╔══[PARSE ERROR] Expected end of input; found identifier instead
-//│ ║  l.429: 	new Foo(1) ,is Foo
+//│ ║  l.474: 	new Foo(1) ,is Foo
 //│ ╙──       	               ^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
@@ -439,10 +484,10 @@ new Foo(1) ,is Foo
 new Foo(1)
 is Foo
 //│ ╔══[PARSE ERROR] Expected start of expression in this position; found 'is' keyword instead
-//│ ║  l.440: 	is Foo
+//│ ║  l.485: 	is Foo
 //│ ╙──       	^^
 //│ ╔══[PARSE ERROR] Expected end of input; found identifier instead
-//│ ║  l.440: 	is Foo
+//│ ║  l.485: 	is Foo
 //│ ╙──       	   ^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 

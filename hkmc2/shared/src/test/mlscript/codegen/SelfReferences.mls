@@ -4,6 +4,20 @@
 :sjs
 module Foo with
   val self: module Foo = Foo
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Foo⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:self⁰
+//│       _2 = term:Foo⁰/self¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/self¹
+//│       sym = member:self⁰
+//│       rhs = MemberRef{disamb=module:Foo⁰}:
+//│         bms = member:Foo¹
+//│         disamb = module:Foo⁰
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Foo1;
 //│ (class Foo {
@@ -24,6 +38,18 @@ Foo.self
 
 module Foo with
   val self: module Foo = this
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Foo²
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:self²
+//│       _2 = term:Foo²/self³
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo²/self³
+//│       sym = member:self²
+//│       rhs = This of module:Foo²
 
 Foo.self
 //│ = class Foo { self: ref'1 } as ref'1
@@ -33,9 +59,21 @@ Foo.self
 module Foo with
   val self = this
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful reference of type Foo.
-//│ ║  l.34: 	  val self = this
+//│ ║  l.60: 	  val self = this
 //│ ║        	             ^^^^
 //│ ╙── Value must be marked as returning a 'module' in order to return a module.
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Foo³
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:self⁴
+//│       _2 = term:Foo³/self⁵
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo³/self⁵
+//│       sym = member:self⁴
+//│       rhs = This of module:Foo³
 
 Foo.self
 //│ = class Foo { self: ref'1 } as ref'1
@@ -43,6 +81,20 @@ Foo.self
 
 object Foo with
   val self = this
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Foo⁴
+//│   sym = member:Foo⁵
+//│   k = Obj
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:self⁶
+//│       _2 = term:Foo⁴/self⁷
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁴/self⁷
+//│       sym = member:self⁶
+//│       rhs = This of object:Foo⁴
 
 Foo.self
 //│ = Foo { self: ref'1, class: object Foo } as ref'1
@@ -51,12 +103,69 @@ Foo.self
 module Foo with
   val foo = 1
   print(Foo.foo)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Foo⁶
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:foo⁰
+//│       _2 = term:Foo⁶/foo¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁶/foo¹
+//│       sym = member:foo⁰
+//│       rhs = Lit of IntLit of 1
+//│     rest = Assign: \
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Select{sym=term:Foo⁶/foo¹}:
+//│               qual = MemberRef{disamb=module:Foo⁶}:
+//│                 bms = member:Foo⁷
+//│                 disamb = module:Foo⁶
+//│               name = Ident of "foo"
 //│ > 1
 
 // * This used not to work, and it could be argued it should be an initialization error
 :sjs
 object Foo with
   val self = id(Foo)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Foo⁸
+//│   sym = member:Foo⁹
+//│   k = Obj
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:self⁸
+//│       _2 = term:Foo⁸/self⁹
+//│   ctor = Scoped(syms = {tmp:tmp⁰}):
+//│     body = Assign:
+//│       lhs = tmp:tmp⁰
+//│       rhs = Call:
+//│         fun = Select{sym=term:Predef⁰/id⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "id"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = MemberRef{disamb=object:Foo⁸}:
+//│                 bms = member:Foo⁹
+//│                 disamb = object:Foo⁸
+//│       rest = Define: \
+//│       defn = ValDefn:
+//│         tsym = term:Foo⁸/self⁹
+//│         sym = member:self⁸
+//│         rhs = SimpleRef of tmp:tmp⁰
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Foo11;
 //│ (class Foo10 {
@@ -82,5 +191,42 @@ object Foo with
 object Foo with
   val self = id(Foo)
   val lateInit = 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Foo¹⁰
+//│   sym = member:Foo¹¹
+//│   k = Obj
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:self¹⁰
+//│       _2 = term:Foo¹⁰/self¹¹
+//│     Tuple2:
+//│       _1 = member:lateInit⁰
+//│       _2 = term:Foo¹⁰/lateInit¹
+//│   ctor = Scoped(syms = {tmp:tmp¹}):
+//│     body = Assign:
+//│       lhs = tmp:tmp¹
+//│       rhs = Call:
+//│         fun = Select{sym=term:Predef⁰/id⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "id"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = MemberRef{disamb=object:Foo¹⁰}:
+//│                 bms = member:Foo¹¹
+//│                 disamb = object:Foo¹⁰
+//│       rest = Define: \
+//│       defn = ValDefn:
+//│         tsym = term:Foo¹⁰/self¹¹
+//│         sym = member:self¹⁰
+//│         rhs = SimpleRef of tmp:tmp¹
+//│       rest = Define: \
+//│       defn = ValDefn:
+//│         tsym = term:Foo¹⁰/lateInit¹
+//│         sym = member:lateInit⁰
+//│         rhs = Lit of IntLit of 1
 
 

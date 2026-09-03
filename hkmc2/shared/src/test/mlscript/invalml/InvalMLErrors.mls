@@ -1,56 +1,196 @@
 :invalml
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:lambda)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:print⁰
+//│       dSym = term:print¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = Select:
+//│           qual = Select:
+//│             qual = This of globalThis:globalThis⁰
+//│             name = Ident of "console"
+//│           name = Ident of "log"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x⁰
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:CodeBase⁰
+//│       sym = member:CodeBase¹
+//│       k = Cls
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Region⁰
+//│       sym = member:Region¹
+//│       k = Cls
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Ref⁰
+//│       sym = member:Ref¹
+//│       ctorSym = S of term:Ref²
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = reg⁰
+//│             sign = S of TyApp{sym=class:Region⁰}:
+//│               lhs = Resolved{sym=class:Region⁰}:
+//│                 t = Ref{sym=member:Region¹} of member:Region¹
+//│                 sym = class:Region⁰
+//│               targs = Ls of
+//│                 Ref{sym=T⁰} of T⁰
+//│             modulefulness = Modulefulness of N
+//│           Param:
+//│             flags = (val)
+//│             sym = value⁰
+//│             sign = S of Ref{sym=S⁰} of S⁰
+//│             modulefulness = Modulefulness of N
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:reg¹
+//│           _2 = term:Ref⁰/reg²
+//│         Tuple2:
+//│           _1 = member:value¹
+//│           _2 = term:Ref⁰/value²
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:Ref⁰/reg²
+//│           sym = member:reg¹
+//│           rhs = SimpleRef of reg⁰
+//│         rest = Define: \
+//│         defn = ValDefn:
+//│           tsym = term:Ref⁰/value²
+//│           sym = member:value¹
+//│           rhs = SimpleRef of value⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "CodeBase"
+//│     rhs = MemberRef{disamb=class:CodeBase⁰}:
+//│       bms = member:CodeBase¹
+//│       disamb = class:CodeBase⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "Region"
+//│     rhs = MemberRef{disamb=class:Region⁰}:
+//│       bms = member:Region¹
+//│       disamb = class:Region⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda⁰
+//│       dSym = term:lambda¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = r⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = v⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Instantiate:
+//│         mut = true
+//│         cls = MemberRef{disamb=class:Ref⁰}:
+//│           bms = member:Ref¹
+//│           disamb = class:Ref⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of r⁰
+//│             Arg:
+//│               value = SimpleRef of v⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "Ref"
+//│     rhs = MemberRef{disamb=term:lambda¹}:
+//│       bms = member:lambda⁰
+//│       disamb = term:lambda¹
 :e
 
 
 2(2)
 //│ ╔══[COMPILATION ERROR] Type error in application
-//│ ║  l.5: 	2(2)
-//│ ║       	^^^^
+//│ ║  l.120: 	2(2)
+//│ ║         	^^^^
 //│ ╙── because: cannot constrain  Int  <:  (Int) ->{'eff} ('app)
 //│ Type: ⊥
 
 (x => x(0))(1)
 //│ ╔══[COMPILATION ERROR] Type error in integer literal with expected type 'x
-//│ ║  l.12: 	(x => x(0))(1)
-//│ ║        	            ^
+//│ ║  l.127: 	(x => x(0))(1)
+//│ ║         	            ^
 //│ ╟── because: cannot constrain  Int  <:  'x
 //│ ╙── because: cannot constrain  Int  <:  (Int) ->{'eff} ('app)
 //│ Type: ⊥
 
 (1).Foo#a()
 //│ ╔══[COMPILATION ERROR] Name not found: Foo
-//│ ║  l.20: 	(1).Foo#a()
-//│ ╙──      	   ^^^^
+//│ ║  l.135: 	(1).Foo#a()
+//│ ╙──       	   ^^^^
 //│ ╔══[COMPILATION ERROR] Identifier `Foo` does not name a known class symbol.
-//│ ║  l.20: 	(1).Foo#a()
-//│ ╙──      	   ^^^^
+//│ ║  l.135: 	(1).Foo#a()
+//│ ╙──       	   ^^^^
 //│ ╔══[COMPILATION ERROR] Expected a statically known class; found ‹error›.
-//│ ║  l.20: 	(1).Foo#a()
-//│ ╙──      	   ^^^^
+//│ ║  l.135: 	(1).Foo#a()
+//│ ╙──       	   ^^^^
 //│ ╔══[COMPILATION ERROR] Not a valid class: ‹error›
-//│ ║  l.20: 	(1).Foo#a()
-//│ ╙──      	   ^^^^
+//│ ║  l.135: 	(1).Foo#a()
+//│ ╙──       	   ^^^^
 //│ Type: ⊥
 
 
 fun Oops() = 1
 Oops().Oops#a()
 //│ ╔══[COMPILATION ERROR] Identifier `Oops` does not name a known class symbol.
-//│ ║  l.37: 	Oops().Oops#a()
-//│ ╙──      	      ^^^^^
+//│ ║  l.152: 	Oops().Oops#a()
+//│ ╙──       	      ^^^^^
 //│ ╔══[COMPILATION ERROR] Not a valid class: reference
-//│ ║  l.37: 	Oops().Oops#a()
-//│ ╙──      	      ^^^^^
+//│ ║  l.152: 	Oops().Oops#a()
+//│ ╙──       	      ^^^^^
 //│ Type: ⊥
 
 data class Oops2()
 (new Oops2()).Oops2#a()
 //│ ╔══[COMPILATION ERROR] Class 'Oops2' does not contain member 'a'.
-//│ ║  l.47: 	(new Oops2()).Oops2#a()
-//│ ╙──      	                    ^
+//│ ║  l.162: 	(new Oops2()).Oops2#a()
+//│ ╙──       	                    ^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:tmp)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:Oops2⁰
+//│       sym = member:Oops2¹
+//│       ctorSym = S of term:Oops2²
+//│       k = Cls
+//│       paramsOpt = S of ParamList: ‹empty›
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁰
+//│     rhs = Instantiate:
+//│       mut = false
+//│       cls = MemberRef{disamb=class:Oops2⁰}:
+//│         bms = member:Oops2¹
+//│         disamb = class:Oops2⁰
+//│       argss = Ls of
+//│         Nil
+//│     rest = Return of Call:
+//│       fun = Select:
+//│         qual = SimpleRef of tmp:tmp⁰
+//│         name = Ident of "a"
+//│       argss = Ls of
+//│         Nil
 //│ ╔══[COMPILATION ERROR] a is not a valid member in class Oops2
-//│ ║  l.47: 	(new Oops2()).Oops2#a()
-//│ ╙──      	 ^^^^^^^^^^^^^^^^^^^^
+//│ ║  l.162: 	(new Oops2()).Oops2#a()
+//│ ╙──       	 ^^^^^^^^^^^^^^^^^^^^
 //│ Type: ⊥
 
 
@@ -58,8 +198,8 @@ data class Oops2()
 fun inc(x) = x + 1
 inc("oops")
 //│ ╔══[COMPILATION ERROR] Type error in string literal with expected type 'x
-//│ ║  l.59: 	inc("oops")
-//│ ║        	    ^^^^^^
+//│ ║  l.199: 	inc("oops")
+//│ ║         	    ^^^^^^
 //│ ╟── because: cannot constrain  Str  <:  'x
 //│ ╙── because: cannot constrain  Str  <:  Int
 //│ Type: Int
@@ -67,8 +207,8 @@ inc("oops")
 fun inc(x) = x + 1
 inc as Int
 //│ ╔══[COMPILATION ERROR] Type error in reference with expected type Int
-//│ ║  l.68: 	inc as Int
-//│ ║        	^^^
+//│ ║  l.208: 	inc as Int
+//│ ║         	^^^
 //│ ╙── because: cannot constrain  ('x) ->{⊥} (Int)  <:  Int
 //│ Type: Int
 

@@ -11,6 +11,37 @@ open annotations
 class A() with
   let z = 0
   set z += 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A⁰
+//│   sym = member:A¹
+//│   ctorSym = S of term:A²
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
+//│   privateFields = Ls of
+//│     term:A⁰/z⁰
+//│   ctor = Scoped(syms = {tmp:tmp⁰}):
+//│     body = AssignField:
+//│       lhs = This of class:A⁰
+//│       nme = Ident of "z"
+//│       rhs = Lit of IntLit of 0
+//│       rest = Assign: \
+//│       lhs = tmp:tmp⁰
+//│       rhs = Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:A⁰/z⁰}:
+//│                 qual = This of class:A⁰
+//│                 name = Ident of "z"
+//│             Arg:
+//│               value = Lit of IntLit of 1
+//│       rest = AssignField: \
+//│       lhs = This of class:A⁰
+//│       nme = Ident of "z"
+//│       rhs = SimpleRef of tmp:tmp⁰
+//│   bufferable = S of true
 //│ ═══[INTERNAL ERROR] [BlockChecker] Invalid IR: symbol tmp:tmp⁰ is bound more than once
 
 
@@ -22,6 +53,82 @@ class A(x) with
     set x += 1
     set z += 2
     x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A³
+//│   sym = member:A⁴
+//│   ctorSym = S of term:A⁵
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:A³
+//│       sym = member:f⁰
+//│       dSym = term:A³/f¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = y⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp¹, tmp:tmp²}):
+//│         body = Assign:
+//│           lhs = tmp:tmp¹
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:A³/x¹}:
+//│                     qual = This of class:A³
+//│                     name = Ident of "x"
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = AssignField: \
+//│           lhs = This of class:A³
+//│           nme = Ident of "x"
+//│           rhs = SimpleRef of tmp:tmp¹
+//│           rest = Assign: \
+//│           lhs = tmp:tmp²
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:A³/z¹}:
+//│                     qual = This of class:A³
+//│                     name = Ident of "z"
+//│                 Arg:
+//│                   value = Lit of IntLit of 2
+//│           rest = AssignField: \
+//│           lhs = This of class:A³
+//│           nme = Ident of "z"
+//│           rhs = SimpleRef of tmp:tmp²
+//│           rest = Return of Select{sym=term:A³/x¹}:
+//│             qual = This of class:A³
+//│             name = Ident of "x"
+//│   privateFields = Ls of
+//│     term:A³/x¹
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:z²
+//│       _2 = term:A³/z¹
+//│   ctor = AssignField:
+//│     lhs = This of class:A³
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:A³/z¹
+//│       sym = member:z²
+//│       rhs = Select{sym=term:A³/x¹}:
+//│         qual = This of class:A³
+//│         name = Ident of "x"
+//│   bufferable = S of true
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let A3;
 //│ A3 = function A(x) {
@@ -119,5 +226,65 @@ class A(x) with
   fun f(y) =
     set z += 1
     z
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A⁶
+//│   sym = member:A⁷
+//│   ctorSym = S of term:A⁸
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x²
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:A⁶
+//│       sym = member:f²
+//│       dSym = term:A⁶/f³
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = y¹
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp³}):
+//│         body = Assign:
+//│           lhs = tmp:tmp³
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:A⁶/z³}:
+//│                     qual = This of class:A⁶
+//│                     name = Ident of "z"
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = AssignField: \
+//│           lhs = This of class:A⁶
+//│           nme = Ident of "z"
+//│           rhs = SimpleRef of tmp:tmp³
+//│           rest = Return of Select{sym=term:A⁶/z³}:
+//│             qual = This of class:A⁶
+//│             name = Ident of "z"
+//│   privateFields = Ls of
+//│     term:A⁶/x³
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:z⁴
+//│       _2 = term:A⁶/z³
+//│   ctor = AssignField:
+//│     lhs = This of class:A⁶
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x²
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:A⁶/z³
+//│       sym = member:z⁴
+//│       rhs = Select{sym=term:A⁶/x³}:
+//│         qual = This of class:A⁶
+//│         name = Ident of "x"
+//│   bufferable = S of true
 
 

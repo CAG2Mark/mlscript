@@ -1,4 +1,119 @@
 :invalml
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:lambda)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:print⁰
+//│       dSym = term:print¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = Select:
+//│           qual = Select:
+//│             qual = This of globalThis:globalThis⁰
+//│             name = Ident of "console"
+//│           name = Ident of "log"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x⁰
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:CodeBase⁰
+//│       sym = member:CodeBase¹
+//│       k = Cls
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Region⁰
+//│       sym = member:Region¹
+//│       k = Cls
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Ref⁰
+//│       sym = member:Ref¹
+//│       ctorSym = S of term:Ref²
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = reg⁰
+//│             sign = S of TyApp{sym=class:Region⁰}:
+//│               lhs = Resolved{sym=class:Region⁰}:
+//│                 t = Ref{sym=member:Region¹} of member:Region¹
+//│                 sym = class:Region⁰
+//│               targs = Ls of
+//│                 Ref{sym=T⁰} of T⁰
+//│             modulefulness = Modulefulness of N
+//│           Param:
+//│             flags = (val)
+//│             sym = value⁰
+//│             sign = S of Ref{sym=S⁰} of S⁰
+//│             modulefulness = Modulefulness of N
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:reg¹
+//│           _2 = term:Ref⁰/reg²
+//│         Tuple2:
+//│           _1 = member:value¹
+//│           _2 = term:Ref⁰/value²
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:Ref⁰/reg²
+//│           sym = member:reg¹
+//│           rhs = SimpleRef of reg⁰
+//│         rest = Define: \
+//│         defn = ValDefn:
+//│           tsym = term:Ref⁰/value²
+//│           sym = member:value¹
+//│           rhs = SimpleRef of value⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "CodeBase"
+//│     rhs = MemberRef{disamb=class:CodeBase⁰}:
+//│       bms = member:CodeBase¹
+//│       disamb = class:CodeBase⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "Region"
+//│     rhs = MemberRef{disamb=class:Region⁰}:
+//│       bms = member:Region¹
+//│       disamb = class:Region⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda⁰
+//│       dSym = term:lambda¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = r⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = v⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Instantiate:
+//│         mut = true
+//│         cls = MemberRef{disamb=class:Ref⁰}:
+//│           bms = member:Ref¹
+//│           disamb = class:Ref⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of r⁰
+//│             Arg:
+//│               value = SimpleRef of v⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "Ref"
+//│     rhs = MemberRef{disamb=term:lambda¹}:
+//│       bms = member:lambda⁰
+//│       disamb = term:lambda¹
 
 
 fun add: (Int, Int) -> Int
@@ -10,37 +125,37 @@ fun foo: Int -> Int
 fun foo: Int -> Int
 //│ ╔══[COMPILATION ERROR] Multiple declarations of symbol 'foo'
 //│ ╟── declared here
-//│ ║  l.9: 	fun foo: Int -> Int
-//│ ║       	^^^^^^^^^^^^^^^^^^^
+//│ ║  l.124: 	fun foo: Int -> Int
+//│ ║         	^^^^^^^^^^^^^^^^^^^
 //│ ╟── declared here
-//│ ║  l.10: 	fun foo: Int -> Int
-//│ ╙──      	^^^^^^^^^^^^^^^^^^^
+//│ ║  l.125: 	fun foo: Int -> Int
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^
 
 :e
 fun id(x) = x
 fun id(y) = y
 //│ ╔══[COMPILATION ERROR] Multiple definitions of symbol 'id'
 //│ ╟── defined here
-//│ ║  l.20: 	fun id(x) = x
-//│ ║        	^^^^^^^^^^^^^
+//│ ║  l.135: 	fun id(x) = x
+//│ ║         	^^^^^^^^^^^^^
 //│ ╟── defined here
-//│ ║  l.21: 	fun id(y) = y
-//│ ╙──      	^^^^^^^^^^^^^
+//│ ║  l.136: 	fun id(y) = y
+//│ ╙──       	^^^^^^^^^^^^^
 
 :e
 fun bar: Str -> Str
 fun bar(x) = let t = x + 1 in "aaa"
 //│ ╔══[COMPILATION ERROR] Type error in reference with expected type Int
-//│ ║  l.32: 	fun bar(x) = let t = x + 1 in "aaa"
-//│ ║        	                     ^
+//│ ║  l.147: 	fun bar(x) = let t = x + 1 in "aaa"
+//│ ║         	                     ^
 //│ ╙── because: cannot constrain  Str  <:  Int
 
 :e
 fun baz: Int -> Int
 fun baz(x) = "bbb"
 //│ ╔══[COMPILATION ERROR] Type error in string literal with expected type Int
-//│ ║  l.40: 	fun baz(x) = "bbb"
-//│ ║        	             ^^^^^
+//│ ║  l.155: 	fun baz(x) = "bbb"
+//│ ║         	             ^^^^^
 //│ ╙── because: cannot constrain  Str  <:  Int
 
 add(1, 2)
@@ -53,16 +168,16 @@ add(1, 2) as Int
 :e
 add(0, 0) as Str
 //│ ╔══[COMPILATION ERROR] Type error in application of type ‹not implemented› with expected type Str
-//│ ║  l.54: 	add(0, 0) as Str
-//│ ║        	^^^^^^^^^
+//│ ║  l.169: 	add(0, 0) as Str
+//│ ║         	^^^^^^^^^
 //│ ╙── because: cannot constrain  Int  <:  Str
 //│ Type: Str
 
 :e
 fun errAdd(x: Int) = x + "1"
 //│ ╔══[COMPILATION ERROR] Type error in string literal with expected type Int
-//│ ║  l.62: 	fun errAdd(x: Int) = x + "1"
-//│ ║        	                         ^^^
+//│ ║  l.177: 	fun errAdd(x: Int) = x + "1"
+//│ ║         	                         ^^^
 //│ ╙── because: cannot constrain  Str  <:  Int
 
 fun high: ([A] -> A -> A) -> Int
@@ -81,12 +196,12 @@ high(x => x)
 :e
 high(x => x + 1)
 //│ ╔══[COMPILATION ERROR] Type error in reference with expected type Int
-//│ ║  l.82: 	high(x => x + 1)
-//│ ║        	          ^
+//│ ║  l.197: 	high(x => x + 1)
+//│ ║         	          ^
 //│ ╙── because: cannot constrain  A  <:  Int
 //│ ╔══[COMPILATION ERROR] Type error in application with expected type A
-//│ ║  l.82: 	high(x => x + 1)
-//│ ║        	          ^^^^^
+//│ ║  l.197: 	high(x => x + 1)
+//│ ║         	          ^^^^^
 //│ ╙── because: cannot constrain  Int  <:  A
 //│ Type: Int
 
@@ -109,7 +224,7 @@ fun baz(z) =
 :e
 baz as Int -> (([A] -> A -> A), Int) -> Int
 //│ ╔══[COMPILATION ERROR] Cannot type non-function term Ref(member:baz) as (Int) ->{⊥} ([outer, 'A] -> ('A) ->{⊥} 'A, Int) ->{⊥} Int
-//│ ║  l.110: 	baz as Int -> (([A] -> A -> A), Int) -> Int
+//│ ║  l.225: 	baz as Int -> (([A] -> A -> A), Int) -> Int
 //│ ╙──       	^^^
 //│ Type: ⊥
 
@@ -120,7 +235,7 @@ baz(42)
 :e
 baz(42) as (([A] -> A -> A), Int) -> Int
 //│ ╔══[COMPILATION ERROR] Cannot type non-function term App(Ref(member:baz),Tup(List(Fld(‹›,Lit(IntLit(42)),None)))) as ([outer, 'A] -> ('A) ->{⊥} 'A, Int) ->{⊥} Int
-//│ ║  l.121: 	baz(42) as (([A] -> A -> A), Int) -> Int
+//│ ║  l.236: 	baz(42) as (([A] -> A -> A), Int) -> Int
 //│ ╙──       	^^^^^^^
 //│ Type: ⊥
 
@@ -141,10 +256,10 @@ id as [A] -> A -> A
 :e
 42 as Int | Num
 //│ ╔══[COMPILATION ERROR] Unexpected term form in expression position (alternation)
-//│ ║  l.142: 	42 as Int | Num
+//│ ║  l.257: 	42 as Int | Num
 //│ ╙──       	^^^^^^^^^^^^^^^
 //│ ╔══[COMPILATION ERROR] Term shape not yet supported by InvalML: CompType(Asc(Lit(IntLit(42)),Ref(member:Int)),Ref(member:Num),true)
-//│ ║  l.142: 	42 as Int | Num
+//│ ║  l.257: 	42 as Int | Num
 //│ ╙──       	^^^^^^^^^^^^^^^
 //│ Type: ⊥
 
@@ -175,7 +290,7 @@ foo
 :e
 foo(42, 1)
 //│ ╔══[COMPILATION ERROR] Type error in integer literal with expected type ¬'A
-//│ ║  l.176: 	foo(42, 1)
+//│ ║  l.291: 	foo(42, 1)
 //│ ║         	        ^
 //│ ╟── because: cannot constrain  Int  <:  ¬'A
 //│ ╟── because: cannot constrain  'A  <:  ¬{Int}

@@ -1,6 +1,28 @@
 :js
 
 data class Some[T](value: T)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Some⁰
+//│   sym = member:Some¹
+//│   ctorSym = S of term:Some²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = value⁰
+//│         sign = S of Ref{sym=T⁰} of T⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:value¹
+//│       _2 = term:Some⁰/value²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Some⁰/value²
+//│       sym = member:value¹
+//│       rhs = SimpleRef of value⁰
 
 
 :fixme // TODO
@@ -11,9 +33,9 @@ fun f(a, b) = if a is
     or  b is Some(v)  then v
   else 0
 //│ ╔══[COMPILATION ERROR] Unexpected infix use of keyword 'then' here
-//│ ║  l.10: 	    and b is Some(v') then v + v'
+//│ ║  l.32: 	    and b is Some(v') then v + v'
 //│ ║        	                           ^^^^^^
-//│ ║  l.11: 	    or  b is Some(v)  then v
+//│ ║  l.33: 	    or  b is Some(v)  then v
 //│ ╙──      	^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 

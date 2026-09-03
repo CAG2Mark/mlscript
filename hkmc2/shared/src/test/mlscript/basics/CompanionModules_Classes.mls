@@ -4,15 +4,27 @@
 class C()
 module C with
   val empty = 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:C⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:empty⁰
+//│       _2 = term:C⁰/empty¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C⁰/empty¹
+//│       sym = member:empty⁰
+//│       rhs = Lit of IntLit of 1
 
 :rt
 C()
 //│ ——————————————| Resolved tree |—————————————————————————————————————————————————————————————————————
 //│ Blk:
-//│   res = App{typ=class:C⁰}:
-//│     lhs = Resolved{sym=term:C¹}:
-//│       t = Ref{sym=member:C²} of member:C²
-//│       sym = term:C¹
+//│   res = App{typ=class:C¹}:
+//│     lhs = Resolved{sym=term:C²}:
+//│       t = Ref{sym=member:C³} of member:C³
+//│       sym = term:C²
 //│     rhs = Tup of Nil
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = C()
@@ -20,7 +32,7 @@ C()
 :sir
 let f = new C
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let f; @private define f as fun f⁰() { return new C⁰() }; set f¹ = f⁰; end
+//│ let f; @private define f as fun f⁰() { return new C¹() }; set f¹ = f⁰; end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ f = fun f
 
@@ -31,10 +43,10 @@ f()
 new C()
 //│ ——————————————| Resolved tree |—————————————————————————————————————————————————————————————————————
 //│ Blk:
-//│   res = New{typ=class:C⁰}:
-//│     cls = Resolved{sym=class:C⁰}:
-//│       t = Ref{sym=member:C²} of member:C²
-//│       sym = class:C⁰
+//│   res = New{typ=class:C¹}:
+//│     cls = Resolved{sym=class:C¹}:
+//│       t = Ref{sym=member:C³} of member:C³
+//│       sym = class:C¹
 //│     args = Ls of
 //│       Tup of Nil
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
@@ -44,13 +56,13 @@ new C()
 C.empty
 //│ ——————————————| Resolved tree |—————————————————————————————————————————————————————————————————————
 //│ Blk:
-//│   res = Resolved{sym=term:C³/empty⁰}:
-//│     t = Sel{sym=member:empty¹}:
-//│       prefix = Resolved{sym=module:C³,typ=module:C³}:
-//│         t = Ref{sym=member:C²} of member:C²
-//│         sym = module:C³
+//│   res = Resolved{sym=term:C⁰/empty¹}:
+//│     t = Sel{sym=member:empty⁰}:
+//│       prefix = Resolved{sym=module:C⁰,typ=module:C⁰}:
+//│         t = Ref{sym=member:C³} of member:C³
+//│         sym = module:C⁰
 //│       nme = Ident of "empty"
-//│     sym = term:C³/empty⁰
+//│     sym = term:C⁰/empty¹
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 1
 
@@ -64,18 +76,30 @@ id(C).empty
 class C
 module C with
   val empty = 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:C⁴
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:empty²
+//│       _2 = term:C⁴/empty³
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C⁴/empty³
+//│       sym = member:empty²
+//│       rhs = Lit of IntLit of 1
 
 :rt
 C.empty
 //│ ——————————————| Resolved tree |—————————————————————————————————————————————————————————————————————
 //│ Blk:
-//│   res = Resolved{sym=term:C⁴/empty²}:
-//│     t = Sel{sym=member:empty³}:
+//│   res = Resolved{sym=term:C⁴/empty³}:
+//│     t = Sel{sym=member:empty²}:
 //│       prefix = Resolved{sym=module:C⁴,typ=module:C⁴}:
 //│         t = Ref{sym=member:C⁵} of member:C⁵
 //│         sym = module:C⁴
 //│       nme = Ident of "empty"
-//│     sym = term:C⁴/empty²
+//│     sym = term:C⁴/empty³
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 1
 
@@ -85,6 +109,30 @@ class Test with
 module Test with
   val ans = 42
   fun test = new Test
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Test⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Test⁰
+//│       sym = member:test⁰
+//│       dSym = term:Test⁰/test¹
+//│       body = Return of Instantiate:
+//│         mut = false
+//│         cls = MemberRef{disamb=class:Test¹}:
+//│           bms = member:Test²
+//│           disamb = class:Test¹
+//│         argss = Ls of
+//│           Nil
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:ans⁰
+//│       _2 = term:Test⁰/ans¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Test⁰/ans¹
+//│       sym = member:ans⁰
+//│       rhs = Lit of IntLit of 42
 
 Test.test.hi
 //│ = 42
@@ -101,6 +149,57 @@ class Foo() with // the class definition is moved to the location of its compani
 set state += 1
 module Foo with
   val res = Foo().foo
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:tmp)
+//│   body = Assign:
+//│     lhs = tmp:tmp⁰
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:+⁰
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = SimpleRef of state⁰
+//│           Arg:
+//│             value = Lit of IntLit of 1
+//│     rest = Assign: \
+//│     lhs = state⁰
+//│     rhs = SimpleRef of tmp:tmp⁰
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Foo⁰
+//│       sym = member:Foo¹
+//│       ctorSym = S of term:Foo²
+//│       k = Cls
+//│       paramsOpt = S of ParamList: ‹empty›
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:Foo⁰
+//│           sym = member:foo⁰
+//│           dSym = term:Foo⁰/foo¹
+//│           body = Return of SimpleRef of state⁰
+//│       companion = S of ClsLikeBody:
+//│         isym = module:Foo³
+//│         publicFields = Ls of
+//│           Tuple2:
+//│             _1 = member:res⁰
+//│             _2 = term:Foo³/res¹
+//│         ctor = Scoped(syms = {tmp:tmp¹}):
+//│           body = Assign:
+//│             lhs = tmp:tmp¹
+//│             rhs = Call:
+//│               fun = MemberRef{disamb=term:Foo²}:
+//│                 bms = member:Foo¹
+//│                 disamb = term:Foo²
+//│               argss = Ls of
+//│                 Nil
+//│             rest = Define: \
+//│             defn = ValDefn:
+//│               tsym = term:Foo³/res¹
+//│               sym = member:res⁰
+//│               rhs = Select{sym=term:Foo⁰/foo¹}:
+//│                 qual = SimpleRef of tmp:tmp¹
+//│                 name = Ident of "foo"
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Foo1, tmp;
 //│ tmp = state + 1;
@@ -140,6 +239,48 @@ module Foo with
   fun foo(using Int) = use[Int]
 print(x)
 bar
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Foo⁴
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Foo⁴
+//│       sym = member:foo²
+//│       dSym = term:Foo⁴/foo³
+//│       params = Ls of
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = tmp²
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = Select{sym=term:Predef⁰/use⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "use"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of tmp²
+//│   ctor = Scoped(syms = {tmp:tmp³}):
+//│     body = Assign:
+//│       lhs = tmp:tmp³
+//│       rhs = Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x⁰
+//│             Arg:
+//│               value = Lit of IntLit of 1
+//│       rest = Assign: \
+//│       lhs = x⁰
+//│       rhs = SimpleRef of tmp:tmp³
 //│ > 1
 //│ > 2
 //│ = 42

@@ -39,6 +39,123 @@ object Foo with
   print(x)
   print(f())
   print(g())
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Foo⁰
+//│   sym = member:Foo¹
+//│   k = Obj
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of object:Foo⁰
+//│       sym = member:g⁰
+//│       dSym = term:Foo⁰/g¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Select{sym=term:Foo⁰/x⁰}:
+//│         qual = This of object:Foo⁰
+//│         name = Ident of "x"
+//│   privateFields = Ls of
+//│     term:Foo⁰/x⁰
+//│     term:Foo⁰/f⁰
+//│     term:Foo⁰/x¹
+//│   ctor = Scoped(syms = {tmp:tmp⁰, tmp:tmp¹, tmp:tmp², member:lambda⁰}):
+//│     body = AssignField:
+//│       lhs = This of object:Foo⁰
+//│       nme = Ident of "x"
+//│       rhs = Lit of IntLit of 1
+//│       rest = Define: \
+//│       defn = FunDefn:
+//│         sym = member:lambda⁰
+//│         dSym = term:lambda¹
+//│         params = Ls of
+//│           ParamList: ‹empty›
+//│         body = Return of Select{sym=term:Foo⁰/x⁰}:
+//│           qual = This of object:Foo⁰
+//│           name = Ident of "x"
+//│       rest = AssignField: \
+//│       lhs = This of object:Foo⁰
+//│       nme = Ident of "f"
+//│       rhs = MemberRef{disamb=term:lambda¹}:
+//│         bms = member:lambda⁰
+//│         disamb = term:lambda¹
+//│       rest = Assign: \
+//│       lhs = tmp:tmp⁰
+//│       rhs = Call:
+//│         fun = Select{sym=term:Foo⁰/f⁰}:
+//│           qual = This of object:Foo⁰
+//│           name = Ident of "f"
+//│         argss = Ls of
+//│           Nil
+//│       rest = Assign: \
+//│       lhs = ‹no symbol›
+//│       rhs = Call:
+//│         fun = Select{sym=term:Predef⁰/print⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "print"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of tmp:tmp⁰
+//│       rest = AssignField: \
+//│       lhs = This of object:Foo⁰
+//│       nme = Ident of "x"
+//│       rhs = Lit of IntLit of 2
+//│       rest = Assign: \
+//│       lhs = ‹no symbol›
+//│       rhs = Call:
+//│         fun = Select{sym=term:Predef⁰/print⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "print"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:Foo⁰/x¹}:
+//│                 qual = This of object:Foo⁰
+//│                 name = Ident of "x"
+//│       rest = Assign: \
+//│       lhs = tmp:tmp¹
+//│       rhs = Call:
+//│         fun = Select{sym=term:Foo⁰/f⁰}:
+//│           qual = This of object:Foo⁰
+//│           name = Ident of "f"
+//│         argss = Ls of
+//│           Nil
+//│       rest = Assign: \
+//│       lhs = ‹no symbol›
+//│       rhs = Call:
+//│         fun = Select{sym=term:Predef⁰/print⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "print"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of tmp:tmp¹
+//│       rest = Assign: \
+//│       lhs = tmp:tmp²
+//│       rhs = Call:
+//│         fun = Select{sym=term:Foo⁰/g¹}:
+//│           qual = This of object:Foo⁰
+//│           name = Ident of "g"
+//│         argss = Ls of
+//│           Nil
+//│       rest = Assign: \
+//│       lhs = ‹no symbol›
+//│       rhs = Call:
+//│         fun = Select{sym=term:Predef⁰/print⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "print"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of tmp:tmp²
 //│ > 1
 //│ > 2
 //│ > 1

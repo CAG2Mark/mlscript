@@ -4,6 +4,38 @@
 module Example with
   val a = 456
   fun f(x) = [x, a]
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Example⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Example⁰
+//│       sym = member:f⁰
+//│       dSym = term:Example⁰/f¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Tuple:
+//│         mut = false
+//│         elems = Ls of
+//│           Arg:
+//│             value = SimpleRef of x⁰
+//│           Arg:
+//│             value = Select{sym=term:Example⁰/a⁰}:
+//│               qual = This of module:Example⁰
+//│               name = Ident of "a"
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a¹
+//│       _2 = term:Example⁰/a⁰
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Example⁰/a⁰
+//│       sym = member:a¹
+//│       rhs = Lit of IntLit of 456
 
 :ssjs
 Example.f(123)
@@ -26,7 +58,7 @@ s(123)
 :e
 Example |>. s(123)
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful reference of type Example.
-//│ ║  l.27: 	Example |>. s(123)
+//│ ║  l.59: 	Example |>. s(123)
 //│ ║        	^^^^^^^
 //│ ╙── Module argument passed to a non-module parameter.
 //│ = [123, 456]
@@ -38,6 +70,60 @@ module Test with
   print(s)
   fun foo() = print(s)
   fun bar() = foo()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Test⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Test⁰
+//│       sym = member:foo⁰
+//│       dSym = term:Test⁰/foo¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = Select{sym=term:Predef⁰/print⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "print"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:Test⁰/s⁰}:
+//│                 qual = This of module:Test⁰
+//│                 name = Ident of "s"
+//│     FunDefn:
+//│       owner = S of module:Test⁰
+//│       sym = member:bar⁰
+//│       dSym = term:Test⁰/bar¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = Select{sym=term:Test⁰/foo¹}:
+//│           qual = This of module:Test⁰
+//│           name = Ident of "foo"
+//│         argss = Ls of
+//│           Nil
+//│   privateFields = Ls of
+//│     term:Test⁰/s⁰
+//│   ctor = AssignField:
+//│     lhs = This of module:Test⁰
+//│     nme = Ident of "s"
+//│     rhs = Lit of IntLit of 1
+//│     rest = Assign: \
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Select{sym=term:Test⁰/s⁰}:
+//│               qual = This of module:Test⁰
+//│               name = Ident of "s"
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Test1;
 //│ (class Test {

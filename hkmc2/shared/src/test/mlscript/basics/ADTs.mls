@@ -10,6 +10,11 @@ class Expr
 //│ ╔══[PARSE ERROR] Expected end of input; found indented block instead
 //│ ║  l.8: 	  constructor Lit(n: Int)
 //│ ╙──     	^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Expr⁰
+//│   sym = member:Expr¹
+//│   k = Cls
 
 class Expr[A] with
   constructor
@@ -17,6 +22,11 @@ class Expr[A] with
     Add(lhs: Expr[Int], rhs: Expr[Int]) { A = Int }
 //│ ═══[COMPILATION ERROR] Expected a valid class definition head; found ‹erroneous syntax› instead
 //│ ═══[COMPILATION ERROR] Expected a valid class definition head; found ‹erroneous syntax› instead
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Expr²
+//│   sym = member:Expr³
+//│   k = Cls
 
 
 // * one can also go the TypeScript way
@@ -24,6 +34,30 @@ class Expr[A] with
 data class Lit(n: Int)
 data class Add(lhs: Expr, rhs: Expr)
 type Expr = Lit | Add
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Lit⁰
+//│   sym = member:Lit¹
+//│   ctorSym = S of term:Lit²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = n⁰
+//│         sign = S of Resolved{sym=class:Int⁰}:
+//│           t = Ref{sym=member:Int¹} of member:Int¹
+//│           sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:n¹
+//│       _2 = term:Lit⁰/n²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Lit⁰/n²
+//│       sym = member:n¹
+//│       rhs = SimpleRef of n⁰
 
 
 // * Which could get a "blessed" shorthand syntax as well
@@ -32,7 +66,7 @@ enum Expr =
   | Lit(n: Int)
   | Add(lhs: Expr, rhs: Expr)
 //│ ╔══[COMPILATION ERROR] Unrecognized definitional assignment left-hand side: juxtaposition
-//│ ║  l.31: 	enum Expr =
+//│ ║  l.65: 	enum Expr =
 //│ ╙──      	^^^^^^^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 

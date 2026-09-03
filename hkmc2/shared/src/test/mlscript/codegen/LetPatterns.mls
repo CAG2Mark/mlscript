@@ -2,16 +2,43 @@
 
 
 data class Some[out A](value: A)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Some⁰
+//│   sym = member:Some¹
+//│   ctorSym = S of term:Some²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = value⁰
+//│         sign = S of Ref{sym=A⁰} of A⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:value¹
+//│       _2 = term:Some⁰/value²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Some⁰/value²
+//│       sym = member:value¹
+//│       rhs = SimpleRef of value⁰
 
 :todo
 let Some(x) = Some(42)
 //│ ╔══[COMPILATION ERROR] Unsupported let binding shape
-//│ ║  l.7: 	let Some(x) = Some(42)
-//│ ╙──     	    ^^^^^^^^^^^^^^^^^^
+//│ ║  l.29: 	let Some(x) = Some(42)
+//│ ╙──      	    ^^^^^^^^^^^^^^^^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 
 object None
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:None⁰
+//│   sym = member:None¹
+//│   k = Obj
 
 let N = None
 //│ N = None
@@ -19,27 +46,48 @@ let N = None
 :todo
 let (None) = N
 //│ ╔══[COMPILATION ERROR] Unsupported let binding shape
-//│ ║  l.20: 	let (None) = N
+//│ ║  l.47: 	let (None) = N
 //│ ╙──      	    ^^^^^^^^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 
 data class Foo(a)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = a⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a¹
+//│       _2 = term:Foo⁰/a²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/a²
+//│       sym = member:a¹
+//│       rhs = SimpleRef of a⁰
 
 :todo
 let Foo(x) = Foo(1) in print(x)
 //│ ╔══[COMPILATION ERROR] Unsupported let binding shape
-//│ ║  l.30: 	let Foo(x) = Foo(1) in print(x)
+//│ ║  l.78: 	let Foo(x) = Foo(1) in print(x)
 //│ ╙──      	    ^^^^^^^^^^^^^^^
 //│ ╔══[COMPILATION ERROR] Name not found: x
-//│ ║  l.30: 	let Foo(x) = Foo(1) in print(x)
+//│ ║  l.78: 	let Foo(x) = Foo(1) in print(x)
 //│ ╙──      	                             ^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 :todo
 let Foo(x) and x > 0 = Foo(1) in print("ok")
 //│ ╔══[COMPILATION ERROR] Unsupported let binding shape
-//│ ║  l.40: 	let Foo(x) and x > 0 = Foo(1) in print("ok")
+//│ ║  l.88: 	let Foo(x) and x > 0 = Foo(1) in print("ok")
 //│ ╙──      	    ^^^^^^^^^^^^^^^^^^^^^^^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 

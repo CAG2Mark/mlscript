@@ -4,6 +4,21 @@
 class x
 if 0 is
   x then 12
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:scrut, x)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:x⁰
+//│       sym = member:x¹
+//│       k = Cls
+//│     rest = Assign: \
+//│     lhs = tmp:scrut⁰
+//│     rhs = Lit of IntLit of 0
+//│     rest = Assign: \
+//│     lhs = x²
+//│     rhs = SimpleRef of tmp:scrut⁰
+//│     rest = Return of Lit of IntLit of 12
 //│ = 12
 
 
@@ -11,6 +26,36 @@ if 0 is
 class X
 if 0 is
   X then 12
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:scrut)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:X⁰
+//│       sym = member:X¹
+//│       k = Cls
+//│     rest = Assign: \
+//│     lhs = tmp:scrut¹
+//│     rhs = Lit of IntLit of 0
+//│     rest = Match: \
+//│     scrut = SimpleRef of tmp:scrut¹
+//│     arms = Ls of
+//│       Tuple2:
+//│         _1 = Cls:
+//│           cls = class:X⁰
+//│           path = MemberRef{disamb=class:X⁰}:
+//│             bms = member:X¹
+//│             disamb = class:X⁰
+//│         _2 = Return of Lit of IntLit of 12
+//│     dflt = S of Throw of Instantiate:
+//│       mut = false
+//│       cls = Select{sym=class:Error⁰}:
+//│         qual = This of globalThis:globalThis⁰
+//│         name = Ident of "Error"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of StrLit of "match error"
 //│ ═══[RUNTIME ERROR] Error: match error
 
 

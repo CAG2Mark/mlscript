@@ -151,6 +151,51 @@ let j = _.x.y(1, _) in j((x: y: tuple), 0)
 
 
 data class C(a, b, c)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C⁰
+//│   sym = member:C¹
+//│   ctorSym = S of term:C²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = a⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = b⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = c⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a¹
+//│       _2 = term:C⁰/a²
+//│     Tuple2:
+//│       _1 = member:b¹
+//│       _2 = term:C⁰/b²
+//│     Tuple2:
+//│       _1 = member:c¹
+//│       _2 = term:C⁰/c²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C⁰/a²
+//│       sym = member:a¹
+//│       rhs = SimpleRef of a⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:C⁰/b²
+//│       sym = member:b¹
+//│       rhs = SimpleRef of b⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:C⁰/c²
+//│       sym = member:c¹
+//│       rhs = SimpleRef of c⁰
 
 2 |> C(1, _, 3) |> print
 //│ = fun
@@ -201,7 +246,7 @@ _ - _ of 1, 2
 :pe
 |> 1
 //│ ╔══[PARSE ERROR] Expected end of input; found literal instead
-//│ ║  l.202: 	|> 1
+//│ ║  l.247: 	|> 1
 //│ ╙──       	   ^
 //│ = fun pipeInto
 
@@ -209,7 +254,7 @@ _ - _ of 1, 2
 :re
 |> (1)
 //│ ╔══[COMPILATION ERROR] Expected 2 arguments, got 1
-//│ ║  l.210: 	|> (1)
+//│ ║  l.255: 	|> (1)
 //│ ╙──       	   ^^^
 //│ ═══[RUNTIME ERROR] TypeError: f is not a function
 
@@ -254,10 +299,10 @@ _ - _ of 1, 2
 :w
 let f = if _ then 1 else 0
 //│ ╔══[WARNING] This catch-all clause makes the following branches unreachable.
-//│ ║  l.255: 	let f = if _ then 1 else 0
+//│ ║  l.300: 	let f = if _ then 1 else 0
 //│ ║         	             ^^^^^^
 //│ ╟── This branch is unreachable.
-//│ ║  l.255: 	let f = if _ then 1 else 0
+//│ ║  l.300: 	let f = if _ then 1 else 0
 //│ ╙──       	                    ^^^^^^
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let f13; f13 = 1;

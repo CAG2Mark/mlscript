@@ -64,6 +64,128 @@ module A with
   fun g(x) = if x == 0 then 1 else
     @tailcall f(x - 1)
     @tailcall f(x - 1)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:A⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:A⁰
+//│       sym = member:f⁰
+//│       dSym = term:A⁰/f¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:scrut⁰, tmp:tmp⁰}):
+//│         body = Assign:
+//│           lhs = tmp:scrut⁰
+//│           rhs = Call:
+//│             fun = Select{sym=term:Predef⁰/equals⁰}:
+//│               qual = MemberRef{disamb=module:Predef⁰}:
+//│                 bms = member:Predef¹
+//│                 disamb = module:Predef⁰
+//│               name = Ident of "equals"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x⁰
+//│                 Arg:
+//│                   value = Lit of IntLit of 0
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut⁰
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of BoolLit of true
+//│               _2 = Return of Lit of IntLit of 0
+//│           dflt = S of Assign:
+//│             lhs = tmp:tmp⁰
+//│             rhs = Call:
+//│               fun = SimpleRef of builtin:-⁰
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of x⁰
+//│                   Arg:
+//│                     value = Lit of IntLit of 1
+//│             rest = Return of Call:
+//│               fun = Select{sym=term:A⁰/g⁰}:
+//│                 qual = This of module:A⁰
+//│                 name = Ident of "g"
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of tmp:tmp⁰
+//│     FunDefn:
+//│       owner = S of module:A⁰
+//│       sym = member:g¹
+//│       dSym = term:A⁰/g⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x¹
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:scrut¹, tmp:tmp¹, tmp:tmp²}):
+//│         body = Assign:
+//│           lhs = tmp:scrut¹
+//│           rhs = Call:
+//│             fun = Select{sym=term:Predef⁰/equals⁰}:
+//│               qual = MemberRef{disamb=module:Predef⁰}:
+//│                 bms = member:Predef¹
+//│                 disamb = module:Predef⁰
+//│               name = Ident of "equals"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x¹
+//│                 Arg:
+//│                   value = Lit of IntLit of 0
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut¹
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of BoolLit of true
+//│               _2 = Return of Lit of IntLit of 1
+//│           dflt = S of Assign:
+//│             lhs = tmp:tmp¹
+//│             rhs = Call:
+//│               fun = SimpleRef of builtin:-⁰
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of x¹
+//│                   Arg:
+//│                     value = Lit of IntLit of 1
+//│             rest = Assign: \
+//│             lhs = ‹no symbol›
+//│             rhs = Call:
+//│               fun = Select{sym=term:A⁰/f¹}:
+//│                 qual = This of module:A⁰
+//│                 name = Ident of "f"
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of tmp:tmp¹
+//│             rest = Assign: \
+//│             lhs = tmp:tmp²
+//│             rhs = Call:
+//│               fun = SimpleRef of builtin:-⁰
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of x¹
+//│                   Arg:
+//│                     value = Lit of IntLit of 1
+//│             rest = Return of Call:
+//│               fun = Select{sym=term:A⁰/f¹}:
+//│                 qual = This of module:A⁰
+//│                 name = Ident of "f"
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of tmp:tmp²
 //│ ╔══[COMPILATION ERROR] This call is not in tail position.
 //│ ║  l.65: 	    @tailcall f(x - 1)
 //│ ╙──      	              ^^^^^^^^
@@ -72,25 +194,52 @@ module A with
 @tailrec
 fun f = 2
 //│ ╔══[WARNING] This function is marked @tailrec but has no direct self-recursion.
-//│ ║  l.73: 	fun f = 2
-//│ ╙──      	    ^
+//│ ║  l.195: 	fun f = 2
+//│ ╙──       	    ^
 
 :w
 module A with
   @tailrec
   fun f() = 2
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:A¹
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:A¹
+//│       sym = member:f²
+//│       dSym = term:A¹/f³
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of IntLit of 2
 //│ ╔══[WARNING] This function is marked @tailrec but has no direct self-recursion.
-//│ ║  l.81: 	  fun f() = 2
-//│ ╙──      	      ^
+//│ ║  l.203: 	  fun f() = 2
+//│ ╙──       	      ^
 
 :fixme // TODO: support
 @tailrec
 fun foo() = Foo.bar()
 module Foo with
   fun bar() = foo()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Foo⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Foo⁰
+//│       sym = member:bar⁰
+//│       dSym = term:Foo⁰/bar¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = MemberRef{disamb=term:foo⁰}:
+//│           bms = member:foo¹
+//│           disamb = term:foo⁰
+//│         argss = Ls of
+//│           Nil
 //│ ╔══[WARNING] This function is marked @tailrec but has no direct self-recursion.
-//│ ║  l.88: 	fun foo() = Foo.bar()
-//│ ╙──      	    ^^^
+//│ ║  l.221: 	fun foo() = Foo.bar()
+//│ ╙──       	    ^^^
 
 :e
 fun f(x) =
@@ -98,8 +247,8 @@ fun f(x) =
   fun g() = g()
   g()
 //│ ╔══[COMPILATION ERROR] This @tailrec function was not processed by the tail-call optimizer.
-//│ ║  l.98: 	  fun g() = g()
-//│ ╙──      	      ^
+//│ ║  l.247: 	  fun g() = g()
+//│ ╙──       	      ^
 
 :e
 fun scan(idx, acc) =
@@ -107,7 +256,7 @@ fun scan(idx, acc) =
   fun go(idx, tok) = scan(idx, tok)
   go(idx, acc)
 //│ ╔══[COMPILATION ERROR] This @tailrec function was not processed by the tail-call optimizer.
-//│ ║  l.107: 	  fun go(idx, tok) = scan(idx, tok)
+//│ ║  l.256: 	  fun go(idx, tok) = scan(idx, tok)
 //│ ╙──       	      ^^
 
 :e
@@ -118,10 +267,10 @@ fun scan(idx, acc) =
   fun go(idx, tok) = scan(idx, tok)
   go(idx, acc)
 //│ ╔══[WARNING] This function is marked @tailrec but has no direct self-recursion.
-//│ ║  l.116: 	fun scan(idx, acc) =
+//│ ║  l.265: 	fun scan(idx, acc) =
 //│ ╙──       	    ^^^^
 //│ ╔══[COMPILATION ERROR] This @tailrec function was not processed by the tail-call optimizer.
-//│ ║  l.118: 	  fun go(idx, tok) = scan(idx, tok)
+//│ ║  l.267: 	  fun go(idx, tok) = scan(idx, tok)
 //│ ╙──       	      ^^
 
 :e
@@ -129,21 +278,21 @@ fun scan(idx, acc) =
 @config(tailRecOpt: false)
 fun foo() = foo()
 //│ ╔══[COMPILATION ERROR] This @tailrec function was not processed by the tail-call optimizer.
-//│ ║  l.130: 	fun foo() = foo()
+//│ ║  l.279: 	fun foo() = foo()
 //│ ╙──       	    ^^^
 
 :e
 fun f =
   @tailcall id(2)
 //│ ╔══[COMPILATION ERROR] Only functions in this compilation unit may be marked @tailcall.
-//│ ║  l.137: 	  @tailcall id(2)
+//│ ║  l.286: 	  @tailcall id(2)
 //│ ╙──       	            ^^^^^
 
 :e
 fun f(x)(y) =
   @tailcall f(x)
 //│ ╔══[COMPILATION ERROR] Only fully applied calls may be marked @tailcall.
-//│ ║  l.144: 	  @tailcall f(x)
+//│ ║  l.293: 	  @tailcall f(x)
 //│ ╙──       	            ^^^^
 
 :e
@@ -152,10 +301,10 @@ fun f(x)() =
 fun g(x)(y) =
   @tailcall f(x)
 //│ ╔══[COMPILATION ERROR] Only fully applied calls may be marked @tailcall.
-//│ ║  l.153: 	  @tailcall f(x)
+//│ ║  l.302: 	  @tailcall f(x)
 //│ ╙──       	            ^^^^
 //│ ╔══[COMPILATION ERROR] This call is not optimized as it does not directly recurse through its parent function.
-//│ ║  l.151: 	  @tailcall g(x)(0)
+//│ ║  l.300: 	  @tailcall g(x)(0)
 //│ ╙──       	            ^^^^^^^
 
 
@@ -163,16 +312,91 @@ fun g(x)(y) =
 module M with
   @tailrec
   fun f = print("ok"); f
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M⁰
+//│       sym = member:f⁴
+//│       dSym = term:M⁰/f⁵
+//│       body = Scoped(syms = {tmp:tmp³}):
+//│         body = Assign:
+//│           lhs = tmp:tmp³
+//│           rhs = Call:
+//│             fun = Select{sym=term:Predef⁰/print⁰}:
+//│               qual = MemberRef{disamb=module:Predef⁰}:
+//│                 bms = member:Predef¹
+//│                 disamb = module:Predef⁰
+//│               name = Ident of "print"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Lit of StrLit of "ok"
+//│           rest = Return of Call:
+//│             fun = SimpleRef of builtin:,⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp³
+//│                 Arg:
+//│                   value = Select{sym=term:M⁰/f⁵}:
+//│                     qual = This of module:M⁰
+//│                     name = Ident of "f"
 //│ ╔══[WARNING] This function is marked @tailrec but has no direct self-recursion.
-//│ ║  l.165: 	  fun f = print("ok"); f
+//│ ║  l.314: 	  fun f = print("ok"); f
 //│ ╙──       	      ^
 
 :w
 module M with
   @tailrec
   fun f = case 0 then f(1)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M¹
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M¹
+//│       sym = member:f⁶
+//│       dSym = term:M¹/f⁷
+//│       body = Scoped(syms = {member:lambda⁰}):
+//│         body = Define:
+//│           defn = FunDefn:
+//│             sym = member:lambda⁰
+//│             dSym = term:lambda¹
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = caseScrut⁰
+//│                     modulefulness = Modulefulness of N
+//│             body = Match:
+//│               scrut = SimpleRef of caseScrut⁰
+//│               arms = Ls of
+//│                 Tuple2:
+//│                   _1 = Lit of IntLit of 0
+//│                   _2 = Return of Call:
+//│                     fun = Select{sym=term:M¹/f⁷}:
+//│                       qual = This of module:M¹
+//│                       name = Ident of "f"
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = Lit of IntLit of 1
+//│               dflt = S of Throw of Instantiate:
+//│                 mut = false
+//│                 cls = Select{sym=class:Error⁰}:
+//│                   qual = This of globalThis:globalThis⁰
+//│                   name = Ident of "Error"
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = Lit of StrLit of "match error"
+//│           rest = Return of MemberRef{disamb=term:lambda¹}:
+//│             bms = member:lambda⁰
+//│             disamb = term:lambda¹
 //│ ╔══[WARNING] This function is marked @tailrec but has no direct self-recursion.
-//│ ║  l.173: 	  fun f = case 0 then f(1)
+//│ ║  l.353: 	  fun f = case 0 then f(1)
 //│ ╙──       	      ^
 
 
@@ -181,10 +405,10 @@ module M with
 fun foo(x) =
   foo(1) + 1
 //│ ╔══[COMPILATION ERROR] This function is marked @tailrec but is not tail recursive.
-//│ ║  l.181: 	fun foo(x) =
+//│ ║  l.405: 	fun foo(x) =
 //│ ║         	    ^^^
 //│ ╟── It could self-recurse through this call, which is not a tail call.
-//│ ║  l.182: 	  foo(1) + 1
+//│ ║  l.406: 	  foo(1) + 1
 //│ ╙──       	  ^^^^^^
 
 :w
@@ -192,6 +416,6 @@ fun foo(x) =
 fun foo(x) =
   1 |> foo
 //│ ╔══[WARNING] This function is marked @tailrec but has no direct self-recursion.
-//│ ║  l.192: 	fun foo(x) =
+//│ ║  l.416: 	fun foo(x) =
 //│ ╙──       	    ^^^
 

@@ -2,6 +2,15 @@
 
 
 module Option1 with { fun Some1 = 1 }
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Option1⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Option1⁰
+//│       sym = member:Some1⁰
+//│       dSym = term:Option1⁰/Some1¹
+//│       body = Return of Lit of IntLit of 1
 
 open Option1
 fun Some1 = "111"
@@ -10,6 +19,15 @@ Some1
 
 
 module Option2 with { fun Some2 = 2 }
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Option2⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Option2⁰
+//│       sym = member:Some2⁰
+//│       dSym = term:Option2⁰/Some2¹
+//│       body = Return of Lit of IntLit of 2
 
 // * Note that wildcard imports do not import names that are already defined in the same scope
 fun Some2 = "222"
@@ -19,18 +37,36 @@ Some2
 
 
 module Option3 with { fun Some3 = 3 }
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Option3⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Option3⁰
+//│       sym = member:Some3⁰
+//│       dSym = term:Option3⁰/Some3¹
+//│       body = Return of Lit of IntLit of 3
 
 :w
 fun Some3 = "333"
 open Option3 { Some3 }
 Some3
 //│ ╔══[WARNING] Imported name 'Some3' is shadowed by a name already defined in the same scope
-//│ ║  l.25: 	open Option3 { Some3 }
+//│ ║  l.52: 	open Option3 { Some3 }
 //│ ╙──      	               ^^^^^
 //│ = "333"
 
 
 module Option4 with { fun Some4 = 4 }
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Option4⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Option4⁰
+//│       sym = member:Some4⁰
+//│       dSym = term:Option4⁰/Some4¹
+//│       body = Return of Lit of IntLit of 4
 
 fun Some4 = "444"
 fun bar =
@@ -41,6 +77,15 @@ bar
 
 
 module Option5 with { fun Some5 = 5 }
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Option5⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Option5⁰
+//│       sym = member:Some5⁰
+//│       dSym = term:Option5⁰/Some5¹
+//│       body = Return of Lit of IntLit of 5
 
 fun Some5 = "555"
 fun bar =

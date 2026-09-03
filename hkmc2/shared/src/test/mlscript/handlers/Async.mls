@@ -1,0 +1,127 @@
+:js
+:lift
+
+import "fs"
+
+open annotations
+open handlers
+
+@async
+fun f(print_result) =
+  print("Hello, world!")
+  let r = await(fs.promises.readFile("./README.md"))
+  let readme = r.toString()
+  let first = readme.slice(0, readme.indexOf("\n"))
+  if print_result do
+    print(first)
+  first
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: applyPath (AsyncLowering.scala:73)
+//│ ╔══[COMPILATION ERROR] Only await inside of async bodies are allowed if effect handlers are not enabled.
+//│ ║  l.12: 	  let r = await(fs.promises.readFile("./README.md"))
+//│ ╙──      	          ^^^^^
+
+// Should get a promise here, the promise is used for JavaScript interop
+f(false)
+//│ > Hello, world!
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
+//│ ═══[RUNTIME ERROR] EffectRaised("mkEffect")
+
+
+// :await will await the promise returned at the top level for the repl
+:await
+f(true)
+//│ > Hello, world!
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
+//│ ═══[RUNTIME ERROR] EffectRaised("mkEffect")
+
+:re
+:await
+@async
+fun f() =
+  raiseUnhandledEffect()
+f()
+//│ ═══[RUNTIME ERROR] EffectRaised("mkEffect")
+
+:ge
+fun f() =
+  await(Promise.resolve(1))
+//│ ╔══[COMPILATION ERROR] Only await inside of async bodies are allowed if effect handlers are not enabled.
+//│ ║  l.50: 	  await(Promise.resolve(1))
+//│ ╙──      	  ^^^^^
+
+:re
+:await
+@async
+fun f() =
+  print(0)
+  let x = await(Promise.resolve(1))
+  raiseUnhandledEffect()
+  print(1)
+f()
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: applyPath (AsyncLowering.scala:73)
+//│ ╔══[COMPILATION ERROR] Only await inside of async bodies are allowed if effect handlers are not enabled.
+//│ ║  l.60: 	  let x = await(Promise.resolve(1))
+//│ ╙──      	          ^^^^^
+//│ > 0
+//│ ═══[RUNTIME ERROR] EffectRaised("mkEffect")
+
+:re
+:await
+@async
+fun f() =
+  print(0)
+  let x = await(Promise.reject("Promise error"))
+  raiseUnhandledEffect()
+  print(1)
+f()
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: applyPath (AsyncLowering.scala:73)
+//│ ╔══[COMPILATION ERROR] Only await inside of async bodies are allowed if effect handlers are not enabled.
+//│ ║  l.77: 	  let x = await(Promise.reject("Promise error"))
+//│ ╙──      	          ^^^^^
+//│ > 0
+//│ ═══[RUNTIME ERROR] EffectRaised("mkEffect")
+//│ = Uncaught:
+//│ UnhandledPromiseRejection: This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). The promise rejected with the reason "Promise error".
+//│     at throwUnhandledRejectionsMode (node:internal/process/promises:322:7)
+//│     at processPromiseRejections (node:internal/process/promises:405:17) {
+//│   code: 'ERR_UNHANDLED_REJECTION'
+
+:global
+:effectHandlers
+
+fun f() =
+  print(0)
+  let r = await(fs.promises.readFile("./README.md"))
+  let readme = r.toString()
+  let first = readme.slice(0, readme.indexOf("\n"))
+  print(first)
+  let r2 = await(fs.promises.readdir("."))
+  print(r2.indexOf("README.md") >= 0)
+//│ = 
+
+@async
+fun g() =
+  f()
+  f()
+//│ = 
+
+:await
+g()
+//│ = 0
+//│ Promise {}
+
+@async
+fun g() =
+  await(Promise.all([@async f(), @async f()]))
+//│ = 
+
+:await
+g()
+//│ = 0
+//│ 0
+//│ Promise {}

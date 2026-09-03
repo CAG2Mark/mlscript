@@ -5,7 +5,34 @@ import RuntimeJS from "./RuntimeJS.mjs";
 import Rendering from "./Rendering.mjs";
 import LazyArray from "./LazyArray.mjs";
 import Iter from "./Iter.mjs";
-let cntSegment, errorSep, Runtime1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, lambda$, lambda$1, lambda$2, lambda$3, lambda$4, Capture$scope291, lambda$5, Capture$scope401, Capture$handleEffect1, lambda$6, lambda$7, Capture$resumeContTrace1, lambda$8, lambda$9;
+let cntSegment, errorSep, continuation, Runtime1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, lambda11, lambda$, lambda$1, lambda$2, lambda$3, lambda$4, Capture$scope291, lambda$5, Capture$scope401, Capture$handleEffect1, lambda$6, lambda$7, Capture$resumeContTrace1, lambda$8, lambda$9, lambda$10, continuation$;
+continuation$ = function continuation$(Runtime2, resume) {
+  return (value) => {
+    return continuation(Runtime2, resume, value)
+  }
+};
+continuation = function continuation(Runtime2, resume, value) {
+  let r, scrut;
+  r = runtime.safeCall(resume(value));
+  scrut = Runtime2.curEffect !== null;
+  if (scrut === true) {
+    Runtime2.illegalEffect("in exported async function");
+    return r
+  }
+  return r;
+};
+lambda$10 = (undefined, function (Runtime2, promise) {
+  return (resume) => {
+    let continuation$here;
+    continuation$here = continuation$(Runtime2, resume);
+    return runtime.safeCall(promise.then(continuation$here))
+  }
+});
+lambda9 = (undefined, function (Runtime2, promise, resume) {
+  let continuation$here;
+  continuation$here = continuation$(Runtime2, resume);
+  return runtime.safeCall(promise.then(continuation$here))
+});
 lambda$9 = (undefined, function (resumeContTrace$cap, curFrame) {
   return () => {
     return runtime.safeCall(curFrame.resume(resumeContTrace$cap.value$0))
@@ -165,16 +192,16 @@ lambda$1 = (undefined, function (Runtime2) {
     return runtime.Unit
   }
 });
-lambda10 = (undefined, function (Runtime2, k) {
+lambda11 = (undefined, function (Runtime2, k) {
   Runtime2.stackResume = k;
   return runtime.Unit
 });
 lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
   return () => {
-    return lambda9(Runtime2, EffectHandle1, value)
+    return lambda10(Runtime2, EffectHandle1, value)
   }
 });
-lambda9 = (undefined, function (Runtime2, EffectHandle1, value) {
+lambda10 = (undefined, function (Runtime2, EffectHandle1, value) {
   let contTrace, scrut;
   contTrace = EffectHandle1.reified.contTrace;
   scrut = contTrace.resumed;
@@ -628,6 +655,20 @@ lambda9 = (undefined, function (Runtime2, EffectHandle1, value) {
     });
     Runtime.latestId = 0;
     Runtime.handleEffectsCall = 0;
+    (class AsyncEffectMarker {
+      static {
+        new this
+      }
+      constructor() {
+        Runtime.AsyncEffectMarker = this;
+        Object.defineProperty(this, "class", {
+          value: AsyncEffectMarker
+        });
+        globalThis.Object.freeze(this);
+      }
+      toString() { return runtime.render(this); }
+      static [definitionMetadata] = ["object", "AsyncEffectMarker"];
+    });
     Runtime.stackLimit = 0;
     Runtime.stackDepth = 0;
     Runtime.stackHandler = null;
@@ -1414,6 +1455,21 @@ lambda9 = (undefined, function (Runtime2, EffectHandle1, value) {
       return resumeContTrace$cap.value$0;
     }
   }
+  static await(promise) {
+    let lambda$here;
+    lambda$here = lambda$10(Runtime, promise);
+    return Runtime.mkEffect(Runtime.AsyncEffectMarker, lambda$here)
+  }
+  static toJsAsync(thunk) {
+    let r, scrut;
+    r = Runtime.enterHandleBlock(Runtime.AsyncEffectMarker, thunk);
+    scrut = Runtime.curEffect !== null;
+    if (scrut === true) {
+      Runtime.illegalEffect("in exported async function");
+      return runtime.safeCall(globalThis.Promise.resolve(r))
+    }
+    return runtime.safeCall(globalThis.Promise.resolve(r));
+  }
   static checkDepth() {
     let tmp, tmp1;
     tmp = Runtime.stackDepth >= Runtime.stackLimit;
@@ -1487,6 +1543,7 @@ lambda9 = (undefined, function (Runtime2, EffectHandle1, value) {
 });
 export { cntSegment as _$_modulePrivate_$_cntSegment };
 export { errorSep as _$_modulePrivate_$_errorSep };
+export { continuation as _$_modulePrivate_$_continuation };
 export { Runtime1 as _$_modulePrivate_$_Runtime };
 export { lambda as _$_modulePrivate_$_lambda };
 export { lambda1 as _$_modulePrivate_$_lambda1 };
@@ -1499,6 +1556,7 @@ export { lambda7 as _$_modulePrivate_$_lambda7 };
 export { lambda8 as _$_modulePrivate_$_lambda8 };
 export { lambda9 as _$_modulePrivate_$_lambda9 };
 export { lambda10 as _$_modulePrivate_$_lambda10 };
+export { lambda11 as _$_modulePrivate_$_lambda11 };
 export { lambda$ as _$_modulePrivate_$_lambda$ };
 export { lambda$1 as _$_modulePrivate_$_lambda$1 };
 export { lambda$2 as _$_modulePrivate_$_lambda$2 };
@@ -1513,4 +1571,6 @@ export { lambda$7 as _$_modulePrivate_$_lambda$7 };
 export { Capture$resumeContTrace1 as _$_modulePrivate_$_Capture$resumeContTrace };
 export { lambda$8 as _$_modulePrivate_$_lambda$8 };
 export { lambda$9 as _$_modulePrivate_$_lambda$9 };
+export { lambda$10 as _$_modulePrivate_$_lambda$10 };
+export { continuation$ as _$_modulePrivate_$_continuation$ };
 let Runtime = Runtime1; export default Runtime;

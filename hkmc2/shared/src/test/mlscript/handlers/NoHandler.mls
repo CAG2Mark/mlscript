@@ -2,16 +2,21 @@
 
 abstract class Effect with
   fun perform(arg: Str): Str
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Effect⁰
+//│   sym = member:Effect¹
+//│   k = Cls
 
 :ge
 handle h = Effect with
   fun perform(arg)(k) = k(arg)
 h.perform("k")
 //│ ╔══[COMPILATION ERROR] Effect handlers are not enabled
-//│ ║  l.7: 	handle h = Effect with
-//│ ║       	           ^^^^^^^^^^^
-//│ ║  l.8: 	  fun perform(arg)(k) = k(arg)
-//│ ║       	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.9: 	h.perform("k")
-//│ ╙──     	^^^^^^^^^^^^^^
+//│ ║  l.12: 	handle h = Effect with
+//│ ║        	           ^^^^^^^^^^^
+//│ ║  l.13: 	  fun perform(arg)(k) = k(arg)
+//│ ║        	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//│ ║  l.14: 	h.perform("k")
+//│ ╙──      	^^^^^^^^^^^^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.

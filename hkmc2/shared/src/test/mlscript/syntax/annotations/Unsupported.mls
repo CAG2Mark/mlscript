@@ -2,6 +2,11 @@
 // The annotations for the following expressions are not supported for now.
 
 object debug
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:debug⁰
+//│   sym = member:debug¹
+//│   k = Obj
 
 import "../../../mlscript-compile/StrOps.mls"
 
@@ -9,78 +14,102 @@ import "../../../mlscript-compile/StrOps.mls"
 @debug
 open StrOps
 //│ ╔══[WARNING] This annotation has no effect
-//│ ║  l.9: 	@debug
-//│ ║       	^^^^^^
+//│ ║  l.14: 	@debug
+//│ ║        	^^^^^^
 //│ ╟── Annotations are not supported on open terms.
-//│ ║  l.10: 	open StrOps
+//│ ║  l.15: 	open StrOps
 //│ ╙──      	^^^^^^^^^^^
 
 :w
 @debug 0
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.19: 	@debug 0
+//│ ║  l.24: 	@debug 0
 //│ ║        	^^^^^^
 //│ ╟── This annotation is not supported on integer literal terms.
-//│ ║  l.19: 	@debug 0
+//│ ║  l.24: 	@debug 0
 //│ ╙──      	       ^
 //│ = 0
 
 :w
 @debug 1 + 2
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.29: 	@debug 1 + 2
+//│ ║  l.34: 	@debug 1 + 2
 //│ ║        	^^^^^^
 //│ ╟── This annotation is not supported on application terms.
-//│ ║  l.29: 	@debug 1 + 2
+//│ ║  l.34: 	@debug 1 + 2
 //│ ╙──      	       ^^^^^
 //│ = 3
 
 :w
 (@debug 1 + 2)
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.39: 	(@debug 1 + 2)
+//│ ║  l.44: 	(@debug 1 + 2)
 //│ ║        	 ^^^^^^
 //│ ╟── This annotation is not supported on application terms.
-//│ ║  l.39: 	(@debug 1 + 2)
+//│ ║  l.44: 	(@debug 1 + 2)
 //│ ╙──      	        ^^^^^
 //│ = 3
 
 :w
 (@debug 1) + 2
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.49: 	(@debug 1) + 2
+//│ ║  l.54: 	(@debug 1) + 2
 //│ ║        	 ^^^^^^
 //│ ╟── This annotation is not supported on integer literal terms.
-//│ ║  l.49: 	(@debug 1) + 2
+//│ ║  l.54: 	(@debug 1) + 2
 //│ ╙──      	        ^
 //│ = 3
 
 :w
 (1 + @debug 2)
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.59: 	(1 + @debug 2)
+//│ ║  l.64: 	(1 + @debug 2)
 //│ ║        	     ^^^^^^
 //│ ╟── This annotation is not supported on integer literal terms.
-//│ ║  l.59: 	(1 + @debug 2)
+//│ ║  l.64: 	(1 + @debug 2)
 //│ ╙──      	            ^
 //│ = 3
 
 data class Log(msg: Str)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Log⁰
+//│   sym = member:Log¹
+//│   ctorSym = S of term:Log²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = msg⁰
+//│         sign = S of Resolved{sym=class:Str⁰}:
+//│           t = Ref{sym=member:Str¹} of member:Str¹
+//│           sym = class:Str⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:msg¹
+//│       _2 = term:Log⁰/msg²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Log⁰/msg²
+//│       sym = member:msg¹
+//│       rhs = SimpleRef of msg⁰
 
 :w
 id(@Log 5)
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.71: 	id(@Log 5)
-//│ ║        	   ^^^^
+//│ ║  l.100: 	id(@Log 5)
+//│ ║         	   ^^^^
 //│ ╟── This annotation is not supported on integer literal terms.
-//│ ║  l.71: 	id(@Log 5)
-//│ ╙──      	        ^
+//│ ║  l.100: 	id(@Log 5)
+//│ ╙──       	        ^
 //│ = 5
 
 :pe
 :re
 @1 + 2 class Qux
 //│ ╔══[PARSE ERROR] Expected end of input; found 'class' keyword instead
-//│ ║  l.82: 	@1 + 2 class Qux
-//│ ╙──      	       ^^^^^
+//│ ║  l.111: 	@1 + 2 class Qux
+//│ ╙──       	       ^^^^^
 //│ ═══[RUNTIME ERROR] TypeError: 3 is not a function

@@ -24,20 +24,59 @@ abstract
 //│ Parsed:
 //│ 	Modified(Keywrd(keyword 'abstract'),TypeDef(Cls,App(Ident(Foo),Tup(List(Ident(a)))),None))
 //│ 	Modified(Keywrd(keyword 'abstract'),TypeDef(Cls,App(Ident(Bar),Tup(List(Ident(b)))),None))
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = a⁰
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo⁰/a¹
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo⁰
+//│     nme = Ident of "a"
+//│     rhs = SimpleRef of a⁰
 
 :todo
 abstract class
     Foo(a)
     Bar(b)
 //│ ╔══[PARSE ERROR] Unexpected identifier here
-//│ ║  l.31: 	    Bar(b)
+//│ ║  l.48: 	    Bar(b)
 //│ ╙──      	    ^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo³
+//│   sym = member:Foo⁴
+//│   ctorSym = S of term:Foo⁵
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = a²
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo³/a³
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo³
+//│     nme = Ident of "a"
+//│     rhs = SimpleRef of a²
 
 
 abstract class Foo
 object
   A extends Foo
   B extends Foo
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁶
+//│   sym = member:Foo⁷
+//│   k = Cls
 
 
 // * Would be cool if something like this was supported:
@@ -46,10 +85,15 @@ object \$ extends Foo
   A
   B
 //│ ╔══[LEXICAL ERROR] unexpected character '$'
-//│ ║  l.45: 	object \$ extends Foo
+//│ ║  l.84: 	object \$ extends Foo
 //│ ╙──      	        ^
 //│ ╔══[PARSE ERROR] Expected end of input; found error instead
-//│ ║  l.45: 	object \$ extends Foo
+//│ ║  l.84: 	object \$ extends Foo
 //│ ╙──      	        ^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:\⁰
+//│   sym = member:\¹
+//│   k = Obj
 
 

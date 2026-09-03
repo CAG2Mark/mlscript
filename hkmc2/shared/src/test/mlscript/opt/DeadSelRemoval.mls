@@ -32,6 +32,52 @@ module Foo with
   fun y =
     set x += 1
     print(x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Foo⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Foo⁰
+//│       sym = member:y⁰
+//│       dSym = term:Foo⁰/y¹
+//│       body = Scoped(syms = {tmp:tmp⁰}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁰
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:Foo⁰/x⁰}:
+//│                     qual = This of module:Foo⁰
+//│                     name = Ident of "x"
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = AssignField: \
+//│           lhs = This of module:Foo⁰
+//│           nme = Ident of "x"
+//│           rhs = SimpleRef of tmp:tmp⁰
+//│           rest = Return of Call:
+//│             fun = Select{sym=term:Predef⁰/print⁰}:
+//│               qual = MemberRef{disamb=module:Predef⁰}:
+//│                 bms = member:Predef¹
+//│                 disamb = module:Predef⁰
+//│               name = Ident of "print"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:Foo⁰/x⁰}:
+//│                     qual = This of module:Foo⁰
+//│                     name = Ident of "x"
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:Foo⁰/x⁰
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/x⁰
+//│       sym = member:x¹
+//│       rhs = Lit of IntLit of 1
 
 Foo.x
 //│ = 1
@@ -53,7 +99,7 @@ Foo.x; Foo.x
 :expect 2
 Foo.y, Foo.x
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
-//│ do Foo⁰.y⁰; return Foo⁰.x⁰
+//│ do Foo⁰.y¹; return Foo⁰.x⁰
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ > 2
 //│ = 2
@@ -87,7 +133,7 @@ let a = Foo.y in Foo.x
   42
 )
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
-//│ let a; define a as val a⁰ = Foo⁰.y⁰; return 42
+//│ let a; define a as val a⁰ = Foo⁰.y¹; return 42
 //│ —————————————| JS (sanitized) |—————————————————————————————————————————————————————————————————————
 //│ let a;
 //│ a = Foo1.y; block$res13 = 42;

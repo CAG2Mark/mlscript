@@ -12,6 +12,39 @@ data object Nil
 //│ deforest > <<< fusing <<<
 //│ eta-expansion > >>> eta-expansion targets shapes >>>
 //│ eta-expansion > <<< eta-expansion targets shapes <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Cons⁰
+//│   sym = member:Cons¹
+//│   ctorSym = S of term:Cons²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = h⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = t⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:h¹
+//│       _2 = term:Cons⁰/h²
+//│     Tuple2:
+//│       _1 = member:t¹
+//│       _2 = term:Cons⁰/t²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Cons⁰/h²
+//│       sym = member:h¹
+//│       rhs = SimpleRef of h⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Cons⁰/t²
+//│       sym = member:t¹
+//│       rhs = SimpleRef of t⁰
 
 
 :expect 15
@@ -24,10 +57,10 @@ sum(enum(5), 0)
 //│ deforest > >>> fusing >>>
 //│ deforest > Nil⁰ ->
 //│ deforest > 	match: ls⁰
-//│ deforest > Cons⁰(x⁰, tmp⁰) ->
+//│ deforest > Cons²(x⁰, tmp⁰) ->
 //│ deforest > 	match: ls⁰
-//│ deforest > 	fields: ls⁰.h⁰
-//│ deforest > 	fields: ls⁰.t⁰
+//│ deforest > 	fields: ls⁰.h²
+//│ deforest > 	fields: ls⁰.t²
 //│ deforest > <<< fusing <<<
 //│ eta-expansion > >>> eta-expansion targets shapes >>>
 //│ eta-expansion > enum_13$enum: [1, 7]
@@ -43,7 +76,7 @@ sum(enum(5), 0)
 //│     else
 //│       set tmp = -⁰(x1, 1);
 //│       set tmp1 = enum¹(tmp);
-//│       return Cons⁰(x1, tmp1)
+//│       return Cons²(x1, tmp1)
 //│   end
 //│ };
 //│ define sum⁰ as fun sum¹(ls, acc) {
@@ -52,9 +85,9 @@ sum(enum(5), 0)
 //│     match ls
 //│       Nil⁰ =>
 //│         return acc
-//│       Cons¹ =>
-//│         set arg$Cons$0$ = ls.h⁰;
-//│         set arg$Cons$1$ = ls.t⁰;
+//│       Cons⁰ =>
+//│         set arg$Cons$0$ = ls.h²;
+//│         set arg$Cons$1$ = ls.t²;
 //│         set tmp = +⁰(arg$Cons$0$, acc);
 //│         set ls = arg$Cons$1$;
 //│         set acc = tmp;
@@ -103,10 +136,10 @@ len(flatten(id((1 :: 2 :: Nil) :: (3 :: Nil) :: Nil)))
 //│ deforest > >>> fusing >>>
 //│ deforest > Nil⁰ ->
 //│ deforest > 	match: ls¹
-//│ deforest > Cons⁰(h¹, tmp¹) ->
+//│ deforest > Cons²(h³, tmp¹) ->
 //│ deforest > 	match: ls¹
-//│ deforest > 	fields: ls¹.h⁰
-//│ deforest > 	fields: ls¹.t⁰
+//│ deforest > 	fields: ls¹.h²
+//│ deforest > 	fields: ls¹.t²
 //│ deforest > <<< fusing <<<
 //│ eta-expansion > >>> eta-expansion targets shapes >>>
 //│ eta-expansion > flatten_31_append_16$append: [2, 6]
@@ -124,10 +157,10 @@ len(flatten(id((1 :: 2 :: Nil) :: (3 :: Nil) :: Nil)))
 //│   match xss
 //│     Nil⁰ =>
 //│       return 0
-//│     Cons¹ =>
+//│     Cons⁰ =>
 //│       let ys;
-//│       set arg$Cons$0$ = xss.h⁰;
-//│       set arg$Cons$1$ = xss.t⁰;
+//│       set arg$Cons$0$ = xss.h²;
+//│       set arg$Cons$1$ = xss.t²;
 //│       set ys = flatten_31$flatten⁰(arg$Cons$1$);
 //│       return flatten_31_append_16$append$worker⁰(arg$Cons$0$, ys)
 //│     else
@@ -140,9 +173,9 @@ len(flatten(id((1 :: 2 :: Nil) :: (3 :: Nil) :: Nil)))
 //│   match xs
 //│     Nil⁰ =>
 //│       return ys()
-//│     Cons¹ =>
+//│     Cons⁰ =>
 //│       let inlinedVal;
-//│       set arg$Cons$1$ = xs.t⁰;
+//│       set arg$Cons$1$ = xs.t²;
 //│       set inlinedVal = flatten_31_append_16$append$worker⁰(arg$Cons$1$, ys);
 //│       return +⁰(1, inlinedVal)
 //│     else
@@ -154,11 +187,11 @@ len(flatten(id((1 :: 2 :: Nil) :: (3 :: Nil) :: Nil)))
 //│   match xs
 //│     Nil⁰ =>
 //│       return ys
-//│     Cons¹ =>
-//│       set arg$Cons$0$ = xs.h⁰;
-//│       set arg$Cons$1$ = xs.t⁰;
+//│     Cons⁰ =>
+//│       set arg$Cons$0$ = xs.h²;
+//│       set arg$Cons$1$ = xs.t²;
 //│       set tmp5 = append¹(arg$Cons$1$, ys);
-//│       return Cons⁰(arg$Cons$0$, tmp5)
+//│       return Cons²(arg$Cons$0$, tmp5)
 //│     else
 //│       throw new globalThis⁰.Error⁰("match error")
 //│   end
@@ -168,9 +201,9 @@ len(flatten(id((1 :: 2 :: Nil) :: (3 :: Nil) :: Nil)))
 //│   match xss
 //│     Nil⁰ =>
 //│       return Nil⁰
-//│     Cons¹ =>
-//│       set arg$Cons$0$ = xss.h⁰;
-//│       set arg$Cons$1$ = xss.t⁰;
+//│     Cons⁰ =>
+//│       set arg$Cons$0$ = xss.h²;
+//│       set arg$Cons$1$ = xss.t²;
 //│       set tmp5 = flatten¹(arg$Cons$1$);
 //│       return append¹(arg$Cons$0$, tmp5)
 //│     else
@@ -182,19 +215,19 @@ len(flatten(id((1 :: 2 :: Nil) :: (3 :: Nil) :: Nil)))
 //│   match ls
 //│     Nil⁰ =>
 //│       return 0
-//│     Cons¹ =>
-//│       set arg$Cons$1$ = ls.t⁰;
+//│     Cons⁰ =>
+//│       set arg$Cons$1$ = ls.t²;
 //│       set tmp5 = len¹(arg$Cons$1$);
 //│       return +⁰(1, tmp5)
 //│     else
 //│       throw new globalThis⁰.Error⁰("match error")
 //│   end
 //│ };
-//│ set tmp = Cons⁰(2, Nil⁰);
-//│ set tmp1 = Cons⁰(1, tmp);
-//│ set tmp2 = Cons⁰(3, Nil⁰);
-//│ set tmp3 = Cons⁰(tmp2, Nil⁰);
-//│ set tmp4 = Cons⁰(tmp1, tmp3);
+//│ set tmp = Cons²(2, Nil⁰);
+//│ set tmp1 = Cons²(1, tmp);
+//│ set tmp2 = Cons²(3, Nil⁰);
+//│ set tmp3 = Cons²(tmp2, Nil⁰);
+//│ set tmp4 = Cons²(tmp1, tmp3);
 //│ return flatten_31$flatten$worker⁰(tmp4)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 3

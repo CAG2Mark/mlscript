@@ -19,6 +19,66 @@ class Foo(val x, val y) with
   val a = 3
   fun f = 4
   fun g() = 5
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = y⁰
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo⁰
+//│       sym = member:f⁰
+//│       dSym = term:Foo⁰/f¹
+//│       body = Return of Lit of IntLit of 4
+//│     FunDefn:
+//│       owner = S of class:Foo⁰
+//│       sym = member:g⁰
+//│       dSym = term:Foo⁰/g¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of IntLit of 5
+//│   privateFields = Ls of
+//│     term:Foo⁰/z⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:Foo⁰/x²
+//│     Tuple2:
+//│       _1 = member:y¹
+//│       _2 = term:Foo⁰/y²
+//│     Tuple2:
+//│       _1 = member:a⁰
+//│       _2 = term:Foo⁰/a¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/y²
+//│       sym = member:y¹
+//│       rhs = SimpleRef of y⁰
+//│     rest = AssignField: \
+//│     lhs = This of class:Foo⁰
+//│     nme = Ident of "z"
+//│     rhs = Lit of IntLit of 2
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/a¹
+//│       sym = member:a⁰
+//│       rhs = Lit of IntLit of 3
 
 let foo = Foo(1,2)
 //│ foo = Foo(1, 2)

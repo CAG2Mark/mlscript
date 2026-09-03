@@ -1,4 +1,119 @@
 :invalml
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:lambda)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:print⁰
+//│       dSym = term:print¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = Select:
+//│           qual = Select:
+//│             qual = This of globalThis:globalThis⁰
+//│             name = Ident of "console"
+//│           name = Ident of "log"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x⁰
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:CodeBase⁰
+//│       sym = member:CodeBase¹
+//│       k = Cls
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Region⁰
+//│       sym = member:Region¹
+//│       k = Cls
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Ref⁰
+//│       sym = member:Ref¹
+//│       ctorSym = S of term:Ref²
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = reg⁰
+//│             sign = S of TyApp{sym=class:Region⁰}:
+//│               lhs = Resolved{sym=class:Region⁰}:
+//│                 t = Ref{sym=member:Region¹} of member:Region¹
+//│                 sym = class:Region⁰
+//│               targs = Ls of
+//│                 Ref{sym=T⁰} of T⁰
+//│             modulefulness = Modulefulness of N
+//│           Param:
+//│             flags = (val)
+//│             sym = value⁰
+//│             sign = S of Ref{sym=S⁰} of S⁰
+//│             modulefulness = Modulefulness of N
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:reg¹
+//│           _2 = term:Ref⁰/reg²
+//│         Tuple2:
+//│           _1 = member:value¹
+//│           _2 = term:Ref⁰/value²
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:Ref⁰/reg²
+//│           sym = member:reg¹
+//│           rhs = SimpleRef of reg⁰
+//│         rest = Define: \
+//│         defn = ValDefn:
+//│           tsym = term:Ref⁰/value²
+//│           sym = member:value¹
+//│           rhs = SimpleRef of value⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "CodeBase"
+//│     rhs = MemberRef{disamb=class:CodeBase⁰}:
+//│       bms = member:CodeBase¹
+//│       disamb = class:CodeBase⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "Region"
+//│     rhs = MemberRef{disamb=class:Region⁰}:
+//│       bms = member:Region¹
+//│       disamb = class:Region⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda⁰
+//│       dSym = term:lambda¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = r⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = v⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Instantiate:
+//│         mut = true
+//│         cls = MemberRef{disamb=class:Ref⁰}:
+//│           bms = member:Ref¹
+//│           disamb = class:Ref⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of r⁰
+//│             Arg:
+//│               value = SimpleRef of v⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "Ref"
+//│     rhs = MemberRef{disamb=term:lambda¹}:
+//│       bms = member:lambda⁰
+//│       disamb = term:lambda¹
 
 fun f(y) =
   let local = ((x => y(x) + 1) as [A] -> A -> Int) in y
@@ -31,8 +146,8 @@ g(foo)
 :e
 y `=> (let t = run(x `=> x `+ y) in y)
 //│ ╔══[COMPILATION ERROR] Type error in quoted term with expected type CodeBase[out 'T, ⊥, ?]
-//│ ║  l.32: 	y `=> (let t = run(x `=> x `+ y) in y)
-//│ ║        	                   ^^^^^^^^^^^^
+//│ ║  l.147: 	y `=> (let t = run(x `=> x `+ y) in y)
+//│ ║         	                   ^^^^^^^^^^^^
 //│ ╟── because: cannot constrain  CodeBase[in ⊥ out ('x) ->{⊥} ('cde), in ⊥ out 'ctx, in ⊥ out ⊤]  <:  CodeBase[in ⊥ out 'T, ⊥, in ⊥ out ⊤]
 //│ ╟── because: cannot constrain  'ctx  <:  ⊥
 //│ ╟── because: cannot constrain  ¬'x1 ∧ y  <:  ⊥
@@ -43,6 +158,47 @@ y `=> (let t = run(x `=> x `+ y) in y)
 //│   'y <: Int
 
 data class C[A](m: A, n: A -> Int)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C⁰
+//│   sym = member:C¹
+//│   ctorSym = S of term:C²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = m⁰
+//│         sign = S of Ref{sym=A⁰} of A⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = n⁰
+//│         sign = S of FunTy:
+//│           lhs = Tup of Ls of
+//│             Fld:
+//│               term = Ref{sym=A⁰} of A⁰
+//│           rhs = Resolved{sym=class:Int⁰}:
+//│             t = Ref{sym=member:Int¹} of member:Int¹
+//│             sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:m¹
+//│       _2 = term:C⁰/m²
+//│     Tuple2:
+//│       _1 = member:n¹
+//│       _2 = term:C⁰/n²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C⁰/m²
+//│       sym = member:m¹
+//│       rhs = SimpleRef of m⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:C⁰/n²
+//│       sym = member:n¹
+//│       rhs = SimpleRef of n⁰
 
 
 fun f: [A] -> ([B] -> (C[out B] & A) -> B) -> A -> Int
@@ -71,8 +227,8 @@ f(g)(foo)
 :fixme // ???
 f(g)(bar)
 //│ ╔══[COMPILATION ERROR] Type error in reference of type C[‹not implemented›] with expected type 'A
-//│ ║  l.72: 	f(g)(bar)
-//│ ║        	     ^^^
+//│ ║  l.228: 	f(g)(bar)
+//│ ║         	     ^^^
 //│ ╟── because: cannot constrain  C[Int]  <:  'A
 //│ ╟── because: cannot constrain  C[Int]  <:  ¬{C[in ⊥ out ¬⊥ ∧ 'B]} ∨ C[in Int out 'D]
 //│ ╟── because: cannot constrain  Int ∧ 'B  <:  'D
@@ -91,8 +247,8 @@ k
 :e
 k(_ => "")
 //│ ╔══[COMPILATION ERROR] Type error in function literal with expected type 'x
-//│ ║  l.92: 	k(_ => "")
-//│ ║        	  ^^^^^^^
+//│ ║  l.248: 	k(_ => "")
+//│ ║         	  ^^^^^^^
 //│ ╟── because: cannot constrain  ('_) ->{⊥} (Str)  <:  'x
 //│ ╟── because: cannot constrain  ('_) ->{⊥} (Str)  <:  (Int) ->{'eff} (Int)
 //│ ╙── because: cannot constrain  Str  <:  Int
@@ -113,7 +269,7 @@ k
 :e
 k(_ => "")
 //│ ╔══[COMPILATION ERROR] Type error in function literal with expected type 'x
-//│ ║  l.114: 	k(_ => "")
+//│ ║  l.270: 	k(_ => "")
 //│ ║         	  ^^^^^^^
 //│ ╟── because: cannot constrain  ('_) ->{⊥} (Str)  <:  'x
 //│ ╟── because: cannot constrain  ('_) ->{⊥} (Str)  <:  (⊤) ->{⊥} ⊥
@@ -123,7 +279,7 @@ k(_ => "")
 :e
 k(_ => 42)
 //│ ╔══[COMPILATION ERROR] Type error in function literal with expected type 'x
-//│ ║  l.124: 	k(_ => 42)
+//│ ║  l.280: 	k(_ => 42)
 //│ ║         	  ^^^^^^^
 //│ ╟── because: cannot constrain  ('_) ->{⊥} (Int)  <:  'x
 //│ ╟── because: cannot constrain  ('_) ->{⊥} (Int)  <:  (⊤) ->{⊥} ⊥

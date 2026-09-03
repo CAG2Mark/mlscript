@@ -6,6 +6,20 @@ staged module TempVariable with
     let x
     let x
     x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:TempVariable⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:TempVariable⁰
+//│       sym = member:f⁰
+//│       dSym = term:TempVariable⁰/f¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {x⁰, x¹}):
+//│         body = Return of SimpleRef of x¹
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ > fun ctor_() = ()
 //│ > fun f() =
 //│ >   let {x, x1}
@@ -13,15 +27,100 @@ staged module TempVariable with
 
 staged module DupeFunctionName with
   fun f() = 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:DupeFunctionName⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:DupeFunctionName⁰
+//│       sym = member:f²
+//│       dSym = term:DupeFunctionName⁰/f³
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of IntLit of 1
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ > fun ctor_() = ()
 //│ > fun f() = 1
 
 class C(val x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C⁰
+//│   sym = member:C¹
+//│   ctorSym = S of term:C²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x²
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x³
+//│       _2 = term:C⁰/x⁴
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C⁰/x⁴
+//│       sym = member:x³
+//│       rhs = SimpleRef of x²
 
 staged module Selection with
   fun f(x) =
     x.call()
     C(1).x is Bool
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Selection⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Selection⁰
+//│       sym = member:f⁴
+//│       dSym = term:Selection⁰/f⁵
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁵
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:scrut⁰, tmp:tmp⁰}):
+//│         body = Assign:
+//│           lhs = ‹no symbol›
+//│           rhs = Call:
+//│             fun = Select:
+//│               qual = SimpleRef of x⁵
+//│               name = Ident of "call"
+//│             argss = Ls of
+//│               Nil
+//│           rest = Assign: \
+//│           lhs = tmp:tmp⁰
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:C²}:
+//│               bms = member:C¹
+//│               disamb = term:C²
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = Assign: \
+//│           lhs = tmp:scrut⁰
+//│           rhs = Select{sym=term:C⁰/x⁴}:
+//│             qual = SimpleRef of tmp:tmp⁰
+//│             name = Ident of "x"
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut⁰
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Cls:
+//│                 cls = class:Bool⁰
+//│                 path = Select{sym=term:Runtime⁰/unreachable⁰}:
+//│                   qual = SimpleRef of tmp:runtime⁰
+//│                   name = Ident of "unreachable"
+//│               _2 = Return of Lit of BoolLit of true
+//│           dflt = S of Return of Lit of BoolLit of false
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ > fun ctor_() = ()
 //│ > fun f(x) =
 //│ >   let {scrut, tmp}
@@ -36,6 +135,28 @@ staged module Selection with
 staged module DupeClass with
   class C(val y)
   fun f() = C(1).y
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of module:DupeClass⁰
+//│   isym = class:C³
+//│   sym = member:C⁴
+//│   ctorSym = S of term:DupeClass⁰/C⁵
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = y⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:y¹
+//│       _2 = term:C³/y²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C³/y²
+//│       sym = member:y¹
+//│       rhs = SimpleRef of y⁰
 //│ ═══[COMPILATION ERROR] Value.This not supported in staged module.
 //│ > fun ctor_() =
 //│ >   class C(y)

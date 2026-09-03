@@ -5,6 +5,41 @@ fun g(x) = x
 fun h(x) = x
 
 data class Pair[A, B](fst: A, snd: B)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Pair⁰
+//│   sym = member:Pair¹
+//│   ctorSym = S of term:Pair²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = fst⁰
+//│         sign = S of Ref{sym=A⁰} of A⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = snd⁰
+//│         sign = S of Ref{sym=B⁰} of B⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:fst¹
+//│       _2 = term:Pair⁰/fst²
+//│     Tuple2:
+//│       _1 = member:snd¹
+//│       _2 = term:Pair⁰/snd²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Pair⁰/fst²
+//│       sym = member:fst¹
+//│       rhs = SimpleRef of fst⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Pair⁰/snd²
+//│       sym = member:snd¹
+//│       rhs = SimpleRef of snd⁰
 
 // Simple conditionals in the form of `x is P`.
 // ============================================
@@ -77,20 +112,42 @@ fun foo(x) = x is
   Pair(a, b) and a > b
   Int
 //│ ╔══[COMPILATION ERROR] Unrecognized pattern (infix operator 'and').
-//│ ║  l.77: 	  Pair(a, b) and a > b
-//│ ╙──      	  ^^^^^^^^^^^^^^^^^^^^
+//│ ║  l.112: 	  Pair(a, b) and a > b
+//│ ╙──       	  ^^^^^^^^^^^^^^^^^^^^
 
 
 :e
 fun foo(x) = x is Pair(a, b) | Int
 //│ ╔══[COMPILATION ERROR] Unexpected term form in expression position (alternation)
-//│ ║  l.85: 	fun foo(x) = x is Pair(a, b) | Int
-//│ ╙──      	             ^^^^^^^^^^^^^^^^^^^^^
+//│ ║  l.120: 	fun foo(x) = x is Pair(a, b) | Int
+//│ ╙──       	             ^^^^^^^^^^^^^^^^^^^^^
 
 // Test how shorthand conditionals work together with lambda functions.
 // ====================================================================
 
 data class A[T](arg: T)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A¹
+//│   sym = member:A²
+//│   ctorSym = S of term:A³
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = arg⁰
+//│         sign = S of Ref{sym=T⁰} of T⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:arg¹
+//│       _2 = term:A¹/arg²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:A¹/arg²
+//│       sym = member:arg¹
+//│       rhs = SimpleRef of arg⁰
 
 let foo = x => x is A(_)
 //│ foo = fun foo

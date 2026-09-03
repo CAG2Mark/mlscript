@@ -67,6 +67,63 @@ module T with
   val b = this.t
   val c = p
   val d = this.p
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:T⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:T⁰
+//│       sym = member:t⁰
+//│       dSym = term:T⁰/t¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of IntLit of 1
+//│     FunDefn:
+//│       owner = S of module:T⁰
+//│       sym = member:p⁰
+//│       dSym = term:T⁰/p¹
+//│       body = Return of Lit of IntLit of 2
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a⁰
+//│       _2 = term:T⁰/a¹
+//│     Tuple2:
+//│       _1 = member:b⁰
+//│       _2 = term:T⁰/b¹
+//│     Tuple2:
+//│       _1 = member:c⁰
+//│       _2 = term:T⁰/c¹
+//│     Tuple2:
+//│       _1 = member:d⁰
+//│       _2 = term:T⁰/d¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:T⁰/a¹
+//│       sym = member:a⁰
+//│       rhs = Select{sym=term:T⁰/t¹}:
+//│         qual = This of module:T⁰
+//│         name = Ident of "t"
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:T⁰/b¹
+//│       sym = member:b⁰
+//│       rhs = Select{sym=term:T⁰/t¹}:
+//│         qual = This of module:T⁰
+//│         name = Ident of "t"
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:T⁰/c¹
+//│       sym = member:c⁰
+//│       rhs = Select{sym=term:T⁰/p¹}:
+//│         qual = This of module:T⁰
+//│         name = Ident of "p"
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:T⁰/d¹
+//│       sym = member:d⁰
+//│       rhs = Select{sym=term:T⁰/p¹}:
+//│         qual = This of module:T⁰
+//│         name = Ident of "p"
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let T1;
 //│ (class T {
@@ -107,6 +164,15 @@ T.d
 :sjs
 module M with
   fun t = 0
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M⁰
+//│       sym = member:t²
+//│       dSym = term:M⁰/t³
+//│       body = Return of Lit of IntLit of 0
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let M1;
 //│ (class M {
@@ -279,6 +345,35 @@ c()
 :sjs
 data class Foo(x) with
   fun oops = x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo⁰
+//│       sym = member:oops⁰
+//│       dSym = term:Foo⁰/oops¹
+//│       body = Return of Select{sym=term:Foo⁰/x¹}:
+//│         qual = This of class:Foo⁰
+//│         name = Ident of "x"
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x²
+//│       _2 = term:Foo⁰/x¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/x¹
+//│       sym = member:x²
+//│       rhs = SimpleRef of x⁰
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Foo1;
 //│ Foo1 = function Foo(x) {
@@ -313,6 +408,35 @@ fun foo(f) =
 
 data class Foo(x) with
   fun oops = x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo³
+//│   sym = member:Foo⁴
+//│   ctorSym = S of term:Foo⁵
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x³
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo³
+//│       sym = member:oops²
+//│       dSym = term:Foo³/oops³
+//│       body = Return of Select{sym=term:Foo³/x⁴}:
+//│         qual = This of class:Foo³
+//│         name = Ident of "x"
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁵
+//│       _2 = term:Foo³/x⁴
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo³/x⁴
+//│       sym = member:x⁵
+//│       rhs = SimpleRef of x³
 
 foo(Foo(42))
 //│ = 42

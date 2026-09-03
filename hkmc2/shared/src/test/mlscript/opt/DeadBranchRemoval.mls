@@ -6,6 +6,27 @@
 data class C(a)
 data class D(b)
 data class E(c)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C⁰
+//│   sym = member:C¹
+//│   ctorSym = S of term:C²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = a⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a¹
+//│       _2 = term:C⁰/a²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C⁰/a²
+//│       sym = member:a¹
+//│       rhs = SimpleRef of a⁰
 
 
 if true then 1 else 0
@@ -19,7 +40,7 @@ if C(123) is
   C(x) then print(x)
   D(y) then print(y)
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
-//│ let scrut, arg$C$0$; set scrut = C⁰(123); set arg$C$0$ = scrut.a⁰; return Predef⁰.print⁰(arg$C$0$)
+//│ let scrut, arg$C$0$; set scrut = C²(123); set arg$C$0$ = scrut.a²; return Predef⁰.print⁰(arg$C$0$)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ > 123
 
@@ -30,7 +51,7 @@ if C(123) is
   C(x) then print(x)
   else print("?")
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
-//│ let scrut, arg$C$0$; set scrut = C⁰(123); set arg$C$0$ = scrut.a⁰; return Predef⁰.print⁰(arg$C$0$)
+//│ let scrut, arg$C$0$; set scrut = C²(123); set arg$C$0$ = scrut.a²; return Predef⁰.print⁰(arg$C$0$)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ > 123
 
@@ -55,14 +76,14 @@ in
 //│ set scrut = Predef⁰.hide⁰(true);
 //│ match scrut
 //│   true =>
-//│     set tmp = C⁰(123);
+//│     set tmp = C²(123);
 //│     end
 //│   else
 //│     set tmp = D⁰(456);
 //│     end
 //│ do Predef⁰.print⁰(tmp);
 //│ match tmp
-//│   C¹ =>
+//│   C⁰ =>
 //│     return 0
 //│   D¹ =>
 //│     return 1
@@ -89,15 +110,15 @@ in
 //│ set scrut = Predef⁰.hide⁰(true);
 //│ match scrut
 //│   true =>
-//│     set tmp = C⁰(123);
+//│     set tmp = C²(123);
 //│     end
 //│   else
 //│     set tmp = D⁰(456);
 //│     end
 //│ do Predef⁰.print⁰(tmp);
 //│ match tmp
-//│   C¹ =>
-//│     set arg$C$0$ = tmp.a⁰;
+//│   C⁰ =>
+//│     set arg$C$0$ = tmp.a²;
 //│     do Predef⁰.print⁰(arg$C$0$);
 //│     return arg$C$0$
 //│   D¹ =>

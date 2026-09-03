@@ -1,6 +1,11 @@
 :js
 
 object tailrec
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:tailrec⁰
+//│   sym = member:tailrec¹
+//│   k = Obj
 
 tailrec
 //│ = tailrec
@@ -9,8 +14,8 @@ tailrec
 @tailrec fun fact_n(n, acc) =
   if n == 0 then acc else fact_n(n - 1, n * acc)
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.9: 	@tailrec fun fact_n(n, acc) =
-//│ ╙──     	^^^^^^^^
+//│ ║  l.14: 	@tailrec fun fact_n(n, acc) =
+//│ ╙──      	^^^^^^^^
 
 :w
 fun fact(n) =
@@ -18,65 +23,149 @@ fun fact(n) =
     if n == 0 then acc else go(n - 1, n * acc)
   go(n, 1)
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.17: 	  @tailrec fun go(n, acc) =
+//│ ║  l.22: 	  @tailrec fun go(n, acc) =
 //│ ╙──      	  ^^^^^^^^
 
 data class Freezed(degree: Num)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Freezed⁰
+//│   sym = member:Freezed¹
+//│   ctorSym = S of term:Freezed²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = degree⁰
+//│         sign = S of Resolved{sym=class:Num⁰}:
+//│           t = Ref{sym=member:Num¹} of member:Num¹
+//│           sym = class:Num⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:degree¹
+//│       _2 = term:Freezed⁰/degree²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Freezed⁰/degree²
+//│       sym = member:degree¹
+//│       rhs = SimpleRef of degree⁰
 
 :w
 @Freezed(-273.15) class AbsoluteZero
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.27: 	@Freezed(-273.15) class AbsoluteZero
+//│ ║  l.56: 	@Freezed(-273.15) class AbsoluteZero
 //│ ╙──      	^^^^^^^^^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:AbsoluteZero⁰
+//│   sym = member:AbsoluteZero¹
+//│   k = Cls
 
 :w
 @Freezed(-18) class Beverage(name: Str)
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.33: 	@Freezed(-18) class Beverage(name: Str)
+//│ ║  l.67: 	@Freezed(-18) class Beverage(name: Str)
 //│ ╙──      	^^^^^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Beverage⁰
+//│   sym = member:Beverage¹
+//│   ctorSym = S of term:Beverage²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = name⁰
+//│         sign = S of Resolved{sym=class:Str⁰}:
+//│           t = Ref{sym=member:Str¹} of member:Str¹
+//│           sym = class:Str⁰
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Beverage⁰/name¹
+//│   ctor = AssignField:
+//│     lhs = This of class:Beverage⁰
+//│     nme = Ident of "name"
+//│     rhs = SimpleRef of name⁰
 
 :w
 @Freezed(-4) let drink = Beverage("Coke")
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.39: 	@Freezed(-4) let drink = Beverage("Coke")
+//│ ║  l.93: 	@Freezed(-4) let drink = Beverage("Coke")
 //│ ╙──      	^^^^^^^^^^^^
 //│ drink = Beverage(_)
 
 module Foo with
   data class Bar(qax: Str)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of module:Foo⁰
+//│   isym = class:Bar⁰
+//│   sym = member:Bar¹
+//│   ctorSym = S of term:Foo⁰/Bar²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = qax⁰
+//│         sign = S of Resolved{sym=class:Str⁰}:
+//│           t = Ref{sym=member:Str¹} of member:Str¹
+//│           sym = class:Str⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:qax¹
+//│       _2 = term:Bar⁰/qax²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Bar⁰/qax²
+//│       sym = member:qax¹
+//│       rhs = SimpleRef of qax⁰
 
 :w
 @Foo.Bar("baz") class Qux
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.49: 	@Foo.Bar("baz") class Qux
-//│ ╙──      	^^^^^^^^^^^^^^^
+//│ ║  l.128: 	@Foo.Bar("baz") class Qux
+//│ ╙──       	^^^^^^^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Qux⁰
+//│   sym = member:Qux¹
+//│   k = Cls
 
 // * Not an annotation, but an applicationo f operator `@`...
 :pe
 :re
 @42 class Qux
 //│ ╔══[PARSE ERROR] Expected end of input; found 'class' keyword instead
-//│ ║  l.57: 	@42 class Qux
-//│ ╙──      	    ^^^^^
+//│ ║  l.141: 	@42 class Qux
+//│ ╙──       	    ^^^^^
 //│ ═══[RUNTIME ERROR] TypeError: 42 is not a function
 
 :pe
 :re
 @(1 + 2) class Qux
 //│ ╔══[PARSE ERROR] Expected end of input; found 'class' keyword instead
-//│ ║  l.65: 	@(1 + 2) class Qux
-//│ ╙──      	         ^^^^^
+//│ ║  l.149: 	@(1 + 2) class Qux
+//│ ╙──       	         ^^^^^
 //│ ═══[RUNTIME ERROR] TypeError: 3 is not a function
 
 :pe
 :re
 @1 module Qux
 //│ ╔══[PARSE ERROR] Expected end of input; found 'module' keyword instead
-//│ ║  l.73: 	@1 module Qux
-//│ ╙──      	   ^^^^^^
+//│ ║  l.157: 	@1 module Qux
+//│ ╙──       	   ^^^^^^
 //│ ═══[RUNTIME ERROR] TypeError: 1 is not a function
 
 object inline
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:inline⁰
+//│   sym = member:inline¹
+//│   k = Obj
 
 :w
 // All functions are annotated with @inline.
@@ -85,22 +174,22 @@ fun
   min(x, y) = if x < y then x else y
   max(x, y) = if x > y then x else y
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.83: 	@inline
-//│ ╙──      	^^^^^^^
+//│ ║  l.172: 	@inline
+//│ ╙──       	^^^^^^^
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.83: 	@inline
-//│ ╙──      	^^^^^^^
+//│ ║  l.172: 	@inline
+//│ ╙──       	^^^^^^^
 
 :w
 @inline let
   abs(x) = if x < 0 then -x else x
   clamp(x, lo, hi) = min(max(x, lo), hi)
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.95: 	@inline let
-//│ ╙──      	^^^^^^^
+//│ ║  l.184: 	@inline let
+//│ ╙──       	^^^^^^^
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.95: 	@inline let
-//│ ╙──      	^^^^^^^
+//│ ║  l.184: 	@inline let
+//│ ╙──       	^^^^^^^
 //│ abs = fun abs
 //│ clamp = fun clamp
 
@@ -110,7 +199,7 @@ let
   @inline success = 0
   failure = 1
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.110: 	  @inline success = 0
+//│ ║  l.199: 	  @inline success = 0
 //│ ╙──       	  ^^^^^^^
 //│ failure = 1
 //│ success = 0
@@ -122,13 +211,18 @@ let
 @inline @tailrec fun fib(n) =
   if n < 2 then n else fib(n - 1) + fib(n - 2)
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.122: 	@inline @tailrec fun fib(n) =
+//│ ║  l.211: 	@inline @tailrec fun fib(n) =
 //│ ╙──       	^^^^^^^
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.122: 	@inline @tailrec fun fib(n) =
+//│ ║  l.211: 	@inline @tailrec fun fib(n) =
 //│ ╙──       	        ^^^^^^^^
 
 object internal
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:internal⁰
+//│   sym = member:internal¹
+//│   k = Obj
 
 :w
 @internal object
@@ -137,17 +231,22 @@ object internal
   transient
   volatile
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.134: 	@internal object
+//│ ║  l.228: 	@internal object
 //│ ╙──       	^^^^^^^^^
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.134: 	@internal object
+//│ ║  l.228: 	@internal object
 //│ ╙──       	^^^^^^^^^
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.134: 	@internal object
+//│ ║  l.228: 	@internal object
 //│ ╙──       	^^^^^^^^^
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.134: 	@internal object
+//│ ║  l.228: 	@internal object
 //│ ╙──       	^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:shared⁰
+//│   sym = member:shared¹
+//│   k = Obj
 
 :w
 @volatile let
@@ -156,31 +255,31 @@ object internal
   @volatile @transient empty = ""
   normal = ()
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.153: 	@volatile let
+//│ ║  l.252: 	@volatile let
 //│ ╙──       	^^^^^^^^^
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.154: 	  @shared counter = 0
+//│ ║  l.253: 	  @shared counter = 0
 //│ ╙──       	  ^^^^^^^
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.153: 	@volatile let
+//│ ║  l.252: 	@volatile let
 //│ ╙──       	^^^^^^^^^
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.155: 	  @transient @thread_local cache = ()
+//│ ║  l.254: 	  @transient @thread_local cache = ()
 //│ ╙──       	  ^^^^^^^^^^
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.155: 	  @transient @thread_local cache = ()
+//│ ║  l.254: 	  @transient @thread_local cache = ()
 //│ ╙──       	             ^^^^^^^^^^^^^
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.153: 	@volatile let
+//│ ║  l.252: 	@volatile let
 //│ ╙──       	^^^^^^^^^
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.156: 	  @volatile @transient empty = ""
+//│ ║  l.255: 	  @volatile @transient empty = ""
 //│ ╙──       	  ^^^^^^^^^
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.156: 	  @volatile @transient empty = ""
+//│ ║  l.255: 	  @volatile @transient empty = ""
 //│ ╙──       	            ^^^^^^^^^^
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.153: 	@volatile let
+//│ ║  l.252: 	@volatile let
 //│ ╙──       	^^^^^^^^^
 //│ cache = ()
 //│ counter = 0

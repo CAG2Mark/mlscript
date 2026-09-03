@@ -14,6 +14,29 @@ module foo with
 //│ ║       	^^^^^^^^^^^^^^^
 //│ ║  l.8: 	  val zero = foo(0)
 //│ ╙──     	^^^^^^^^^^^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:foo⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:zero⁰
+//│       _2 = term:foo⁰/zero¹
+//│   ctor = Scoped(syms = {tmp:tmp⁰}):
+//│     body = Assign:
+//│       lhs = tmp:tmp⁰
+//│       rhs = Call:
+//│         fun = MemberRef{disamb=term:foo¹}:
+//│           bms = member:foo²
+//│           disamb = term:foo¹
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Lit of IntLit of 0
+//│       rest = Define: \
+//│       defn = ValDefn:
+//│         tsym = term:foo⁰/zero¹
+//│         sym = member:zero⁰
+//│         rhs = SimpleRef of tmp:tmp⁰
 
 foo(123)
 //│ = 124

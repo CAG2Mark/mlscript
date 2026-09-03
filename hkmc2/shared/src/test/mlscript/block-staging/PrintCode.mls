@@ -34,6 +34,152 @@ class A(val x)(y)
 class B
 let aSym = ConcreteClassSymbol("A", A, Some([Symbol("x")]), [[Symbol("y")]])
 let bSym = ConcreteClassSymbol("B", B, None, [])
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:tmp, tmp:tmp, tmp:tmp, tmp:tmp, tmp:tmp, tmp:tmp, tmp:tmp)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:A⁰
+//│       sym = member:A¹
+//│       ctorSym = S of term:A²
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = x⁰
+//│             modulefulness = Modulefulness of N
+//│       auxParams = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = y⁰
+//│               modulefulness = Modulefulness of N
+//│       privateFields = Ls of
+//│         term:A⁰/y¹
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:x¹
+//│           _2 = term:A⁰/x²
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:A⁰/x²
+//│           sym = member:x¹
+//│           rhs = SimpleRef of x⁰
+//│         rest = AssignField: \
+//│         lhs = This of class:A⁰
+//│         nme = Ident of "y"
+//│         rhs = SimpleRef of y⁰
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:B⁰
+//│       sym = member:B¹
+//│       k = Cls
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁰
+//│     rhs = Call:
+//│       fun = Select{sym=term:Block⁰/Symbol⁰}:
+//│         qual = MemberRef{disamb=module:Block⁰}:
+//│           bms = member:Block¹
+//│           disamb = module:Block⁰
+//│         name = Ident of "Symbol"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of StrLit of "x"
+//│     rest = Assign: \
+//│     lhs = tmp:tmp¹
+//│     rhs = Tuple:
+//│       mut = false
+//│       elems = Ls of
+//│         Arg:
+//│           value = SimpleRef of tmp:tmp⁰
+//│     rest = Assign: \
+//│     lhs = tmp:tmp²
+//│     rhs = Call:
+//│       fun = Select{sym=term:Option⁰/Some⁰}:
+//│         qual = MemberRef{disamb=module:Option⁰}:
+//│           bms = member:Option¹
+//│           disamb = module:Option⁰
+//│         name = Ident of "Some"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp¹
+//│     rest = Assign: \
+//│     lhs = tmp:tmp³
+//│     rhs = Call:
+//│       fun = Select{sym=term:Block⁰/Symbol⁰}:
+//│         qual = MemberRef{disamb=module:Block⁰}:
+//│           bms = member:Block¹
+//│           disamb = module:Block⁰
+//│         name = Ident of "Symbol"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of StrLit of "y"
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁴
+//│     rhs = Tuple:
+//│       mut = false
+//│       elems = Ls of
+//│         Arg:
+//│           value = SimpleRef of tmp:tmp³
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁵
+//│     rhs = Tuple:
+//│       mut = false
+//│       elems = Ls of
+//│         Arg:
+//│           value = SimpleRef of tmp:tmp⁴
+//│     rest = Assign: \
+//│     lhs = aSym⁰
+//│     rhs = Call:
+//│       fun = Select{sym=term:Block⁰/ConcreteClassSymbol⁰}:
+//│         qual = MemberRef{disamb=module:Block⁰}:
+//│           bms = member:Block¹
+//│           disamb = module:Block⁰
+//│         name = Ident of "ConcreteClassSymbol"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of StrLit of "A"
+//│           Arg:
+//│             value = MemberRef{disamb=term:A²}:
+//│               bms = member:A¹
+//│               disamb = term:A²
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp²
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp⁵
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁶
+//│     rhs = Tuple:
+//│       mut = false
+//│     rest = Assign: \
+//│     lhs = bSym⁰
+//│     rhs = Call:
+//│       fun = Select{sym=term:Block⁰/ConcreteClassSymbol⁰}:
+//│         qual = MemberRef{disamb=module:Block⁰}:
+//│           bms = member:Block¹
+//│           disamb = module:Block⁰
+//│         name = Ident of "ConcreteClassSymbol"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of StrLit of "B"
+//│           Arg:
+//│             value = MemberRef{disamb=class:B⁰}:
+//│               bms = member:B¹
+//│               disamb = class:B⁰
+//│           Arg:
+//│             value = Select{sym=object:None⁰}:
+//│               qual = MemberRef{disamb=module:Option⁰}:
+//│                 bms = member:Option¹
+//│                 disamb = module:Option⁰
+//│               name = Ident of "None"
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp⁶
 
 printCode(Call(ValueSimpleRef(Symbol("f")), [Arg(ValueLit(3))]))
 printCode(Instantiate(ValueMemberRef(aSym), [Arg(ValueLit(0))]))

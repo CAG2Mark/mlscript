@@ -12,6 +12,22 @@ object Bar with
   val x = 1
   module Baz with
     val a = Bar.x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Baz⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a⁰
+//│       _2 = term:Baz⁰/a¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Baz⁰/a¹
+//│       sym = member:a⁰
+//│       rhs = Select{sym=term:Bar⁰/x⁰}:
+//│         qual = MemberRef{disamb=object:Bar⁰}:
+//│           bms = member:Bar¹
+//│           disamb = object:Bar⁰
+//│         name = Ident of "x"
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Bar1;
 //│ (class Bar {
@@ -51,6 +67,22 @@ module Bar with
   val x = 1
   module Baz with
     val a = Bar.x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Baz¹
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a²
+//│       _2 = term:Baz¹/a³
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Baz¹/a³
+//│       sym = member:a²
+//│       rhs = Select{sym=term:Bar²/x¹}:
+//│         qual = MemberRef{disamb=module:Bar²}:
+//│           bms = member:Bar³
+//│           disamb = module:Bar²
+//│         name = Ident of "x"
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Bar3;
 //│ (class Bar2 {

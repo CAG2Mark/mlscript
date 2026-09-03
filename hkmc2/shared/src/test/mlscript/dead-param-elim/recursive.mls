@@ -214,12 +214,70 @@ module M with
 private fun pong(n, unused) = if n == 0 then 0 else M.ping(n - 1, unused)
 class Test(a) with
   fun f() = pong(3, 123)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M⁰
+//│       sym = member:ping⁶
+//│       dSym = term:M⁰/ping⁷
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = n⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = unused⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:scrut⁰, tmp:tmp⁰}):
+//│         body = Assign:
+//│           lhs = tmp:scrut⁰
+//│           rhs = Call:
+//│             fun = Select{sym=term:Predef⁰/equals⁰}:
+//│               qual = MemberRef{disamb=module:Predef⁰}:
+//│                 bms = member:Predef¹
+//│                 disamb = module:Predef⁰
+//│               name = Ident of "equals"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of n⁰
+//│                 Arg:
+//│                   value = Lit of IntLit of 0
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut⁰
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of BoolLit of true
+//│               _2 = Return of Lit of IntLit of 0
+//│           dflt = S of Assign:
+//│             lhs = tmp:tmp⁰
+//│             rhs = Call:
+//│               fun = SimpleRef of builtin:-⁰
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of n⁰
+//│                   Arg:
+//│                     value = Lit of IntLit of 1
+//│             rest = Return of Call:
+//│               fun = MemberRef{disamb=term:pong⁶}:
+//│                 bms = member:pong⁷
+//│                 disamb = term:pong⁶
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of tmp:tmp⁰
+//│                   Arg:
+//│                     value = SimpleRef of unused⁰
 //│ dead-param-elim > >>> dead-param-elim results >>>
 //│ dead-param-elim > prodfun pong#0 @ <root> -> eliminable: {1}
 //│ dead-param-elim > <<< dead-param-elim results <<<
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
 //│ @private
-//│ define pong⁶ as fun pong⁷(n) {
+//│ define pong⁷ as fun pong⁶(n) {
 //│   let scrut, tmp;
 //│   set scrut = Predef⁰.equals⁰(n, 0);
 //│   match scrut
@@ -227,12 +285,12 @@ class Test(a) with
 //│       return 0
 //│     else
 //│       set tmp = -⁰(n, 1);
-//│       return M⁰.ping⁶(tmp, undefined)
+//│       return M⁰.ping⁷(tmp, undefined)
 //│   end
 //│ };
 //│ define M¹ as class M²
 //│ module M⁰ {
-//│   method ping⁷ = fun ping⁶(n, unused) {
+//│   method ping⁶ = fun ping⁷(n, unused) {
 //│     let scrut, tmp;
 //│     set scrut = Predef⁰.equals⁰(n, 0);
 //│     match scrut
@@ -240,11 +298,11 @@ class Test(a) with
 //│         return 0
 //│       else
 //│         set tmp = -⁰(n, 1);
-//│         return pong⁷(tmp)
+//│         return pong⁶(tmp)
 //│     end
 //│   }
 //│ };
-//│ define Test⁰ as class Test² { constructor Test¹ method f⁰ = fun f¹() { return pong⁷(3) } };
+//│ define Test⁰ as class Test² { constructor Test¹ method f⁰ = fun f¹() { return pong⁶(3) } };
 //│ end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 

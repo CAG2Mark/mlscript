@@ -8,6 +8,11 @@ open Stack
 abstract class Q
 abstract class A extends Q
 abstract class B extends Q
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Q⁰
+//│   sym = member:Q¹
+//│   k = Cls
 
 // Note: A and B are sibling classes (both extend Q but neither extends the
 // other), so under the single-inheritance restriction they are provably
@@ -71,6 +76,27 @@ if 5 is (a & b & c) then a+b+c
 //│ = 15
 
 data class C(a)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C⁰
+//│   sym = member:C¹
+//│   ctorSym = S of term:C²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = a⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a¹
+//│       _2 = term:C⁰/a²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C⁰/a²
+//│       sym = member:a¹
+//│       rhs = SimpleRef of a⁰
 
 fun foo(x) = if x is
   ({a:_ & a} & C) and

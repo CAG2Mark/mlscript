@@ -6,6 +6,26 @@ using Str = "ok"
 fun bar = M.foo()
 module M with
   fun foo()(using s: Str) = s
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M⁰
+//│       sym = member:foo⁰
+//│       dSym = term:M⁰/foo¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = s⁰
+//│               sign = S of Resolved{sym=class:Str⁰}:
+//│                 t = Ref{sym=member:Str¹} of member:Str¹
+//│                 sym = class:Str⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of SimpleRef of s⁰
 
 :expect "ok"
 bar
@@ -16,6 +36,17 @@ module M with
   fun getN: module N = N
 module N with
   fun foo()(using Str) = 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M¹
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M¹
+//│       sym = member:getN⁰
+//│       dSym = term:M¹/getN¹
+//│       body = Return of MemberRef{disamb=module:N⁰}:
+//│         bms = member:N¹
+//│         disamb = module:N⁰
 
 :expect 1
 bar
@@ -31,12 +62,32 @@ module Example with
   fun foo(): module M = M
 test
 //│ ╔══[COMPILATION ERROR] Cannot query instance of type Int for call: 
-//│ ║  l.27: 	fun test = M.mtd()
+//│ ║  l.58: 	fun test = M.mtd()
 //│ ║        	           ^^^^^^^
 //│ ╟── Required by contextual parameter declaration: 
-//│ ║  l.29: 	  fun mtd()(using n: Int) = n
+//│ ║  l.60: 	  fun mtd()(using n: Int) = n
 //│ ║        	                  ^^^^^^
 //│ ╙── Missing instance: Expected: Int; Available: Str
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M²
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M²
+//│       sym = member:mtd⁰
+//│       dSym = term:M²/mtd¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = n⁰
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of SimpleRef of n⁰
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 
@@ -49,12 +100,32 @@ module Example with
   fun foo(): module M = M
 test
 //│ ╔══[COMPILATION ERROR] Cannot query instance of type Int for call: 
-//│ ║  l.45: 	fun test = Example.foo().mtd()
+//│ ║  l.96: 	fun test = Example.foo().mtd()
 //│ ║        	           ^^^^^^^^^^^^^^^^^^^
 //│ ╟── Required by contextual parameter declaration: 
-//│ ║  l.47: 	  fun mtd()(using n: Int) = n
+//│ ║  l.98: 	  fun mtd()(using n: Int) = n
 //│ ║        	                  ^^^^^^
 //│ ╙── Missing instance: Expected: Int; Available: Str
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M³
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M³
+//│       sym = member:mtd²
+//│       dSym = term:M³/mtd³
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = n¹
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of SimpleRef of n¹
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 
@@ -65,6 +136,26 @@ module M with
   fun mtd()(using n: Int) = n
 module Example with
   fun foo(): module M = M
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁴
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M⁴
+//│       sym = member:mtd⁴
+//│       dSym = term:M⁴/mtd⁵
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = n²
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of SimpleRef of n²
 
 :expect 42
 test

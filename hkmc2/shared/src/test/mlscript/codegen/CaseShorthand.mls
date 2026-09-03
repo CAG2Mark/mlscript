@@ -100,6 +100,27 @@ case
 
 data class Some(value)
 object None
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Some⁰
+//│   sym = member:Some¹
+//│   ctorSym = S of term:Some²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = value⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:value¹
+//│       _2 = term:Some⁰/value²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Some⁰/value²
+//│       sym = member:value¹
+//│       rhs = SimpleRef of value⁰
 
 :sjs
 val isDefined = case
@@ -123,6 +144,6 @@ val isDefined = case
 :todo
 case 0 | 1
 //│ ╔══[COMPILATION ERROR] Unrecognized pattern split (infix operator '|').
-//│ ║  l.124: 	case 0 | 1
+//│ ║  l.145: 	case 0 | 1
 //│ ╙──       	     ^^^^^
 //│ = fun

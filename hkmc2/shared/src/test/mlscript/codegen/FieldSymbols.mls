@@ -3,6 +3,37 @@
 
 data class Foo(val x) with
   val y = x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:Foo⁰/x²
+//│     Tuple2:
+//│       _1 = member:y⁰
+//│       _2 = term:Foo⁰/y¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/y¹
+//│       sym = member:y⁰
+//│       rhs = Select{sym=term:Foo⁰/x²}:
+//│         qual = This of class:Foo⁰
+//│         name = Ident of "x"
 
 
 // TODO add symbol to this Sel
@@ -12,7 +43,7 @@ Foo(42).x
 //│ Blk:
 //│   res = Sel:
 //│     prefix = App:
-//│       lhs = Ref{sym=member:Foo⁰} of member:Foo⁰
+//│       lhs = Ref{sym=member:Foo¹} of member:Foo¹
 //│       rhs = Tup of Ls of
 //│         Fld:
 //│           term = Lit of IntLit of 42
@@ -68,7 +99,7 @@ case
 //│         branch = Match:
 //│           scrutinee = Ref{sym=caseScrut⁰} of caseScrut⁰
 //│           pattern = Constructor:
-//│             target = Ref{sym=member:Foo⁰} of member:Foo⁰
+//│             target = Ref{sym=member:Foo¹} of member:Foo¹
 //│             arguments = S of Ls of
 //│               Alias:
 //│                 pattern = Wildcard
@@ -81,8 +112,8 @@ case
 //│ define lambda as fun lambda⁰(caseScrut) {
 //│   let a, arg$Foo$0$;
 //│   match caseScrut
-//│     Foo¹ =>
-//│       set arg$Foo$0$ = caseScrut.x⁰;
+//│     Foo⁰ =>
+//│       set arg$Foo$0$ = caseScrut.x²;
 //│       set a = arg$Foo$0$;
 //│       return a
 //│     else

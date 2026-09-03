@@ -3,6 +3,39 @@
 open annotations
 
 data class Add(val lhs, val rhs)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Add⁰
+//│   sym = member:Add¹
+//│   ctorSym = S of term:Add²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = lhs⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = rhs⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:lhs¹
+//│       _2 = term:Add⁰/lhs²
+//│     Tuple2:
+//│       _1 = member:rhs¹
+//│       _2 = term:Add⁰/rhs²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Add⁰/lhs²
+//│       sym = member:lhs¹
+//│       rhs = SimpleRef of lhs⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Add⁰/rhs²
+//│       sym = member:rhs¹
+//│       rhs = SimpleRef of rhs⁰
 
 :sir
 case Add(0, 0) then 1
@@ -13,8 +46,8 @@ case Add(0, 0) then 1
 //│   let arg$Add$0$, arg$Add$1$;
 //│   match caseScrut
 //│     Add⁰ =>
-//│       set arg$Add$0$ = caseScrut.lhs⁰;
-//│       set arg$Add$1$ = caseScrut.rhs⁰;
+//│       set arg$Add$0$ = caseScrut.lhs²;
+//│       set arg$Add$1$ = caseScrut.rhs²;
 //│       match arg$Add$0$
 //│         0 =>
 //│           match arg$Add$1$
@@ -45,8 +78,8 @@ case @compile Add(0, 0) then 1
 //│     let lhs, rhs, lhs1, rhs1, p_0$, result1$, result1$1, p_0$1, tmp, tmp1;
 //│     match input
 //│       Add⁰ =>
-//│         set lhs = input.lhs⁰;
-//│         set rhs = input.rhs⁰;
+//│         set lhs = input.lhs²;
+//│         set rhs = input.rhs²;
 //│         set lhs1 = matcher__0$(lhs);
 //│         set rhs1 = matcher__0$(rhs);
 //│         set result1$1 = lhs1;
@@ -100,6 +133,27 @@ case @compile Add(0, 0) then 1
 //│ = fun
 
 data class Box(val value)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Box⁰
+//│   sym = member:Box¹
+//│   ctorSym = S of term:Box²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = value⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:value¹
+//│       _2 = term:Box⁰/value²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Box⁰/value²
+//│       sym = member:value¹
+//│       rhs = SimpleRef of value⁰
 
 // * TODO: We should find a way of optimizing away the local intermediate records in cases like this.
 :soir
@@ -112,7 +166,7 @@ case @compile (Box(0) | Box(1)) then 1
 //│   match caseScrut
 //│     Box⁰ =>
 //│       let inlinedVal;
-//│       set value = caseScrut.value⁰;
+//│       set value = caseScrut.value²;
 //│       match value
 //│         0 =>
 //│           set inlinedVal = { "p_1": true, "p_2": false };
@@ -149,20 +203,84 @@ case @compile (Box(0) & Box(0 | 1)) then 1
 //│ = fun
 
 class Add2(val x, val y, z)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Add2⁰
+//│   sym = member:Add2¹
+//│   ctorSym = S of term:Add2²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = y⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         sym = z⁰
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Add2⁰/z¹
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:Add2⁰/x²
+//│     Tuple2:
+//│       _1 = member:y¹
+//│       _2 = term:Add2⁰/y²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Add2⁰/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Add2⁰/y²
+//│       sym = member:y¹
+//│       rhs = SimpleRef of y⁰
+//│     rest = AssignField: \
+//│     lhs = This of class:Add2⁰
+//│     nme = Ident of "z"
+//│     rhs = SimpleRef of z⁰
 
 :e
 case @compile (Add2(0, _, _) | Add2(_, 1, _)) then 0
 //│ ╔══[COMPILATION ERROR] Parameter `z` is not accessible.
-//│ ║  l.151: 	class Add2(val x, val y, z)
+//│ ║  l.205: 	class Add2(val x, val y, z)
 //│ ╙──       	                         ^
 //│ ╔══[COMPILATION ERROR] Parameter `z` is not accessible.
-//│ ║  l.151: 	class Add2(val x, val y, z)
+//│ ║  l.205: 	class Add2(val x, val y, z)
 //│ ╙──       	                         ^
 //│ = fun
 
 module Outer with
   module Inner with
     data class Wrapped(val value)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of module:Inner⁰
+//│   isym = class:Wrapped⁰
+//│   sym = member:Wrapped¹
+//│   ctorSym = S of term:Inner⁰/Wrapped²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = value³
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:value⁴
+//│       _2 = term:Wrapped⁰/value⁵
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Wrapped⁰/value⁵
+//│       sym = member:value⁴
+//│       rhs = SimpleRef of value³
 
 :sir
 fun compiledInner(module Inner: Outer.Inner, x) =
@@ -174,7 +292,7 @@ fun compiledInner(module Inner: Outer.Inner, x) =
 //│     let value, value1, p_0$, result1$, p_0$1, tmp, tmp1;
 //│     match input
 //│       Wrapped⁰ =>
-//│         set value = input.value¹;
+//│         set value = input.value⁵;
 //│         set value1 = matcher__3$(value);
 //│         set result1$ = value1;
 //│         match result1$

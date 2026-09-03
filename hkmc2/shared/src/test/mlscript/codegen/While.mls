@@ -189,6 +189,39 @@ if x
 // import "../../mlscript-compile/Stack.mls"
 
 data class Cons(hd, tl)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Cons⁰
+//│   sym = member:Cons¹
+//│   ctorSym = S of term:Cons²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = hd⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = tl⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:hd¹
+//│       _2 = term:Cons⁰/hd²
+//│     Tuple2:
+//│       _1 = member:tl¹
+//│       _2 = term:Cons⁰/tl²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Cons⁰/hd²
+//│       sym = member:hd¹
+//│       rhs = SimpleRef of hd⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Cons⁰/tl²
+//│       sym = member:tl¹
+//│       rhs = SimpleRef of tl⁰
 
 :sjs
 fun f(ls) =
@@ -243,6 +276,33 @@ f(Cons(1, Cons(2, Cons(3, 0))))
 while false do
   class A
   new A
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:A, tmp:scrut)
+//│   body = Assign:
+//│     lhs = tmp:scrut⁰
+//│     rhs = Lit of BoolLit of false
+//│     rest = Match: \
+//│     scrut = SimpleRef of tmp:scrut⁰
+//│     arms = Ls of
+//│       Tuple2:
+//│         _1 = Lit of BoolLit of true
+//│         _2 = Define:
+//│           defn = ClsLikeDefn:
+//│             isym = class:A⁰
+//│             sym = member:A¹
+//│             k = Cls
+//│           rest = Assign: \
+//│           lhs = ‹no symbol›
+//│           rhs = Instantiate:
+//│             mut = false
+//│             cls = MemberRef{disamb=class:A⁰}:
+//│               bms = member:A¹
+//│               disamb = class:A⁰
+//│             argss = Ls of
+//│               Nil
+//│           rest = Continue of label:lbl⁰
+//│     dflt = S of End of ""
 
 
 let x = 1
@@ -285,6 +345,82 @@ class Lazy[out A](f: () -> A) with
     if cached === () do
       set cached = f()
     cached
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Lazy⁰
+//│   sym = member:Lazy¹
+//│   ctorSym = S of term:Lazy²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = f⁰
+//│         sign = S of FunTy:
+//│           lhs = Tup of Nil
+//│           rhs = Ref{sym=A²} of A²
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Lazy⁰
+//│       sym = member:get⁰
+//│       dSym = term:Lazy⁰/get¹
+//│       body = Scoped(syms = {tmp:scrut¹, tmp:tmp⁰}):
+//│         body = Assign:
+//│           lhs = tmp:scrut¹
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:===⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:Lazy⁰/cached⁰}:
+//│                     qual = This of class:Lazy⁰
+//│                     name = Ident of "cached"
+//│                 Arg:
+//│                   value = Select{sym=object:Unit⁰}:
+//│                     qual = SimpleRef of tmp:runtime⁰
+//│                     name = Ident of "Unit"
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut¹
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of BoolLit of true
+//│               _2 = Assign:
+//│                 lhs = tmp:tmp⁰
+//│                 rhs = Call:
+//│                   fun = Select{sym=term:Lazy⁰/f¹}:
+//│                     qual = This of class:Lazy⁰
+//│                     name = Ident of "f"
+//│                   argss = Ls of
+//│                     Nil
+//│                 rest = Begin: \
+//│                 sub = AssignField:
+//│                   lhs = This of class:Lazy⁰
+//│                   nme = Ident of "cached"
+//│                   rhs = SimpleRef of tmp:tmp⁰
+//│                 rest = Return of Select{sym=term:Lazy⁰/cached⁰}:
+//│                   qual = This of class:Lazy⁰
+//│                   name = Ident of "cached"
+//│           dflt = S of Return of Select{sym=term:Lazy⁰/cached⁰}:
+//│             qual = This of class:Lazy⁰
+//│             name = Ident of "cached"
+//│           rest = End of "Rest moved to non-abortive branch(es)"
+//│   privateFields = Ls of
+//│     term:Lazy⁰/f¹
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:cached¹
+//│       _2 = term:Lazy⁰/cached⁰
+//│   ctor = AssignField:
+//│     lhs = This of class:Lazy⁰
+//│     nme = Ident of "f"
+//│     rhs = SimpleRef of f⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Lazy⁰/cached⁰
+//│       sym = member:cached¹
+//│       rhs = Select{sym=object:Unit⁰}:
+//│         qual = SimpleRef of tmp:runtime⁰
+//│         name = Ident of "Unit"
 
 
 :expect [1, 2, 3]
@@ -327,10 +463,10 @@ while print("Hello World"); false
   then 0(0)
   else 1
 //│ ╔══[PARSE ERROR] Unexpected 'then' keyword here
-//│ ║  l.327: 	  then 0(0)
+//│ ║  l.463: 	  then 0(0)
 //│ ╙──       	  ^^^^
 //│ ╔══[COMPILATION ERROR] Unrecognized term split (false literal)
-//│ ║  l.326: 	while print("Hello World"); false
+//│ ║  l.462: 	while print("Hello World"); false
 //│ ╙──       	                            ^^^^^
 //│ > Hello World
 
@@ -339,12 +475,12 @@ while { print("Hello World"), false }
   then 0(0)
   else 1
 //│ ╔══[COMPILATION ERROR] Unexpected infix use of keyword 'then' here
-//│ ║  l.338: 	while { print("Hello World"), false }
+//│ ║  l.474: 	while { print("Hello World"), false }
 //│ ║         	        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.339: 	  then 0(0)
+//│ ║  l.475: 	  then 0(0)
 //│ ╙──       	^^^^^^^^^^^
 //│ ╔══[COMPILATION ERROR] Illegal position for prefix keyword 'else'.
-//│ ║  l.340: 	  else 1
+//│ ║  l.476: 	  else 1
 //│ ╙──       	  ^^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
@@ -355,14 +491,14 @@ while
   then 0(0)
   else 1
 //│ ╔══[COMPILATION ERROR] Unexpected infix use of keyword 'then' here
-//│ ║  l.353: 	    print("Hello World")
+//│ ║  l.489: 	    print("Hello World")
 //│ ║         	    ^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.354: 	    false
+//│ ║  l.490: 	    false
 //│ ║         	^^^^^^^^^
-//│ ║  l.355: 	  then 0(0)
+//│ ║  l.491: 	  then 0(0)
 //│ ╙──       	^^^^^^^^^^^
 //│ ╔══[COMPILATION ERROR] Illegal position for prefix keyword 'else'.
-//│ ║  l.356: 	  else 1
+//│ ║  l.492: 	  else 1
 //│ ╙──       	  ^^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 

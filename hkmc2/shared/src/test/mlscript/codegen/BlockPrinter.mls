@@ -144,13 +144,30 @@ let x = x + 1
 class C(x)
 C(123)
 new C(123)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C⁰
+//│   sym = member:C¹
+//│   ctorSym = S of term:C²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁵
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:C⁰/x⁶
+//│   ctor = AssignField:
+//│     lhs = This of class:C⁰
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁵
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define C⁰ as class C² {
-//│   private val x⁵;
-//│   constructor C¹(x) { set C².this.x⁵ = x; end }
+//│ define C¹ as class C⁰ {
+//│   private val x⁶;
+//│   constructor C²(x) { set C⁰.this.x⁶ = x; end }
 //│ };
-//│ do C¹(123);
-//│ return new C²(123)
+//│ do C²(123);
+//│ return new C⁰(123)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = C(_)
 
@@ -161,18 +178,48 @@ module A with
     fun f(x) = 2
   fun g(x) = 3
 A.x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of module:A⁰
+//│   isym = class:C³
+//│   sym = member:C⁴
+//│   ctorSym = S of term:A⁰/C⁵
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁷
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:C³
+//│       sym = member:f⁴
+//│       dSym = term:C³/f⁵
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁸
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Lit of IntLit of 2
+//│   privateFields = Ls of
+//│     term:C³/x⁹
+//│   ctor = AssignField:
+//│     lhs = This of class:C³
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁷
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define A⁰ as class A¹
-//│ module A² {
+//│ define A¹ as class A²
+//│ module A⁰ {
 //│   private val y⁰;
-//│   val x⁶;
+//│   val x¹⁰;
 //│   constructor {
-//│     define x⁶ as val x⁷ = 2;
-//│     set A².this.y⁰ = 3;
-//│     define C³ as class C⁵ {
-//│       private val x⁸;
-//│       constructor C⁴(x) {
-//│         set C⁵.this.x⁸ = x;
+//│     define x¹⁰ as val x¹¹ = 2;
+//│     set A⁰.this.y⁰ = 3;
+//│     define C⁴ as class C³ {
+//│       private val x⁹;
+//│       constructor C⁵(x) {
+//│         set C³.this.x⁹ = x;
 //│         end
 //│       }
 //│       method f⁴ = fun f⁵(x1) {
@@ -183,36 +230,115 @@ A.x
 //│   }
 //│   method g⁰ = fun g¹(x) { return 3 }
 //│ };
-//│ return A².x⁷
+//│ return A⁰.x¹¹
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 2
 
 module A with
   val x = 3
 A.x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:A³
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹²
+//│       _2 = term:A³/x¹³
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:A³/x¹³
+//│       sym = member:x¹²
+//│       rhs = Lit of IntLit of 3
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define A³ as class A⁴
-//│ module A⁵ { val x⁹; constructor { define x⁹ as val x¹⁰ = 3; end } };
-//│ return A⁵.x¹⁰
+//│ define A⁴ as class A⁵
+//│ module A³ { val x¹²; constructor { define x¹² as val x¹³ = 3; end } };
+//│ return A³.x¹³
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 3
 
 class A
 class B(x) extends A with
   val y = 2
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A⁶
+//│   sym = member:A⁷
+//│   k = Cls
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define A⁶ as class A⁷;
-//│ define B⁰ as class B² extends A⁷ {
-//│   private val x¹¹;
+//│ define A⁷ as class A⁶;
+//│ define B⁰ as class B² extends A⁶ {
+//│   private val x¹⁴;
 //│   val y¹;
-//│   constructor B¹(x) { do super⁰(); end; set B².this.x¹¹ = x; define y¹ as val y² = 2; end }
+//│   constructor B¹(x) { do super⁰(); end; set B².this.x¹⁴ = x; define y¹ as val y² = 2; end }
 //│ };
 //│ end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 pattern P = B
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = pattern:P⁰
+//│   sym = member:P¹
+//│   k = Pat
+//│   methods = Ls of
+//│     FunDefn:
+//│       sym = member:unapply⁰
+//│       dSym = term:unapply¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = input⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Match:
+//│         scrut = SimpleRef of input⁰
+//│         arms = Ls of
+//│           Tuple2:
+//│             _1 = Cls:
+//│               cls = class:B²
+//│               path = MemberRef{disamb=class:B²}:
+//│                 bms = member:B⁰
+//│                 disamb = class:B²
+//│             _2 = Return of Instantiate:
+//│               mut = false
+//│               cls = Select{sym=class:MatchSuccess⁰}:
+//│                 qual = SimpleRef of tmp:runtime⁰
+//│                 name = Ident of "MatchSuccess"
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of input⁰
+//│                   Arg:
+//│                     value = Lit of UnitLit of true
+//│         dflt = S of Return of Instantiate:
+//│           mut = false
+//│           cls = Select{sym=class:MatchFailure⁰}:
+//│             qual = SimpleRef of tmp:runtime⁰
+//│             name = Ident of "MatchFailure"
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = Lit of UnitLit of true
+//│     FunDefn:
+//│       sym = member:unapplyStringPrefix⁰
+//│       dSym = term:unapplyStringPrefix¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = input¹
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Instantiate:
+//│         mut = false
+//│         cls = Select{sym=class:MatchFailure⁰}:
+//│           qual = SimpleRef of tmp:runtime⁰
+//│           name = Ident of "MatchFailure"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Lit of UnitLit of true
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define P⁰ as pattern P¹ {
+//│ define P¹ as pattern P⁰ {
 //│   method unapply⁰ = fun unapply¹(input) {
 //│     match input
 //│       B² =>
@@ -230,14 +356,25 @@ pattern P = B
 
 object A with
   fun f = 42
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:A⁸
+//│   sym = member:A⁹
+//│   k = Obj
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of object:A⁸
+//│       sym = member:f⁶
+//│       dSym = term:A⁸/f⁷
+//│       body = Return of Lit of IntLit of 42
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define A⁸ as object A⁹ { method f⁶ = fun f⁷ { return 42 } }; end
+//│ define A⁹ as object A⁸ { method f⁶ = fun f⁷ { return 42 } }; end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 let x = [1, 2, 3]
 x.0
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ set x¹² = [1, 2, 3]; return x¹².0﹖
+//│ set x¹⁵ = [1, 2, 3]; return x¹⁵.0﹖
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 1
 //│ x = [1, 2, 3]
@@ -255,7 +392,7 @@ fun foo =
   class A
   new A
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define foo⁰ as fun foo¹() { let A; define A as class A¹⁰; return new A¹⁰() }; end
+//│ @inline define foo⁰ as fun foo¹() { let A; define A as class A¹⁰; return new A¹⁰() }; end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 

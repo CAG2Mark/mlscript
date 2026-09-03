@@ -58,6 +58,9 @@ tuple(
 
 module A with {
 }
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:A⁰
 
 :p
 tuple(
@@ -72,12 +75,12 @@ tuple(
 1
 )
 //│ ╔══[WARNING] This literal should be indented
-//│ ║  l.72: 	1
+//│ ║  l.75: 	1
 //│ ║        	^
 //│ ╟── since it is a continuation of the new line here
-//│ ║  l.71: 	tuple(
+//│ ║  l.74: 	tuple(
 //│ ║        	      ^
-//│ ║  l.72: 	1
+//│ ║  l.75: 	1
 //│ ╙──
 //│ = [1]
 
@@ -139,7 +142,7 @@ id
 //│ Parsed:
 //│ 	Jux(Ident(id),Block(List(IntLit(1))))
 //│ ╔══[COMPILATION ERROR] Illegal juxtaposition right-hand side (integer literal).
-//│ ║  l.137: 	  1
+//│ ║  l.140: 	  1
 //│ ╙──       	  ^
 //│ = fun id
 
@@ -152,7 +155,7 @@ id(0
 //│ Parsed:
 //│ 	App(App(Ident(id),Tup(List(Jux(IntLit(0),Block(List(Ident(id))))))),Tup(List(IntLit(1))))
 //│ ╔══[COMPILATION ERROR] Illegal juxtaposition right-hand side (identifier).
-//│ ║  l.150: 	  id)(1)
+//│ ║  l.153: 	  id)(1)
 //│ ╙──       	  ^^
 //│ ═══[RUNTIME ERROR] TypeError: 0 is not a function
 
@@ -207,6 +210,30 @@ P.x
 //│ Sel:
 //│   prefix = Ident of "P"
 //│   name = Ident of "x"
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:P⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁰
+//│       _2 = term:P⁰/x¹
+//│   ctor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 2
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:P⁰/x¹
+//│       sym = member:x⁰
+//│       rhs = Lit of IntLit of 1
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ > 2
 //│ = 1
@@ -216,11 +243,17 @@ module P with
   (
     )
   module TraceLogger
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:TraceLogger⁰
 
 module P with
   (
   )
   module TraceLogger
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:TraceLogger¹
 
 
 module P with ...
@@ -228,6 +261,9 @@ fun checkArgs(expected) =
   ("Function" +
     expected)
 module TraceLogger
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:TraceLogger²
 
 P.TraceLogger
 //│ = class TraceLogger

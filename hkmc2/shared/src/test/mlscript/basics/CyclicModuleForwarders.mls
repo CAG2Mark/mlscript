@@ -5,6 +5,19 @@ module M1 with
   fun List: module M2 = M2.List
 module M2 with
   fun List: module M1 = M1.List
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M1⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M1⁰
+//│       sym = member:List⁰
+//│       dSym = term:M1⁰/List¹
+//│       body = Return of Select:
+//│         qual = MemberRef{disamb=module:M2⁰}:
+//│           bms = member:M2¹
+//│           disamb = module:M2⁰
+//│         name = Ident of "List"
 
 :breakme // TODO: init error
 :e

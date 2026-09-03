@@ -2,13 +2,35 @@
 
 
 data class Some[out A](value: A)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Some⁰
+//│   sym = member:Some¹
+//│   ctorSym = S of term:Some²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = value⁰
+//│         sign = S of Ref{sym=A⁰} of A⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:value¹
+//│       _2 = term:Some⁰/value²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Some⁰/value²
+//│       sym = member:value¹
+//│       rhs = SimpleRef of value⁰
 
 
 :todo
 let Some(x) = Some(42)
 //│ ╔══[COMPILATION ERROR] Unsupported let binding shape
-//│ ║  l.8: 	let Some(x) = Some(42)
-//│ ╙──     	    ^^^^^^^^^^^^^^^^^^
+//│ ║  l.30: 	let Some(x) = Some(42)
+//│ ╙──      	    ^^^^^^^^^^^^^^^^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 

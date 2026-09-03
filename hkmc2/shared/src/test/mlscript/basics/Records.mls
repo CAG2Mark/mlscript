@@ -95,6 +95,33 @@ let rcd = new with
 //│ ╔══[COMPILATION ERROR] Name not found: bar
 //│ ║  l.90: 	  bar =
 //│ ╙──      	  ^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:$anon)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:$anon⁰
+//│       sym = member:$anon¹
+//│       k = Cls
+//│       parentPath = S of Select{sym=class:Object⁰}:
+//│         qual = This of globalThis:globalThis⁰
+//│         name = Ident of "Object"
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Nil
+//│       ctor = Throw of Lit of StrLit of "This code cannot be run as its compilation yielded an error."
+//│     rest = Assign: \
+//│     lhs = rcd⁰
+//│     rhs = Instantiate:
+//│       mut = false
+//│       cls = MemberRef{disamb=class:$anon⁰}:
+//│         bms = member:$anon¹
+//│         disamb = class:$anon⁰
+//│       argss = Ls of
+//│         Nil
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 //│ rcd = undefined
 
@@ -136,7 +163,7 @@ m0.get(41)
 :e
 {get(k): _}
 //│ ╔══[COMPILATION ERROR] Unexpected record key shape.
-//│ ║  l.137: 	{get(k): _}
+//│ ║  l.164: 	{get(k): _}
 //│ ╙──       	 ^^^^^^
 //│ = fun
 
@@ -191,14 +218,14 @@ display(x: 88, y: 99, i: 0)
 :todo
 t("group")
 //│ ╔══[COMPILATION ERROR] Expected 2 arguments, got 1
-//│ ║  l.192: 	t("group")
+//│ ║  l.219: 	t("group")
 //│ ╙──       	 ^^^^^^^^^
 //│ ═══[RUNTIME ERROR] Error: Function 't' expected 2 arguments but got 1
 
 :todo
 t("group")
 //│ ╔══[COMPILATION ERROR] Expected 2 arguments, got 1
-//│ ║  l.199: 	t("group")
+//│ ║  l.226: 	t("group")
 //│ ╙──       	 ^^^^^^^^^
 //│ ═══[RUNTIME ERROR] Error: Function 't' expected 2 arguments but got 1
 

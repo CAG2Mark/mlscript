@@ -5,6 +5,45 @@ class Foo with
   val x = 0
   fun change =
     set x += 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   k = Cls
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo⁰
+//│       sym = member:change⁰
+//│       dSym = term:Foo⁰/change¹
+//│       body = Scoped(syms = {tmp:tmp⁰}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁰
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:Foo⁰/x⁰}:
+//│                     qual = This of class:Foo⁰
+//│                     name = Ident of "x"
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = AssignField: \
+//│           lhs = This of class:Foo⁰
+//│           nme = Ident of "x"
+//│           rhs = SimpleRef of tmp:tmp⁰
+//│           rest = Return of Select{sym=object:Unit⁰}:
+//│             qual = SimpleRef of tmp:runtime⁰
+//│             name = Ident of "Unit"
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:Foo⁰/x⁰
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/x⁰
+//│       sym = member:x¹
+//│       rhs = Lit of IntLit of 0
 
 
 :sjs
@@ -61,16 +100,16 @@ f.y
 :e
 let f = mut new Foo
 //│ ╔══[COMPILATION ERROR] Illegal position for 'mut' modifier.
-//│ ║  l.62: 	let f = mut new Foo
-//│ ╙──      	        ^^^
+//│ ║  l.101: 	let f = mut new Foo
+//│ ╙──       	        ^^^
 //│ f = Foo { x: 0 }
 
 :e
 :re
 new mut Foo.x
 //│ ╔══[COMPILATION ERROR] Expected a statically known class; found selection.
-//│ ║  l.70: 	new mut Foo.x
-//│ ║        	        ^^^^^
+//│ ║  l.109: 	new mut Foo.x
+//│ ║         	        ^^^^^
 //│ ╙── The 'new' keyword requires a statically known class; use the 'new!' operator for dynamic instantiation.
 //│ ═══[RUNTIME ERROR] Error: Access to required field 'x' yielded 'undefined'
 
@@ -102,6 +141,27 @@ new Foo().x
 
 
 class Foo(val x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo²
+//│   sym = member:Foo³
+//│   ctorSym = S of term:Foo⁴
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x²
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x³
+//│       _2 = term:Foo²/x⁴
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo²/x⁴
+//│       sym = member:x³
+//│       rhs = SimpleRef of x²
 
 
 let f = new Foo(0)
@@ -143,6 +203,35 @@ f.y
 
 class Foo(mut val x) with
   mut val y = 0
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁵
+//│   sym = member:Foo⁶
+//│   ctorSym = S of term:Foo⁷
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (mut, val)
+//│         sym = x⁵
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁶
+//│       _2 = term:Foo⁵/x⁷
+//│     Tuple2:
+//│       _1 = member:y⁰
+//│       _2 = term:Foo⁵/y¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁵/x⁷
+//│       sym = member:x⁶
+//│       rhs = SimpleRef of x⁵
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁵/y¹
+//│       sym = member:y⁰
+//│       rhs = Lit of IntLit of 0
 
 
 let f = new Foo(0)
@@ -166,6 +255,41 @@ f.y
 
 let f = new Object with
   val x = 12
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:$anon)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:$anon⁰
+//│       sym = member:$anon¹
+//│       k = Cls
+//│       parentPath = S of Select{sym=class:Object⁰}:
+//│         qual = This of globalThis:globalThis⁰
+//│         name = Ident of "Object"
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:x⁸
+//│           _2 = term:$anon⁰/x⁹
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Nil
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:$anon⁰/x⁹
+//│           sym = member:x⁸
+//│           rhs = Lit of IntLit of 12
+//│     rest = Assign: \
+//│     lhs = f⁰
+//│     rhs = Instantiate:
+//│       mut = false
+//│       cls = MemberRef{disamb=class:$anon⁰}:
+//│         bms = member:$anon¹
+//│         disamb = class:$anon⁰
+//│       argss = Ls of
+//│         Nil
 //│ f = $anon { x: 12 }
 
 set
@@ -182,6 +306,41 @@ f.y
 
 let f = new mut Object with
   val x = 12
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:$anon)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:$anon²
+//│       sym = member:$anon³
+//│       k = Cls
+//│       parentPath = S of Select{sym=class:Object⁰}:
+//│         qual = This of globalThis:globalThis⁰
+//│         name = Ident of "Object"
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:x¹⁰
+//│           _2 = term:$anon²/x¹¹
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Nil
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:$anon²/x¹¹
+//│           sym = member:x¹⁰
+//│           rhs = Lit of IntLit of 12
+//│     rest = Assign: \
+//│     lhs = f¹
+//│     rhs = Instantiate:
+//│       mut = true
+//│       cls = MemberRef{disamb=class:$anon²}:
+//│         bms = member:$anon³
+//│         disamb = class:$anon²
+//│       argss = Ls of
+//│         Nil
 //│ f = $anon { x: 12 }
 
 set

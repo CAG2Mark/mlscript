@@ -42,6 +42,27 @@ x => if x is [[0]] then 1
 
 
 data class S(value)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:S⁰
+//│   sym = member:S¹
+//│   ctorSym = S of term:S²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = value⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:value¹
+//│       _2 = term:S⁰/value²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:S⁰/value²
+//│       sym = member:value¹
+//│       rhs = SimpleRef of value⁰
 
 // * Note: the computation in the default branch should not be duplicated.
 :sjs

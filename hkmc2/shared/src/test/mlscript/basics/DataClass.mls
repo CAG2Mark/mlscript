@@ -2,6 +2,30 @@
 
 
 data class Foo(x: Int)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         sign = S of Resolved{sym=class:Int⁰}:
+//│           t = Ref{sym=member:Int¹} of member:Int¹
+//│           sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:Foo⁰/x²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
 
 Foo(1).x
 //│ = 1
@@ -12,10 +36,10 @@ Foo(1).x
 data Foo(x: Int)
 //│ ╔══[WARNING] This annotation has no effect.
 //│ ╟── This annotation is not supported on application of type Foo terms.
-//│ ║  l.12: 	data Foo(x: Int)
+//│ ║  l.36: 	data Foo(x: Int)
 //│ ╙──      	     ^^^^^^^^^^^
 //│ ╔══[COMPILATION ERROR] Symbol 'Int' is virtual (i.e., "compiler fiction"); cannot be used as a term
-//│ ║  l.12: 	data Foo(x: Int)
+//│ ║  l.36: 	data Foo(x: Int)
 //│ ╙──      	            ^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 

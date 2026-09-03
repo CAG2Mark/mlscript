@@ -2,12 +2,17 @@
 
 
 object Foo
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Foo⁰
+//│   sym = member:Foo¹
+//│   k = Obj
 
 :fixme // Support?
 new Foo
 //│ ╔══[COMPILATION ERROR] Expected a statically known class; found reference of type Foo.
-//│ ║  l.7: 	new Foo
-//│ ║       	    ^^^
+//│ ║  l.12: 	new Foo
+//│ ║        	    ^^^
 //│ ╙── The 'new' keyword requires a statically known class; use the 'new!' operator for dynamic instantiation.
 //│ ═══[RUNTIME ERROR] TypeError: Foo1 is not a constructor
 
@@ -18,7 +23,7 @@ new! Foo
 :fixme // Support?
 new! Foo.class
 //│ ╔══[COMPILATION ERROR] Object 'Foo' does not contain member 'class'
-//│ ║  l.19: 	new! Foo.class
+//│ ║  l.24: 	new! Foo.class
 //│ ╙──      	        ^^^^^^
 //│ = Foo
 
@@ -28,26 +33,97 @@ new! Foo!class
 :fixme // Support?
 object Bar extends Foo
 //│ ╔══[COMPILATION ERROR] Expected a statically known class; found reference of type Foo.
-//│ ║  l.29: 	object Bar extends Foo
+//│ ║  l.34: 	object Bar extends Foo
 //│ ║        	                   ^^^
 //│ ╙── The 'new' keyword requires a statically known class; use the 'new!' operator for dynamic instantiation.
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Bar⁰
+//│   sym = member:Bar¹
+//│   k = Obj
+//│   parentPath = S of MemberRef{disamb=object:Foo⁰}:
+//│     bms = member:Foo¹
+//│     disamb = object:Foo⁰
+//│   preCtor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:super⁰
+//│       argss = Ls of
+//│         Nil
 //│ ═══[RUNTIME ERROR] TypeError: Class extends value [object Object] is not a constructor or null
 
 :e
 :re
 object Bar extends Foo!class
 //│ ╔══[COMPILATION ERROR] Expected a statically known class; found dynamic selection.
-//│ ║  l.38: 	object Bar extends Foo!class
+//│ ║  l.57: 	object Bar extends Foo!class
 //│ ║        	                   ^^^^^^^^^
 //│ ╙── The 'new' keyword requires a statically known class; use the 'new!' operator for dynamic instantiation.
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Bar²
+//│   sym = member:Bar³
+//│   k = Obj
+//│   parentPath = S of DynSelect:
+//│     qual = MemberRef{disamb=object:Foo⁰}:
+//│       bms = member:Foo¹
+//│       disamb = object:Foo⁰
+//│     fld = Lit of StrLit of "class"
+//│     arrayIdx = false
+//│   preCtor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:super⁰
+//│       argss = Ls of
+//│         Nil
 //│ ═══[RUNTIME ERROR] TypeError: Cannot redefine property: class
 
 :fixme // Support?
 object Bar extends! Foo!class
 //│ ╔══[COMPILATION ERROR] Expected a statically known class; found reference.
-//│ ║  l.46: 	object Bar extends! Foo!class
+//│ ║  l.82: 	object Bar extends! Foo!class
 //│ ║        	                  ^
 //│ ╙── The 'new' keyword requires a statically known class; use the 'new!' operator for dynamic instantiation.
 //│ ═══[COMPILATION ERROR] Too many parameter lists for parent class
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:lambda)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:lambda⁰
+//│       dSym = term:lambda¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = arg⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:!⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of arg⁰
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = object:Bar⁴
+//│       sym = member:Bar⁵
+//│       k = Obj
+//│       parentPath = S of MemberRef{disamb=term:lambda¹}:
+//│         bms = member:lambda⁰
+//│         disamb = term:lambda¹
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = DynSelect:
+//│                   qual = MemberRef{disamb=object:Foo⁰}:
+//│                     bms = member:Foo¹
+//│                     disamb = object:Foo⁰
+//│                   fld = Lit of StrLit of "class"
+//│                   arrayIdx = false
 
 

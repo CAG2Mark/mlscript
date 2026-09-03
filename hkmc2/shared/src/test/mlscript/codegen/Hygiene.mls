@@ -9,6 +9,46 @@ object Test with
   fun foo() =
     print(Test)
     Test.x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Test⁰
+//│   sym = member:Test¹
+//│   k = Obj
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of object:Test⁰
+//│       sym = member:foo⁰
+//│       dSym = term:Test⁰/foo¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = Select{sym=term:Predef⁰/print⁰}:
+//│             qual = MemberRef{disamb=module:Predef⁰}:
+//│               bms = member:Predef¹
+//│               disamb = module:Predef⁰
+//│             name = Ident of "print"
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = MemberRef{disamb=object:Test⁰}:
+//│                   bms = member:Test¹
+//│                   disamb = object:Test⁰
+//│         rest = Return of Select{sym=term:Test⁰/x⁰}:
+//│           qual = MemberRef{disamb=object:Test⁰}:
+//│             bms = member:Test¹
+//│             disamb = object:Test⁰
+//│           name = Ident of "x"
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:Test⁰/x⁰
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Test⁰/x⁰
+//│       sym = member:x¹
+//│       rhs = Lit of IntLit of 12
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Test1;
 //│ (class Test {
@@ -77,11 +117,29 @@ module Test with
   val x = 1
   let x = 2
 //│ ╔══[COMPILATION ERROR] Name 'x' is already used
-//│ ║  l.78: 	  let x = 2
-//│ ║        	      ^^^^^
+//│ ║  l.118: 	  let x = 2
+//│ ║         	      ^^^^^
 //│ ╟── by a member declared in the same block
-//│ ║  l.77: 	  val x = 1
-//│ ╙──      	  ^^^^^^^^^
+//│ ║  l.117: 	  val x = 1
+//│ ╙──       	  ^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Test²
+//│   privateFields = Ls of
+//│     term:Test²/x²
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x³
+//│       _2 = term:Test²/x⁴
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Test²/x⁴
+//│       sym = member:x³
+//│       rhs = Lit of IntLit of 1
+//│     rest = AssignField: \
+//│     lhs = This of module:Test²
+//│     nme = Ident of "x"
+//│     rhs = Lit of IntLit of 2
 //│ —————————————| JS (sanitized) |—————————————————————————————————————————————————————————————————————
 //│ let Test4;
 //│ globalThis.Object.freeze(class Test3 {
@@ -105,6 +163,57 @@ module Test with
   let f = () => x
   let x = 2
   print(f())
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Test³
+//│   privateFields = Ls of
+//│     term:Test³/x⁵
+//│     term:Test³/f⁰
+//│     term:Test³/x⁶
+//│   ctor = Scoped(syms = {tmp:tmp⁰, member:lambda⁰}):
+//│     body = AssignField:
+//│       lhs = This of module:Test³
+//│       nme = Ident of "x"
+//│       rhs = Lit of IntLit of 1
+//│       rest = Define: \
+//│       defn = FunDefn:
+//│         sym = member:lambda⁰
+//│         dSym = term:lambda¹
+//│         params = Ls of
+//│           ParamList: ‹empty›
+//│         body = Return of Select{sym=term:Test³/x⁵}:
+//│           qual = This of module:Test³
+//│           name = Ident of "x"
+//│       rest = AssignField: \
+//│       lhs = This of module:Test³
+//│       nme = Ident of "f"
+//│       rhs = MemberRef{disamb=term:lambda¹}:
+//│         bms = member:lambda⁰
+//│         disamb = term:lambda¹
+//│       rest = AssignField: \
+//│       lhs = This of module:Test³
+//│       nme = Ident of "x"
+//│       rhs = Lit of IntLit of 2
+//│       rest = Assign: \
+//│       lhs = tmp:tmp⁰
+//│       rhs = Call:
+//│         fun = Select{sym=term:Test³/f⁰}:
+//│           qual = This of module:Test³
+//│           name = Ident of "f"
+//│         argss = Ls of
+//│           Nil
+//│       rest = Assign: \
+//│       lhs = ‹no symbol›
+//│       rhs = Call:
+//│         fun = Select{sym=term:Predef⁰/print⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "print"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of tmp:tmp⁰
 //│ > 1
 
 
@@ -115,6 +224,89 @@ data class Cls(x) with
   let x *= 2
   fun bar = x
   print(this.x, x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Cls⁰
+//│   sym = member:Cls¹
+//│   ctorSym = S of term:Cls²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁷
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Cls⁰
+//│       sym = member:foo²
+//│       dSym = term:Cls⁰/foo³
+//│       body = Return of Select{sym=term:Cls⁰/x⁸}:
+//│         qual = This of class:Cls⁰
+//│         name = Ident of "x"
+//│     FunDefn:
+//│       owner = S of class:Cls⁰
+//│       sym = member:bar⁰
+//│       dSym = term:Cls⁰/bar¹
+//│       body = Return of Select{sym=term:Cls⁰/x⁹}:
+//│         qual = This of class:Cls⁰
+//│         name = Ident of "x"
+//│   privateFields = Ls of
+//│     term:Cls⁰/x⁸
+//│     term:Cls⁰/x⁹
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹⁰
+//│       _2 = term:Cls⁰/x¹¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Cls⁰/x¹¹
+//│       sym = member:x¹⁰
+//│       rhs = SimpleRef of x⁷
+//│     rest = AssignField: \
+//│     lhs = This of class:Cls⁰
+//│     nme = Ident of "x"
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:+⁰
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Select{sym=term:Cls⁰/x¹¹}:
+//│               qual = This of class:Cls⁰
+//│               name = Ident of "x"
+//│           Arg:
+//│             value = Lit of IntLit of 1
+//│     rest = AssignField: \
+//│     lhs = This of class:Cls⁰
+//│     nme = Ident of "x"
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:*⁰
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Select{sym=term:Cls⁰/x⁸}:
+//│               qual = This of class:Cls⁰
+//│               name = Ident of "x"
+//│           Arg:
+//│             value = Lit of IntLit of 2
+//│     rest = Assign: \
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Select{sym=term:Cls⁰/x¹¹}:
+//│               qual = This of class:Cls⁰
+//│               name = Ident of "x"
+//│           Arg:
+//│             value = Select{sym=term:Cls⁰/x⁹}:
+//│               qual = This of class:Cls⁰
+//│               name = Ident of "x"
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Cls1;
 //│ Cls1 = function Cls(x2) {
@@ -160,6 +352,9 @@ cls.bar
 //│ = 22
 
 module M
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁰
 
 fun foo(): module M =
   if false then
@@ -170,6 +365,34 @@ fun foo(): module M =
     A
 
 foo()
+//│ FAILURE: Unexpected internal error
+//│ FAILURE LOCATION: go (JSBuilder.scala:950)
+//│ FAILURE INFO: Scope:
+//│   parentOrCfg = Left of Cfg:
+//│     escapeChars = true
+//│     useSuperscripts = false
+//│     includeZero = false
+//│     defaultName = "tmp"
+//│   curThis = S of S of globalThis:globalThis⁰
+//│   bindings = HashMap(tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res11, cls -> cls, tmp:block$res -> block$res12, tmp:block$res -> block$res13, tmp:block$res -> block$res14, tmp:block$res -> block$res15, member:M -> M1, module:M -> M, class:M -> M, tmp:block$res -> block$res16, tmp:block$res -> block$res, member:foo -> foo, member:Test -> Test1, object:Test -> Test, module:A -> A, module:A -> A1, class:A -> A, class:A -> A1, tmp:block$res -> block$res1, tmp:block$res -> block$res17, tmp:block$res -> block$res2, tmp:block$res -> block$res3, class:A -> A2, tmp:block$res -> block$res4, member:Test -> Test2, tmp:block$res -> block$res18, tmp:block$res -> block$res5, tmp:block$res -> block$res6, x -> x, f -> f, x -> x1, member:f -> f1, tmp:block$res -> block$res7, member:Test -> Test4, module:Test -> Test3, member:Predef -> Predef, class:Test -> Test3, tmp:block$res -> block$res8, tmp:block$res -> block$res9, member:Test -> Test6, module:Test -> Test5, class:Test -> Test5, tmp:block$res -> block$res10, member:Cls -> Cls1, class:Cls -> Cls)
+//│   defaultImportBindings = HashMap(/storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Predef.mjs -> Predef)
+//│ ╔══[INTERNAL ERROR] `module:A` is already in scope
+//│ ║  l.361: 	    module A
+//│ ╙──       	           ^
+//│ FAILURE: Unexpected internal error
+//│ FAILURE LOCATION: go (JSBuilder.scala:950)
+//│ FAILURE INFO: Scope:
+//│   parentOrCfg = Left of Cfg:
+//│     escapeChars = true
+//│     useSuperscripts = false
+//│     includeZero = false
+//│     defaultName = "tmp"
+//│   curThis = S of S of globalThis:globalThis⁰
+//│   bindings = HashMap(tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:Term -> Term, tmp:Block -> Block, tmp:option -> option, tmp:block$res -> block$res11, cls -> cls, tmp:block$res -> block$res12, tmp:block$res -> block$res13, tmp:block$res -> block$res14, tmp:block$res -> block$res15, member:M -> M1, module:M -> M, class:M -> M, tmp:block$res -> block$res16, tmp:block$res -> block$res, member:foo -> foo, member:Test -> Test1, object:Test -> Test, module:A -> A2‹BAD_SHADOW›, module:A -> A1, class:A -> A, class:A -> A1, tmp:block$res -> block$res1, tmp:block$res -> block$res17, tmp:block$res -> block$res2, tmp:block$res -> block$res3, class:A -> A2, tmp:block$res -> block$res4, class:A -> A3, member:Test -> Test2, tmp:block$res -> block$res18, tmp:block$res -> block$res5, tmp:block$res -> block$res6, x -> x, f -> f, x -> x1, member:f -> f1, tmp:block$res -> block$res7, member:Test -> Test4, module:Test -> Test3, member:Predef -> Predef, class:Test -> Test3, tmp:block$res -> block$res8, tmp:block$res -> block$res9, member:Test -> Test6, module:Test -> Test5, class:Test -> Test5, tmp:block$res -> block$res10, member:Cls -> Cls1, class:Cls -> Cls)
+//│   defaultImportBindings = HashMap(/storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Predef.mjs -> Predef)
+//│ ╔══[INTERNAL ERROR] `module:A` is already in scope
+//│ ║  l.364: 	    module A
+//│ ╙──       	           ^
 //│ = class A
 
 
@@ -180,6 +403,31 @@ module Whoops with
   module Whoops with
     val w: module Whoops = this
     fun g() = f()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Whoops⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Whoops⁰
+//│       sym = member:g⁰
+//│       dSym = term:Whoops⁰/g¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = Select{sym=term:Whoops¹/f¹}:
+//│           qual = This of module:Whoops¹
+//│           name = Ident of "f"
+//│         argss = Ls of
+//│           Nil
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:w⁰
+//│       _2 = term:Whoops⁰/w¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Whoops⁰/w¹
+//│       sym = member:w⁰
+//│       rhs = This of module:Whoops⁰
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Whoops2;
 //│ (class Whoops {
@@ -223,7 +471,7 @@ Whoops.Whoops.g()
 :e
 Runtime
 //│ ╔══[COMPILATION ERROR] Name not found: Runtime
-//│ ║  l.224: 	Runtime
+//│ ║  l.472: 	Runtime
 //│ ╙──       	^^^^^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
@@ -235,6 +483,30 @@ module AA with
     fun test =
       let BB = "oops"
       y
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:BB⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:BB⁰
+//│       sym = member:test⁰
+//│       dSym = term:BB⁰/test¹
+//│       body = Scoped(syms = {BB¹}):
+//│         body = Assign:
+//│           lhs = BB¹
+//│           rhs = Lit of StrLit of "oops"
+//│           rest = Return of Select{sym=term:BB⁰/y⁰}:
+//│             qual = This of module:BB⁰
+//│             name = Ident of "y"
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:y¹
+//│       _2 = term:BB⁰/y⁰
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:BB⁰/y⁰
+//│       sym = member:y¹
+//│       rhs = Lit of IntLit of 2
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let AA1;
 //│ (class AA {

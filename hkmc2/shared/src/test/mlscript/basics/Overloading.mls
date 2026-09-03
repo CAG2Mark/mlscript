@@ -13,6 +13,18 @@ module Foo with { val x = 1 }
 //│ ╟── with module of the same name
 //│ ║  l.9: 	module Foo with { val x = 1 }
 //│ ╙──     	^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Foo⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁰
+//│       _2 = term:Foo⁰/x¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/x¹
+//│       sym = member:x⁰
+//│       rhs = Lit of IntLit of 1
 
 Foo
 //│ = class Foo { x: 1 }

@@ -136,6 +136,21 @@ fun g() =
 class C with
   class C with
     new C
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of class:C⁰
+//│   isym = class:C¹
+//│   sym = member:C²
+//│   k = Cls
+//│   ctor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Instantiate:
+//│       mut = false
+//│       cls = Select{sym=class:C¹}:
+//│         qual = This of class:C⁰
+//│         name = Ident of "C"
+//│       argss = Ls of
+//│         Nil
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let C2;
 //│ (class C {
@@ -201,6 +216,11 @@ class F
 module M with
   object F1 with
     val res = new F
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:F⁰
+//│   sym = member:F¹
+//│   k = Cls
 
 :expect true
 M.F1.res is F

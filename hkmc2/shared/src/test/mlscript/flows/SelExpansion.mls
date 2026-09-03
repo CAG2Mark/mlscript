@@ -21,6 +21,26 @@ module Foo with
 //│     x⁰  <~  type Foo
 //│     flow:a⁰  <~  123
 //│     flow:foo⁰  <~  ((type Foo) -> flow:a⁰)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Foo⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Foo⁰
+//│       sym = member:foo⁰
+//│       dSym = term:Foo⁰/foo¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               sign = S of Resolved{sym=class:Foo¹}:
+//│                 t = Ref{sym=member:Foo²} of member:Foo²
+//│                 sym = class:Foo¹
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Select{sym=term:Foo¹/a⁰}:
+//│         qual = SimpleRef of x⁰
+//│         name = Ident of "a"
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 let f = new Foo()
@@ -44,7 +64,7 @@ f.a
 :re
 f.a.b
 //│ ╔══[COMPILATION ERROR] Unresolved selection:
-//│ ║  l.45: 	f.a.b
+//│ ║  l.65: 	f.a.b
 //│ ║        	^^^^^
 //│ ╟── Type `123` does not contain member 'b'
 //│ ║  l.10: 	  val a = 123
@@ -132,10 +152,10 @@ id(0)
 :e
 id(f).foo
 //│ ╔══[COMPILATION ERROR] Unresolved selection:
-//│ ║  l.133: 	id(f).foo
+//│ ║  l.153: 	id(f).foo
 //│ ║         	^^^^^^^^^
 //│ ╟── Type `0` does not contain member 'foo'
-//│ ║  l.123: 	id(0)
+//│ ║  l.143: 	id(0)
 //│ ╙──       	   ^
 //│ —————————————————| Flowed |—————————————————————————————————————————————————————————————————————————
 //│   id²{ ~> id² }(f⁰)‹app⁶›.foo‹?›{ ~> Foo⁰.foo⁰(id²(f⁰)‹app⁶›)‹app⁷› }
@@ -152,7 +172,7 @@ id(f).foo
 :e
 fun test(g) = g.foo
 //│ ╔══[COMPILATION ERROR] Cannot resolve selection
-//│ ║  l.153: 	fun test(g) = g.foo
+//│ ║  l.173: 	fun test(g) = g.foo
 //│ ╙──       	              ^^^^^
 //│ —————————————————| Flowed |—————————————————————————————————————————————————————————————————————————
 //│   fun test⁰(g⁰) ‹flow:test⁰› = g⁰.foo‹?›
@@ -210,6 +230,26 @@ module AA with
 //│     self⁰  <~  type CC
 //│     flow:x⁰  <~  1
 //│     flow:getX⁰  <~  ((type CC) -> flow:x⁰)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:CC⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:CC⁰
+//│       sym = member:getX⁰
+//│       dSym = term:CC⁰/getX¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = self⁰
+//│               sign = S of SynthSel{sym=member:CC¹}:
+//│                 prefix = Ref{sym=module:BB⁰} of module:BB⁰
+//│                 nme = Ident of "CC"
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Select{sym=term:CC²/x¹}:
+//│         qual = SimpleRef of self⁰
+//│         name = Ident of "x"
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 :sjs
@@ -256,6 +296,37 @@ let foo =
 //│ where
 //│     foo¹  <~  A
 //│     flow:test²  <~  ((a¹) -> 1)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:A)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:A⁰
+//│       sym = member:A¹
+//│       k = Cls
+//│       companion = S of ClsLikeBody:
+//│         isym = module:A²
+//│         methods = Ls of
+//│           FunDefn:
+//│             owner = S of module:A²
+//│             sym = member:test⁰
+//│             dSym = term:A²/test¹
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = a¹
+//│                     modulefulness = Modulefulness of N
+//│             body = Return of Lit of IntLit of 1
+//│     rest = Assign: \
+//│     lhs = foo²
+//│     rhs = Instantiate:
+//│       mut = false
+//│       cls = MemberRef{disamb=class:A⁰}:
+//│         bms = member:A¹
+//│         disamb = class:A⁰
+//│       argss = Ls of
+//│         Nil
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ foo = A
 
@@ -263,7 +334,7 @@ let foo =
 :re
 foo.test
 //│ ╔══[COMPILATION ERROR] Cannot access companion A from the context of this selection
-//│ ║  l.264: 	foo.test
+//│ ║  l.335: 	foo.test
 //│ ╙──       	^^^^^^^^
 //│ —————————————————| Flowed |—————————————————————————————————————————————————————————————————————————
 //│   foo¹.test‹?›
@@ -295,6 +366,55 @@ let foo =
 //│     a²  <~  A
 //│     flow:test³  <~  ((a²) -> A)
 //│     flow:test³  ~>  ((A) -> ⋅test¹)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:tmp, member:A)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:A³
+//│       sym = member:A⁴
+//│       k = Cls
+//│       companion = S of ClsLikeBody:
+//│         isym = module:A⁵
+//│         methods = Ls of
+//│           FunDefn:
+//│             owner = S of module:A⁵
+//│             sym = member:test²
+//│             dSym = term:A⁵/test³
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = a²
+//│                     modulefulness = Modulefulness of N
+//│             body = Return of Instantiate:
+//│               mut = false
+//│               cls = MemberRef{disamb=class:A³}:
+//│                 bms = member:A⁴
+//│                 disamb = class:A³
+//│               argss = Ls of
+//│                 Nil
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁰
+//│     rhs = Instantiate:
+//│       mut = false
+//│       cls = MemberRef{disamb=class:A³}:
+//│         bms = member:A⁴
+//│         disamb = class:A³
+//│       argss = Ls of
+//│         Nil
+//│     rest = Assign: \
+//│     lhs = foo³
+//│     rhs = Call:
+//│       fun = Select:
+//│         qual = MemberRef{disamb=class:A³}:
+//│           bms = member:A⁴
+//│           disamb = class:A³
+//│         name = Ident of "test"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp⁰
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ foo = A
 
@@ -302,7 +422,7 @@ let foo =
 :re
 foo.test
 //│ ╔══[COMPILATION ERROR] Cannot access companion A from the context of this selection
-//│ ║  l.303: 	foo.test
+//│ ║  l.423: 	foo.test
 //│ ╙──       	^^^^^^^^
 //│ —————————————————| Flowed |—————————————————————————————————————————————————————————————————————————
 //│   foo².test‹?›
@@ -329,6 +449,26 @@ module CC with
 //│     self¹  <~  type CC
 //│     flow:x¹  <~  type Int
 //│     flow:getX¹  <~  ((type CC) -> flow:x¹)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:CC³
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:CC³
+//│       sym = member:getX²
+//│       dSym = term:CC³/getX³
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = self¹
+//│               sign = S of Resolved{sym=class:CC⁴}:
+//│                 t = Ref{sym=member:CC⁵} of member:CC⁵
+//│                 sym = class:CC⁴
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Select{sym=term:CC⁴/x²}:
+//│         qual = SimpleRef of self¹
+//│         name = Ident of "x"
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 :fixme // TODO: handle lifted class defs: the JS is missing the `.class` access to get the static member `CC2.class.getX`
@@ -357,6 +497,33 @@ module CC with
 //│     x⁷  ~>  {oops: ⋅oops⁰}
 //│     flow:oops⁰  <~  ((type CC) -> ⋅oops⁰)
 //│     flow:oops⁰  ~>  ((CC) -> ⋅oops⁰)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:CC⁶
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:CC⁶
+//│       sym = member:oops⁰
+//│       dSym = term:CC⁶/oops¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x³
+//│               sign = S of Resolved{sym=class:CC⁷}:
+//│                 t = Ref{sym=member:CC⁸} of member:CC⁸
+//│                 sym = class:CC⁷
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = Select:
+//│           qual = MemberRef{disamb=class:CC⁷}:
+//│             bms = member:CC⁸
+//│             disamb = class:CC⁷
+//│           name = Ident of "oops"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x³
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 :re
@@ -384,6 +551,26 @@ module CC with
 //│     x⁸  <~  type CC
 //│     flow:okay⁰  <~  123
 //│     flow:okay¹  <~  ((type CC) -> flow:okay⁰)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:CC⁹
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:CC⁹
+//│       sym = member:okay⁰
+//│       dSym = term:CC⁹/okay¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁴
+//│               sign = S of Resolved{sym=class:CC¹⁰}:
+//│                 t = Ref{sym=member:CC¹¹} of member:CC¹¹
+//│                 sym = class:CC¹⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Select{sym=term:CC¹⁰/okay²}:
+//│         qual = SimpleRef of x⁴
+//│         name = Ident of "okay"
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 new CC().okay
@@ -414,6 +601,44 @@ module Example with
 //│     self²  <~  type Test
 //│     flow:field⁰  <~  type Int
 //│     flow:next⁰  <~  ((type Test) -> app¹⁸)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Test⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Test⁰
+//│       sym = member:next⁰
+//│       dSym = term:Test⁰/next¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = self²
+//│               sign = S of SynthSel{sym=member:Test¹}:
+//│                 prefix = Ref{sym=module:Example⁰} of module:Example⁰
+//│                 nme = Ident of "Test"
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp¹}):
+//│         body = Assign:
+//│           lhs = tmp:tmp¹
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:Test²/field⁰}:
+//│                     qual = SimpleRef of self²
+//│                     name = Ident of "field"
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = Return of Call:
+//│             fun = Select{sym=term:Example⁰/Test³}:
+//│               qual = This of module:Example⁰
+//│               name = Ident of "Test"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp¹
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 let e = new Example.Test(123)

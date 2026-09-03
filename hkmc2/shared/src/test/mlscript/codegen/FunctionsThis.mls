@@ -13,6 +13,32 @@ fun foo() =
 :sjs
 class Test with
   print(foo())
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Test⁰
+//│   sym = member:Test¹
+//│   k = Cls
+//│   ctor = Scoped(syms = {tmp:tmp⁰}):
+//│     body = Assign:
+//│       lhs = tmp:tmp⁰
+//│       rhs = Call:
+//│         fun = MemberRef{disamb=term:foo⁰}:
+//│           bms = member:foo¹
+//│           disamb = term:foo⁰
+//│         argss = Ls of
+//│           Nil
+//│       rest = Assign: \
+//│       lhs = ‹no symbol›
+//│       rhs = Call:
+//│         fun = Select{sym=term:Predef⁰/print⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "print"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of tmp:tmp⁰
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Test1;
 //│ (class Test {

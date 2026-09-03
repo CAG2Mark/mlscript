@@ -21,6 +21,362 @@ M.f(M.p())
 //│ deforest > 	match: arg$XX$0$⁰
 //│ deforest > 	fields: arg$XX$0$⁰.b⁰
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:p_11$p, member:f_14$x_XX, member:f_14$arg$XX$0$_rest, member:f_14$f, member:f_14$x_rest, member:f_14$arg$XX$0$_YY, tmp:tmp)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:p_11$p⁰
+//│       dSym = term:p_11$p¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = eta$0$0⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$1⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$2⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp¹, tmp:YY_b⁰, tmp:XX_a⁰}):
+//│         body = Assign:
+//│           lhs = tmp:YY_b⁰
+//│           rhs = Select{sym=object:OO⁰}:
+//│             qual = MemberRef{disamb=module:M⁰}:
+//│               bms = member:M¹
+//│               disamb = module:M⁰
+//│             name = Ident of "OO"
+//│           rest = Assign: \
+//│           lhs = tmp:tmp¹
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:f_14$arg$XX$0$_YY⁰}:
+//│               bms = member:f_14$arg$XX$0$_YY¹
+//│               disamb = term:f_14$arg$XX$0$_YY⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:YY_b⁰
+//│           rest = Assign: \
+//│           lhs = tmp:XX_a⁰
+//│           rhs = SimpleRef of tmp:tmp¹
+//│           rest = Return of Call:
+//│             fun = MemberRef{disamb=term:f_14$x_XX⁰}:
+//│               bms = member:f_14$x_XX¹
+//│               disamb = term:f_14$x_XX⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:XX_a⁰
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$0⁰
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$1⁰
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$2⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_14$f⁰
+//│       dSym = term:f_14$f¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x¹
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {y⁰, tmp:arg$XX$0$¹, tmp:arg$YY$0$⁰}):
+//│         body = Return of Call:
+//│           fun = SimpleRef of x¹
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of y⁰
+//│               Arg:
+//│                 value = SimpleRef of tmp:arg$XX$0$¹
+//│               Arg:
+//│                 value = SimpleRef of tmp:arg$YY$0$⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_14$x_XX¹
+//│       dSym = term:f_14$x_XX⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = XX_a¹
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_y⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$XX$0$⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$YY$0$⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = fv_arg$XX$0$⁰
+//│         rhs = SimpleRef of XX_a¹
+//│         rest = Return of Call:
+//│           fun = SimpleRef of fv_arg$XX$0$⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_y⁰
+//│               Arg:
+//│                 value = SimpleRef of fv_arg$YY$0$⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_14$arg$XX$0$_YY¹
+//│       dSym = term:f_14$arg$XX$0$_YY⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = YY_b¹
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_y¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$YY$0$¹
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = fv_arg$YY$0$¹
+//│         rhs = SimpleRef of YY_b¹
+//│         rest = Assign: \
+//│         lhs = fv_y¹
+//│         rhs = SimpleRef of fv_arg$YY$0$¹
+//│         rest = Return of Call:
+//│           fun = Select{sym=term:M⁰/h⁰}:
+//│             qual = MemberRef{disamb=module:M⁰}:
+//│               bms = member:M¹
+//│               disamb = module:M⁰
+//│             name = Ident of "h"
+//│           argss = Ls of
+//│             Nil
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_14$x_rest⁰
+//│       dSym = term:f_14$x_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_14$arg$XX$0$_rest⁰
+//│       dSym = term:f_14$arg$XX$0$_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = MemberRef{disamb=term:f_14$x_rest¹}:
+//│           bms = member:f_14$x_rest⁰
+//│           disamb = term:f_14$x_rest¹
+//│         argss = Ls of
+//│           Nil
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:M²
+//│       sym = member:M¹
+//│       k = Cls
+//│       companion = S of ClsLikeBody:
+//│         isym = module:M⁰
+//│         methods = Ls of
+//│           FunDefn:
+//│             owner = S of module:M⁰
+//│             sym = member:h¹
+//│             dSym = term:M⁰/h⁰
+//│             params = Ls of
+//│               ParamList: ‹empty›
+//│             body = Return of Lit of IntLit of 123
+//│           FunDefn:
+//│             owner = S of module:M⁰
+//│             sym = member:p⁰
+//│             dSym = term:M⁰/p¹
+//│             params = Ls of
+//│               ParamList: ‹empty›
+//│             body = Scoped(syms = {tmp:tmp⁰}):
+//│               body = Assign:
+//│                 lhs = tmp:tmp⁰
+//│                 rhs = Call:
+//│                   fun = Select{sym=term:M⁰/YY⁰}:
+//│                     qual = This of module:M⁰
+//│                     name = Ident of "YY"
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = Select{sym=object:OO⁰}:
+//│                           qual = This of module:M⁰
+//│                           name = Ident of "OO"
+//│                 rest = Return of Call:
+//│                   fun = Select{sym=term:M⁰/XX⁰}:
+//│                     qual = This of module:M⁰
+//│                     name = Ident of "XX"
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of tmp:tmp⁰
+//│           FunDefn:
+//│             owner = S of module:M⁰
+//│             sym = member:f⁰
+//│             dSym = term:M⁰/f¹
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = x⁰
+//│                     modulefulness = Modulefulness of N
+//│             body = Scoped(syms = {y¹, tmp:arg$XX$0$⁰, tmp:arg$YY$0$¹}):
+//│               body = Match:
+//│                 scrut = SimpleRef of x⁰
+//│                 arms = Ls of
+//│                   Tuple2:
+//│                     _1 = Cls:
+//│                       cls = class:XX¹
+//│                       path = Select{sym=class:XX¹}:
+//│                         qual = This of module:M⁰
+//│                         name = Ident of "XX"
+//│                     _2 = Assign:
+//│                       lhs = tmp:arg$XX$0$⁰
+//│                       rhs = Select{sym=term:XX¹/a⁰}:
+//│                         qual = SimpleRef of x⁰
+//│                         name = Ident of "a"
+//│                       rest = Match: \
+//│                       scrut = SimpleRef of tmp:arg$XX$0$⁰
+//│                       arms = Ls of
+//│                         Tuple2:
+//│                           _1 = Cls:
+//│                             cls = class:YY¹
+//│                             path = Select{sym=class:YY¹}:
+//│                               qual = This of module:M⁰
+//│                               name = Ident of "YY"
+//│                           _2 = Assign:
+//│                             lhs = tmp:arg$YY$0$¹
+//│                             rhs = Select{sym=term:YY¹/b⁰}:
+//│                               qual = SimpleRef of tmp:arg$XX$0$⁰
+//│                               name = Ident of "b"
+//│                             rest = Assign: \
+//│                             lhs = y¹
+//│                             rhs = SimpleRef of tmp:arg$YY$0$¹
+//│                             rest = Return of Call:
+//│                               fun = Select{sym=term:M⁰/h⁰}:
+//│                                 qual = This of module:M⁰
+//│                                 name = Ident of "h"
+//│                               argss = Ls of
+//│                                 Nil
+//│                       dflt = S of Throw of Instantiate:
+//│                         mut = false
+//│                         cls = Select{sym=class:Error⁰}:
+//│                           qual = This of globalThis:globalThis⁰
+//│                           name = Ident of "Error"
+//│                         argss = Ls of
+//│                           Ls of
+//│                             Arg:
+//│                               value = Lit of StrLit of "match error"
+//│                 dflt = S of Throw of Instantiate:
+//│                   mut = false
+//│                   cls = Select{sym=class:Error⁰}:
+//│                     qual = This of globalThis:globalThis⁰
+//│                     name = Ident of "Error"
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = Lit of StrLit of "match error"
+//│         ctor = Define:
+//│           defn = ClsLikeDefn:
+//│             owner = S of module:M⁰
+//│             isym = class:XX¹
+//│             sym = member:XX²
+//│             ctorSym = S of term:M⁰/XX⁰
+//│             k = Cls
+//│             paramsOpt = S of ParamList:
+//│               params = Ls of
+//│                 Param:
+//│                   flags = (val)
+//│                   sym = a¹
+//│                   modulefulness = Modulefulness of N
+//│             publicFields = Ls of
+//│               Tuple2:
+//│                 _1 = member:a²
+//│                 _2 = term:XX¹/a⁰
+//│             ctor = Define:
+//│               defn = ValDefn:
+//│                 tsym = term:XX¹/a⁰
+//│                 sym = member:a²
+//│                 rhs = SimpleRef of a¹
+//│           rest = Define: \
+//│           defn = ClsLikeDefn:
+//│             owner = S of module:M⁰
+//│             isym = class:YY¹
+//│             sym = member:YY²
+//│             ctorSym = S of term:M⁰/YY⁰
+//│             k = Cls
+//│             paramsOpt = S of ParamList:
+//│               params = Ls of
+//│                 Param:
+//│                   flags = (val)
+//│                   sym = b¹
+//│                   modulefulness = Modulefulness of N
+//│             publicFields = Ls of
+//│               Tuple2:
+//│                 _1 = member:b²
+//│                 _2 = term:YY¹/b⁰
+//│             ctor = Define:
+//│               defn = ValDefn:
+//│                 tsym = term:YY¹/b⁰
+//│                 sym = member:b²
+//│                 rhs = SimpleRef of b¹
+//│           rest = Define: \
+//│           defn = ClsLikeDefn:
+//│             owner = S of module:M⁰
+//│             isym = class:ZZ⁰
+//│             sym = member:ZZ¹
+//│             ctorSym = S of term:M⁰/ZZ²
+//│             k = Cls
+//│             paramsOpt = S of ParamList:
+//│               params = Ls of
+//│                 Param:
+//│                   flags = (val)
+//│                   sym = c⁰
+//│                   modulefulness = Modulefulness of N
+//│             publicFields = Ls of
+//│               Tuple2:
+//│                 _1 = member:c¹
+//│                 _2 = term:ZZ⁰/c²
+//│             ctor = Define:
+//│               defn = ValDefn:
+//│                 tsym = term:ZZ⁰/c²
+//│                 sym = member:c¹
+//│                 rhs = SimpleRef of c⁰
+//│           rest = Define: \
+//│           defn = ClsLikeDefn:
+//│             owner = S of module:M⁰
+//│             isym = object:OO⁰
+//│             sym = member:OO¹
+//│             k = Obj
+//│     rest = Assign: \
+//│     lhs = tmp:tmp²
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:p_11$p¹}:
+//│         bms = member:p_11$p⁰
+//│         disamb = term:p_11$p¹
+//│       argss = Ls of
+//│         Nil
+//│     rest = Return of Call:
+//│       fun = MemberRef{disamb=term:f_14$f¹}:
+//│         bms = member:f_14$f⁰
+//│         disamb = term:f_14$f¹
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp²
 //│ = 123
 
 
@@ -43,23 +399,975 @@ DeforestList.res + DeforestList.main()
 //│ deforest > >>> fusing >>>
 //│ deforest > DeforestList⁰.this.Nil⁰ ->
 //│ deforest > 	match: ls⁰
-//│ deforest > DeforestList⁰.this.Cons⁰(n⁰, tmp¹) ->
+//│ deforest > DeforestList⁰.this.Cons⁰(n⁰, tmp³) ->
 //│ deforest > 	match: ls⁰
-//│ deforest > 	fields: ls⁰.h⁰
+//│ deforest > 	fields: ls⁰.h²
 //│ deforest > 	fields: ls⁰.t⁰
 //│ deforest > DeforestList⁰.this.Nil⁰ ->
 //│ deforest > 	match: ls⁰
-//│ deforest > DeforestList⁰.this.Cons⁰(n⁰, tmp¹) ->
+//│ deforest > DeforestList⁰.this.Cons⁰(n⁰, tmp³) ->
 //│ deforest > 	match: ls⁰
-//│ deforest > 	fields: ls⁰.h⁰
+//│ deforest > 	fields: ls⁰.h²
 //│ deforest > 	fields: ls⁰.t⁰
-//│ deforest > DeforestList⁰.this.Cons⁰(n⁰, tmp¹) ->
+//│ deforest > DeforestList⁰.this.Cons⁰(n⁰, tmp³) ->
 //│ deforest > 	match: ls⁰
-//│ deforest > 	fields: ls⁰.h⁰
+//│ deforest > 	fields: ls⁰.h²
 //│ deforest > 	fields: ls⁰.t⁰
 //│ deforest > DeforestList⁰.this.Nil⁰ ->
 //│ deforest > 	match: ls⁰
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:main_31_sum_17$ls_Cons, member:main_26_sum_17$ls_Nil, member:sum_23$ls_Nil, member:main_31_enum_14$enum, member:sum_23$ls_Cons, member:main_26_sum_17$ls_rest, member:main_26_enum_14$enum, member:main_26_sum_17$sum, member:sum_23$ls_rest, member:main_26$main, tmp:tmp, member:enum_20$enum, member:main_31_sum_17$ls_Nil, member:main_26_sum_17$ls_Cons, member:main_31_sum_17$ls_rest, member:sum_23$sum, member:main_31_sum_17$sum)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:main_31_enum_14$enum⁰
+//│       dSym = term:main_31_enum_14$enum¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = n¹
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = eta$0$0¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$1¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$2¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$3⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$4⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:scrut⁰, tmp:tmp⁴, tmp:tmp⁵}):
+//│         body = Assign:
+//│           lhs = tmp:scrut⁰
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:>⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of n¹
+//│                 Arg:
+//│                   value = Lit of IntLit of 0
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut⁰
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of BoolLit of true
+//│               _2 = Scoped(syms = {tmp:Cons_h⁰, tmp:Cons_t⁰}):
+//│                 body = Assign:
+//│                   lhs = tmp:tmp⁴
+//│                   rhs = Call:
+//│                     fun = SimpleRef of builtin:-⁰
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of n¹
+//│                         Arg:
+//│                           value = Lit of IntLit of 1
+//│                   rest = Assign: \
+//│                   lhs = tmp:tmp⁵
+//│                   rhs = Call:
+//│                     fun = MemberRef{disamb=term:main_31_enum_14$enum¹}:
+//│                       bms = member:main_31_enum_14$enum⁰
+//│                       disamb = term:main_31_enum_14$enum¹
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of tmp:tmp⁴
+//│                   rest = Assign: \
+//│                   lhs = tmp:Cons_h⁰
+//│                   rhs = SimpleRef of n¹
+//│                   rest = Assign: \
+//│                   lhs = tmp:Cons_t⁰
+//│                   rhs = SimpleRef of tmp:tmp⁵
+//│                   rest = Return of Call:
+//│                     fun = MemberRef{disamb=term:main_31_sum_17$ls_Cons⁰}:
+//│                       bms = member:main_31_sum_17$ls_Cons¹
+//│                       disamb = term:main_31_sum_17$ls_Cons⁰
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of tmp:Cons_h⁰
+//│                         Arg:
+//│                           value = SimpleRef of tmp:Cons_t⁰
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$0¹
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$1¹
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$2¹
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$3⁰
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$4⁰
+//│           dflt = S of Return of Call:
+//│             fun = MemberRef{disamb=term:main_31_sum_17$ls_Nil⁰}:
+//│               bms = member:main_31_sum_17$ls_Nil¹
+//│               disamb = term:main_31_sum_17$ls_Nil⁰
+//│             argss = Ls of
+//│               Nil
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$0¹
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$1¹
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$2¹
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$3⁰
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$4⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_31_sum_17$sum⁰
+//│       dSym = term:main_31_sum_17$sum¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = ls¹
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {t¹, h³, tmp:arg$Cons$0$⁰, tmp:arg$Cons$1$⁰, tmp:tmp⁶}):
+//│         body = Return of Call:
+//│           fun = SimpleRef of ls¹
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of t¹
+//│               Arg:
+//│                 value = SimpleRef of h³
+//│               Arg:
+//│                 value = SimpleRef of tmp:arg$Cons$0$⁰
+//│               Arg:
+//│                 value = SimpleRef of tmp:arg$Cons$1$⁰
+//│               Arg:
+//│                 value = SimpleRef of tmp:tmp⁶
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_26_enum_14$enum⁰
+//│       dSym = term:main_26_enum_14$enum¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = n²
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = eta$0$0²
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$1²
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$2²
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$3¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$4¹
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:scrut¹, tmp:tmp⁷, tmp:tmp⁸}):
+//│         body = Assign:
+//│           lhs = tmp:scrut¹
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:>⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of n²
+//│                 Arg:
+//│                   value = Lit of IntLit of 0
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut¹
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of BoolLit of true
+//│               _2 = Scoped(syms = {tmp:Cons_h¹, tmp:Cons_t¹}):
+//│                 body = Assign:
+//│                   lhs = tmp:tmp⁷
+//│                   rhs = Call:
+//│                     fun = SimpleRef of builtin:-⁰
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of n²
+//│                         Arg:
+//│                           value = Lit of IntLit of 1
+//│                   rest = Assign: \
+//│                   lhs = tmp:tmp⁸
+//│                   rhs = Call:
+//│                     fun = MemberRef{disamb=term:main_26_enum_14$enum¹}:
+//│                       bms = member:main_26_enum_14$enum⁰
+//│                       disamb = term:main_26_enum_14$enum¹
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of tmp:tmp⁷
+//│                   rest = Assign: \
+//│                   lhs = tmp:Cons_h¹
+//│                   rhs = SimpleRef of n²
+//│                   rest = Assign: \
+//│                   lhs = tmp:Cons_t¹
+//│                   rhs = SimpleRef of tmp:tmp⁸
+//│                   rest = Return of Call:
+//│                     fun = MemberRef{disamb=term:main_26_sum_17$ls_Cons⁰}:
+//│                       bms = member:main_26_sum_17$ls_Cons¹
+//│                       disamb = term:main_26_sum_17$ls_Cons⁰
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of tmp:Cons_h¹
+//│                         Arg:
+//│                           value = SimpleRef of tmp:Cons_t¹
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$0²
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$1²
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$2²
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$3¹
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$4¹
+//│           dflt = S of Return of Call:
+//│             fun = MemberRef{disamb=term:main_26_sum_17$ls_Nil⁰}:
+//│               bms = member:main_26_sum_17$ls_Nil¹
+//│               disamb = term:main_26_sum_17$ls_Nil⁰
+//│             argss = Ls of
+//│               Nil
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$0²
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$1²
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$2²
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$3¹
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$4¹
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_26$main⁰
+//│       dSym = term:main_26$main¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {tmp:tmp⁹}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁹
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:main_26_enum_14$enum¹}:
+//│               bms = member:main_26_enum_14$enum⁰
+//│               disamb = term:main_26_enum_14$enum¹
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Lit of IntLit of 3
+//│           rest = Return of Call:
+//│             fun = MemberRef{disamb=term:main_26_sum_17$sum⁰}:
+//│               bms = member:main_26_sum_17$sum¹
+//│               disamb = term:main_26_sum_17$sum⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp⁹
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_26_sum_17$sum¹
+//│       dSym = term:main_26_sum_17$sum⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = ls²
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {t², h⁴, tmp:arg$Cons$0$¹, tmp:arg$Cons$1$¹, tmp:tmp¹⁰}):
+//│         body = Return of Call:
+//│           fun = SimpleRef of ls²
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of t²
+//│               Arg:
+//│                 value = SimpleRef of h⁴
+//│               Arg:
+//│                 value = SimpleRef of tmp:arg$Cons$0$¹
+//│               Arg:
+//│                 value = SimpleRef of tmp:arg$Cons$1$¹
+//│               Arg:
+//│                 value = SimpleRef of tmp:tmp¹⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:enum_20$enum⁰
+//│       dSym = term:enum_20$enum¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = n³
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = eta$0$0³
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$1³
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$2³
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$3²
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$4²
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:scrut², tmp:tmp¹¹, tmp:tmp¹²}):
+//│         body = Assign:
+//│           lhs = tmp:scrut²
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:>⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of n³
+//│                 Arg:
+//│                   value = Lit of IntLit of 0
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut²
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of BoolLit of true
+//│               _2 = Scoped(syms = {tmp:Cons_h², tmp:Cons_t²}):
+//│                 body = Assign:
+//│                   lhs = tmp:tmp¹¹
+//│                   rhs = Call:
+//│                     fun = SimpleRef of builtin:-⁰
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of n³
+//│                         Arg:
+//│                           value = Lit of IntLit of 1
+//│                   rest = Assign: \
+//│                   lhs = tmp:tmp¹²
+//│                   rhs = Call:
+//│                     fun = MemberRef{disamb=term:enum_20$enum¹}:
+//│                       bms = member:enum_20$enum⁰
+//│                       disamb = term:enum_20$enum¹
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of tmp:tmp¹¹
+//│                   rest = Assign: \
+//│                   lhs = tmp:Cons_h²
+//│                   rhs = SimpleRef of n³
+//│                   rest = Assign: \
+//│                   lhs = tmp:Cons_t²
+//│                   rhs = SimpleRef of tmp:tmp¹²
+//│                   rest = Return of Call:
+//│                     fun = MemberRef{disamb=term:sum_23$ls_Cons⁰}:
+//│                       bms = member:sum_23$ls_Cons¹
+//│                       disamb = term:sum_23$ls_Cons⁰
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of tmp:Cons_h²
+//│                         Arg:
+//│                           value = SimpleRef of tmp:Cons_t²
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$0³
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$1³
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$2³
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$3²
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$4²
+//│           dflt = S of Return of Call:
+//│             fun = MemberRef{disamb=term:sum_23$ls_Nil⁰}:
+//│               bms = member:sum_23$ls_Nil¹
+//│               disamb = term:sum_23$ls_Nil⁰
+//│             argss = Ls of
+//│               Nil
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$0³
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$1³
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$2³
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$3²
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$4²
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:sum_23$sum⁰
+//│       dSym = term:sum_23$sum¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = ls³
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {t³, h⁵, tmp:arg$Cons$0$², tmp:arg$Cons$1$², tmp:tmp¹³}):
+//│         body = Return of Call:
+//│           fun = SimpleRef of ls³
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of t³
+//│               Arg:
+//│                 value = SimpleRef of h⁵
+//│               Arg:
+//│                 value = SimpleRef of tmp:arg$Cons$0$²
+//│               Arg:
+//│                 value = SimpleRef of tmp:arg$Cons$1$²
+//│               Arg:
+//│                 value = SimpleRef of tmp:tmp¹³
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_31_sum_17$ls_Nil¹
+//│       dSym = term:main_31_sum_17$ls_Nil⁰
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_t⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_h⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$0$⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$1$⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_tmp⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Lit of IntLit of 0
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_31_sum_17$ls_Cons¹
+//│       dSym = term:main_31_sum_17$ls_Cons⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = Cons_h³
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = Cons_t³
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_t¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_h¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$0$¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$1$¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_tmp¹
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = fv_arg$Cons$0$¹
+//│         rhs = SimpleRef of Cons_h³
+//│         rest = Assign: \
+//│         lhs = fv_arg$Cons$1$¹
+//│         rhs = SimpleRef of Cons_t³
+//│         rest = Assign: \
+//│         lhs = fv_t¹
+//│         rhs = SimpleRef of fv_arg$Cons$1$¹
+//│         rest = Assign: \
+//│         lhs = fv_h¹
+//│         rhs = SimpleRef of fv_arg$Cons$0$¹
+//│         rest = Assign: \
+//│         lhs = fv_tmp¹
+//│         rhs = Call:
+//│           fun = MemberRef{disamb=term:main_31_sum_17$sum¹}:
+//│             bms = member:main_31_sum_17$sum⁰
+//│             disamb = term:main_31_sum_17$sum¹
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_t¹
+//│         rest = Return of Call:
+//│           fun = SimpleRef of builtin:+⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_h¹
+//│               Arg:
+//│                 value = SimpleRef of fv_tmp¹
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_26_sum_17$ls_Nil¹
+//│       dSym = term:main_26_sum_17$ls_Nil⁰
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_t²
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_h²
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$0$²
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$1$²
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_tmp²
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Lit of IntLit of 0
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_26_sum_17$ls_Cons¹
+//│       dSym = term:main_26_sum_17$ls_Cons⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = Cons_h⁴
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = Cons_t⁴
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_t³
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_h³
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$0$³
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$1$³
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_tmp³
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = fv_arg$Cons$0$³
+//│         rhs = SimpleRef of Cons_h⁴
+//│         rest = Assign: \
+//│         lhs = fv_arg$Cons$1$³
+//│         rhs = SimpleRef of Cons_t⁴
+//│         rest = Assign: \
+//│         lhs = fv_t³
+//│         rhs = SimpleRef of fv_arg$Cons$1$³
+//│         rest = Assign: \
+//│         lhs = fv_h³
+//│         rhs = SimpleRef of fv_arg$Cons$0$³
+//│         rest = Assign: \
+//│         lhs = fv_tmp³
+//│         rhs = Call:
+//│           fun = MemberRef{disamb=term:main_26_sum_17$sum⁰}:
+//│             bms = member:main_26_sum_17$sum¹
+//│             disamb = term:main_26_sum_17$sum⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_t³
+//│         rest = Return of Call:
+//│           fun = SimpleRef of builtin:+⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_h³
+//│               Arg:
+//│                 value = SimpleRef of fv_tmp³
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:sum_23$ls_Cons¹
+//│       dSym = term:sum_23$ls_Cons⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = Cons_h⁵
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = Cons_t⁵
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_t⁴
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_h⁴
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$0$⁴
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$1$⁴
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_tmp⁴
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = fv_arg$Cons$0$⁴
+//│         rhs = SimpleRef of Cons_h⁵
+//│         rest = Assign: \
+//│         lhs = fv_arg$Cons$1$⁴
+//│         rhs = SimpleRef of Cons_t⁵
+//│         rest = Assign: \
+//│         lhs = fv_t⁴
+//│         rhs = SimpleRef of fv_arg$Cons$1$⁴
+//│         rest = Assign: \
+//│         lhs = fv_h⁴
+//│         rhs = SimpleRef of fv_arg$Cons$0$⁴
+//│         rest = Assign: \
+//│         lhs = fv_tmp⁴
+//│         rhs = Call:
+//│           fun = MemberRef{disamb=term:sum_23$sum¹}:
+//│             bms = member:sum_23$sum⁰
+//│             disamb = term:sum_23$sum¹
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_t⁴
+//│         rest = Return of Call:
+//│           fun = SimpleRef of builtin:+⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_h⁴
+//│               Arg:
+//│                 value = SimpleRef of fv_tmp⁴
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:sum_23$ls_Nil¹
+//│       dSym = term:sum_23$ls_Nil⁰
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_t⁵
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_h⁵
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$0$⁵
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$1$⁵
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_tmp⁵
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Lit of IntLit of 0
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_31_sum_17$ls_rest⁰
+//│       dSym = term:main_31_sum_17$ls_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_26_sum_17$ls_rest⁰
+//│       dSym = term:main_26_sum_17$ls_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:sum_23$ls_rest⁰
+//│       dSym = term:sum_23$ls_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:DeforestList¹
+//│       sym = member:DeforestList²
+//│       k = Cls
+//│       companion = S of ClsLikeBody:
+//│         isym = module:DeforestList⁰
+//│         methods = Ls of
+//│           FunDefn:
+//│             owner = S of module:DeforestList⁰
+//│             sym = member:sum⁰
+//│             dSym = term:DeforestList⁰/sum¹
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = ls⁰
+//│                     modulefulness = Modulefulness of N
+//│             body = Scoped(syms = {t⁴, h⁶, tmp:arg$Cons$0$³, tmp:arg$Cons$1$³, tmp:tmp¹⁴}):
+//│               body = Match:
+//│                 scrut = SimpleRef of ls⁰
+//│                 arms = Ls of
+//│                   Tuple2:
+//│                     _1 = Cls:
+//│                       cls = object:Nil⁰
+//│                       path = Select{sym=object:Nil⁰}:
+//│                         qual = This of module:DeforestList⁰
+//│                         name = Ident of "Nil"
+//│                     _2 = Return of Lit of IntLit of 0
+//│                   Tuple2:
+//│                     _1 = Cls:
+//│                       cls = class:Cons¹
+//│                       path = Select{sym=class:Cons¹}:
+//│                         qual = This of module:DeforestList⁰
+//│                         name = Ident of "Cons"
+//│                     _2 = Assign:
+//│                       lhs = tmp:arg$Cons$0$³
+//│                       rhs = Select{sym=term:Cons¹/h²}:
+//│                         qual = SimpleRef of ls⁰
+//│                         name = Ident of "h"
+//│                       rest = Assign: \
+//│                       lhs = tmp:arg$Cons$1$³
+//│                       rhs = Select{sym=term:Cons¹/t⁰}:
+//│                         qual = SimpleRef of ls⁰
+//│                         name = Ident of "t"
+//│                       rest = Assign: \
+//│                       lhs = t⁴
+//│                       rhs = SimpleRef of tmp:arg$Cons$1$³
+//│                       rest = Assign: \
+//│                       lhs = h⁶
+//│                       rhs = SimpleRef of tmp:arg$Cons$0$³
+//│                       rest = Assign: \
+//│                       lhs = tmp:tmp¹⁴
+//│                       rhs = Call:
+//│                         fun = Select{sym=term:DeforestList⁰/sum¹}:
+//│                           qual = This of module:DeforestList⁰
+//│                           name = Ident of "sum"
+//│                         argss = Ls of
+//│                           Ls of
+//│                             Arg:
+//│                               value = SimpleRef of t⁴
+//│                       rest = Return of Call:
+//│                         fun = SimpleRef of builtin:+⁰
+//│                         argss = Ls of
+//│                           Ls of
+//│                             Arg:
+//│                               value = SimpleRef of h⁶
+//│                             Arg:
+//│                               value = SimpleRef of tmp:tmp¹⁴
+//│                 dflt = S of Throw of Instantiate:
+//│                   mut = false
+//│                   cls = Select{sym=class:Error⁰}:
+//│                     qual = This of globalThis:globalThis⁰
+//│                     name = Ident of "Error"
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = Lit of StrLit of "match error"
+//│           FunDefn:
+//│             owner = S of module:DeforestList⁰
+//│             sym = member:enum⁰
+//│             dSym = term:DeforestList⁰/enum¹
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = n⁰
+//│                     modulefulness = Modulefulness of N
+//│             body = Scoped(syms = {tmp:scrut³, tmp:tmp¹⁵, tmp:tmp³}):
+//│               body = Assign:
+//│                 lhs = tmp:scrut³
+//│                 rhs = Call:
+//│                   fun = SimpleRef of builtin:>⁰
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of n⁰
+//│                       Arg:
+//│                         value = Lit of IntLit of 0
+//│                 rest = Match: \
+//│                 scrut = SimpleRef of tmp:scrut³
+//│                 arms = Ls of
+//│                   Tuple2:
+//│                     _1 = Lit of BoolLit of true
+//│                     _2 = Assign:
+//│                       lhs = tmp:tmp¹⁵
+//│                       rhs = Call:
+//│                         fun = SimpleRef of builtin:-⁰
+//│                         argss = Ls of
+//│                           Ls of
+//│                             Arg:
+//│                               value = SimpleRef of n⁰
+//│                             Arg:
+//│                               value = Lit of IntLit of 1
+//│                       rest = Assign: \
+//│                       lhs = tmp:tmp³
+//│                       rhs = Call:
+//│                         fun = Select{sym=term:DeforestList⁰/enum¹}:
+//│                           qual = This of module:DeforestList⁰
+//│                           name = Ident of "enum"
+//│                         argss = Ls of
+//│                           Ls of
+//│                             Arg:
+//│                               value = SimpleRef of tmp:tmp¹⁵
+//│                       rest = Return of Call:
+//│                         fun = Select{sym=term:DeforestList⁰/Cons⁰}:
+//│                           qual = This of module:DeforestList⁰
+//│                           name = Ident of "Cons"
+//│                         argss = Ls of
+//│                           Ls of
+//│                             Arg:
+//│                               value = SimpleRef of n⁰
+//│                             Arg:
+//│                               value = SimpleRef of tmp:tmp³
+//│                 dflt = S of Return of Select{sym=object:Nil⁰}:
+//│                   qual = This of module:DeforestList⁰
+//│                   name = Ident of "Nil"
+//│           FunDefn:
+//│             owner = S of module:DeforestList⁰
+//│             sym = member:main⁰
+//│             dSym = term:DeforestList⁰/main¹
+//│             params = Ls of
+//│               ParamList: ‹empty›
+//│             body = Scoped(syms = {tmp:tmp¹⁶}):
+//│               body = Assign:
+//│                 lhs = tmp:tmp¹⁶
+//│                 rhs = Call:
+//│                   fun = MemberRef{disamb=term:main_31_enum_14$enum¹}:
+//│                     bms = member:main_31_enum_14$enum⁰
+//│                     disamb = term:main_31_enum_14$enum¹
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = Lit of IntLit of 3
+//│                 rest = Return of Call:
+//│                   fun = MemberRef{disamb=term:main_31_sum_17$sum¹}:
+//│                     bms = member:main_31_sum_17$sum⁰
+//│                     disamb = term:main_31_sum_17$sum¹
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of tmp:tmp¹⁶
+//│         publicFields = Ls of
+//│           Tuple2:
+//│             _1 = member:res⁰
+//│             _2 = term:DeforestList⁰/res¹
+//│         ctor = Scoped(syms = {tmp:tmp¹⁷, tmp:tmp¹⁸}):
+//│           body = Define:
+//│             defn = ClsLikeDefn:
+//│               owner = S of module:DeforestList⁰
+//│               isym = object:Nil⁰
+//│               sym = member:Nil¹
+//│               k = Obj
+//│             rest = Define: \
+//│             defn = ClsLikeDefn:
+//│               owner = S of module:DeforestList⁰
+//│               isym = class:Cons¹
+//│               sym = member:Cons²
+//│               ctorSym = S of term:DeforestList⁰/Cons⁰
+//│               k = Cls
+//│               paramsOpt = S of ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     flags = (val)
+//│                     sym = h⁷
+//│                     modulefulness = Modulefulness of N
+//│                   Param:
+//│                     flags = (val)
+//│                     sym = t⁵
+//│                     modulefulness = Modulefulness of N
+//│               publicFields = Ls of
+//│                 Tuple2:
+//│                   _1 = member:h⁸
+//│                   _2 = term:Cons¹/h²
+//│                 Tuple2:
+//│                   _1 = member:t⁶
+//│                   _2 = term:Cons¹/t⁰
+//│               ctor = Define:
+//│                 defn = ValDefn:
+//│                   tsym = term:Cons¹/h²
+//│                   sym = member:h⁸
+//│                   rhs = SimpleRef of h⁷
+//│                 rest = Define: \
+//│                 defn = ValDefn:
+//│                   tsym = term:Cons¹/t⁰
+//│                   sym = member:t⁶
+//│                   rhs = SimpleRef of t⁵
+//│             rest = Assign: \
+//│             lhs = tmp:tmp¹⁷
+//│             rhs = Call:
+//│               fun = MemberRef{disamb=term:enum_20$enum¹}:
+//│                 bms = member:enum_20$enum⁰
+//│                 disamb = term:enum_20$enum¹
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = Lit of IntLit of 100
+//│             rest = Assign: \
+//│             lhs = tmp:tmp¹⁸
+//│             rhs = Call:
+//│               fun = MemberRef{disamb=term:sum_23$sum¹}:
+//│                 bms = member:sum_23$sum⁰
+//│                 disamb = term:sum_23$sum¹
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of tmp:tmp¹⁷
+//│             rest = Define: \
+//│             defn = ValDefn:
+//│               tsym = term:DeforestList⁰/res¹
+//│               sym = member:res⁰
+//│               rhs = SimpleRef of tmp:tmp¹⁸
+//│     rest = Assign: \
+//│     lhs = tmp:tmp¹⁹
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:main_26$main¹}:
+//│         bms = member:main_26$main⁰
+//│         disamb = term:main_26$main¹
+//│       argss = Ls of
+//│         Nil
+//│     rest = Return of Call:
+//│       fun = SimpleRef of builtin:+⁰
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Select{sym=term:DeforestList⁰/res¹}:
+//│               qual = MemberRef{disamb=module:DeforestList⁰}:
+//│                 bms = member:DeforestList²
+//│                 disamb = module:DeforestList⁰
+//│               name = Ident of "res"
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp¹⁹
 //│ = 5056
 
 
@@ -81,25 +1389,1171 @@ module DeforestList with
   val res = DeforestList.sum(DeforestList.enum(100))
 DeforestList.res + DeforestList.main()
 //│ deforest > >>> fusing >>>
-//│ deforest > DeforestList¹.this.Nil¹ ->
-//│ deforest > 	match: ls¹
-//│ deforest > DeforestList¹.this.Cons¹(n¹, tmp²) ->
-//│ deforest > 	match: ls¹
-//│ deforest > 	fields: ls¹.h¹
-//│ deforest > 	fields: ls¹.t¹
-//│ deforest > DeforestList¹.this.Nil¹ ->
-//│ deforest > 	match: ls¹
-//│ deforest > DeforestList¹.this.Cons¹(n¹, tmp²) ->
-//│ deforest > 	match: ls¹
-//│ deforest > 	fields: ls¹.h¹
-//│ deforest > 	fields: ls¹.t¹
-//│ deforest > DeforestList¹.this.Cons¹(n¹, tmp²) ->
-//│ deforest > 	match: ls¹
-//│ deforest > 	fields: ls¹.h¹
-//│ deforest > 	fields: ls¹.t¹
-//│ deforest > DeforestList¹.this.Nil¹ ->
-//│ deforest > 	match: ls¹
+//│ deforest > DeforestList³.this.Nil² ->
+//│ deforest > 	match: ls⁴
+//│ deforest > DeforestList³.this.Cons³(n⁴, tmp²⁰) ->
+//│ deforest > 	match: ls⁴
+//│ deforest > 	fields: ls⁴.h⁹
+//│ deforest > 	fields: ls⁴.t⁷
+//│ deforest > DeforestList³.this.Nil² ->
+//│ deforest > 	match: ls⁴
+//│ deforest > DeforestList³.this.Cons³(n⁴, tmp²⁰) ->
+//│ deforest > 	match: ls⁴
+//│ deforest > 	fields: ls⁴.h⁹
+//│ deforest > 	fields: ls⁴.t⁷
+//│ deforest > DeforestList³.this.Cons³(n⁴, tmp²⁰) ->
+//│ deforest > 	match: ls⁴
+//│ deforest > 	fields: ls⁴.h⁹
+//│ deforest > 	fields: ls⁴.t⁷
+//│ deforest > DeforestList³.this.Nil² ->
+//│ deforest > 	match: ls⁴
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:sum_24$ls_Cons, member:main_32_sum_18$ls_rest, member:main_32_enum_15$enum, member:main_32_sum_18$ls_Cons, member:main_27_sum_18$ls_rest, member:main_27_sum_18$sum, member:main_27_enum_15$enum, member:main_32_sum_18$ls_Nil, member:sum_24$sum, member:main_27_sum_18$ls_Nil, member:enum_21$enum, member:main_27$main, tmp:tmp, member:sum_24$ls_Nil, member:main_27_sum_18$ls_Cons, member:sum_24$ls_rest, member:main_32_sum_18$sum)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:main_32_enum_15$enum⁰
+//│       dSym = term:main_32_enum_15$enum¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = n⁵
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = eta$0$0⁴
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$1⁴
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$2⁴
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$3³
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$4³
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$5⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$6⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:scrut⁴, tmp:tmp²¹, tmp:tmp²²}):
+//│         body = Assign:
+//│           lhs = tmp:scrut⁴
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:>⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of n⁵
+//│                 Arg:
+//│                   value = Lit of IntLit of 0
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut⁴
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of BoolLit of true
+//│               _2 = Scoped(syms = {tmp:Cons_h⁶, tmp:Cons_t⁶}):
+//│                 body = Assign:
+//│                   lhs = tmp:tmp²¹
+//│                   rhs = Call:
+//│                     fun = SimpleRef of builtin:-⁰
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of n⁵
+//│                         Arg:
+//│                           value = Lit of IntLit of 1
+//│                   rest = Assign: \
+//│                   lhs = tmp:tmp²²
+//│                   rhs = Call:
+//│                     fun = MemberRef{disamb=term:main_32_enum_15$enum¹}:
+//│                       bms = member:main_32_enum_15$enum⁰
+//│                       disamb = term:main_32_enum_15$enum¹
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of tmp:tmp²¹
+//│                   rest = Assign: \
+//│                   lhs = tmp:Cons_h⁶
+//│                   rhs = SimpleRef of n⁵
+//│                   rest = Assign: \
+//│                   lhs = tmp:Cons_t⁶
+//│                   rhs = SimpleRef of tmp:tmp²²
+//│                   rest = Return of Call:
+//│                     fun = MemberRef{disamb=term:main_32_sum_18$ls_Cons⁰}:
+//│                       bms = member:main_32_sum_18$ls_Cons¹
+//│                       disamb = term:main_32_sum_18$ls_Cons⁰
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of tmp:Cons_h⁶
+//│                         Arg:
+//│                           value = SimpleRef of tmp:Cons_t⁶
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$0⁴
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$1⁴
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$2⁴
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$3³
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$4³
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$5⁰
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$6⁰
+//│           dflt = S of Return of Call:
+//│             fun = MemberRef{disamb=term:main_32_sum_18$ls_Nil⁰}:
+//│               bms = member:main_32_sum_18$ls_Nil¹
+//│               disamb = term:main_32_sum_18$ls_Nil⁰
+//│             argss = Ls of
+//│               Nil
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$0⁴
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$1⁴
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$2⁴
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$3³
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$4³
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$5⁰
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$6⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_32_sum_18$sum⁰
+//│       dSym = term:main_32_sum_18$sum¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = ls⁵
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {member:helper⁰}):
+//│         body = Define:
+//│           defn = FunDefn:
+//│             sym = member:helper⁰
+//│             dSym = term:helper¹
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = ls⁶
+//│                     modulefulness = Modulefulness of N
+//│                   Param:
+//│                     sym = acc⁰
+//│                     modulefulness = Modulefulness of N
+//│             body = Scoped(syms = {t⁸, h¹⁰, tmp:arg$Cons$0$⁴, tmp:arg$Cons$1$⁴, tmp:tmp²³}):
+//│               body = Return of Call:
+//│                 fun = SimpleRef of ls⁶
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = MemberRef{disamb=term:helper¹}:
+//│                         bms = member:helper⁰
+//│                         disamb = term:helper¹
+//│                     Arg:
+//│                       value = SimpleRef of acc⁰
+//│                     Arg:
+//│                       value = SimpleRef of t⁸
+//│                     Arg:
+//│                       value = SimpleRef of h¹⁰
+//│                     Arg:
+//│                       value = SimpleRef of tmp:arg$Cons$0$⁴
+//│                     Arg:
+//│                       value = SimpleRef of tmp:arg$Cons$1$⁴
+//│                     Arg:
+//│                       value = SimpleRef of tmp:tmp²³
+//│           rest = Return of Call:
+//│             fun = MemberRef{disamb=term:helper¹}:
+//│               bms = member:helper⁰
+//│               disamb = term:helper¹
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of ls⁵
+//│                 Arg:
+//│                   value = Lit of IntLit of 0
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_27_enum_15$enum⁰
+//│       dSym = term:main_27_enum_15$enum¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = n⁶
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = eta$0$0⁵
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$1⁵
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$2⁵
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$3⁴
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$4⁴
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$5¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$6¹
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:scrut⁵, tmp:tmp²⁴, tmp:tmp²⁵}):
+//│         body = Assign:
+//│           lhs = tmp:scrut⁵
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:>⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of n⁶
+//│                 Arg:
+//│                   value = Lit of IntLit of 0
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut⁵
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of BoolLit of true
+//│               _2 = Scoped(syms = {tmp:Cons_h⁷, tmp:Cons_t⁷}):
+//│                 body = Assign:
+//│                   lhs = tmp:tmp²⁴
+//│                   rhs = Call:
+//│                     fun = SimpleRef of builtin:-⁰
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of n⁶
+//│                         Arg:
+//│                           value = Lit of IntLit of 1
+//│                   rest = Assign: \
+//│                   lhs = tmp:tmp²⁵
+//│                   rhs = Call:
+//│                     fun = MemberRef{disamb=term:main_27_enum_15$enum¹}:
+//│                       bms = member:main_27_enum_15$enum⁰
+//│                       disamb = term:main_27_enum_15$enum¹
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of tmp:tmp²⁴
+//│                   rest = Assign: \
+//│                   lhs = tmp:Cons_h⁷
+//│                   rhs = SimpleRef of n⁶
+//│                   rest = Assign: \
+//│                   lhs = tmp:Cons_t⁷
+//│                   rhs = SimpleRef of tmp:tmp²⁵
+//│                   rest = Return of Call:
+//│                     fun = MemberRef{disamb=term:main_27_sum_18$ls_Cons⁰}:
+//│                       bms = member:main_27_sum_18$ls_Cons¹
+//│                       disamb = term:main_27_sum_18$ls_Cons⁰
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of tmp:Cons_h⁷
+//│                         Arg:
+//│                           value = SimpleRef of tmp:Cons_t⁷
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$0⁵
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$1⁵
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$2⁵
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$3⁴
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$4⁴
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$5¹
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$6¹
+//│           dflt = S of Return of Call:
+//│             fun = MemberRef{disamb=term:main_27_sum_18$ls_Nil⁰}:
+//│               bms = member:main_27_sum_18$ls_Nil¹
+//│               disamb = term:main_27_sum_18$ls_Nil⁰
+//│             argss = Ls of
+//│               Nil
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$0⁵
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$1⁵
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$2⁵
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$3⁴
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$4⁴
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$5¹
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$6¹
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_27$main⁰
+//│       dSym = term:main_27$main¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {tmp:tmp²⁶}):
+//│         body = Assign:
+//│           lhs = tmp:tmp²⁶
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:main_27_enum_15$enum¹}:
+//│               bms = member:main_27_enum_15$enum⁰
+//│               disamb = term:main_27_enum_15$enum¹
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Lit of IntLit of 3
+//│           rest = Return of Call:
+//│             fun = MemberRef{disamb=term:main_27_sum_18$sum⁰}:
+//│               bms = member:main_27_sum_18$sum¹
+//│               disamb = term:main_27_sum_18$sum⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp²⁶
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_27_sum_18$sum¹
+//│       dSym = term:main_27_sum_18$sum⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = ls⁷
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {member:helper²}):
+//│         body = Define:
+//│           defn = FunDefn:
+//│             sym = member:helper²
+//│             dSym = term:helper³
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = ls⁸
+//│                     modulefulness = Modulefulness of N
+//│                   Param:
+//│                     sym = acc¹
+//│                     modulefulness = Modulefulness of N
+//│             body = Scoped(syms = {t⁹, h¹¹, tmp:arg$Cons$0$⁵, tmp:arg$Cons$1$⁵, tmp:tmp²⁷}):
+//│               body = Return of Call:
+//│                 fun = SimpleRef of ls⁸
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = MemberRef{disamb=term:helper³}:
+//│                         bms = member:helper²
+//│                         disamb = term:helper³
+//│                     Arg:
+//│                       value = SimpleRef of acc¹
+//│                     Arg:
+//│                       value = SimpleRef of t⁹
+//│                     Arg:
+//│                       value = SimpleRef of h¹¹
+//│                     Arg:
+//│                       value = SimpleRef of tmp:arg$Cons$0$⁵
+//│                     Arg:
+//│                       value = SimpleRef of tmp:arg$Cons$1$⁵
+//│                     Arg:
+//│                       value = SimpleRef of tmp:tmp²⁷
+//│           rest = Return of Call:
+//│             fun = MemberRef{disamb=term:helper³}:
+//│               bms = member:helper²
+//│               disamb = term:helper³
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of ls⁷
+//│                 Arg:
+//│                   value = Lit of IntLit of 0
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:enum_21$enum⁰
+//│       dSym = term:enum_21$enum¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = n⁷
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = eta$0$0⁶
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$1⁶
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$2⁶
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$3⁵
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$4⁵
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$5²
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$6²
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:scrut⁶, tmp:tmp²⁸, tmp:tmp²⁹}):
+//│         body = Assign:
+//│           lhs = tmp:scrut⁶
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:>⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of n⁷
+//│                 Arg:
+//│                   value = Lit of IntLit of 0
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut⁶
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of BoolLit of true
+//│               _2 = Scoped(syms = {tmp:Cons_h⁸, tmp:Cons_t⁸}):
+//│                 body = Assign:
+//│                   lhs = tmp:tmp²⁸
+//│                   rhs = Call:
+//│                     fun = SimpleRef of builtin:-⁰
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of n⁷
+//│                         Arg:
+//│                           value = Lit of IntLit of 1
+//│                   rest = Assign: \
+//│                   lhs = tmp:tmp²⁹
+//│                   rhs = Call:
+//│                     fun = MemberRef{disamb=term:enum_21$enum¹}:
+//│                       bms = member:enum_21$enum⁰
+//│                       disamb = term:enum_21$enum¹
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of tmp:tmp²⁸
+//│                   rest = Assign: \
+//│                   lhs = tmp:Cons_h⁸
+//│                   rhs = SimpleRef of n⁷
+//│                   rest = Assign: \
+//│                   lhs = tmp:Cons_t⁸
+//│                   rhs = SimpleRef of tmp:tmp²⁹
+//│                   rest = Return of Call:
+//│                     fun = MemberRef{disamb=term:sum_24$ls_Cons⁰}:
+//│                       bms = member:sum_24$ls_Cons¹
+//│                       disamb = term:sum_24$ls_Cons⁰
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of tmp:Cons_h⁸
+//│                         Arg:
+//│                           value = SimpleRef of tmp:Cons_t⁸
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$0⁶
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$1⁶
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$2⁶
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$3⁵
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$4⁵
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$5²
+//│                         Arg:
+//│                           value = SimpleRef of eta$0$6²
+//│           dflt = S of Return of Call:
+//│             fun = MemberRef{disamb=term:sum_24$ls_Nil⁰}:
+//│               bms = member:sum_24$ls_Nil¹
+//│               disamb = term:sum_24$ls_Nil⁰
+//│             argss = Ls of
+//│               Nil
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$0⁶
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$1⁶
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$2⁶
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$3⁵
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$4⁵
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$5²
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$6²
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:sum_24$sum⁰
+//│       dSym = term:sum_24$sum¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = ls⁹
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {member:helper⁴}):
+//│         body = Define:
+//│           defn = FunDefn:
+//│             sym = member:helper⁴
+//│             dSym = term:helper⁵
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = ls¹⁰
+//│                     modulefulness = Modulefulness of N
+//│                   Param:
+//│                     sym = acc²
+//│                     modulefulness = Modulefulness of N
+//│             body = Scoped(syms = {t¹⁰, h¹², tmp:arg$Cons$0$⁶, tmp:arg$Cons$1$⁶, tmp:tmp³⁰}):
+//│               body = Return of Call:
+//│                 fun = SimpleRef of ls¹⁰
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = MemberRef{disamb=term:helper⁵}:
+//│                         bms = member:helper⁴
+//│                         disamb = term:helper⁵
+//│                     Arg:
+//│                       value = SimpleRef of acc²
+//│                     Arg:
+//│                       value = SimpleRef of t¹⁰
+//│                     Arg:
+//│                       value = SimpleRef of h¹²
+//│                     Arg:
+//│                       value = SimpleRef of tmp:arg$Cons$0$⁶
+//│                     Arg:
+//│                       value = SimpleRef of tmp:arg$Cons$1$⁶
+//│                     Arg:
+//│                       value = SimpleRef of tmp:tmp³⁰
+//│           rest = Return of Call:
+//│             fun = MemberRef{disamb=term:helper⁵}:
+//│               bms = member:helper⁴
+//│               disamb = term:helper⁵
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of ls⁹
+//│                 Arg:
+//│                   value = Lit of IntLit of 0
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_32_sum_18$ls_Nil¹
+//│       dSym = term:main_32_sum_18$ls_Nil⁰
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_helper⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_acc⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_t⁶
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_h⁶
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$0$⁶
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$1$⁶
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_tmp⁶
+//│               modulefulness = Modulefulness of N
+//│       body = Return of SimpleRef of fv_acc⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_32_sum_18$ls_Cons¹
+//│       dSym = term:main_32_sum_18$ls_Cons⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = Cons_h⁹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = Cons_t⁹
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_helper¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_acc¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_t⁷
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_h⁷
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$0$⁷
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$1$⁷
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_tmp⁷
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = fv_arg$Cons$0$⁷
+//│         rhs = SimpleRef of Cons_h⁹
+//│         rest = Assign: \
+//│         lhs = fv_arg$Cons$1$⁷
+//│         rhs = SimpleRef of Cons_t⁹
+//│         rest = Assign: \
+//│         lhs = fv_t⁷
+//│         rhs = SimpleRef of fv_arg$Cons$1$⁷
+//│         rest = Assign: \
+//│         lhs = fv_h⁷
+//│         rhs = SimpleRef of fv_arg$Cons$0$⁷
+//│         rest = Assign: \
+//│         lhs = fv_tmp⁷
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:+⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_acc¹
+//│               Arg:
+//│                 value = SimpleRef of fv_h⁷
+//│         rest = Return of Call:
+//│           fun = SimpleRef of fv_helper¹
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_t⁷
+//│               Arg:
+//│                 value = SimpleRef of fv_tmp⁷
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_27_sum_18$ls_Nil¹
+//│       dSym = term:main_27_sum_18$ls_Nil⁰
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_helper²
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_acc²
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_t⁸
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_h⁸
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$0$⁸
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$1$⁸
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_tmp⁸
+//│               modulefulness = Modulefulness of N
+//│       body = Return of SimpleRef of fv_acc²
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_27_sum_18$ls_Cons¹
+//│       dSym = term:main_27_sum_18$ls_Cons⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = Cons_h¹⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = Cons_t¹⁰
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_helper³
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_acc³
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_t⁹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_h⁹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$0$⁹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$1$⁹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_tmp⁹
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = fv_arg$Cons$0$⁹
+//│         rhs = SimpleRef of Cons_h¹⁰
+//│         rest = Assign: \
+//│         lhs = fv_arg$Cons$1$⁹
+//│         rhs = SimpleRef of Cons_t¹⁰
+//│         rest = Assign: \
+//│         lhs = fv_t⁹
+//│         rhs = SimpleRef of fv_arg$Cons$1$⁹
+//│         rest = Assign: \
+//│         lhs = fv_h⁹
+//│         rhs = SimpleRef of fv_arg$Cons$0$⁹
+//│         rest = Assign: \
+//│         lhs = fv_tmp⁹
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:+⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_acc³
+//│               Arg:
+//│                 value = SimpleRef of fv_h⁹
+//│         rest = Return of Call:
+//│           fun = SimpleRef of fv_helper³
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_t⁹
+//│               Arg:
+//│                 value = SimpleRef of fv_tmp⁹
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:sum_24$ls_Cons¹
+//│       dSym = term:sum_24$ls_Cons⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = Cons_h¹¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = Cons_t¹¹
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_helper⁴
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_acc⁴
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_t¹⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_h¹⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$0$¹⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$1$¹⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_tmp¹⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = fv_arg$Cons$0$¹⁰
+//│         rhs = SimpleRef of Cons_h¹¹
+//│         rest = Assign: \
+//│         lhs = fv_arg$Cons$1$¹⁰
+//│         rhs = SimpleRef of Cons_t¹¹
+//│         rest = Assign: \
+//│         lhs = fv_t¹⁰
+//│         rhs = SimpleRef of fv_arg$Cons$1$¹⁰
+//│         rest = Assign: \
+//│         lhs = fv_h¹⁰
+//│         rhs = SimpleRef of fv_arg$Cons$0$¹⁰
+//│         rest = Assign: \
+//│         lhs = fv_tmp¹⁰
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:+⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_acc⁴
+//│               Arg:
+//│                 value = SimpleRef of fv_h¹⁰
+//│         rest = Return of Call:
+//│           fun = SimpleRef of fv_helper⁴
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_t¹⁰
+//│               Arg:
+//│                 value = SimpleRef of fv_tmp¹⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:sum_24$ls_Nil¹
+//│       dSym = term:sum_24$ls_Nil⁰
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_helper⁵
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_acc⁵
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_t¹¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_h¹¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$0$¹¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$Cons$1$¹¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_tmp¹¹
+//│               modulefulness = Modulefulness of N
+//│       body = Return of SimpleRef of fv_acc⁵
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_32_sum_18$ls_rest⁰
+//│       dSym = term:main_32_sum_18$ls_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:main_27_sum_18$ls_rest⁰
+//│       dSym = term:main_27_sum_18$ls_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:sum_24$ls_rest⁰
+//│       dSym = term:sum_24$ls_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:DeforestList⁴
+//│       sym = member:DeforestList⁵
+//│       k = Cls
+//│       companion = S of ClsLikeBody:
+//│         isym = module:DeforestList³
+//│         methods = Ls of
+//│           FunDefn:
+//│             owner = S of module:DeforestList³
+//│             sym = member:sum²
+//│             dSym = term:DeforestList³/sum³
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = ls¹¹
+//│                     modulefulness = Modulefulness of N
+//│             body = Scoped(syms = {member:helper⁶}):
+//│               body = Define:
+//│                 defn = FunDefn:
+//│                   sym = member:helper⁶
+//│                   dSym = term:helper⁷
+//│                   params = Ls of
+//│                     ParamList:
+//│                       params = Ls of
+//│                         Param:
+//│                           sym = ls⁴
+//│                           modulefulness = Modulefulness of N
+//│                         Param:
+//│                           sym = acc³
+//│                           modulefulness = Modulefulness of N
+//│                   body = Scoped(syms = {t¹¹, h¹³, tmp:arg$Cons$0$⁷, tmp:arg$Cons$1$⁷, tmp:tmp³¹}):
+//│                     body = Match:
+//│                       scrut = SimpleRef of ls⁴
+//│                       arms = Ls of
+//│                         Tuple2:
+//│                           _1 = Cls:
+//│                             cls = object:Nil²
+//│                             path = Select{sym=object:Nil²}:
+//│                               qual = This of module:DeforestList³
+//│                               name = Ident of "Nil"
+//│                           _2 = Return of SimpleRef of acc³
+//│                         Tuple2:
+//│                           _1 = Cls:
+//│                             cls = class:Cons⁴
+//│                             path = Select{sym=class:Cons⁴}:
+//│                               qual = This of module:DeforestList³
+//│                               name = Ident of "Cons"
+//│                           _2 = Assign:
+//│                             lhs = tmp:arg$Cons$0$⁷
+//│                             rhs = Select{sym=term:Cons⁴/h⁹}:
+//│                               qual = SimpleRef of ls⁴
+//│                               name = Ident of "h"
+//│                             rest = Assign: \
+//│                             lhs = tmp:arg$Cons$1$⁷
+//│                             rhs = Select{sym=term:Cons⁴/t⁷}:
+//│                               qual = SimpleRef of ls⁴
+//│                               name = Ident of "t"
+//│                             rest = Assign: \
+//│                             lhs = t¹¹
+//│                             rhs = SimpleRef of tmp:arg$Cons$1$⁷
+//│                             rest = Assign: \
+//│                             lhs = h¹³
+//│                             rhs = SimpleRef of tmp:arg$Cons$0$⁷
+//│                             rest = Assign: \
+//│                             lhs = tmp:tmp³¹
+//│                             rhs = Call:
+//│                               fun = SimpleRef of builtin:+⁰
+//│                               argss = Ls of
+//│                                 Ls of
+//│                                   Arg:
+//│                                     value = SimpleRef of acc³
+//│                                   Arg:
+//│                                     value = SimpleRef of h¹³
+//│                             rest = Return of Call:
+//│                               fun = MemberRef{disamb=term:helper⁷}:
+//│                                 bms = member:helper⁶
+//│                                 disamb = term:helper⁷
+//│                               argss = Ls of
+//│                                 Ls of
+//│                                   Arg:
+//│                                     value = SimpleRef of t¹¹
+//│                                   Arg:
+//│                                     value = SimpleRef of tmp:tmp³¹
+//│                       dflt = S of Throw of Instantiate:
+//│                         mut = false
+//│                         cls = Select{sym=class:Error⁰}:
+//│                           qual = This of globalThis:globalThis⁰
+//│                           name = Ident of "Error"
+//│                         argss = Ls of
+//│                           Ls of
+//│                             Arg:
+//│                               value = Lit of StrLit of "match error"
+//│                 rest = Return of Call:
+//│                   fun = MemberRef{disamb=term:helper⁷}:
+//│                     bms = member:helper⁶
+//│                     disamb = term:helper⁷
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of ls¹¹
+//│                       Arg:
+//│                         value = Lit of IntLit of 0
+//│           FunDefn:
+//│             owner = S of module:DeforestList³
+//│             sym = member:enum²
+//│             dSym = term:DeforestList³/enum³
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = n⁴
+//│                     modulefulness = Modulefulness of N
+//│             body = Scoped(syms = {tmp:scrut⁷, tmp:tmp³², tmp:tmp²⁰}):
+//│               body = Assign:
+//│                 lhs = tmp:scrut⁷
+//│                 rhs = Call:
+//│                   fun = SimpleRef of builtin:>⁰
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of n⁴
+//│                       Arg:
+//│                         value = Lit of IntLit of 0
+//│                 rest = Match: \
+//│                 scrut = SimpleRef of tmp:scrut⁷
+//│                 arms = Ls of
+//│                   Tuple2:
+//│                     _1 = Lit of BoolLit of true
+//│                     _2 = Assign:
+//│                       lhs = tmp:tmp³²
+//│                       rhs = Call:
+//│                         fun = SimpleRef of builtin:-⁰
+//│                         argss = Ls of
+//│                           Ls of
+//│                             Arg:
+//│                               value = SimpleRef of n⁴
+//│                             Arg:
+//│                               value = Lit of IntLit of 1
+//│                       rest = Assign: \
+//│                       lhs = tmp:tmp²⁰
+//│                       rhs = Call:
+//│                         fun = Select{sym=term:DeforestList³/enum³}:
+//│                           qual = This of module:DeforestList³
+//│                           name = Ident of "enum"
+//│                         argss = Ls of
+//│                           Ls of
+//│                             Arg:
+//│                               value = SimpleRef of tmp:tmp³²
+//│                       rest = Return of Call:
+//│                         fun = Select{sym=term:DeforestList³/Cons³}:
+//│                           qual = This of module:DeforestList³
+//│                           name = Ident of "Cons"
+//│                         argss = Ls of
+//│                           Ls of
+//│                             Arg:
+//│                               value = SimpleRef of n⁴
+//│                             Arg:
+//│                               value = SimpleRef of tmp:tmp²⁰
+//│                 dflt = S of Return of Select{sym=object:Nil²}:
+//│                   qual = This of module:DeforestList³
+//│                   name = Ident of "Nil"
+//│           FunDefn:
+//│             owner = S of module:DeforestList³
+//│             sym = member:main²
+//│             dSym = term:DeforestList³/main³
+//│             params = Ls of
+//│               ParamList: ‹empty›
+//│             body = Scoped(syms = {tmp:tmp³³}):
+//│               body = Assign:
+//│                 lhs = tmp:tmp³³
+//│                 rhs = Call:
+//│                   fun = MemberRef{disamb=term:main_32_enum_15$enum¹}:
+//│                     bms = member:main_32_enum_15$enum⁰
+//│                     disamb = term:main_32_enum_15$enum¹
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = Lit of IntLit of 3
+//│                 rest = Return of Call:
+//│                   fun = MemberRef{disamb=term:main_32_sum_18$sum¹}:
+//│                     bms = member:main_32_sum_18$sum⁰
+//│                     disamb = term:main_32_sum_18$sum¹
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of tmp:tmp³³
+//│         publicFields = Ls of
+//│           Tuple2:
+//│             _1 = member:res²
+//│             _2 = term:DeforestList³/res³
+//│         ctor = Scoped(syms = {tmp:tmp³⁴, tmp:tmp³⁵}):
+//│           body = Define:
+//│             defn = ClsLikeDefn:
+//│               owner = S of module:DeforestList³
+//│               isym = object:Nil²
+//│               sym = member:Nil³
+//│               k = Obj
+//│             rest = Define: \
+//│             defn = ClsLikeDefn:
+//│               owner = S of module:DeforestList³
+//│               isym = class:Cons⁴
+//│               sym = member:Cons⁵
+//│               ctorSym = S of term:DeforestList³/Cons³
+//│               k = Cls
+//│               paramsOpt = S of ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     flags = (val)
+//│                     sym = h¹⁴
+//│                     modulefulness = Modulefulness of N
+//│                   Param:
+//│                     flags = (val)
+//│                     sym = t¹²
+//│                     modulefulness = Modulefulness of N
+//│               publicFields = Ls of
+//│                 Tuple2:
+//│                   _1 = member:h¹⁵
+//│                   _2 = term:Cons⁴/h⁹
+//│                 Tuple2:
+//│                   _1 = member:t¹³
+//│                   _2 = term:Cons⁴/t⁷
+//│               ctor = Define:
+//│                 defn = ValDefn:
+//│                   tsym = term:Cons⁴/h⁹
+//│                   sym = member:h¹⁵
+//│                   rhs = SimpleRef of h¹⁴
+//│                 rest = Define: \
+//│                 defn = ValDefn:
+//│                   tsym = term:Cons⁴/t⁷
+//│                   sym = member:t¹³
+//│                   rhs = SimpleRef of t¹²
+//│             rest = Assign: \
+//│             lhs = tmp:tmp³⁴
+//│             rhs = Call:
+//│               fun = MemberRef{disamb=term:enum_21$enum¹}:
+//│                 bms = member:enum_21$enum⁰
+//│                 disamb = term:enum_21$enum¹
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = Lit of IntLit of 100
+//│             rest = Assign: \
+//│             lhs = tmp:tmp³⁵
+//│             rhs = Call:
+//│               fun = MemberRef{disamb=term:sum_24$sum¹}:
+//│                 bms = member:sum_24$sum⁰
+//│                 disamb = term:sum_24$sum¹
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of tmp:tmp³⁴
+//│             rest = Define: \
+//│             defn = ValDefn:
+//│               tsym = term:DeforestList³/res³
+//│               sym = member:res²
+//│               rhs = SimpleRef of tmp:tmp³⁵
+//│     rest = Assign: \
+//│     lhs = tmp:tmp³⁶
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:main_27$main¹}:
+//│         bms = member:main_27$main⁰
+//│         disamb = term:main_27$main¹
+//│       argss = Ls of
+//│         Nil
+//│     rest = Return of Call:
+//│       fun = SimpleRef of builtin:+⁰
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Select{sym=term:DeforestList³/res³}:
+//│               qual = MemberRef{disamb=module:DeforestList³}:
+//│                 bms = member:DeforestList⁵
+//│                 disamb = module:DeforestList³
+//│               name = Ident of "res"
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp³⁶
 //│ = 5056
 
 
@@ -115,12 +2569,175 @@ module MMM with
 MMM.f()
 //│ deforest > >>> fusing >>>
 //│ deforest > MMM⁰.this.A⁰ ->
-//│ deforest > 	match: scrut⁰
+//│ deforest > 	match: scrut⁸
 //│ deforest > MMM⁰.this.A⁰ ->
-//│ deforest > 	match: scrut⁰
+//│ deforest > 	match: scrut⁸
 //│ deforest > MMM⁰.this.A⁰ ->
-//│ deforest > 	match: scrut⁰
+//│ deforest > 	match: scrut⁸
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:f_9$scrut_A, member:f_8$scrut_A, member:f_5$f, member:f_5$scrut_rest, member:f_9$scrut_rest, member:f_8$scrut_rest, member:f_5$scrut_A, member:f_8$f)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:f_8$f⁰
+//│       dSym = term:f_8$f¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {tmp:scrut⁹}):
+//│         body = Assign:
+//│           lhs = tmp:scrut⁹
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:f_8$scrut_A⁰}:
+//│               bms = member:f_8$scrut_A¹
+//│               disamb = term:f_8$scrut_A⁰
+//│             argss = Ls of
+//│               Nil
+//│           rest = Return of Call:
+//│             fun = SimpleRef of tmp:scrut⁹
+//│             argss = Ls of
+//│               Nil
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_5$f⁰
+//│       dSym = term:f_5$f¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {tmp:scrut¹⁰}):
+//│         body = Assign:
+//│           lhs = tmp:scrut¹⁰
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:f_5$scrut_A⁰}:
+//│               bms = member:f_5$scrut_A¹
+//│               disamb = term:f_5$scrut_A⁰
+//│             argss = Ls of
+//│               Nil
+//│           rest = Return of Call:
+//│             fun = SimpleRef of tmp:scrut¹⁰
+//│             argss = Ls of
+//│               Nil
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_9$scrut_A⁰
+//│       dSym = term:f_9$scrut_A¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList: ‹empty›
+//│       body = Return of Select{sym=term:MMM⁰/y²}:
+//│         qual = MemberRef{disamb=module:MMM⁰}:
+//│           bms = member:MMM¹
+//│           disamb = module:MMM⁰
+//│         name = Ident of "y"
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_8$scrut_A¹
+//│       dSym = term:f_8$scrut_A⁰
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList: ‹empty›
+//│       body = Return of Select{sym=term:MMM⁰/y²}:
+//│         qual = MemberRef{disamb=module:MMM⁰}:
+//│           bms = member:MMM¹
+//│           disamb = module:MMM⁰
+//│         name = Ident of "y"
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_5$scrut_A¹
+//│       dSym = term:f_5$scrut_A⁰
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList: ‹empty›
+//│       body = Return of Select{sym=term:MMM⁰/y²}:
+//│         qual = MemberRef{disamb=module:MMM⁰}:
+//│           bms = member:MMM¹
+//│           disamb = module:MMM⁰
+//│         name = Ident of "y"
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_9$scrut_rest⁰
+//│       dSym = term:f_9$scrut_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_8$scrut_rest⁰
+//│       dSym = term:f_8$scrut_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_5$scrut_rest⁰
+//│       dSym = term:f_5$scrut_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:MMM²
+//│       sym = member:MMM¹
+//│       k = Cls
+//│       companion = S of ClsLikeBody:
+//│         isym = module:MMM⁰
+//│         methods = Ls of
+//│           FunDefn:
+//│             owner = S of module:MMM⁰
+//│             sym = member:f²
+//│             dSym = term:MMM⁰/f³
+//│             params = Ls of
+//│               ParamList: ‹empty›
+//│             body = Scoped(syms = {tmp:scrut⁸}):
+//│               body = Assign:
+//│                 lhs = tmp:scrut⁸
+//│                 rhs = Call:
+//│                   fun = MemberRef{disamb=term:f_9$scrut_A¹}:
+//│                     bms = member:f_9$scrut_A⁰
+//│                     disamb = term:f_9$scrut_A¹
+//│                   argss = Ls of
+//│                     Nil
+//│                 rest = Return of Call:
+//│                   fun = SimpleRef of tmp:scrut⁸
+//│                   argss = Ls of
+//│                     Nil
+//│         publicFields = Ls of
+//│           Tuple2:
+//│             _1 = member:y³
+//│             _2 = term:MMM⁰/y²
+//│           Tuple2:
+//│             _1 = member:x²
+//│             _2 = term:MMM⁰/x³
+//│         ctor = Scoped(syms = {tmp:tmp³⁷}):
+//│           body = Define:
+//│             defn = ClsLikeDefn:
+//│               owner = S of module:MMM⁰
+//│               isym = object:A⁰
+//│               sym = member:A¹
+//│               k = Obj
+//│             rest = Define: \
+//│             defn = ValDefn:
+//│               tsym = term:MMM⁰/y²
+//│               sym = member:y³
+//│               rhs = Lit of IntLit of 3
+//│             rest = Assign: \
+//│             lhs = tmp:tmp³⁷
+//│             rhs = Call:
+//│               fun = MemberRef{disamb=term:f_5$f¹}:
+//│                 bms = member:f_5$f⁰
+//│                 disamb = term:f_5$f¹
+//│               argss = Ls of
+//│                 Nil
+//│             rest = Define: \
+//│             defn = ValDefn:
+//│               tsym = term:MMM⁰/x³
+//│               sym = member:x²
+//│               rhs = SimpleRef of tmp:tmp³⁷
+//│     rest = Return of Call:
+//│       fun = MemberRef{disamb=term:f_8$f¹}:
+//│         bms = member:f_8$f⁰
+//│         disamb = term:f_8$f¹
+//│       argss = Ls of
+//│         Nil
 //│ = 3
 
 
@@ -138,9 +2755,191 @@ module M with
         Y then x
 M.f(M.X)
 //│ deforest > >>> fusing >>>
-//│ deforest > M¹.X⁰ ->
+//│ deforest > M³.X⁰ ->
 //│ deforest > 	match: k⁰
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:f_8$f, member:f_8$k_X, member:f_8$k_rest, tmp:deforest$lam)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:f_8$f²
+//│       dSym = term:f_8$f³
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = k¹
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:scrut¹¹}):
+//│         body = Return of Call:
+//│           fun = SimpleRef of k¹
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of tmp:scrut¹¹
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_8$k_X⁰
+//│       dSym = term:f_8$k_X¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_scrut⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = fv_scrut⁰
+//│         rhs = Select{sym=term:M³/y⁴}:
+//│           qual = MemberRef{disamb=module:M³}:
+//│             bms = member:M⁴
+//│             disamb = module:M³
+//│           name = Ident of "y"
+//│         rest = Match: \
+//│         scrut = SimpleRef of fv_scrut⁰
+//│         arms = Ls of
+//│           Tuple2:
+//│             _1 = Cls:
+//│               cls = object:Y⁰
+//│               path = Select{sym=object:Y⁰}:
+//│                 qual = MemberRef{disamb=module:M³}:
+//│                   bms = member:M⁴
+//│                   disamb = module:M³
+//│                 name = Ident of "Y"
+//│             _2 = Return of Select{sym=term:M³/x⁴}:
+//│               qual = MemberRef{disamb=module:M³}:
+//│                 bms = member:M⁴
+//│                 disamb = module:M³
+//│               name = Ident of "x"
+//│         dflt = S of Throw of Instantiate:
+//│           mut = false
+//│           cls = Select{sym=class:Error⁰}:
+//│             qual = This of globalThis:globalThis⁰
+//│             name = Ident of "Error"
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = Lit of StrLit of "match error"
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_8$k_rest⁰
+//│       dSym = term:f_8$k_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:M⁵
+//│       sym = member:M⁴
+//│       k = Cls
+//│       companion = S of ClsLikeBody:
+//│         isym = module:M³
+//│         methods = Ls of
+//│           FunDefn:
+//│             owner = S of module:M³
+//│             sym = member:f⁴
+//│             dSym = term:M³/f⁵
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = k⁰
+//│                     modulefulness = Modulefulness of N
+//│             body = Scoped(syms = {tmp:scrut¹²}):
+//│               body = Match:
+//│                 scrut = SimpleRef of k⁰
+//│                 arms = Ls of
+//│                   Tuple2:
+//│                     _1 = Cls:
+//│                       cls = object:X⁰
+//│                       path = Select{sym=object:X⁰}:
+//│                         qual = This of module:M³
+//│                         name = Ident of "X"
+//│                     _2 = Assign:
+//│                       lhs = tmp:scrut¹²
+//│                       rhs = Select{sym=term:M³/y⁴}:
+//│                         qual = This of module:M³
+//│                         name = Ident of "y"
+//│                       rest = Match: \
+//│                       scrut = SimpleRef of tmp:scrut¹²
+//│                       arms = Ls of
+//│                         Tuple2:
+//│                           _1 = Cls:
+//│                             cls = object:Y⁰
+//│                             path = Select{sym=object:Y⁰}:
+//│                               qual = This of module:M³
+//│                               name = Ident of "Y"
+//│                           _2 = Return of Select{sym=term:M³/x⁴}:
+//│                             qual = This of module:M³
+//│                             name = Ident of "x"
+//│                       dflt = S of Throw of Instantiate:
+//│                         mut = false
+//│                         cls = Select{sym=class:Error⁰}:
+//│                           qual = This of globalThis:globalThis⁰
+//│                           name = Ident of "Error"
+//│                         argss = Ls of
+//│                           Ls of
+//│                             Arg:
+//│                               value = Lit of StrLit of "match error"
+//│                 dflt = S of Throw of Instantiate:
+//│                   mut = false
+//│                   cls = Select{sym=class:Error⁰}:
+//│                     qual = This of globalThis:globalThis⁰
+//│                     name = Ident of "Error"
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = Lit of StrLit of "match error"
+//│         publicFields = Ls of
+//│           Tuple2:
+//│             _1 = member:x⁵
+//│             _2 = term:M³/x⁴
+//│           Tuple2:
+//│             _1 = member:y⁵
+//│             _2 = term:M³/y⁴
+//│         ctor = Define:
+//│           defn = ClsLikeDefn:
+//│             owner = S of module:M³
+//│             isym = object:X⁰
+//│             sym = member:X¹
+//│             k = Obj
+//│           rest = Define: \
+//│           defn = ClsLikeDefn:
+//│             owner = S of module:M³
+//│             isym = object:Y⁰
+//│             sym = member:Y¹
+//│             k = Obj
+//│           rest = Define: \
+//│           defn = ValDefn:
+//│             tsym = term:M³/x⁴
+//│             sym = member:x⁵
+//│             rhs = Select{sym=object:X⁰}:
+//│               qual = This of module:M³
+//│               name = Ident of "X"
+//│           rest = Define: \
+//│           defn = ValDefn:
+//│             tsym = term:M³/y⁴
+//│             sym = member:y⁵
+//│             rhs = Select{sym=object:Y⁰}:
+//│               qual = This of module:M³
+//│               name = Ident of "Y"
+//│     rest = Assign: \
+//│     lhs = tmp:deforest$lam⁰
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:f_8$k_X¹}:
+//│         bms = member:f_8$k_X⁰
+//│         disamb = term:f_8$k_X¹
+//│       argss = Ls of
+//│         Nil
+//│     rest = Return of Call:
+//│       fun = MemberRef{disamb=term:f_8$f³}:
+//│         bms = member:f_8$f²
+//│         disamb = term:f_8$f³
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = SimpleRef of tmp:deforest$lam⁰
 //│ = X
 
 
@@ -166,26 +2965,690 @@ module M with
 [M.f(3), M.g(true)]
 //│ deforest > >>> fusing >>>
 //│ deforest > B⁰(0) ->
-//│ deforest > 	match: scrut¹
+//│ deforest > 	match: scrut¹³
 //│ deforest > D⁰ ->
-//│ deforest > 	match: scrut¹
-//│ deforest > A¹ ->
-//│ deforest > 	match: scrut²
-//│ deforest > A¹ ->
-//│ deforest > 	match: scrut²
+//│ deforest > 	match: scrut¹³
+//│ deforest > A² ->
+//│ deforest > 	match: scrut¹⁴
+//│ deforest > A² ->
+//│ deforest > 	match: scrut¹⁴
 //│ deforest > C⁰ ->
-//│ deforest > 	match: scrut²
+//│ deforest > 	match: scrut¹⁴
 //│ deforest > B⁰(0) ->
-//│ deforest > 	match: scrut¹
+//│ deforest > 	match: scrut¹³
 //│ deforest > D⁰ ->
-//│ deforest > 	match: scrut¹
-//│ deforest > A¹ ->
-//│ deforest > 	match: scrut²
-//│ deforest > A¹ ->
-//│ deforest > 	match: scrut²
+//│ deforest > 	match: scrut¹³
+//│ deforest > A² ->
+//│ deforest > 	match: scrut¹⁴
+//│ deforest > A² ->
+//│ deforest > 	match: scrut¹⁴
 //│ deforest > C⁰ ->
-//│ deforest > 	match: scrut²
+//│ deforest > 	match: scrut¹⁴
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:g_25$g, member:f_22$scrut_rest, member:g_25$scrut_rest, member:f_27$scrut_A, member:g_25$scrut_D, member:f_27$scrut_C, member:f_22$g, member:g_28$scrut_rest, member:f_22$scrut_C, tmp:tmp, member:g_28$scrut_D, member:g_25$b_rest, member:g_25$f, member:f_27$scrut_rest, member:f_22$f, member:f_22$scrut_A, member:g_28$b_rest, tmp:tmp, member:g_28$scrut_B, member:g_25$scrut_B)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:g_25$f⁰
+//│       dSym = term:g_25$f¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁶
+//│               modulefulness = Modulefulness of N
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {tmp:scrut¹⁵, tmp:scrut¹⁶, tmp:tmp³⁸}):
+//│         body = Assign:
+//│           lhs = tmp:scrut¹⁵
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:g_25$g⁰}:
+//│               bms = member:g_25$g¹
+//│               disamb = term:g_25$g⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Lit of BoolLit of false
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut¹⁵
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Cls:
+//│                 cls = object:A²
+//│                 path = MemberRef{disamb=object:A²}:
+//│                   bms = member:A³
+//│                   disamb = object:A²
+//│               _2 = Assign:
+//│                 lhs = tmp:scrut¹⁶
+//│                 rhs = Call:
+//│                   fun = SimpleRef of builtin:<⁰
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of x⁶
+//│                       Arg:
+//│                         value = Lit of IntLit of 1
+//│                 rest = Match: \
+//│                 scrut = SimpleRef of tmp:scrut¹⁶
+//│                 arms = Ls of
+//│                   Tuple2:
+//│                     _1 = Lit of BoolLit of true
+//│                     _2 = Scoped(syms = {tmp:B_b⁰}):
+//│                       body = Assign:
+//│                         lhs = tmp:B_b⁰
+//│                         rhs = Lit of IntLit of 0
+//│                         rest = Return of Call:
+//│                           fun = MemberRef{disamb=term:g_25$scrut_B⁰}:
+//│                             bms = member:g_25$scrut_B¹
+//│                             disamb = term:g_25$scrut_B⁰
+//│                           argss = Ls of
+//│                             Ls of
+//│                               Arg:
+//│                                 value = SimpleRef of tmp:B_b⁰
+//│                             Nil
+//│                 dflt = S of Assign:
+//│                   lhs = tmp:tmp³⁸
+//│                   rhs = Call:
+//│                     fun = SimpleRef of builtin:-⁰
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of x⁶
+//│                         Arg:
+//│                           value = Lit of IntLit of 1
+//│                   rest = Return of Call:
+//│                     fun = MemberRef{disamb=term:g_25$f¹}:
+//│                       bms = member:g_25$f⁰
+//│                       disamb = term:g_25$f¹
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of tmp:tmp³⁸
+//│                       Nil
+//│             Tuple2:
+//│               _1 = Cls:
+//│                 cls = object:C⁰
+//│                 path = MemberRef{disamb=object:C⁰}:
+//│                   bms = member:C¹
+//│                   disamb = object:C⁰
+//│               _2 = Return of Call:
+//│                 fun = MemberRef{disamb=term:g_25$scrut_D⁰}:
+//│                   bms = member:g_25$scrut_D¹
+//│                   disamb = term:g_25$scrut_D⁰
+//│                 argss = Ls of
+//│                   Nil
+//│                   Nil
+//│           dflt = S of Throw of Instantiate:
+//│             mut = false
+//│             cls = Select{sym=class:Error⁰}:
+//│               qual = This of globalThis:globalThis⁰
+//│               name = Ident of "Error"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Lit of StrLit of "match error"
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:g_25$g¹
+//│       dSym = term:g_25$g⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = b³
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:scrut¹⁷}):
+//│         body = Match:
+//│           scrut = SimpleRef of b³
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of BoolLit of true
+//│               _2 = Assign:
+//│                 lhs = tmp:scrut¹⁷
+//│                 rhs = Call:
+//│                   fun = MemberRef{disamb=term:g_25$f¹}:
+//│                     bms = member:g_25$f⁰
+//│                     disamb = term:g_25$f¹
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = Lit of IntLit of 0
+//│                 rest = Return of Call:
+//│                   fun = SimpleRef of tmp:scrut¹⁷
+//│                   argss = Ls of
+//│                     Nil
+//│           dflt = S of Return of MemberRef{disamb=object:C⁰}:
+//│             bms = member:C¹
+//│             disamb = object:C⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_22$f⁰
+//│       dSym = term:f_22$f¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁷
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:scrut¹⁸, tmp:scrut¹⁹, tmp:tmp³⁹}):
+//│         body = Assign:
+//│           lhs = tmp:scrut¹⁸
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:f_22$g⁰}:
+//│               bms = member:f_22$g¹
+//│               disamb = term:f_22$g⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Lit of BoolLit of false
+//│           rest = Return of Call:
+//│             fun = SimpleRef of tmp:scrut¹⁸
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x⁷
+//│                 Arg:
+//│                   value = SimpleRef of tmp:scrut¹⁹
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp³⁹
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_22$g¹
+//│       dSym = term:f_22$g⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = b⁴
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = eta$0$0⁷
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$1⁷
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = eta$0$2⁷
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:scrut²⁰}):
+//│         body = Match:
+//│           scrut = SimpleRef of b⁴
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of BoolLit of true
+//│               _2 = Assign:
+//│                 lhs = tmp:scrut²⁰
+//│                 rhs = Call:
+//│                   fun = MemberRef{disamb=term:f_22$f¹}:
+//│                     bms = member:f_22$f⁰
+//│                     disamb = term:f_22$f¹
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = Lit of IntLit of 0
+//│                 rest = Match: \
+//│                 scrut = SimpleRef of tmp:scrut²⁰
+//│                 arms = Ls of
+//│                   Tuple2:
+//│                     _1 = Cls:
+//│                       cls = class:B¹
+//│                       path = MemberRef{disamb=class:B¹}:
+//│                         bms = member:B²
+//│                         disamb = class:B¹
+//│                     _2 = Return of Call:
+//│                       fun = MemberRef{disamb=term:f_22$scrut_A⁰}:
+//│                         bms = member:f_22$scrut_A¹
+//│                         disamb = term:f_22$scrut_A⁰
+//│                       argss = Ls of
+//│                         Nil
+//│                         Ls of
+//│                           Arg:
+//│                             value = SimpleRef of eta$0$0⁷
+//│                           Arg:
+//│                             value = SimpleRef of eta$0$1⁷
+//│                           Arg:
+//│                             value = SimpleRef of eta$0$2⁷
+//│                   Tuple2:
+//│                     _1 = Cls:
+//│                       cls = object:D⁰
+//│                       path = MemberRef{disamb=object:D⁰}:
+//│                         bms = member:D¹
+//│                         disamb = object:D⁰
+//│                     _2 = Return of Call:
+//│                       fun = MemberRef{disamb=term:f_22$scrut_A⁰}:
+//│                         bms = member:f_22$scrut_A¹
+//│                         disamb = term:f_22$scrut_A⁰
+//│                       argss = Ls of
+//│                         Nil
+//│                         Ls of
+//│                           Arg:
+//│                             value = SimpleRef of eta$0$0⁷
+//│                           Arg:
+//│                             value = SimpleRef of eta$0$1⁷
+//│                           Arg:
+//│                             value = SimpleRef of eta$0$2⁷
+//│                 dflt = S of Throw of Instantiate:
+//│                   mut = false
+//│                   cls = Select{sym=class:Error⁰}:
+//│                     qual = This of globalThis:globalThis⁰
+//│                     name = Ident of "Error"
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = Lit of StrLit of "match error"
+//│           dflt = S of Return of Call:
+//│             fun = MemberRef{disamb=term:f_22$scrut_C⁰}:
+//│               bms = member:f_22$scrut_C¹
+//│               disamb = term:f_22$scrut_C⁰
+//│             argss = Ls of
+//│               Nil
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$0⁷
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$1⁷
+//│                 Arg:
+//│                   value = SimpleRef of eta$0$2⁷
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:g_28$scrut_B⁰
+//│       dSym = term:g_28$scrut_B¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = _b⁰
+//│               modulefulness = Modulefulness of N
+//│         ParamList: ‹empty›
+//│       body = Return of MemberRef{disamb=object:A²}:
+//│         bms = member:A³
+//│         disamb = object:A²
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:g_28$scrut_D⁰
+//│       dSym = term:g_28$scrut_D¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList: ‹empty›
+//│       body = Return of MemberRef{disamb=object:A²}:
+//│         bms = member:A³
+//│         disamb = object:A²
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_27$scrut_A⁰
+//│       dSym = term:f_27$scrut_A¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_x⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_scrut¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_tmp¹²
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = fv_scrut¹
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:<⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_x⁰
+//│               Arg:
+//│                 value = Lit of IntLit of 1
+//│         rest = Match: \
+//│         scrut = SimpleRef of fv_scrut¹
+//│         arms = Ls of
+//│           Tuple2:
+//│             _1 = Lit of BoolLit of true
+//│             _2 = Return of Call:
+//│               fun = MemberRef{disamb=term:B⁰}:
+//│                 bms = member:B²
+//│                 disamb = term:B⁰
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = Lit of IntLit of 0
+//│         dflt = S of Assign:
+//│           lhs = fv_tmp¹²
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:-⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of fv_x⁰
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = Return of Call:
+//│             fun = Select{sym=term:M⁶/f⁶}:
+//│               qual = MemberRef{disamb=module:M⁶}:
+//│                 bms = member:M⁷
+//│                 disamb = module:M⁶
+//│               name = Ident of "f"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of fv_tmp¹²
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_27$scrut_C⁰
+//│       dSym = term:f_27$scrut_C¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_x¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_scrut²
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_tmp¹³
+//│               modulefulness = Modulefulness of N
+//│       body = Return of MemberRef{disamb=object:D⁰}:
+//│         bms = member:D¹
+//│         disamb = object:D⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:g_25$scrut_B¹
+//│       dSym = term:g_25$scrut_B⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = _b¹
+//│               modulefulness = Modulefulness of N
+//│         ParamList: ‹empty›
+//│       body = Return of MemberRef{disamb=object:A²}:
+//│         bms = member:A³
+//│         disamb = object:A²
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:g_25$scrut_D¹
+//│       dSym = term:g_25$scrut_D⁰
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList: ‹empty›
+//│       body = Return of MemberRef{disamb=object:A²}:
+//│         bms = member:A³
+//│         disamb = object:A²
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_22$scrut_A¹
+//│       dSym = term:f_22$scrut_A⁰
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_x²
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_scrut³
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_tmp¹⁴
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = fv_scrut³
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:<⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_x²
+//│               Arg:
+//│                 value = Lit of IntLit of 1
+//│         rest = Match: \
+//│         scrut = SimpleRef of fv_scrut³
+//│         arms = Ls of
+//│           Tuple2:
+//│             _1 = Lit of BoolLit of true
+//│             _2 = Return of Call:
+//│               fun = MemberRef{disamb=term:B⁰}:
+//│                 bms = member:B²
+//│                 disamb = term:B⁰
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = Lit of IntLit of 0
+//│         dflt = S of Assign:
+//│           lhs = fv_tmp¹⁴
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:-⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of fv_x²
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = Return of Call:
+//│             fun = MemberRef{disamb=term:f_22$f¹}:
+//│               bms = member:f_22$f⁰
+//│               disamb = term:f_22$f¹
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of fv_tmp¹⁴
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_22$scrut_C¹
+//│       dSym = term:f_22$scrut_C⁰
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_x³
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_scrut⁴
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_tmp¹⁵
+//│               modulefulness = Modulefulness of N
+//│       body = Return of MemberRef{disamb=object:D⁰}:
+//│         bms = member:D¹
+//│         disamb = object:D⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:g_28$scrut_rest⁰
+//│       dSym = term:g_28$scrut_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = MemberRef{disamb=term:g_28$b_rest⁰}:
+//│           bms = member:g_28$b_rest¹
+//│           disamb = term:g_28$b_rest⁰
+//│         argss = Ls of
+//│           Nil
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:g_28$b_rest¹
+//│       dSym = term:g_28$b_rest⁰
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_27$scrut_rest⁰
+//│       dSym = term:f_27$scrut_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:g_25$scrut_rest⁰
+//│       dSym = term:g_25$scrut_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = MemberRef{disamb=term:g_25$b_rest⁰}:
+//│           bms = member:g_25$b_rest¹
+//│           disamb = term:g_25$b_rest⁰
+//│         argss = Ls of
+//│           Nil
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:g_25$b_rest¹
+//│       dSym = term:g_25$b_rest⁰
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_22$scrut_rest⁰
+//│       dSym = term:f_22$scrut_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = object:A²
+//│       sym = member:A³
+//│       k = Obj
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:B¹
+//│       sym = member:B²
+//│       ctorSym = S of term:B⁰
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = b⁵
+//│             modulefulness = Modulefulness of N
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:b⁶
+//│           _2 = term:B¹/b⁷
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:B¹/b⁷
+//│           sym = member:b⁶
+//│           rhs = SimpleRef of b⁵
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = object:C⁰
+//│       sym = member:C¹
+//│       k = Obj
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = object:D⁰
+//│       sym = member:D¹
+//│       k = Obj
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:M⁸
+//│       sym = member:M⁷
+//│       k = Cls
+//│       companion = S of ClsLikeBody:
+//│         isym = module:M⁶
+//│         methods = Ls of
+//│           FunDefn:
+//│             owner = S of module:M⁶
+//│             sym = member:f⁷
+//│             dSym = term:M⁶/f⁶
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = x⁸
+//│                     modulefulness = Modulefulness of N
+//│             body = Scoped(syms = {tmp:scrut¹⁴, tmp:scrut²¹, tmp:tmp⁴⁰}):
+//│               body = Assign:
+//│                 lhs = tmp:scrut¹⁴
+//│                 rhs = Call:
+//│                   fun = Select{sym=term:M⁶/g⁰}:
+//│                     qual = MemberRef{disamb=module:M⁶}:
+//│                       bms = member:M⁷
+//│                       disamb = module:M⁶
+//│                     name = Ident of "g"
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = Lit of BoolLit of false
+//│                 rest = Return of Call:
+//│                   fun = SimpleRef of tmp:scrut¹⁴
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of x⁸
+//│                       Arg:
+//│                         value = SimpleRef of tmp:scrut²¹
+//│                       Arg:
+//│                         value = SimpleRef of tmp:tmp⁴⁰
+//│           FunDefn:
+//│             owner = S of module:M⁶
+//│             sym = member:g¹
+//│             dSym = term:M⁶/g⁰
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = b⁸
+//│                     modulefulness = Modulefulness of N
+//│             body = Scoped(syms = {tmp:scrut¹³}):
+//│               body = Match:
+//│                 scrut = SimpleRef of b⁸
+//│                 arms = Ls of
+//│                   Tuple2:
+//│                     _1 = Lit of BoolLit of true
+//│                     _2 = Assign:
+//│                       lhs = tmp:scrut¹³
+//│                       rhs = Call:
+//│                         fun = Select{sym=term:M⁶/f⁶}:
+//│                           qual = MemberRef{disamb=module:M⁶}:
+//│                             bms = member:M⁷
+//│                             disamb = module:M⁶
+//│                           name = Ident of "f"
+//│                         argss = Ls of
+//│                           Ls of
+//│                             Arg:
+//│                               value = Lit of IntLit of 0
+//│                       rest = Return of Call:
+//│                         fun = SimpleRef of tmp:scrut¹³
+//│                         argss = Ls of
+//│                           Nil
+//│                 dflt = S of Return of MemberRef{disamb=object:C⁰}:
+//│                   bms = member:C¹
+//│                   disamb = object:C⁰
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁴¹
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:f_22$f¹}:
+//│         bms = member:f_22$f⁰
+//│         disamb = term:f_22$f¹
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 3
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁴²
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:g_25$g⁰}:
+//│         bms = member:g_25$g¹
+//│         disamb = term:g_25$g⁰
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of BoolLit of true
+//│     rest = Return of Tuple:
+//│       mut = false
+//│       elems = Ls of
+//│         Arg:
+//│           value = SimpleRef of tmp:tmp⁴¹
+//│         Arg:
+//│           value = SimpleRef of tmp:tmp⁴²
 //│ = [D, A]
 
 
@@ -196,6 +3659,28 @@ module O with
     val x = 3
     fun g() = 23
     data class C(x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of module:I⁰
+//│   isym = class:C²
+//│   sym = member:C³
+//│   ctorSym = S of term:I⁰/C⁴
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁹
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹⁰
+//│       _2 = term:C²/x¹¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C²/x¹¹
+//│       sym = member:x¹⁰
+//│       rhs = SimpleRef of x⁹
 
 :deforest
 :noInline
@@ -204,9 +3689,9 @@ private fun g(x, module I: O.I) = if x is
   I.C(y) then y + 2
 g(f(O.I), O.I)
 //│ deforest > >>> fusing >>>
-//│ deforest > I⁰.C¹(3) ->
-//│ deforest > 	match: x¹
-//│ deforest > 	fields: x¹.x²
+//│ deforest > I¹.C⁴(3) ->
+//│ deforest > 	match: x¹²
+//│ deforest > 	fields: x¹².x¹¹
 //│ deforest > <<< fusing <<<
 //│ = 5
 
@@ -218,8 +3703,8 @@ private fun g(x, module O: O) = if x is
   O.I.C(y) then y + 2
 g(f(O), O)
 //│ deforest > >>> fusing >>>
-//│ deforest > O⁰.I¹.C¹(3) ->
-//│ deforest > 	match: x³
-//│ deforest > 	fields: x³.x²
+//│ deforest > O⁰.I⁰.C⁴(3) ->
+//│ deforest > 	match: x¹³
+//│ deforest > 	fields: x¹³.x¹¹
 //│ deforest > <<< fusing <<<
 //│ = 5

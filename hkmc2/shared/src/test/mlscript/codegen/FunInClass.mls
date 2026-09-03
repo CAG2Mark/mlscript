@@ -75,7 +75,7 @@ fun test(a) =
   [C1(1), C2(2)]
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let test2;
-//│ test2 = function test(a) {
+//│ test2 = function test(a1) {
 //│   let C12, C22, tmp1, tmp2;
 //│   C12 = function C1(b) {
 //│     return globalThis.Object.freeze(new C1.class(b));
@@ -88,7 +88,7 @@ fun test(a) =
 //│       let tmp3;
 //│       this.b = b;
 //│       tmp3 = globalThis.Object.freeze([
-//│         a,
+//│         a1,
 //│         this.b
 //│       ]);
 //│       Predef.print(tmp3);
@@ -107,7 +107,7 @@ fun test(a) =
 //│       let tmp3;
 //│       this.b = b;
 //│       tmp3 = globalThis.Object.freeze([
-//│         a,
+//│         a1,
 //│         this.b
 //│       ]);
 //│       Predef.print(tmp3);
@@ -138,17 +138,86 @@ data class Foo(a) with
     baz()
   foo()
 Foo(123)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = a⁰
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo⁰
+//│       sym = member:foo⁰
+//│       dSym = term:Foo⁰/foo¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {member:bar⁰, member:baz⁰}):
+//│         body = Define:
+//│           defn = FunDefn:
+//│             sym = member:bar⁰
+//│             dSym = term:bar¹
+//│             params = Ls of
+//│               ParamList: ‹empty›
+//│             body = Return of Select{sym=term:Foo⁰/a¹}:
+//│               qual = This of class:Foo⁰
+//│               name = Ident of "a"
+//│           rest = Define: \
+//│           defn = FunDefn:
+//│             sym = member:baz⁰
+//│             dSym = term:baz¹
+//│             params = Ls of
+//│               ParamList: ‹empty›
+//│             body = Return of Select{sym=term:Foo⁰/a¹}:
+//│               qual = This of class:Foo⁰
+//│               name = Ident of "a"
+//│           rest = Assign: \
+//│           lhs = ‹no symbol›
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:bar¹}:
+//│               bms = member:bar⁰
+//│               disamb = term:bar¹
+//│             argss = Ls of
+//│               Nil
+//│           rest = Return of Call:
+//│             fun = MemberRef{disamb=term:baz¹}:
+//│               bms = member:baz⁰
+//│               disamb = term:baz¹
+//│             argss = Ls of
+//│               Nil
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a²
+//│       _2 = term:Foo⁰/a¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/a¹
+//│       sym = member:a²
+//│       rhs = SimpleRef of a⁰
+//│     rest = Assign: \
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Foo⁰/foo¹}:
+//│         qual = This of class:Foo⁰
+//│         name = Ident of "foo"
+//│       argss = Ls of
+//│         Nil
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Foo1;
-//│ Foo1 = function Foo(a) {
-//│   return globalThis.Object.freeze(new Foo.class(a));
+//│ Foo1 = function Foo(a2) {
+//│   return globalThis.Object.freeze(new Foo.class(a2));
 //│ };
 //│ (class Foo {
 //│   static {
 //│     Foo1.class = this
 //│   }
-//│   constructor(a) {
-//│     this.a = a;
+//│   constructor(a2) {
+//│     this.a = a2;
 //│     this.foo();
 //│   }
 //│   foo() {
@@ -178,6 +247,60 @@ data class Bar(x) with
     bar()
   foo()()
 Bar(1)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Bar⁰
+//│   sym = member:Bar¹
+//│   ctorSym = S of term:Bar²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Bar⁰
+//│       sym = member:foo²
+//│       dSym = term:Bar⁰/foo³
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {member:bar²}):
+//│         body = Define:
+//│           defn = FunDefn:
+//│             sym = member:bar²
+//│             dSym = term:bar³
+//│             params = Ls of
+//│               ParamList: ‹empty›
+//│             body = Return of Select{sym=term:Bar⁰/x¹}:
+//│               qual = This of class:Bar⁰
+//│               name = Ident of "x"
+//│           rest = Return of Call:
+//│             fun = MemberRef{disamb=term:bar³}:
+//│               bms = member:bar²
+//│               disamb = term:bar³
+//│             argss = Ls of
+//│               Nil
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x²
+//│       _2 = term:Bar⁰/x¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Bar⁰/x¹
+//│       sym = member:x²
+//│       rhs = SimpleRef of x⁰
+//│     rest = Assign: \
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Bar⁰/foo³}:
+//│         qual = This of class:Bar⁰
+//│         name = Ident of "foo"
+//│       argss = Ls of
+//│         Nil
+//│         Nil
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Bar1;
 //│ Bar1 = function Bar(x) {

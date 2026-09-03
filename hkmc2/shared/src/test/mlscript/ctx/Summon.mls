@@ -61,6 +61,28 @@ fun f(using Int) = use[Num]
 
 
 data class Some[T](value: T)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Some⁰
+//│   sym = member:Some¹
+//│   ctorSym = S of term:Some²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = value⁰
+//│         sign = S of Ref{sym=T⁰} of T⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:value¹
+//│       _2 = term:Some⁰/value²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Some⁰/value²
+//│       sym = member:value¹
+//│       rhs = SimpleRef of value⁰
 
 
 :expect 42
@@ -73,7 +95,7 @@ f
 :re
 use{[Some[Int]].value}
 //│ ╔══[COMPILATION ERROR] Unsupported refinement in this position.
-//│ ║  l.74: 	use{[Some[Int]].value}
+//│ ║  l.96: 	use{[Some[Int]].value}
 //│ ╙──      	^^^^^^^^^^^^^^^^^^^^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
@@ -81,8 +103,8 @@ use{[Some[Int]].value}
 :re
 use([Some[Int]].value)
 //│ ╔══[COMPILATION ERROR] Cannot query instance of type ‹unspecified› (type parameter T) for call: 
-//│ ║  l.82: 	use([Some[Int]].value)
-//│ ║        	^^^
+//│ ║  l.104: 	use([Some[Int]].value)
+//│ ║         	^^^
 //│ ╟── Required by contextual parameter declaration: 
 //│ ║  l.133: 	fun use[T](using instance: T) = instance
 //│ ║         	                 ^^^^^^^^^^^
@@ -100,11 +122,11 @@ f[Int]
 :re
 f
 //│ ╔══[COMPILATION ERROR] Cannot query instance of type ‹unspecified› (type parameter T) for call: 
-//│ ║  l.101: 	f
+//│ ║  l.123: 	f
 //│ ║         	^
 //│ ╟── Required by contextual parameter declaration: 
-//│ ║  l.94: 	fun f[T](using T) = use[T]
-//│ ║        	               ^
+//│ ║  l.116: 	fun f[T](using T) = use[T]
+//│ ║         	               ^
 //│ ╙── Illegal query for an unspecified type variable T.
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 

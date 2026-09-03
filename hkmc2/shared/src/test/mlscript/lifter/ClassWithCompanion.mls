@@ -14,7 +14,19 @@ fun foo(x) =
 //│ ╙──     	         ^
 
 foo(10).get
-//│ = [10, 123]
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'get')
+//│     at REPL13:1:575
+//│     at ContextifyScript.runInThisContext (node:vm:138:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:66:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:514:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:477:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:675:18)
 
 :w
 fun foo(x) =
@@ -24,7 +36,7 @@ fun foo(x) =
     val empty = new C
   C.empty
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.23: 	  module C with
+//│ ║  l.35: 	  module C with
 //│ ╙──      	         ^
 
 foo(10).get

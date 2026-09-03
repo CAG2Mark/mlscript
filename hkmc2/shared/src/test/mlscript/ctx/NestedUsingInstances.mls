@@ -12,6 +12,33 @@ let x =
 object Ex with
   using Int = 1
   get
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Ex⁰
+//│   sym = member:Ex¹
+//│   k = Obj
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:instance$Ident(Int)⁰
+//│       _2 = term:instance$Ident(Int)¹
+//│   ctor = Scoped(syms = {member:instance$Ident(Int)⁰}):
+//│     body = Define:
+//│       defn = ValDefn:
+//│         tsym = term:instance$Ident(Int)¹
+//│         sym = member:instance$Ident(Int)⁰
+//│         rhs = Lit of IntLit of 1
+//│       rest = Assign: \
+//│       lhs = ‹no symbol›
+//│       rhs = Call:
+//│         fun = MemberRef{disamb=term:get⁰}:
+//│           bms = member:get¹
+//│           disamb = term:get⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = MemberRef{disamb=term:instance$Ident(Int)¹}:
+//│                 bms = member:instance$Ident(Int)⁰
+//│                 disamb = term:instance$Ident(Int)¹
 
 :rt
 module Ex with
@@ -21,15 +48,15 @@ module Ex with
 //│ Blk:
 //│   stats = Ls of
 //│     ModuleOrObjectDef:
-//│       sym = module:Ex⁰
-//│       bsym = member:Ex¹
+//│       sym = module:Ex²
+//│       bsym = member:Ex³
 //│       kind = Mod
 //│       body = ObjBody of Blk:
 //│         stats = Ls of
 //│           TermDefinition:
 //│             k = Ins
-//│             sym = member:instance$Ident(Int)⁰
-//│             tsym = term:instance$Ident(Int)¹
+//│             sym = member:instance$Ident(Int)²
+//│             tsym = term:instance$Ident(Int)³
 //│             sign = S of Resolved{sym=class:Int⁰}:
 //│               t = Ref{sym=member:Int¹} of member:Int¹
 //│               sym = class:Int⁰
@@ -41,10 +68,35 @@ module Ex with
 //│             sym = term:get⁰
 //│           rhs = Tup of Ls of
 //│             Fld:
-//│               term = Resolved{sym=term:instance$Ident(Int)¹,typ=class:Int⁰}:
-//│                 t = Ref{sym=member:instance$Ident(Int)⁰} of member:instance$Ident(Int)⁰
-//│                 sym = term:instance$Ident(Int)¹
+//│               term = Resolved{sym=term:instance$Ident(Int)³,typ=class:Int⁰}:
+//│                 t = Ref{sym=member:instance$Ident(Int)²} of member:instance$Ident(Int)²
+//│                 sym = term:instance$Ident(Int)³
 //│   res = Lit of UnitLit of false
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Ex²
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:instance$Ident(Int)²
+//│       _2 = term:instance$Ident(Int)³
+//│   ctor = Scoped(syms = {member:instance$Ident(Int)²}):
+//│     body = Define:
+//│       defn = ValDefn:
+//│         tsym = term:instance$Ident(Int)³
+//│         sym = member:instance$Ident(Int)²
+//│         rhs = Lit of IntLit of 1
+//│       rest = Assign: \
+//│       lhs = ‹no symbol›
+//│       rhs = Call:
+//│         fun = MemberRef{disamb=term:get⁰}:
+//│           bms = member:get¹
+//│           disamb = term:get⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = MemberRef{disamb=term:instance$Ident(Int)³}:
+//│                 bms = member:instance$Ident(Int)²
+//│                 disamb = term:instance$Ident(Int)³
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 

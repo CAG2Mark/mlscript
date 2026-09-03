@@ -47,6 +47,11 @@ render(x => x)
 //│ = "fun"
 
 class Foo
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   k = Cls
 
 render(Foo)
 //│ = "class Foo"
@@ -72,6 +77,27 @@ interleave(", ") of 1, 2
 
 
 data class Foo(val xs)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo²
+//│   sym = member:Foo³
+//│   ctorSym = S of term:Foo⁴
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = xs⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:xs¹
+//│       _2 = term:Foo²/xs²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo²/xs²
+//│       sym = member:xs¹
+//│       rhs = SimpleRef of xs⁰
 
 render(Foo([1, 2, 3]))
 //│ = "Foo([1, 2, 3])"
@@ -156,6 +182,11 @@ renderAsStr of new WeakSet
 // =============================================
 
 class Foo
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁵
+//│   sym = member:Foo⁶
+//│   k = Cls
 
 renderAsStr of Foo
 //│ = "class Foo"
@@ -166,6 +197,20 @@ renderAsStr of Foo
 //│ = "class Foo"
 
 class Bar extends Foo
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Bar⁰
+//│   sym = member:Bar¹
+//│   k = Cls
+//│   parentPath = S of MemberRef{disamb=class:Foo⁵}:
+//│     bms = member:Foo⁶
+//│     disamb = class:Foo⁵
+//│   preCtor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:super⁰
+//│       argss = Ls of
+//│         Nil
 
 renderAsStr of Bar
 //│ = "class Bar"
@@ -302,17 +347,66 @@ renderAsStr of
 // =================================
 
 object Singleton
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Singleton⁰
+//│   sym = member:Singleton¹
+//│   k = Obj
 
 renderAsStr of Singleton
 //│ = "Singleton"
 
 class Phantom
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Phantom⁰
+//│   sym = member:Phantom¹
+//│   k = Cls
 
 // Parameter-less classes should be rendered as `class`.
 renderAsStr of Phantom
 //│ = "class Phantom"
 
 data class Point(x: Num, y: Num)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Point⁰
+//│   sym = member:Point¹
+//│   ctorSym = S of term:Point²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         sign = S of Resolved{sym=class:Num⁰}:
+//│           t = Ref{sym=member:Num¹} of member:Num¹
+//│           sym = class:Num⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = y⁰
+//│         sign = S of Resolved{sym=class:Num⁰}:
+//│           t = Ref{sym=member:Num¹} of member:Num¹
+//│           sym = class:Num⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:Point⁰/x²
+//│     Tuple2:
+//│       _1 = member:y¹
+//│       _2 = term:Point⁰/y²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Point⁰/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Point⁰/y²
+//│       sym = member:y¹
+//│       rhs = SimpleRef of y⁰
 
 // While classes with parameters should be rendered as `fun`.
 renderAsStr of Point
@@ -328,6 +422,42 @@ renderAsStr of Point(1, 2)
 //│ = "Point(1, 2)"
 
 class Bar(x: Int, val a: Int)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Bar²
+//│   sym = member:Bar³
+//│   ctorSym = S of term:Bar⁴
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x³
+//│         sign = S of Resolved{sym=class:Int⁰}:
+//│           t = Ref{sym=member:Int¹} of member:Int¹
+//│           sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = a⁰
+//│         sign = S of Resolved{sym=class:Int⁰}:
+//│           t = Ref{sym=member:Int¹} of member:Int¹
+//│           sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Bar²/x⁴
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a¹
+//│       _2 = term:Bar²/a²
+//│   ctor = AssignField:
+//│     lhs = This of class:Bar²
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x³
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Bar²/a²
+//│       sym = member:a¹
+//│       rhs = SimpleRef of a⁰
 
 renderAsStr of Bar(123, 789)
 //│ = "Bar(_, 789)"
@@ -342,6 +472,28 @@ renderAsStr of 1 :: 2 :: 3 :: 4
 class Origin with
   val x = 0
   val y = 0
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Origin⁰
+//│   sym = member:Origin¹
+//│   k = Cls
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁵
+//│       _2 = term:Origin⁰/x⁶
+//│     Tuple2:
+//│       _1 = member:y³
+//│       _2 = term:Origin⁰/y⁴
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Origin⁰/x⁶
+//│       sym = member:x⁵
+//│       rhs = Lit of IntLit of 0
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Origin⁰/y⁴
+//│       sym = member:y³
+//│       rhs = Lit of IntLit of 0
 
 renderAsStr of new Origin
 //│ = "Origin { x: 0, y: 0 }"
@@ -349,6 +501,58 @@ renderAsStr of new Origin
 class Point(x: Num, y: Num) with
   val x = x
   val y = y
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Point³
+//│   sym = member:Point⁴
+//│   ctorSym = S of term:Point⁵
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁷
+//│         sign = S of Resolved{sym=class:Num⁰}:
+//│           t = Ref{sym=member:Num¹} of member:Num¹
+//│           sym = class:Num⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         sym = y⁵
+//│         sign = S of Resolved{sym=class:Num⁰}:
+//│           t = Ref{sym=member:Num¹} of member:Num¹
+//│           sym = class:Num⁰
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Point³/x⁸
+//│     term:Point³/y⁶
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁹
+//│       _2 = term:Point³/x¹⁰
+//│     Tuple2:
+//│       _1 = member:y⁷
+//│       _2 = term:Point³/y⁸
+//│   ctor = AssignField:
+//│     lhs = This of class:Point³
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁷
+//│     rest = AssignField: \
+//│     lhs = This of class:Point³
+//│     nme = Ident of "y"
+//│     rhs = SimpleRef of y⁵
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Point³/x¹⁰
+//│       sym = member:x⁹
+//│       rhs = Select{sym=term:Point³/x¹⁰}:
+//│         qual = This of class:Point³
+//│         name = Ident of "x"
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Point³/y⁸
+//│       sym = member:y⁷
+//│       rhs = Select{sym=term:Point³/y⁸}:
+//│         qual = This of class:Point³
+//│         name = Ident of "y"
 
 // Note that we do not display members defined in the body.
 // Some classes define lots of members, so doing so could be problematic.
@@ -358,6 +562,28 @@ renderAsStr of new Point(0, 1)
 class SelfRef with
   val a = this
   val b = 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:SelfRef⁰
+//│   sym = member:SelfRef¹
+//│   k = Cls
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a³
+//│       _2 = term:SelfRef⁰/a⁴
+//│     Tuple2:
+//│       _1 = member:b⁰
+//│       _2 = term:SelfRef⁰/b¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:SelfRef⁰/a⁴
+//│       sym = member:a³
+//│       rhs = This of class:SelfRef⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:SelfRef⁰/b¹
+//│       sym = member:b⁰
+//│       rhs = Lit of IntLit of 1
 
 renderAsStr of new SelfRef
 //│ = "SelfRef { a: ref'1, b: 1 } as ref'1"
@@ -366,17 +592,187 @@ renderAsStr of
   new Object with
     val x = 0
     fun y = 0
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:$anon, tmp:tmp)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:$anon⁰
+//│       sym = member:$anon¹
+//│       k = Cls
+//│       parentPath = S of Select{sym=class:Object⁰}:
+//│         qual = This of globalThis:globalThis⁰
+//│         name = Ident of "Object"
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:$anon⁰
+//│           sym = member:y⁹
+//│           dSym = term:$anon⁰/y¹⁰
+//│           body = Return of Lit of IntLit of 0
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:x¹¹
+//│           _2 = term:$anon⁰/x¹²
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Nil
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:$anon⁰/x¹²
+//│           sym = member:x¹¹
+//│           rhs = Lit of IntLit of 0
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁰
+//│     rhs = Instantiate:
+//│       mut = false
+//│       cls = MemberRef{disamb=class:$anon⁰}:
+//│         bms = member:$anon¹
+//│         disamb = class:$anon⁰
+//│       argss = Ls of
+//│         Nil
+//│     rest = Return of Call:
+//│       fun = Select{sym=term:Predef⁰/renderAsStr⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "renderAsStr"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp⁰
 //│ = "$anon { x: 0 }"
 
 abstract class Shape
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Shape⁰
+//│   sym = member:Shape¹
+//│   k = Cls
 
 data class Rectangle(x: Num, y: Num, w: Num, h: Num)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Rectangle⁰
+//│   sym = member:Rectangle¹
+//│   ctorSym = S of term:Rectangle²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x¹³
+//│         sign = S of Resolved{sym=class:Num⁰}:
+//│           t = Ref{sym=member:Num¹} of member:Num¹
+//│           sym = class:Num⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = y¹¹
+//│         sign = S of Resolved{sym=class:Num⁰}:
+//│           t = Ref{sym=member:Num¹} of member:Num¹
+//│           sym = class:Num⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = w⁰
+//│         sign = S of Resolved{sym=class:Num⁰}:
+//│           t = Ref{sym=member:Num¹} of member:Num¹
+//│           sym = class:Num⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = h⁰
+//│         sign = S of Resolved{sym=class:Num⁰}:
+//│           t = Ref{sym=member:Num¹} of member:Num¹
+//│           sym = class:Num⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹⁴
+//│       _2 = term:Rectangle⁰/x¹⁵
+//│     Tuple2:
+//│       _1 = member:y¹²
+//│       _2 = term:Rectangle⁰/y¹³
+//│     Tuple2:
+//│       _1 = member:w¹
+//│       _2 = term:Rectangle⁰/w²
+//│     Tuple2:
+//│       _1 = member:h¹
+//│       _2 = term:Rectangle⁰/h²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Rectangle⁰/x¹⁵
+//│       sym = member:x¹⁴
+//│       rhs = SimpleRef of x¹³
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Rectangle⁰/y¹³
+//│       sym = member:y¹²
+//│       rhs = SimpleRef of y¹¹
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Rectangle⁰/w²
+//│       sym = member:w¹
+//│       rhs = SimpleRef of w⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Rectangle⁰/h²
+//│       sym = member:h¹
+//│       rhs = SimpleRef of h⁰
 
 renderAsStr of Shape
 //│ = "class Shape"
 
 renderAsStr of new Shape with
   val x = 0
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:$anon, tmp:tmp)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:$anon²
+//│       sym = member:$anon³
+//│       k = Cls
+//│       parentPath = S of MemberRef{disamb=class:Shape⁰}:
+//│         bms = member:Shape¹
+//│         disamb = class:Shape⁰
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:x¹⁶
+//│           _2 = term:$anon²/x¹⁷
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Nil
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:$anon²/x¹⁷
+//│           sym = member:x¹⁶
+//│           rhs = Lit of IntLit of 0
+//│     rest = Assign: \
+//│     lhs = tmp:tmp¹
+//│     rhs = Instantiate:
+//│       mut = false
+//│       cls = MemberRef{disamb=class:$anon²}:
+//│         bms = member:$anon³
+//│         disamb = class:$anon²
+//│       argss = Ls of
+//│         Nil
+//│     rest = Return of Call:
+//│       fun = Select{sym=term:Predef⁰/renderAsStr⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "renderAsStr"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp¹
 //│ = "$anon { x: 0 }"
 
 renderAsStr of Rectangle
@@ -386,6 +782,64 @@ renderAsStr of Rectangle(0, 0, 5, 5)
 //│ = "Rectangle(0, 0, 5, 5)"
 
 pattern Null = null
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = pattern:Null⁰
+//│   sym = member:Null¹
+//│   k = Pat
+//│   methods = Ls of
+//│     FunDefn:
+//│       sym = member:unapply⁰
+//│       dSym = term:unapply¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = input⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Match:
+//│         scrut = SimpleRef of input⁰
+//│         arms = Ls of
+//│           Tuple2:
+//│             _1 = Lit of UnitLit of true
+//│             _2 = Return of Instantiate:
+//│               mut = false
+//│               cls = Select{sym=class:MatchSuccess⁰}:
+//│                 qual = SimpleRef of tmp:runtime⁰
+//│                 name = Ident of "MatchSuccess"
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of input⁰
+//│                   Arg:
+//│                     value = Lit of UnitLit of true
+//│         dflt = S of Return of Instantiate:
+//│           mut = false
+//│           cls = Select{sym=class:MatchFailure⁰}:
+//│             qual = SimpleRef of tmp:runtime⁰
+//│             name = Ident of "MatchFailure"
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = Lit of UnitLit of true
+//│     FunDefn:
+//│       sym = member:unapplyStringPrefix⁰
+//│       dSym = term:unapplyStringPrefix¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = input¹
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Instantiate:
+//│         mut = false
+//│         cls = Select{sym=class:MatchFailure⁰}:
+//│           qual = SimpleRef of tmp:runtime⁰
+//│           name = Ident of "MatchFailure"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Lit of UnitLit of true
 
 renderAsStr of Null
 //│ = "pattern Null"
@@ -406,6 +860,140 @@ class RangeIterator(val start: Int, val end: Int) extends Iterator with
       result
     else
       (done: true, value: undefined)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:RangeIterator⁰
+//│   sym = member:RangeIterator¹
+//│   ctorSym = S of term:RangeIterator²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = start⁰
+//│         sign = S of Resolved{sym=class:Int⁰}:
+//│           t = Ref{sym=member:Int¹} of member:Int¹
+//│           sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = end⁰
+//│         sign = S of Resolved{sym=class:Int⁰}:
+//│           t = Ref{sym=member:Int¹} of member:Int¹
+//│           sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│   parentPath = S of Select{sym=class:Iterator⁰}:
+//│     qual = This of globalThis:globalThis⁰
+//│     name = Ident of "Iterator"
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:RangeIterator⁰
+//│       sym = member:next⁰
+//│       dSym = term:RangeIterator⁰/next¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {tmp:scrut⁰, result⁰, done⁰, value⁰, done¹, value¹, tmp:tmp²}):
+//│         body = Assign:
+//│           lhs = tmp:scrut⁰
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:<⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:RangeIterator⁰/current⁰}:
+//│                     qual = This of class:RangeIterator⁰
+//│                     name = Ident of "current"
+//│                 Arg:
+//│                   value = Select{sym=term:RangeIterator⁰/end¹}:
+//│                     qual = This of class:RangeIterator⁰
+//│                     name = Ident of "end"
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut⁰
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of BoolLit of true
+//│               _2 = Assign:
+//│                 lhs = done⁰
+//│                 rhs = Lit of BoolLit of false
+//│                 rest = Assign: \
+//│                 lhs = value⁰
+//│                 rhs = Select{sym=term:RangeIterator⁰/current⁰}:
+//│                   qual = This of class:RangeIterator⁰
+//│                   name = Ident of "current"
+//│                 rest = Assign: \
+//│                 lhs = result⁰
+//│                 rhs = Record:
+//│                   mut = false
+//│                   elems = Ls of
+//│                     RcdArg:
+//│                       idx = S of Lit of StrLit of "done"
+//│                       value = SimpleRef of done⁰
+//│                     RcdArg:
+//│                       idx = S of Lit of StrLit of "value"
+//│                       value = SimpleRef of value⁰
+//│                 rest = Assign: \
+//│                 lhs = tmp:tmp²
+//│                 rhs = Call:
+//│                   fun = SimpleRef of builtin:+⁰
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = Select{sym=term:RangeIterator⁰/current⁰}:
+//│                           qual = This of class:RangeIterator⁰
+//│                           name = Ident of "current"
+//│                       Arg:
+//│                         value = Lit of IntLit of 1
+//│                 rest = AssignField: \
+//│                 lhs = This of class:RangeIterator⁰
+//│                 nme = Ident of "current"
+//│                 rhs = SimpleRef of tmp:tmp²
+//│                 rest = Return of SimpleRef of result⁰
+//│           dflt = S of Assign:
+//│             lhs = done¹
+//│             rhs = Lit of BoolLit of true
+//│             rest = Assign: \
+//│             lhs = value¹
+//│             rhs = Lit of UnitLit of false
+//│             rest = Return of Record:
+//│               mut = false
+//│               elems = Ls of
+//│                 RcdArg:
+//│                   idx = S of Lit of StrLit of "done"
+//│                   value = SimpleRef of done¹
+//│                 RcdArg:
+//│                   idx = S of Lit of StrLit of "value"
+//│                   value = SimpleRef of value¹
+//│   privateFields = Ls of
+//│     term:RangeIterator⁰/current⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:start¹
+//│       _2 = term:RangeIterator⁰/start²
+//│     Tuple2:
+//│       _1 = member:end²
+//│       _2 = term:RangeIterator⁰/end¹
+//│   preCtor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:super⁰
+//│       argss = Ls of
+//│         Nil
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:RangeIterator⁰/start²
+//│       sym = member:start¹
+//│       rhs = SimpleRef of start⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:RangeIterator⁰/end¹
+//│       sym = member:end²
+//│       rhs = SimpleRef of end⁰
+//│     rest = AssignField: \
+//│     lhs = This of class:RangeIterator⁰
+//│     nme = Ident of "current"
+//│     rhs = Select{sym=term:RangeIterator⁰/start²}:
+//│       qual = This of class:RangeIterator⁰
+//│       name = Ident of "start"
 
 renderAsStr of RangeIterator(0, 1)
 //│ = "RangeIterator(0, 1)"
@@ -462,6 +1050,11 @@ renderAsStr of globalThis.Iterator
 // ===================
 
 class Test
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Test⁰
+//│   sym = member:Test¹
+//│   k = Cls
 
 Test
 //│ = class Test

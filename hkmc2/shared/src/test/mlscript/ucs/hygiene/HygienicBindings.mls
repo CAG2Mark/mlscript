@@ -9,6 +9,28 @@ fun (~~>) expect(a, b) = if a == b then () else throw Error("unexpected result")
 type Either[A, B] = Left[A] | Right[B]
 data class Left[A](val leftValue: A)
 data class Right[B](val rightValue: B)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Left⁰
+//│   sym = member:Left¹
+//│   ctorSym = S of term:Left²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = leftValue⁰
+//│         sign = S of Ref{sym=A⁰} of A⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:leftValue¹
+//│       _2 = term:Left⁰/leftValue²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Left⁰/leftValue²
+//│       sym = member:leftValue¹
+//│       rhs = SimpleRef of leftValue⁰
 
 fun justTrue(_) = true
 fun justFalse(_) = false

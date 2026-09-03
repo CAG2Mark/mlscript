@@ -13,19 +13,89 @@ private fun f(used, unused) =
     fun get() = used
   new C
 f(1, 2).get()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(tmp:tmp, member:C)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:C⁰
+//│       sym = member:C¹
+//│       k = Cls
+//│       auxParams = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = used⁰
+//│               modulefulness = Modulefulness of N
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:C⁰
+//│           sym = member:get⁰
+//│           dSym = term:C⁰/get¹
+//│           params = Ls of
+//│             ParamList: ‹empty›
+//│           body = Return of Select{sym=term:C⁰/used¹}:
+//│             qual = This of class:C⁰
+//│             name = Ident of "used"
+//│       privateFields = Ls of
+//│         term:C⁰/used¹
+//│       ctor = AssignField:
+//│         lhs = This of class:C⁰
+//│         nme = Ident of "used"
+//│         rhs = SimpleRef of used⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f⁰
+//│       dSym = term:f¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = used²
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = unused⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Instantiate:
+//│         mut = false
+//│         cls = MemberRef{disamb=class:C⁰}:
+//│           bms = member:C¹
+//│           disamb = class:C⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of used²
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁰
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:f¹}:
+//│         bms = member:f⁰
+//│         disamb = term:f¹
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 1
+//│           Arg:
+//│             value = Lit of IntLit of 2
+//│     rest = Return of Call:
+//│       fun = Select:
+//│         qual = SimpleRef of tmp:tmp⁰
+//│         name = Ident of "get"
+//│       argss = Ls of
+//│         Nil
 //│ dead-param-elim > >>> dead-param-elim results >>>
 //│ dead-param-elim > prodfun f#0 @ <root> -> eliminable: {1}
 //│ dead-param-elim > <<< dead-param-elim results <<<
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
 //│ let C, tmp;
 //│ define C as class C⁰ {
-//│   private val used⁰;
+//│   private val used¹;
 //│   constructor(used) {
-//│     set C⁰.this.used⁰ = used;
+//│     set C⁰.this.used¹ = used;
 //│     end
 //│   }
 //│   method get⁰ = fun get¹() {
-//│     return C⁰.this.used⁰
+//│     return C⁰.this.used¹
 //│   }
 //│ };
 //│ @private
@@ -46,5 +116,75 @@ private fun foo(y) =
     fun bar() = set y = 2
   (new M).bar()
 foo(10)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:M)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:M⁰
+//│       sym = member:M¹
+//│       k = Cls
+//│       auxParams = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = y⁰
+//│               modulefulness = Modulefulness of N
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:M⁰
+//│           sym = member:bar⁰
+//│           dSym = term:M⁰/bar¹
+//│           params = Ls of
+//│             ParamList: ‹empty›
+//│           body = AssignField:
+//│             lhs = This of class:M⁰
+//│             nme = Ident of "y"
+//│             rhs = Lit of IntLit of 2
+//│             rest = Return of Select{sym=object:Unit⁰}:
+//│               qual = SimpleRef of tmp:runtime⁰
+//│               name = Ident of "Unit"
+//│       privateFields = Ls of
+//│         term:M⁰/y¹
+//│       ctor = AssignField:
+//│         lhs = This of class:M⁰
+//│         nme = Ident of "y"
+//│         rhs = SimpleRef of y⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:foo⁰
+//│       dSym = term:foo¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = y²
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp¹}):
+//│         body = Assign:
+//│           lhs = tmp:tmp¹
+//│           rhs = Instantiate:
+//│             mut = false
+//│             cls = MemberRef{disamb=class:M⁰}:
+//│               bms = member:M¹
+//│               disamb = class:M⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of y²
+//│           rest = Return of Call:
+//│             fun = Select{sym=term:M⁰/bar¹}:
+//│               qual = SimpleRef of tmp:tmp¹
+//│               name = Ident of "bar"
+//│             argss = Ls of
+//│               Nil
+//│     rest = Return of Call:
+//│       fun = MemberRef{disamb=term:foo¹}:
+//│         bms = member:foo⁰
+//│         disamb = term:foo¹
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 10
 //│ dead-param-elim > >>> dead-param-elim results >>>
 //│ dead-param-elim > <<< dead-param-elim results <<<

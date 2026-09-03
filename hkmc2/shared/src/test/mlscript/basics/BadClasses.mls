@@ -1,46 +1,157 @@
 
 
 class C { print("hi") }
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C⁰
+//│   sym = member:C¹
+//│   k = Cls
+//│   ctor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of StrLit of "hi"
 
 :w
 class C { 1 }
 //│ ╔══[WARNING] Pure expression in statement position
-//│ ║  l.6: 	class C { 1 }
-//│ ╙──     	          ^
+//│ ║  l.23: 	class C { 1 }
+//│ ╙──      	          ^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C²
+//│   sym = member:C³
+//│   k = Cls
 
 class C { }
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C⁴
+//│   sym = member:C⁵
+//│   k = Cls
 
 class C { val a = 1 }
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C⁶
+//│   sym = member:C⁷
+//│   k = Cls
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a⁰
+//│       _2 = term:C⁶/a¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C⁶/a¹
+//│       sym = member:a⁰
+//│       rhs = Lit of IntLit of 1
 
 class C {
   val a = 1
 }
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C⁸
+//│   sym = member:C⁹
+//│   k = Cls
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a²
+//│       _2 = term:C⁸/a³
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C⁸/a³
+//│       sym = member:a²
+//│       rhs = Lit of IntLit of 1
 
 :e
 class C { val a = 1 } with
   val b = 2
 //│ ╔══[COMPILATION ERROR] Multiple type definition bodies are not supported.
-//│ ║  l.21: 	  val b = 2
+//│ ║  l.76: 	  val b = 2
 //│ ╙──      	  ^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C¹⁰
+//│   sym = member:C¹¹
+//│   k = Cls
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a⁴
+//│       _2 = term:C¹⁰/a⁵
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C¹⁰/a⁵
+//│       sym = member:a⁴
+//│       rhs = Lit of IntLit of 1
 
 :e
 class C { val a = 1 } { val b = 2 }
 //│ ╔══[COMPILATION ERROR] Multiple type definition bodies are not supported.
-//│ ║  l.27: 	class C { val a = 1 } { val b = 2 }
+//│ ║  l.96: 	class C { val a = 1 } { val b = 2 }
 //│ ╙──      	                      ^^^^^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C¹²
+//│   sym = member:C¹³
+//│   k = Cls
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a⁶
+//│       _2 = term:C¹²/a⁷
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C¹²/a⁷
+//│       sym = member:a⁶
+//│       rhs = Lit of IntLit of 1
 
 :e
 class C { val a = 1 } { val b = 2 } { val c = 2 }
 //│ ╔══[COMPILATION ERROR] Multiple type definition bodies are not supported.
-//│ ║  l.33: 	class C { val a = 1 } { val b = 2 } { val c = 2 }
-//│ ╙──      	                      ^^^^^^^^^^^^^
+//│ ║  l.116: 	class C { val a = 1 } { val b = 2 } { val c = 2 }
+//│ ╙──       	                      ^^^^^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C¹⁴
+//│   sym = member:C¹⁵
+//│   k = Cls
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a⁸
+//│       _2 = term:C¹⁴/a⁹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C¹⁴/a⁹
+//│       sym = member:a⁸
+//│       rhs = Lit of IntLit of 1
 
 :e
 class C { val a = 1 } { val b = 2 } with
   val c = 2
 //│ ╔══[COMPILATION ERROR] Multiple type definition bodies are not supported.
-//│ ║  l.39: 	class C { val a = 1 } { val b = 2 } with
-//│ ╙──      	                      ^^^^^^^^^^^^^
+//│ ║  l.136: 	class C { val a = 1 } { val b = 2 } with
+//│ ╙──       	                      ^^^^^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C¹⁶
+//│   sym = member:C¹⁷
+//│   k = Cls
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a¹⁰
+//│       _2 = term:C¹⁶/a¹¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C¹⁶/a¹¹
+//│       sym = member:a¹⁰
+//│       rhs = Lit of IntLit of 1
 
 
 // * Note that these work:
@@ -48,21 +159,38 @@ class C { val a = 1 } { val b = 2 } with
 :w
 class Foo with { 1 }
 //│ ╔══[WARNING] Pure expression in statement position
-//│ ║  l.49: 	class Foo with { 1 }
-//│ ╙──      	                 ^
+//│ ║  l.160: 	class Foo with { 1 }
+//│ ╙──       	                 ^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   k = Cls
 
 :w
 class Foo with
   1
 //│ ╔══[WARNING] Pure expression in statement position
-//│ ║  l.56: 	  1
-//│ ╙──      	  ^
+//│ ║  l.172: 	  1
+//│ ╙──       	  ^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo²
+//│   sym = member:Foo³
+//│   k = Cls
 
 
 :e
 class Foo(42)
 //│ ╔══[COMPILATION ERROR] Expected a valid parameter, found integer literal
-//│ ║  l.63: 	class Foo(42)
-//│ ╙──      	          ^^
+//│ ║  l.184: 	class Foo(42)
+//│ ╙──       	          ^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁴
+//│   sym = member:Foo⁵
+//│   ctorSym = S of term:Foo⁶
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
 
 

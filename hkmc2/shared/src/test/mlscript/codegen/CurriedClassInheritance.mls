@@ -2,11 +2,94 @@
 
 
 class Foo(val x)(val y)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│   auxParams = Ls of
+//│     ParamList:
+//│       params = Ls of
+//│         Param:
+//│           flags = (val)
+//│           sym = y⁰
+//│           modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:Foo⁰/x²
+//│     Tuple2:
+//│       _1 = member:y¹
+//│       _2 = term:Foo⁰/y²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/y²
+//│       sym = member:y¹
+//│       rhs = SimpleRef of y⁰
 
 :e
 :sjs
 class Bar(val a)(val d) extends Foo(a)
 //│ ═══[COMPILATION ERROR] Extending a partially applied class is not supported
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Bar⁰
+//│   sym = member:Bar¹
+//│   ctorSym = S of term:Bar²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = a⁰
+//│         modulefulness = Modulefulness of N
+//│   auxParams = Ls of
+//│     ParamList:
+//│       params = Ls of
+//│         Param:
+//│           flags = (val)
+//│           sym = d⁰
+//│           modulefulness = Modulefulness of N
+//│   parentPath = S of MemberRef{disamb=class:Foo⁰}:
+//│     bms = member:Foo¹
+//│     disamb = class:Foo⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a¹
+//│       _2 = term:Bar⁰/a²
+//│     Tuple2:
+//│       _1 = member:d¹
+//│       _2 = term:Bar⁰/d²
+//│   preCtor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:super⁰
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = SimpleRef of a⁰
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Bar⁰/a²
+//│       sym = member:a¹
+//│       rhs = SimpleRef of a⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Bar⁰/d²
+//│       sym = member:d¹
+//│       rhs = SimpleRef of d⁰
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Bar1;
 //│ Bar1 = function Bar(a) {
@@ -82,6 +165,64 @@ c.a
 
 
 class Baz(a)(val d) extends Foo(a)(a + 1)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Baz⁰
+//│   sym = member:Baz¹
+//│   ctorSym = S of term:Baz²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = a³
+//│         modulefulness = Modulefulness of N
+//│   auxParams = Ls of
+//│     ParamList:
+//│       params = Ls of
+//│         Param:
+//│           flags = (val)
+//│           sym = d³
+//│           modulefulness = Modulefulness of N
+//│   parentPath = S of MemberRef{disamb=class:Foo⁰}:
+//│     bms = member:Foo¹
+//│     disamb = class:Foo⁰
+//│   privateFields = Ls of
+//│     term:Baz⁰/a⁴
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:d⁴
+//│       _2 = term:Baz⁰/d⁵
+//│   preCtor = Scoped(syms = {tmp:tmp⁰}):
+//│     body = Assign:
+//│       lhs = tmp:tmp⁰
+//│       rhs = Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of a³
+//│             Arg:
+//│               value = Lit of IntLit of 1
+//│       rest = Assign: \
+//│       lhs = ‹no symbol›
+//│       rhs = Call:
+//│         fun = SimpleRef of builtin:super⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of a³
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of tmp:tmp⁰
+//│   ctor = AssignField:
+//│     lhs = This of class:Baz⁰
+//│     nme = Ident of "a"
+//│     rhs = SimpleRef of a³
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Baz⁰/d⁵
+//│       sym = member:d⁴
+//│       rhs = SimpleRef of d³
 
 let b = Baz(123)(1234)
 //│ b = Baz(_)

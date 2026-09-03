@@ -75,6 +75,94 @@ module A with
   fun sum_impl(n, acc) = if n == 0 then acc else @tailcall sum_impl(n - 1, n + acc)
   fun sum(n) = sum_impl(n, 0)
 A.sum(20000)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:A⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:A⁰
+//│       sym = member:sum_impl⁰
+//│       dSym = term:A⁰/sum_impl¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = n⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = acc⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:scrut⁰, tmp:tmp⁰, tmp:tmp¹}):
+//│         body = Assign:
+//│           lhs = tmp:scrut⁰
+//│           rhs = Call:
+//│             fun = Select{sym=term:Predef⁰/equals⁰}:
+//│               qual = MemberRef{disamb=module:Predef⁰}:
+//│                 bms = member:Predef¹
+//│                 disamb = module:Predef⁰
+//│               name = Ident of "equals"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of n⁰
+//│                 Arg:
+//│                   value = Lit of IntLit of 0
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut⁰
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of BoolLit of true
+//│               _2 = Return of SimpleRef of acc⁰
+//│           dflt = S of Assign:
+//│             lhs = tmp:tmp⁰
+//│             rhs = Call:
+//│               fun = SimpleRef of builtin:-⁰
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of n⁰
+//│                   Arg:
+//│                     value = Lit of IntLit of 1
+//│             rest = Assign: \
+//│             lhs = tmp:tmp¹
+//│             rhs = Call:
+//│               fun = SimpleRef of builtin:+⁰
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of n⁰
+//│                   Arg:
+//│                     value = SimpleRef of acc⁰
+//│             rest = Return of Call:
+//│               fun = Select{sym=term:A⁰/sum_impl¹}:
+//│                 qual = This of module:A⁰
+//│                 name = Ident of "sum_impl"
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of tmp:tmp⁰
+//│                   Arg:
+//│                     value = SimpleRef of tmp:tmp¹
+//│     FunDefn:
+//│       owner = S of module:A⁰
+//│       sym = member:sum⁰
+//│       dSym = term:A⁰/sum¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = n¹
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = Select{sym=term:A⁰/sum_impl¹}:
+//│           qual = This of module:A⁰
+//│           name = Ident of "sum_impl"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of n¹
+//│             Arg:
+//│               value = Lit of IntLit of 0
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let A1;
 //│ (class A {
@@ -213,7 +301,7 @@ fun f(x) =
     @tailcall f(x)
   @tailcall g()
 //│ ╔══[COMPILATION ERROR] This call is not in tail position.
-//│ ║  l.212: 	    @tailcall f(x)
+//│ ║  l.300: 	    @tailcall f(x)
 //│ ╙──       	              ^^^^
 
 :lift
@@ -340,9 +428,64 @@ module M with
     f(x)
     print(x)
     0
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M⁰
+//│       sym = member:f⁸
+//│       dSym = term:M⁰/f⁹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = Select{sym=term:M⁰/g⁶}:
+//│           qual = This of module:M⁰
+//│           name = Ident of "g"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x⁰
+//│     FunDefn:
+//│       owner = S of module:M⁰
+//│       sym = member:g⁷
+//│       dSym = term:M⁰/g⁶
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x¹
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = Select{sym=term:M⁰/f⁹}:
+//│             qual = This of module:M⁰
+//│             name = Ident of "f"
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of x¹
+//│         rest = Assign: \
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = Select{sym=term:Predef⁰/print⁰}:
+//│             qual = MemberRef{disamb=module:Predef⁰}:
+//│               bms = member:Predef¹
+//│               disamb = module:Predef⁰
+//│             name = Ident of "print"
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of x¹
+//│         rest = Return of Lit of IntLit of 0
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
-//│ define M⁰ as class M¹
-//│ module M² {
+//│ define M¹ as class M²
+//│ module M⁰ {
 //│   method f_g² = fun f_g³(id, param0) {
 //│     loop loopLabel:
 //│       match id
@@ -350,7 +493,7 @@ module M with
 //│           set id = 1;
 //│           continue loopLabel
 //│         1 =>
-//│           do M².this.f_g³(0, param0);
+//│           do M⁰.this.f_g³(0, param0);
 //│           do Predef⁰.print⁰(param0);
 //│           return 0
 //│         else
@@ -359,9 +502,9 @@ module M with
 //│     end
 //│   }
 //│   method f⁸ = fun f⁹(x) {
-//│     return M².this.f_g³(0, x)
+//│     return M⁰.this.f_g³(0, x)
 //│   }
-//│   method g⁶ = fun g⁷(x) { return M².this.f_g³(1, x) }
+//│   method g⁷ = fun g⁶(x) { return M⁰.this.f_g³(1, x) }
 //│ };
 //│ end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
@@ -404,11 +547,101 @@ module A with
     fun g(x) = if x < 0 then 0 else @tailcall f(x)
     @tailcall g(x - 1)
 A.f(10000)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:g)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:g⁸
+//│       dSym = term:g⁹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = A¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = x²
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:scrut¹}):
+//│         body = Assign:
+//│           lhs = tmp:scrut¹
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:<⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x²
+//│                 Arg:
+//│                   value = Lit of IntLit of 0
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut¹
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of BoolLit of true
+//│               _2 = Return of Lit of IntLit of 0
+//│           dflt = S of Return of Call:
+//│             fun = Select{sym=term:A²/f¹²}:
+//│               qual = SimpleRef of A¹
+//│               name = Ident of "f"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x²
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:A³
+//│       sym = member:A⁴
+//│       k = Cls
+//│       companion = S of ClsLikeBody:
+//│         isym = module:A²
+//│         methods = Ls of
+//│           FunDefn:
+//│             owner = S of module:A²
+//│             sym = member:f¹³
+//│             dSym = term:A²/f¹²
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = x³
+//│                     modulefulness = Modulefulness of N
+//│             body = Scoped(syms = {tmp:tmp²}):
+//│               body = Assign:
+//│                 lhs = tmp:tmp²
+//│                 rhs = Call:
+//│                   fun = SimpleRef of builtin:-⁰
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of x³
+//│                       Arg:
+//│                         value = Lit of IntLit of 1
+//│                 rest = Return of Call:
+//│                   fun = MemberRef{disamb=term:g⁹}:
+//│                     bms = member:g⁸
+//│                     disamb = term:g⁹
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = This of module:A²
+//│                       Arg:
+//│                         value = SimpleRef of tmp:tmp²
+//│     rest = Return of Call:
+//│       fun = Select{sym=term:A²/f¹²}:
+//│         qual = MemberRef{disamb=module:A²}:
+//│           bms = member:A⁴
+//│           disamb = module:A²
+//│         name = Ident of "f"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 10000
 //│ ╔══[COMPILATION ERROR] This tail call exits the current scope and is not optimized.
-//│ ║  l.404: 	    fun g(x) = if x < 0 then 0 else @tailcall f(x)
+//│ ║  l.547: 	    fun g(x) = if x < 0 then 0 else @tailcall f(x)
 //│ ╙──       	                                              ^^^^
 //│ ╔══[COMPILATION ERROR] This tail call exits the current scope and is not optimized.
-//│ ║  l.405: 	    @tailcall g(x - 1)
+//│ ║  l.548: 	    @tailcall g(x - 1)
 //│ ╙──       	              ^^^^^^^^
 //│ = 0
 
@@ -420,12 +653,137 @@ module A with
   fun g =
     @tailcall f
     f
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:A⁵
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:A⁵
+//│       sym = member:f¹⁴
+//│       dSym = term:A⁵/f¹⁵
+//│       body = Return of Select{sym=term:A⁵/g¹⁰}:
+//│         qual = This of module:A⁵
+//│         name = Ident of "g"
+//│     FunDefn:
+//│       owner = S of module:A⁵
+//│       sym = member:g¹¹
+//│       dSym = term:A⁵/g¹⁰
+//│       body = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Select{sym=term:A⁵/f¹⁵}:
+//│           qual = This of module:A⁵
+//│           name = Ident of "f"
+//│         rest = Return of Select{sym=term:A⁵/f¹⁵}:
+//│           qual = This of module:A⁵
+//│           name = Ident of "f"
 
 :expect 0
 module A with
   fun f(x) = if x == 0 then 0 else @tailcall g(x - 1)
   fun g(x) = if x == 0 then 1 else @tailcall f(x - 1)
 A.f(10)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:A⁶
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:A⁶
+//│       sym = member:f¹⁶
+//│       dSym = term:A⁶/f¹⁷
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁴
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:scrut², tmp:tmp³}):
+//│         body = Assign:
+//│           lhs = tmp:scrut²
+//│           rhs = Call:
+//│             fun = Select{sym=term:Predef⁰/equals⁰}:
+//│               qual = MemberRef{disamb=module:Predef⁰}:
+//│                 bms = member:Predef¹
+//│                 disamb = module:Predef⁰
+//│               name = Ident of "equals"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x⁴
+//│                 Arg:
+//│                   value = Lit of IntLit of 0
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut²
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of BoolLit of true
+//│               _2 = Return of Lit of IntLit of 0
+//│           dflt = S of Assign:
+//│             lhs = tmp:tmp³
+//│             rhs = Call:
+//│               fun = SimpleRef of builtin:-⁰
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of x⁴
+//│                   Arg:
+//│                     value = Lit of IntLit of 1
+//│             rest = Return of Call:
+//│               fun = Select{sym=term:A⁶/g¹²}:
+//│                 qual = This of module:A⁶
+//│                 name = Ident of "g"
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of tmp:tmp³
+//│     FunDefn:
+//│       owner = S of module:A⁶
+//│       sym = member:g¹³
+//│       dSym = term:A⁶/g¹²
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁵
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:scrut³, tmp:tmp⁴}):
+//│         body = Assign:
+//│           lhs = tmp:scrut³
+//│           rhs = Call:
+//│             fun = Select{sym=term:Predef⁰/equals⁰}:
+//│               qual = MemberRef{disamb=module:Predef⁰}:
+//│                 bms = member:Predef¹
+//│                 disamb = module:Predef⁰
+//│               name = Ident of "equals"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x⁵
+//│                 Arg:
+//│                   value = Lit of IntLit of 0
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut³
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of BoolLit of true
+//│               _2 = Return of Lit of IntLit of 1
+//│           dflt = S of Assign:
+//│             lhs = tmp:tmp⁴
+//│             rhs = Call:
+//│               fun = SimpleRef of builtin:-⁰
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of x⁵
+//│                   Arg:
+//│                     value = Lit of IntLit of 1
+//│             rest = Return of Call:
+//│               fun = Select{sym=term:A⁶/f¹⁷}:
+//│                 qual = This of module:A⁶
+//│                 name = Ident of "f"
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of tmp:tmp⁴
 //│ = 0
 
 :todo
@@ -434,13 +792,137 @@ class A with
   @tailrec fun f(x) = if x == 0 then 0 else @tailcall g(x - 1)
   fun g(x) = if x == 0 then 1 else @tailcall f(x - 1)
 (new A).f(10)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:tmp)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:A⁷
+//│       sym = member:A⁸
+//│       k = Cls
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:A⁷
+//│           sym = member:f¹⁸
+//│           dSym = term:A⁷/f¹⁹
+//│           params = Ls of
+//│             ParamList:
+//│               params = Ls of
+//│                 Param:
+//│                   sym = x⁶
+//│                   modulefulness = Modulefulness of N
+//│           body = Scoped(syms = {tmp:scrut⁴, tmp:tmp⁵}):
+//│             body = Assign:
+//│               lhs = tmp:scrut⁴
+//│               rhs = Call:
+//│                 fun = Select{sym=term:Predef⁰/equals⁰}:
+//│                   qual = MemberRef{disamb=module:Predef⁰}:
+//│                     bms = member:Predef¹
+//│                     disamb = module:Predef⁰
+//│                   name = Ident of "equals"
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = SimpleRef of x⁶
+//│                     Arg:
+//│                       value = Lit of IntLit of 0
+//│               rest = Match: \
+//│               scrut = SimpleRef of tmp:scrut⁴
+//│               arms = Ls of
+//│                 Tuple2:
+//│                   _1 = Lit of BoolLit of true
+//│                   _2 = Return of Lit of IntLit of 0
+//│               dflt = S of Assign:
+//│                 lhs = tmp:tmp⁵
+//│                 rhs = Call:
+//│                   fun = SimpleRef of builtin:-⁰
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of x⁶
+//│                       Arg:
+//│                         value = Lit of IntLit of 1
+//│                 rest = Return of Call:
+//│                   fun = Select{sym=term:A⁷/g¹⁴}:
+//│                     qual = This of class:A⁷
+//│                     name = Ident of "g"
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of tmp:tmp⁵
+//│         FunDefn:
+//│           owner = S of class:A⁷
+//│           sym = member:g¹⁵
+//│           dSym = term:A⁷/g¹⁴
+//│           params = Ls of
+//│             ParamList:
+//│               params = Ls of
+//│                 Param:
+//│                   sym = x⁷
+//│                   modulefulness = Modulefulness of N
+//│           body = Scoped(syms = {tmp:scrut⁵, tmp:tmp⁶}):
+//│             body = Assign:
+//│               lhs = tmp:scrut⁵
+//│               rhs = Call:
+//│                 fun = Select{sym=term:Predef⁰/equals⁰}:
+//│                   qual = MemberRef{disamb=module:Predef⁰}:
+//│                     bms = member:Predef¹
+//│                     disamb = module:Predef⁰
+//│                   name = Ident of "equals"
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = SimpleRef of x⁷
+//│                     Arg:
+//│                       value = Lit of IntLit of 0
+//│               rest = Match: \
+//│               scrut = SimpleRef of tmp:scrut⁵
+//│               arms = Ls of
+//│                 Tuple2:
+//│                   _1 = Lit of BoolLit of true
+//│                   _2 = Return of Lit of IntLit of 1
+//│               dflt = S of Assign:
+//│                 lhs = tmp:tmp⁶
+//│                 rhs = Call:
+//│                   fun = SimpleRef of builtin:-⁰
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of x⁷
+//│                       Arg:
+//│                         value = Lit of IntLit of 1
+//│                 rest = Return of Call:
+//│                   fun = Select{sym=term:A⁷/f¹⁹}:
+//│                     qual = This of class:A⁷
+//│                     name = Ident of "f"
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of tmp:tmp⁶
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁷
+//│     rhs = Instantiate:
+//│       mut = false
+//│       cls = MemberRef{disamb=class:A⁷}:
+//│         bms = member:A⁸
+//│         disamb = class:A⁷
+//│       argss = Ls of
+//│         Nil
+//│     rest = Return of Call:
+//│       fun = Select{sym=term:A⁷/f¹⁹}:
+//│         qual = SimpleRef of tmp:tmp⁷
+//│         name = Ident of "f"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 10
 //│ ╔══[COMPILATION ERROR] Calls from class methods cannot yet be marked @tailcall.
-//│ ║  l.434: 	  @tailrec fun f(x) = if x == 0 then 0 else @tailcall g(x - 1)
+//│ ║  l.792: 	  @tailrec fun f(x) = if x == 0 then 0 else @tailcall g(x - 1)
 //│ ╙──       	                                                      ^^^^^^^^
 //│ ╔══[COMPILATION ERROR] Class methods may not yet be marked @tailrec.
-//│ ║  l.434: 	  @tailrec fun f(x) = if x == 0 then 0 else @tailcall g(x - 1)
+//│ ║  l.792: 	  @tailrec fun f(x) = if x == 0 then 0 else @tailcall g(x - 1)
 //│ ╙──       	               ^
 //│ ╔══[COMPILATION ERROR] Calls from class methods cannot yet be marked @tailcall.
-//│ ║  l.435: 	  fun g(x) = if x == 0 then 1 else @tailcall f(x - 1)
+//│ ║  l.793: 	  fun g(x) = if x == 0 then 1 else @tailcall f(x - 1)
 //│ ╙──       	                                             ^^^^^^^^
 //│ = 0

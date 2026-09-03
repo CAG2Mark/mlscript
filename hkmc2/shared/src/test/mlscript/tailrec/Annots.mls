@@ -11,12 +11,17 @@ fun f
 @tailrec
 class A
 //│ ═══[WARNING] This annotation has no effect.
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A⁰
+//│   sym = member:A¹
+//│   k = Cls
 
 :w
 @tailrec 2 + 2
 //│ ╔══[WARNING] This annotation has no effect.
 //│ ╟── This annotation is not supported on application terms.
-//│ ║  l.16: 	@tailrec 2 + 2
+//│ ║  l.21: 	@tailrec 2 + 2
 //│ ╙──      	         ^^^^^
 //│ = 4
 
@@ -38,7 +43,7 @@ fun test =
   @tailcall f
 //│ ╔══[WARNING] This annotation has no effect.
 //│ ╟── This annotation is not supported on reference terms.
-//│ ║  l.38: 	  @tailcall f
+//│ ║  l.43: 	  @tailcall f
 //│ ╙──      	            ^
 //│ f = 0
 
@@ -47,8 +52,38 @@ class A with
   @tailrec
   fun f() = g()
   fun g() = f()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A²
+//│   sym = member:A³
+//│   k = Cls
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:A²
+//│       sym = member:f⁰
+//│       dSym = term:A²/f¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = Select{sym=term:A²/g⁰}:
+//│           qual = This of class:A²
+//│           name = Ident of "g"
+//│         argss = Ls of
+//│           Nil
+//│     FunDefn:
+//│       owner = S of class:A²
+//│       sym = member:g¹
+//│       dSym = term:A²/g⁰
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = Select{sym=term:A²/f¹}:
+//│           qual = This of class:A²
+//│           name = Ident of "f"
+//│         argss = Ls of
+//│           Nil
 //│ ╔══[COMPILATION ERROR] Class methods may not yet be marked @tailrec.
-//│ ║  l.48: 	  fun f() = g()
+//│ ║  l.53: 	  fun f() = g()
 //│ ╙──      	      ^
 
 :w
@@ -56,15 +91,35 @@ class A with
   @tailcall
   fun f = 2
 //│ ═══[WARNING] This annotation has no effect.
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A⁴
+//│   sym = member:A⁵
+//│   k = Cls
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:A⁴
+//│       sym = member:f²
+//│       dSym = term:A⁴/f³
+//│       body = Return of Lit of IntLit of 2
 
 :todo
 class A
 module A with
   @tailrec
   fun f = 2
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:A⁶
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:A⁶
+//│       sym = member:f⁴
+//│       dSym = term:A⁶/f⁵
+//│       body = Return of Lit of IntLit of 2
 //│ ╔══[WARNING] This function is marked @tailrec but has no direct self-recursion.
-//│ ║  l.64: 	  fun f = 2
-//│ ╙──      	      ^
+//│ ║  l.110: 	  fun f = 2
+//│ ╙──       	      ^
 
 :w
 class A
@@ -72,6 +127,15 @@ module A with
   @tailcall
   fun f = 2
 //│ ═══[WARNING] This annotation has no effect.
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:A⁷
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:A⁷
+//│       sym = member:f⁶
+//│       dSym = term:A⁷/f⁷
+//│       body = Return of Lit of IntLit of 2
 
 
 :w
@@ -87,5 +151,5 @@ fun test =
   @tailcall 1 + 2
 //│ ╔══[WARNING] This annotation has no effect.
 //│ ╟── The @tailcall annotation has no effect on calls to built-in symbols.
-//│ ║  l.87: 	  @tailcall 1 + 2
-//│ ╙──      	            ^^^^^
+//│ ║  l.151: 	  @tailcall 1 + 2
+//│ ╙──       	            ^^^^^

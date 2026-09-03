@@ -3,6 +3,28 @@
 
 module Foo with
   data class C(x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of module:Foo⁰
+//│   isym = class:C⁰
+//│   sym = member:C¹
+//│   ctorSym = S of term:Foo⁰/C²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:C⁰/x²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C⁰/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
 
 Foo.C(123).x
 //│ = 123
@@ -19,7 +41,7 @@ c(123)
 :e
 new c(123)
 //│ ╔══[COMPILATION ERROR] Expected a statically known class; found reference.
-//│ ║  l.20: 	new c(123)
+//│ ║  l.42: 	new c(123)
 //│ ║        	    ^
 //│ ╙── The 'new' keyword requires a statically known class; use the 'new!' operator for dynamic instantiation.
 //│ = C(123)
@@ -30,6 +52,66 @@ new! c(123)
 object D extends Foo.C(123) with
   print(this!x)
   print(id(this).x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:D⁰
+//│   sym = member:D¹
+//│   k = Obj
+//│   parentPath = S of Select{sym=class:C⁰}:
+//│     qual = MemberRef{disamb=module:Foo⁰}:
+//│       bms = member:Foo¹
+//│       disamb = module:Foo⁰
+//│     name = Ident of "C"
+//│   preCtor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:super⁰
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 123
+//│   ctor = Scoped(syms = {tmp:tmp⁰}):
+//│     body = Assign:
+//│       lhs = ‹no symbol›
+//│       rhs = Call:
+//│         fun = Select{sym=term:Predef⁰/print⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "print"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = DynSelect:
+//│                 qual = This of object:D⁰
+//│                 fld = Lit of StrLit of "x"
+//│                 arrayIdx = false
+//│       rest = Assign: \
+//│       lhs = tmp:tmp⁰
+//│       rhs = Call:
+//│         fun = Select{sym=term:Predef⁰/id⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "id"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = This of object:D⁰
+//│       rest = Assign: \
+//│       lhs = ‹no symbol›
+//│       rhs = Call:
+//│         fun = Select{sym=term:Predef⁰/print⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "print"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select:
+//│                 qual = SimpleRef of tmp:tmp⁰
+//│                 name = Ident of "x"
 //│ > 123
 //│ > 123
 
@@ -37,8 +119,40 @@ object D extends Foo.C(123) with
 object D extends Foo.C(123) with
   print(this.x)
 //│ ╔══[COMPILATION ERROR] Object 'D' does not contain member 'x'
-//│ ║  l.38: 	  print(this.x)
-//│ ╙──      	        ^^^^^^
+//│ ║  l.120: 	  print(this.x)
+//│ ╙──       	        ^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:D²
+//│   sym = member:D³
+//│   k = Obj
+//│   parentPath = S of Select{sym=class:C⁰}:
+//│     qual = MemberRef{disamb=module:Foo⁰}:
+//│       bms = member:Foo¹
+//│       disamb = module:Foo⁰
+//│     name = Ident of "C"
+//│   preCtor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:super⁰
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 123
+//│   ctor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Select:
+//│               qual = This of object:D²
+//│               name = Ident of "x"
 //│ > 123
 
 

@@ -5,6 +5,11 @@
 
 
 class Foo
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   k = Cls
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Foo1;
 //│ (class Foo {
@@ -59,6 +64,23 @@ Foo()
 
 data class Foo with { print("hi") }
 print("ok")
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo²
+//│   sym = member:Foo³
+//│   k = Cls
+//│   ctor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of StrLit of "hi"
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Foo3;
 //│ (class Foo2 {
@@ -120,7 +142,7 @@ let t = test()
 :e
 new t
 //│ ╔══[COMPILATION ERROR] Expected a statically known class; found reference.
-//│ ║  l.121: 	new t
+//│ ║  l.143: 	new t
 //│ ║         	    ^
 //│ ╙── The 'new' keyword requires a statically known class; use the 'new!' operator for dynamic instantiation.
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
@@ -139,7 +161,7 @@ new! t
 :e
 new t()
 //│ ╔══[COMPILATION ERROR] Expected a statically known class; found reference.
-//│ ║  l.140: 	new t()
+//│ ║  l.162: 	new t()
 //│ ║         	    ^
 //│ ╙── The 'new' keyword requires a statically known class; use the 'new!' operator for dynamic instantiation.
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
@@ -160,6 +182,54 @@ class Foo with
   val x = 1
   let y = x + 1
   fun z() = y + x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁴
+//│   sym = member:Foo⁵
+//│   k = Cls
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo⁴
+//│       sym = member:z⁰
+//│       dSym = term:Foo⁴/z¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:Foo⁴/y⁰}:
+//│                 qual = This of class:Foo⁴
+//│                 name = Ident of "y"
+//│             Arg:
+//│               value = Select{sym=term:Foo⁴/x⁰}:
+//│                 qual = This of class:Foo⁴
+//│                 name = Ident of "x"
+//│   privateFields = Ls of
+//│     term:Foo⁴/y⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:Foo⁴/x⁰
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁴/x⁰
+//│       sym = member:x¹
+//│       rhs = Lit of IntLit of 1
+//│     rest = AssignField: \
+//│     lhs = This of class:Foo⁴
+//│     nme = Ident of "y"
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:+⁰
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Select{sym=term:Foo⁴/x⁰}:
+//│               qual = This of class:Foo⁴
+//│               name = Ident of "x"
+//│           Arg:
+//│             value = Lit of IntLit of 1
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Foo8;
 //│ (class Foo7 {
@@ -188,6 +258,66 @@ class Foo with
   fun z1() = 5
   fun z2() = 6
   print("hello")
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁶
+//│   sym = member:Foo⁷
+//│   k = Cls
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo⁶
+//│       sym = member:z1⁰
+//│       dSym = term:Foo⁶/z1¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of IntLit of 5
+//│     FunDefn:
+//│       owner = S of class:Foo⁶
+//│       sym = member:z2⁰
+//│       dSym = term:Foo⁶/z2¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of IntLit of 6
+//│   privateFields = Ls of
+//│     term:Foo⁶/y1⁰
+//│     term:Foo⁶/y2⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x1⁰
+//│       _2 = term:Foo⁶/x1¹
+//│     Tuple2:
+//│       _1 = member:x2⁰
+//│       _2 = term:Foo⁶/x2¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁶/x1¹
+//│       sym = member:x1⁰
+//│       rhs = Lit of IntLit of 1
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁶/x2¹
+//│       sym = member:x2⁰
+//│       rhs = Lit of IntLit of 2
+//│     rest = AssignField: \
+//│     lhs = This of class:Foo⁶
+//│     nme = Ident of "y1"
+//│     rhs = Lit of IntLit of 3
+//│     rest = AssignField: \
+//│     lhs = This of class:Foo⁶
+//│     nme = Ident of "y2"
+//│     rhs = Lit of IntLit of 4
+//│     rest = Assign: \
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of StrLit of "hello"
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Foo10;
 //│ (class Foo9 {
@@ -215,6 +345,70 @@ class Foo with
   val x = 1
   fun foo(y) = x + y
   fun bar(z) = foo(z) + 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁸
+//│   sym = member:Foo⁹
+//│   k = Cls
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo⁸
+//│       sym = member:foo⁰
+//│       dSym = term:Foo⁸/foo¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = y¹
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:Foo⁸/x²}:
+//│                 qual = This of class:Foo⁸
+//│                 name = Ident of "x"
+//│             Arg:
+//│               value = SimpleRef of y¹
+//│     FunDefn:
+//│       owner = S of class:Foo⁸
+//│       sym = member:bar⁰
+//│       dSym = term:Foo⁸/bar¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = z²
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp⁰}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁰
+//│           rhs = Call:
+//│             fun = Select{sym=term:Foo⁸/foo¹}:
+//│               qual = This of class:Foo⁸
+//│               name = Ident of "foo"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of z²
+//│           rest = Return of Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp⁰
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x³
+//│       _2 = term:Foo⁸/x²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁸/x²
+//│       sym = member:x³
+//│       rhs = Lit of IntLit of 1
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Foo12;
 //│ (class Foo11 {
@@ -263,11 +457,33 @@ class Foo with
   val x = 2
 //│ ╔══[COMPILATION ERROR] Multiple definitions of symbol 'x'
 //│ ╟── defined here
-//│ ║  l.262: 	  val x = 1
+//│ ║  l.456: 	  val x = 1
 //│ ║         	  ^^^^^^^^^
 //│ ╟── defined here
-//│ ║  l.263: 	  val x = 2
+//│ ║  l.457: 	  val x = 2
 //│ ╙──       	  ^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo¹⁰
+//│   sym = member:Foo¹¹
+//│   k = Cls
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁴
+//│       _2 = term:Foo¹⁰/x⁵
+//│     Tuple2:
+//│       _1 = member:x⁴
+//│       _2 = term:Foo¹⁰/x⁶
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo¹⁰/x⁵
+//│       sym = member:x⁴
+//│       rhs = Lit of IntLit of 1
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Foo¹⁰/x⁶
+//│       sym = member:x⁴
+//│       rhs = Lit of IntLit of 2
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Foo14;
 //│ (class Foo13 {
@@ -288,11 +504,31 @@ class Foo with
   val x = 1
   let x = 2
 //│ ╔══[COMPILATION ERROR] Name 'x' is already used
-//│ ║  l.289: 	  let x = 2
+//│ ║  l.505: 	  let x = 2
 //│ ║         	      ^^^^^
 //│ ╟── by a member declared in the same block
-//│ ║  l.288: 	  val x = 1
+//│ ║  l.504: 	  val x = 1
 //│ ╙──       	  ^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo¹²
+//│   sym = member:Foo¹³
+//│   k = Cls
+//│   privateFields = Ls of
+//│     term:Foo¹²/x⁷
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁸
+//│       _2 = term:Foo¹²/x⁹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo¹²/x⁹
+//│       sym = member:x⁸
+//│       rhs = Lit of IntLit of 1
+//│     rest = AssignField: \
+//│     lhs = This of class:Foo¹²
+//│     nme = Ident of "x"
+//│     rhs = Lit of IntLit of 2
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Foo16;
 //│ (class Foo15 {
@@ -317,8 +553,13 @@ class Foo with
 :e
 class Foo with val x = 1
 //│ ╔══[COMPILATION ERROR] Illegal body of class definition (should be a block; found term definition).
-//│ ║  l.318: 	class Foo with val x = 1
+//│ ║  l.554: 	class Foo with val x = 1
 //│ ╙──       	               ^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo¹⁴
+//│   sym = member:Foo¹⁵
+//│   k = Cls
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Foo18;
 //│ (class Foo17 {

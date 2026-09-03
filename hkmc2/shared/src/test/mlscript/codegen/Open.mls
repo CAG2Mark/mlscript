@@ -5,6 +5,34 @@ module Foo with
   val x = 1
   val y = 2
   val z = 3
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Foo⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁰
+//│       _2 = term:Foo⁰/x¹
+//│     Tuple2:
+//│       _1 = member:y⁰
+//│       _2 = term:Foo⁰/y¹
+//│     Tuple2:
+//│       _1 = member:z⁰
+//│       _2 = term:Foo⁰/z¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/x¹
+//│       sym = member:x⁰
+//│       rhs = Lit of IntLit of 1
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/y¹
+//│       sym = member:y⁰
+//│       rhs = Lit of IntLit of 2
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/z¹
+//│       sym = member:z⁰
+//│       rhs = Lit of IntLit of 3
 
 :sjs
 open Foo { x }
@@ -20,14 +48,14 @@ x + y
 :e
 z
 //│ ╔══[COMPILATION ERROR] Name not found: z
-//│ ║  l.21: 	z
+//│ ║  l.49: 	z
 //│ ╙──      	^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
 :e
 open Foo { a }
 //│ ╔══[COMPILATION ERROR] Module 'Foo' does not contain member 'a'
-//│ ║  l.28: 	open Foo { a }
+//│ ║  l.56: 	open Foo { a }
 //│ ╙──      	           ^
 
 
@@ -41,6 +69,26 @@ module Bar with
     val b = 5
   open Baz { a }
   fun f() = [a, b, y]
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Baz⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a⁰
+//│       _2 = term:Baz⁰/a¹
+//│     Tuple2:
+//│       _1 = member:b⁰
+//│       _2 = term:Baz⁰/b¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Baz⁰/a¹
+//│       sym = member:a⁰
+//│       rhs = Lit of IntLit of 4
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Baz⁰/b¹
+//│       sym = member:b⁰
+//│       rhs = Lit of IntLit of 5
 
 
 val str = "oops"

@@ -61,6 +61,13 @@ x.r
 //│ ╔══[COMPILATION ERROR] Spread parameters are not supported in class parameters.
 //│ ║  l.58: 	data class A(...r)
 //│ ╙──      	                ^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A⁰
+//│   sym = member:A¹
+//│   ctorSym = S of term:A²
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
 //│ ═══[RUNTIME ERROR] Error: Access to required field 'r' yielded 'undefined'
 //│ ═══[RUNTIME ERROR] Expected: '[1, 2, 3]', got: 'undefined'
 //│ x = A()
@@ -71,13 +78,47 @@ data class A(...r) with
   fun getR = r
 new A(1, 2, 3).getR
 //│ ╔══[COMPILATION ERROR] Spread parameters are not supported in class parameters.
-//│ ║  l.70: 	data class A(...r) with
+//│ ║  l.77: 	data class A(...r) with
 //│ ╙──      	                ^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:tmp)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:A³
+//│       sym = member:A⁴
+//│       ctorSym = S of term:A⁵
+//│       k = Cls
+//│       paramsOpt = S of ParamList: ‹empty›
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:A³
+//│           sym = member:getR⁰
+//│           dSym = term:A³/getR¹
+//│           body = Return of SimpleRef of r⁰
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁰
+//│     rhs = Instantiate:
+//│       mut = false
+//│       cls = MemberRef{disamb=class:A³}:
+//│         bms = member:A⁴
+//│         disamb = class:A³
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 1
+//│           Arg:
+//│             value = Lit of IntLit of 2
+//│           Arg:
+//│             value = Lit of IntLit of 3
+//│     rest = Return of Select{sym=term:A³/getR¹}:
+//│       qual = SimpleRef of tmp:tmp⁰
+//│       name = Ident of "getR"
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'r'
-//│ ║  l.71: 	  fun getR = r
+//│ ║  l.78: 	  fun getR = r
 //│ ║        	             ^
 //│ ╟── which references the symbol introduced here
-//│ ║  l.70: 	data class A(...r) with
+//│ ║  l.77: 	data class A(...r) with
 //│ ╙──      	                ^
 //│ ═══[RUNTIME ERROR] ReferenceError: r is not defined
 //│ ═══[RUNTIME ERROR] Expected: '[1, 2, 3]', got: 'undefined'

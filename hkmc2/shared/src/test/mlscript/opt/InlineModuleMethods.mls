@@ -3,6 +3,28 @@
 
 module M with
   fun f(x) = x + 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M⁰
+//│       sym = member:f⁰
+//│       dSym = term:M⁰/f¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x⁰
+//│             Arg:
+//│               value = Lit of IntLit of 1
 
 // * Note: this should be inlined+folded into a constant
 :soir
@@ -29,42 +51,219 @@ module Outer with
     print(h(2)) // TODO: should be inlined
     print(Inner.f(3)) // TODO: should be inlined
   print(Mid.Inner.f(4)) // TODO: should be inlined
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:tmp)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       owner = S of module:Outer⁰
+//│       isym = class:Mid⁰
+//│       sym = member:Mid¹
+//│       k = Cls
+//│       companion = S of ClsLikeBody:
+//│         isym = module:Mid²
+//│         methods = Ls of
+//│           FunDefn:
+//│             owner = S of module:Mid²
+//│             sym = member:h⁰
+//│             dSym = term:Mid²/h¹
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = x¹
+//│                     modulefulness = Modulefulness of N
+//│             body = Scoped(syms = {tmp:tmp⁰}):
+//│               body = Assign:
+//│                 lhs = tmp:tmp⁰
+//│                 rhs = Call:
+//│                   fun = Select{sym=term:Inner⁰/f²}:
+//│                     qual = Select{sym=module:Inner⁰}:
+//│                       qual = This of module:Mid²
+//│                       name = Ident of "Inner"
+//│                     name = Ident of "f"
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of x¹
+//│                 rest = Return of Call:
+//│                   fun = SimpleRef of builtin:*⁰
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of tmp:tmp⁰
+//│                       Arg:
+//│                         value = Lit of IntLit of 2
+//│         ctor = Scoped(syms = {tmp:tmp¹, tmp:tmp²}):
+//│           body = Define:
+//│             defn = ClsLikeDefn:
+//│               owner = S of module:Mid²
+//│               isym = class:Inner¹
+//│               sym = member:Inner²
+//│               k = Cls
+//│               companion = S of ClsLikeBody:
+//│                 isym = module:Inner⁰
+//│                 methods = Ls of
+//│                   FunDefn:
+//│                     owner = S of module:Inner⁰
+//│                     sym = member:f³
+//│                     dSym = term:Inner⁰/f²
+//│                     params = Ls of
+//│                       ParamList:
+//│                         params = Ls of
+//│                           Param:
+//│                             sym = x²
+//│                             modulefulness = Modulefulness of N
+//│                     body = Scoped(syms = {tmp:tmp³}):
+//│                       body = Assign:
+//│                         lhs = tmp:tmp³
+//│                         rhs = Call:
+//│                           fun = Select{sym=term:Outer⁰/g⁰}:
+//│                             qual = This of module:Outer⁰
+//│                             name = Ident of "g"
+//│                           argss = Ls of
+//│                             Ls of
+//│                               Arg:
+//│                                 value = SimpleRef of x²
+//│                         rest = Return of Call:
+//│                           fun = SimpleRef of builtin:+⁰
+//│                           argss = Ls of
+//│                             Ls of
+//│                               Arg:
+//│                                 value = SimpleRef of tmp:tmp³
+//│                               Arg:
+//│                                 value = Lit of IntLit of 1
+//│                 ctor = Scoped(syms = {tmp:tmp⁴}):
+//│                   body = Assign:
+//│                     lhs = tmp:tmp⁴
+//│                     rhs = Call:
+//│                       fun = Select{sym=term:Inner⁰/f²}:
+//│                         qual = This of module:Inner⁰
+//│                         name = Ident of "f"
+//│                       argss = Ls of
+//│                         Ls of
+//│                           Arg:
+//│                             value = Lit of IntLit of 1
+//│                     rest = Assign: \
+//│                     lhs = ‹no symbol›
+//│                     rhs = Call:
+//│                       fun = Select{sym=term:Predef⁰/print⁰}:
+//│                         qual = MemberRef{disamb=module:Predef⁰}:
+//│                           bms = member:Predef¹
+//│                           disamb = module:Predef⁰
+//│                         name = Ident of "print"
+//│                       argss = Ls of
+//│                         Ls of
+//│                           Arg:
+//│                             value = SimpleRef of tmp:tmp⁴
+//│             rest = Assign: \
+//│             lhs = tmp:tmp¹
+//│             rhs = Call:
+//│               fun = Select{sym=term:Mid²/h¹}:
+//│                 qual = This of module:Mid²
+//│                 name = Ident of "h"
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = Lit of IntLit of 2
+//│             rest = Assign: \
+//│             lhs = ‹no symbol›
+//│             rhs = Call:
+//│               fun = Select{sym=term:Predef⁰/print⁰}:
+//│                 qual = MemberRef{disamb=module:Predef⁰}:
+//│                   bms = member:Predef¹
+//│                   disamb = module:Predef⁰
+//│                 name = Ident of "print"
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of tmp:tmp¹
+//│             rest = Assign: \
+//│             lhs = tmp:tmp²
+//│             rhs = Call:
+//│               fun = Select{sym=term:Inner⁰/f²}:
+//│                 qual = Select{sym=module:Inner⁰}:
+//│                   qual = This of module:Mid²
+//│                   name = Ident of "Inner"
+//│                 name = Ident of "f"
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = Lit of IntLit of 3
+//│             rest = Assign: \
+//│             lhs = ‹no symbol›
+//│             rhs = Call:
+//│               fun = Select{sym=term:Predef⁰/print⁰}:
+//│                 qual = MemberRef{disamb=module:Predef⁰}:
+//│                   bms = member:Predef¹
+//│                   disamb = module:Predef⁰
+//│                 name = Ident of "print"
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of tmp:tmp²
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁵
+//│     rhs = Call:
+//│       fun = Select{sym=term:Inner⁰/f²}:
+//│         qual = Select{sym=module:Inner⁰}:
+//│           qual = Select{sym=module:Mid²}:
+//│             qual = This of module:Outer⁰
+//│             name = Ident of "Mid"
+//│           name = Ident of "Inner"
+//│         name = Ident of "f"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 4
+//│     rest = Assign: \
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp⁵
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define Outer⁰ as class Outer¹
-//│ module Outer² {
+//│ define Outer¹ as class Outer²
+//│ module Outer⁰ {
 //│   constructor {
 //│     let tmp;
-//│     define Mid⁰ as class Mid¹
+//│     define Mid¹ as class Mid⁰
 //│     module Mid² {
 //│       constructor {
 //│         let tmp1, tmp2;
-//│         define Inner⁰ as class Inner¹
-//│         module Inner² {
+//│         define Inner² as class Inner¹
+//│         module Inner⁰ {
 //│           constructor {
 //│             let tmp3;
-//│             set tmp3 = Inner².this.f⁰(1);
+//│             set tmp3 = Inner⁰.this.f²(1);
 //│             do Predef⁰.print⁰(tmp3);
 //│             end
 //│           }
-//│           method f¹ = fun f⁰(x) {
+//│           method f³ = fun f²(x) {
 //│             let tmp3;
-//│             set tmp3 = Outer².this.g⁰(x);
+//│             set tmp3 = Outer⁰.this.g⁰(x);
 //│             return +⁰(tmp3, 1)
 //│           }
 //│         };
-//│         set tmp1 = Mid².this.h⁰(2);
+//│         set tmp1 = Mid².this.h¹(2);
 //│         do Predef⁰.print⁰(tmp1);
-//│         set tmp2 = Mid².this.Inner².f⁰(3);
+//│         set tmp2 = Mid².this.Inner⁰.f²(3);
 //│         do Predef⁰.print⁰(tmp2);
 //│         end
 //│       }
-//│       method h¹ = fun h⁰(x) {
+//│       method h⁰ = fun h¹(x) {
 //│         let tmp1;
-//│         set tmp1 = Mid².this.Inner².f⁰(x);
+//│         set tmp1 = Mid².this.Inner⁰.f²(x);
 //│         return *⁰(tmp1, 2)
 //│       }
 //│     };
-//│     set tmp = Outer².this.Mid².Inner².f⁰(4);
+//│     set tmp = Outer⁰.this.Mid².Inner⁰.f²(4);
 //│     do Predef⁰.print⁰(tmp);
 //│     end
 //│   }

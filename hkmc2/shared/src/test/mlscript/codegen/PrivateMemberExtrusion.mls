@@ -9,6 +9,237 @@ class Foo(a) with
   private fun y() = a + b
   val f = x => y() + a + x
   fun g() = x => f(x) + a + x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:lambda, member:lambda$, member:lambda, member:lambda$)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:lambda$⁰
+//│       dSym = term:lambda$¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = Foo⁰
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = MemberRef{disamb=term:lambda⁰}:
+//│           bms = member:lambda¹
+//│           disamb = term:lambda⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of Foo⁰
+//│             Arg:
+//│               value = SimpleRef of x⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda¹
+//│       dSym = term:lambda⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = Foo¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = x¹
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp⁰, tmp:tmp¹}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁰
+//│           rhs = Call:
+//│             fun = Select{sym=term:Foo²/f⁰}:
+//│               qual = SimpleRef of Foo¹
+//│               name = Ident of "f"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x¹
+//│           rest = Assign: \
+//│           lhs = tmp:tmp¹
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp⁰
+//│                 Arg:
+//│                   value = Select{sym=term:Foo²/a⁰}:
+//│                     qual = SimpleRef of Foo¹
+//│                     name = Ident of "a"
+//│           rest = Return of Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp¹
+//│                 Arg:
+//│                   value = SimpleRef of x¹
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda$²
+//│       dSym = term:lambda$³
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = Foo³
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x²
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = MemberRef{disamb=term:lambda²}:
+//│           bms = member:lambda³
+//│           disamb = term:lambda²
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of Foo³
+//│             Arg:
+//│               value = SimpleRef of x²
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda³
+//│       dSym = term:lambda²
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = Foo⁴
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = x³
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp², tmp:tmp³}):
+//│         body = Assign:
+//│           lhs = tmp:tmp²
+//│           rhs = Call:
+//│             fun = Select{sym=term:Foo²/y⁰}:
+//│               qual = SimpleRef of Foo⁴
+//│               name = Ident of "y"
+//│             argss = Ls of
+//│               Nil
+//│           rest = Assign: \
+//│           lhs = tmp:tmp³
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp²
+//│                 Arg:
+//│                   value = Select{sym=term:Foo²/a⁰}:
+//│                     qual = SimpleRef of Foo⁴
+//│                     name = Ident of "a"
+//│           rest = Return of Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp³
+//│                 Arg:
+//│                   value = SimpleRef of x³
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Foo²
+//│       sym = member:Foo⁵
+//│       ctorSym = S of term:Foo⁶
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             sym = a¹
+//│             modulefulness = Modulefulness of N
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:Foo²
+//│           sym = member:y¹
+//│           dSym = term:Foo²/y⁰
+//│           params = Ls of
+//│             ParamList: ‹empty›
+//│           body = Return of Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:Foo²/a⁰}:
+//│                     qual = This of class:Foo²
+//│                     name = Ident of "a"
+//│                 Arg:
+//│                   value = Select{sym=term:Foo²/b⁰}:
+//│                     qual = This of class:Foo²
+//│                     name = Ident of "b"
+//│         FunDefn:
+//│           owner = S of class:Foo²
+//│           sym = member:g⁰
+//│           dSym = term:Foo²/g¹
+//│           params = Ls of
+//│             ParamList: ‹empty›
+//│           body = Scoped(syms = {tmp:lambda$here⁰}):
+//│             body = Assign:
+//│               lhs = tmp:lambda$here⁰
+//│               rhs = Call:
+//│                 fun = MemberRef{disamb=term:lambda$¹}:
+//│                   bms = member:lambda$⁰
+//│                   disamb = term:lambda$¹
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = This of class:Foo²
+//│               rest = Return of SimpleRef of tmp:lambda$here⁰
+//│       privateFields = Ls of
+//│         term:Foo²/a⁰
+//│         term:Foo²/b⁰
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:f¹
+//│           _2 = term:Foo²/f⁰
+//│       ctor = Scoped(syms = {tmp:tmp⁴, tmp:lambda$here¹}):
+//│         body = AssignField:
+//│           lhs = This of class:Foo²
+//│           nme = Ident of "a"
+//│           rhs = SimpleRef of a¹
+//│           rest = Assign: \
+//│           lhs = tmp:tmp⁴
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:Foo²/a⁰}:
+//│                     qual = This of class:Foo²
+//│                     name = Ident of "a"
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = Define: \
+//│           defn = ValDefn:
+//│             tsym = term:Foo²/b⁰
+//│             sym = member:b¹
+//│             rhs = SimpleRef of tmp:tmp⁴
+//│           rest = Assign: \
+//│           lhs = tmp:lambda$here¹
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:lambda$³}:
+//│               bms = member:lambda$²
+//│               disamb = term:lambda$³
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = This of class:Foo²
+//│           rest = Define: \
+//│           defn = ValDefn:
+//│             tsym = term:Foo²/f⁰
+//│             sym = member:f¹
+//│             rhs = SimpleRef of tmp:lambda$here¹
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ const a$accessorSymbol = globalThis.Symbol("a");
 //│ const y$accessorSymbol = globalThis.Symbol("y");
@@ -88,6 +319,269 @@ class Foo(a) with
       b += 1
     y() + a + x
   fun g() = x => f(x) + a + x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:lambda, member:lambda$, member:lambda, member:lambda$)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:lambda$⁴
+//│       dSym = term:lambda$⁵
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = Foo⁷
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁴
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = MemberRef{disamb=term:lambda⁴}:
+//│           bms = member:lambda⁵
+//│           disamb = term:lambda⁴
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of Foo⁷
+//│             Arg:
+//│               value = SimpleRef of x⁴
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda⁵
+//│       dSym = term:lambda⁴
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = Foo⁸
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = x⁵
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp⁵, tmp:tmp⁶}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁵
+//│           rhs = Call:
+//│             fun = Select{sym=term:Foo⁹/f²}:
+//│               qual = SimpleRef of Foo⁸
+//│               name = Ident of "f"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x⁵
+//│           rest = Assign: \
+//│           lhs = tmp:tmp⁶
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp⁵
+//│                 Arg:
+//│                   value = Select{sym=term:Foo⁹/a²}:
+//│                     qual = SimpleRef of Foo⁸
+//│                     name = Ident of "a"
+//│           rest = Return of Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp⁶
+//│                 Arg:
+//│                   value = SimpleRef of x⁵
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda$⁶
+//│       dSym = term:lambda$⁷
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = Foo¹⁰
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁶
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = MemberRef{disamb=term:lambda⁶}:
+//│           bms = member:lambda⁷
+//│           disamb = term:lambda⁶
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of Foo¹⁰
+//│             Arg:
+//│               value = SimpleRef of x⁶
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda⁷
+//│       dSym = term:lambda⁶
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = Foo¹¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = x⁷
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp⁷, tmp:tmp⁸, tmp:tmp⁹, tmp:tmp¹⁰}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁷
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:Foo⁹/a²}:
+//│                     qual = SimpleRef of Foo¹¹
+//│                     name = Ident of "a"
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = AssignField: \
+//│           lhs = SimpleRef of Foo¹¹
+//│           nme = Ident of "a"
+//│           rhs = SimpleRef of tmp:tmp⁷
+//│           rest = Assign: \
+//│           lhs = tmp:tmp⁸
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:Foo⁹/b²}:
+//│                     qual = SimpleRef of Foo¹¹
+//│                     name = Ident of "b"
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = AssignField: \
+//│           lhs = SimpleRef of Foo¹¹
+//│           nme = Ident of "b"
+//│           rhs = SimpleRef of tmp:tmp⁸
+//│           rest = Assign: \
+//│           lhs = tmp:tmp⁹
+//│           rhs = Call:
+//│             fun = Select{sym=term:Foo⁹/y²}:
+//│               qual = SimpleRef of Foo¹¹
+//│               name = Ident of "y"
+//│             argss = Ls of
+//│               Nil
+//│           rest = Assign: \
+//│           lhs = tmp:tmp¹⁰
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp⁹
+//│                 Arg:
+//│                   value = Select{sym=term:Foo⁹/a²}:
+//│                     qual = SimpleRef of Foo¹¹
+//│                     name = Ident of "a"
+//│           rest = Return of Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp¹⁰
+//│                 Arg:
+//│                   value = SimpleRef of x⁷
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Foo⁹
+//│       sym = member:Foo¹²
+//│       ctorSym = S of term:Foo¹³
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             sym = a³
+//│             modulefulness = Modulefulness of N
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:Foo⁹
+//│           sym = member:y³
+//│           dSym = term:Foo⁹/y²
+//│           params = Ls of
+//│             ParamList: ‹empty›
+//│           body = Return of Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:Foo⁹/a²}:
+//│                     qual = This of class:Foo⁹
+//│                     name = Ident of "a"
+//│                 Arg:
+//│                   value = Select{sym=term:Foo⁹/b²}:
+//│                     qual = This of class:Foo⁹
+//│                     name = Ident of "b"
+//│         FunDefn:
+//│           owner = S of class:Foo⁹
+//│           sym = member:g²
+//│           dSym = term:Foo⁹/g³
+//│           params = Ls of
+//│             ParamList: ‹empty›
+//│           body = Scoped(syms = {tmp:lambda$here²}):
+//│             body = Assign:
+//│               lhs = tmp:lambda$here²
+//│               rhs = Call:
+//│                 fun = MemberRef{disamb=term:lambda$⁵}:
+//│                   bms = member:lambda$⁴
+//│                   disamb = term:lambda$⁵
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = This of class:Foo⁹
+//│               rest = Return of SimpleRef of tmp:lambda$here²
+//│       privateFields = Ls of
+//│         term:Foo⁹/a²
+//│         term:Foo⁹/b²
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:f³
+//│           _2 = term:Foo⁹/f²
+//│       ctor = Scoped(syms = {tmp:tmp¹¹, tmp:lambda$here³}):
+//│         body = AssignField:
+//│           lhs = This of class:Foo⁹
+//│           nme = Ident of "a"
+//│           rhs = SimpleRef of a³
+//│           rest = Assign: \
+//│           lhs = tmp:tmp¹¹
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:Foo⁹/a²}:
+//│                     qual = This of class:Foo⁹
+//│                     name = Ident of "a"
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = Define: \
+//│           defn = ValDefn:
+//│             tsym = term:Foo⁹/b²
+//│             sym = member:b³
+//│             rhs = SimpleRef of tmp:tmp¹¹
+//│           rest = Assign: \
+//│           lhs = tmp:lambda$here³
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:lambda$⁷}:
+//│               bms = member:lambda$⁶
+//│               disamb = term:lambda$⁷
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = This of class:Foo⁹
+//│           rest = Define: \
+//│           defn = ValDefn:
+//│             tsym = term:Foo⁹/f²
+//│             sym = member:f³
+//│             rhs = SimpleRef of tmp:lambda$here³
 
 val f = Foo(42)
 //│ f = Foo(_)
@@ -112,6 +606,194 @@ class Foo(a) with
       b += 1
     y() + a + x
   fun g() = x => f(x) + a + x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo¹⁴
+//│   sym = member:Foo¹⁵
+//│   ctorSym = S of term:Foo¹⁶
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = a⁴
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo¹⁴
+//│       sym = member:y⁴
+//│       dSym = term:Foo¹⁴/y⁵
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:Foo¹⁴/a⁵}:
+//│                 qual = This of class:Foo¹⁴
+//│                 name = Ident of "a"
+//│             Arg:
+//│               value = Select{sym=term:Foo¹⁴/b⁴}:
+//│                 qual = This of class:Foo¹⁴
+//│                 name = Ident of "b"
+//│     FunDefn:
+//│       owner = S of class:Foo¹⁴
+//│       sym = member:g⁴
+//│       dSym = term:Foo¹⁴/g⁵
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {member:lambda⁸}):
+//│         body = Define:
+//│           defn = FunDefn:
+//│             sym = member:lambda⁸
+//│             dSym = term:lambda⁹
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = x⁸
+//│                     modulefulness = Modulefulness of N
+//│             body = Scoped(syms = {tmp:tmp¹², tmp:tmp¹³}):
+//│               body = Assign:
+//│                 lhs = tmp:tmp¹²
+//│                 rhs = Call:
+//│                   fun = Select{sym=term:Foo¹⁴/f⁴}:
+//│                     qual = This of class:Foo¹⁴
+//│                     name = Ident of "f"
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of x⁸
+//│                 rest = Assign: \
+//│                 lhs = tmp:tmp¹³
+//│                 rhs = Call:
+//│                   fun = SimpleRef of builtin:+⁰
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of tmp:tmp¹²
+//│                       Arg:
+//│                         value = Select{sym=term:Foo¹⁴/a⁵}:
+//│                           qual = This of class:Foo¹⁴
+//│                           name = Ident of "a"
+//│                 rest = Return of Call:
+//│                   fun = SimpleRef of builtin:+⁰
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of tmp:tmp¹³
+//│                       Arg:
+//│                         value = SimpleRef of x⁸
+//│           rest = Return of MemberRef{disamb=term:lambda⁹}:
+//│             bms = member:lambda⁸
+//│             disamb = term:lambda⁹
+//│   privateFields = Ls of
+//│     term:Foo¹⁴/a⁵
+//│     term:Foo¹⁴/b⁴
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:f⁵
+//│       _2 = term:Foo¹⁴/f⁴
+//│   ctor = Scoped(syms = {tmp:tmp¹⁴, member:lambda¹⁰}):
+//│     body = AssignField:
+//│       lhs = This of class:Foo¹⁴
+//│       nme = Ident of "a"
+//│       rhs = SimpleRef of a⁴
+//│       rest = Assign: \
+//│       lhs = tmp:tmp¹⁴
+//│       rhs = Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:Foo¹⁴/a⁵}:
+//│                 qual = This of class:Foo¹⁴
+//│                 name = Ident of "a"
+//│             Arg:
+//│               value = Lit of IntLit of 1
+//│       rest = Define: \
+//│       defn = ValDefn:
+//│         tsym = term:Foo¹⁴/b⁴
+//│         sym = member:b⁵
+//│         rhs = SimpleRef of tmp:tmp¹⁴
+//│       rest = Define: \
+//│       defn = FunDefn:
+//│         sym = member:lambda¹⁰
+//│         dSym = term:lambda¹¹
+//│         params = Ls of
+//│           ParamList:
+//│             params = Ls of
+//│               Param:
+//│                 sym = x⁹
+//│                 modulefulness = Modulefulness of N
+//│         body = Scoped(syms = {tmp:tmp¹⁵, tmp:tmp¹⁶, tmp:tmp¹⁷, tmp:tmp¹⁸}):
+//│           body = Assign:
+//│             lhs = tmp:tmp¹⁵
+//│             rhs = Call:
+//│               fun = SimpleRef of builtin:+⁰
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = Select{sym=term:Foo¹⁴/a⁵}:
+//│                       qual = This of class:Foo¹⁴
+//│                       name = Ident of "a"
+//│                   Arg:
+//│                     value = Lit of IntLit of 1
+//│             rest = AssignField: \
+//│             lhs = This of class:Foo¹⁴
+//│             nme = Ident of "a"
+//│             rhs = SimpleRef of tmp:tmp¹⁵
+//│             rest = Assign: \
+//│             lhs = tmp:tmp¹⁶
+//│             rhs = Call:
+//│               fun = SimpleRef of builtin:+⁰
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = Select{sym=term:Foo¹⁴/b⁴}:
+//│                       qual = This of class:Foo¹⁴
+//│                       name = Ident of "b"
+//│                   Arg:
+//│                     value = Lit of IntLit of 1
+//│             rest = AssignField: \
+//│             lhs = This of class:Foo¹⁴
+//│             nme = Ident of "b"
+//│             rhs = SimpleRef of tmp:tmp¹⁶
+//│             rest = Assign: \
+//│             lhs = tmp:tmp¹⁷
+//│             rhs = Call:
+//│               fun = Select{sym=term:Foo¹⁴/y⁵}:
+//│                 qual = This of class:Foo¹⁴
+//│                 name = Ident of "y"
+//│               argss = Ls of
+//│                 Nil
+//│             rest = Assign: \
+//│             lhs = tmp:tmp¹⁸
+//│             rhs = Call:
+//│               fun = SimpleRef of builtin:+⁰
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of tmp:tmp¹⁷
+//│                   Arg:
+//│                     value = Select{sym=term:Foo¹⁴/a⁵}:
+//│                       qual = This of class:Foo¹⁴
+//│                       name = Ident of "a"
+//│             rest = Return of Call:
+//│               fun = SimpleRef of builtin:+⁰
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of tmp:tmp¹⁸
+//│                   Arg:
+//│                     value = SimpleRef of x⁹
+//│       rest = Define: \
+//│       defn = ValDefn:
+//│         tsym = term:Foo¹⁴/f⁴
+//│         sym = member:f⁵
+//│         rhs = MemberRef{disamb=term:lambda¹¹}:
+//│           bms = member:lambda¹⁰
+//│           disamb = term:lambda¹¹
 
 val f = Foo(42)
 //│ f = Foo(_)

@@ -3,6 +3,11 @@
 abstract class List[out T]
 data class Cons[out T](head: T, tail: List[T]) extends List[T]
 object Nil extends List[Nothing]
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:List⁰
+//│   sym = member:List¹
+//│   k = Cls
 
 
 fun map(f, xs) = if xs is
@@ -12,11 +17,21 @@ fun map(f, xs) = if xs is
 
 
 object Bot
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Bot⁰
+//│   sym = member:Bot¹
+//│   k = Obj
 
 
 abstract class Option[T]
 data class Some[T](value: T) extends Option[T]
 object None extends Option[Nothing]
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Option⁰
+//│   sym = member:Option¹
+//│   k = Cls
 
 
 fun normalize(tp) = ()

@@ -1,5 +1,8 @@
 module M
 module MM[T]
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁰
 
 
 
@@ -8,11 +11,11 @@ module MM[T]
 :e
 fun f(m: M)
 //│ ╔══[COMPILATION ERROR] Expected a non-module type; found reference.
-//│ ║  l.9: 	fun f(m: M)
-//│ ╙──     	         ^
+//│ ║  l.12: 	fun f(m: M)
+//│ ╙──      	         ^
 //│ ╔══[COMPILATION ERROR] Expected a non-module type; found reference of type M denoting module 'M'.
-//│ ║  l.9: 	fun f(m: M)
-//│ ║       	         ^
+//│ ║  l.12: 	fun f(m: M)
+//│ ║        	         ^
 //│ ╙── Non-module parameter must have a non-module type.
 
 fun f(m)
@@ -20,7 +23,7 @@ fun f(m)
 :e
 f(M)
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful reference of type M.
-//│ ║  l.21: 	f(M)
+//│ ║  l.24: 	f(M)
 //│ ║        	  ^
 //│ ╙── Module argument passed to a non-module parameter.
 
@@ -29,7 +32,7 @@ f(42)
 :e
 fun f(module m)
 //│ ╔══[COMPILATION ERROR] Module parameter must have explicit type.
-//│ ║  l.30: 	fun f(module m)
+//│ ║  l.33: 	fun f(module m)
 //│ ╙──      	             ^
 
 fun f(module m: M)
@@ -41,10 +44,10 @@ f(M)
 :e
 fun f[T](module m: T)
 //│ ╔══[COMPILATION ERROR] Expected a module type; found reference.
-//│ ║  l.42: 	fun f[T](module m: T)
+//│ ║  l.45: 	fun f[T](module m: T)
 //│ ╙──      	                   ^
 //│ ╔══[COMPILATION ERROR] Expected a module type; found reference.
-//│ ║  l.42: 	fun f[T](module m: T)
+//│ ║  l.45: 	fun f[T](module m: T)
 //│ ║        	                   ^
 //│ ╙── Module parameter must have a module type.
 
@@ -67,18 +70,18 @@ fun assertNonMM[T](m)
 :e
 fun f() = M
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful reference of type M.
-//│ ║  l.68: 	fun f() = M
+//│ ║  l.71: 	fun f() = M
 //│ ║        	          ^
 //│ ╙── Function must be marked as returning a 'module' in order to return a module.
 
 :e
 fun f(): M = M
 //│ ╔══[COMPILATION ERROR] Expected a non-module type; found reference of type M denoting module 'M'.
-//│ ║  l.75: 	fun f(): M = M
+//│ ║  l.78: 	fun f(): M = M
 //│ ║        	         ^
 //│ ╙── Function must be marked as returning a 'module' in order to have a module return type.
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful reference of type M.
-//│ ║  l.75: 	fun f(): M = M
+//│ ║  l.78: 	fun f(): M = M
 //│ ║        	             ^
 //│ ╙── Function must be marked as returning a 'module' in order to return a module.
 
@@ -87,7 +90,7 @@ fun f(): module M = M
 :e
 assertNonM(f())
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful application of type M.
-//│ ║  l.88: 	assertNonM(f())
+//│ ║  l.91: 	assertNonM(f())
 //│ ║        	           ^^^
 //│ ╙── Module argument passed to a non-module parameter.
 
@@ -96,8 +99,8 @@ assertM(f())
 :e
 fun f4[T](): module T = M
 //│ ╔══[COMPILATION ERROR] Expected a module type; found reference.
-//│ ║  l.97: 	fun f4[T](): module T = M
-//│ ║        	                    ^
+//│ ║  l.100: 	fun f4[T](): module T = M
+//│ ║         	                    ^
 //│ ╙── Function marked as returning a 'module' must have a module return type.
 
 fun f[T](): module MM[T] = MM[T]
@@ -105,7 +108,7 @@ fun f[T](): module MM[T] = MM[T]
 :e
 assertNonM(f[Int]())
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful application of type MM[T].
-//│ ║  l.106: 	assertNonM(f[Int]())
+//│ ║  l.109: 	assertNonM(f[Int]())
 //│ ║         	           ^^^^^^^^
 //│ ╙── Module argument passed to a non-module parameter.
 
@@ -116,14 +119,14 @@ assertM(f[Int]())
 :e
 fun f3() = return M
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful reference of type M.
-//│ ║  l.117: 	fun f3() = return M
+//│ ║  l.120: 	fun f3() = return M
 //│ ╙──       	                  ^
 
 :todo
 :e
 fun f3() = (() => M)()
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful reference of type M.
-//│ ║  l.124: 	fun f3() = (() => M)()
+//│ ║  l.127: 	fun f3() = (() => M)()
 //│ ╙──       	                  ^
 
 // * [test:T4]
@@ -133,7 +136,7 @@ fun f3() = (() => M)()
 :lift
 fun f3() = (() => return M)()
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful reference of type M.
-//│ ║  l.134: 	fun f3() = (() => return M)()
+//│ ║  l.137: 	fun f3() = (() => return M)()
 //│ ╙──       	                         ^
 
 
@@ -143,7 +146,7 @@ fun f3() = (() => return M)()
 :e
 fun f(module m: M) = m
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful reference of type M.
-//│ ║  l.144: 	fun f(module m: M) = m
+//│ ║  l.147: 	fun f(module m: M) = m
 //│ ║         	                     ^
 //│ ╙── Function must be marked as returning a 'module' in order to return a module.
 
@@ -156,7 +159,7 @@ fun f(module m: M): module M = m
 :e
 val v = M
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful reference of type M.
-//│ ║  l.157: 	val v = M
+//│ ║  l.160: 	val v = M
 //│ ║         	        ^
 //│ ╙── Value must be marked as returning a 'module' in order to return a module.
 
@@ -169,6 +172,38 @@ val v: module M = M
 module N with
   fun foo(): module M = M
   fun bar(module m: M): module M = foo()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:N⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:N⁰
+//│       sym = member:foo⁰
+//│       dSym = term:N⁰/foo¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of MemberRef{disamb=module:M⁰}:
+//│         bms = member:M¹
+//│         disamb = module:M⁰
+//│     FunDefn:
+//│       owner = S of module:N⁰
+//│       sym = member:bar⁰
+//│       dSym = term:N⁰/bar¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = m⁰
+//│               sign = S of Resolved{sym=module:M⁰,typ=module:M⁰}:
+//│                 t = Ref{sym=member:M¹} of member:M¹
+//│                 sym = module:M⁰
+//│               modulefulness = Modulefulness of S of module:M⁰
+//│       body = Return of Call:
+//│         fun = Select{sym=term:N⁰/foo¹}:
+//│           qual = This of module:N⁰
+//│           name = Ident of "foo"
+//│         argss = Ls of
+//│           Nil
 
 N.bar(M)
 
@@ -179,8 +214,32 @@ class C with
   fun foo: module M = M
   val bar: module M = M
 //│ ╔══[COMPILATION ERROR] Function returning modules should not be a class member.
-//│ ║  l.179: 	  fun foo: module M = M
+//│ ║  l.214: 	  fun foo: module M = M
 //│ ╙──       	  ^^^^^^^^^^^^^^^^^^^^^
 //│ ╔══[COMPILATION ERROR] Value returning modules should not be a class member.
-//│ ║  l.180: 	  val bar: module M = M
+//│ ║  l.215: 	  val bar: module M = M
 //│ ╙──       	  ^^^^^^^^^^^^^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C⁰
+//│   sym = member:C¹
+//│   k = Cls
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:C⁰
+//│       sym = member:foo²
+//│       dSym = term:C⁰/foo³
+//│       body = Return of MemberRef{disamb=module:M⁰}:
+//│         bms = member:M¹
+//│         disamb = module:M⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:bar²
+//│       _2 = term:C⁰/bar³
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C⁰/bar³
+//│       sym = member:bar²
+//│       rhs = MemberRef{disamb=module:M⁰}:
+//│         bms = member:M¹
+//│         disamb = module:M⁰

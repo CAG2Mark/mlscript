@@ -273,6 +273,36 @@ undefined === null
 class B(val a, b)
 let x = B(1, 2)
 let y = B(1, 4)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:B⁰
+//│   sym = member:B¹
+//│   ctorSym = S of term:B²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = a⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         sym = b⁰
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:B⁰/b¹
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a¹
+//│       _2 = term:B⁰/a²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:B⁰/a²
+//│       sym = member:a¹
+//│       rhs = SimpleRef of a⁰
+//│     rest = AssignField: \
+//│     lhs = This of class:B⁰
+//│     nme = Ident of "b"
+//│     rhs = SimpleRef of b⁰
 
 x == y
 //│ = false
@@ -285,6 +315,51 @@ module M with
   data class A(a, b, c)
 let x = A(1, 2, 3)
 let y = A(1, 2, 3)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A⁰
+//│   sym = member:A¹
+//│   ctorSym = S of term:A²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = a³
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = b²
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = c⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a⁴
+//│       _2 = term:A⁰/a⁵
+//│     Tuple2:
+//│       _1 = member:b³
+//│       _2 = term:A⁰/b⁴
+//│     Tuple2:
+//│       _1 = member:c¹
+//│       _2 = term:A⁰/c²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:A⁰/a⁵
+//│       sym = member:a⁴
+//│       rhs = SimpleRef of a³
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:A⁰/b⁴
+//│       sym = member:b³
+//│       rhs = SimpleRef of b²
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:A⁰/c²
+//│       sym = member:c¹
+//│       rhs = SimpleRef of c⁰
 
 x == y
 //│ = true

@@ -6,12 +6,46 @@
 object Foo with
   if true then
     val x = 0
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Foo⁰
+//│   sym = member:Foo¹
+//│   k = Obj
+//│   ctor = Scoped(syms = {member:x⁰, tmp:scrut⁰, tmp:tmp⁰}):
+//│     body = Assign:
+//│       lhs = tmp:scrut⁰
+//│       rhs = Lit of BoolLit of true
+//│       rest = Match: \
+//│       scrut = SimpleRef of tmp:scrut⁰
+//│       arms = Ls of
+//│         Tuple2:
+//│           _1 = Lit of BoolLit of true
+//│           _2 = Define:
+//│             defn = ValDefn:
+//│               tsym = term:x¹
+//│               sym = member:x⁰
+//│               rhs = Lit of IntLit of 0
+//│             rest = Assign: \
+//│             lhs = tmp:tmp⁰
+//│             rhs = Select{sym=object:Unit⁰}:
+//│               qual = SimpleRef of tmp:runtime⁰
+//│               name = Ident of "Unit"
+//│       dflt = S of Throw of Instantiate:
+//│         mut = false
+//│         cls = Select{sym=class:Error⁰}:
+//│           qual = This of globalThis:globalThis⁰
+//│           name = Ident of "Error"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Lit of StrLit of "match error"
+//│       rest = End of "Rest moved to non-abortive branch(es)"
 
 :e
 :re
 Foo.x
 //│ ╔══[COMPILATION ERROR] Object 'Foo' does not contain member 'x'
-//│ ║  l.12: 	Foo.x
+//│ ║  l.46: 	Foo.x
 //│ ╙──      	   ^^
 //│ ═══[RUNTIME ERROR] Error: Access to required field 'x' yielded 'undefined'
 
@@ -20,6 +54,40 @@ module Oops with
   if true then
     fun f = 1
     ()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Oops⁰
+//│   ctor = Scoped(syms = {member:f⁰, tmp:scrut¹, tmp:tmp¹}):
+//│     body = Assign:
+//│       lhs = tmp:scrut¹
+//│       rhs = Lit of BoolLit of true
+//│       rest = Match: \
+//│       scrut = SimpleRef of tmp:scrut¹
+//│       arms = Ls of
+//│         Tuple2:
+//│           _1 = Lit of BoolLit of true
+//│           _2 = Define:
+//│             defn = FunDefn:
+//│               sym = member:f⁰
+//│               dSym = term:f¹
+//│               params = Ls of
+//│                 ParamList: ‹empty›
+//│               body = Return of Lit of IntLit of 1
+//│             rest = Assign: \
+//│             lhs = tmp:tmp¹
+//│             rhs = Select{sym=object:Unit⁰}:
+//│               qual = SimpleRef of tmp:runtime⁰
+//│               name = Ident of "Unit"
+//│       dflt = S of Throw of Instantiate:
+//│         mut = false
+//│         cls = Select{sym=class:Error⁰}:
+//│           qual = This of globalThis:globalThis⁰
+//│           name = Ident of "Error"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Lit of StrLit of "match error"
+//│       rest = End of "Rest moved to non-abortive branch(es)"
 
 // * We used to forget to reset the owner to None in sub-blocks like this one
 :e
@@ -30,8 +98,65 @@ object Oops with
     print(fakeField)
   print(this.fakeField) // shouldn't work!
 //│ ╔══[COMPILATION ERROR] Object 'Oops' does not contain member 'fakeField'
-//│ ║  l.31: 	  print(this.fakeField) // shouldn't work!
+//│ ║  l.99: 	  print(this.fakeField) // shouldn't work!
 //│ ╙──      	        ^^^^^^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Oops¹
+//│   sym = member:Oops²
+//│   k = Obj
+//│   ctor = Scoped(syms = {member:fakeField⁰, tmp:scrut², tmp:tmp²}):
+//│     body = Assign:
+//│       lhs = tmp:scrut²
+//│       rhs = Lit of BoolLit of true
+//│       rest = Match: \
+//│       scrut = SimpleRef of tmp:scrut²
+//│       arms = Ls of
+//│         Tuple2:
+//│           _1 = Lit of BoolLit of true
+//│           _2 = Define:
+//│             defn = ValDefn:
+//│               tsym = term:fakeField¹
+//│               sym = member:fakeField⁰
+//│               rhs = Lit of IntLit of 1
+//│             rest = Assign: \
+//│             lhs = tmp:tmp²
+//│             rhs = Call:
+//│               fun = Select{sym=term:Predef⁰/print⁰}:
+//│                 qual = MemberRef{disamb=module:Predef⁰}:
+//│                   bms = member:Predef¹
+//│                   disamb = module:Predef⁰
+//│                 name = Ident of "print"
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = MemberRef{disamb=term:fakeField¹}:
+//│                       bms = member:fakeField⁰
+//│                       disamb = term:fakeField¹
+//│             rest = Assign: \
+//│             lhs = ‹no symbol›
+//│             rhs = Call:
+//│               fun = Select{sym=term:Predef⁰/print⁰}:
+//│                 qual = MemberRef{disamb=module:Predef⁰}:
+//│                   bms = member:Predef¹
+//│                   disamb = module:Predef⁰
+//│                 name = Ident of "print"
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = Select:
+//│                       qual = This of object:Oops¹
+//│                       name = Ident of "fakeField"
+//│       dflt = S of Throw of Instantiate:
+//│         mut = false
+//│         cls = Select{sym=class:Error⁰}:
+//│           qual = This of globalThis:globalThis⁰
+//│           name = Ident of "Error"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Lit of StrLit of "match error"
+//│       rest = End of "Rest moved to non-abortive branch(es)"
 //│ > 1
 //│ ═══[RUNTIME ERROR] Error: Access to required field 'fakeField' yielded 'undefined'
 
@@ -39,8 +164,8 @@ object Oops with
 :re
 Oops.fakeField
 //│ ╔══[COMPILATION ERROR] Object 'Oops' does not contain member 'fakeField'
-//│ ║  l.40: 	Oops.fakeField
-//│ ╙──      	    ^^^^^^^^^^
+//│ ║  l.165: 	Oops.fakeField
+//│ ╙──       	    ^^^^^^^^^^
 //│ ═══[RUNTIME ERROR] Error: Access to required field 'fakeField' yielded 'undefined'
 
 

@@ -13,6 +13,48 @@ foo_bar_<:<(41)
 
 class Box_#(val value_?!) with
   fun add_++(delta) = value_?! + delta
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Box⁰
+//│   sym = member:Box¹
+//│   ctorSym = S of term:Box²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = value⁰
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Box⁰
+//│       sym = member:add⁰
+//│       dSym = term:Box⁰/add¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = delta⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:Box⁰/value_?!⁰}:
+//│                 qual = This of class:Box⁰
+//│                 name = Ident of "value_?!"
+//│             Arg:
+//│               value = SimpleRef of delta⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:value¹
+//│       _2 = term:Box⁰/value_?!⁰
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Box⁰/value_?!⁰
+//│       sym = member:value¹
+//│       rhs = SimpleRef of value⁰
 
 let box_# = new Box_#(42)
 //│ box_# = Box(42)
@@ -29,7 +71,7 @@ box_#.add_++(1)
 :sjs
 fun (++) foo_+(x) = x + 1
 //│ ╔══[COMPILATION ERROR] Cannot combine an explicit symbolic name with a symbolic suffix identifier.
-//│ ║  l.30: 	fun (++) foo_+(x) = x + 1
+//│ ║  l.72: 	fun (++) foo_+(x) = x + 1
 //│ ╙──      	         ^^^^^
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let foo; foo = function foo(x) { return x + 1 };
@@ -39,7 +81,7 @@ fun (++) foo_+(x) = x + 1
 :sjs
 foo_+
 //│ ╔══[COMPILATION ERROR] Name not found: foo_+
-//│ ║  l.40: 	foo_+
+//│ ║  l.82: 	foo_+
 //│ ╙──      	^^^^^
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ throw "This code cannot be run as its compilation yielded an error."
@@ -50,7 +92,7 @@ foo_+
 :sjs
 (++)
 //│ ╔══[COMPILATION ERROR] Name not found: ++
-//│ ║  l.51: 	(++)
+//│ ║  l.93: 	(++)
 //│ ╙──      	 ^^
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ throw "This code cannot be run as its compilation yielded an error."

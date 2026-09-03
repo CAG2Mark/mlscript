@@ -1,27 +1,182 @@
 
 
 class Foo[A]
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   k = Cls
 
 class Foo[A]()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo²
+//│   sym = member:Foo³
+//│   ctorSym = S of term:Foo⁴
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
 
 class Foo[A](x: A)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁵
+//│   sym = member:Foo⁶
+//│   ctorSym = S of term:Foo⁷
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁰
+//│         sign = S of Ref{sym=A⁰} of A⁰
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo⁵/x¹
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo⁵
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁰
 
 class Foo[A](x: A -> Int)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁸
+//│   sym = member:Foo⁹
+//│   ctorSym = S of term:Foo¹⁰
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x²
+//│         sign = S of FunTy:
+//│           lhs = Tup of Ls of
+//│             Fld:
+//│               term = Ref{sym=A¹} of A¹
+//│           rhs = Resolved{sym=class:Int⁰}:
+//│             t = Ref{sym=member:Int¹} of member:Int¹
+//│             sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo⁸/x³
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo⁸
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x²
 
 class Foo[A](x: Foo[A])
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo¹¹
+//│   sym = member:Foo¹²
+//│   ctorSym = S of term:Foo¹³
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁴
+//│         sign = S of TyApp{sym=class:Foo¹¹}:
+//│           lhs = Resolved{sym=class:Foo¹¹}:
+//│             t = Ref{sym=member:Foo¹²} of member:Foo¹²
+//│             sym = class:Foo¹¹
+//│           targs = Ls of
+//│             Ref{sym=A²} of A²
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo¹¹/x⁵
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo¹¹
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁴
 
 class Foo[A](x: Foo[A] -> A)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo¹⁴
+//│   sym = member:Foo¹⁵
+//│   ctorSym = S of term:Foo¹⁶
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁶
+//│         sign = S of FunTy:
+//│           lhs = Tup of Ls of
+//│             Fld:
+//│               term = TyApp{sym=term:Foo¹⁶}:
+//│                 lhs = Resolved{sym=term:Foo¹⁶}:
+//│                   t = Ref{sym=member:Foo¹⁵} of member:Foo¹⁵
+//│                   sym = term:Foo¹⁶
+//│                 targs = Ls of
+//│                   Ref{sym=A³} of A³
+//│           rhs = Ref{sym=A³} of A³
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo¹⁴/x⁷
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo¹⁴
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁶
 
 class Foo[A](x: Bar[A])
 class Bar[B](x: Foo[Int], y: B -> Int)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo¹⁷
+//│   sym = member:Foo¹⁸
+//│   ctorSym = S of term:Foo¹⁹
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁸
+//│         sign = S of TyApp{sym=class:Bar⁰}:
+//│           lhs = Resolved{sym=class:Bar⁰}:
+//│             t = Ref{sym=member:Bar¹} of member:Bar¹
+//│             sym = class:Bar⁰
+//│           targs = Ls of
+//│             Ref{sym=A⁴} of A⁴
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo¹⁷/x⁹
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo¹⁷
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁸
 
 class Foo[A](x: Bar[A])
 class Baz[C](x: C)
 class Bar[B](x: Foo[Int], y: Baz[B] -> Int)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo²⁰
+//│   sym = member:Foo²¹
+//│   ctorSym = S of term:Foo²²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x¹⁰
+//│         sign = S of TyApp{sym=class:Bar²}:
+//│           lhs = Resolved{sym=class:Bar²}:
+//│             t = Ref{sym=member:Bar³} of member:Bar³
+//│             sym = class:Bar²
+//│           targs = Ls of
+//│             Ref{sym=A⁵} of A⁵
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo²⁰/x¹¹
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo²⁰
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x¹⁰
 
 
 class Foo[A] with
   fun foo: A -> A
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo²³
+//│   sym = member:Foo²⁴
+//│   k = Cls
 
 
 
@@ -29,14 +184,61 @@ class Foo[A] with
 :e
 class Foo[A](x: Foo[A, A])
 //│ ╔══[COMPILATION ERROR] Expected 1 type arguments, got 2
-//│ ║  l.30: 	class Foo[A](x: Foo[A, A])
-//│ ╙──      	                ^^^^^^^^^
+//│ ║  l.185: 	class Foo[A](x: Foo[A, A])
+//│ ╙──       	                ^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo²⁵
+//│   sym = member:Foo²⁶
+//│   ctorSym = S of term:Foo²⁷
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x¹²
+//│         sign = S of TyApp{sym=class:Foo²⁵}:
+//│           lhs = Resolved{sym=class:Foo²⁵}:
+//│             t = Ref{sym=member:Foo²⁶} of member:Foo²⁶
+//│             sym = class:Foo²⁵
+//│           targs = Ls of
+//│             Ref{sym=A⁶} of A⁶
+//│             Ref{sym=A⁶} of A⁶
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo²⁵/x¹³
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo²⁵
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x¹²
 
 :e
 class Foo[A](x: Bar[A])
 class Bar(x: Foo[Int])
 //│ ╔══[COMPILATION ERROR] Expected no type arguments, got 1
-//│ ║  l.36: 	class Foo[A](x: Bar[A])
-//│ ╙──      	                ^^^^^^
+//│ ║  l.215: 	class Foo[A](x: Bar[A])
+//│ ╙──       	                ^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo²⁸
+//│   sym = member:Foo²⁹
+//│   ctorSym = S of term:Foo³⁰
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x¹⁴
+//│         sign = S of TyApp{sym=class:Bar⁴}:
+//│           lhs = Resolved{sym=class:Bar⁴}:
+//│             t = Ref{sym=member:Bar⁵} of member:Bar⁵
+//│             sym = class:Bar⁴
+//│           targs = Ls of
+//│             Ref{sym=A⁷} of A⁷
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo²⁸/x¹⁵
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo²⁸
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x¹⁴
 
 

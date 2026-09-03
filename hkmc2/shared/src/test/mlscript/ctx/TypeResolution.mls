@@ -1,6 +1,30 @@
 
 class Foo with
   val foo: Foo = new Foo
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   k = Cls
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:foo⁰
+//│       _2 = term:Foo⁰/foo¹
+//│   ctor = Scoped(syms = {tmp:tmp⁰}):
+//│     body = Assign:
+//│       lhs = tmp:tmp⁰
+//│       rhs = Instantiate:
+//│         mut = false
+//│         cls = MemberRef{disamb=class:Foo⁰}:
+//│           bms = member:Foo¹
+//│           disamb = class:Foo⁰
+//│         argss = Ls of
+//│           Nil
+//│       rest = Define: \
+//│       defn = ValDefn:
+//│         tsym = term:Foo⁰/foo¹
+//│         sym = member:foo⁰
+//│         rhs = SimpleRef of tmp:tmp⁰
 
 :rt
 new Foo
@@ -27,24 +51,48 @@ val foo: Foo = new Foo
 foo
 //│ ——————————————| Resolved tree |—————————————————————————————————————————————————————————————————————
 //│ Blk:
-//│   res = Resolved{sym=term:foo⁰,typ=class:Foo⁰}:
-//│     t = Ref{sym=member:foo¹} of member:foo¹
-//│     sym = term:foo⁰
+//│   res = Resolved{sym=term:foo²,typ=class:Foo⁰}:
+//│     t = Ref{sym=member:foo³} of member:foo³
+//│     sym = term:foo²
 
 :rt
 foo.foo
 //│ ——————————————| Resolved tree |—————————————————————————————————————————————————————————————————————
 //│ Blk:
-//│   res = Resolved{sym=term:Foo⁰/foo²,typ=class:Foo⁰}:
-//│     t = Sel{sym=member:foo³}:
-//│       prefix = Resolved{sym=term:foo⁰,typ=class:Foo⁰}:
-//│         t = Ref{sym=member:foo¹} of member:foo¹
-//│         sym = term:foo⁰
+//│   res = Resolved{sym=term:Foo⁰/foo¹,typ=class:Foo⁰}:
+//│     t = Sel{sym=member:foo⁰}:
+//│       prefix = Resolved{sym=term:foo²,typ=class:Foo⁰}:
+//│         t = Ref{sym=member:foo³} of member:foo³
+//│         sym = term:foo²
 //│       nme = Ident of "foo"
-//│     sym = term:Foo⁰/foo²
+//│     sym = term:Foo⁰/foo¹
 
 class Foo2[A, B] with
   val foo: Foo2[Int, Str] = new Foo2
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo2⁰
+//│   sym = member:Foo2¹
+//│   k = Cls
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:foo⁴
+//│       _2 = term:Foo2⁰/foo⁵
+//│   ctor = Scoped(syms = {tmp:tmp¹}):
+//│     body = Assign:
+//│       lhs = tmp:tmp¹
+//│       rhs = Instantiate:
+//│         mut = false
+//│         cls = MemberRef{disamb=class:Foo2⁰}:
+//│           bms = member:Foo2¹
+//│           disamb = class:Foo2⁰
+//│         argss = Ls of
+//│           Nil
+//│       rest = Define: \
+//│       defn = ValDefn:
+//│         tsym = term:Foo2⁰/foo⁵
+//│         sym = member:foo⁴
+//│         rhs = SimpleRef of tmp:tmp¹
 
 :rt
 new Foo2
@@ -71,21 +119,21 @@ val foo: Foo2[Str, Int] = new Foo2
 foo
 //│ ——————————————| Resolved tree |—————————————————————————————————————————————————————————————————————
 //│ Blk:
-//│   res = Resolved{sym=term:foo⁴,typ=class:Foo2⁰[class:Str⁰, class:Int⁰]}:
-//│     t = Ref{sym=member:foo⁵} of member:foo⁵
-//│     sym = term:foo⁴
+//│   res = Resolved{sym=term:foo⁶,typ=class:Foo2⁰[class:Str⁰, class:Int⁰]}:
+//│     t = Ref{sym=member:foo⁷} of member:foo⁷
+//│     sym = term:foo⁶
 
 :rt
 foo.foo
 //│ ——————————————| Resolved tree |—————————————————————————————————————————————————————————————————————
 //│ Blk:
-//│   res = Resolved{sym=term:Foo2⁰/foo⁶,typ=class:Foo2⁰[class:Int⁰, class:Str⁰]}:
-//│     t = Sel{sym=member:foo⁷}:
-//│       prefix = Resolved{sym=term:foo⁴,typ=class:Foo2⁰[class:Str⁰, class:Int⁰]}:
-//│         t = Ref{sym=member:foo⁵} of member:foo⁵
-//│         sym = term:foo⁴
+//│   res = Resolved{sym=term:Foo2⁰/foo⁵,typ=class:Foo2⁰[class:Int⁰, class:Str⁰]}:
+//│     t = Sel{sym=member:foo⁴}:
+//│       prefix = Resolved{sym=term:foo⁶,typ=class:Foo2⁰[class:Str⁰, class:Int⁰]}:
+//│         t = Ref{sym=member:foo⁷} of member:foo⁷
+//│         sym = term:foo⁶
 //│       nme = Ident of "foo"
-//│     sym = term:Foo2⁰/foo⁶
+//│     sym = term:Foo2⁰/foo⁵
 
 :rt
 fun f(x: Foo) = x
@@ -111,6 +159,9 @@ fun f(x: Foo) = x
 
 module M
 object O
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁰
 
 :rt
 M
@@ -221,6 +272,20 @@ class Foo with
 //│             nme = Ident of "foo"
 //│           sym = term:Foo²/foo⁹
 //│   res = Lit of UnitLit of false
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo²
+//│   sym = member:Foo³
+//│   k = Cls
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:foo⁸
+//│       _2 = term:Foo²/foo⁹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo²/foo⁹
+//│       sym = member:foo⁸
+//│       rhs = Lit of IntLit of 42
 
 // The explicit `this` (class:Foo) in the Sel(class:Foo, "foo") should be resolved correctly.
 :rt
@@ -249,3 +314,17 @@ class Foo with
 //│             nme = Ident of "foo"
 //│           sym = term:Foo⁴/foo¹¹
 //│   res = Lit of UnitLit of false
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁴
+//│   sym = member:Foo⁵
+//│   k = Cls
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:foo¹⁰
+//│       _2 = term:Foo⁴/foo¹¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁴/foo¹¹
+//│       sym = member:foo¹⁰
+//│       rhs = Lit of IntLit of 42

@@ -54,6 +54,51 @@ object Outer with
   val r = foo()
   fun bar() = r
 Outer.r
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Outer⁰
+//│   sym = member:Outer¹
+//│   k = Obj
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of object:Outer⁰
+//│       sym = member:foo⁰
+//│       dSym = term:Outer⁰/foo¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = Select{sym=term:Outer⁰/bar⁰}:
+//│           qual = This of object:Outer⁰
+//│           name = Ident of "bar"
+//│         argss = Ls of
+//│           Nil
+//│     FunDefn:
+//│       owner = S of object:Outer⁰
+//│       sym = member:bar¹
+//│       dSym = term:Outer⁰/bar⁰
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Select{sym=term:Outer⁰/r⁰}:
+//│         qual = This of object:Outer⁰
+//│         name = Ident of "r"
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:r¹
+//│       _2 = term:Outer⁰/r⁰
+//│   ctor = Scoped(syms = {tmp:tmp⁰}):
+//│     body = Assign:
+//│       lhs = tmp:tmp⁰
+//│       rhs = Call:
+//│         fun = Select{sym=term:Outer⁰/foo¹}:
+//│           qual = This of object:Outer⁰
+//│           name = Ident of "foo"
+//│         argss = Ls of
+//│           Nil
+//│       rest = Define: \
+//│       defn = ValDefn:
+//│         tsym = term:Outer⁰/r⁰
+//│         sym = member:r¹
+//│         rhs = SimpleRef of tmp:tmp⁰
 //│ ═══[RUNTIME ERROR] Error: MLscript call unexpectedly returned `undefined`, the forbidden value.
 
 

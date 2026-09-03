@@ -34,6 +34,27 @@ xs
 
 
 class Foo(val x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:Foo⁰/x²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
 
 let foo = Foo(123)
 //│ foo = Foo(123)
@@ -63,6 +84,18 @@ foo.["x"]
 
 class DynCtor() with
   set this.("dynField") = 42
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:DynCtor⁰
+//│   sym = member:DynCtor¹
+//│   ctorSym = S of term:DynCtor²
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
+//│   ctor = AssignDynField:
+//│     lhs = This of class:DynCtor⁰
+//│     fld = Lit of StrLit of "dynField"
+//│     arrayIdx = false
+//│     rhs = Lit of IntLit of 42
 
 DynCtor().dynField
 //│ = 42

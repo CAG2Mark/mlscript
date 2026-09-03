@@ -2,6 +2,27 @@
 
 data class A(a)
 data class B(a, b, c, d, e)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A⁰
+//│   sym = member:A¹
+//│   ctorSym = S of term:A²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = a⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a¹
+//│       _2 = term:A⁰/a²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:A⁰/a²
+//│       sym = member:a¹
+//│       rhs = SimpleRef of a⁰
 
 :deforest
 :sir
@@ -11,7 +32,7 @@ if B(1,2,3,4,5) is
 //│ deforest > >>> fusing >>>
 //│ deforest > B⁰(1, 2, 3, 4, 5) ->
 //│ deforest > 	match: scrut⁰
-//│ deforest > 	fields: scrut⁰.a⁰
+//│ deforest > 	fields: scrut⁰.a³
 //│ deforest > 	fields: scrut⁰.b⁰
 //│ deforest > 	fields: scrut⁰.c⁰
 //│ deforest > 	fields: scrut⁰.d⁰
@@ -55,24 +76,24 @@ fun c2(x) = if x is
   A(A(A(A(A(A(a)))))) then a
 c2 of A(A(A(A(A(A(1))))))
 //│ deforest > >>> fusing >>>
-//│ deforest > A⁰(tmp⁰) ->
+//│ deforest > A²(tmp⁰) ->
 //│ deforest > 	match: x⁰
-//│ deforest > 	fields: x⁰.a¹
-//│ deforest > A⁰(tmp¹) ->
+//│ deforest > 	fields: x⁰.a²
+//│ deforest > A²(tmp¹) ->
 //│ deforest > 	match: arg$A$0$⁰
-//│ deforest > 	fields: arg$A$0$⁰.a¹
-//│ deforest > A⁰(tmp²) ->
+//│ deforest > 	fields: arg$A$0$⁰.a²
+//│ deforest > A²(tmp²) ->
 //│ deforest > 	match: arg$A$0$¹
-//│ deforest > 	fields: arg$A$0$¹.a¹
-//│ deforest > A⁰(tmp³) ->
+//│ deforest > 	fields: arg$A$0$¹.a²
+//│ deforest > A²(tmp³) ->
 //│ deforest > 	match: arg$A$0$²
-//│ deforest > 	fields: arg$A$0$².a¹
-//│ deforest > A⁰(tmp⁴) ->
+//│ deforest > 	fields: arg$A$0$².a²
+//│ deforest > A²(tmp⁴) ->
 //│ deforest > 	match: arg$A$0$³
-//│ deforest > 	fields: arg$A$0$³.a¹
-//│ deforest > A⁰(1) ->
+//│ deforest > 	fields: arg$A$0$³.a²
+//│ deforest > A²(1) ->
 //│ deforest > 	match: arg$A$0$⁴
-//│ deforest > 	fields: arg$A$0$⁴.a¹
+//│ deforest > 	fields: arg$A$0$⁴.a²
 //│ deforest > <<< fusing <<<
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
 //│ let tmp, tmp1, tmp2, tmp3, tmp4, tmp5, c2_19$c2, c2_19$x_A, c2_19$x_rest, c2_19$arg$A$0$_A, c2_19$arg$A$0$_rest, c2_19$arg$A$0$_A1, c2_19$arg$A$0$_rest1, c2_19$arg$A$0$_A2, c2_19$arg$A$0$_rest2, c2_19$arg$A$0$_A3, c2_19$arg$A$0$_rest3, c2_19$arg$A$0$_A4, c2_19$arg$A$0$_rest4, A_a, A_a1, A_a2, A_a3, A_a4, A_a5;
@@ -139,23 +160,23 @@ c2 of A(A(A(A(A(A(1))))))
 //│ define c2⁰ as fun c2¹(x) {
 //│   let a, arg$A$0$, arg$A$0$1, arg$A$0$2, arg$A$0$3, arg$A$0$4, arg$A$0$5;
 //│   match x
-//│     A¹ =>
-//│       set arg$A$0$ = x.a¹;
+//│     A⁰ =>
+//│       set arg$A$0$ = x.a²;
 //│       match arg$A$0$
-//│         A¹ =>
-//│           set arg$A$0$1 = arg$A$0$.a¹;
+//│         A⁰ =>
+//│           set arg$A$0$1 = arg$A$0$.a²;
 //│           match arg$A$0$1
-//│             A¹ =>
-//│               set arg$A$0$2 = arg$A$0$1.a¹;
+//│             A⁰ =>
+//│               set arg$A$0$2 = arg$A$0$1.a²;
 //│               match arg$A$0$2
-//│                 A¹ =>
-//│                   set arg$A$0$3 = arg$A$0$2.a¹;
+//│                 A⁰ =>
+//│                   set arg$A$0$3 = arg$A$0$2.a²;
 //│                   match arg$A$0$3
-//│                     A¹ =>
-//│                       set arg$A$0$4 = arg$A$0$3.a¹;
+//│                     A⁰ =>
+//│                       set arg$A$0$4 = arg$A$0$3.a²;
 //│                       match arg$A$0$4
-//│                         A¹ =>
-//│                           set arg$A$0$5 = arg$A$0$4.a¹;
+//│                         A⁰ =>
+//│                           set arg$A$0$5 = arg$A$0$4.a²;
 //│                           set a = arg$A$0$5;
 //│                           return a
 //│                         else

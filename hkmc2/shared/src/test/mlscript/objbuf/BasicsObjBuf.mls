@@ -10,6 +10,46 @@ open annotations
 class A with
   constructor(x)
   fun f(y) = x + y
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A⁰
+//│   sym = member:A¹
+//│   ctorSym = S of term:A²
+//│   k = Cls
+//│   auxParams = Ls of
+//│     ParamList:
+//│       params = Ls of
+//│         Param:
+//│           sym = x⁰
+//│           modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:A⁰
+//│       sym = member:f⁰
+//│       dSym = term:A⁰/f¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = y⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:A⁰/x¹}:
+//│                 qual = This of class:A⁰
+//│                 name = Ident of "x"
+//│             Arg:
+//│               value = SimpleRef of y⁰
+//│   privateFields = Ls of
+//│     term:A⁰/x¹
+//│   ctor = AssignField:
+//│     lhs = This of class:A⁰
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁰
+//│   bufferable = S of false
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let A1;
 //│ (class A {
@@ -43,57 +83,167 @@ class A with
 @bufferable
 class A2(x) with
   fun f(y) = x + y
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A2⁰
+//│   sym = member:A2¹
+//│   ctorSym = S of term:A2²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x²
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:A2⁰
+//│       sym = member:f²
+//│       dSym = term:A2⁰/f³
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = y¹
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:A2⁰/x³}:
+//│                 qual = This of class:A2⁰
+//│                 name = Ident of "x"
+//│             Arg:
+//│               value = SimpleRef of y¹
+//│   privateFields = Ls of
+//│     term:A2⁰/x³
+//│   ctor = AssignField:
+//│     lhs = This of class:A2⁰
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x²
+//│   bufferable = S of true
 
 :ge
 @buffered
 class B0(x)
 //│ ╔══[COMPILATION ERROR] Buffered classes must not have a main parameter list; use `constructor(...)` syntax instead.
-//│ ║  l.48: 	@buffered
-//│ ╙──      	^^^^^^^^^
+//│ ║  l.127: 	@buffered
+//│ ╙──       	^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:B0⁰
+//│   sym = member:B0¹
+//│   ctorSym = S of term:B0²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁴
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:B0⁰/x⁵
+//│   ctor = AssignField:
+//│     lhs = This of class:B0⁰
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁴
+//│   bufferable = S of false
 
 :ge
 @buffered
 @buffered
 class B1(x)
 //│ ╔══[COMPILATION ERROR] Only one of bufferable annotation is allowed.
-//│ ║  l.55: 	@buffered
-//│ ║        	^^^^^^^^^
-//│ ║  l.56: 	@buffered
-//│ ╙──      	^^^^^^^^^
+//│ ║  l.152: 	@buffered
+//│ ║         	^^^^^^^^^
+//│ ║  l.153: 	@buffered
+//│ ╙──       	^^^^^^^^^
 //│ ╔══[COMPILATION ERROR] Buffered classes must not have a main parameter list; use `constructor(...)` syntax instead.
-//│ ║  l.55: 	@buffered
-//│ ║        	^^^^^^^^^
-//│ ║  l.56: 	@buffered
-//│ ╙──      	^^^^^^^^^
+//│ ║  l.152: 	@buffered
+//│ ║         	^^^^^^^^^
+//│ ║  l.153: 	@buffered
+//│ ╙──       	^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:B1⁰
+//│   sym = member:B1¹
+//│   ctorSym = S of term:B1²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁶
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:B1⁰/x⁷
+//│   ctor = AssignField:
+//│     lhs = This of class:B1⁰
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁶
+//│   bufferable = S of false
 
 :ge
 @buffered
 @bufferable
 class B2(x)
 //│ ╔══[COMPILATION ERROR] Only one of bufferable annotation is allowed.
-//│ ║  l.70: 	@buffered
-//│ ║        	^^^^^^^^^
-//│ ║  l.71: 	@bufferable
-//│ ╙──      	^^^^^^^^^^^
+//│ ║  l.185: 	@buffered
+//│ ║         	^^^^^^^^^
+//│ ║  l.186: 	@bufferable
+//│ ╙──       	^^^^^^^^^^^
 //│ ╔══[COMPILATION ERROR] Buffered classes must not have a main parameter list; use `constructor(...)` syntax instead.
-//│ ║  l.70: 	@buffered
-//│ ║        	^^^^^^^^^
-//│ ║  l.71: 	@bufferable
-//│ ╙──      	^^^^^^^^^^^
+//│ ║  l.185: 	@buffered
+//│ ║         	^^^^^^^^^
+//│ ║  l.186: 	@bufferable
+//│ ╙──       	^^^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:B2⁰
+//│   sym = member:B2¹
+//│   ctorSym = S of term:B2²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁸
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:B2⁰/x⁹
+//│   ctor = AssignField:
+//│     lhs = This of class:B2⁰
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁸
+//│   bufferable = S of false
 
 :w
 @bufferable
 module B3
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.85: 	@bufferable
-//│ ╙──      	^^^^^^^^^^^
+//│ ║  l.218: 	@bufferable
+//│ ╙──       	^^^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:B3⁰
+//│   annotations = Ls of
+//│     Trm of Resolved{sym=object:bufferable⁰,typ=object:bufferable⁰}:
+//│       t = SynthSel{sym=member:bufferable¹}:
+//│         prefix = Resolved{sym=module:annotations⁰,typ=module:annotations⁰}:
+//│           t = Ref{sym=member:annotations¹} of member:annotations¹
+//│           sym = module:annotations⁰
+//│         nme = Ident of "bufferable"
+//│       sym = object:bufferable⁰
 
 :w
 @bufferable
 object B3
 //│ ╔══[WARNING] This annotation has no effect.
-//│ ║  l.92: 	@bufferable
-//│ ╙──      	^^^^^^^^^^^
+//│ ║  l.236: 	@bufferable
+//│ ╙──       	^^^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:B3¹
+//│   sym = member:B3²
+//│   k = Obj
+//│   bufferable = S of true
 
 
 :breakme // TODO: disallow direct instantiation of @buffered classes
@@ -136,6 +286,27 @@ A.f(buf, obj3)(1)
 @bufferable
 class Oops with
   fun hi = print("hi")
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Oops⁰
+//│   sym = member:Oops¹
+//│   k = Cls
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Oops⁰
+//│       sym = member:hi⁰
+//│       dSym = term:Oops⁰/hi¹
+//│       body = Return of Call:
+//│         fun = Select{sym=term:Predef⁰/print⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "print"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Lit of StrLit of "hi"
+//│   bufferable = S of true
 
 let obj1 = buf.mkNew(Oops)
 //│ obj1 = 0
@@ -162,5 +333,69 @@ class A with
   constructor(x)
   val z = x
   fun f(y) = x + y + z
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A³
+//│   sym = member:A⁴
+//│   ctorSym = S of term:A⁵
+//│   k = Cls
+//│   auxParams = Ls of
+//│     ParamList:
+//│       params = Ls of
+//│         Param:
+//│           sym = x¹⁰
+//│           modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:A³
+//│       sym = member:f⁴
+//│       dSym = term:A³/f⁵
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = y²
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp⁰}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁰
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:A³/x¹¹}:
+//│                     qual = This of class:A³
+//│                     name = Ident of "x"
+//│                 Arg:
+//│                   value = SimpleRef of y²
+//│           rest = Return of Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp⁰
+//│                 Arg:
+//│                   value = Select{sym=term:A³/z⁰}:
+//│                     qual = This of class:A³
+//│                     name = Ident of "z"
+//│   privateFields = Ls of
+//│     term:A³/x¹¹
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:z¹
+//│       _2 = term:A³/z⁰
+//│   ctor = AssignField:
+//│     lhs = This of class:A³
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x¹⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:A³/z⁰
+//│       sym = member:z¹
+//│       rhs = Select{sym=term:A³/x¹¹}:
+//│         qual = This of class:A³
+//│         name = Ident of "x"
+//│   bufferable = S of false
 
 

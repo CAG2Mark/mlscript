@@ -3,15 +3,22 @@
 
 :sir
 data class Foo()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ @data define Foo⁰ as class Foo² { constructor Foo¹ }; end
+//│ @data define Foo¹ as class Foo⁰ { constructor Foo² }; end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 // * Notice that `Foo¹` correctly refers to the ClassCtorSymbol of `Foo` shown above
 :sir
 Foo
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ return Foo¹
+//│ return Foo²
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = fun Foo { class: class Foo }
 
@@ -26,11 +33,19 @@ Foo.class
 object Foo with
   class C()
   print(C)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of object:Foo³
+//│   isym = class:C⁰
+//│   sym = member:C¹
+//│   ctorSym = S of term:Foo³/C²
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define Foo³ as object Foo⁴ {
+//│ define Foo⁴ as object Foo³ {
 //│   constructor() {
-//│     define C⁰ as class C² { constructor C¹ };
-//│     do Predef⁰.print⁰(Foo⁴.this.C¹);
+//│     define C¹ as class C⁰ { constructor C² };
+//│     do Predef⁰.print⁰(Foo³.this.C²);
 //│     end
 //│   }
 //│ };
@@ -43,16 +58,37 @@ object Foo with
 Foo.C
 //│ —————————————| Lowered IR Tree |————————————————————————————————————————————————————————————————————
 //│ Program:
-//│   main = Return of Select{sym=term:Foo⁴/C¹}:
-//│     qual = MemberRef{disamb=object:Foo⁴}:
-//│       bms = member:Foo³
-//│       disamb = object:Foo⁴
+//│   main = Return of Select{sym=term:Foo³/C²}:
+//│     qual = MemberRef{disamb=object:Foo³}:
+//│       bms = member:Foo⁴
+//│       disamb = object:Foo³
 //│     name = Ident of "C"
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = fun C { class: class C }
 
 
 data class Foo(a)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁵
+//│   sym = member:Foo⁶
+//│   ctorSym = S of term:Foo⁷
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = a⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a¹
+//│       _2 = term:Foo⁵/a²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁵/a²
+//│       sym = member:a¹
+//│       rhs = SimpleRef of a⁰
 
 Foo
 //│ = fun Foo { class: class Foo }
@@ -69,6 +105,39 @@ foo(27)
 
 
 data class Foo(a, b)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁸
+//│   sym = member:Foo⁹
+//│   ctorSym = S of term:Foo¹⁰
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = a³
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = b⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a⁴
+//│       _2 = term:Foo⁸/a⁵
+//│     Tuple2:
+//│       _1 = member:b¹
+//│       _2 = term:Foo⁸/b²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁸/a⁵
+//│       sym = member:a⁴
+//│       rhs = SimpleRef of a³
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁸/b²
+//│       sym = member:b¹
+//│       rhs = SimpleRef of b⁰
 
 let foo = Foo
 //│ foo = fun Foo { class: class Foo }
@@ -103,6 +172,62 @@ Foo(print(1), print(2))
 data class Inner(c) with
   fun i1(d) = c + d
   print(c)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Inner⁰
+//│   sym = member:Inner¹
+//│   ctorSym = S of term:Inner²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = c⁰
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Inner⁰
+//│       sym = member:i1⁰
+//│       dSym = term:Inner⁰/i1¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = d⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:Inner⁰/c¹}:
+//│                 qual = This of class:Inner⁰
+//│                 name = Ident of "c"
+//│             Arg:
+//│               value = SimpleRef of d⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:c²
+//│       _2 = term:Inner⁰/c¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Inner⁰/c¹
+//│       sym = member:c²
+//│       rhs = SimpleRef of c⁰
+//│     rest = Assign: \
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Select{sym=term:Inner⁰/c¹}:
+//│               qual = This of class:Inner⁰
+//│               name = Ident of "c"
 
 let i = new Inner(100)
 //│ > 100
@@ -122,6 +247,204 @@ class Foo(x, val y, z, val z, z) with
   print("this.y = " + this.y)
   print("z = " + z)
   print("this.z = " + this.z)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo¹¹
+//│   sym = member:Foo¹²
+//│   ctorSym = S of term:Foo¹³
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = y⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         sym = z⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = z¹
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         sym = z²
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo¹¹/x¹
+//│     term:Foo¹¹/z³
+//│     term:Foo¹¹/z⁴
+//│     term:Foo¹¹/x²
+//│     term:Foo¹¹/y¹
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:y²
+//│       _2 = term:Foo¹¹/y³
+//│     Tuple2:
+//│       _1 = member:z⁵
+//│       _2 = term:Foo¹¹/z⁶
+//│   ctor = Scoped(syms = {tmp:tmp⁰, tmp:tmp¹, tmp:tmp², tmp:tmp³, tmp:tmp⁴}):
+//│     body = AssignField:
+//│       lhs = This of class:Foo¹¹
+//│       nme = Ident of "x"
+//│       rhs = SimpleRef of x⁰
+//│       rest = Define: \
+//│       defn = ValDefn:
+//│         tsym = term:Foo¹¹/y³
+//│         sym = member:y²
+//│         rhs = SimpleRef of y⁰
+//│       rest = AssignField: \
+//│       lhs = This of class:Foo¹¹
+//│       nme = Ident of "z"
+//│       rhs = SimpleRef of z⁰
+//│       rest = Define: \
+//│       defn = ValDefn:
+//│         tsym = term:Foo¹¹/z⁶
+//│         sym = member:z⁵
+//│         rhs = SimpleRef of z¹
+//│       rest = AssignField: \
+//│       lhs = This of class:Foo¹¹
+//│       nme = Ident of "z"
+//│       rhs = SimpleRef of z²
+//│       rest = AssignField: \
+//│       lhs = This of class:Foo¹¹
+//│       nme = Ident of "x"
+//│       rhs = Lit of IntLit of 1
+//│       rest = AssignField: \
+//│       lhs = This of class:Foo¹¹
+//│       nme = Ident of "y"
+//│       rhs = Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:Foo¹¹/y³}:
+//│                 qual = This of class:Foo¹¹
+//│                 name = Ident of "y"
+//│             Arg:
+//│               value = Lit of IntLit of 1
+//│       rest = Assign: \
+//│       lhs = tmp:tmp⁰
+//│       rhs = Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Lit of StrLit of "x = "
+//│             Arg:
+//│               value = Select{sym=term:Foo¹¹/x²}:
+//│                 qual = This of class:Foo¹¹
+//│                 name = Ident of "x"
+//│       rest = Assign: \
+//│       lhs = ‹no symbol›
+//│       rhs = Call:
+//│         fun = Select{sym=term:Predef⁰/print⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "print"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of tmp:tmp⁰
+//│       rest = Assign: \
+//│       lhs = tmp:tmp¹
+//│       rhs = Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Lit of StrLit of "y = "
+//│             Arg:
+//│               value = Select{sym=term:Foo¹¹/y¹}:
+//│                 qual = This of class:Foo¹¹
+//│                 name = Ident of "y"
+//│       rest = Assign: \
+//│       lhs = ‹no symbol›
+//│       rhs = Call:
+//│         fun = Select{sym=term:Predef⁰/print⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "print"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of tmp:tmp¹
+//│       rest = Assign: \
+//│       lhs = tmp:tmp²
+//│       rhs = Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Lit of StrLit of "this.y = "
+//│             Arg:
+//│               value = Select{sym=term:Foo¹¹/y³}:
+//│                 qual = This of class:Foo¹¹
+//│                 name = Ident of "y"
+//│       rest = Assign: \
+//│       lhs = ‹no symbol›
+//│       rhs = Call:
+//│         fun = Select{sym=term:Predef⁰/print⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "print"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of tmp:tmp²
+//│       rest = Assign: \
+//│       lhs = tmp:tmp³
+//│       rhs = Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Lit of StrLit of "z = "
+//│             Arg:
+//│               value = Select{sym=term:Foo¹¹/z⁴}:
+//│                 qual = This of class:Foo¹¹
+//│                 name = Ident of "z"
+//│       rest = Assign: \
+//│       lhs = ‹no symbol›
+//│       rhs = Call:
+//│         fun = Select{sym=term:Predef⁰/print⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "print"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of tmp:tmp³
+//│       rest = Assign: \
+//│       lhs = tmp:tmp⁴
+//│       rhs = Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Lit of StrLit of "this.z = "
+//│             Arg:
+//│               value = Select{sym=term:Foo¹¹/z⁶}:
+//│                 qual = This of class:Foo¹¹
+//│                 name = Ident of "z"
+//│       rest = Assign: \
+//│       lhs = ‹no symbol›
+//│       rhs = Call:
+//│         fun = Select{sym=term:Predef⁰/print⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "print"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of tmp:tmp⁴
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Foo9;
 //│ Foo9 = function Foo(x, y, z, z1, z2) {
@@ -170,11 +493,27 @@ Foo(10, 20, 30, 40, 50)
 class Foo(val z, val z)
 //│ ╔══[COMPILATION ERROR] Duplicate definition of member named 'z'.
 //│ ╟── Defined at: 
-//│ ║  l.170: 	class Foo(val z, val z)
+//│ ║  l.493: 	class Foo(val z, val z)
 //│ ║         	              ^
 //│ ╟── Defined at: 
-//│ ║  l.170: 	class Foo(val z, val z)
+//│ ║  l.493: 	class Foo(val z, val z)
 //│ ╙──       	                     ^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo¹⁴
+//│   sym = member:Foo¹⁵
+//│   ctorSym = S of term:Foo¹⁶
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = z⁷
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = z⁸
+//│         modulefulness = Modulefulness of N
 
 Foo(1, 2)
 //│ = Foo(undefined, undefined)

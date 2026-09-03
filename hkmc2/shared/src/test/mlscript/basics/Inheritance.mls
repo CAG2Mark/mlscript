@@ -4,17 +4,60 @@
 class Foo with
   val x = 10
   fun foo = x + 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   k = Cls
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo⁰
+//│       sym = member:foo⁰
+//│       dSym = term:Foo⁰/foo¹
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:Foo⁰/x⁰}:
+//│                 qual = This of class:Foo⁰
+//│                 name = Ident of "x"
+//│             Arg:
+//│               value = Lit of IntLit of 1
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:Foo⁰/x⁰
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/x⁰
+//│       sym = member:x¹
+//│       rhs = Lit of IntLit of 10
 
 
 object Bar extends Foo
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Bar⁰
+//│   sym = member:Bar¹
+//│   k = Obj
+//│   parentPath = S of MemberRef{disamb=class:Foo⁰}:
+//│     bms = member:Foo¹
+//│     disamb = class:Foo⁰
+//│   preCtor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:super⁰
+//│       argss = Ls of
+//│         Nil
 
 :todo // recognize fields that are inherited from superclasses
 [Bar.x, Bar.foo]
 //│ ╔══[COMPILATION ERROR] Object 'Bar' does not contain member 'x'
-//│ ║  l.12: 	[Bar.x, Bar.foo]
+//│ ║  l.55: 	[Bar.x, Bar.foo]
 //│ ╙──      	    ^^
 //│ ╔══[COMPILATION ERROR] Object 'Bar' does not contain member 'foo'
-//│ ║  l.12: 	[Bar.x, Bar.foo]
+//│ ║  l.55: 	[Bar.x, Bar.foo]
 //│ ╙──      	           ^^^^
 //│ = [10, 11]
 
@@ -33,6 +76,51 @@ Bar is String
 // :de
 data class Bar(y) extends Foo with
   fun bar = y + 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Bar²
+//│   sym = member:Bar³
+//│   ctorSym = S of term:Bar⁴
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = y⁰
+//│         modulefulness = Modulefulness of N
+//│   parentPath = S of MemberRef{disamb=class:Foo⁰}:
+//│     bms = member:Foo¹
+//│     disamb = class:Foo⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Bar²
+//│       sym = member:bar⁰
+//│       dSym = term:Bar²/bar¹
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:Bar²/y¹}:
+//│                 qual = This of class:Bar²
+//│                 name = Ident of "y"
+//│             Arg:
+//│               value = Lit of IntLit of 1
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:y²
+//│       _2 = term:Bar²/y¹
+//│   preCtor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:super⁰
+//│       argss = Ls of
+//│         Nil
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Bar²/y¹
+//│       sym = member:y²
+//│       rhs = SimpleRef of y⁰
 
 let b = Bar(42)
 //│ b = Bar(42)
@@ -50,6 +138,64 @@ b is String
 :sjs
 data class Baz(z) extends Bar(z * 1) with
   fun baz = this.bar * 2
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Baz⁰
+//│   sym = member:Baz¹
+//│   ctorSym = S of term:Baz²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = z⁰
+//│         modulefulness = Modulefulness of N
+//│   parentPath = S of MemberRef{disamb=class:Bar²}:
+//│     bms = member:Bar³
+//│     disamb = class:Bar²
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Baz⁰
+//│       sym = member:baz⁰
+//│       dSym = term:Baz⁰/baz¹
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:*⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select:
+//│                 qual = This of class:Baz⁰
+//│                 name = Ident of "bar"
+//│             Arg:
+//│               value = Lit of IntLit of 2
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:z¹
+//│       _2 = term:Baz⁰/z²
+//│   preCtor = Scoped(syms = {tmp:tmp⁰}):
+//│     body = Assign:
+//│       lhs = tmp:tmp⁰
+//│       rhs = Call:
+//│         fun = SimpleRef of builtin:*⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of z⁰
+//│             Arg:
+//│               value = Lit of IntLit of 1
+//│       rest = Assign: \
+//│       lhs = ‹no symbol›
+//│       rhs = Call:
+//│         fun = SimpleRef of builtin:super⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of tmp:tmp⁰
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Baz⁰/z²
+//│       sym = member:z¹
+//│       rhs = SimpleRef of z⁰
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Baz1;
 //│ Baz1 = function Baz(z) {
@@ -91,14 +237,298 @@ abstract class Option[out T]: Some[T] | None
 object None extends Option[Nothing]
 data class Some[out T](x: T) extends Option[T]
 [Some(123) is Option, None is Option, Some(123) is String, None is String]
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:scrut, tmp:tmp, tmp:tmp, tmp:tmp, tmp:tmp, tmp:scrut)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:Option⁰
+//│       sym = member:Option¹
+//│       k = Cls
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = object:None⁰
+//│       sym = member:None¹
+//│       k = Obj
+//│       parentPath = S of MemberRef{disamb=class:Option⁰}:
+//│         bms = member:Option¹
+//│         disamb = class:Option⁰
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Nil
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Some⁰
+//│       sym = member:Some¹
+//│       ctorSym = S of term:Some²
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = x²
+//│             sign = S of Ref{sym=T⁰} of T⁰
+//│             modulefulness = Modulefulness of N
+//│       parentPath = S of MemberRef{disamb=class:Option⁰}:
+//│         bms = member:Option¹
+//│         disamb = class:Option⁰
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:x³
+//│           _2 = term:Some⁰/x⁴
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Nil
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:Some⁰/x⁴
+//│           sym = member:x³
+//│           rhs = SimpleRef of x²
+//│     rest = Assign: \
+//│     lhs = tmp:scrut⁰
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:Some²}:
+//│         bms = member:Some¹
+//│         disamb = term:Some²
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 123
+//│     rest = Match: \
+//│     scrut = SimpleRef of tmp:scrut⁰
+//│     arms = Ls of
+//│       Tuple2:
+//│         _1 = Cls:
+//│           cls = class:Option⁰
+//│           path = MemberRef{disamb=class:Option⁰}:
+//│             bms = member:Option¹
+//│             disamb = class:Option⁰
+//│         _2 = Assign:
+//│           lhs = tmp:tmp¹
+//│           rhs = Lit of BoolLit of true
+//│     dflt = S of Assign:
+//│       lhs = tmp:tmp¹
+//│       rhs = Lit of BoolLit of false
+//│     rest = Match: \
+//│     scrut = MemberRef{disamb=object:None⁰}:
+//│       bms = member:None¹
+//│       disamb = object:None⁰
+//│     arms = Ls of
+//│       Tuple2:
+//│         _1 = Cls:
+//│           cls = class:Option⁰
+//│           path = MemberRef{disamb=class:Option⁰}:
+//│             bms = member:Option¹
+//│             disamb = class:Option⁰
+//│         _2 = Assign:
+//│           lhs = tmp:tmp²
+//│           rhs = Lit of BoolLit of true
+//│     dflt = S of Assign:
+//│       lhs = tmp:tmp²
+//│       rhs = Lit of BoolLit of false
+//│     rest = Assign: \
+//│     lhs = tmp:scrut¹
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:Some²}:
+//│         bms = member:Some¹
+//│         disamb = term:Some²
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 123
+//│     rest = Match: \
+//│     scrut = SimpleRef of tmp:scrut¹
+//│     arms = Ls of
+//│       Tuple2:
+//│         _1 = Cls:
+//│           cls = class:String⁰
+//│           path = Select{sym=class:String⁰}:
+//│             qual = This of globalThis:globalThis⁰
+//│             name = Ident of "String"
+//│         _2 = Assign:
+//│           lhs = tmp:tmp³
+//│           rhs = Lit of BoolLit of true
+//│     dflt = S of Assign:
+//│       lhs = tmp:tmp³
+//│       rhs = Lit of BoolLit of false
+//│     rest = Match: \
+//│     scrut = MemberRef{disamb=object:None⁰}:
+//│       bms = member:None¹
+//│       disamb = object:None⁰
+//│     arms = Ls of
+//│       Tuple2:
+//│         _1 = Cls:
+//│           cls = class:String⁰
+//│           path = Select{sym=class:String⁰}:
+//│             qual = This of globalThis:globalThis⁰
+//│             name = Ident of "String"
+//│         _2 = Assign:
+//│           lhs = tmp:tmp⁴
+//│           rhs = Lit of BoolLit of true
+//│           rest = Return of Tuple:
+//│             mut = false
+//│             elems = Ls of
+//│               Arg:
+//│                 value = SimpleRef of tmp:tmp¹
+//│               Arg:
+//│                 value = SimpleRef of tmp:tmp²
+//│               Arg:
+//│                 value = SimpleRef of tmp:tmp³
+//│               Arg:
+//│                 value = SimpleRef of tmp:tmp⁴
+//│     dflt = S of Assign:
+//│       lhs = tmp:tmp⁴
+//│       rhs = Lit of BoolLit of false
+//│       rest = Return of Tuple:
+//│         mut = false
+//│         elems = Ls of
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp¹
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp²
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp³
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp⁴
+//│     rest = End of "Rest moved to non-abortive branch(es)"
 //│ = [true, true, false, false]
 
 
 data class Barr(x: Int)(y: Int) with
   fun f = x + y
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Barr⁰
+//│   sym = member:Barr¹
+//│   ctorSym = S of term:Barr²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁵
+//│         sign = S of Resolved{sym=class:Int⁰}:
+//│           t = Ref{sym=member:Int¹} of member:Int¹
+//│           sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│   auxParams = Ls of
+//│     ParamList:
+//│       params = Ls of
+//│         Param:
+//│           flags = (val)
+//│           sym = y³
+//│           sign = S of Ref{sym=member:Int¹} of member:Int¹
+//│           modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Barr⁰
+//│       sym = member:f⁰
+//│       dSym = term:Barr⁰/f¹
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:Barr⁰/x⁶}:
+//│                 qual = This of class:Barr⁰
+//│                 name = Ident of "x"
+//│             Arg:
+//│               value = Select{sym=term:Barr⁰/y⁴}:
+//│                 qual = This of class:Barr⁰
+//│                 name = Ident of "y"
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁷
+//│       _2 = term:Barr⁰/x⁶
+//│     Tuple2:
+//│       _1 = member:y⁵
+//│       _2 = term:Barr⁰/y⁴
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Barr⁰/x⁶
+//│       sym = member:x⁷
+//│       rhs = SimpleRef of x⁵
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Barr⁰/y⁴
+//│       sym = member:y⁵
+//│       rhs = SimpleRef of y³
 
 data class Bazz(z: Int) extends Barr(z % 10)(z / 10) with
   fun g = z
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Bazz⁰
+//│   sym = member:Bazz¹
+//│   ctorSym = S of term:Bazz²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = z³
+//│         sign = S of Resolved{sym=class:Int⁰}:
+//│           t = Ref{sym=member:Int¹} of member:Int¹
+//│           sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│   parentPath = S of MemberRef{disamb=class:Barr⁰}:
+//│     bms = member:Barr¹
+//│     disamb = class:Barr⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Bazz⁰
+//│       sym = member:g⁰
+//│       dSym = term:Bazz⁰/g¹
+//│       body = Return of Select{sym=term:Bazz⁰/z⁴}:
+//│         qual = This of class:Bazz⁰
+//│         name = Ident of "z"
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:z⁵
+//│       _2 = term:Bazz⁰/z⁴
+//│   preCtor = Scoped(syms = {tmp:tmp⁵, tmp:tmp⁶}):
+//│     body = Assign:
+//│       lhs = tmp:tmp⁵
+//│       rhs = Call:
+//│         fun = SimpleRef of builtin:%⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of z³
+//│             Arg:
+//│               value = Lit of IntLit of 10
+//│       rest = Assign: \
+//│       lhs = tmp:tmp⁶
+//│       rhs = Call:
+//│         fun = SimpleRef of builtin:/⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of z³
+//│             Arg:
+//│               value = Lit of IntLit of 10
+//│       rest = Assign: \
+//│       lhs = ‹no symbol›
+//│       rhs = Call:
+//│         fun = SimpleRef of builtin:super⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of tmp:tmp⁵
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of tmp:tmp⁶
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Bazz⁰/z⁴
+//│       sym = member:z⁵
+//│       rhs = SimpleRef of z³
 
 
 Bazz(42).f
@@ -107,16 +537,73 @@ Bazz(42).f
 
 new Barr(40)(2) with
   fun f = 43
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:$anon)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:$anon⁰
+//│       sym = member:$anon¹
+//│       k = Cls
+//│       parentPath = S of MemberRef{disamb=class:Barr⁰}:
+//│         bms = member:Barr¹
+//│         disamb = class:Barr⁰
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:$anon⁰
+//│           sym = member:f²
+//│           dSym = term:$anon⁰/f³
+//│           body = Return of Lit of IntLit of 43
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = Lit of IntLit of 40
+//│             Ls of
+//│               Arg:
+//│                 value = Lit of IntLit of 2
+//│     rest = Return of Instantiate:
+//│       mut = false
+//│       cls = MemberRef{disamb=class:$anon⁰}:
+//│         bms = member:$anon¹
+//│         disamb = class:$anon⁰
+//│       argss = Ls of
+//│         Nil
 //│ = $anon { x: 40, y: 2 }
 
 
 
 module M with
   class A
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of module:M⁰
+//│   isym = class:A⁰
+//│   sym = member:A¹
+//│   k = Cls
 
 // * Check that the access to `M.A` is not sanity-checked, as it is resolved.
 :sjs
 class B extends M.A
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:B⁰
+//│   sym = member:B¹
+//│   k = Cls
+//│   parentPath = S of Select{sym=class:A⁰}:
+//│     qual = MemberRef{disamb=module:M⁰}:
+//│       bms = member:M¹
+//│       disamb = module:M⁰
+//│     name = Ident of "A"
+//│   preCtor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:super⁰
+//│       argss = Ls of
+//│         Nil
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let B1;
 //│ (class B extends M1.A {

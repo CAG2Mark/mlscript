@@ -5,8 +5,29 @@
 
 :sir
 class A(val x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A⁰
+//│   sym = member:A¹
+//│   ctorSym = S of term:A²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:A⁰/x²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:A⁰/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define A⁰ as class A² { val x⁰; constructor A¹(x) { define x⁰ as val x¹ = x; end } }; end
+//│ define A¹ as class A⁰ { val x¹; constructor A²(x) { define x¹ as val x² = x; end } }; end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 let a = A(1)
@@ -24,7 +45,7 @@ a.x
 :sir
 a.A#x
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ return a⁰.x¹
+//│ return a⁰.x²
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 1
 
@@ -34,7 +55,7 @@ A::x
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
 //│ let lambda;
 //│ @private
-//│ define lambda as fun lambda⁰(self, ...args) { return self.x¹(...args) };
+//│ define lambda as fun lambda⁰(self, ...args) { return self.x²(...args) };
 //│ return lambda⁰
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = fun
@@ -48,8 +69,8 @@ case A(x) then x
 //│ define lambda as fun lambda¹(caseScrut) {
 //│   let x, arg$A$0$;
 //│   match caseScrut
-//│     A² =>
-//│       set arg$A$0$ = caseScrut.x¹;
+//│     A⁰ =>
+//│       set arg$A$0$ = caseScrut.x²;
 //│       set x = arg$A$0$;
 //│       return x
 //│     else
@@ -63,8 +84,31 @@ case A(x) then x
 
 :sir
 class A()(val x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A³
+//│   sym = member:A⁴
+//│   ctorSym = S of term:A⁵
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
+//│   auxParams = Ls of
+//│     ParamList:
+//│       params = Ls of
+//│         Param:
+//│           flags = (val)
+//│           sym = x³
+//│           modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁴
+//│       _2 = term:A³/x⁵
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:A³/x⁵
+//│       sym = member:x⁴
+//│       rhs = SimpleRef of x³
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define A³ as class A⁵ { val x²; constructor A⁴(x) { define x² as val x³ = x; end } }; end
+//│ define A⁴ as class A³ { val x⁴; constructor A⁵(x) { define x⁴ as val x⁵ = x; end } }; end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 let a = A()(1)
@@ -80,7 +124,7 @@ a.x
 :sir
 a.A#x
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ return a¹.x³
+//│ return a¹.x⁵
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 1
 
@@ -89,7 +133,7 @@ A::x
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
 //│ let lambda;
 //│ @private
-//│ define lambda as fun lambda²(self, ...args) { return self.x³(...args) };
+//│ define lambda as fun lambda²(self, ...args) { return self.x⁵(...args) };
 //│ return lambda²
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = fun
@@ -103,7 +147,7 @@ case A as a then a.x
 //│ define lambda as fun lambda³(caseScrut) {
 //│   let a;
 //│   match caseScrut
-//│     A⁵ =>
+//│     A³ =>
 //│       set a = caseScrut;
 //│       return a.x﹖
 //│     else
@@ -124,20 +168,107 @@ fun foo(x, y) =
   class A(val u) with { val v = y }
   let a = new A(x)
   [a, a.A#u, a.A#v]
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:A)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:A⁶
+//│       sym = member:A⁷
+//│       ctorSym = S of term:A⁸
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = u⁰
+//│             modulefulness = Modulefulness of N
+//│       auxParams = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = y⁰
+//│               modulefulness = Modulefulness of N
+//│       privateFields = Ls of
+//│         term:A⁶/y¹
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:u¹
+//│           _2 = term:A⁶/u²
+//│         Tuple2:
+//│           _1 = member:v⁰
+//│           _2 = term:A⁶/v¹
+//│       ctor = AssignField:
+//│         lhs = This of class:A⁶
+//│         nme = Ident of "y"
+//│         rhs = SimpleRef of y⁰
+//│         rest = Define: \
+//│         defn = ValDefn:
+//│           tsym = term:A⁶/u²
+//│           sym = member:u¹
+//│           rhs = SimpleRef of u⁰
+//│         rest = Define: \
+//│         defn = ValDefn:
+//│           tsym = term:A⁶/v¹
+//│           sym = member:v⁰
+//│           rhs = Select{sym=term:A⁶/y¹}:
+//│             qual = This of class:A⁶
+//│             name = Ident of "y"
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:foo⁰
+//│       dSym = term:foo¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁶
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = y²
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {a²}):
+//│         body = Assign:
+//│           lhs = a²
+//│           rhs = Instantiate:
+//│             mut = false
+//│             cls = MemberRef{disamb=class:A⁶}:
+//│               bms = member:A⁷
+//│               disamb = class:A⁶
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x⁶
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of y²
+//│           rest = Return of Tuple:
+//│             mut = false
+//│             elems = Ls of
+//│               Arg:
+//│                 value = SimpleRef of a²
+//│               Arg:
+//│                 value = Select{sym=term:A⁶/u²}:
+//│                   qual = SimpleRef of a²
+//│                   name = Ident of "u"
+//│               Arg:
+//│                 value = Select{sym=term:A⁶/v¹}:
+//│                   qual = SimpleRef of a²
+//│                   name = Ident of "v"
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
 //│ let A;
-//│ define A as class A⁷ {
-//│   private val y⁰;
-//│   val u⁰;
+//│ define A as class A⁶ {
+//│   private val y¹;
+//│   val u¹;
 //│   val v⁰;
-//│   constructor A⁶(u, y) {
-//│     set A⁷.this.y⁰ = y;
-//│     define u⁰ as val u¹ = u;
-//│     define v⁰ as val v¹ = A⁷.this.y⁰;
+//│   constructor A⁸(u, y) {
+//│     set A⁶.this.y¹ = y;
+//│     define u¹ as val u² = u;
+//│     define v⁰ as val v¹ = A⁶.this.y¹;
 //│     end
 //│   }
 //│ };
-//│ define foo⁰ as fun foo¹(x, y) { let a; set a = new A⁷(x, y); return [a, a.u¹, a.v¹] };
+//│ define foo⁰ as fun foo¹(x, y) { let a; set a = new A⁶(x, y); return [a, a.u², a.v¹] };
 //│ end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 

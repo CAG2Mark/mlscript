@@ -23,6 +23,24 @@ getter
 
 module Foo with
   fun getter = print(42)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Foo⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Foo⁰
+//│       sym = member:getter⁰
+//│       dSym = term:Foo⁰/getter¹
+//│       body = Return of Call:
+//│         fun = Select{sym=term:Predef⁰/print⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "print"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Lit of IntLit of 42
 
 Foo.getter
 //│ > 42
@@ -56,7 +74,7 @@ x => x
 :noInline
 x => x
 //│ ╔══[INTERNAL ERROR] [BlockChecker] Invalid IR: symbol x⁰ is bound more than once
-//│ ║  l.57: 	x => x
+//│ ║  l.75: 	x => x
 //│ ╙──      	^
 //│ = class anonymous
 
@@ -116,10 +134,10 @@ let f = foo in bar(f)
 bar([foo].0)
 bar([foo, x => x].1)
 //│ ╔══[COMPILATION ERROR] Cannot determine if 0 is a function.
-//│ ║  l.116: 	bar([foo].0)
+//│ ║  l.134: 	bar([foo].0)
 //│ ╙──       	         ^^
 //│ ╔══[COMPILATION ERROR] Cannot determine if 1 is a function.
-//│ ║  l.117: 	bar([foo, x => x].1)
+//│ ║  l.135: 	bar([foo, x => x].1)
 //│ ╙──       	                 ^^
 //│ = 0
 
@@ -134,7 +152,7 @@ bar([foo, x => x].(i))
 :ge
 [foo, x => x].(i)(0)
 //│ ╔══[COMPILATION ERROR] Cannot determine if the dynamic selection is a function object.
-//│ ║  l.135: 	[foo, x => x].(i)(0)
+//│ ║  l.153: 	[foo, x => x].(i)(0)
 //│ ╙──       	               ^
 
 
@@ -142,16 +160,93 @@ class Foo() with
   val f = x => x
   val g = x => x + 1
   fun h(x) = x - 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo¹
+//│   sym = member:Foo²
+//│   ctorSym = S of term:Foo³
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo¹
+//│       sym = member:h⁰
+//│       dSym = term:Foo¹/h¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x¹
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:-⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x¹
+//│             Arg:
+//│               value = Lit of IntLit of 1
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:f⁰
+//│       _2 = term:Foo¹/f¹
+//│     Tuple2:
+//│       _1 = member:g⁰
+//│       _2 = term:Foo¹/g¹
+//│   ctor = Scoped(syms = {member:lambda², member:lambda³}):
+//│     body = Define:
+//│       defn = FunDefn:
+//│         sym = member:lambda²
+//│         dSym = term:lambda⁴
+//│         params = Ls of
+//│           ParamList:
+//│             params = Ls of
+//│               Param:
+//│                 sym = x²
+//│                 modulefulness = Modulefulness of N
+//│         body = Return of SimpleRef of x²
+//│       rest = Define: \
+//│       defn = ValDefn:
+//│         tsym = term:Foo¹/f¹
+//│         sym = member:f⁰
+//│         rhs = MemberRef{disamb=term:lambda⁴}:
+//│           bms = member:lambda²
+//│           disamb = term:lambda⁴
+//│       rest = Define: \
+//│       defn = FunDefn:
+//│         sym = member:lambda³
+//│         dSym = term:lambda⁵
+//│         params = Ls of
+//│           ParamList:
+//│             params = Ls of
+//│               Param:
+//│                 sym = x³
+//│                 modulefulness = Modulefulness of N
+//│         body = Return of Call:
+//│           fun = SimpleRef of builtin:+⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of x³
+//│               Arg:
+//│                 value = Lit of IntLit of 1
+//│       rest = Define: \
+//│       defn = ValDefn:
+//│         tsym = term:Foo¹/g¹
+//│         sym = member:g⁰
+//│         rhs = MemberRef{disamb=term:lambda⁵}:
+//│           bms = member:lambda³
+//│           disamb = term:lambda⁵
 
 :ge
 let foo = Foo()
 foo.("f")(0)
 foo.("h")(1)
 //│ ╔══[COMPILATION ERROR] Cannot determine if the dynamic selection is a function object.
-//│ ║  l.148: 	foo.("f")(0)
+//│ ║  l.243: 	foo.("f")(0)
 //│ ╙──       	^^^^^^^^
 //│ ╔══[COMPILATION ERROR] Cannot determine if the dynamic selection is a function object.
-//│ ║  l.149: 	foo.("h")(1)
+//│ ║  l.244: 	foo.("h")(1)
 //│ ╙──       	^^^^^^^^
 //│ = 0
 //│ foo = Foo()
@@ -159,6 +254,42 @@ foo.("h")(1)
 
 class Foo(x) with
   fun foo(f) = f(x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁴
+//│   sym = member:Foo⁵
+//│   ctorSym = S of term:Foo⁶
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁴
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo⁴
+//│       sym = member:foo²
+//│       dSym = term:Foo⁴/foo³
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = f²
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of f²
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:Foo⁴/x⁵}:
+//│                 qual = This of class:Foo⁴
+//│                 name = Ident of "x"
+//│   privateFields = Ls of
+//│     term:Foo⁴/x⁵
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo⁴
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁴
 
 
 :expect 0
@@ -166,17 +297,17 @@ class Foo(x) with
 Foo(1).foo(x => x - 1)
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
 //│ let tmp, lambda, Function$, tmp1;
-//│ set tmp = Foo⁰(1);
-//│ define lambda as fun lambda²(x) {
+//│ set tmp = Foo⁶(1);
+//│ define lambda as fun lambda⁶(x) {
 //│   return -⁰(x, 1)
 //│ };
 //│ define Function$ as class Function$² extends globalThis⁰.Function⁰ {
 //│   method call⁴ = fun call⁵(x) {
-//│     return lambda²(x)
+//│     return lambda⁶(x)
 //│   }
 //│ };
 //│ set tmp1 = new Function$²();
-//│ return tmp.foo²(tmp1)
+//│ return tmp.foo³(tmp1)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 0
 
@@ -188,20 +319,20 @@ foo()(1)
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
 //│ let baseCall, lambda, Function$;
 //│ @private
-//│ define lambda as fun lambda³(x) {
+//│ define lambda as fun lambda⁷(x) {
 //│   return x
 //│ };
 //│ define Function$ as class Function$³ extends globalThis⁰.Function⁰ {
 //│   method call⁶ = fun call⁷(x) {
-//│     return lambda³(x)
+//│     return lambda⁷(x)
 //│   }
 //│ };
-//│ define foo³ as fun foo⁴() {
+//│ define foo⁴ as fun foo⁵() {
 //│   let tmp;
 //│   set tmp = new Function$³();
 //│   return tmp
 //│ };
-//│ set baseCall = foo⁴();
+//│ set baseCall = foo⁵();
 //│ return baseCall.call﹖(1)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 1
@@ -209,6 +340,35 @@ foo()(1)
 
 class Bar() with
   fun bar() = x => x 
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Bar⁰
+//│   sym = member:Bar¹
+//│   ctorSym = S of term:Bar²
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Bar⁰
+//│       sym = member:bar²
+//│       dSym = term:Bar⁰/bar³
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {member:lambda⁸}):
+//│         body = Define:
+//│           defn = FunDefn:
+//│             sym = member:lambda⁸
+//│             dSym = term:lambda⁹
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = x⁶
+//│                     modulefulness = Modulefulness of N
+//│             body = Return of SimpleRef of x⁶
+//│           rest = Return of MemberRef{disamb=term:lambda⁹}:
+//│             bms = member:lambda⁸
+//│             disamb = term:lambda⁹
 
 
 :expect 42
@@ -218,6 +378,54 @@ Bar().bar()(42)
 
 class Baz(b) with
   fun baz() = x => x + b
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Baz⁰
+//│   sym = member:Baz¹
+//│   ctorSym = S of term:Baz²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = b⁰
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Baz⁰
+//│       sym = member:baz⁰
+//│       dSym = term:Baz⁰/baz¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {member:lambda¹⁰}):
+//│         body = Define:
+//│           defn = FunDefn:
+//│             sym = member:lambda¹⁰
+//│             dSym = term:lambda¹¹
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = x⁷
+//│                     modulefulness = Modulefulness of N
+//│             body = Return of Call:
+//│               fun = SimpleRef of builtin:+⁰
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of x⁷
+//│                   Arg:
+//│                     value = Select{sym=term:Baz⁰/b¹}:
+//│                       qual = This of class:Baz⁰
+//│                       name = Ident of "b"
+//│           rest = Return of MemberRef{disamb=term:lambda¹¹}:
+//│             bms = member:lambda¹⁰
+//│             disamb = term:lambda¹¹
+//│   privateFields = Ls of
+//│     term:Baz⁰/b¹
+//│   ctor = AssignField:
+//│     lhs = This of class:Baz⁰
+//│     nme = Ident of "b"
+//│     rhs = SimpleRef of b⁰
 
 
 :expect 42
@@ -229,6 +437,143 @@ module Foo with
   fun aux(f) = f(1) + f(10)
   fun f(x, y, b) =
     aux(z => x + z) * aux(z => if b then y + z else y - z)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Foo⁷
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Foo⁷
+//│       sym = member:aux²
+//│       dSym = term:Foo⁷/aux³
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = f³
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp⁰, tmp:tmp¹}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁰
+//│           rhs = Call:
+//│             fun = SimpleRef of f³
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = Assign: \
+//│           lhs = tmp:tmp¹
+//│           rhs = Call:
+//│             fun = SimpleRef of f³
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Lit of IntLit of 10
+//│           rest = Return of Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp⁰
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp¹
+//│     FunDefn:
+//│       owner = S of module:Foo⁷
+//│       sym = member:f⁴
+//│       dSym = term:Foo⁷/f⁵
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁸
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = y⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = b²
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {member:lambda¹², tmp:tmp², member:lambda¹³, tmp:tmp³}):
+//│         body = Define:
+//│           defn = FunDefn:
+//│             sym = member:lambda¹²
+//│             dSym = term:lambda¹⁴
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = z⁰
+//│                     modulefulness = Modulefulness of N
+//│             body = Return of Call:
+//│               fun = SimpleRef of builtin:+⁰
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of x⁸
+//│                   Arg:
+//│                     value = SimpleRef of z⁰
+//│           rest = Assign: \
+//│           lhs = tmp:tmp²
+//│           rhs = Call:
+//│             fun = Select{sym=term:Foo⁷/aux³}:
+//│               qual = This of module:Foo⁷
+//│               name = Ident of "aux"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = MemberRef{disamb=term:lambda¹⁴}:
+//│                     bms = member:lambda¹²
+//│                     disamb = term:lambda¹⁴
+//│           rest = Define: \
+//│           defn = FunDefn:
+//│             sym = member:lambda¹³
+//│             dSym = term:lambda¹⁵
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = z¹
+//│                     modulefulness = Modulefulness of N
+//│             body = Match:
+//│               scrut = SimpleRef of b²
+//│               arms = Ls of
+//│                 Tuple2:
+//│                   _1 = Lit of BoolLit of true
+//│                   _2 = Return of Call:
+//│                     fun = SimpleRef of builtin:+⁰
+//│                     argss = Ls of
+//│                       Ls of
+//│                         Arg:
+//│                           value = SimpleRef of y⁰
+//│                         Arg:
+//│                           value = SimpleRef of z¹
+//│               dflt = S of Return of Call:
+//│                 fun = SimpleRef of builtin:-⁰
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = SimpleRef of y⁰
+//│                     Arg:
+//│                       value = SimpleRef of z¹
+//│           rest = Assign: \
+//│           lhs = tmp:tmp³
+//│           rhs = Call:
+//│             fun = Select{sym=term:Foo⁷/aux³}:
+//│               qual = This of module:Foo⁷
+//│               name = Ident of "aux"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = MemberRef{disamb=term:lambda¹⁵}:
+//│                     bms = member:lambda¹³
+//│                     disamb = term:lambda¹⁵
+//│           rest = Return of Call:
+//│             fun = SimpleRef of builtin:*⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp²
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp³
 
 
 :expect 121
@@ -240,38 +585,102 @@ Foo.f(0, 0, true)
 module Foo with
   class Bar(y) with
     fun bar(z) = x => x + y + z 
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of module:Foo⁸
+//│   isym = class:Bar³
+//│   sym = member:Bar⁴
+//│   ctorSym = S of term:Foo⁸/Bar⁵
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = y¹
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Bar³
+//│       sym = member:bar⁴
+//│       dSym = term:Bar³/bar⁵
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = z²
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {member:lambda¹⁶}):
+//│         body = Define:
+//│           defn = FunDefn:
+//│             sym = member:lambda¹⁶
+//│             dSym = term:lambda¹⁷
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = x⁹
+//│                     modulefulness = Modulefulness of N
+//│             body = Scoped(syms = {tmp:tmp⁴}):
+//│               body = Assign:
+//│                 lhs = tmp:tmp⁴
+//│                 rhs = Call:
+//│                   fun = SimpleRef of builtin:+⁰
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of x⁹
+//│                       Arg:
+//│                         value = Select{sym=term:Bar³/y²}:
+//│                           qual = This of class:Bar³
+//│                           name = Ident of "y"
+//│                 rest = Return of Call:
+//│                   fun = SimpleRef of builtin:+⁰
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of tmp:tmp⁴
+//│                       Arg:
+//│                         value = SimpleRef of z²
+//│           rest = Return of MemberRef{disamb=term:lambda¹⁷}:
+//│             bms = member:lambda¹⁶
+//│             disamb = term:lambda¹⁷
+//│   privateFields = Ls of
+//│     term:Bar³/y²
+//│   ctor = AssignField:
+//│     lhs = This of class:Bar³
+//│     nme = Ident of "y"
+//│     rhs = SimpleRef of y¹
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
 //│ let lambda, Function$;
 //│ @private
-//│ define lambda as fun lambda⁴(Bar, z, x) {
+//│ define lambda as fun lambda¹⁷(Bar, z, x) {
 //│   let tmp;
-//│   set tmp = +⁰(x, Bar.y⁰);
+//│   set tmp = +⁰(x, Bar.y²);
 //│   return +⁰(tmp, z)
 //│ };
 //│ define Function$ as class Function$⁴ extends globalThis⁰.Function⁰ {
-//│   private val Bar⁰;
-//│   private val z⁰;
+//│   private val Bar⁶;
+//│   private val z³;
 //│   constructor(Bar, z) {
 //│     do super⁰();
 //│     end;
-//│     set Function$⁴.this.Bar⁰ = Bar;
-//│     set Function$⁴.this.z⁰ = z;
+//│     set Function$⁴.this.Bar⁶ = Bar;
+//│     set Function$⁴.this.z³ = z;
 //│     end
 //│   }
 //│   method call⁸ = fun call⁹(x) {
-//│     return lambda⁴(Function$⁴.this.Bar⁰, Function$⁴.this.z⁰, x)
+//│     return lambda¹⁷(Function$⁴.this.Bar⁶, Function$⁴.this.z³, x)
 //│   }
 //│ };
-//│ define Foo¹ as class Foo²
-//│ module Foo³ {
+//│ define Foo⁹ as class Foo¹⁰
+//│ module Foo⁸ {
 //│   constructor {
-//│     define Bar¹ as class Bar³ {
-//│       private val y⁰;
-//│       constructor Bar²(y) {
-//│         set Bar³.this.y⁰ = y;
+//│     define Bar⁴ as class Bar³ {
+//│       private val y²;
+//│       constructor Bar⁵(y) {
+//│         set Bar³.this.y² = y;
 //│         end
 //│       }
-//│       method bar² = fun bar³(z) {
+//│       method bar⁴ = fun bar⁵(z) {
 //│         let tmp;
 //│         set tmp = new Function$⁴(Bar³.this, z);
 //│         return tmp
@@ -298,11 +707,11 @@ y => x + y
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
 //│ let lambda, Function$, tmp;
 //│ @private
-//│ define lambda as fun lambda⁵(y) {
-//│   return +⁰(x¹, y)
+//│ define lambda as fun lambda¹⁸(y) {
+//│   return +⁰(x¹⁰, y)
 //│ };
 //│ define Function$ as class Function$⁵ extends globalThis⁰.Function⁰ {
-//│   method call¹⁰ = fun call¹¹(y) { return lambda⁵(y) }
+//│   method call¹⁰ = fun call¹¹(y) { return lambda¹⁸(y) }
 //│ };
 //│ set tmp = new Function$⁵();
 //│ return tmp
@@ -320,6 +729,27 @@ fun bar(x) = foo(x) + 1
 
 
 class A(val x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A⁰
+//│   sym = member:A¹
+//│   ctorSym = S of term:A²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x¹¹
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹²
+//│       _2 = term:A⁰/x¹³
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:A⁰/x¹³
+//│       sym = member:x¹²
+//│       rhs = SimpleRef of x¹¹
 
 
 A(42)
@@ -338,6 +768,28 @@ A(foo).x(0)
 
 module Foo with
   fun foo(x) = x + 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Foo¹¹
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Foo¹¹
+//│       sym = member:foo⁶
+//│       dSym = term:Foo¹¹/foo⁷
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x¹⁴
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x¹⁴
+//│             Arg:
+//│               value = Lit of IntLit of 1
 
 fun foo(f) = f(0)
 
@@ -353,6 +805,28 @@ module Foo with
   module Bar2 with
     fun bar(x) = x - 1 
 fun foo(f) = f(0)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Bar1⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Bar1⁰
+//│       sym = member:bar⁶
+//│       dSym = term:Bar1⁰/bar⁷
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x¹⁵
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x¹⁵
+//│             Arg:
+//│               value = Lit of IntLit of 1
 
 
 foo(Foo.Bar1.bar)
@@ -366,6 +840,26 @@ foo(Foo.Bar2.bar)
 module Foo with
   val x = 1
   fun bar() = 0
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Foo¹²
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Foo¹²
+//│       sym = member:bar⁸
+//│       dSym = term:Foo¹²/bar⁹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of IntLit of 0
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹⁶
+//│       _2 = term:Foo¹²/x¹⁷
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo¹²/x¹⁷
+//│       sym = member:x¹⁶
+//│       rhs = Lit of IntLit of 1
 
 
 fun foo(y) = y + 1
@@ -376,6 +870,46 @@ foo(Foo.x)
 
 class Foo(val x) with
   fun f(y) = y + 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo¹³
+//│   sym = member:Foo¹⁴
+//│   ctorSym = S of term:Foo¹⁵
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x¹⁸
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo¹³
+//│       sym = member:f⁶
+//│       dSym = term:Foo¹³/f⁷
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = y³
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of y³
+//│             Arg:
+//│               value = Lit of IntLit of 1
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹⁹
+//│       _2 = term:Foo¹³/x²⁰
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo¹³/x²⁰
+//│       sym = member:x¹⁹
+//│       rhs = SimpleRef of x¹⁸
 
 
 Foo(0).f(1)
@@ -396,7 +930,7 @@ foo.Foo#x
 :ge
 foo.f(0)
 //│ ╔══[COMPILATION ERROR] Cannot determine if f is a function object.
-//│ ║  l.397: 	foo.f(0)
+//│ ║  l.931: 	foo.f(0)
 //│ ╙──       	^^^^^
 //│ = 1
 
@@ -414,7 +948,7 @@ foo.Foo#f(0)
 :ge
 foo.x(0)
 //│ ╔══[COMPILATION ERROR] Cannot determine if x is a function object.
-//│ ║  l.415: 	foo.x(0)
+//│ ║  l.949: 	foo.x(0)
 //│ ╙──       	^^^^^
 
 
@@ -425,6 +959,51 @@ foo.Foo#x(0)
 class Bar() with
   val x = 0
   val bar = x => x + 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Bar⁷
+//│   sym = member:Bar⁸
+//│   ctorSym = S of term:Bar⁹
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x²¹
+//│       _2 = term:Bar⁷/x²²
+//│     Tuple2:
+//│       _1 = member:bar¹⁰
+//│       _2 = term:Bar⁷/bar¹¹
+//│   ctor = Scoped(syms = {member:lambda¹⁹}):
+//│     body = Define:
+//│       defn = ValDefn:
+//│         tsym = term:Bar⁷/x²²
+//│         sym = member:x²¹
+//│         rhs = Lit of IntLit of 0
+//│       rest = Define: \
+//│       defn = FunDefn:
+//│         sym = member:lambda¹⁹
+//│         dSym = term:lambda²⁰
+//│         params = Ls of
+//│           ParamList:
+//│             params = Ls of
+//│               Param:
+//│                 sym = x²³
+//│                 modulefulness = Modulefulness of N
+//│         body = Return of Call:
+//│           fun = SimpleRef of builtin:+⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of x²³
+//│               Arg:
+//│                 value = Lit of IntLit of 1
+//│       rest = Define: \
+//│       defn = ValDefn:
+//│         tsym = term:Bar⁷/bar¹¹
+//│         sym = member:bar¹⁰
+//│         rhs = MemberRef{disamb=term:lambda²⁰}:
+//│           bms = member:lambda¹⁹
+//│           disamb = term:lambda²⁰
 
 
 Bar().bar(1)
@@ -447,6 +1026,32 @@ let bar = Bar().bar in bar(1)
 
 module Foo with
   val f = x => x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Foo¹⁶
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:f⁸
+//│       _2 = term:Foo¹⁶/f⁹
+//│   ctor = Scoped(syms = {member:lambda²¹}):
+//│     body = Define:
+//│       defn = FunDefn:
+//│         sym = member:lambda²¹
+//│         dSym = term:lambda²²
+//│         params = Ls of
+//│           ParamList:
+//│             params = Ls of
+//│               Param:
+//│                 sym = x²⁴
+//│                 modulefulness = Modulefulness of N
+//│         body = Return of SimpleRef of x²⁴
+//│       rest = Define: \
+//│       defn = ValDefn:
+//│         tsym = term:Foo¹⁶/f⁹
+//│         sym = member:f⁸
+//│         rhs = MemberRef{disamb=term:lambda²²}:
+//│           bms = member:lambda²¹
+//│           disamb = term:lambda²²
 
 
 Foo.f(1)
@@ -456,6 +1061,75 @@ module Bar with
   fun h(x) = x + 1
   fun w(y) = y(0)
   fun f(x) = w(h) + x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Bar¹⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Bar¹⁰
+//│       sym = member:h²
+//│       dSym = term:Bar¹⁰/h³
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x²⁵
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x²⁵
+//│             Arg:
+//│               value = Lit of IntLit of 1
+//│     FunDefn:
+//│       owner = S of module:Bar¹⁰
+//│       sym = member:w⁰
+//│       dSym = term:Bar¹⁰/w¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = y⁴
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of y⁴
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Lit of IntLit of 0
+//│     FunDefn:
+//│       owner = S of module:Bar¹⁰
+//│       sym = member:f¹⁰
+//│       dSym = term:Bar¹⁰/f¹¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x²⁶
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp⁵}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁵
+//│           rhs = Call:
+//│             fun = Select{sym=term:Bar¹⁰/w¹}:
+//│               qual = This of module:Bar¹⁰
+//│               name = Ident of "w"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:Bar¹⁰/h³}:
+//│                     qual = This of module:Bar¹⁰
+//│                     name = Ident of "h"
+//│           rest = Return of Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp⁵
+//│                 Arg:
+//│                   value = SimpleRef of x²⁶
 
 Bar.f(0)
 //│ = 1
@@ -465,6 +1139,59 @@ module Foo with
   module Bar with
     fun g1(h) = h(0)
     fun g2(x) = g1(Foo.f) + x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Bar¹¹
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Bar¹¹
+//│       sym = member:g1⁰
+//│       dSym = term:Bar¹¹/g1¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = h⁴
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of h⁴
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Lit of IntLit of 0
+//│     FunDefn:
+//│       owner = S of module:Bar¹¹
+//│       sym = member:g2⁰
+//│       dSym = term:Bar¹¹/g2¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x²⁷
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp⁶}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁶
+//│           rhs = Call:
+//│             fun = Select{sym=term:Bar¹¹/g1¹}:
+//│               qual = This of module:Bar¹¹
+//│               name = Ident of "g1"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:Foo¹⁷/f¹²}:
+//│                     qual = MemberRef{disamb=module:Foo¹⁷}:
+//│                       bms = member:Foo¹⁸
+//│                       disamb = module:Foo¹⁷
+//│                     name = Ident of "f"
+//│           rest = Return of Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp⁶
+//│                 Arg:
+//│                   value = SimpleRef of x²⁷
 
 
 Foo.Bar.g2(1)
@@ -487,18 +1214,18 @@ fun foo(x)(y) = x + y
 //│   return +⁰(x, y)
 //│ };
 //│ define Function$ as class Function$⁶ extends globalThis⁰.Function⁰ {
-//│   private val x²;
+//│   private val x²⁸;
 //│   constructor(x) {
 //│     do super⁰();
 //│     end;
-//│     set Function$⁶.this.x² = x;
+//│     set Function$⁶.this.x²⁸ = x;
 //│     end
 //│   }
 //│   method call¹² = fun call¹³(y) {
-//│     return lambda$⁰(Function$⁶.this.x², y)
+//│     return lambda$⁰(Function$⁶.this.x²⁸, y)
 //│   }
 //│ };
-//│ define foo⁵ as fun foo⁶(x) { let tmp; set tmp = new Function$⁶(x); return tmp };
+//│ define foo⁸ as fun foo⁹(x) { let tmp; set tmp = new Function$⁶(x); return tmp };
 //│ end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
@@ -545,7 +1272,7 @@ foo(tuple)
 //│   }
 //│ };
 //│ set tmp = new Function$⁷();
-//│ return foo⁷(tmp)
+//│ return foo¹⁰(tmp)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = ["abc"]
 
@@ -563,6 +1290,27 @@ if 0 is
 //│ = 0
 
 class Foo(val x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo¹⁹
+//│   sym = member:Foo²⁰
+//│   ctorSym = S of term:Foo²¹
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x²⁹
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x³⁰
+//│       _2 = term:Foo¹⁹/x³¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo¹⁹/x³¹
+//│       sym = member:x³⁰
+//│       rhs = SimpleRef of x²⁹
 
 
 if Foo(1) is
@@ -580,6 +1328,27 @@ if [1, 2, 3] is
 
 
 class Foo(val x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo²²
+//│   sym = member:Foo²³
+//│   ctorSym = S of term:Foo²⁴
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x³²
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x³³
+//│       _2 = term:Foo²²/x³⁴
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo²²/x³⁴
+//│       sym = member:x³³
+//│       rhs = SimpleRef of x³²
 
 let foo = Foo(1) in foo.Foo#x
 //│ = 1

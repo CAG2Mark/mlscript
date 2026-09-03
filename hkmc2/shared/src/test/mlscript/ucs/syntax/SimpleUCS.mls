@@ -3,10 +3,20 @@
 abstract class Option[A]: Some[A] | None
 data class Some[A](value: A) extends Option[A]
 object None extends Option
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Option⁰
+//│   sym = member:Option¹
+//│   k = Cls
 
 abstract class Either[out A, out B]: Left[A] | Right[B]
 data class Left[A](leftValue: A) extends Either[A, Nothing]
 data class Right[B](rightValue: B) extends Either[Nothing, B]
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Either⁰
+//│   sym = member:Either¹
+//│   k = Cls
 
 fun f(x, y) =
   if x is
@@ -41,6 +51,28 @@ fun f(x, y) =
 
 data class A[T](value: T)
 data class B[T](value: T)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A⁰
+//│   sym = member:A¹
+//│   ctorSym = S of term:A²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = value⁰
+//│         sign = S of Ref{sym=T⁰} of T⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:value¹
+//│       _2 = term:A⁰/value²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:A⁰/value²
+//│       sym = member:value¹
+//│       rhs = SimpleRef of value⁰
 
 fun f(x, y, u, v) =
   if x is
@@ -180,6 +212,30 @@ abstract class ValBase: (IntVal | BoolVal)
 data class IntVal(value: Int) extends ValBase
 data class BoolVal(value: Bool) extends ValBase
 data class Lit(value: ValBase)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Var⁰
+//│   sym = member:Var¹
+//│   ctorSym = S of term:Var²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = name⁰
+//│         sign = S of Resolved{sym=class:Str⁰}:
+//│           t = Ref{sym=member:Str¹} of member:Str¹
+//│           sym = class:Str⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:name¹
+//│       _2 = term:Var⁰/name²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Var⁰/name²
+//│       sym = member:name¹
+//│       rhs = SimpleRef of name⁰
 
 fun p(e, context) =
   if e is
@@ -190,6 +246,13 @@ fun p(e, context) =
     Lit(BoolVal(v)) then Right(v)
 
 data class Nil()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Nil⁰
+//│   sym = member:Nil¹
+//│   ctorSym = S of term:Nil²
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
 
 // Support operator constructor like ::
 :todo
@@ -199,9 +262,9 @@ fun f(x) =
     0 ::
       Nil() then "oh"
 //│ ╔══[COMPILATION ERROR] Unrecognized pattern split (operator application).
-//│ ║  l.199: 	    0 ::
+//│ ║  l.262: 	    0 ::
 //│ ║         	    ^^^^
-//│ ║  l.200: 	      Nil() then "oh"
+//│ ║  l.263: 	      Nil() then "oh"
 //│ ╙──       	^^^^^^
 
 

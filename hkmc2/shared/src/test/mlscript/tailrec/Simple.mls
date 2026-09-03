@@ -13,6 +13,17 @@ fun f = f
 module Foo with
   @tailrec
   fun bar = bar
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Foo⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Foo⁰
+//│       sym = member:bar⁰
+//│       dSym = term:Foo⁰/bar¹
+//│       body = Return of Select{sym=term:Foo⁰/bar¹}:
+//│         qual = This of module:Foo⁰
+//│         name = Ident of "bar"
 //│ ╔══[WARNING] This function is marked @tailrec but has no direct self-recursion.
 //│ ║  l.15: 	  fun bar = bar
 //│ ╙──      	      ^^^
@@ -23,6 +34,22 @@ fun f() = f()
 module Foo with
   @tailrec
   fun bar() = bar()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Foo¹
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Foo¹
+//│       sym = member:bar²
+//│       dSym = term:Foo¹/bar³
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = Select{sym=term:Foo¹/bar³}:
+//│           qual = This of module:Foo¹
+//│           name = Ident of "bar"
+//│         argss = Ls of
+//│           Nil
 
 fun f(x) = f(x + 1)
 
@@ -44,6 +71,49 @@ fun f(x) = f(f(x) + 1)
 
 module A with
   fun f(x) = @tailcall f(f(x) + 1)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:A⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:A⁰
+//│       sym = member:f⁰
+//│       dSym = term:A⁰/f¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp⁰, tmp:tmp¹}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁰
+//│           rhs = Call:
+//│             fun = Select{sym=term:A⁰/f¹}:
+//│               qual = This of module:A⁰
+//│               name = Ident of "f"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x⁰
+//│           rest = Assign: \
+//│           lhs = tmp:tmp¹
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp⁰
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = Return of Call:
+//│             fun = Select{sym=term:A⁰/f¹}:
+//│               qual = This of module:A⁰
+//│               name = Ident of "f"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp¹
 
 
 :fixme // TODO: support
@@ -52,7 +122,42 @@ module A with
   fun f(x) = B.g(x + 1)
 module B with
   fun g(x) = A.f(x * 2)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:A¹
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:A¹
+//│       sym = member:f²
+//│       dSym = term:A¹/f³
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x¹
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp²}):
+//│         body = Assign:
+//│           lhs = tmp:tmp²
+//│           rhs = Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x¹
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = Return of Call:
+//│             fun = Select{sym=term:B⁰/g⁰}:
+//│               qual = MemberRef{disamb=module:B⁰}:
+//│                 bms = member:B¹
+//│                 disamb = module:B⁰
+//│               name = Ident of "g"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp²
 //│ ╔══[WARNING] This function is marked @tailrec but has no direct self-recursion.
-//│ ║  l.52: 	  fun f(x) = B.g(x + 1)
-//│ ╙──      	      ^
+//│ ║  l.122: 	  fun f(x) = B.g(x + 1)
+//│ ╙──       	      ^
 

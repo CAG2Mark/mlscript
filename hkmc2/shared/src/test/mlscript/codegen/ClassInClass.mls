@@ -13,6 +13,175 @@ data class Outer(a, b) with
   val i = Inner(a)
   print(i.c)
   print(i.i1(1))
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:tmp, tmp:tmp)
+//│   body = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Outer⁰/a⁰
+//│       sym = member:a¹
+//│       rhs = SimpleRef of a²
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Outer⁰/b⁰
+//│       sym = member:b¹
+//│       rhs = SimpleRef of b²
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       owner = S of class:Outer⁰
+//│       isym = class:Inner⁰
+//│       sym = member:Inner¹
+//│       ctorSym = S of term:Outer⁰/Inner²
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = c⁰
+//│             modulefulness = Modulefulness of N
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:Inner⁰
+//│           sym = member:i1⁰
+//│           dSym = term:Inner⁰/i1¹
+//│           params = Ls of
+//│             ParamList:
+//│               params = Ls of
+//│                 Param:
+//│                   sym = d⁰
+//│                   modulefulness = Modulefulness of N
+//│           body = Return of Tuple:
+//│             mut = false
+//│             elems = Ls of
+//│               Arg:
+//│                 value = Select{sym=term:Outer⁰/b⁰}:
+//│                   qual = This of class:Outer⁰
+//│                   name = Ident of "b"
+//│               Arg:
+//│                 value = Select{sym=term:Inner⁰/c¹}:
+//│                   qual = This of class:Inner⁰
+//│                   name = Ident of "c"
+//│               Arg:
+//│                 value = SimpleRef of d⁰
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:c²
+//│           _2 = term:Inner⁰/c¹
+//│       ctor = Scoped(syms = {tmp:tmp⁰}):
+//│         body = Define:
+//│           defn = ValDefn:
+//│             tsym = term:Inner⁰/c¹
+//│             sym = member:c²
+//│             rhs = SimpleRef of c⁰
+//│           rest = Assign: \
+//│           lhs = ‹no symbol›
+//│           rhs = Call:
+//│             fun = Select{sym=term:Predef⁰/print⁰}:
+//│               qual = MemberRef{disamb=module:Predef⁰}:
+//│                 bms = member:Predef¹
+//│                 disamb = module:Predef⁰
+//│               name = Ident of "print"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:Outer⁰/a⁰}:
+//│                     qual = This of class:Outer⁰
+//│                     name = Ident of "a"
+//│           rest = Assign: \
+//│           lhs = ‹no symbol›
+//│           rhs = Call:
+//│             fun = Select{sym=term:Predef⁰/print⁰}:
+//│               qual = MemberRef{disamb=module:Predef⁰}:
+//│                 bms = member:Predef¹
+//│                 disamb = module:Predef⁰
+//│               name = Ident of "print"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:Inner⁰/c¹}:
+//│                     qual = This of class:Inner⁰
+//│                     name = Ident of "c"
+//│           rest = Assign: \
+//│           lhs = tmp:tmp⁰
+//│           rhs = Call:
+//│             fun = Select{sym=term:Inner⁰/i1¹}:
+//│               qual = This of class:Inner⁰
+//│               name = Ident of "i1"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:Outer⁰/a⁰}:
+//│                     qual = This of class:Outer⁰
+//│                     name = Ident of "a"
+//│           rest = Assign: \
+//│           lhs = ‹no symbol›
+//│           rhs = Call:
+//│             fun = Select{sym=term:Predef⁰/print⁰}:
+//│               qual = MemberRef{disamb=module:Predef⁰}:
+//│                 bms = member:Predef¹
+//│                 disamb = module:Predef⁰
+//│               name = Ident of "print"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp⁰
+//│     rest = Assign: \
+//│     lhs = tmp:tmp¹
+//│     rhs = Call:
+//│       fun = Select{sym=term:Outer⁰/Inner²}:
+//│         qual = This of class:Outer⁰
+//│         name = Ident of "Inner"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Select{sym=term:Outer⁰/a⁰}:
+//│               qual = This of class:Outer⁰
+//│               name = Ident of "a"
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Outer⁰/i⁰
+//│       sym = member:i¹
+//│       rhs = SimpleRef of tmp:tmp¹
+//│     rest = Assign: \
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Select:
+//│               qual = Select{sym=term:Outer⁰/i⁰}:
+//│                 qual = This of class:Outer⁰
+//│                 name = Ident of "i"
+//│               name = Ident of "c"
+//│     rest = Assign: \
+//│     lhs = tmp:tmp²
+//│     rhs = Call:
+//│       fun = Select:
+//│         qual = Select{sym=term:Outer⁰/i⁰}:
+//│           qual = This of class:Outer⁰
+//│           name = Ident of "i"
+//│         name = Ident of "i1"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 1
+//│     rest = Assign: \
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp²
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Outer1;
 //│ Outer1 = function Outer(a, b) {

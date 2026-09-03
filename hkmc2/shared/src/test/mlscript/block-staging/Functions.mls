@@ -8,6 +8,23 @@ staged module Expressions with
   fun lit() =
     let x = 42
     x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Expressions⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Expressions⁰
+//│       sym = member:lit⁰
+//│       dSym = term:Expressions⁰/lit¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {x⁰}):
+//│         body = Assign:
+//│           lhs = x⁰
+//│           rhs = Lit of IntLit of 42
+//│           rest = Return of SimpleRef of x⁰
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ ╔══[INTERNAL ERROR] [BlockChecker] Invalid IR: symbol x⁰ is bound more than once
 //│ ║  l.9: 	    let x = 42
 //│ ╙──     	        ^
@@ -40,6 +57,175 @@ staged module Expressions with
       [1, 2] then 2
       [a, _] then 3
       else 0
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Expressions¹
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Expressions¹
+//│       sym = member:lit²
+//│       dSym = term:Expressions¹/lit³
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of IntLit of 1
+//│     FunDefn:
+//│       owner = S of module:Expressions¹
+//│       sym = member:assign⁰
+//│       dSym = term:Expressions¹/assign¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {x¹, y⁰}):
+//│         body = Assign:
+//│           lhs = x¹
+//│           rhs = Lit of IntLit of 42
+//│           rest = Assign: \
+//│           lhs = y⁰
+//│           rhs = SimpleRef of x¹
+//│           rest = Return of SimpleRef of y⁰
+//│     FunDefn:
+//│       owner = S of module:Expressions¹
+//│       sym = member:tup1⁰
+//│       dSym = term:Expressions¹/tup1¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Tuple:
+//│         mut = false
+//│         elems = Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 1
+//│           Arg:
+//│             value = Lit of IntLit of 2
+//│     FunDefn:
+//│       owner = S of module:Expressions¹
+//│       sym = member:tup2⁰
+//│       dSym = term:Expressions¹/tup2¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Tuple:
+//│         mut = false
+//│         elems = Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 1
+//│           Arg:
+//│             value = SimpleRef of x²
+//│     FunDefn:
+//│       owner = S of module:Expressions¹
+//│       sym = member:dynsel⁰
+//│       dSym = term:Expressions¹/dynsel¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {tmp:tmp⁰}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁰
+//│           rhs = Tuple:
+//│             mut = false
+//│             elems = Ls of
+//│               Arg:
+//│                 value = Lit of IntLit of 1
+//│           rest = Return of DynSelect:
+//│             qual = SimpleRef of tmp:tmp⁰
+//│             fld = Lit of IntLit of 0
+//│             arrayIdx = false
+//│     FunDefn:
+//│       owner = S of module:Expressions¹
+//│       sym = member:match1⁰
+//│       dSym = term:Expressions¹/match1¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {tmp:scrut⁰}):
+//│         body = Assign:
+//│           lhs = tmp:scrut⁰
+//│           rhs = Lit of IntLit of 9
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut⁰
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Cls:
+//│                 cls = class:Bool⁰
+//│                 path = Select{sym=term:Runtime⁰/unreachable⁰}:
+//│                   qual = SimpleRef of tmp:runtime⁰
+//│                   name = Ident of "unreachable"
+//│               _2 = Return of Lit of IntLit of 1
+//│             Tuple2:
+//│               _1 = Lit of IntLit of 8
+//│               _2 = Return of Lit of IntLit of 2
+//│             Tuple2:
+//│               _1 = Cls:
+//│                 cls = class:Int⁰
+//│                 path = Select{sym=term:Runtime⁰/unreachable⁰}:
+//│                   qual = SimpleRef of tmp:runtime⁰
+//│                   name = Ident of "unreachable"
+//│               _2 = Return of Lit of IntLit of 3
+//│           dflt = S of Return of Lit of IntLit of 0
+//│     FunDefn:
+//│       owner = S of module:Expressions¹
+//│       sym = member:match2⁰
+//│       dSym = term:Expressions¹/match2¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {a⁰, tmp:element1$⁰, tmp:element0$⁰}):
+//│         body = Match:
+//│           scrut = SimpleRef of x²
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Tup:
+//│                 len = 0
+//│                 inf = false
+//│               _2 = Return of Lit of IntLit of 1
+//│             Tuple2:
+//│               _1 = Tup:
+//│                 len = 2
+//│                 inf = false
+//│               _2 = Assign:
+//│                 lhs = tmp:element0$⁰
+//│                 rhs = Call:
+//│                   fun = Select{sym=term:Tuple⁰/get⁰}:
+//│                     qual = Select{sym=module:Tuple⁰}:
+//│                       qual = SimpleRef of tmp:runtime⁰
+//│                       name = Ident of "Tuple"
+//│                     name = Ident of "get"
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of x²
+//│                       Arg:
+//│                         value = Lit of IntLit of 0
+//│                 rest = Assign: \
+//│                 lhs = tmp:element1$⁰
+//│                 rhs = Call:
+//│                   fun = Select{sym=term:Tuple⁰/get⁰}:
+//│                     qual = Select{sym=module:Tuple⁰}:
+//│                       qual = SimpleRef of tmp:runtime⁰
+//│                       name = Ident of "Tuple"
+//│                     name = Ident of "get"
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of x²
+//│                       Arg:
+//│                         value = Lit of IntLit of 1
+//│                 rest = Match: \
+//│                 scrut = SimpleRef of tmp:element0$⁰
+//│                 arms = Ls of
+//│                   Tuple2:
+//│                     _1 = Lit of IntLit of 1
+//│                     _2 = Match:
+//│                       scrut = SimpleRef of tmp:element1$⁰
+//│                       arms = Ls of
+//│                         Tuple2:
+//│                           _1 = Lit of IntLit of 2
+//│                           _2 = Return of Lit of IntLit of 2
+//│                       dflt = S of Assign:
+//│                         lhs = a⁰
+//│                         rhs = SimpleRef of tmp:element0$⁰
+//│                         rest = Return of Lit of IntLit of 3
+//│                 dflt = S of Assign:
+//│                   lhs = a⁰
+//│                   rhs = SimpleRef of tmp:element0$⁰
+//│                   rest = Return of Lit of IntLit of 3
+//│           dflt = S of Return of Lit of IntLit of 0
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ > fun ctor_() = ()
 //│ > fun lit() = 1
 //│ > fun assign() =
@@ -91,6 +277,51 @@ staged module Example with
   fun f(x, y, z) = if
     x is 0 and y is 0 and z is 0 then 1
     else 2
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Example⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Example⁰
+//│       sym = member:f⁰
+//│       dSym = term:Example⁰/f¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x³
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = y¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = z⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Label:
+//│         label = label:σ⁰
+//│         loop = false
+//│         body = Match:
+//│           scrut = SimpleRef of x³
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of IntLit of 0
+//│               _2 = Match:
+//│                 scrut = SimpleRef of y¹
+//│                 arms = Ls of
+//│                   Tuple2:
+//│                     _1 = Lit of IntLit of 0
+//│                     _2 = Match:
+//│                       scrut = SimpleRef of z⁰
+//│                       arms = Ls of
+//│                         Tuple2:
+//│                           _1 = Lit of IntLit of 0
+//│                           _2 = Return of Lit of IntLit of 1
+//│                       dflt = S of Break of label:σ⁰
+//│                 dflt = S of Break of label:σ⁰
+//│           dflt = S of Break of label:σ⁰
+//│         rest = Return of Lit of IntLit of 2
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ ═══[COMPILATION ERROR] Other Blocks not supported in staged module: class hkmc2.codegen.Label.
 //│ > fun ctor_() = ()
 //│ ═══[RUNTIME ERROR] Error: MLscript call unexpectedly returned `undefined`, the forbidden value.
@@ -105,6 +336,51 @@ staged module Example with
   fun f(x, y, z) = if
     x is 0 and y is 0 and z is 0 then 1
     else 2
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Example¹
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Example¹
+//│       sym = member:f²
+//│       dSym = term:Example¹/f³
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁴
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = y²
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = z¹
+//│               modulefulness = Modulefulness of N
+//│       body = Label:
+//│         label = label:σ¹
+//│         loop = false
+//│         body = Match:
+//│           scrut = SimpleRef of x⁴
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of IntLit of 0
+//│               _2 = Match:
+//│                 scrut = SimpleRef of y²
+//│                 arms = Ls of
+//│                   Tuple2:
+//│                     _1 = Lit of IntLit of 0
+//│                     _2 = Match:
+//│                       scrut = SimpleRef of z¹
+//│                       arms = Ls of
+//│                         Tuple2:
+//│                           _1 = Lit of IntLit of 0
+//│                           _2 = Return of Lit of IntLit of 1
+//│                       dflt = S of Break of label:σ¹
+//│                 dflt = S of Break of label:σ¹
+//│           dflt = S of Break of label:σ¹
+//│         rest = Return of Lit of IntLit of 2
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ ═══[COMPILATION ERROR] Other Blocks not supported in staged module: class hkmc2.codegen.Label.
 //│ > fun ctor_() = ()
 //│ ═══[RUNTIME ERROR] Error: MLscript call unexpectedly returned `undefined`, the forbidden value.
@@ -118,6 +394,23 @@ staged module ClassInstrumentation with
   fun inst2() = new NoArg
   fun app1() = Outside(1)
   fun app2() = Inside(1, 2)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Outside⁰
+//│   sym = member:Outside¹
+//│   ctorSym = S of term:Outside²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = a¹
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Outside⁰/a²
+//│   ctor = AssignField:
+//│     lhs = This of class:Outside⁰
+//│     nme = Ident of "a"
+//│     rhs = SimpleRef of a¹
 //│ ═══[COMPILATION ERROR] Value.This not supported in staged module.
 //│ ═══[COMPILATION ERROR] Value.This not supported in staged module.
 //│ > fun ctor_() =
@@ -135,6 +428,17 @@ staged module CallSubst with
     1 + 1
     Nonstaged.f()
     Staged.f()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Nonstaged⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Nonstaged⁰
+//│       sym = member:f⁴
+//│       dSym = term:Nonstaged⁰/f⁵
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of IntLit of 1
 //│ > fun ctor_() = ()
 //│ > fun f() = 1
 //│ > fun ctor_() = ()
@@ -148,6 +452,46 @@ staged module Arguments with
     x = 1
     x
   fun g(x)(y, z)() = z
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Arguments⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Arguments⁰
+//│       sym = member:f⁶
+//│       dSym = term:Arguments⁰/f⁷
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁵
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = x⁵
+//│         rhs = Lit of IntLit of 1
+//│         rest = Return of SimpleRef of x⁵
+//│     FunDefn:
+//│       owner = S of module:Arguments⁰
+//│       sym = member:g⁰
+//│       dSym = term:Arguments⁰/g¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁶
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = y³
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = z²
+//│               modulefulness = Modulefulness of N
+//│         ParamList: ‹empty›
+//│       body = Return of SimpleRef of z²
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ > fun ctor_() = ()
 //│ > fun f(x) =
 //│ >   x = 1
@@ -160,6 +504,39 @@ staged module Arguments with
 // :e
 staged module BadArguments with
   fun f() = Arguments.g(1)(2, 3)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:BadArguments⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:BadArguments⁰
+//│       sym = member:f⁸
+//│       dSym = term:BadArguments⁰/f⁹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {tmp:callPrefix⁰}):
+//│         body = Assign:
+//│           lhs = tmp:callPrefix⁰
+//│           rhs = Call:
+//│             fun = Select{sym=term:Arguments⁰/g²}:
+//│               qual = MemberRef{disamb=module:Arguments⁰}:
+//│                 bms = member:Arguments¹
+//│                 disamb = module:Arguments⁰
+//│               name = Ident of "g"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = Return of Call:
+//│             fun = SimpleRef of tmp:callPrefix⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Lit of IntLit of 2
+//│                 Arg:
+//│                   value = Lit of IntLit of 3
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ > fun ctor_() = ()
 //│ > fun f() =
 //│ >   let {callPrefix}
@@ -179,21 +556,95 @@ staged module OtherBlocks with
       2 then 0
       3 then 0
       else 0
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:OtherBlocks⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:OtherBlocks⁰
+//│       sym = member:scope⁰
+//│       dSym = term:OtherBlocks⁰/scope¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {a³}):
+//│         body = Assign:
+//│           lhs = a³
+//│           rhs = Lit of IntLit of 1
+//│           rest = Return of Call:
+//│             fun = Select:
+//│               qual = Select{sym=term:OtherBlocks⁰/scope¹}:
+//│                 qual = This of module:OtherBlocks⁰
+//│                 name = Ident of "scope"
+//│               name = Ident of "locally"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of a³
+//│     FunDefn:
+//│       owner = S of module:OtherBlocks⁰
+//│       sym = member:breakAndLabel⁰
+//│       dSym = term:OtherBlocks⁰/breakAndLabel¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {tmp:scrut¹}):
+//│         body = Assign:
+//│           lhs = tmp:scrut¹
+//│           rhs = Lit of IntLit of 1
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut¹
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of IntLit of 2
+//│               _2 = Return of Lit of IntLit of 0
+//│             Tuple2:
+//│               _1 = Lit of IntLit of 3
+//│               _2 = Return of Lit of IntLit of 0
+//│           dflt = S of Return of Lit of IntLit of 0
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ ═══[COMPILATION ERROR] Value.This not supported in staged module.
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'a'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.174: 	      let a = 1
+//│ ║  l.551: 	      let a = 1
 //│ ╙──       	          ^
 //│ > fun ctor_() = ()
 //│ ═══[RUNTIME ERROR] ReferenceError: a is not defined
 
 staged module ClassDefs with
   class A
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of module:ClassDefs⁰
+//│   isym = class:A⁰
+//│   sym = member:A¹
+//│   k = Cls
 //│ > fun ctor_() =
 //│ >   class A
 
 staged module ValClass with
   class A(val a)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of module:ValClass⁰
+//│   isym = class:A²
+//│   sym = member:A³
+//│   ctorSym = S of term:ValClass⁰/A⁴
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = a⁴
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a⁵
+//│       _2 = term:A²/a⁶
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:A²/a⁶
+//│       sym = member:a⁵
+//│       rhs = SimpleRef of a⁴
 //│ > fun ctor_() =
 //│ >   class A(a)
 
@@ -202,12 +653,75 @@ staged module ClassFunctions with
   class InnerClass() with
     fun f() = 1 + Arguments.f(1)
     fun g() = f()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of module:ClassFunctions⁰
+//│   isym = class:InnerClass⁰
+//│   sym = member:InnerClass¹
+//│   ctorSym = S of term:ClassFunctions⁰/InnerClass²
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:InnerClass⁰
+//│       sym = member:f¹⁰
+//│       dSym = term:InnerClass⁰/f¹¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {tmp:tmp¹}):
+//│         body = Assign:
+//│           lhs = tmp:tmp¹
+//│           rhs = Call:
+//│             fun = Select{sym=term:Arguments⁰/f⁷}:
+//│               qual = MemberRef{disamb=module:Arguments⁰}:
+//│                 bms = member:Arguments¹
+//│                 disamb = module:Arguments⁰
+//│               name = Ident of "f"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = Return of Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp¹
+//│     FunDefn:
+//│       owner = S of class:InnerClass⁰
+//│       sym = member:g³
+//│       dSym = term:InnerClass⁰/g⁴
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = Select{sym=term:InnerClass⁰/f¹¹}:
+//│           qual = This of class:InnerClass⁰
+//│           name = Ident of "f"
+//│         argss = Ls of
+//│           Nil
 //│ ═══[COMPILATION ERROR] Value.This not supported in staged module.
 //│ ═══[COMPILATION ERROR] Value.This not supported in staged module.
 //│ ═══[RUNTIME ERROR] Error: MLscript call unexpectedly returned `undefined`, the forbidden value.
 
 staged module RetUnit with
   fun f() = ()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:RetUnit⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:RetUnit⁰
+//│       sym = member:f¹²
+//│       dSym = term:RetUnit⁰/f¹³
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Select{sym=object:Unit⁰}:
+//│         qual = SimpleRef of tmp:runtime⁰
+//│         name = Ident of "Unit"
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ > fun ctor_() = ()
 //│ > fun f() = ()
 
@@ -215,6 +729,19 @@ staged module RetUnit with
 class A()
 staged module A with
   fun f() = 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:A⁵
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:A⁵
+//│       sym = member:f¹⁴
+//│       dSym = term:A⁵/f¹⁵
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of IntLit of 1
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ > fun ctor_() = ()
 //│ > fun f() = 1
 
@@ -222,6 +749,19 @@ staged module A with
 module A with
   staged module B with
     fun f() = 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:B⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:B⁰
+//│       sym = member:f¹⁶
+//│       dSym = term:B⁰/f¹⁷
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of IntLit of 1
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ > fun ctor_() = ()
 //│ > fun f() = 1
 
@@ -231,6 +771,32 @@ staged module NestedFunDefn with
   fun f() =
     fun g() = 1
     g()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:NestedFunDefn⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:NestedFunDefn⁰
+//│       sym = member:f¹⁸
+//│       dSym = term:NestedFunDefn⁰/f¹⁹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {member:g⁵}):
+//│         body = Define:
+//│           defn = FunDefn:
+//│             sym = member:g⁵
+//│             dSym = term:g⁶
+//│             params = Ls of
+//│               ParamList: ‹empty›
+//│             body = Return of Lit of IntLit of 1
+//│           rest = Return of Call:
+//│             fun = MemberRef{disamb=term:g⁶}:
+//│               bms = member:g⁵
+//│               disamb = term:g⁶
+//│             argss = Ls of
+//│               Nil
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ > fun ctor_() = ()
 //│ > fun f() = g()
 
@@ -244,10 +810,87 @@ staged module LabelBreak with
     0 then 2
     1 then 2
     else 2
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:LabelBreak⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:LabelBreak⁰
+//│       sym = member:f²⁰
+//│       dSym = term:LabelBreak⁰/f²¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {x⁷}):
+//│         body = Assign:
+//│           lhs = x⁷
+//│           rhs = Lit of IntLit of 1
+//│           rest = Label: \
+//│           label = label:lbl⁰
+//│           loop = true
+//│           body = Scoped(syms = {tmp:scrut², tmp:tmp²}):
+//│             body = Assign:
+//│               lhs = tmp:scrut²
+//│               rhs = Call:
+//│                 fun = Select{sym=term:Predef⁰/equals⁰}:
+//│                   qual = MemberRef{disamb=module:Predef⁰}:
+//│                     bms = member:Predef¹
+//│                     disamb = module:Predef⁰
+//│                   name = Ident of "equals"
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = SimpleRef of x⁷
+//│                     Arg:
+//│                       value = Lit of IntLit of 1
+//│               rest = Match: \
+//│               scrut = SimpleRef of tmp:scrut²
+//│               arms = Ls of
+//│                 Tuple2:
+//│                   _1 = Lit of BoolLit of true
+//│                   _2 = Assign:
+//│                     lhs = tmp:tmp²
+//│                     rhs = Call:
+//│                       fun = SimpleRef of builtin:+⁰
+//│                       argss = Ls of
+//│                         Ls of
+//│                           Arg:
+//│                             value = SimpleRef of x⁷
+//│                           Arg:
+//│                             value = Lit of IntLit of 1
+//│                     rest = Assign: \
+//│                     lhs = x⁷
+//│                     rhs = SimpleRef of tmp:tmp²
+//│                     rest = Continue of label:lbl⁰
+//│               dflt = S of End of ""
+//│           rest = Return of Select{sym=object:Unit⁰}:
+//│             qual = SimpleRef of tmp:runtime⁰
+//│             name = Ident of "Unit"
+//│     FunDefn:
+//│       owner = S of module:LabelBreak⁰
+//│       sym = member:g⁷
+//│       dSym = term:LabelBreak⁰/g⁸
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {tmp:scrut³}):
+//│         body = Assign:
+//│           lhs = tmp:scrut³
+//│           rhs = Lit of IntLit of 1
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut³
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Lit of IntLit of 0
+//│               _2 = Return of Lit of IntLit of 2
+//│             Tuple2:
+//│               _1 = Lit of IntLit of 1
+//│               _2 = Return of Lit of IntLit of 2
+//│           dflt = S of Return of Lit of IntLit of 2
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ ═══[COMPILATION ERROR] Other Blocks not supported in staged module: class hkmc2.codegen.Label.
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'x'
 //│ ╟── which references the symbol introduced here
-//│ ║  l.240: 	    let x = 1
+//│ ║  l.806: 	    let x = 1
 //│ ╙──       	        ^
 //│ > fun ctor_() = ()
 //│ ═══[RUNTIME ERROR] Error: MLscript call unexpectedly returned `undefined`, the forbidden value.
@@ -258,9 +901,30 @@ staged module A with
   let x = C(1)
   fun f() = set x.a = 0
   fun g() = {1 : 2}
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C⁰
+//│   sym = member:C¹
+//│   ctorSym = S of term:C²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = a⁷
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a⁸
+//│       _2 = term:C⁰/a⁹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C⁰/a⁹
+//│       sym = member:a⁸
+//│       rhs = SimpleRef of a⁷
 //│ ═══[COMPILATION ERROR] Field assignment is not supported in staged modules: a
 //│ ╔══[COMPILATION ERROR] Other Results not supported in staged module: class hkmc2.codegen.Record
-//│ ║  l.260: 	  fun g() = {1 : 2}
+//│ ║  l.903: 	  fun g() = {1 : 2}
 //│ ╙──       	                 ^
 //│ > fun ctor_() =
 //│ >   x = C(1)
@@ -269,6 +933,86 @@ staged module A with
 :todo
 staged module Spread with
   fun f() = if [1, ..[1, 2]] is [1, ...x] then x else 0
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Spread⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Spread⁰
+//│       sym = member:f²²
+//│       dSym = term:Spread⁰/f²³
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {tmp:scrut⁴, x⁸, tmp:middleElements⁰, tmp:element0$¹, tmp:tmp³}):
+//│         body = Assign:
+//│           lhs = tmp:tmp³
+//│           rhs = Tuple:
+//│             mut = false
+//│             elems = Ls of
+//│               Arg:
+//│                 value = Lit of IntLit of 1
+//│               Arg:
+//│                 value = Lit of IntLit of 2
+//│           rest = Assign: \
+//│           lhs = tmp:scrut⁴
+//│           rhs = Tuple:
+//│             mut = false
+//│             elems = Ls of
+//│               Arg:
+//│                 value = Lit of IntLit of 1
+//│               Arg:
+//│                 spread = S of Lazy
+//│                 value = SimpleRef of tmp:tmp³
+//│           rest = Match: \
+//│           scrut = SimpleRef of tmp:scrut⁴
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Tup:
+//│                 len = 1
+//│                 inf = true
+//│               _2 = Assign:
+//│                 lhs = tmp:element0$¹
+//│                 rhs = Call:
+//│                   fun = Select{sym=term:Tuple⁰/get⁰}:
+//│                     qual = Select{sym=module:Tuple⁰}:
+//│                       qual = SimpleRef of tmp:runtime⁰
+//│                       name = Ident of "Tuple"
+//│                     name = Ident of "get"
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of tmp:scrut⁴
+//│                       Arg:
+//│                         value = Lit of IntLit of 0
+//│                 rest = Assign: \
+//│                 lhs = tmp:middleElements⁰
+//│                 rhs = Call:
+//│                   fun = Select{sym=term:Tuple⁰/slice⁰}:
+//│                     qual = Select{sym=module:Tuple⁰}:
+//│                       qual = SimpleRef of tmp:runtime⁰
+//│                       name = Ident of "Tuple"
+//│                     name = Ident of "slice"
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of tmp:scrut⁴
+//│                       Arg:
+//│                         value = Lit of IntLit of 1
+//│                       Arg:
+//│                         value = Lit of IntLit of 0
+//│                 rest = Match: \
+//│                 scrut = SimpleRef of tmp:element0$¹
+//│                 arms = Ls of
+//│                   Tuple2:
+//│                     _1 = Lit of IntLit of 1
+//│                     _2 = Assign:
+//│                       lhs = x⁸
+//│                       rhs = SimpleRef of tmp:middleElements⁰
+//│                       rest = Return of SimpleRef of x⁸
+//│                 dflt = S of Return of Lit of IntLit of 0
+//│           dflt = S of Return of Lit of IntLit of 0
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ ═══[COMPILATION ERROR] Spread parameters are not supported in staged module: Arg(Some(Lazy),SimpleRef(tmp:tmp))
 //│ ═══[COMPILATION ERROR] No definition found in scope for member 'tmp'
 //│ > fun ctor_() = ()

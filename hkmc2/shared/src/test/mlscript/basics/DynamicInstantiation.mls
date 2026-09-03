@@ -2,6 +2,11 @@
 
 
 class C
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C⁰
+//│   sym = member:C¹
+//│   k = Cls
 
 :sjs
 new! C
@@ -52,7 +57,7 @@ new! (id(C))
 :re
 new id(C)
 //│ ╔══[COMPILATION ERROR] Expected a statically known class; found selection.
-//│ ║  l.53: 	new id(C)
+//│ ║  l.58: 	new id(C)
 //│ ║        	    ^^
 //│ ╙── The 'new' keyword requires a statically known class; use the 'new!' operator for dynamic instantiation.
 //│ ═══[RUNTIME ERROR] TypeError: Predef.id is not a constructor
@@ -60,13 +65,46 @@ new id(C)
 :e
 new (id(C))
 //│ ╔══[COMPILATION ERROR] Expected a statically known class; found application.
-//│ ║  l.61: 	new (id(C))
+//│ ║  l.66: 	new (id(C))
 //│ ║        	     ^^^^^
 //│ ╙── The 'new' keyword requires a statically known class; use the 'new!' operator for dynamic instantiation.
 //│ = C
 
 
 data class C(x, y)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C²
+//│   sym = member:C³
+//│   ctorSym = S of term:C⁴
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = y⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:C²/x²
+//│     Tuple2:
+//│       _1 = member:y¹
+//│       _2 = term:C²/y²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C²/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:C²/y²
+//│       sym = member:y¹
+//│       rhs = SimpleRef of y⁰
 
 
 // Note: mismatched number of arguments and class parameters

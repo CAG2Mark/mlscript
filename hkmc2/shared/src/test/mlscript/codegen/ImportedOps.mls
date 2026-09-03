@@ -3,6 +3,31 @@
 
 module M with
   fun (~) concat(a, b) = a + b
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M⁰
+//│       sym = member:concat⁰
+//│       dSym = term:M⁰/concat¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = a⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = b⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of a⁰
+//│             Arg:
+//│               value = SimpleRef of b⁰
 
 open M
 

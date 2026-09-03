@@ -9,6 +9,50 @@ object A with
   val y = 2
   print(A, "|", B)
   print(x, y)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of object:A⁰
+//│   isym = object:B⁰
+//│   sym = member:B¹
+//│   k = Obj
+//│   ctor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = MemberRef{disamb=object:A⁰}:
+//│               bms = member:A¹
+//│               disamb = object:A⁰
+//│           Arg:
+//│             value = Lit of StrLit of "|"
+//│           Arg:
+//│             value = Select{sym=object:B⁰}:
+//│               qual = This of object:A⁰
+//│               name = Ident of "B"
+//│     rest = Assign: \
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Select{sym=term:A⁰/x⁰}:
+//│               qual = This of object:A⁰
+//│               name = Ident of "x"
+//│           Arg:
+//│             value = Select{sym=term:A⁰/y⁰}:
+//│               qual = This of object:A⁰
+//│               name = Ident of "y"
 //│ > A { x: 1, B: B {} } | B {}
 //│ > 1 undefined
 //│ > A { x: 1, B: B, y: 2 } | B
@@ -25,8 +69,29 @@ module A with
     A
   val y = 2
 //│ ╔══[WARNING] Pure expression in statement position
-//│ ║  l.25: 	    A
+//│ ║  l.69: 	    A
 //│ ╙──      	    ^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:B²
+//│   ctor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Select{sym=term:A²/x¹}:
+//│               qual = This of module:A²
+//│               name = Ident of "x"
+//│           Arg:
+//│             value = Select{sym=term:A²/y¹}:
+//│               qual = This of module:A²
+//│               name = Ident of "y"
 //│ > 1 undefined
 
 

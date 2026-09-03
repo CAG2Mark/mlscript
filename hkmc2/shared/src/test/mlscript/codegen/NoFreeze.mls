@@ -2,6 +2,27 @@
 
 :ssjs
 class Foo(val x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:Foo⁰/x²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
 //│ —————————————| JS (sanitized) |—————————————————————————————————————————————————————————————————————
 //│ let Foo1;
 //│ Foo1 = function Foo(x) {
@@ -22,6 +43,27 @@ class Foo(val x)
 :ssjs
 :noFreeze
 class Foo(val x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo³
+//│   sym = member:Foo⁴
+//│   ctorSym = S of term:Foo⁵
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x³
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁴
+//│       _2 = term:Foo³/x⁵
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo³/x⁵
+//│       sym = member:x⁴
+//│       rhs = SimpleRef of x³
 //│ —————————————| JS (sanitized) |—————————————————————————————————————————————————————————————————————
 //│ let Foo3;
 //│ Foo3 = function Foo(x) {

@@ -2,6 +2,31 @@
 
 
 class Foo(a, b)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = a⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         sym = b⁰
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo⁰/a¹
+//│     term:Foo⁰/b¹
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo⁰
+//│     nme = Ident of "a"
+//│     rhs = SimpleRef of a⁰
+//│     rest = AssignField: \
+//│     lhs = This of class:Foo⁰
+//│     nme = Ident of "b"
+//│     rhs = SimpleRef of b⁰
 
 :ucs normalized
 fun f(x) =

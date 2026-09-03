@@ -4,6 +4,33 @@
 object Test with
   fun bar = 1
   fun foo() = bar + 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Test⁰
+//│   sym = member:Test¹
+//│   k = Obj
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of object:Test⁰
+//│       sym = member:bar⁰
+//│       dSym = term:Test⁰/bar¹
+//│       body = Return of Lit of IntLit of 1
+//│     FunDefn:
+//│       owner = S of object:Test⁰
+//│       sym = member:foo⁰
+//│       dSym = term:Test⁰/foo¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:Test⁰/bar¹}:
+//│                 qual = This of object:Test⁰
+//│                 name = Ident of "bar"
+//│             Arg:
+//│               value = Lit of IntLit of 1
 
 // TODO: make this a type error
 // Using the old partial logic in Elaborator, this used to report:
@@ -50,6 +77,35 @@ g()
 object Test with
   fun bar = 1
   fun foo() = Test.bar + 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Test²
+//│   sym = member:Test³
+//│   k = Obj
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of object:Test²
+//│       sym = member:bar²
+//│       dSym = term:Test²/bar³
+//│       body = Return of Lit of IntLit of 1
+//│     FunDefn:
+//│       owner = S of object:Test²
+//│       sym = member:foo²
+//│       dSym = term:Test²/foo³
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:Test²/bar³}:
+//│                 qual = MemberRef{disamb=object:Test²}:
+//│                   bms = member:Test³
+//│                   disamb = object:Test²
+//│                 name = Ident of "bar"
+//│             Arg:
+//│               value = Lit of IntLit of 1
 
 let f = Test.("foo")
 //│ f = fun foo

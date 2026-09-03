@@ -2,38 +2,290 @@
 
 
 class Foo
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   k = Cls
 
 class Foo()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo²
+//│   sym = member:Foo³
+//│   ctorSym = S of term:Foo⁴
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
 
 class Foo(x: Int)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁵
+//│   sym = member:Foo⁶
+//│   ctorSym = S of term:Foo⁷
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁰
+//│         sign = S of Resolved{sym=class:Int⁰}:
+//│           t = Ref{sym=member:Int¹} of member:Int¹
+//│           sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo⁵/x¹
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo⁵
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁰
 
 class Foo(x: Int, y: Str)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁸
+//│   sym = member:Foo⁹
+//│   ctorSym = S of term:Foo¹⁰
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x²
+//│         sign = S of Resolved{sym=class:Int⁰}:
+//│           t = Ref{sym=member:Int¹} of member:Int¹
+//│           sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         sym = y⁰
+//│         sign = S of Resolved{sym=class:Str⁰}:
+//│           t = Ref{sym=member:Str¹} of member:Str¹
+//│           sym = class:Str⁰
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo⁸/x³
+//│     term:Foo⁸/y¹
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo⁸
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x²
+//│     rest = AssignField: \
+//│     lhs = This of class:Foo⁸
+//│     nme = Ident of "y"
+//│     rhs = SimpleRef of y⁰
 
 class Foo(x: Int) with
   val y = x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo¹¹
+//│   sym = member:Foo¹²
+//│   ctorSym = S of term:Foo¹³
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁴
+//│         sign = S of Resolved{sym=class:Int⁰}:
+//│           t = Ref{sym=member:Int¹} of member:Int¹
+//│           sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo¹¹/x⁵
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:y²
+//│       _2 = term:Foo¹¹/y³
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo¹¹
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁴
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Foo¹¹/y³
+//│       sym = member:y²
+//│       rhs = Select{sym=term:Foo¹¹/x⁵}:
+//│         qual = This of class:Foo¹¹
+//│         name = Ident of "x"
 
 
 class Foo(x: Int) { val y = x }
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo¹⁴
+//│   sym = member:Foo¹⁵
+//│   ctorSym = S of term:Foo¹⁶
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁶
+//│         sign = S of Resolved{sym=class:Int⁰}:
+//│           t = Ref{sym=member:Int¹} of member:Int¹
+//│           sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo¹⁴/x⁷
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:y⁴
+//│       _2 = term:Foo¹⁴/y⁵
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo¹⁴
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁶
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Foo¹⁴/y⁵
+//│       sym = member:y⁴
+//│       rhs = Select{sym=term:Foo¹⁴/x⁷}:
+//│         qual = This of class:Foo¹⁴
+//│         name = Ident of "x"
 
 class Foo {
   // Class bodies without `with` are refinements and should remain newline-aware
   // even when the first line is a comment.
   fun f = 1
 }
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo¹⁷
+//│   sym = member:Foo¹⁸
+//│   k = Cls
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo¹⁷
+//│       sym = member:f⁰
+//│       dSym = term:Foo¹⁷/f¹
+//│       body = Return of Lit of IntLit of 1
 
 class Foo(pred) {
   val r = pred.id(42)
   fun callId(x) = pred.id(x)
 }
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo¹⁹
+//│   sym = member:Foo²⁰
+//│   ctorSym = S of term:Foo²¹
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = pred⁰
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo¹⁹
+//│       sym = member:callId⁰
+//│       dSym = term:Foo¹⁹/callId¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁸
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = Select:
+//│           qual = Select{sym=term:Foo¹⁹/pred¹}:
+//│             qual = This of class:Foo¹⁹
+//│             name = Ident of "pred"
+//│           name = Ident of "id"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x⁸
+//│   privateFields = Ls of
+//│     term:Foo¹⁹/pred¹
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:r⁰
+//│       _2 = term:Foo¹⁹/r¹
+//│   ctor = Scoped(syms = {tmp:tmp⁰}):
+//│     body = AssignField:
+//│       lhs = This of class:Foo¹⁹
+//│       nme = Ident of "pred"
+//│       rhs = SimpleRef of pred⁰
+//│       rest = Assign: \
+//│       lhs = tmp:tmp⁰
+//│       rhs = Call:
+//│         fun = Select:
+//│           qual = Select{sym=term:Foo¹⁹/pred¹}:
+//│             qual = This of class:Foo¹⁹
+//│             name = Ident of "pred"
+//│           name = Ident of "id"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Lit of IntLit of 42
+//│       rest = Define: \
+//│       defn = ValDefn:
+//│         tsym = term:Foo¹⁹/r¹
+//│         sym = member:r⁰
+//│         rhs = SimpleRef of tmp:tmp⁰
 
 :pe
 class Foo(x: Int)
   val y = x
 //│ ╔══[PARSE ERROR] Expected end of input; found indented block instead
-//│ ║  l.31: 	  val y = x
-//│ ╙──      	^^
+//│ ║  l.227: 	  val y = x
+//│ ╙──       	^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo²²
+//│   sym = member:Foo²³
+//│   ctorSym = S of term:Foo²⁴
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁹
+//│         sign = S of Resolved{sym=class:Int⁰}:
+//│           t = Ref{sym=member:Int¹} of member:Int¹
+//│           sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo²²/x¹⁰
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo²²
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁹
 
 class Foo(x: Int) { print("Hello!", x) }
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo²⁵
+//│   sym = member:Foo²⁶
+//│   ctorSym = S of term:Foo²⁷
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x¹¹
+//│         sign = S of Resolved{sym=class:Int⁰}:
+//│           t = Ref{sym=member:Int¹} of member:Int¹
+//│           sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo²⁵/x¹²
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo²⁵
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x¹¹
+//│     rest = Assign: \
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of StrLit of "Hello!"
+//│           Arg:
+//│             value = Select{sym=term:Foo²⁵/x¹²}:
+//│               qual = This of class:Foo²⁵
+//│               name = Ident of "x"
 
 Foo(42)
 //│ > Hello! 42
@@ -41,10 +293,44 @@ Foo(42)
 
 
 class Bar { val x: Int }
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Bar⁰
+//│   sym = member:Bar¹
+//│   k = Cls
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹³
+//│       _2 = term:Bar⁰/x¹⁴
 
 class Foo() extends Bar {
   val x = 1
 }
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo²⁸
+//│   sym = member:Foo²⁹
+//│   ctorSym = S of term:Foo³⁰
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
+//│   parentPath = S of MemberRef{disamb=class:Bar⁰}:
+//│     bms = member:Bar¹
+//│     disamb = class:Bar⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹⁵
+//│       _2 = term:Foo²⁸/x¹⁶
+//│   preCtor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:super⁰
+//│       argss = Ls of
+//│         Nil
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo²⁸/x¹⁶
+//│       sym = member:x¹⁵
+//│       rhs = Lit of IntLit of 1
 
 Foo().x
 //│ = 1
@@ -52,24 +338,83 @@ Foo().x
 :todo
 class Foo() extends Bar { x = 1 }
 //│ ╔══[COMPILATION ERROR] Name not found: x
-//│ ║  l.53: 	class Foo() extends Bar { x = 1 }
-//│ ╙──      	                          ^
+//│ ║  l.339: 	class Foo() extends Bar { x = 1 }
+//│ ╙──       	                          ^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo³¹
+//│   sym = member:Foo³²
+//│   ctorSym = S of term:Foo³³
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
+//│   parentPath = S of MemberRef{disamb=class:Bar⁰}:
+//│     bms = member:Bar¹
+//│     disamb = class:Bar⁰
+//│   preCtor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:super⁰
+//│       argss = Ls of
+//│         Nil
+//│   ctor = Throw of Lit of StrLit of "This code cannot be run as its compilation yielded an error."
 
 
 :e
 class Foo() extends Bar { val x = 1 } with
   val y = this.x
 //│ ╔══[COMPILATION ERROR] Multiple type definition bodies are not supported.
-//│ ║  l.61: 	  val y = this.x
-//│ ╙──      	  ^^^^^^^^^^^^^^
+//│ ║  l.364: 	  val y = this.x
+//│ ╙──       	  ^^^^^^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo³⁴
+//│   sym = member:Foo³⁵
+//│   ctorSym = S of term:Foo³⁶
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
+//│   parentPath = S of MemberRef{disamb=class:Bar⁰}:
+//│     bms = member:Bar¹
+//│     disamb = class:Bar⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹⁷
+//│       _2 = term:Foo³⁴/x¹⁸
+//│   preCtor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:super⁰
+//│       argss = Ls of
+//│         Nil
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo³⁴/x¹⁸
+//│       sym = member:x¹⁷
+//│       rhs = Lit of IntLit of 1
 
 :e
 class Foo() extends Bar { x = 1 } with
   val y = this.x
 //│ ╔══[COMPILATION ERROR] Multiple type definition bodies are not supported.
-//│ ║  l.68: 	  val y = this.x
-//│ ╙──      	  ^^^^^^^^^^^^^^
+//│ ║  l.396: 	  val y = this.x
+//│ ╙──       	  ^^^^^^^^^^^^^^
 //│ ╔══[COMPILATION ERROR] Name not found: x
-//│ ║  l.67: 	class Foo() extends Bar { x = 1 } with
-//│ ╙──      	                          ^
+//│ ║  l.395: 	class Foo() extends Bar { x = 1 } with
+//│ ╙──       	                          ^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo³⁷
+//│   sym = member:Foo³⁸
+//│   ctorSym = S of term:Foo³⁹
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
+//│   parentPath = S of MemberRef{disamb=class:Bar⁰}:
+//│     bms = member:Bar¹
+//│     disamb = class:Bar⁰
+//│   preCtor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:super⁰
+//│       argss = Ls of
+//│         Nil
+//│   ctor = Throw of Lit of StrLit of "This code cannot be run as its compilation yielded an error."
 

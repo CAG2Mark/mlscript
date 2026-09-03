@@ -7,6 +7,39 @@ data object Nil
 //│ deforest > <<< non-affine syms <<<
 //│ deforest > >>> fusing >>>
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Cons⁰
+//│   sym = member:Cons¹
+//│   ctorSym = S of term:Cons²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = h⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = t⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:h¹
+//│       _2 = term:Cons⁰/h²
+//│     Tuple2:
+//│       _1 = member:t¹
+//│       _2 = term:Cons⁰/t²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Cons⁰/h²
+//│       sym = member:h¹
+//│       rhs = SimpleRef of h⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Cons⁰/t²
+//│       sym = member:t¹
+//│       rhs = SimpleRef of t⁰
 
 data class AA(x)
 data class BB(x)
@@ -14,6 +47,27 @@ data class BB(x)
 //│ deforest > <<< non-affine syms <<<
 //│ deforest > >>> fusing >>>
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:AA⁰
+//│   sym = member:AA¹
+//│   ctorSym = S of term:AA²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:AA⁰/x²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:AA⁰/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
 
 data class Many(x)
 data class Once(x)
@@ -21,6 +75,27 @@ data class Once(x)
 //│ deforest > <<< non-affine syms <<<
 //│ deforest > >>> fusing >>>
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Many⁰
+//│   sym = member:Many¹
+//│   ctorSym = S of term:Many²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x³
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁴
+//│       _2 = term:Many⁰/x⁵
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Many⁰/x⁵
+//│       sym = member:x⁴
+//│       rhs = SimpleRef of x³
 
 
 
@@ -31,9 +106,9 @@ c(AA(3))
 //│ deforest > >>> non-affine syms >>>
 //│ deforest > <<< non-affine syms <<<
 //│ deforest > >>> fusing >>>
-//│ deforest > AA⁰(3) ->
+//│ deforest > AA²(3) ->
 //│ deforest > 	match: p⁰
-//│ deforest > 	fields: p⁰.x⁰
+//│ deforest > 	fields: p⁰.x²
 //│ deforest > <<< fusing <<<
 //│ = 3
 
@@ -44,11 +119,11 @@ c(AA(7))
 //│ deforest > >>> non-affine syms >>>
 //│ deforest > <<< non-affine syms <<<
 //│ deforest > >>> fusing >>>
-//│ deforest > AA⁰(7) ->
-//│ deforest > 	match: x¹
-//│ deforest > 	fields: x¹.x⁰
-//│ deforest > 	fields: x¹.x⁰
-//│ deforest > 	fields: x¹.x⁰
+//│ deforest > AA²(7) ->
+//│ deforest > 	match: x⁶
+//│ deforest > 	fields: x⁶.x²
+//│ deforest > 	fields: x⁶.x²
+//│ deforest > 	fields: x⁶.x²
 //│ deforest > <<< fusing <<<
 //│ = 14
 
@@ -82,12 +157,12 @@ affine_branched(AA(0), AA(1), (y) => if y is AA(x) then x + 2)
 //│ deforest > >>> non-affine syms >>>
 //│ deforest > <<< non-affine syms <<<
 //│ deforest > >>> fusing >>>
-//│ deforest > AA⁰(1) ->
+//│ deforest > AA²(1) ->
 //│ deforest > 	match: y⁰
-//│ deforest > 	fields: y⁰.x⁰
-//│ deforest > AA⁰(0) ->
-//│ deforest > 	match: x²
-//│ deforest > 	fields: x².x⁰
+//│ deforest > 	fields: y⁰.x²
+//│ deforest > AA²(0) ->
+//│ deforest > 	match: x⁷
+//│ deforest > 	fields: x⁷.x²
 //│ deforest > <<< fusing <<<
 //│ = 3
 
@@ -97,7 +172,7 @@ fun c(x) = if x is AA(_) then 0
 let p = AA(10) in
   c(p) + c(p)
 //│ deforest > >>> non-affine syms >>>
-//│ deforest > p@1
+//│ deforest > p@2
 //│ deforest > <<< non-affine syms <<<
 //│ deforest > >>> fusing >>>
 //│ deforest > <<< fusing <<<
@@ -130,9 +205,9 @@ c(AA(0), AA(3))
 //│ deforest > x_for_c@31
 //│ deforest > <<< non-affine syms <<<
 //│ deforest > >>> fusing >>>
-//│ deforest > AA⁰(0) ->
+//│ deforest > AA²(0) ->
 //│ deforest > 	match: k⁰
-//│ deforest > 	fields: k⁰.x⁰
+//│ deforest > 	fields: k⁰.x²
 //│ deforest > <<< fusing <<<
 //│ = 9
 
@@ -209,9 +284,9 @@ nest_consume(nest_pickB, nest_prod(10))
 //│ deforest > x_for_nest_prod@29
 //│ deforest > <<< non-affine syms <<<
 //│ deforest > >>> fusing >>>
-//│ deforest > AA⁰(tmp⁰) ->
+//│ deforest > AA²(tmp⁰) ->
 //│ deforest > 	match: p¹
-//│ deforest > 	fields: p¹.x⁰
+//│ deforest > 	fields: p¹.x²
 //│ deforest > <<< fusing <<<
 //│ = 22
 
@@ -253,14 +328,14 @@ length(append(id(1 :: Nil), 2 :: Nil))
 //│ deforest > >>> accumulator syms >>>
 //│ deforest > <<< accumulator syms <<<
 //│ deforest > >>> fusing >>>
-//│ deforest > Cons⁰(h⁰, tmp¹) ->
+//│ deforest > Cons²(h³, tmp¹) ->
 //│ deforest > 	match: ls⁰
-//│ deforest > 	fields: ls⁰.h¹
-//│ deforest > 	fields: ls⁰.t⁰
-//│ deforest > Cons⁰(2, Nil⁰) ->
+//│ deforest > 	fields: ls⁰.h²
+//│ deforest > 	fields: ls⁰.t²
+//│ deforest > Cons²(2, Nil⁰) ->
 //│ deforest > 	match: ls⁰
-//│ deforest > 	fields: ls⁰.h¹
-//│ deforest > 	fields: ls⁰.t⁰
+//│ deforest > 	fields: ls⁰.h²
+//│ deforest > 	fields: ls⁰.t²
 //│ deforest > Nil⁰ ->
 //│ deforest > 	match: ls⁰
 //│ deforest > <<< fusing <<<
@@ -284,14 +359,14 @@ length(ping(id(1 :: 2 :: Nil), 3 :: 4 :: Nil))
 //│ deforest > >>> accumulator syms >>>
 //│ deforest > <<< accumulator syms <<<
 //│ deforest > >>> fusing >>>
-//│ deforest > Cons⁰(3, tmp²) ->
+//│ deforest > Cons²(3, tmp²) ->
 //│ deforest > 	match: ls¹
-//│ deforest > 	fields: ls¹.h¹
-//│ deforest > 	fields: ls¹.t⁰
-//│ deforest > Cons⁰(4, Nil⁰) ->
+//│ deforest > 	fields: ls¹.h²
+//│ deforest > 	fields: ls¹.t²
+//│ deforest > Cons²(4, Nil⁰) ->
 //│ deforest > 	match: ls¹
-//│ deforest > 	fields: ls¹.h¹
-//│ deforest > 	fields: ls¹.t⁰
+//│ deforest > 	fields: ls¹.h²
+//│ deforest > 	fields: ls¹.t²
 //│ deforest > Nil⁰ ->
 //│ deforest > 	match: ls¹
 //│ deforest > <<< fusing <<<
@@ -314,10 +389,10 @@ sum(append(id(Nil), Nil), 0)
 //│ deforest > >>> accumulator syms >>>
 //│ deforest > <<< accumulator syms <<<
 //│ deforest > >>> fusing >>>
-//│ deforest > Cons⁰(h², tmp³) ->
+//│ deforest > Cons²(h⁴, tmp³) ->
 //│ deforest > 	match: ls²
-//│ deforest > 	fields: ls².h¹
-//│ deforest > 	fields: ls².t⁰
+//│ deforest > 	fields: ls².h²
+//│ deforest > 	fields: ls².t²
 //│ deforest > Nil⁰ ->
 //│ deforest > 	match: ls²
 //│ deforest > <<< fusing <<<
@@ -355,10 +430,10 @@ length(flatten(id((1 :: Nil) :: Nil)))
 //│ deforest > >>> accumulator syms >>>
 //│ deforest > <<< accumulator syms <<<
 //│ deforest > >>> fusing >>>
-//│ deforest > Cons⁰(h³, tmp⁴) ->
+//│ deforest > Cons²(h⁵, tmp⁴) ->
 //│ deforest > 	match: ls³
-//│ deforest > 	fields: ls³.h¹
-//│ deforest > 	fields: ls³.t⁰
+//│ deforest > 	fields: ls³.h²
+//│ deforest > 	fields: ls³.t²
 //│ deforest > Nil⁰ ->
 //│ deforest > 	match: ls³
 //│ deforest > <<< fusing <<<
@@ -395,10 +470,10 @@ foo of AA of () => 1
 //│ deforest > >>> accumulator syms >>>
 //│ deforest > <<< accumulator syms <<<
 //│ deforest > >>> fusing >>>
-//│ deforest > AA⁰(lambda⁰) ->
+//│ deforest > AA²(lambda⁰) ->
 //│ deforest > 	match: a⁰
-//│ deforest > 	fields: a⁰.x⁰
-//│ deforest > 	fields: a⁰.x⁰
+//│ deforest > 	fields: a⁰.x²
+//│ deforest > 	fields: a⁰.x²
 //│ deforest > <<< fusing <<<
 //│ = 2
 
@@ -420,9 +495,9 @@ foo of AA of () => 1
 //│ deforest > >>> accumulator syms >>>
 //│ deforest > <<< accumulator syms <<<
 //│ deforest > >>> fusing >>>
-//│ deforest > AA⁰(lambda¹) ->
+//│ deforest > AA²(lambda¹) ->
 //│ deforest > 	match: a¹
-//│ deforest > 	fields: a¹.x⁰
+//│ deforest > 	fields: a¹.x²
 //│ deforest > <<< fusing <<<
 //│ = 2
 

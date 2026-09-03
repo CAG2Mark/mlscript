@@ -5,5 +5,39 @@ data class Lazy[out A](init: () -> A) with
   mut val cached: A | () = ()
   fun get: A
   // fun eq(that: Lazy[A]) = this.cached == that.cached // TODO `this`
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Lazy⁰
+//│   sym = member:Lazy¹
+//│   ctorSym = S of term:Lazy²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = init⁰
+//│         sign = S of FunTy:
+//│           lhs = Tup of Nil
+//│           rhs = Ref{sym=A⁰} of A⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:init¹
+//│       _2 = term:Lazy⁰/init²
+//│     Tuple2:
+//│       _1 = member:cached⁰
+//│       _2 = term:Lazy⁰/cached¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Lazy⁰/init²
+//│       sym = member:init¹
+//│       rhs = SimpleRef of init⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Lazy⁰/cached¹
+//│       sym = member:cached⁰
+//│       rhs = Select{sym=object:Unit⁰}:
+//│         qual = SimpleRef of tmp:runtime⁰
+//│         name = Ident of "Unit"
 
 

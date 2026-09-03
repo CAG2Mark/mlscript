@@ -3,6 +3,27 @@
 
 data class Some(value)
 object None
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Some⁰
+//│   sym = member:Some¹
+//│   ctorSym = S of term:Some²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = value⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:value¹
+//│       _2 = term:Some⁰/value²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Some⁰/value²
+//│       sym = member:value¹
+//│       rhs = SimpleRef of value⁰
 
 
 :sjs
@@ -67,6 +88,28 @@ isDefined(None)
 
 module Foo with
   data class Other(v)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of module:Foo⁰
+//│   isym = class:Other⁰
+//│   sym = member:Other¹
+//│   ctorSym = S of term:Foo⁰/Other²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = v⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:v¹
+//│       _2 = term:Other⁰/v²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Other⁰/v²
+//│       sym = member:v¹
+//│       rhs = SimpleRef of v⁰
 
 val isOther = x => if x is
   Foo.Other(_) then true

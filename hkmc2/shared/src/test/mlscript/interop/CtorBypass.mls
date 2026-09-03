@@ -5,6 +5,44 @@ class A with
   print("ok")
   val n = 123
   Object.freeze(this)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A⁰
+//│   sym = member:A¹
+//│   k = Cls
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:n⁰
+//│       _2 = term:A⁰/n¹
+//│   ctor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of StrLit of "ok"
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:A⁰/n¹
+//│       sym = member:n⁰
+//│       rhs = Lit of IntLit of 123
+//│     rest = Assign: \
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Object⁰/freeze⁰}:
+//│         qual = Select{sym=module:Object⁰}:
+//│           qual = This of globalThis:globalThis⁰
+//│           name = Ident of "Object"
+//│         name = Ident of "freeze"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = This of class:A⁰
 
 let a = new A
 //│ > ok

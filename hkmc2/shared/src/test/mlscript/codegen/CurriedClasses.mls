@@ -4,11 +4,47 @@
 :sir
 :sjs
 class A(val x)(val y)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A⁰
+//│   sym = member:A¹
+//│   ctorSym = S of term:A²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│   auxParams = Ls of
+//│     ParamList:
+//│       params = Ls of
+//│         Param:
+//│           flags = (val)
+//│           sym = y⁰
+//│           modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:A⁰/x²
+//│     Tuple2:
+//│       _1 = member:y¹
+//│       _2 = term:A⁰/y²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:A⁰/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:A⁰/y²
+//│       sym = member:y¹
+//│       rhs = SimpleRef of y⁰
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define A⁰ as class A² {
-//│   val x⁰;
-//│   val y⁰;
-//│   constructor A¹(x, y) { define x⁰ as val x¹ = x; define y⁰ as val y¹ = y; end }
+//│ define A¹ as class A⁰ {
+//│   val x¹;
+//│   val y¹;
+//│   constructor A²(x, y) { define x¹ as val x² = x; define y¹ as val y² = y; end }
 //│ };
 //│ end
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
@@ -106,22 +142,82 @@ h.y
 class A(x1, x2, ...xs)(y1, ...ys) with
   fun fields = [x1, x2, xs, y1, ys]
 //│ ╔══[COMPILATION ERROR] Spread parameters are not supported in class parameters.
-//│ ║  l.106: 	class A(x1, x2, ...xs)(y1, ...ys) with
+//│ ║  l.142: 	class A(x1, x2, ...xs)(y1, ...ys) with
 //│ ╙──       	                   ^^
 //│ ╔══[COMPILATION ERROR] Spread parameters are not supported in class parameters.
-//│ ║  l.106: 	class A(x1, x2, ...xs)(y1, ...ys) with
+//│ ║  l.142: 	class A(x1, x2, ...xs)(y1, ...ys) with
 //│ ╙──       	                              ^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A³
+//│   sym = member:A⁴
+//│   ctorSym = S of term:A⁵
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x1⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         sym = x2⁰
+//│         modulefulness = Modulefulness of N
+//│   auxParams = Ls of
+//│     ParamList:
+//│       params = Ls of
+//│         Param:
+//│           sym = y1⁰
+//│           modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:A³
+//│       sym = member:fields⁰
+//│       dSym = term:A³/fields¹
+//│       body = Return of Tuple:
+//│         mut = false
+//│         elems = Ls of
+//│           Arg:
+//│             value = Select{sym=term:A³/x1¹}:
+//│               qual = This of class:A³
+//│               name = Ident of "x1"
+//│           Arg:
+//│             value = Select{sym=term:A³/x2¹}:
+//│               qual = This of class:A³
+//│               name = Ident of "x2"
+//│           Arg:
+//│             value = SimpleRef of xs⁰
+//│           Arg:
+//│             value = Select{sym=term:A³/y1¹}:
+//│               qual = This of class:A³
+//│               name = Ident of "y1"
+//│           Arg:
+//│             value = SimpleRef of ys⁰
+//│   privateFields = Ls of
+//│     term:A³/x1¹
+//│     term:A³/x2¹
+//│     term:A³/y1¹
+//│   ctor = AssignField:
+//│     lhs = This of class:A³
+//│     nme = Ident of "x1"
+//│     rhs = SimpleRef of x1⁰
+//│     rest = AssignField: \
+//│     lhs = This of class:A³
+//│     nme = Ident of "x2"
+//│     rhs = SimpleRef of x2⁰
+//│     rest = AssignField: \
+//│     lhs = This of class:A³
+//│     nme = Ident of "y1"
+//│     rhs = SimpleRef of y1⁰
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'xs'
-//│ ║  l.107: 	  fun fields = [x1, x2, xs, y1, ys]
+//│ ║  l.143: 	  fun fields = [x1, x2, xs, y1, ys]
 //│ ║         	                        ^^
 //│ ╟── which references the symbol introduced here
-//│ ║  l.106: 	class A(x1, x2, ...xs)(y1, ...ys) with
+//│ ║  l.142: 	class A(x1, x2, ...xs)(y1, ...ys) with
 //│ ╙──       	                   ^^
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'ys'
-//│ ║  l.107: 	  fun fields = [x1, x2, xs, y1, ys]
+//│ ║  l.143: 	  fun fields = [x1, x2, xs, y1, ys]
 //│ ║         	                                ^^
 //│ ╟── which references the symbol introduced here
-//│ ║  l.106: 	class A(x1, x2, ...xs)(y1, ...ys) with
+//│ ║  l.142: 	class A(x1, x2, ...xs)(y1, ...ys) with
 //│ ╙──       	                              ^^
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let A3;
@@ -155,16 +251,16 @@ class A(x1, x2, ...xs)(y1, ...ys) with
 //│   static [definitionMetadata] = ["class", "A", [null, null]];
 //│ });
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'xs'
-//│ ║  l.107: 	  fun fields = [x1, x2, xs, y1, ys]
+//│ ║  l.143: 	  fun fields = [x1, x2, xs, y1, ys]
 //│ ║         	                        ^^
 //│ ╟── which references the symbol introduced here
-//│ ║  l.106: 	class A(x1, x2, ...xs)(y1, ...ys) with
+//│ ║  l.142: 	class A(x1, x2, ...xs)(y1, ...ys) with
 //│ ╙──       	                   ^^
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'ys'
-//│ ║  l.107: 	  fun fields = [x1, x2, xs, y1, ys]
+//│ ║  l.143: 	  fun fields = [x1, x2, xs, y1, ys]
 //│ ║         	                                ^^
 //│ ╟── which references the symbol introduced here
-//│ ║  l.106: 	class A(x1, x2, ...xs)(y1, ...ys) with
+//│ ║  l.142: 	class A(x1, x2, ...xs)(y1, ...ys) with
 //│ ╙──       	                              ^^
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 

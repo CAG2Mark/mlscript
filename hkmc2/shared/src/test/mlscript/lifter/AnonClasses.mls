@@ -5,6 +5,42 @@
 fun foo() =
   new Object with
     fun test = 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:$anon)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:$anon⁰
+//│       sym = member:$anon¹
+//│       k = Cls
+//│       parentPath = S of Select{sym=class:Object⁰}:
+//│         qual = This of globalThis:globalThis⁰
+//│         name = Ident of "Object"
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:$anon⁰
+//│           sym = member:test⁰
+//│           dSym = term:$anon⁰/test¹
+//│           body = Return of Lit of IntLit of 1
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Nil
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:foo⁰
+//│       dSym = term:foo¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Instantiate:
+//│         mut = false
+//│         cls = MemberRef{disamb=class:$anon⁰}:
+//│           bms = member:$anon¹
+//│           disamb = class:$anon⁰
+//│         argss = Ls of
+//│           Nil
 
 foo().test
 //│ = 1
@@ -13,6 +49,42 @@ foo().test
 fun foo() =
   new with
     fun test = 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:$anon)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:$anon²
+//│       sym = member:$anon³
+//│       k = Cls
+//│       parentPath = S of Select{sym=class:Object⁰}:
+//│         qual = This of globalThis:globalThis⁰
+//│         name = Ident of "Object"
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:$anon²
+//│           sym = member:test²
+//│           dSym = term:$anon²/test³
+//│           body = Return of Lit of IntLit of 1
+//│       preCtor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:super⁰
+//│           argss = Ls of
+//│             Nil
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:foo²
+//│       dSym = term:foo³
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Instantiate:
+//│         mut = false
+//│         cls = MemberRef{disamb=class:$anon²}:
+//│           bms = member:$anon³
+//│           disamb = class:$anon²
+//│         argss = Ls of
+//│           Nil
 
 foo().test
 //│ = 1

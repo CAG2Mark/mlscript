@@ -58,6 +58,9 @@ module M
 data class A(a, b)
 data class B(a, b)
 data object Nil
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁰
 
 
 
@@ -104,6 +107,20 @@ fun f(x, y) =
 
 class A with
   val x = 1 + 2
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A⁰
+//│   sym = member:A¹
+//│   k = Cls
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁰
+//│       _2 = term:A⁰/x¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:A⁰/x¹
+//│       sym = member:x⁰
+//│       rhs = Lit of IntLit of 3
 
 
 let state = 0
@@ -115,6 +132,65 @@ class Foo() with // the class definition is moved to the location of its compani
 set state += 1
 module Foo with
   val res = Foo().foo()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:tmp)
+//│   body = Assign:
+//│     lhs = tmp:tmp⁰
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:+⁰
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = SimpleRef of state⁰
+//│           Arg:
+//│             value = Lit of IntLit of 1
+//│     rest = Assign: \
+//│     lhs = state⁰
+//│     rhs = SimpleRef of tmp:tmp⁰
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Foo⁰
+//│       sym = member:Foo¹
+//│       ctorSym = S of term:Foo²
+//│       k = Cls
+//│       paramsOpt = S of ParamList: ‹empty›
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:Foo⁰
+//│           sym = member:foo⁰
+//│           dSym = term:Foo⁰/foo¹
+//│           params = Ls of
+//│             ParamList: ‹empty›
+//│           body = Return of SimpleRef of state⁰
+//│       companion = S of ClsLikeBody:
+//│         isym = module:Foo³
+//│         publicFields = Ls of
+//│           Tuple2:
+//│             _1 = member:res⁰
+//│             _2 = term:Foo³/res¹
+//│         ctor = Scoped(syms = {tmp:tmp¹, tmp:tmp²}):
+//│           body = Assign:
+//│             lhs = tmp:tmp¹
+//│             rhs = Call:
+//│               fun = MemberRef{disamb=term:Foo²}:
+//│                 bms = member:Foo¹
+//│                 disamb = term:Foo²
+//│               argss = Ls of
+//│                 Nil
+//│             rest = Assign: \
+//│             lhs = tmp:tmp²
+//│             rhs = Call:
+//│               fun = Select{sym=term:Foo⁰/foo¹}:
+//│                 qual = SimpleRef of tmp:tmp¹
+//│                 name = Ident of "foo"
+//│               argss = Ls of
+//│                 Nil
+//│             rest = Define: \
+//│             defn = ValDefn:
+//│               tsym = term:Foo³/res¹
+//│               sym = member:res⁰
+//│               rhs = SimpleRef of tmp:tmp²
 
 
 
@@ -129,12 +205,74 @@ type I = Int
 
 class A(x) with
   val y = x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A²
+//│   sym = member:A³
+//│   ctorSym = S of term:A⁴
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x²
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:A²/x³
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:y⁰
+//│       _2 = term:A²/y¹
+//│   ctor = AssignField:
+//│     lhs = This of class:A²
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x²
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:A²/y¹
+//│       sym = member:y⁰
+//│       rhs = Select{sym=term:A²/x³}:
+//│         qual = This of class:A²
+//│         name = Ident of "x"
 
 
 
 
 module M with
   data class A(x, y)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of module:M¹
+//│   isym = class:A⁵
+//│   sym = member:A⁶
+//│   ctorSym = S of term:M¹/A⁷
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁴
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = y²
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁵
+//│       _2 = term:A⁵/x⁶
+//│     Tuple2:
+//│       _1 = member:y³
+//│       _2 = term:A⁵/y⁴
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:A⁵/x⁶
+//│       sym = member:x⁵
+//│       rhs = SimpleRef of x⁴
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:A⁵/y⁴
+//│       sym = member:y³
+//│       rhs = SimpleRef of y²
 
 // NOTE: while bodies are not rewritten to functions by default
 // and are `Scoped`
@@ -183,12 +321,99 @@ fun f(x) =
 
 
 data class Bar(x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Bar⁰
+//│   sym = member:Bar¹
+//│   ctorSym = S of term:Bar²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁷
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁸
+//│       _2 = term:Bar⁰/x⁹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Bar⁰/x⁹
+//│       sym = member:x⁸
+//│       rhs = SimpleRef of x⁷
 
 // NOTE: `tmp`s in pCtor and ctor shouldn't have name clashes with each other
 :sjs
 data class Baz(z) extends Bar(z * 1) with
   val k = 1 + 2 + 3
   fun baz = this.bar * 2
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Baz⁰
+//│   sym = member:Baz¹
+//│   ctorSym = S of term:Baz²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = z⁰
+//│         modulefulness = Modulefulness of N
+//│   parentPath = S of MemberRef{disamb=class:Bar⁰}:
+//│     bms = member:Bar¹
+//│     disamb = class:Bar⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Baz⁰
+//│       sym = member:baz⁰
+//│       dSym = term:Baz⁰/baz¹
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:*⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select:
+//│                 qual = This of class:Baz⁰
+//│                 name = Ident of "bar"
+//│             Arg:
+//│               value = Lit of IntLit of 2
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:z¹
+//│       _2 = term:Baz⁰/z²
+//│     Tuple2:
+//│       _1 = member:k⁰
+//│       _2 = term:Baz⁰/k¹
+//│   preCtor = Scoped(syms = {tmp:tmp³}):
+//│     body = Assign:
+//│       lhs = tmp:tmp³
+//│       rhs = Call:
+//│         fun = SimpleRef of builtin:*⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of z⁰
+//│             Arg:
+//│               value = Lit of IntLit of 1
+//│       rest = Assign: \
+//│       lhs = ‹no symbol›
+//│       rhs = Call:
+//│         fun = SimpleRef of builtin:super⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of tmp:tmp³
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Baz⁰/z²
+//│       sym = member:z¹
+//│       rhs = SimpleRef of z⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Baz⁰/k¹
+//│       sym = member:k⁰
+//│       rhs = Lit of IntLit of 6
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Baz1;
 //│ Baz1 = function Baz(z) {

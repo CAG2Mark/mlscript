@@ -84,6 +84,11 @@ fun succ(x) = S(x)
 fun toInt(x) = if x is
   N then 0
   S(n) then 1 + toInt(n)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:E⁰
+//│   sym = member:E¹
+//│   k = Cls
 
 
 (S(S(N()))).toString()
@@ -118,6 +123,87 @@ fun id(y) =
       id(y - 1)
       0
 id(2)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Cls⁰
+//│   sym = member:Cls¹
+//│   ctorSym = S of term:Cls²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = a⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = b⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = c⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = d⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = e⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = f⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a¹
+//│       _2 = term:Cls⁰/a²
+//│     Tuple2:
+//│       _1 = member:b¹
+//│       _2 = term:Cls⁰/b²
+//│     Tuple2:
+//│       _1 = member:c¹
+//│       _2 = term:Cls⁰/c²
+//│     Tuple2:
+//│       _1 = member:d¹
+//│       _2 = term:Cls⁰/d²
+//│     Tuple2:
+//│       _1 = member:e¹
+//│       _2 = term:Cls⁰/e²
+//│     Tuple2:
+//│       _1 = member:f¹
+//│       _2 = term:Cls⁰/f²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Cls⁰/a²
+//│       sym = member:a¹
+//│       rhs = SimpleRef of a⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Cls⁰/b²
+//│       sym = member:b¹
+//│       rhs = SimpleRef of b⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Cls⁰/c²
+//│       sym = member:c¹
+//│       rhs = SimpleRef of c⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Cls⁰/d²
+//│       sym = member:d¹
+//│       rhs = SimpleRef of d⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Cls⁰/e²
+//│       sym = member:e¹
+//│       rhs = SimpleRef of e⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Cls⁰/f²
+//│       sym = member:f¹
+//│       rhs = SimpleRef of f⁰
 //│ > CALL id(2)
 //│ > | CALL id(1)
 //│ > | | CALL id(0)

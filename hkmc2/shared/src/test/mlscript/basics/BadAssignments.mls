@@ -74,11 +74,14 @@ fun foo() =
 
 class X
 module X
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:X⁰
 
 :ge
 set X = 2
 //│ ╔══[COMPILATION ERROR] Cannot assign to overloaded class and module 'X'
-//│ ║  l.79: 	set X = 2
+//│ ║  l.82: 	set X = 2
 //│ ║        	    ^^^^^
 //│ ╟── Defined here:
 //│ ║  l.75: 	class X
@@ -90,7 +93,7 @@ set X = 2
 :ge
 set globalThis = 0
 //│ ╔══[COMPILATION ERROR] Cannot assign to symbol 'globalThis'
-//│ ║  l.91: 	set globalThis = 0
+//│ ║  l.94: 	set globalThis = 0
 //│ ╙──      	    ^^^^^^^^^^^^^^
 
 

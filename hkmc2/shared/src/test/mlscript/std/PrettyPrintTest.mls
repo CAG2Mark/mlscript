@@ -439,6 +439,19 @@ show of u: v: w:
 
 class Hola with
   fun toString() = "Hola.\nMi amigo.\n\u00bfQu\u00e9 tal?\nHasta luego."
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Hola⁰
+//│   sym = member:Hola¹
+//│   k = Cls
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Hola⁰
+//│       sym = member:toString⁰
+//│       dSym = term:Hola⁰/toString¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of StrLit of "Hola.\nMi amigo.\n¿Qué tal?\nHasta luego."
 
 // Customized `toString` should be able to trigger breaking lines.
 show of x: y: new Hola
@@ -453,6 +466,19 @@ show of x: y: new Hola
 
 class Hello with
   fun toString() = "Hi there. How's going?"
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Hello⁰
+//│   sym = member:Hello¹
+//│   k = Cls
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Hello⁰
+//│       sym = member:toString²
+//│       dSym = term:Hello⁰/toString³
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of StrLit of "Hi there. How's going?"
 
 show of x: y: z: new Hello
 //│ > {x: {y: {z: Hi there. How's going?}}}                                     ┊

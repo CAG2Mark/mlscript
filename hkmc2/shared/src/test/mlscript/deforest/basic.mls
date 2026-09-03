@@ -13,6 +13,27 @@ data object Nil
 data class (::) Cons(h, t)
 //│ deforest > >>> fusing >>>
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:X⁰
+//│   sym = member:X¹
+//│   ctorSym = S of term:X²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = a⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a¹
+//│       _2 = term:X⁰/a²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:X⁰/a²
+//│       sym = member:a¹
+//│       rhs = SimpleRef of a⁰
 
 :sir
 let lsit = [2, 1] in
@@ -51,9 +72,9 @@ fun c(x) = if x is
   X(x) then x
 c(p())
 //│ deforest > >>> fusing >>>
-//│ deforest > X⁰(O⁰) ->
+//│ deforest > X²(O⁰) ->
 //│ deforest > 	match: x⁰
-//│ deforest > 	fields: x⁰.a⁰
+//│ deforest > 	fields: x⁰.a²
 //│ deforest > <<< fusing <<<
 //│ = O
 
@@ -65,9 +86,9 @@ fun f(x) = if x is
   X(Y(y)) then y
 f(p())
 //│ deforest > >>> fusing >>>
-//│ deforest > X⁰(tmp⁰) ->
+//│ deforest > X²(tmp⁰) ->
 //│ deforest > 	match: x¹
-//│ deforest > 	fields: x¹.a⁰
+//│ deforest > 	fields: x¹.a²
 //│ deforest > Y⁰(O⁰) ->
 //│ deforest > 	match: arg$X$0$⁰
 //│ deforest > 	fields: arg$X$0$⁰.b⁰
@@ -109,13 +130,13 @@ f(p())
 //│ define p⁰ as fun p¹() {
 //│   let tmp1;
 //│   set tmp1 = Y⁰(O⁰);
-//│   return X⁰(tmp1)
+//│   return X²(tmp1)
 //│ };
 //│ define f⁰ as fun f¹(x) {
 //│   let y, arg$X$0$, arg$Y$0$;
 //│   match x
-//│     X¹ =>
-//│       set arg$X$0$ = x.a⁰;
+//│     X⁰ =>
+//│       set arg$X$0$ = x.a²;
 //│       match arg$X$0$
 //│         Y¹ =>
 //│           set arg$Y$0$ = arg$X$0$.b⁰;
@@ -143,12 +164,12 @@ fun f(x, res) = if x is
       Y(y) then res + tmp
 f(p(), 2)
 //│ deforest > >>> fusing >>>
-//│ deforest > X⁰(tmp¹) ->
+//│ deforest > X²(tmp¹) ->
 //│ deforest > 	match: x²
-//│ deforest > 	fields: x².a⁰
+//│ deforest > 	fields: x².a²
 //│ deforest > Y⁰(O⁰) ->
-//│ deforest > 	match: a¹
-//│ deforest > 	fields: a¹.b⁰
+//│ deforest > 	match: a³
+//│ deforest > 	fields: a³.b⁰
 //│ deforest > <<< fusing <<<
 //│ = 14
 
@@ -164,9 +185,9 @@ fun f(x, y, res) = if x is
         res + tmp + a
 f(X(1), Y(2), 3)
 //│ deforest > >>> fusing >>>
-//│ deforest > X⁰(1) ->
+//│ deforest > X²(1) ->
 //│ deforest > 	match: x³
-//│ deforest > 	fields: x³.a⁰
+//│ deforest > 	fields: x³.a²
 //│ deforest > <<< fusing <<<
 //│ = 16
 
@@ -176,18 +197,18 @@ fun c(x, d) = if x is
   X(a) then c(X(a), d)
 () => c(X(3), 2)
 //│ deforest > >>> fusing >>>
-//│ deforest > X⁰(a²) ->
+//│ deforest > X²(a⁴) ->
 //│ deforest > 	match: x⁴
-//│ deforest > 	fields: x⁴.a⁰
-//│ deforest > X⁰(3) ->
+//│ deforest > 	fields: x⁴.a²
+//│ deforest > X²(3) ->
 //│ deforest > 	match: x⁴
-//│ deforest > 	fields: x⁴.a⁰
-//│ deforest > X⁰(a²) ->
+//│ deforest > 	fields: x⁴.a²
+//│ deforest > X²(a⁴) ->
 //│ deforest > 	match: x⁴
-//│ deforest > 	fields: x⁴.a⁰
-//│ deforest > X⁰(3) ->
+//│ deforest > 	fields: x⁴.a²
+//│ deforest > X²(3) ->
 //│ deforest > 	match: x⁴
-//│ deforest > 	fields: x⁴.a⁰
+//│ deforest > 	fields: x⁴.a²
 //│ deforest > <<< fusing <<<
 //│ = fun lambda_7$lambda
 

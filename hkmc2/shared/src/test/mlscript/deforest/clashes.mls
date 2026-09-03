@@ -5,11 +5,65 @@
 data class A(x)
 //│ deforest > >>> fusing >>>
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A⁰
+//│   sym = member:A¹
+//│   ctorSym = S of term:A²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:A⁰/x²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:A⁰/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
 
 data class (::) Cons(h, t)
 object Nil
 //│ deforest > >>> fusing >>>
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Cons⁰
+//│   sym = member:Cons¹
+//│   ctorSym = S of term:Cons²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = h⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = t⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:h¹
+//│       _2 = term:Cons⁰/h²
+//│     Tuple2:
+//│       _1 = member:t¹
+//│       _2 = term:Cons⁰/t²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Cons⁰/h²
+//│       sym = member:h¹
+//│       rhs = SimpleRef of h⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Cons⁰/t²
+//│       sym = member:t¹
+//│       rhs = SimpleRef of t⁰
 
 
 
@@ -41,9 +95,9 @@ fun f1(p) = if p is A(a) then a + 1
 fun f2(p) = if p is A(b) then b + 2
 f1(one) + f2(one) + f2(two)
 //│ deforest > >>> fusing >>>
-//│ deforest > A⁰(x⁰) ->
+//│ deforest > A²(x³) ->
 //│ deforest > 	match: p⁰
-//│ deforest > 	fields: p⁰.x¹
+//│ deforest > 	fields: p⁰.x²
 //│ deforest > <<< fusing <<<
 //│ = 9
 

@@ -9,16 +9,31 @@ data class BB(x)
 data class CC(x)
 //│ deforest > >>> fusing >>>
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:A⁰
+//│   sym = member:A¹
+//│   k = Obj
 
 object Nil
 data class Cons(h, t)
 //│ deforest > >>> fusing >>>
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Nil⁰
+//│   sym = member:Nil¹
+//│   k = Obj
 
 object None
 data class Some(x)
 //│ deforest > >>> fusing >>>
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:None⁰
+//│   sym = member:None¹
+//│   k = Obj
 
 
 // TODO: many dead code contain duplicated `t + 5 * 4 - 3 + 2 - 1`.
@@ -195,10 +210,10 @@ test()
 //│ deforest > 	fields: scrut⁰.x²
 //│ deforest > <<< fusing <<<
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'Local'
-//│ ║  l.187: 	    Global(x) then Local(x + 1)
+//│ ║  l.202: 	    Global(x) then Local(x + 1)
 //│ ║         	                   ^^^^^
 //│ ╟── which references the symbol introduced here
-//│ ║  l.185: 	  data class Local(x)
+//│ ║  l.200: 	  data class Local(x)
 //│ ╙──       	             ^^^^^^^^
 //│ ═══[RUNTIME ERROR] ReferenceError: Local is not defined
 //│ ═══[RUNTIME ERROR] Expected: 'Local(2)', got: 'undefined'
@@ -242,4 +257,157 @@ Test.Test2.foo(AA(2))
 //│ deforest > 	match: a⁰
 //│ deforest > 	fields: a⁰.x¹
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:AA_x, member:foo_7$a_AA, tmp:tmp, member:foo_7$foo, member:foo_7$a_rest)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:foo_7$foo⁰
+//│       dSym = term:foo_7$foo¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = a¹
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {y⁰, tmp:arg$AA$0$²}):
+//│         body = Return of Call:
+//│           fun = SimpleRef of a¹
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of y⁰
+//│               Arg:
+//│                 value = SimpleRef of tmp:arg$AA$0$²
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:foo_7$a_AA⁰
+//│       dSym = term:foo_7$a_AA¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = AA_x⁰
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_y⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$AA$0$⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = fv_arg$AA$0$⁰
+//│         rhs = SimpleRef of AA_x⁰
+//│         rest = Assign: \
+//│         lhs = fv_y⁰
+//│         rhs = SimpleRef of fv_arg$AA$0$⁰
+//│         rest = Return of Call:
+//│           fun = SimpleRef of builtin:+⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = Select{sym=term:Test2⁰/x⁴}:
+//│                   qual = This of module:Test2⁰
+//│                   name = Ident of "x"
+//│               Arg:
+//│                 value = SimpleRef of fv_y⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:foo_7$a_rest⁰
+//│       dSym = term:foo_7$a_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Test⁰
+//│       sym = member:Test¹
+//│       k = Cls
+//│       companion = S of ClsLikeBody:
+//│         isym = module:Test²
+//│         ctor = Define:
+//│           defn = ClsLikeDefn:
+//│             owner = S of module:Test²
+//│             isym = class:Test2¹
+//│             sym = member:Test2²
+//│             k = Cls
+//│             companion = S of ClsLikeBody:
+//│               isym = module:Test2⁰
+//│               methods = Ls of
+//│                 FunDefn:
+//│                   owner = S of module:Test2⁰
+//│                   sym = member:foo⁰
+//│                   dSym = term:Test2⁰/foo¹
+//│                   params = Ls of
+//│                     ParamList:
+//│                       params = Ls of
+//│                         Param:
+//│                           sym = a⁰
+//│                           modulefulness = Modulefulness of N
+//│                   body = Scoped(syms = {y¹, tmp:arg$AA$0$³}):
+//│                     body = Match:
+//│                       scrut = SimpleRef of a⁰
+//│                       arms = Ls of
+//│                         Tuple2:
+//│                           _1 = Cls:
+//│                             cls = class:AA¹
+//│                             path = MemberRef{disamb=class:AA¹}:
+//│                               bms = member:AA²
+//│                               disamb = class:AA¹
+//│                           _2 = Assign:
+//│                             lhs = tmp:arg$AA$0$³
+//│                             rhs = Select{sym=term:AA¹/x¹}:
+//│                               qual = SimpleRef of a⁰
+//│                               name = Ident of "x"
+//│                             rest = Assign: \
+//│                             lhs = y¹
+//│                             rhs = SimpleRef of tmp:arg$AA$0$³
+//│                             rest = Return of Call:
+//│                               fun = SimpleRef of builtin:+⁰
+//│                               argss = Ls of
+//│                                 Ls of
+//│                                   Arg:
+//│                                     value = Select{sym=term:Test2⁰/x⁴}:
+//│                                       qual = This of module:Test2⁰
+//│                                       name = Ident of "x"
+//│                                   Arg:
+//│                                     value = SimpleRef of y¹
+//│                       dflt = S of Throw of Instantiate:
+//│                         mut = false
+//│                         cls = Select{sym=class:Error⁰}:
+//│                           qual = This of globalThis:globalThis⁰
+//│                           name = Ident of "Error"
+//│                         argss = Ls of
+//│                           Ls of
+//│                             Arg:
+//│                               value = Lit of StrLit of "match error"
+//│               privateFields = Ls of
+//│                 term:Test2⁰/x⁴
+//│               ctor = AssignField:
+//│                 lhs = This of module:Test2⁰
+//│                 nme = Ident of "x"
+//│                 rhs = Lit of IntLit of 1
+//│     rest = Assign: \
+//│     lhs = tmp:AA_x¹
+//│     rhs = Lit of IntLit of 2
+//│     rest = Assign: \
+//│     lhs = tmp:tmp²
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:foo_7$a_AA¹}:
+//│         bms = member:foo_7$a_AA⁰
+//│         disamb = term:foo_7$a_AA¹
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = SimpleRef of tmp:AA_x¹
+//│     rest = Return of Call:
+//│       fun = MemberRef{disamb=term:foo_7$foo¹}:
+//│         bms = member:foo_7$foo⁰
+//│         disamb = term:foo_7$foo¹
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp²
 //│ ═══[RUNTIME ERROR] ReferenceError: Test2 is not defined

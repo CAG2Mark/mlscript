@@ -1,4 +1,119 @@
 :invalml
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:lambda)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:print⁰
+//│       dSym = term:print¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = Select:
+//│           qual = Select:
+//│             qual = This of globalThis:globalThis⁰
+//│             name = Ident of "console"
+//│           name = Ident of "log"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x⁰
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:CodeBase⁰
+//│       sym = member:CodeBase¹
+//│       k = Cls
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Region⁰
+//│       sym = member:Region¹
+//│       k = Cls
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Ref⁰
+//│       sym = member:Ref¹
+//│       ctorSym = S of term:Ref²
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = reg⁰
+//│             sign = S of TyApp{sym=class:Region⁰}:
+//│               lhs = Resolved{sym=class:Region⁰}:
+//│                 t = Ref{sym=member:Region¹} of member:Region¹
+//│                 sym = class:Region⁰
+//│               targs = Ls of
+//│                 Ref{sym=T⁰} of T⁰
+//│             modulefulness = Modulefulness of N
+//│           Param:
+//│             flags = (val)
+//│             sym = value⁰
+//│             sign = S of Ref{sym=S⁰} of S⁰
+//│             modulefulness = Modulefulness of N
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:reg¹
+//│           _2 = term:Ref⁰/reg²
+//│         Tuple2:
+//│           _1 = member:value¹
+//│           _2 = term:Ref⁰/value²
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:Ref⁰/reg²
+//│           sym = member:reg¹
+//│           rhs = SimpleRef of reg⁰
+//│         rest = Define: \
+//│         defn = ValDefn:
+//│           tsym = term:Ref⁰/value²
+//│           sym = member:value¹
+//│           rhs = SimpleRef of value⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "CodeBase"
+//│     rhs = MemberRef{disamb=class:CodeBase⁰}:
+//│       bms = member:CodeBase¹
+//│       disamb = class:CodeBase⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "Region"
+//│     rhs = MemberRef{disamb=class:Region⁰}:
+//│       bms = member:Region¹
+//│       disamb = class:Region⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda⁰
+//│       dSym = term:lambda¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = r⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = v⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Instantiate:
+//│         mut = true
+//│         cls = MemberRef{disamb=class:Ref⁰}:
+//│           bms = member:Ref¹
+//│           disamb = class:Ref⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of r⁰
+//│             Arg:
+//│               value = SimpleRef of v⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "Ref"
+//│     rhs = MemberRef{disamb=term:lambda¹}:
+//│       bms = member:lambda⁰
+//│       disamb = term:lambda¹
 
 
 123
@@ -38,8 +153,8 @@ x => x
 :e
 114 + "514"
 //│ ╔══[COMPILATION ERROR] Type error in string literal with expected type Int
-//│ ║  l.39: 	114 + "514"
-//│ ║        	      ^^^^^
+//│ ║  l.154: 	114 + "514"
+//│ ║         	      ^^^^^
 //│ ╙── because: cannot constrain  Str  <:  Int
 //│ Type: Int
 
@@ -56,36 +171,60 @@ let x = 1 in let y = 2 in x + y
 :e
 let x = 0 in x + "1"
 //│ ╔══[COMPILATION ERROR] Type error in string literal with expected type Int
-//│ ║  l.57: 	let x = 0 in x + "1"
-//│ ║        	                 ^^^
+//│ ║  l.172: 	let x = 0 in x + "1"
+//│ ║         	                 ^^^
 //│ ╙── because: cannot constrain  Str  <:  Int
 //│ Type: Int
 
 data class Foo(x: Int)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x¹
+//│         sign = S of Resolved{sym=class:Int⁰}:
+//│           t = Ref{sym=member:Int¹} of member:Int¹
+//│           sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x²
+//│       _2 = term:Foo⁰/x³
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/x³
+//│       sym = member:x²
+//│       rhs = SimpleRef of x¹
 
 :e
 new Nothingness(0)
 //│ ╔══[COMPILATION ERROR] Name not found: Nothingness
-//│ ║  l.67: 	new Nothingness(0)
-//│ ╙──      	    ^^^^^^^^^^^
+//│ ║  l.206: 	new Nothingness(0)
+//│ ╙──       	    ^^^^^^^^^^^
 //│ ╔══[COMPILATION ERROR] Expected a statically known class; found ‹error›.
-//│ ║  l.67: 	new Nothingness(0)
-//│ ║        	    ^^^^^^^^^^^
+//│ ║  l.206: 	new Nothingness(0)
+//│ ║         	    ^^^^^^^^^^^
 //│ ╙── The 'new' keyword requires a statically known class; use the 'new!' operator for dynamic instantiation.
 //│ ╔══[COMPILATION ERROR] Not a valid class: ‹error›
-//│ ║  l.67: 	new Nothingness(0)
-//│ ╙──      	    ^^^^^^^^^^^
+//│ ║  l.206: 	new Nothingness(0)
+//│ ╙──       	    ^^^^^^^^^^^
 //│ Type: ⊥
 
 :e
 new 42
 //│ ╔══[COMPILATION ERROR] Expected a statically known class; found integer literal.
-//│ ║  l.81: 	new 42
-//│ ║        	    ^^
+//│ ║  l.220: 	new 42
+//│ ║         	    ^^
 //│ ╙── The 'new' keyword requires a statically known class; use the 'new!' operator for dynamic instantiation.
 //│ ╔══[COMPILATION ERROR] Not a valid class: integer literal
-//│ ║  l.81: 	new 42
-//│ ╙──      	    ^^
+//│ ║  l.220: 	new 42
+//│ ╙──       	    ^^
 //│ Type: ⊥
 
 
@@ -94,6 +233,60 @@ new Foo(42)
 
 
 data class Point(x: Num, y: Num, z: Num)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Point⁰
+//│   sym = member:Point¹
+//│   ctorSym = S of term:Point²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁴
+//│         sign = S of Resolved{sym=class:Num⁰}:
+//│           t = Ref{sym=member:Num¹} of member:Num¹
+//│           sym = class:Num⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = y⁰
+//│         sign = S of Resolved{sym=class:Num⁰}:
+//│           t = Ref{sym=member:Num¹} of member:Num¹
+//│           sym = class:Num⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = z⁰
+//│         sign = S of Resolved{sym=class:Num⁰}:
+//│           t = Ref{sym=member:Num¹} of member:Num¹
+//│           sym = class:Num⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁵
+//│       _2 = term:Point⁰/x⁶
+//│     Tuple2:
+//│       _1 = member:y¹
+//│       _2 = term:Point⁰/y²
+//│     Tuple2:
+//│       _1 = member:z¹
+//│       _2 = term:Point⁰/z²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Point⁰/x⁶
+//│       sym = member:x⁵
+//│       rhs = SimpleRef of x⁴
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Point⁰/y²
+//│       sym = member:y¹
+//│       rhs = SimpleRef of y⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Point⁰/z²
+//│       sym = member:z¹
+//│       rhs = SimpleRef of z⁰
 
 
 new Point(0.0, 0.0, 0.0)
@@ -102,13 +295,35 @@ new Point(0.0, 0.0, 0.0)
 :e
 new Foo("1!5!")
 //│ ╔══[COMPILATION ERROR] Type error in string literal with expected type Int
-//│ ║  l.103: 	new Foo("1!5!")
+//│ ║  l.296: 	new Foo("1!5!")
 //│ ║         	        ^^^^^^
 //│ ╙── because: cannot constrain  Str  <:  Int
 //│ Type: Foo
 
 
 data class Some[A](value: A)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Some⁰
+//│   sym = member:Some¹
+//│   ctorSym = S of term:Some²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = value³
+//│         sign = S of Ref{sym=A⁰} of A⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:value⁴
+//│       _2 = term:Some⁰/value⁵
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Some⁰/value⁵
+//│       sym = member:value⁴
+//│       rhs = SimpleRef of value³
 
 new Some(true)
 //│ Type: Some['A]
@@ -130,15 +345,43 @@ let t = new Some(true) in t.Some#value
 :pe
 42.Some#value
 //│ ╔══[LEXICAL ERROR] Expected at least one digit after the  decimal point
-//│ ║  l.131: 	42.Some#value
+//│ ║  l.346: 	42.Some#value
 //│ ╙──       	   ^
 //│ ╔══[COMPILATION ERROR] Illegal juxtaposition right-hand side (infix operator '#').
-//│ ║  l.131: 	42.Some#value
+//│ ║  l.346: 	42.Some#value
 //│ ╙──       	   ^^^^^^^^^^
 //│ Type: Num
 
 
 data class Printer[T](f: T -> Str)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Printer⁰
+//│   sym = member:Printer¹
+//│   ctorSym = S of term:Printer²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = f⁰
+//│         sign = S of FunTy:
+//│           lhs = Tup of Ls of
+//│             Fld:
+//│               term = Ref{sym=T¹} of T¹
+//│           rhs = Resolved{sym=class:Str⁰}:
+//│             t = Ref{sym=member:Str¹} of member:Str¹
+//│             sym = class:Str⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:f¹
+//│       _2 = term:Printer⁰/f²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Printer⁰/f²
+//│       sym = member:f¹
+//│       rhs = SimpleRef of f⁰
 
 fun foofoo(x) =
   let t = x + 1 in "foo"
@@ -154,7 +397,7 @@ let ip = new Printer(foofoo) in ip.Printer#f(42)
 :e
 let ip = new Printer(foofoo) in ip.Printer#f("42")
 //│ ╔══[COMPILATION ERROR] Type error in string literal with expected type 'T
-//│ ║  l.155: 	let ip = new Printer(foofoo) in ip.Printer#f("42")
+//│ ║  l.398: 	let ip = new Printer(foofoo) in ip.Printer#f("42")
 //│ ║         	                                             ^^^^
 //│ ╟── because: cannot constrain  Str  <:  'T
 //│ ╟── because: cannot constrain  Str  <:  'T
@@ -162,6 +405,32 @@ let ip = new Printer(foofoo) in ip.Printer#f("42")
 //│ Type: Str
 
 data class TFun[T](f: T -> T)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:TFun⁰
+//│   sym = member:TFun¹
+//│   ctorSym = S of term:TFun²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = f³
+//│         sign = S of FunTy:
+//│           lhs = Tup of Ls of
+//│             Fld:
+//│               term = Ref{sym=T²} of T²
+//│           rhs = Ref{sym=T²} of T²
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:f⁴
+//│       _2 = term:TFun⁰/f⁵
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:TFun⁰/f⁵
+//│       sym = member:f⁴
+//│       rhs = SimpleRef of f³
 
 fun inc(x) = x + 1
 
@@ -177,7 +446,7 @@ let tf = new TFun(inc) in tf.TFun#f(1)
 :e
 let tf = new TFun(inc) in tf.TFun#f("1")
 //│ ╔══[COMPILATION ERROR] Type error in string literal with expected type 'T
-//│ ║  l.178: 	let tf = new TFun(inc) in tf.TFun#f("1")
+//│ ║  l.447: 	let tf = new TFun(inc) in tf.TFun#f("1")
 //│ ║         	                                    ^^^
 //│ ╟── because: cannot constrain  Str  <:  'T
 //│ ╟── because: cannot constrain  Str  <:  'T
@@ -185,6 +454,41 @@ let tf = new TFun(inc) in tf.TFun#f("1")
 //│ Type: Str ∨ Int
 
 data class Pair[A, B](fst: A, snd: B)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Pair⁰
+//│   sym = member:Pair¹
+//│   ctorSym = S of term:Pair²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = fst⁰
+//│         sign = S of Ref{sym=A¹} of A¹
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = snd⁰
+//│         sign = S of Ref{sym=B⁰} of B⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:fst¹
+//│       _2 = term:Pair⁰/fst²
+//│     Tuple2:
+//│       _1 = member:snd¹
+//│       _2 = term:Pair⁰/snd²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Pair⁰/fst²
+//│       sym = member:fst¹
+//│       rhs = SimpleRef of fst⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Pair⁰/snd²
+//│       sym = member:snd¹
+//│       rhs = SimpleRef of snd⁰
 
 (new Pair(42, true)).Pair#fst
 //│ Type: Int
@@ -267,6 +571,32 @@ fact2(0)
 
 
 data class Foo[A](x: A -> A)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo³
+//│   sym = member:Foo⁴
+//│   ctorSym = S of term:Foo⁵
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁷
+//│         sign = S of FunTy:
+//│           lhs = Tup of Ls of
+//│             Fld:
+//│               term = Ref{sym=A²} of A²
+//│           rhs = Ref{sym=A²} of A²
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁸
+//│       _2 = term:Foo³/x⁹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo³/x⁹
+//│       sym = member:x⁸
+//│       rhs = SimpleRef of x⁷
 
 new Foo(x => x)
 //│ Type: Foo['A]
@@ -289,7 +619,7 @@ throw new Error("oops")
 :e
 throw 42
 //│ ╔══[COMPILATION ERROR] Type error in throw
-//│ ║  l.290: 	throw 42
+//│ ║  l.620: 	throw 42
 //│ ║         	^^^^^^^^
 //│ ╙── because: cannot constrain  Int  <:  Error
 //│ Type: ⊥

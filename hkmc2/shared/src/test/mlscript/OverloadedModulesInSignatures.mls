@@ -5,23 +5,59 @@ class ClsMod with
   val whoami = "class"
 module ClsMod with
   val whoami = "module"
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:ClsMod⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:whoami⁰
+//│       _2 = term:ClsMod⁰/whoami¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:ClsMod⁰/whoami¹
+//│       sym = member:whoami⁰
+//│       rhs = Lit of StrLit of "module"
 
 type TypMod = Int
 module TypMod with
   val whoami = "module"
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:TypMod⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:whoami²
+//│       _2 = term:TypMod⁰/whoami³
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:TypMod⁰/whoami³
+//│       sym = member:whoami²
+//│       rhs = Lit of StrLit of "module"
 
 :fixme
 fun TrmMod = 42
 module TrmMod with
   val whoami = "module"
 //│ ╔══[COMPILATION ERROR] Not yet supported: overloading of function 'TrmMod'
-//│ ║  l.14: 	fun TrmMod = 42
+//│ ║  l.38: 	fun TrmMod = 42
 //│ ║        	^^^^^^^^^^^^^^^
 //│ ╟── with module of the same name
-//│ ║  l.15: 	module TrmMod with
+//│ ║  l.39: 	module TrmMod with
 //│ ║        	^^^^^^^^^^^^^^^^^^
-//│ ║  l.16: 	  val whoami = "module"
+//│ ║  l.40: 	  val whoami = "module"
 //│ ╙──      	^^^^^^^^^^^^^^^^^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:TrmMod⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:whoami⁴
+//│       _2 = term:TrmMod⁰/whoami⁵
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:TrmMod⁰/whoami⁵
+//│       sym = member:whoami⁴
+//│       rhs = Lit of StrLit of "module"
 
 fun f: ClsMod = 42
 
@@ -29,7 +65,7 @@ fun f: ClsMod = 42
 f
 //│ ——————————————| Resolved tree |—————————————————————————————————————————————————————————————————————
 //│ Blk:
-//│   res = Resolved{sym=term:f⁰,typ=class:ClsMod⁰}:
+//│   res = Resolved{sym=term:f⁰,typ=class:ClsMod¹}:
 //│     t = Ref{sym=member:f¹} of member:f¹
 //│     sym = term:f⁰
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
@@ -41,7 +77,7 @@ fun f: module ClsMod = ClsMod
 f
 //│ ——————————————| Resolved tree |—————————————————————————————————————————————————————————————————————
 //│ Blk:
-//│   res = Resolved{sym=term:f²,typ=module:ClsMod¹}:
+//│   res = Resolved{sym=term:f²,typ=module:ClsMod⁰}:
 //│     t = Ref{sym=member:f³} of member:f³
 //│     sym = term:f²
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
@@ -53,7 +89,7 @@ fun f: TypMod = 42
 f
 //│ ——————————————| Resolved tree |—————————————————————————————————————————————————————————————————————
 //│ Blk:
-//│   res = Resolved{sym=term:f⁴,typ=type:TypMod⁰}:
+//│   res = Resolved{sym=term:f⁴,typ=type:TypMod¹}:
 //│     t = Ref{sym=member:f⁵} of member:f⁵
 //│     sym = term:f⁴
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
@@ -65,7 +101,7 @@ fun f: module TypMod = TypMod
 f
 //│ ——————————————| Resolved tree |—————————————————————————————————————————————————————————————————————
 //│ Blk:
-//│   res = Resolved{sym=term:f⁶,typ=module:TypMod¹}:
+//│   res = Resolved{sym=term:f⁶,typ=module:TypMod⁰}:
 //│     t = Ref{sym=member:f⁷} of member:f⁷
 //│     sym = term:f⁶
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
@@ -74,8 +110,8 @@ f
 :e
 fun f: TrmMod = 42
 //│ ╔══[COMPILATION ERROR] Expected a non-module type; found reference of type TrmMod denoting module 'TrmMod'.
-//│ ║  l.75: 	fun f: TrmMod = 42
-//│ ║        	       ^^^^^^
+//│ ║  l.111: 	fun f: TrmMod = 42
+//│ ║         	       ^^^^^^
 //│ ╙── Function must be marked as returning a 'module' in order to have a module return type.
 
 :sjs
@@ -134,14 +170,17 @@ assertNonModule(TrmMod).whoami
 
 type Foo[A] = Int
 module Foo
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Foo⁰
 
 :e
 fun f(x: Foo): Foo = x
 //│ ╔══[COMPILATION ERROR] Expected 1 type arguments, got none
-//│ ║  l.139: 	fun f(x: Foo): Foo = x
+//│ ║  l.178: 	fun f(x: Foo): Foo = x
 //│ ╙──       	         ^^^
 //│ ╔══[COMPILATION ERROR] Expected 1 type arguments, got none
-//│ ║  l.139: 	fun f(x: Foo): Foo = x
+//│ ║  l.178: 	fun f(x: Foo): Foo = x
 //│ ╙──       	               ^^^
 
 fun f(x: Foo[Int]): Foo[Int] = x
@@ -151,10 +190,10 @@ fun f(module x: Foo): module Foo = x
 :e
 fun f(module x: Foo[Int]): module Foo[Int] = x
 //│ ╔══[COMPILATION ERROR] Expected no type arguments, got 1
-//│ ║  l.152: 	fun f(module x: Foo[Int]): module Foo[Int] = x
+//│ ║  l.191: 	fun f(module x: Foo[Int]): module Foo[Int] = x
 //│ ╙──       	                ^^^^^^^^
 //│ ╔══[COMPILATION ERROR] Expected no type arguments, got 1
-//│ ║  l.152: 	fun f(module x: Foo[Int]): module Foo[Int] = x
+//│ ║  l.191: 	fun f(module x: Foo[Int]): module Foo[Int] = x
 //│ ╙──       	                                  ^^^^^^^^
 
 

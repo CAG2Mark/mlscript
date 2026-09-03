@@ -139,18 +139,49 @@ class Foo(x) with
   fun bar(a) = x
 let foo = Foo(1)
 foo.bar(99)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo⁰
+//│       sym = member:bar⁰
+//│       dSym = term:Foo⁰/bar¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = a⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Select{sym=term:Foo⁰/x¹}:
+//│         qual = This of class:Foo⁰
+//│         name = Ident of "x"
+//│   privateFields = Ls of
+//│     term:Foo⁰/x¹
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo⁰
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁰
 //│ dead-param-elim > >>> dead-param-elim results >>>
 //│ dead-param-elim > <<< dead-param-elim results <<<
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
-//│ define Foo⁰ as class Foo² {
-//│   private val x⁰;
-//│   constructor Foo¹(x) {
-//│     set Foo².this.x⁰ = x;
+//│ define Foo¹ as class Foo⁰ {
+//│   private val x¹;
+//│   constructor Foo²(x) {
+//│     set Foo⁰.this.x¹ = x;
 //│     end
 //│   }
-//│   method bar⁰ = fun bar¹(a) { return Foo².this.x⁰ }
+//│   method bar⁰ = fun bar¹(a) { return Foo⁰.this.x¹ }
 //│ };
-//│ set foo⁰ = Foo¹(1);
+//│ set foo⁰ = Foo²(1);
 //│ return foo⁰.bar﹖(99)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 1
@@ -161,6 +192,35 @@ class Foo(x) with
   fun bar(a) = a
 let foo = Foo(1)
 foo.bar(99)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo³
+//│   sym = member:Foo⁴
+//│   ctorSym = S of term:Foo⁵
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = x²
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo³
+//│       sym = member:bar²
+//│       dSym = term:Foo³/bar³
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = a¹
+//│               modulefulness = Modulefulness of N
+//│       body = Return of SimpleRef of a¹
+//│   privateFields = Ls of
+//│     term:Foo³/x³
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo³
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x²
 //│ dead-param-elim > >>> dead-param-elim results >>>
 //│ dead-param-elim > <<< dead-param-elim results <<<
 //│ = 99
@@ -172,6 +232,52 @@ foo.bar(99)
 class Foo(x) with
   fun get() = x
 Foo(1).get()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:tmp)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:Foo⁶
+//│       sym = member:Foo⁷
+//│       ctorSym = S of term:Foo⁸
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             sym = x⁴
+//│             modulefulness = Modulefulness of N
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:Foo⁶
+//│           sym = member:get⁰
+//│           dSym = term:Foo⁶/get¹
+//│           params = Ls of
+//│             ParamList: ‹empty›
+//│           body = Return of Select{sym=term:Foo⁶/x⁵}:
+//│             qual = This of class:Foo⁶
+//│             name = Ident of "x"
+//│       privateFields = Ls of
+//│         term:Foo⁶/x⁵
+//│       ctor = AssignField:
+//│         lhs = This of class:Foo⁶
+//│         nme = Ident of "x"
+//│         rhs = SimpleRef of x⁴
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁰
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:Foo⁸}:
+//│         bms = member:Foo⁷
+//│         disamb = term:Foo⁸
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 1
+//│     rest = Return of Call:
+//│       fun = Select{sym=term:Foo⁶/get¹}:
+//│         qual = SimpleRef of tmp:tmp⁰
+//│         name = Ident of "get"
+//│       argss = Ls of
+//│         Nil
 //│ dead-param-elim > >>> dead-param-elim results >>>
 //│ dead-param-elim > <<< dead-param-elim results <<<
 //│ = 1
@@ -183,6 +289,108 @@ Foo(1).get()
 data class Pair(a, b)
 private fun fst(p) = if p is Pair(a, b) then a
 fst(Pair(1, 2))
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:tmp)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:fst⁰
+//│       dSym = term:fst¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = p⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {a², b⁰, tmp:arg$Pair$0$⁰, tmp:arg$Pair$1$⁰}):
+//│         body = Match:
+//│           scrut = SimpleRef of p⁰
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Cls:
+//│                 cls = class:Pair⁰
+//│                 path = MemberRef{disamb=class:Pair⁰}:
+//│                   bms = member:Pair¹
+//│                   disamb = class:Pair⁰
+//│               _2 = Assign:
+//│                 lhs = tmp:arg$Pair$0$⁰
+//│                 rhs = Select{sym=term:Pair⁰/a³}:
+//│                   qual = SimpleRef of p⁰
+//│                   name = Ident of "a"
+//│                 rest = Assign: \
+//│                 lhs = tmp:arg$Pair$1$⁰
+//│                 rhs = Select{sym=term:Pair⁰/b¹}:
+//│                   qual = SimpleRef of p⁰
+//│                   name = Ident of "b"
+//│                 rest = Assign: \
+//│                 lhs = b⁰
+//│                 rhs = SimpleRef of tmp:arg$Pair$1$⁰
+//│                 rest = Assign: \
+//│                 lhs = a²
+//│                 rhs = SimpleRef of tmp:arg$Pair$0$⁰
+//│                 rest = Return of SimpleRef of a²
+//│           dflt = S of Throw of Instantiate:
+//│             mut = false
+//│             cls = Select{sym=class:Error⁰}:
+//│               qual = This of globalThis:globalThis⁰
+//│               name = Ident of "Error"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Lit of StrLit of "match error"
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Pair⁰
+//│       sym = member:Pair¹
+//│       ctorSym = S of term:Pair²
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = a⁴
+//│             modulefulness = Modulefulness of N
+//│           Param:
+//│             flags = (val)
+//│             sym = b²
+//│             modulefulness = Modulefulness of N
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:a⁵
+//│           _2 = term:Pair⁰/a³
+//│         Tuple2:
+//│           _1 = member:b³
+//│           _2 = term:Pair⁰/b¹
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:Pair⁰/a³
+//│           sym = member:a⁵
+//│           rhs = SimpleRef of a⁴
+//│         rest = Define: \
+//│         defn = ValDefn:
+//│           tsym = term:Pair⁰/b¹
+//│           sym = member:b³
+//│           rhs = SimpleRef of b²
+//│     rest = Assign: \
+//│     lhs = tmp:tmp¹
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:Pair²}:
+//│         bms = member:Pair¹
+//│         disamb = term:Pair²
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 1
+//│           Arg:
+//│             value = Lit of IntLit of 2
+//│     rest = Return of Call:
+//│       fun = MemberRef{disamb=term:fst¹}:
+//│         bms = member:fst⁰
+//│         disamb = term:fst¹
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp¹
 //│ dead-param-elim > >>> dead-param-elim results >>>
 //│ dead-param-elim > <<< dead-param-elim results <<<
 //│ = 1
@@ -193,6 +401,108 @@ fst(Pair(1, 2))
 data class Pair(a, b)
 private fun snd(p) = if p is Pair(a, b) then b
 snd(Pair(1, 2))
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:tmp)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:snd⁰
+//│       dSym = term:snd¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = p¹
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {a⁶, b⁴, tmp:arg$Pair$0$¹, tmp:arg$Pair$1$¹}):
+//│         body = Match:
+//│           scrut = SimpleRef of p¹
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Cls:
+//│                 cls = class:Pair³
+//│                 path = MemberRef{disamb=class:Pair³}:
+//│                   bms = member:Pair⁴
+//│                   disamb = class:Pair³
+//│               _2 = Assign:
+//│                 lhs = tmp:arg$Pair$0$¹
+//│                 rhs = Select{sym=term:Pair³/a⁷}:
+//│                   qual = SimpleRef of p¹
+//│                   name = Ident of "a"
+//│                 rest = Assign: \
+//│                 lhs = tmp:arg$Pair$1$¹
+//│                 rhs = Select{sym=term:Pair³/b⁵}:
+//│                   qual = SimpleRef of p¹
+//│                   name = Ident of "b"
+//│                 rest = Assign: \
+//│                 lhs = b⁴
+//│                 rhs = SimpleRef of tmp:arg$Pair$1$¹
+//│                 rest = Assign: \
+//│                 lhs = a⁶
+//│                 rhs = SimpleRef of tmp:arg$Pair$0$¹
+//│                 rest = Return of SimpleRef of b⁴
+//│           dflt = S of Throw of Instantiate:
+//│             mut = false
+//│             cls = Select{sym=class:Error⁰}:
+//│               qual = This of globalThis:globalThis⁰
+//│               name = Ident of "Error"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Lit of StrLit of "match error"
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Pair³
+//│       sym = member:Pair⁴
+//│       ctorSym = S of term:Pair⁵
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = a⁸
+//│             modulefulness = Modulefulness of N
+//│           Param:
+//│             flags = (val)
+//│             sym = b⁶
+//│             modulefulness = Modulefulness of N
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:a⁹
+//│           _2 = term:Pair³/a⁷
+//│         Tuple2:
+//│           _1 = member:b⁷
+//│           _2 = term:Pair³/b⁵
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:Pair³/a⁷
+//│           sym = member:a⁹
+//│           rhs = SimpleRef of a⁸
+//│         rest = Define: \
+//│         defn = ValDefn:
+//│           tsym = term:Pair³/b⁵
+//│           sym = member:b⁷
+//│           rhs = SimpleRef of b⁶
+//│     rest = Assign: \
+//│     lhs = tmp:tmp²
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:Pair⁵}:
+//│         bms = member:Pair⁴
+//│         disamb = term:Pair⁵
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 1
+//│           Arg:
+//│             value = Lit of IntLit of 2
+//│     rest = Return of Call:
+//│       fun = MemberRef{disamb=term:snd¹}:
+//│         bms = member:snd⁰
+//│         disamb = term:snd¹
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp²
 //│ dead-param-elim > >>> dead-param-elim results >>>
 //│ dead-param-elim > <<< dead-param-elim results <<<
 //│ = 2
@@ -241,6 +551,75 @@ apply(inc)
 data class Pair(a, b)
 private fun f(p) = p.Pair#a
 f(Pair(1, 2))
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:tmp)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:f²¹
+//│       dSym = term:f²²
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = p²
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Select{sym=term:Pair⁶/a¹⁰}:
+//│         qual = SimpleRef of p²
+//│         name = Ident of "a"
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Pair⁶
+//│       sym = member:Pair⁷
+//│       ctorSym = S of term:Pair⁸
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = a¹¹
+//│             modulefulness = Modulefulness of N
+//│           Param:
+//│             flags = (val)
+//│             sym = b⁸
+//│             modulefulness = Modulefulness of N
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:a¹²
+//│           _2 = term:Pair⁶/a¹⁰
+//│         Tuple2:
+//│           _1 = member:b⁹
+//│           _2 = term:Pair⁶/b¹⁰
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:Pair⁶/a¹⁰
+//│           sym = member:a¹²
+//│           rhs = SimpleRef of a¹¹
+//│         rest = Define: \
+//│         defn = ValDefn:
+//│           tsym = term:Pair⁶/b¹⁰
+//│           sym = member:b⁹
+//│           rhs = SimpleRef of b⁸
+//│     rest = Assign: \
+//│     lhs = tmp:tmp³
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:Pair⁸}:
+//│         bms = member:Pair⁷
+//│         disamb = term:Pair⁸
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 1
+//│           Arg:
+//│             value = Lit of IntLit of 2
+//│     rest = Return of Call:
+//│       fun = MemberRef{disamb=term:f²²}:
+//│         bms = member:f²¹
+//│         disamb = term:f²²
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp³
 //│ dead-param-elim > >>> dead-param-elim results >>>
 //│ dead-param-elim > <<< dead-param-elim results <<<
 //│ = 1
@@ -262,8 +641,8 @@ fun f() = case [...x, y, z] then x
 //│   match caseScrut
 //│     Array(2+) =>
 //│       set middleElements = runtime⁰.Tuple⁰.slice⁰(caseScrut, 0, 2);
-//│       set lastElement2$ = runtime⁰.Tuple⁰.get⁰(caseScrut, -2);
-//│       set lastElement1$ = runtime⁰.Tuple⁰.get⁰(caseScrut, -1);
+//│       set lastElement2$ = runtime⁰.Tuple⁰.get²(caseScrut, -2);
+//│       set lastElement1$ = runtime⁰.Tuple⁰.get²(caseScrut, -1);
 //│       set y = lastElement1$;
 //│       set z = lastElement2$;
 //│       set x = middleElements;
@@ -272,7 +651,7 @@ fun f() = case [...x, y, z] then x
 //│       throw new globalThis⁰.Error⁰("match error")
 //│   end
 //│ };
-//│ define f²¹ as fun f²²() { return lambda⁰ };
+//│ define f²³ as fun f²⁴() { return lambda⁰ };
 //│ end
 //│ dead-param-elim > >>> dead-param-elim results >>>
 //│ dead-param-elim > <<< dead-param-elim results <<<
@@ -294,13 +673,13 @@ fun f(c) = Runtime.Tuple.get(c, 1) + 1
 //│   do runtime⁰.checkDepth﹖();
 //│   set curDepth = +⁰(runtime⁰.stackDepth﹖, 1);
 //│   set pc = f$varsClass.0;
-//│   set tmp = Runtime⁰.Tuple⁰.get⁰(f$varsClass.1, 1);
+//│   set tmp = Runtime⁰.Tuple⁰.get²(f$varsClass.1, 1);
 //│   do runtime⁰.popFrame﹖("f");
 //│   return +⁰(tmp, 1)
 //│ };
 //│ do runtime⁰.resetEffects﹖();
 //│ @inline
-//│ define f²³ as fun f²⁴(c) {
+//│ define f²⁵ as fun f²⁶(c) {
 //│   let tmp;
 //│   set tmp = mut [0, c];
 //│   do runtime⁰.pushFrame﹖(f$worker⁰, tmp);

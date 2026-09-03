@@ -4,6 +4,40 @@
 class Example with
   val a = 456
   fun f(x) = [x, a]
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Example⁰
+//│   sym = member:Example¹
+//│   k = Cls
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Example⁰
+//│       sym = member:f⁰
+//│       dSym = term:Example⁰/f¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Tuple:
+//│         mut = false
+//│         elems = Ls of
+//│           Arg:
+//│             value = SimpleRef of x⁰
+//│           Arg:
+//│             value = Select{sym=term:Example⁰/a⁰}:
+//│               qual = This of class:Example⁰
+//│               name = Ident of "a"
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a¹
+//│       _2 = term:Example⁰/a⁰
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Example⁰/a⁰
+//│       sym = member:a¹
+//│       rhs = Lit of IntLit of 456
 
 val ex = new Example
 //│ ex = Example { a: 456 }
@@ -31,6 +65,70 @@ module Example with
   val a = 456
   fun f(x) = [x, a]
   fun g(x) = [x, a, f(x)]
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Example²
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Example²
+//│       sym = member:f²
+//│       dSym = term:Example²/f³
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x¹
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Tuple:
+//│         mut = false
+//│         elems = Ls of
+//│           Arg:
+//│             value = SimpleRef of x¹
+//│           Arg:
+//│             value = Select{sym=term:Example²/a²}:
+//│               qual = This of module:Example²
+//│               name = Ident of "a"
+//│     FunDefn:
+//│       owner = S of module:Example²
+//│       sym = member:g⁰
+//│       dSym = term:Example²/g¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x²
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp⁰}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁰
+//│           rhs = Call:
+//│             fun = Select{sym=term:Example²/f³}:
+//│               qual = This of module:Example²
+//│               name = Ident of "f"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x²
+//│           rest = Return of Tuple:
+//│             mut = false
+//│             elems = Ls of
+//│               Arg:
+//│                 value = SimpleRef of x²
+//│               Arg:
+//│                 value = Select{sym=term:Example²/a²}:
+//│                   qual = This of module:Example²
+//│                   name = Ident of "a"
+//│               Arg:
+//│                 value = SimpleRef of tmp:tmp⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a³
+//│       _2 = term:Example²/a²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Example²/a²
+//│       sym = member:a³
+//│       rhs = Lit of IntLit of 456
 
 let
   f = Example.f
@@ -47,8 +145,8 @@ g(123)
 :e
 Example |>. g(123)
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful reference of type Example.
-//│ ║  l.48: 	Example |>. g(123)
-//│ ║        	^^^^^^^
+//│ ║  l.146: 	Example |>. g(123)
+//│ ║         	^^^^^^^
 //│ ╙── Module argument passed to a non-module parameter.
 //│ = [123, 456, [123, 456]]
 

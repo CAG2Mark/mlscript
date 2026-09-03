@@ -2,8 +2,35 @@
 
 
 data class Some[out A](value: A)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Some⁰
+//│   sym = member:Some¹
+//│   ctorSym = S of term:Some²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = value⁰
+//│         sign = S of Ref{sym=A⁰} of A⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:value¹
+//│       _2 = term:Some⁰/value²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Some⁰/value²
+//│       sym = member:value¹
+//│       rhs = SimpleRef of value⁰
 
 object None
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:None⁰
+//│   sym = member:None¹
+//│   k = Obj
 
 
 :sjs
@@ -48,7 +75,7 @@ if s is
 //│ let arg$Some$0$;
 //│ match s⁰
 //│   Some⁰ =>
-//│     set arg$Some$0$ = s⁰.value⁰;
+//│     set arg$Some$0$ = s⁰.value²;
 //│     match arg$Some$0$
 //│       1 =>
 //│         return 0
@@ -64,7 +91,7 @@ if s is
 //│ let arg$Some$0$;
 //│ match s⁰
 //│   Some⁰ =>
-//│     set arg$Some$0$ = s⁰.value⁰;
+//│     set arg$Some$0$ = s⁰.value²;
 //│     match arg$Some$0$
 //│       1 =>
 //│         return 0
@@ -101,6 +128,27 @@ x => if x is Some(x) then x
 
 
 data class C(a)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C⁰
+//│   sym = member:C¹
+//│   ctorSym = S of term:C²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = a⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a¹
+//│       _2 = term:C⁰/a²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C⁰/a²
+//│       sym = member:a¹
+//│       rhs = SimpleRef of a⁰
 
 fun f(x) = if x is C(a) then a else 0
 
@@ -117,6 +165,46 @@ f(C(27))
 object M with
   data class D(a)
   val d = D(27)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:tmp)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       owner = S of object:M⁰
+//│       isym = class:D⁰
+//│       sym = member:D¹
+//│       ctorSym = S of term:M⁰/D²
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = a³
+//│             modulefulness = Modulefulness of N
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:a⁴
+//│           _2 = term:D⁰/a⁵
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:D⁰/a⁵
+//│           sym = member:a⁴
+//│           rhs = SimpleRef of a³
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁰
+//│     rhs = Call:
+//│       fun = Select{sym=term:M⁰/D²}:
+//│         qual = This of object:M⁰
+//│         name = Ident of "D"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 27
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:M⁰/d⁰
+//│       sym = member:d¹
+//│       rhs = SimpleRef of tmp:tmp⁰
 
 M.d
 //│ = D(27)
@@ -181,6 +269,41 @@ f(0)
 
 
 data class Pair[out A, out B](fst: A, snd: B)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Pair⁰
+//│   sym = member:Pair¹
+//│   ctorSym = S of term:Pair²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = fst⁰
+//│         sign = S of Ref{sym=A¹} of A¹
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = snd⁰
+//│         sign = S of Ref{sym=B⁰} of B⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:fst¹
+//│       _2 = term:Pair⁰/fst²
+//│     Tuple2:
+//│       _1 = member:snd¹
+//│       _2 = term:Pair⁰/snd²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Pair⁰/fst²
+//│       sym = member:fst¹
+//│       rhs = SimpleRef of fst⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Pair⁰/snd²
+//│       sym = member:snd¹
+//│       rhs = SimpleRef of snd⁰
 
 
 :sjs

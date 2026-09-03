@@ -1,8 +1,148 @@
 :invalml
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:lambda)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:print⁰
+//│       dSym = term:print¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = Select:
+//│           qual = Select:
+//│             qual = This of globalThis:globalThis⁰
+//│             name = Ident of "console"
+//│           name = Ident of "log"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x⁰
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:CodeBase⁰
+//│       sym = member:CodeBase¹
+//│       k = Cls
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Region⁰
+//│       sym = member:Region¹
+//│       k = Cls
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Ref⁰
+//│       sym = member:Ref¹
+//│       ctorSym = S of term:Ref²
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = reg⁰
+//│             sign = S of TyApp{sym=class:Region⁰}:
+//│               lhs = Resolved{sym=class:Region⁰}:
+//│                 t = Ref{sym=member:Region¹} of member:Region¹
+//│                 sym = class:Region⁰
+//│               targs = Ls of
+//│                 Ref{sym=T⁰} of T⁰
+//│             modulefulness = Modulefulness of N
+//│           Param:
+//│             flags = (val)
+//│             sym = value⁰
+//│             sign = S of Ref{sym=S⁰} of S⁰
+//│             modulefulness = Modulefulness of N
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:reg¹
+//│           _2 = term:Ref⁰/reg²
+//│         Tuple2:
+//│           _1 = member:value¹
+//│           _2 = term:Ref⁰/value²
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:Ref⁰/reg²
+//│           sym = member:reg¹
+//│           rhs = SimpleRef of reg⁰
+//│         rest = Define: \
+//│         defn = ValDefn:
+//│           tsym = term:Ref⁰/value²
+//│           sym = member:value¹
+//│           rhs = SimpleRef of value⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "CodeBase"
+//│     rhs = MemberRef{disamb=class:CodeBase⁰}:
+//│       bms = member:CodeBase¹
+//│       disamb = class:CodeBase⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "Region"
+//│     rhs = MemberRef{disamb=class:Region⁰}:
+//│       bms = member:Region¹
+//│       disamb = class:Region⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda⁰
+//│       dSym = term:lambda¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = r⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = v⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Instantiate:
+//│         mut = true
+//│         cls = MemberRef{disamb=class:Ref⁰}:
+//│           bms = member:Ref¹
+//│           disamb = class:Ref⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of r⁰
+//│             Arg:
+//│               value = SimpleRef of v⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "Ref"
+//│     rhs = MemberRef{disamb=term:lambda¹}:
+//│       bms = member:lambda⁰
+//│       disamb = term:lambda¹
 
 
 
 data class Seq[A, E](next: () ->{E} A)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Seq⁰
+//│   sym = member:Seq¹
+//│   ctorSym = S of term:Seq²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = next⁰
+//│         sign = S of FunTy:
+//│           lhs = Tup of Nil
+//│           rhs = Ref{sym=A⁰} of A⁰
+//│           eff = S of Ref{sym=E⁰} of E⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:next¹
+//│       _2 = term:Seq⁰/next²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Seq⁰/next²
+//│       sym = member:next¹
+//│       rhs = SimpleRef of next⁰
 
 fun map: [A, B, E] -> Seq[out A, out E] -> (A ->{E} B) -> Seq[out B, out E]
 
@@ -30,14 +170,14 @@ fun mapi = s => f =>
       i := !(i) + 1
       f(!(i), x)
 //│ ╔══[COMPILATION ERROR] Type error in region expression with expected type Seq[out A, out E]
-//│ ║  l.28: 	    let i = r.ref 0
-//│ ║        	            ^^^^^^^
-//│ ║  l.29: 	    map(s) of x =>
-//│ ║        	^^^^^^^^^^^^^^^^^^
-//│ ║  l.30: 	      i := !(i) + 1
-//│ ║        	^^^^^^^^^^^^^^^^^^^
-//│ ║  l.31: 	      f(!(i), x)
-//│ ║        	^^^^^^^^^^^^^^^^
+//│ ║  l.168: 	    let i = r.ref 0
+//│ ║         	            ^^^^^^^
+//│ ║  l.169: 	    map(s) of x =>
+//│ ║         	^^^^^^^^^^^^^^^^^^
+//│ ║  l.170: 	      i := !(i) + 1
+//│ ║         	^^^^^^^^^^^^^^^^^^^
+//│ ║  l.171: 	      f(!(i), x)
+//│ ║         	^^^^^^^^^^^^^^^^
 //│ ╟── because: cannot constrain  Seq[in ⊥ out 'B, in ⊥ out 'E1]  <:  Seq[in ⊥ out A, in ⊥ out E]
 //│ ╟── because: cannot constrain  'E1  <:  E
 //│ ╟── because: cannot constrain  'reg  <:  E
@@ -106,12 +246,12 @@ r := 1
 r := 1
 ! r // because of the space, this is a NL-op
 //│ ╔══[COMPILATION ERROR] Builtin '!' is not a binary operator
-//│ ║  l.106: 	r := 1
+//│ ║  l.246: 	r := 1
 //│ ║         	^^^^^^
-//│ ║  l.107: 	! r // because of the space, this is a NL-op
+//│ ║  l.247: 	! r // because of the space, this is a NL-op
 //│ ╙──       	^^^
 //│ ╔══[COMPILATION ERROR] Variable not found: !
-//│ ║  l.107: 	! r // because of the space, this is a NL-op
+//│ ║  l.247: 	! r // because of the space, this is a NL-op
 //│ ╙──       	^
 //│ Type: ⊥
 

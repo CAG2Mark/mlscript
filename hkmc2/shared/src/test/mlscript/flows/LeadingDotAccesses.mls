@@ -7,6 +7,21 @@ class A with
 module A with
   fun a = new A
 fun f(x : A) = x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:A⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:A⁰
+//│       sym = member:a⁰
+//│       dSym = term:A⁰/a¹
+//│       body = Return of Instantiate:
+//│         mut = false
+//│         cls = MemberRef{disamb=class:A¹}:
+//│           bms = member:A²
+//│           disamb = class:A¹
+//│         argss = Ls of
+//│           Nil
 
 :sf
 f(.a)
@@ -71,6 +86,21 @@ f(.a.c(1).b.c(4))
 class C
 module C with
   fun a = new C
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:C⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:C⁰
+//│       sym = member:a²
+//│       dSym = term:C⁰/a³
+//│       body = Return of Instantiate:
+//│         mut = false
+//│         cls = MemberRef{disamb=class:C¹}:
+//│           bms = member:C²
+//│           disamb = class:C¹
+//│         argss = Ls of
+//│           Nil
 
 :sf
 :e
@@ -79,10 +109,10 @@ let d = .a
 f(d)
 g(d)
 //│ ╔══[COMPILATION ERROR] Ambiguous selection with multiple apparent targets:
-//│ ║  l.78: 	let d = .a
-//│ ║        	        ^^
+//│ ║  l.108: 	let d = .a
+//│ ║         	        ^^
 //│ ╟── companion member a
-//│ ║  l.73: 	  fun a = new C
+//│ ║  l.88: 	  fun a = new C
 //│ ║        	  ^^^^^^^^^^^^^
 //│ ╟── companion member a
 //│ ║  l.8: 	  fun a = new A
@@ -123,7 +153,7 @@ g(.a)
 :e
 f(.w)
 //│ ╔══[COMPILATION ERROR] Cannot resolve leading dot selection
-//│ ║  l.124: 	f(.w)
+//│ ║  l.154: 	f(.w)
 //│ ╙──       	  ^^
 //│ —————————————————| Flowed |—————————————————————————————————————————————————————————————————————————
 //│   f⁰{ ~> f⁰ }(_?_.w{ ~> ‹error› })‹app¹³›
@@ -136,7 +166,7 @@ f(.w)
 :e
 .b(new A)
 //│ ╔══[COMPILATION ERROR] Cannot resolve leading dot selection
-//│ ║  l.137: 	.b(new A)
+//│ ║  l.167: 	.b(new A)
 //│ ╙──       	^^
 //│ —————————————————| Flowed |—————————————————————————————————————————————————————————————————————————
 //│   _?_.b{ ~> ‹error› }(new A⁰)‹app¹⁴›

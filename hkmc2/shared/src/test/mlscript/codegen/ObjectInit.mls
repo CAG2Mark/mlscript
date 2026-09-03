@@ -5,6 +5,28 @@ fun f = print(A)
 object A with
   f // A is not fully initialized yet but can still be accessed
   val x = 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:A⁰
+//│   sym = member:A¹
+//│   k = Obj
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁰
+//│       _2 = term:A⁰/x¹
+//│   ctor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:f⁰}:
+//│         bms = member:f¹
+//│         disamb = term:f⁰
+//│       argss = Ls of
+//│         Nil
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:A⁰/x¹
+//│       sym = member:x⁰
+//│       rhs = Lit of IntLit of 1
 //│ > A {}
 
 // * By contrast:
@@ -13,6 +35,63 @@ class Acls with
   f // A is not accessible at all here
   val x = 1
 val A = new Acls
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:tmp)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:f²
+//│       dSym = term:f³
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = Select{sym=term:Predef⁰/print⁰}:
+//│           qual = MemberRef{disamb=module:Predef⁰}:
+//│             bms = member:Predef¹
+//│             disamb = module:Predef⁰
+//│           name = Ident of "print"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = MemberRef{disamb=term:A²}:
+//│                 bms = member:A³
+//│                 disamb = term:A²
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Acls⁰
+//│       sym = member:Acls¹
+//│       k = Cls
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:x²
+//│           _2 = term:Acls⁰/x³
+//│       ctor = Assign:
+//│         lhs = ‹no symbol›
+//│         rhs = Call:
+//│           fun = MemberRef{disamb=term:f³}:
+//│             bms = member:f²
+//│             disamb = term:f³
+//│           argss = Ls of
+//│             Nil
+//│         rest = Define: \
+//│         defn = ValDefn:
+//│           tsym = term:Acls⁰/x³
+//│           sym = member:x²
+//│           rhs = Lit of IntLit of 1
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁰
+//│     rhs = Instantiate:
+//│       mut = false
+//│       cls = MemberRef{disamb=class:Acls⁰}:
+//│         bms = member:Acls¹
+//│         disamb = class:Acls⁰
+//│       argss = Ls of
+//│         Nil
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:A²
+//│       sym = member:A³
+//│       rhs = SimpleRef of tmp:tmp⁰
 //│ > undefined
 //│ A = Acls { x: 1 }
 
@@ -21,6 +100,28 @@ fun f = print(A.x)
 object A with
   f
   val x = 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:A⁴
+//│   sym = member:A⁵
+//│   k = Obj
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁴
+//│       _2 = term:A⁴/x⁵
+//│   ctor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:f⁴}:
+//│         bms = member:f⁵
+//│         disamb = term:f⁴
+//│       argss = Ls of
+//│         Nil
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:A⁴/x⁵
+//│       sym = member:x⁴
+//│       rhs = Lit of IntLit of 1
 //│ > undefined
 
 
@@ -29,6 +130,36 @@ object A with
   f
   val x = 1
   f
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:A⁶
+//│   sym = member:A⁷
+//│   k = Obj
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁶
+//│       _2 = term:A⁶/x⁷
+//│   ctor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:f⁶}:
+//│         bms = member:f⁷
+//│         disamb = term:f⁶
+//│       argss = Ls of
+//│         Nil
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:A⁶/x⁷
+//│       sym = member:x⁶
+//│       rhs = Lit of IntLit of 1
+//│     rest = Assign: \
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:f⁶}:
+//│         bms = member:f⁷
+//│         disamb = term:f⁶
+//│       argss = Ls of
+//│         Nil
 //│ > A5 {} undefined
 //│ > A5 { x: 1 } 1
 
@@ -38,6 +169,25 @@ f
 object A with
   print(B)
 object B
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:A⁸
+//│   sym = member:A⁹
+//│   k = Obj
+//│   ctor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = Select{sym=term:Predef⁰/print⁰}:
+//│         qual = MemberRef{disamb=module:Predef⁰}:
+//│           bms = member:Predef¹
+//│           disamb = module:Predef⁰
+//│         name = Ident of "print"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = MemberRef{disamb=object:B⁰}:
+//│               bms = member:B¹
+//│               disamb = object:B⁰
 //│ > undefined
 
 

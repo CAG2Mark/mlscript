@@ -3,6 +3,9 @@
 
 :sjs
 module None
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:None⁰
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let None1;
 //│ (class None {
@@ -32,7 +35,7 @@ None()
 :e
 new None
 //│ ╔══[COMPILATION ERROR] Expected a statically known class; found reference of type None.
-//│ ║  l.33: 	new None
+//│ ║  l.36: 	new None
 //│ ║        	    ^^^^
 //│ ╙── The 'new' keyword requires a statically known class; use the 'new!' operator for dynamic instantiation.
 //│ = None
@@ -41,7 +44,7 @@ new None
 :e
 new! None
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful reference of type None.
-//│ ║  l.42: 	new! None
+//│ ║  l.45: 	new! None
 //│ ╙──      	     ^^^^
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ return globalThis.Object.freeze(new None1())
@@ -55,6 +58,45 @@ module M with
   class D()
   val x = 1
   val y = x + 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:tmp)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       owner = S of module:M⁰
+//│       isym = class:C⁰
+//│       sym = member:C¹
+//│       k = Cls
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       owner = S of module:M⁰
+//│       isym = class:D⁰
+//│       sym = member:D¹
+//│       ctorSym = S of term:M⁰/D²
+//│       k = Cls
+//│       paramsOpt = S of ParamList: ‹empty›
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:M⁰/x⁰
+//│       sym = member:x¹
+//│       rhs = Lit of IntLit of 1
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁰
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:+⁰
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Select{sym=term:M⁰/x⁰}:
+//│               qual = This of module:M⁰
+//│               name = Ident of "x"
+//│           Arg:
+//│             value = Lit of IntLit of 1
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:M⁰/y⁰
+//│       sym = member:y¹
+//│       rhs = SimpleRef of tmp:tmp⁰
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let M1;
 //│ (class M {
@@ -108,7 +150,7 @@ M.y
 :re
 M.oops
 //│ ╔══[COMPILATION ERROR] Module 'M' does not contain member 'oops'
-//│ ║  l.109: 	M.oops
+//│ ║  l.151: 	M.oops
 //│ ╙──       	 ^^^^^
 //│ ═══[RUNTIME ERROR] Error: Access to required field 'oops' yielded 'undefined'
 
@@ -117,6 +159,20 @@ M.oops
 :sjs
 module M with
   val m: module M = M
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M¹
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:m⁰
+//│       _2 = term:M¹/m¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:M¹/m¹
+//│       sym = member:m⁰
+//│       rhs = MemberRef{disamb=module:M¹}:
+//│         bms = member:M²
+//│         disamb = module:M¹
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let M3;
 //│ (class M2 {
@@ -140,6 +196,9 @@ M.m
 
 
 module M()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M³
 
 
 // * Peculiarity (should not be a problem): notice that we have `BB.y`, and not `AA.BB.y`
@@ -149,6 +208,18 @@ module AA with
   module BB with
     val y = 2
     [x, y]
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:BB⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:y²
+//│       _2 = term:BB⁰/y³
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:BB⁰/y³
+//│       sym = member:y²
+//│       rhs = Lit of IntLit of 2
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let AA1;
 //│ (class AA {

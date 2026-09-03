@@ -40,6 +40,27 @@ if 1 + 1
 
 class Some(val v)
 object None
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Some⁰
+//│   sym = member:Some¹
+//│   ctorSym = S of term:Some²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = v⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:v¹
+//│       _2 = term:Some⁰/v²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Some⁰/v²
+//│       sym = member:v¹
+//│       rhs = SimpleRef of v⁰
 
 // :ucs normalized
 // Uncomment the line above to see the explosion: ~1200 lines of code.
@@ -77,19 +98,64 @@ fun parse(text: Str): [Int, Str] =
 // ——— ——— ———
 
 data class Tuple(a, b, c)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Tuple⁰
+//│   sym = member:Tuple¹
+//│   ctorSym = S of term:Tuple²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = a⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = b⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = c⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a¹
+//│       _2 = term:Tuple⁰/a²
+//│     Tuple2:
+//│       _1 = member:b¹
+//│       _2 = term:Tuple⁰/b²
+//│     Tuple2:
+//│       _1 = member:c¹
+//│       _2 = term:Tuple⁰/c²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Tuple⁰/a²
+//│       sym = member:a¹
+//│       rhs = SimpleRef of a⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Tuple⁰/b²
+//│       sym = member:b¹
+//│       rhs = SimpleRef of b⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Tuple⁰/c²
+//│       sym = member:c¹
+//│       rhs = SimpleRef of c⁰
 
 let foo =
   case
     Tuple(...elements) then elements
 //│ ╔══[COMPILATION ERROR] Unrecognized pattern (spread).
-//│ ║  l.83: 	    Tuple(...elements) then elements
-//│ ╙──      	          ^^^^^^^^^^^
+//│ ║  l.149: 	    Tuple(...elements) then elements
+//│ ╙──       	          ^^^^^^^^^^^
 //│ ╔══[COMPILATION ERROR] Name not found: elements
-//│ ║  l.83: 	    Tuple(...elements) then elements
-//│ ╙──      	                            ^^^^^^^^
+//│ ║  l.149: 	    Tuple(...elements) then elements
+//│ ╙──       	                            ^^^^^^^^
 //│ ╔══[COMPILATION ERROR] Expected three arguments, but found only one argument.
-//│ ║  l.83: 	    Tuple(...elements) then elements
-//│ ╙──      	    ^^^^^
+//│ ║  l.149: 	    Tuple(...elements) then elements
+//│ ╙──       	    ^^^^^
 //│ foo = fun
 
 foo(Tuple(1, 2, 3))
@@ -101,26 +167,32 @@ module Foo with
   class
     Bar
     Baz
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of module:Foo⁰
+//│   isym = class:Bar⁰
+//│   sym = member:Bar¹
+//│   k = Cls
 
 fun foo(x) = if x is Foo.
   Bar then "Bar"
   Foo then "Foo"
 //│ ╔══[PARSE ERROR] Expected end of input; found period instead
-//│ ║  l.105: 	fun foo(x) = if x is Foo.
+//│ ║  l.177: 	fun foo(x) = if x is Foo.
 //│ ╙──       	                        ^
 //│ ╔══[COMPILATION ERROR] Unrecognized pattern split (identifier).
-//│ ║  l.105: 	fun foo(x) = if x is Foo.
+//│ ║  l.177: 	fun foo(x) = if x is Foo.
 //│ ╙──       	                     ^^^
 
 fun foo(x) = if x is Foo
   .Bar then "Bar"
   .Foo then "Foo"
 //│ ╔══[COMPILATION ERROR] Unrecognized pattern split (operator split).
-//│ ║  l.115: 	fun foo(x) = if x is Foo
+//│ ║  l.187: 	fun foo(x) = if x is Foo
 //│ ║         	                     ^^^
-//│ ║  l.116: 	  .Bar then "Bar"
+//│ ║  l.188: 	  .Bar then "Bar"
 //│ ║         	^^^^^^^^^^^^^^^^^
-//│ ║  l.117: 	  .Foo then "Foo"
+//│ ║  l.189: 	  .Foo then "Foo"
 //│ ╙──       	^^^^^^^^^^^^^^^^^
 
 // ——— ——— ———

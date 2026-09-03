@@ -5,6 +5,28 @@ open annotations
 module QualifiedOuter with
   module Inner with
     data class Wrapped(val value)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of module:Inner⁰
+//│   isym = class:Wrapped⁰
+//│   sym = member:Wrapped¹
+//│   ctorSym = S of term:Inner⁰/Wrapped²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = value⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:value¹
+//│       _2 = term:Wrapped⁰/value²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Wrapped⁰/value²
+//│       sym = member:value¹
+//│       rhs = SimpleRef of value⁰
 
 fun compiledQualified(module Inner: QualifiedOuter.Inner, x) =
   if x is @compile Inner.Wrapped(3) then true else false

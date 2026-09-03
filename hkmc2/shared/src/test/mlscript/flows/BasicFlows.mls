@@ -41,13 +41,27 @@ class Foo with
 //│   }
 //│ where
 //│     flow:m⁰  <~  1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   k = Cls
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:m⁰
+//│       _2 = term:Foo⁰/m¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/m¹
+//│       sym = member:m⁰
+//│       rhs = Lit of IntLit of 1
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 
 :e
 fun test(x) = x.m
 //│ ╔══[COMPILATION ERROR] Cannot resolve selection
-//│ ║  l.48: 	fun test(x) = x.m
+//│ ║  l.62: 	fun test(x) = x.m
 //│ ╙──      	              ^^^
 //│ —————————————————| Flowed |—————————————————————————————————————————————————————————————————————————
 //│   fun test⁰(x¹) ‹flow:test⁰› = x¹.m‹?›

@@ -5,6 +5,41 @@ open annotations
 data class Pair[A, B](first: A, second: B)
 pattern NumPair = Pair(Num, Num)
 pattern SumPair = Pair((Num as x), (Num as y)) => x + y
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Pair⁰
+//│   sym = member:Pair¹
+//│   ctorSym = S of term:Pair²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = first⁰
+//│         sign = S of Ref{sym=A⁰} of A⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = second⁰
+//│         sign = S of Ref{sym=B⁰} of B⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:first¹
+//│       _2 = term:Pair⁰/first²
+//│     Tuple2:
+//│       _1 = member:second¹
+//│       _2 = term:Pair⁰/second²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Pair⁰/first²
+//│       sym = member:first¹
+//│       rhs = SimpleRef of first⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Pair⁰/second²
+//│       sym = member:second¹
+//│       rhs = SimpleRef of second⁰
 
 // TLDR: This file tests the case where a compiled pattern's result is bound
 // with `as`, but the pattern itself does not involve any transformations.

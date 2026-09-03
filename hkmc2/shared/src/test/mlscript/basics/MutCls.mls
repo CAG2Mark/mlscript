@@ -2,6 +2,27 @@
 
 
 class C(val x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C⁰
+//│   sym = member:C¹
+//│   ctorSym = S of term:C²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:C⁰/x²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:C⁰/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
 
 let c = C(1)
 //│ c = C(1)
@@ -13,6 +34,42 @@ c
 
 
 class Foo(val x)(val y)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x³
+//│         modulefulness = Modulefulness of N
+//│   auxParams = Ls of
+//│     ParamList:
+//│       params = Ls of
+//│         Param:
+//│           flags = (val)
+//│           sym = y⁰
+//│           modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x⁴
+//│       _2 = term:Foo⁰/x⁵
+//│     Tuple2:
+//│       _1 = member:y¹
+//│       _2 = term:Foo⁰/y²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/x⁵
+//│       sym = member:x⁴
+//│       rhs = SimpleRef of x³
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/y²
+//│       sym = member:y¹
+//│       rhs = SimpleRef of y⁰
 
 let f = Foo(1)(2)
 //│ f = Foo(1)
@@ -29,6 +86,24 @@ f.y
 class Foo with
   fun foo() = 1
   fun bar = 2
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo³
+//│   sym = member:Foo⁴
+//│   k = Cls
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo³
+//│       sym = member:foo⁰
+//│       dSym = term:Foo³/foo¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of IntLit of 1
+//│     FunDefn:
+//│       owner = S of class:Foo³
+//│       sym = member:bar⁰
+//│       dSym = term:Foo³/bar¹
+//│       body = Return of Lit of IntLit of 2
 
 
 let f = new mut Foo

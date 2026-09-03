@@ -22,6 +22,11 @@ data
     CodeBase[T, C, S]
     Region[T]
     Ref[T, S](reg: Region[T], value: S)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:CodeBase⁰
+//│   sym = member:CodeBase¹
+//│   k = Cls
 
 @untyped
 set
@@ -91,6 +96,10 @@ declare module annotations with
   object bufferable
   object mayNotRaiseEffects
   object generator
+  object async
+
+declare module handlers with
+  fun await
 
 declare module scope with
   fun locally

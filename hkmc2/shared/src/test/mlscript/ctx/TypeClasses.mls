@@ -8,33 +8,278 @@ using Int as someInt = 42
 
 module M with
   fun f(using Int) = 42
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M⁰
+//│       sym = member:f⁰
+//│       dSym = term:M⁰/f¹
+//│       params = Ls of
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = tmp⁰
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Lit of IntLit of 42
 
 module M with
   fun f(using foo: Int) = 42
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M¹
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M¹
+//│       sym = member:f²
+//│       dSym = term:M¹/f³
+//│       params = Ls of
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = foo⁰
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Lit of IntLit of 42
 
 module M with
   fun f(using foo: Int, bar: Int) = 42
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M²
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M²
+//│       sym = member:f⁴
+//│       dSym = term:M²/f⁵
+//│       params = Ls of
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = foo¹
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = bar⁰
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Lit of IntLit of 42
 
 module M with
   fun f(using foo: Int)(bar: Int) = 42
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M³
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M³
+//│       sym = member:f⁶
+//│       dSym = term:M³/f⁷
+//│       params = Ls of
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = foo²
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = bar¹
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Lit of IntLit of 42
 
 module M with
   fun f(foo: Int)(using bar: Int) = 42
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁴
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M⁴
+//│       sym = member:f⁸
+//│       dSym = term:M⁴/f⁹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = foo³
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = bar²
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Lit of IntLit of 42
 
 module M with
   fun f(using foo: Int)(using bar: Int) = 42
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁵
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M⁵
+//│       sym = member:f¹⁰
+//│       dSym = term:M⁵/f¹¹
+//│       params = Ls of
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = foo⁴
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = bar³
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Lit of IntLit of 42
 
 module M with
   fun f(using foo: Int, bar: Int) = 42
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁶
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M⁶
+//│       sym = member:f¹²
+//│       dSym = term:M⁶/f¹³
+//│       params = Ls of
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = foo⁵
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = bar⁴
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Lit of IntLit of 42
 
 module M with
   fun f(using Int, Int) = 42
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁷
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M⁷
+//│       sym = member:f¹⁴
+//│       dSym = term:M⁷/f¹⁵
+//│       params = Ls of
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = tmp¹
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = tmp²
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Lit of IntLit of 42
 
 module M with
   fun foo(using Int, arg: Str) = 42
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁸
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M⁸
+//│       sym = member:foo⁶
+//│       dSym = term:M⁸/foo⁷
+//│       params = Ls of
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = tmp³
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = arg⁰
+//│               sign = S of Resolved{sym=class:Str⁰}:
+//│                 t = Ref{sym=member:Str¹} of member:Str¹
+//│                 sym = class:Str⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Lit of IntLit of 42
 
 module M with
   fun foo(using arg: Str, Int) = 42
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁹
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M⁹
+//│       sym = member:foo⁸
+//│       dSym = term:M⁹/foo⁹
+//│       params = Ls of
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = arg¹
+//│               sign = S of Resolved{sym=class:Str⁰}:
+//│                 t = Ref{sym=member:Str¹} of member:Str¹
+//│                 sym = class:Str⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = tmp⁴
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Lit of IntLit of 42
 
 
 // Basic Resolution
@@ -50,6 +295,11 @@ module M with
   fun strFoo(using someFoo: Foo[Str]): Str = someFoo.foo()
   fun intFoo(using someFoo: Foo[Int]): Int = someFoo.foo()
   fun tFoo[T](using someFoo: Foo[T]): T = someFoo.foo()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   k = Cls
 
 using Int as i = 24
 
@@ -90,6 +340,49 @@ module N with
   fun g(using Num): Num = N.f
 using Num = 3.14
 N.g
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:N⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:N⁰
+//│       sym = member:f¹⁶
+//│       dSym = term:N⁰/f¹⁷
+//│       params = Ls of
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = someNum⁰
+//│               sign = S of Resolved{sym=class:Num⁰}:
+//│                 t = Ref{sym=member:Num¹} of member:Num¹
+//│                 sym = class:Num⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of SimpleRef of someNum⁰
+//│     FunDefn:
+//│       owner = S of module:N⁰
+//│       sym = member:g⁰
+//│       dSym = term:N⁰/g¹
+//│       params = Ls of
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = tmp⁵
+//│               sign = S of Resolved{sym=class:Num⁰}:
+//│                 t = Ref{sym=member:Num¹} of member:Num¹
+//│                 sym = class:Num⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = Select{sym=term:N⁰/f¹⁷}:
+//│           qual = MemberRef{disamb=module:N⁰}:
+//│             bms = member:N¹
+//│             disamb = module:N⁰
+//│           name = Ident of "f"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of tmp⁵
 //│ = 3.14
 
 
@@ -115,6 +408,11 @@ module M with
   fun tBar1[T](using someFoo: Bar[Int, T]): Str = someFoo.bar()
   fun tBar2[T](using someFoo: Bar[Str, T]): Str = someFoo.bar()
   fun tBar3[A, B](using someFoo: Bar[A, B]): Str = someFoo.bar()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Bar⁰
+//│   sym = member:Bar¹
+//│   k = Cls
 
 using Bar[Int, Str] = new IntStrBar()
 using Bar[Str, Int] = new StrIntBar()
@@ -145,20 +443,267 @@ M.tBar3[Int, Str]
 abstract class Monoid[T] with
   fun combine(a: T, b: T): T
   fun empty: T
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Monoid⁰
+//│   sym = member:Monoid¹
+//│   k = Cls
 
 object IntAddMonoid extends Monoid[Int] with
   fun combine(a: Int, b: Int): Int = a + b
   fun empty: Int = 0
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:IntAddMonoid⁰
+//│   sym = member:IntAddMonoid¹
+//│   k = Obj
+//│   parentPath = S of MemberRef{disamb=class:Monoid⁰}:
+//│     bms = member:Monoid¹
+//│     disamb = class:Monoid⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of object:IntAddMonoid⁰
+//│       sym = member:combine⁰
+//│       dSym = term:IntAddMonoid⁰/combine¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = a⁰
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = b⁰
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of a⁰
+//│             Arg:
+//│               value = SimpleRef of b⁰
+//│     FunDefn:
+//│       owner = S of object:IntAddMonoid⁰
+//│       sym = member:empty⁰
+//│       dSym = term:IntAddMonoid⁰/empty¹
+//│       body = Return of Lit of IntLit of 0
+//│   preCtor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:super⁰
+//│       argss = Ls of
+//│         Nil
 
 object IntMulMonoid extends Monoid[Int] with
   fun combine(a: Int, b: Int): Int = a * b
   fun empty: Int = 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:IntMulMonoid⁰
+//│   sym = member:IntMulMonoid¹
+//│   k = Obj
+//│   parentPath = S of MemberRef{disamb=class:Monoid⁰}:
+//│     bms = member:Monoid¹
+//│     disamb = class:Monoid⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of object:IntMulMonoid⁰
+//│       sym = member:combine²
+//│       dSym = term:IntMulMonoid⁰/combine³
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = a¹
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = b¹
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:*⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of a¹
+//│             Arg:
+//│               value = SimpleRef of b¹
+//│     FunDefn:
+//│       owner = S of object:IntMulMonoid⁰
+//│       sym = member:empty²
+//│       dSym = term:IntMulMonoid⁰/empty³
+//│       body = Return of Lit of IntLit of 1
+//│   preCtor = Assign:
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = SimpleRef of builtin:super⁰
+//│       argss = Ls of
+//│         Nil
 
 module M with
   fun foldInt(x1: Int, x2: Int, x3: Int)(using m: Monoid[Int]): Int =
     m.combine(x1, m.combine(x2, m.combine(x3, m.empty)))
   fun fold[T](x1: T, x2: T, x3: T)(using m: Monoid[T]): T =
     m.combine(x1, m.combine(x2, m.combine(x3, m.empty)))
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M¹⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M¹⁰
+//│       sym = member:foldInt⁰
+//│       dSym = term:M¹⁰/foldInt¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x1⁰
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = x2⁰
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = x3⁰
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = m⁰
+//│               sign = S of TyApp{sym=class:Monoid⁰}:
+//│                 lhs = Resolved{sym=class:Monoid⁰}:
+//│                   t = Ref{sym=member:Monoid¹} of member:Monoid¹
+//│                   sym = class:Monoid⁰
+//│                 targs = Ls of
+//│                   Resolved{sym=class:Int⁰}:
+//│                     t = Ref{sym=member:Int¹} of member:Int¹
+//│                     sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp⁶, tmp:tmp⁷}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁶
+//│           rhs = Call:
+//│             fun = Select{sym=term:Monoid⁰/combine⁴}:
+//│               qual = SimpleRef of m⁰
+//│               name = Ident of "combine"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x3⁰
+//│                 Arg:
+//│                   value = Select{sym=term:Monoid⁰/empty⁴}:
+//│                     qual = SimpleRef of m⁰
+//│                     name = Ident of "empty"
+//│           rest = Assign: \
+//│           lhs = tmp:tmp⁷
+//│           rhs = Call:
+//│             fun = Select{sym=term:Monoid⁰/combine⁴}:
+//│               qual = SimpleRef of m⁰
+//│               name = Ident of "combine"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x2⁰
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp⁶
+//│           rest = Return of Call:
+//│             fun = Select{sym=term:Monoid⁰/combine⁴}:
+//│               qual = SimpleRef of m⁰
+//│               name = Ident of "combine"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x1⁰
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp⁷
+//│     FunDefn:
+//│       owner = S of module:M¹⁰
+//│       sym = member:fold⁰
+//│       dSym = term:M¹⁰/fold¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x1¹
+//│               sign = S of Ref{sym=T⁰} of T⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = x2¹
+//│               sign = S of Ref{sym=T⁰} of T⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = x3¹
+//│               sign = S of Ref{sym=T⁰} of T⁰
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = m¹
+//│               sign = S of TyApp{sym=class:Monoid⁰}:
+//│                 lhs = Resolved{sym=class:Monoid⁰}:
+//│                   t = Ref{sym=member:Monoid¹} of member:Monoid¹
+//│                   sym = class:Monoid⁰
+//│                 targs = Ls of
+//│                   Ref{sym=T⁰} of T⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:tmp⁸, tmp:tmp⁹}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁸
+//│           rhs = Call:
+//│             fun = Select{sym=term:Monoid⁰/combine⁴}:
+//│               qual = SimpleRef of m¹
+//│               name = Ident of "combine"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x3¹
+//│                 Arg:
+//│                   value = Select{sym=term:Monoid⁰/empty⁴}:
+//│                     qual = SimpleRef of m¹
+//│                     name = Ident of "empty"
+//│           rest = Assign: \
+//│           lhs = tmp:tmp⁹
+//│           rhs = Call:
+//│             fun = Select{sym=term:Monoid⁰/combine⁴}:
+//│               qual = SimpleRef of m¹
+//│               name = Ident of "combine"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x2¹
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp⁸
+//│           rest = Return of Call:
+//│             fun = Select{sym=term:Monoid⁰/combine⁴}:
+//│               qual = SimpleRef of m¹
+//│               name = Ident of "combine"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x1¹
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp⁹
 
 :expect 9
 using Monoid[Int] = IntAddMonoid

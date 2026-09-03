@@ -2,13 +2,35 @@
 
 module M with
   fun foo(x) = x + 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:M⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:M⁰
+//│       sym = member:foo⁰
+//│       dSym = term:M⁰/foo¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x⁰
+//│             Arg:
+//│               value = Lit of IntLit of 1
 
 
 :e
 M."foo"(1)
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful reference of type M.
-//│ ║  l.8: 	M."foo"(1)
-//│ ╙──     	^
+//│ ║  l.30: 	M."foo"(1)
+//│ ╙──      	^
 //│ = 2
 
 
@@ -21,10 +43,10 @@ M."foo"(1)
 fun foo(): module M =
   let m = M in m
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful reference of type M.
-//│ ║  l.22: 	  let m = M in m
+//│ ║  l.44: 	  let m = M in m
 //│ ╙──      	          ^
 //│ ╔══[COMPILATION ERROR] Expected a module; found non-moduleful block.
-//│ ║  l.22: 	  let m = M in m
+//│ ║  l.44: 	  let m = M in m
 //│ ║        	          ^^^^^^
 //│ ╙── Function marked as returning a 'module' but not returning a module.
 
@@ -38,11 +60,32 @@ foo().foo(1)
 
 
 class Bar(val x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Bar⁰
+//│   sym = member:Bar¹
+//│   ctorSym = S of term:Bar²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x¹
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x²
+//│       _2 = term:Bar⁰/x³
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Bar⁰/x³
+//│       sym = member:x²
+//│       rhs = SimpleRef of x¹
 
 :e
 let bar = Bar in new bar(1)
 //│ ╔══[COMPILATION ERROR] Expected a statically known class; found reference.
-//│ ║  l.43: 	let bar = Bar in new bar(1)
+//│ ║  l.86: 	let bar = Bar in new bar(1)
 //│ ║        	                     ^^^
 //│ ╙── The 'new' keyword requires a statically known class; use the 'new!' operator for dynamic instantiation.
 //│ = Bar(1)

@@ -109,17 +109,80 @@ bar(0.42)
 module Test with
   fun test(j)(using Int) = 0
   fun main(using Int) = test
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Test⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Test⁰
+//│       sym = member:test⁰
+//│       dSym = term:Test⁰/test¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = j⁰
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = tmp⁰
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Lit of IntLit of 0
+//│     FunDefn:
+//│       owner = S of module:Test⁰
+//│       sym = member:main⁰
+//│       dSym = term:Test⁰/main¹
+//│       params = Ls of
+//│         ParamList:
+//│           flags = (ctx)
+//│           params = Ls of
+//│             Param:
+//│               sym = tmp¹
+//│               sign = S of Resolved{sym=class:Int⁰}:
+//│                 t = Ref{sym=member:Int¹} of member:Int¹
+//│                 sym = class:Int⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {member:lambda¹}):
+//│         body = Define:
+//│           defn = FunDefn:
+//│             sym = member:lambda¹
+//│             dSym = term:lambda²
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = j⁰
+//│                     modulefulness = Modulefulness of N
+//│             body = Return of Call:
+//│               fun = Select{sym=term:Test⁰/test¹}:
+//│                 qual = This of module:Test⁰
+//│                 name = Ident of "test"
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of j⁰
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of tmp¹
+//│           rest = Return of MemberRef{disamb=term:lambda²}:
+//│             bms = member:lambda¹
+//│             disamb = term:lambda²
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define Test⁰ as class Test¹
-//│ module Test² {
+//│ define Test¹ as class Test²
+//│ module Test⁰ {
 //│   method test⁰ = fun test¹(j)(tmp) {
 //│     return 0
 //│   }
 //│   method main⁰ = fun main¹(tmp) {
 //│     let lambda;
 //│     @private
-//│     define lambda as fun lambda¹(j) { return Test².this.test¹(j)(tmp) };
-//│     return lambda¹
+//│     define lambda as fun lambda²(j) { return Test⁰.this.test¹(j)(tmp) };
+//│     return lambda²
 //│   }
 //│ };
 //│ end

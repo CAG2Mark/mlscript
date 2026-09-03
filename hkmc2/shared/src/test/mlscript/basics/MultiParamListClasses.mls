@@ -2,6 +2,54 @@
 
 
 data class Foo(x, y)(z)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = y⁰
+//│         modulefulness = Modulefulness of N
+//│   auxParams = Ls of
+//│     ParamList:
+//│       params = Ls of
+//│         Param:
+//│           flags = (val)
+//│           sym = z⁰
+//│           modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:Foo⁰/x²
+//│     Tuple2:
+//│       _1 = member:y¹
+//│       _2 = term:Foo⁰/y²
+//│     Tuple2:
+//│       _1 = member:z¹
+//│       _2 = term:Foo⁰/z²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/y²
+//│       sym = member:y¹
+//│       rhs = SimpleRef of y⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/z²
+//│       sym = member:z¹
+//│       rhs = SimpleRef of z⁰
 
 Foo
 //│ = fun Foo { class: class Foo }
@@ -53,9 +101,76 @@ new Foo(1, 2)
 
 data class Foo with
   constructor(x, y)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo³
+//│   sym = member:Foo⁴
+//│   ctorSym = S of term:Foo⁵
+//│   k = Cls
+//│   auxParams = Ls of
+//│     ParamList:
+//│       params = Ls of
+//│         Param:
+//│           flags = (val)
+//│           sym = x³
+//│           modulefulness = Modulefulness of N
+//│         Param:
+//│           flags = (val)
+//│           sym = y³
+//│           modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo³/x⁴
+//│     term:Foo³/y⁴
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo³
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x³
+//│     rest = AssignField: \
+//│     lhs = This of class:Foo³
+//│     nme = Ident of "y"
+//│     rhs = SimpleRef of y³
 
 data class Foo with
   constructor(x, y)(z)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁶
+//│   sym = member:Foo⁷
+//│   ctorSym = S of term:Foo⁸
+//│   k = Cls
+//│   auxParams = Ls of
+//│     ParamList:
+//│       params = Ls of
+//│         Param:
+//│           flags = (val)
+//│           sym = x⁵
+//│           modulefulness = Modulefulness of N
+//│         Param:
+//│           flags = (val)
+//│           sym = y⁵
+//│           modulefulness = Modulefulness of N
+//│     ParamList:
+//│       params = Ls of
+//│         Param:
+//│           flags = (val)
+//│           sym = z³
+//│           modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Foo⁶/x⁶
+//│     term:Foo⁶/y⁶
+//│     term:Foo⁶/z⁴
+//│   ctor = AssignField:
+//│     lhs = This of class:Foo⁶
+//│     nme = Ident of "x"
+//│     rhs = SimpleRef of x⁵
+//│     rest = AssignField: \
+//│     lhs = This of class:Foo⁶
+//│     nme = Ident of "y"
+//│     rhs = SimpleRef of y⁵
+//│     rest = AssignField: \
+//│     lhs = This of class:Foo⁶
+//│     nme = Ident of "z"
+//│     rhs = SimpleRef of z³
 
 
 // class Foo(using z: Int)
@@ -63,6 +178,11 @@ data class Foo with
 class Foo0
 fun Foo(using z: Int) = new mut Foo0 !> res =>
   set res.z = z
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo0⁰
+//│   sym = member:Foo0¹
+//│   k = Cls
 
 using Int = 123
 
@@ -77,6 +197,11 @@ fun Foo(x, y)(using z: Int) = new mut Foo0 !> res =>
     res.x = x
     res.y = y
     res.z = z
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo0²
+//│   sym = member:Foo0³
+//│   k = Cls
 
 
 Foo(1, 2)

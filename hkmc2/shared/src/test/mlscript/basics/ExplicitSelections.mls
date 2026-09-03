@@ -4,6 +4,39 @@
 class Foo() with
   val x = 1
   fun f() = x + 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   ctorSym = S of term:Foo²
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Foo⁰
+//│       sym = member:f⁰
+//│       dSym = term:Foo⁰/f¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Select{sym=term:Foo⁰/x⁰}:
+//│                 qual = This of class:Foo⁰
+//│                 name = Ident of "x"
+//│             Arg:
+//│               value = Lit of IntLit of 1
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:Foo⁰/x⁰
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Foo⁰/x⁰
+//│       sym = member:x¹
+//│       rhs = Lit of IntLit of 1
 
 
 Foo().x

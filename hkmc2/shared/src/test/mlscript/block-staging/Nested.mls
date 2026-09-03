@@ -16,19 +16,45 @@ staged module LiftedNested with
   fun f() =
     fun g() = 1
     g()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:LiftedNested⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:LiftedNested⁰
+//│       sym = member:f⁰
+//│       dSym = term:LiftedNested⁰/f¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {member:g⁰}):
+//│         body = Define:
+//│           defn = FunDefn:
+//│             sym = member:g⁰
+//│             dSym = term:g¹
+//│             params = Ls of
+//│               ParamList: ‹empty›
+//│             body = Return of Lit of IntLit of 1
+//│           rest = Return of Call:
+//│             fun = MemberRef{disamb=term:g¹}:
+//│               bms = member:g⁰
+//│               disamb = term:g¹
+//│             argss = Ls of
+//│               Nil
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
 //│ let g;
 //│ @staged
-//│ define g as staged fun g⁰() {
+//│ define g as staged fun g¹() {
 //│   return 1
 //│ };
-//│ define LiftedNested⁰ as class LiftedNested¹
-//│ staged module LiftedNested² {
+//│ define LiftedNested¹ as class LiftedNested²
+//│ staged module LiftedNested⁰ {
 //│   constructor {
 //│     let tmp, tmp1, tmp2, tmp3;
-//│     set tmp2 = LiftedNested².this.ctor$_instr﹖();
+//│     set tmp2 = LiftedNested⁰.this.ctor$_instr﹖();
 //│     set tmp3 = Block⁰.printCode﹖(tmp2);
-//│     set tmp = LiftedNested².this.f_instr﹖();
+//│     set tmp = LiftedNested⁰.this.f_instr﹖();
 //│     set tmp1 = Block⁰.printCode﹖(tmp);
 //│     end
 //│   }
@@ -42,7 +68,7 @@ staged module LiftedNested with
 //│     return tmp3
 //│   }
 //│   method f⁰ = fun f¹() {
-//│     return g⁰()
+//│     return g¹()
 //│   }
 //│   method f_instr⁰ = fun f_instr¹() {
 //│     let sym, var1, tmp, app, return1, tmp1, tmp2, tmp3, tmp4;
@@ -66,32 +92,70 @@ staged module LiftedNested with
 
 staged module LiftedLambda with
   fun foo(x) = y => x + y
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:LiftedLambda⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:LiftedLambda⁰
+//│       sym = member:foo⁰
+//│       dSym = term:LiftedLambda⁰/foo¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {member:lambda⁰}):
+//│         body = Define:
+//│           defn = FunDefn:
+//│             sym = member:lambda⁰
+//│             dSym = term:lambda¹
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = y⁰
+//│                     modulefulness = Modulefulness of N
+//│             body = Return of Call:
+//│               fun = SimpleRef of builtin:+⁰
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of x⁰
+//│                   Arg:
+//│                     value = SimpleRef of y⁰
+//│           rest = Return of MemberRef{disamb=term:lambda¹}:
+//│             bms = member:lambda⁰
+//│             disamb = term:lambda¹
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
 //│ let lambda, Function$;
 //│ @staged @private
-//│ define lambda as staged fun lambda⁰(x, y) {
+//│ define lambda as staged fun lambda¹(x, y) {
 //│   return +⁰(x, y)
 //│ };
 //│ @staged
 //│ define Function$ as staged class Function$⁰ extends globalThis⁰.Function⁰ {
-//│   private val x⁰;
+//│   private val x¹;
 //│   constructor(x) {
 //│     do super⁰();
 //│     end;
-//│     set Function$⁰.this.x⁰ = x;
+//│     set Function$⁰.this.x¹ = x;
 //│     end
 //│   }
 //│   method call⁰ = fun call¹(y) {
-//│     return lambda⁰(Function$⁰.this.x⁰, y)
+//│     return lambda¹(Function$⁰.this.x¹, y)
 //│   }
 //│ };
-//│ define LiftedLambda⁰ as class LiftedLambda¹
-//│ staged module LiftedLambda² {
+//│ define LiftedLambda¹ as class LiftedLambda²
+//│ staged module LiftedLambda⁰ {
 //│   constructor {
 //│     let tmp, tmp1, tmp2, tmp3;
-//│     set tmp2 = LiftedLambda².this.ctor$_instr﹖();
+//│     set tmp2 = LiftedLambda⁰.this.ctor$_instr﹖();
 //│     set tmp3 = Block⁰.printCode﹖(tmp2);
-//│     set tmp = LiftedLambda².this.foo_instr﹖();
+//│     set tmp = LiftedLambda⁰.this.foo_instr﹖();
 //│     set tmp1 = Block⁰.printCode﹖(tmp);
 //│     end
 //│   }
@@ -149,6 +213,35 @@ staged module LiftedLambda with
 
 staged module LiftedMultParams with
   fun foo(x)(y) = x + y
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:LiftedMultParams⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:LiftedMultParams⁰
+//│       sym = member:foo²
+//│       dSym = term:LiftedMultParams⁰/foo³
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x²
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = y¹
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of builtin:+⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x²
+//│             Arg:
+//│               value = SimpleRef of y¹
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
 //│ let lambda$, Function$;
 //│ @staged
@@ -157,24 +250,24 @@ staged module LiftedMultParams with
 //│ };
 //│ @staged
 //│ define Function$ as staged class Function$¹ extends globalThis⁰.Function⁰ {
-//│   private val x¹;
+//│   private val x³;
 //│   constructor(x) {
 //│     do super⁰();
 //│     end;
-//│     set Function$¹.this.x¹ = x;
+//│     set Function$¹.this.x³ = x;
 //│     end
 //│   }
 //│   method call² = fun call³(y) {
-//│     return lambda$⁰(Function$¹.this.x¹, y)
+//│     return lambda$⁰(Function$¹.this.x³, y)
 //│   }
 //│ };
-//│ define LiftedMultParams⁰ as class LiftedMultParams¹
-//│ staged module LiftedMultParams² {
+//│ define LiftedMultParams¹ as class LiftedMultParams²
+//│ staged module LiftedMultParams⁰ {
 //│   constructor {
 //│     let tmp, tmp1, tmp2, tmp3;
-//│     set tmp2 = LiftedMultParams².this.ctor$_instr﹖();
+//│     set tmp2 = LiftedMultParams⁰.this.ctor$_instr﹖();
 //│     set tmp3 = Block⁰.printCode﹖(tmp2);
-//│     set tmp = LiftedMultParams².this.foo_instr﹖();
+//│     set tmp = LiftedMultParams⁰.this.foo_instr﹖();
 //│     set tmp1 = Block⁰.printCode﹖(tmp);
 //│     end
 //│   }
@@ -187,7 +280,7 @@ staged module LiftedMultParams with
 //│     set tmp3 = Block⁰.FunDefn﹖(tmp, tmp2, end, true);
 //│     return tmp3
 //│   }
-//│   method foo² = fun foo³(x) {
+//│   method foo² = fun foo⁴(x) {
 //│     let tmp;
 //│     set tmp = new Function$¹(x);
 //│     return tmp

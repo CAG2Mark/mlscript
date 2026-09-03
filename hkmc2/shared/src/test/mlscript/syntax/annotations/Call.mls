@@ -4,8 +4,13 @@
 //│ import "..." as Predef; end
 object special
 object static
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:special⁰
+//│   sym = member:special¹
+//│   k = Obj
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define special⁰ as object special¹; define static⁰ as object static¹; end
+//│ define special¹ as object special⁰; define static⁰ as object static¹; end
 
 
 fun identity(x) = x
@@ -46,26 +51,78 @@ fun nullary = 1
 
 
 class Box(value: Int)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Box⁰
+//│   sym = member:Box¹
+//│   ctorSym = S of term:Box²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = value⁰
+//│         sign = S of Resolved{sym=class:Int⁰}:
+//│           t = Ref{sym=member:Int¹} of member:Int¹
+//│           sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:Box⁰/value¹
+//│   ctor = AssignField:
+//│     lhs = This of class:Box⁰
+//│     nme = Ident of "value"
+//│     rhs = SimpleRef of value⁰
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define Box⁰ as class Box² {
-//│   private val value⁰;
-//│   constructor Box¹(value) { set Box².this.value⁰ = value; end }
+//│ define Box¹ as class Box⁰ {
+//│   private val value¹;
+//│   constructor Box²(value) { set Box⁰.this.value¹ = value; end }
 //│ };
 //│ end
 
 @special new Box(1)
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ return @special new Box²(1)
+//│ return @special new Box⁰(1)
 
 
 class CurriedBox(first: Int)(second: Int)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:CurriedBox⁰
+//│   sym = member:CurriedBox¹
+//│   ctorSym = S of term:CurriedBox²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         sym = first⁰
+//│         sign = S of Resolved{sym=class:Int⁰}:
+//│           t = Ref{sym=member:Int¹} of member:Int¹
+//│           sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│   auxParams = Ls of
+//│     ParamList:
+//│       params = Ls of
+//│         Param:
+//│           sym = second⁰
+//│           sign = S of Ref{sym=member:Int¹} of member:Int¹
+//│           modulefulness = Modulefulness of N
+//│   privateFields = Ls of
+//│     term:CurriedBox⁰/first¹
+//│     term:CurriedBox⁰/second¹
+//│   ctor = AssignField:
+//│     lhs = This of class:CurriedBox⁰
+//│     nme = Ident of "first"
+//│     rhs = SimpleRef of first⁰
+//│     rest = AssignField: \
+//│     lhs = This of class:CurriedBox⁰
+//│     nme = Ident of "second"
+//│     rhs = SimpleRef of second⁰
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define CurriedBox⁰ as class CurriedBox² {
-//│   private val first⁰;
-//│   private val second⁰;
-//│   constructor CurriedBox¹(first, second) {
-//│     set CurriedBox².this.first⁰ = first;
-//│     set CurriedBox².this.second⁰ = second;
+//│ define CurriedBox¹ as class CurriedBox⁰ {
+//│   private val first¹;
+//│   private val second¹;
+//│   constructor CurriedBox²(first, second) {
+//│     set CurriedBox⁰.this.first¹ = first;
+//│     set CurriedBox⁰.this.second¹ = second;
 //│     end
 //│   }
 //│ };
@@ -73,4 +130,4 @@ class CurriedBox(first: Int)(second: Int)
 
 @special new CurriedBox(1)(2)
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ return @special new CurriedBox²(1, 2)
+//│ return @special new CurriedBox⁰(1, 2)

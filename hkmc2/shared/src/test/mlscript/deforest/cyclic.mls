@@ -8,6 +8,27 @@ data class (::) Cons(h, t)
 object Nil
 object None
 data class Some(x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:A⁰
+//│   sym = member:A¹
+//│   ctorSym = S of term:A²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:A⁰/x²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:A⁰/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
 
 
 
@@ -77,11 +98,11 @@ fun modSome(x, m) = if x is
 modSome(Some(17), 3)
 //│ deforest > >>> fusing >>>
 //│ deforest > Some⁰(tmp⁰) ->
-//│ deforest > 	match: x⁰
-//│ deforest > 	fields: x⁰.x¹
+//│ deforest > 	match: x³
+//│ deforest > 	fields: x³.x⁴
 //│ deforest > Some⁰(17) ->
-//│ deforest > 	match: x⁰
-//│ deforest > 	fields: x⁰.x¹
+//│ deforest > 	match: x³
+//│ deforest > 	fields: x³.x⁴
 //│ deforest > <<< fusing <<<
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
 //│ let Some_x, fv_m, fv_scrut, fv_tmp, inlinedVal;
@@ -90,7 +111,7 @@ modSome(Some(17), 3)
 //│     let scrut, arg$Some$0$, tmp, tmp1;
 //│     match x
 //│       Some¹ =>
-//│         set arg$Some$0$ = x.x¹;
+//│         set arg$Some$0$ = x.x⁴;
 //│         set scrut = >=⁰(arg$Some$0$, m);
 //│         match scrut
 //│           true =>

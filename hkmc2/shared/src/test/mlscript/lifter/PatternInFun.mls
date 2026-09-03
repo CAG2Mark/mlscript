@@ -20,5 +20,219 @@ fun listLen(ls) =
     Cons(h, t) then l(t, a + 1)
   l(ls, 0)
 print(listLen(Cons(1, Nil)))
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:l)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:l⁰
+//│       dSym = term:l¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = ScratchPrelude⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = ls⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = a⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {t⁰, h⁰, tmp:arg$Cons$0$⁰, tmp:arg$Cons$1$⁰, tmp:tmp⁰}):
+//│         body = Match:
+//│           scrut = SimpleRef of ls⁰
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Cls:
+//│                 cls = object:Nil⁰
+//│                 path = Select{sym=object:Nil⁰}:
+//│                   qual = SimpleRef of ScratchPrelude⁰
+//│                   name = Ident of "Nil"
+//│               _2 = Return of SimpleRef of a⁰
+//│             Tuple2:
+//│               _1 = Cls:
+//│                 cls = class:Cons⁰
+//│                 path = Select{sym=class:Cons⁰}:
+//│                   qual = SimpleRef of ScratchPrelude⁰
+//│                   name = Ident of "Cons"
+//│               _2 = Assign:
+//│                 lhs = tmp:arg$Cons$0$⁰
+//│                 rhs = Select{sym=term:Cons⁰/head⁰}:
+//│                   qual = SimpleRef of ls⁰
+//│                   name = Ident of "head"
+//│                 rest = Assign: \
+//│                 lhs = tmp:arg$Cons$1$⁰
+//│                 rhs = Select{sym=term:Cons⁰/tail⁰}:
+//│                   qual = SimpleRef of ls⁰
+//│                   name = Ident of "tail"
+//│                 rest = Assign: \
+//│                 lhs = t⁰
+//│                 rhs = SimpleRef of tmp:arg$Cons$1$⁰
+//│                 rest = Assign: \
+//│                 lhs = h⁰
+//│                 rhs = SimpleRef of tmp:arg$Cons$0$⁰
+//│                 rest = Assign: \
+//│                 lhs = tmp:tmp⁰
+//│                 rhs = Call:
+//│                   fun = SimpleRef of builtin:+⁰
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of a⁰
+//│                       Arg:
+//│                         value = Lit of IntLit of 1
+//│                 rest = Return of Call:
+//│                   fun = MemberRef{disamb=term:l¹}:
+//│                     bms = member:l⁰
+//│                     disamb = term:l¹
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of ScratchPrelude⁰
+//│                       Arg:
+//│                         value = SimpleRef of t⁰
+//│                       Arg:
+//│                         value = SimpleRef of tmp:tmp⁰
+//│           dflt = S of Throw of Instantiate:
+//│             mut = false
+//│             cls = Select{sym=class:Error⁰}:
+//│               qual = This of globalThis:globalThis⁰
+//│               name = Ident of "Error"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Lit of StrLit of "match error"
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:ScratchPrelude¹
+//│       sym = member:ScratchPrelude²
+//│       k = Cls
+//│       companion = S of ClsLikeBody:
+//│         isym = module:ScratchPrelude³
+//│         methods = Ls of
+//│           FunDefn:
+//│             owner = S of module:ScratchPrelude³
+//│             sym = member:listLen⁰
+//│             dSym = term:ScratchPrelude³/listLen¹
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = ls¹
+//│                     modulefulness = Modulefulness of N
+//│             body = Return of Call:
+//│               fun = MemberRef{disamb=term:l¹}:
+//│                 bms = member:l⁰
+//│                 disamb = term:l¹
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = This of module:ScratchPrelude³
+//│                   Arg:
+//│                     value = SimpleRef of ls¹
+//│                   Arg:
+//│                     value = Lit of IntLit of 0
+//│         ctor = Scoped(syms = {tmp:tmp¹, tmp:tmp²}):
+//│           body = Define:
+//│             defn = ClsLikeDefn:
+//│               owner = S of module:ScratchPrelude³
+//│               isym = class:List⁰
+//│               sym = member:List¹
+//│               k = Cls
+//│             rest = Define: \
+//│             defn = ClsLikeDefn:
+//│               owner = S of module:ScratchPrelude³
+//│               isym = class:Cons⁰
+//│               sym = member:Cons¹
+//│               ctorSym = S of term:ScratchPrelude³/Cons²
+//│               k = Cls
+//│               paramsOpt = S of ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     flags = (val)
+//│                     sym = head¹
+//│                     modulefulness = Modulefulness of N
+//│                   Param:
+//│                     flags = (val)
+//│                     sym = tail¹
+//│                     modulefulness = Modulefulness of N
+//│               parentPath = S of Select{sym=class:List⁰}:
+//│                 qual = This of module:ScratchPrelude³
+//│                 name = Ident of "List"
+//│               publicFields = Ls of
+//│                 Tuple2:
+//│                   _1 = member:head²
+//│                   _2 = term:Cons⁰/head⁰
+//│                 Tuple2:
+//│                   _1 = member:tail²
+//│                   _2 = term:Cons⁰/tail⁰
+//│               preCtor = Assign:
+//│                 lhs = ‹no symbol›
+//│                 rhs = Call:
+//│                   fun = SimpleRef of builtin:super⁰
+//│                   argss = Ls of
+//│                     Nil
+//│               ctor = Define:
+//│                 defn = ValDefn:
+//│                   tsym = term:Cons⁰/head⁰
+//│                   sym = member:head²
+//│                   rhs = SimpleRef of head¹
+//│                 rest = Define: \
+//│                 defn = ValDefn:
+//│                   tsym = term:Cons⁰/tail⁰
+//│                   sym = member:tail²
+//│                   rhs = SimpleRef of tail¹
+//│             rest = Define: \
+//│             defn = ClsLikeDefn:
+//│               owner = S of module:ScratchPrelude³
+//│               isym = object:Nil⁰
+//│               sym = member:Nil¹
+//│               k = Obj
+//│               parentPath = S of Select{sym=class:List⁰}:
+//│                 qual = This of module:ScratchPrelude³
+//│                 name = Ident of "List"
+//│               preCtor = Assign:
+//│                 lhs = ‹no symbol›
+//│                 rhs = Call:
+//│                   fun = SimpleRef of builtin:super⁰
+//│                   argss = Ls of
+//│                     Nil
+//│             rest = Assign: \
+//│             lhs = tmp:tmp¹
+//│             rhs = Call:
+//│               fun = Select{sym=term:ScratchPrelude³/Cons²}:
+//│                 qual = This of module:ScratchPrelude³
+//│                 name = Ident of "Cons"
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = Lit of IntLit of 1
+//│                   Arg:
+//│                     value = Select{sym=object:Nil⁰}:
+//│                       qual = This of module:ScratchPrelude³
+//│                       name = Ident of "Nil"
+//│             rest = Assign: \
+//│             lhs = tmp:tmp²
+//│             rhs = Call:
+//│               fun = Select{sym=term:ScratchPrelude³/listLen¹}:
+//│                 qual = This of module:ScratchPrelude³
+//│                 name = Ident of "listLen"
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of tmp:tmp¹
+//│             rest = Assign: \
+//│             lhs = ‹no symbol›
+//│             rhs = Call:
+//│               fun = Select{sym=term:Predef⁰/print⁰}:
+//│                 qual = MemberRef{disamb=module:Predef⁰}:
+//│                   bms = member:Predef¹
+//│                   disamb = module:Predef⁰
+//│                 name = Ident of "print"
+//│               argss = Ls of
+//│                 Ls of
+//│                   Arg:
+//│                     value = SimpleRef of tmp:tmp²
 //│ > 1
 

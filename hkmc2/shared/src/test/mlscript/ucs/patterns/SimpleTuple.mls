@@ -45,6 +45,45 @@ test(12)
 //│ ═══[RUNTIME ERROR] Error: match error
 
 data class Point(x: Int, y: Int)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Point⁰
+//│   sym = member:Point¹
+//│   ctorSym = S of term:Point²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = x⁰
+//│         sign = S of Resolved{sym=class:Int⁰}:
+//│           t = Ref{sym=member:Int¹} of member:Int¹
+//│           sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = y⁰
+//│         sign = S of Resolved{sym=class:Int⁰}:
+//│           t = Ref{sym=member:Int¹} of member:Int¹
+//│           sym = class:Int⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:x¹
+//│       _2 = term:Point⁰/x²
+//│     Tuple2:
+//│       _1 = member:y¹
+//│       _2 = term:Point⁰/y²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Point⁰/x²
+//│       sym = member:x¹
+//│       rhs = SimpleRef of x⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Point⁰/y²
+//│       sym = member:y¹
+//│       rhs = SimpleRef of y⁰
 
 fun with_other_constructors(thing) =
   if thing is

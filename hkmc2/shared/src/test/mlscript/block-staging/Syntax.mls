@@ -7,11 +7,26 @@ staged module A
 //│   body = TypeDef:
 //│     k = Mod
 //│     head = Ident of "A"
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:A⁰
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 
 // TODO: reject these annotations?
 staged object Foo
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = object:Foo⁰
+//│   sym = member:Foo¹
+//│   k = Obj
 
 staged class Foo
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo²
+//│   sym = member:Foo³
+//│   k = Cls
 
 staged fun f() = 0
 
@@ -19,12 +34,17 @@ staged fun f() = 0
 :sir
 :staging
 staged module A
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:A¹
+//│   annotations = Ls of
+//│     Modifier of keyword 'staged'
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define A⁰ as class A¹
-//│ staged module A² {
+//│ define A² as class A³
+//│ staged module A¹ {
 //│   constructor {
 //│     let tmp, tmp1;
-//│     set tmp = A².this.ctor$_instr﹖();
+//│     set tmp = A¹.this.ctor$_instr﹖();
 //│     set tmp1 = Block⁰.printCode﹖(tmp);
 //│     end
 //│   }

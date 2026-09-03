@@ -10,6 +10,11 @@ abstract class EitherOrBoth[out A, out B]: (Left[A, B] | Right[A, B] | Both[A, B
 data class Left[out A, out B](value: A) extends EitherOrBoth[A, B]
 data class Right[out A, out B](value: B) extends EitherOrBoth[A, B]
 data class Both[out A, out B](left: A, right: B) extends EitherOrBoth[A, B] 
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:EitherOrBoth⁰
+//│   sym = member:EitherOrBoth¹
+//│   k = Cls
 
 type Either[A, B] = Left[A, B] | Right[A, B]
 

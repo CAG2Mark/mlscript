@@ -33,14 +33,41 @@ print(1)
 
 
 module Option with ...
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Option⁰
 
 module Option with ...
 val a = 1
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Option¹
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a⁰
+//│       _2 = term:Option¹/a¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Option¹/a¹
+//│       sym = member:a⁰
+//│       rhs = Lit of IntLit of 1
 
 module Option with ...
 // 
 val a = 1
 // 
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Option²
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a²
+//│       _2 = term:Option²/a³
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Option²/a³
+//│       sym = member:a²
+//│       rhs = Lit of IntLit of 1
 
 :pt
 module A with
@@ -72,6 +99,26 @@ module A with
 //│               k = ImmutVal
 //│               head = Ident of "b"
 //│               rhs = S of IntLit of 2
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:B⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:a⁴
+//│       _2 = term:B⁰/a⁵
+//│     Tuple2:
+//│       _1 = member:b⁰
+//│       _2 = term:B⁰/b¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:B⁰/a⁵
+//│       sym = member:a⁴
+//│       rhs = Lit of IntLit of 1
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:B⁰/b¹
+//│       sym = member:b⁰
+//│       rhs = Lit of IntLit of 2
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 
@@ -88,12 +135,12 @@ x =>
   1
 let bar = 1
 //│ ╔══[WARNING] Pure expression in statement position
-//│ ║  l.86: 	x =>
-//│ ║        	^^^^
-//│ ║  l.87: 	  if false then 0 else...
-//│ ║        	^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.88: 	  1
-//│ ╙──      	^^^
+//│ ║  l.133: 	x =>
+//│ ║         	^^^^
+//│ ║  l.134: 	  if false then 0 else...
+//│ ║         	^^^^^^^^^^^^^^^^^^^^^^^^^
+//│ ║  l.135: 	  1
+//│ ╙──       	^^^
 //│ bar = 1
 
 bar
@@ -106,12 +153,12 @@ x => if false then 0 else...
   1
 let foo = 1
 //│ ╔══[COMPILATION ERROR] Illegal position for '...' spread operator.
-//│ ║  l.105: 	x => if false then 0 else...
+//│ ║  l.152: 	x => if false then 0 else...
 //│ ╙──       	                         ^^^
 //│ ╔══[WARNING] Pure expression in statement position
-//│ ║  l.105: 	x => if false then 0 else...
+//│ ║  l.152: 	x => if false then 0 else...
 //│ ║         	^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.106: 	  1
+//│ ║  l.153: 	  1
 //│ ╙──       	^^^
 //│ foo = 1
 

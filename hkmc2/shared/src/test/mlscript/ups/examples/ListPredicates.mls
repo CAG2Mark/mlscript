@@ -27,6 +27,564 @@ pattern Unique(pattern P) =
     ((((P as hd) :: (Unique(P) as tl)) =>
       let there = tl contains(hd)
       [there, if there then tl else hd :: tl]) as [false, list]) => list)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = pattern:Unique⁰
+//│   sym = member:Unique¹
+//│   k = Pat
+//│   methods = Ls of
+//│     FunDefn:
+//│       sym = member:unapply⁰
+//│       dSym = term:unapply¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = P⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = input⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:transform⁰, tmp:transform¹, tmp:arg$Cons$0$⁰, tmp:arg$Cons$1$⁰, tmp:matchSuccess_P⁰, tmp:output⁰, tmp:bindings⁰, tmp:patternArgument0$⁰, tmp:unapplyResult⁰, tmp:output¹, tmp:bindings¹, tmp:transformResult⁰, tmp:element1$⁰, tmp:element0$⁰, tmp:transformResult¹, tmp:unapply², tmp:unapplyStringPrefix⁰, tmp:output², member:lambda⁰, member:lambda¹, member:lambda²}):
+//│         body = Match:
+//│           scrut = SimpleRef of input⁰
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Cls:
+//│                 cls = object:Nil⁰
+//│                 path = Select{sym=object:Nil⁰}:
+//│                   qual = MemberRef{disamb=module:Stack⁰}:
+//│                     bms = member:Stack¹
+//│                     disamb = module:Stack⁰
+//│                   name = Ident of "Nil"
+//│               _2 = Assign:
+//│                 lhs = tmp:output²
+//│                 rhs = SimpleRef of input⁰
+//│                 rest = Return of Instantiate:
+//│                   mut = false
+//│                   cls = Select{sym=class:MatchSuccess⁰}:
+//│                     qual = SimpleRef of tmp:runtime⁰
+//│                     name = Ident of "MatchSuccess"
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of tmp:output²
+//│                       Arg:
+//│                         value = Lit of UnitLit of true
+//│           dflt = S of Scoped(syms = {member:lambda³}):
+//│             body = Define:
+//│               defn = FunDefn:
+//│                 sym = member:lambda³
+//│                 dSym = term:lambda⁴
+//│                 params = Ls of
+//│                   ParamList:
+//│                     params = Ls of
+//│                       Param:
+//│                         sym = list⁰
+//│                         modulefulness = Modulefulness of N
+//│                 body = Return of SimpleRef of list⁰
+//│               rest = Assign: \
+//│               lhs = tmp:transform⁰
+//│               rhs = MemberRef{disamb=term:lambda⁴}:
+//│                 bms = member:lambda³
+//│                 disamb = term:lambda⁴
+//│               rest = Define: \
+//│               defn = FunDefn:
+//│                 sym = member:lambda⁰
+//│                 dSym = term:lambda⁵
+//│                 params = Ls of
+//│                   ParamList:
+//│                     params = Ls of
+//│                       Param:
+//│                         sym = tl⁰
+//│                         modulefulness = Modulefulness of N
+//│                       Param:
+//│                         sym = hd⁰
+//│                         modulefulness = Modulefulness of N
+//│                 body = Scoped(syms = {there⁰, tmp:tmp⁰}):
+//│                   body = Assign:
+//│                     lhs = there⁰
+//│                     rhs = Call:
+//│                       fun = MemberRef{disamb=term:contains⁰}:
+//│                         bms = member:contains¹
+//│                         disamb = term:contains⁰
+//│                       argss = Ls of
+//│                         Ls of
+//│                           Arg:
+//│                             value = SimpleRef of tl⁰
+//│                           Arg:
+//│                             value = SimpleRef of hd⁰
+//│                     rest = Match: \
+//│                     scrut = SimpleRef of there⁰
+//│                     arms = Ls of
+//│                       Tuple2:
+//│                         _1 = Lit of BoolLit of true
+//│                         _2 = Assign:
+//│                           lhs = tmp:tmp⁰
+//│                           rhs = SimpleRef of tl⁰
+//│                           rest = Return of Tuple:
+//│                             mut = false
+//│                             elems = Ls of
+//│                               Arg:
+//│                                 value = SimpleRef of there⁰
+//│                               Arg:
+//│                                 value = SimpleRef of tmp:tmp⁰
+//│                     dflt = S of Assign:
+//│                       lhs = tmp:tmp⁰
+//│                       rhs = Call:
+//│                         fun = Select{sym=term:Stack⁰/Cons⁰}:
+//│                           qual = MemberRef{disamb=module:Stack⁰}:
+//│                             bms = member:Stack¹
+//│                             disamb = module:Stack⁰
+//│                           name = Ident of "Cons"
+//│                         argss = Ls of
+//│                           Ls of
+//│                             Arg:
+//│                               value = SimpleRef of hd⁰
+//│                             Arg:
+//│                               value = SimpleRef of tl⁰
+//│                       rest = Return of Tuple:
+//│                         mut = false
+//│                         elems = Ls of
+//│                           Arg:
+//│                             value = SimpleRef of there⁰
+//│                           Arg:
+//│                             value = SimpleRef of tmp:tmp⁰
+//│                     rest = End of "Rest moved to non-abortive branch(es)"
+//│               rest = Assign: \
+//│               lhs = tmp:transform¹
+//│               rhs = MemberRef{disamb=term:lambda⁵}:
+//│                 bms = member:lambda⁰
+//│                 disamb = term:lambda⁵
+//│               rest = Match: \
+//│               scrut = SimpleRef of input⁰
+//│               arms = Ls of
+//│                 Tuple2:
+//│                   _1 = Cls:
+//│                     cls = class:Cons¹
+//│                     path = Select{sym=class:Cons¹}:
+//│                       qual = MemberRef{disamb=module:Stack⁰}:
+//│                         bms = member:Stack¹
+//│                         disamb = module:Stack⁰
+//│                       name = Ident of "Cons"
+//│                   _2 = Assign:
+//│                     lhs = tmp:arg$Cons$0$⁰
+//│                     rhs = Select{sym=term:Cons¹/head⁰}:
+//│                       qual = SimpleRef of input⁰
+//│                       name = Ident of "head"
+//│                     rest = Assign: \
+//│                     lhs = tmp:arg$Cons$1$⁰
+//│                     rhs = Select{sym=term:Cons¹/tail⁰}:
+//│                       qual = SimpleRef of input⁰
+//│                       name = Ident of "tail"
+//│                     rest = Assign: \
+//│                     lhs = tmp:matchSuccess_P⁰
+//│                     rhs = Call:
+//│                       fun = Select:
+//│                         qual = SimpleRef of P⁰
+//│                         name = Ident of "unapply"
+//│                       argss = Ls of
+//│                         Ls of
+//│                           Arg:
+//│                             value = SimpleRef of tmp:arg$Cons$0$⁰
+//│                     rest = Match: \
+//│                     scrut = SimpleRef of tmp:matchSuccess_P⁰
+//│                     arms = Ls of
+//│                       Tuple2:
+//│                         _1 = Cls:
+//│                           cls = class:MatchSuccess⁰
+//│                           path = Select{sym=class:MatchSuccess⁰}:
+//│                             qual = SimpleRef of tmp:runtime⁰
+//│                             name = Ident of "MatchSuccess"
+//│                         _2 = Assign:
+//│                           lhs = tmp:output⁰
+//│                           rhs = Select{sym=term:MatchSuccess⁰/output³}:
+//│                             qual = SimpleRef of tmp:matchSuccess_P⁰
+//│                             name = Ident of "output"
+//│                           rest = Assign: \
+//│                           lhs = tmp:bindings⁰
+//│                           rhs = Select{sym=term:MatchSuccess⁰/bindings²}:
+//│                             qual = SimpleRef of tmp:matchSuccess_P⁰
+//│                             name = Ident of "bindings"
+//│                           rest = Define: \
+//│                           defn = FunDefn:
+//│                             sym = member:lambda¹
+//│                             dSym = term:lambda⁶
+//│                             params = Ls of
+//│                               ParamList:
+//│                                 params = Ls of
+//│                                   Param:
+//│                                     sym = input¹
+//│                                     modulefulness = Modulefulness of N
+//│                             body = Scoped(syms = {tmp:matchSuccess_P¹, tmp:output⁴, tmp:bindings³}):
+//│                               body = Assign:
+//│                                 lhs = tmp:matchSuccess_P¹
+//│                                 rhs = Call:
+//│                                   fun = Select:
+//│                                     qual = SimpleRef of P⁰
+//│                                     name = Ident of "unapply"
+//│                                   argss = Ls of
+//│                                     Ls of
+//│                                       Arg:
+//│                                         value = SimpleRef of input¹
+//│                                 rest = Match: \
+//│                                 scrut = SimpleRef of tmp:matchSuccess_P¹
+//│                                 arms = Ls of
+//│                                   Tuple2:
+//│                                     _1 = Cls:
+//│                                       cls = class:MatchSuccess⁰
+//│                                       path = Select{sym=class:MatchSuccess⁰}:
+//│                                         qual = SimpleRef of tmp:runtime⁰
+//│                                         name = Ident of "MatchSuccess"
+//│                                     _2 = Assign:
+//│                                       lhs = tmp:output⁴
+//│                                       rhs = Select{sym=term:MatchSuccess⁰/output³}:
+//│                                         qual = SimpleRef of tmp:matchSuccess_P¹
+//│                                         name = Ident of "output"
+//│                                       rest = Assign: \
+//│                                       lhs = tmp:bindings³
+//│                                       rhs = Select{sym=term:MatchSuccess⁰/bindings²}:
+//│                                         qual = SimpleRef of tmp:matchSuccess_P¹
+//│                                         name = Ident of "bindings"
+//│                                       rest = Return of Instantiate:
+//│                                         mut = false
+//│                                         cls = Select{sym=class:MatchSuccess⁰}:
+//│                                           qual = SimpleRef of tmp:runtime⁰
+//│                                           name = Ident of "MatchSuccess"
+//│                                         argss = Ls of
+//│                                           Ls of
+//│                                             Arg:
+//│                                               value = SimpleRef of tmp:output⁴
+//│                                             Arg:
+//│                                               value = Lit of UnitLit of true
+//│                                 dflt = S of Return of Instantiate:
+//│                                   mut = false
+//│                                   cls = Select{sym=class:MatchFailure⁰}:
+//│                                     qual = SimpleRef of tmp:runtime⁰
+//│                                     name = Ident of "MatchFailure"
+//│                                   argss = Ls of
+//│                                     Ls of
+//│                                       Arg:
+//│                                         value = Lit of UnitLit of true
+//│                           rest = Assign: \
+//│                           lhs = tmp:unapply²
+//│                           rhs = MemberRef{disamb=term:lambda⁶}:
+//│                             bms = member:lambda¹
+//│                             disamb = term:lambda⁶
+//│                           rest = Define: \
+//│                           defn = FunDefn:
+//│                             sym = member:lambda²
+//│                             dSym = term:lambda⁷
+//│                             params = Ls of
+//│                               ParamList:
+//│                                 params = Ls of
+//│                                   Param:
+//│                                     sym = input²
+//│                                     modulefulness = Modulefulness of N
+//│                             body = Scoped(syms = {tmp:matchSuccess_P², tmp:outputPair⁰, tmp:bindings⁴, tmp:output⁵, tmp:remaining⁰, tmp:tmp¹}):
+//│                               body = Assign:
+//│                                 lhs = tmp:matchSuccess_P²
+//│                                 rhs = Call:
+//│                                   fun = Select:
+//│                                     qual = SimpleRef of P⁰
+//│                                     name = Ident of "unapplyStringPrefix"
+//│                                   argss = Ls of
+//│                                     Ls of
+//│                                       Arg:
+//│                                         value = SimpleRef of input²
+//│                                 rest = Match: \
+//│                                 scrut = SimpleRef of tmp:matchSuccess_P²
+//│                                 arms = Ls of
+//│                                   Tuple2:
+//│                                     _1 = Cls:
+//│                                       cls = class:MatchSuccess⁰
+//│                                       path = Select{sym=class:MatchSuccess⁰}:
+//│                                         qual = SimpleRef of tmp:runtime⁰
+//│                                         name = Ident of "MatchSuccess"
+//│                                     _2 = Assign:
+//│                                       lhs = tmp:outputPair⁰
+//│                                       rhs = Select{sym=term:MatchSuccess⁰/output³}:
+//│                                         qual = SimpleRef of tmp:matchSuccess_P²
+//│                                         name = Ident of "output"
+//│                                       rest = Assign: \
+//│                                       lhs = tmp:bindings⁴
+//│                                       rhs = Select{sym=term:MatchSuccess⁰/bindings²}:
+//│                                         qual = SimpleRef of tmp:matchSuccess_P²
+//│                                         name = Ident of "bindings"
+//│                                       rest = Match: \
+//│                                       scrut = SimpleRef of tmp:outputPair⁰
+//│                                       arms = Ls of
+//│                                         Tuple2:
+//│                                           _1 = Tup:
+//│                                             len = 2
+//│                                             inf = false
+//│                                           _2 = Assign:
+//│                                             lhs = tmp:output⁵
+//│                                             rhs = Call:
+//│                                               fun = Select{sym=term:Tuple⁰/get⁰}:
+//│                                                 qual = Select{sym=module:Tuple⁰}:
+//│                                                   qual = SimpleRef of tmp:runtime⁰
+//│                                                   name = Ident of "Tuple"
+//│                                                 name = Ident of "get"
+//│                                               argss = Ls of
+//│                                                 Ls of
+//│                                                   Arg:
+//│                                                     value = SimpleRef of tmp:outputPair⁰
+//│                                                   Arg:
+//│                                                     value = Lit of IntLit of 0
+//│                                             rest = Assign: \
+//│                                             lhs = tmp:remaining⁰
+//│                                             rhs = Call:
+//│                                               fun = Select{sym=term:Tuple⁰/get⁰}:
+//│                                                 qual = Select{sym=module:Tuple⁰}:
+//│                                                   qual = SimpleRef of tmp:runtime⁰
+//│                                                   name = Ident of "Tuple"
+//│                                                 name = Ident of "get"
+//│                                               argss = Ls of
+//│                                                 Ls of
+//│                                                   Arg:
+//│                                                     value = SimpleRef of tmp:outputPair⁰
+//│                                                   Arg:
+//│                                                     value = Lit of IntLit of 1
+//│                                             rest = Assign: \
+//│                                             lhs = tmp:tmp¹
+//│                                             rhs = Tuple:
+//│                                               mut = false
+//│                                               elems = Ls of
+//│                                                 Arg:
+//│                                                   value = SimpleRef of tmp:output⁵
+//│                                                 Arg:
+//│                                                   value = SimpleRef of tmp:remaining⁰
+//│                                             rest = Return of Instantiate:
+//│                                               mut = false
+//│                                               cls = Select{sym=class:MatchSuccess⁰}:
+//│                                                 qual = SimpleRef of tmp:runtime⁰
+//│                                                 name = Ident of "MatchSuccess"
+//│                                               argss = Ls of
+//│                                                 Ls of
+//│                                                   Arg:
+//│                                                     value = SimpleRef of tmp:tmp¹
+//│                                                   Arg:
+//│                                                     value = Lit of UnitLit of true
+//│                                       dflt = S of Return of Instantiate:
+//│                                         mut = false
+//│                                         cls = Select{sym=class:MatchFailure⁰}:
+//│                                           qual = SimpleRef of tmp:runtime⁰
+//│                                           name = Ident of "MatchFailure"
+//│                                         argss = Ls of
+//│                                           Ls of
+//│                                             Arg:
+//│                                               value = Lit of UnitLit of true
+//│                                 dflt = S of Return of Instantiate:
+//│                                   mut = false
+//│                                   cls = Select{sym=class:MatchFailure⁰}:
+//│                                     qual = SimpleRef of tmp:runtime⁰
+//│                                     name = Ident of "MatchFailure"
+//│                                   argss = Ls of
+//│                                     Ls of
+//│                                       Arg:
+//│                                         value = Lit of UnitLit of true
+//│                           rest = Assign: \
+//│                           lhs = tmp:unapplyStringPrefix⁰
+//│                           rhs = MemberRef{disamb=term:lambda⁷}:
+//│                             bms = member:lambda²
+//│                             disamb = term:lambda⁷
+//│                           rest = Assign: \
+//│                           lhs = tmp:patternArgument0$⁰
+//│                           rhs = Record:
+//│                             mut = false
+//│                             elems = Ls of
+//│                               RcdArg:
+//│                                 idx = S of Lit of StrLit of "unapply"
+//│                                 value = SimpleRef of tmp:unapply²
+//│                               RcdArg:
+//│                                 idx = S of Lit of StrLit of "unapplyStringPrefix"
+//│                                 value = SimpleRef of tmp:unapplyStringPrefix⁰
+//│                           rest = Assign: \
+//│                           lhs = tmp:unapplyResult⁰
+//│                           rhs = Call:
+//│                             fun = Select:
+//│                               qual = MemberRef{disamb=pattern:Unique⁰}:
+//│                                 bms = member:Unique¹
+//│                                 disamb = pattern:Unique⁰
+//│                               name = Ident of "unapply"
+//│                             argss = Ls of
+//│                               Ls of
+//│                                 Arg:
+//│                                   value = SimpleRef of tmp:patternArgument0$⁰
+//│                                 Arg:
+//│                                   value = SimpleRef of tmp:arg$Cons$1$⁰
+//│                           rest = Match: \
+//│                           scrut = SimpleRef of tmp:unapplyResult⁰
+//│                           arms = Ls of
+//│                             Tuple2:
+//│                               _1 = Cls:
+//│                                 cls = class:MatchSuccess⁰
+//│                                 path = Select{sym=class:MatchSuccess⁰}:
+//│                                   qual = SimpleRef of tmp:runtime⁰
+//│                                   name = Ident of "MatchSuccess"
+//│                               _2 = Assign:
+//│                                 lhs = tmp:output¹
+//│                                 rhs = Select{sym=term:MatchSuccess⁰/output³}:
+//│                                   qual = SimpleRef of tmp:unapplyResult⁰
+//│                                   name = Ident of "output"
+//│                                 rest = Assign: \
+//│                                 lhs = tmp:bindings¹
+//│                                 rhs = Select{sym=term:MatchSuccess⁰/bindings²}:
+//│                                   qual = SimpleRef of tmp:unapplyResult⁰
+//│                                   name = Ident of "bindings"
+//│                                 rest = Assign: \
+//│                                 lhs = tmp:transformResult⁰
+//│                                 rhs = Call:
+//│                                   fun = SimpleRef of tmp:transform¹
+//│                                   argss = Ls of
+//│                                     Ls of
+//│                                       Arg:
+//│                                         value = SimpleRef of tmp:output¹
+//│                                       Arg:
+//│                                         value = SimpleRef of tmp:output⁰
+//│                                 rest = Match: \
+//│                                 scrut = SimpleRef of tmp:transformResult⁰
+//│                                 arms = Ls of
+//│                                   Tuple2:
+//│                                     _1 = Tup:
+//│                                       len = 2
+//│                                       inf = false
+//│                                     _2 = Assign:
+//│                                       lhs = tmp:element0$⁰
+//│                                       rhs = Call:
+//│                                         fun = Select{sym=term:Tuple⁰/get⁰}:
+//│                                           qual = Select{sym=module:Tuple⁰}:
+//│                                             qual = SimpleRef of tmp:runtime⁰
+//│                                             name = Ident of "Tuple"
+//│                                           name = Ident of "get"
+//│                                         argss = Ls of
+//│                                           Ls of
+//│                                             Arg:
+//│                                               value = SimpleRef of tmp:transformResult⁰
+//│                                             Arg:
+//│                                               value = Lit of IntLit of 0
+//│                                       rest = Assign: \
+//│                                       lhs = tmp:element1$⁰
+//│                                       rhs = Call:
+//│                                         fun = Select{sym=term:Tuple⁰/get⁰}:
+//│                                           qual = Select{sym=module:Tuple⁰}:
+//│                                             qual = SimpleRef of tmp:runtime⁰
+//│                                             name = Ident of "Tuple"
+//│                                           name = Ident of "get"
+//│                                         argss = Ls of
+//│                                           Ls of
+//│                                             Arg:
+//│                                               value = SimpleRef of tmp:transformResult⁰
+//│                                             Arg:
+//│                                               value = Lit of IntLit of 1
+//│                                       rest = Match: \
+//│                                       scrut = SimpleRef of tmp:element0$⁰
+//│                                       arms = Ls of
+//│                                         Tuple2:
+//│                                           _1 = Lit of BoolLit of false
+//│                                           _2 = Assign:
+//│                                             lhs = tmp:transformResult¹
+//│                                             rhs = Call:
+//│                                               fun = SimpleRef of tmp:transform⁰
+//│                                               argss = Ls of
+//│                                                 Ls of
+//│                                                   Arg:
+//│                                                     value = SimpleRef of tmp:element1$⁰
+//│                                             rest = Return of Instantiate:
+//│                                               mut = false
+//│                                               cls = Select{sym=class:MatchSuccess⁰}:
+//│                                                 qual = SimpleRef of tmp:runtime⁰
+//│                                                 name = Ident of "MatchSuccess"
+//│                                               argss = Ls of
+//│                                                 Ls of
+//│                                                   Arg:
+//│                                                     value = SimpleRef of tmp:transformResult¹
+//│                                                   Arg:
+//│                                                     value = Lit of UnitLit of true
+//│                                       dflt = S of Return of Instantiate:
+//│                                         mut = false
+//│                                         cls = Select{sym=class:MatchFailure⁰}:
+//│                                           qual = SimpleRef of tmp:runtime⁰
+//│                                           name = Ident of "MatchFailure"
+//│                                         argss = Ls of
+//│                                           Ls of
+//│                                             Arg:
+//│                                               value = Lit of UnitLit of true
+//│                                 dflt = S of Return of Instantiate:
+//│                                   mut = false
+//│                                   cls = Select{sym=class:MatchFailure⁰}:
+//│                                     qual = SimpleRef of tmp:runtime⁰
+//│                                     name = Ident of "MatchFailure"
+//│                                   argss = Ls of
+//│                                     Ls of
+//│                                       Arg:
+//│                                         value = Lit of UnitLit of true
+//│                           dflt = S of Return of Instantiate:
+//│                             mut = false
+//│                             cls = Select{sym=class:MatchFailure⁰}:
+//│                               qual = SimpleRef of tmp:runtime⁰
+//│                               name = Ident of "MatchFailure"
+//│                             argss = Ls of
+//│                               Ls of
+//│                                 Arg:
+//│                                   value = Lit of UnitLit of true
+//│                     dflt = S of Return of Instantiate:
+//│                       mut = false
+//│                       cls = Select{sym=class:MatchFailure⁰}:
+//│                         qual = SimpleRef of tmp:runtime⁰
+//│                         name = Ident of "MatchFailure"
+//│                       argss = Ls of
+//│                         Ls of
+//│                           Arg:
+//│                             value = Lit of UnitLit of true
+//│               dflt = S of Return of Instantiate:
+//│                 mut = false
+//│                 cls = Select{sym=class:MatchFailure⁰}:
+//│                   qual = SimpleRef of tmp:runtime⁰
+//│                   name = Ident of "MatchFailure"
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = Lit of UnitLit of true
+//│     FunDefn:
+//│       sym = member:unapplyStringPrefix¹
+//│       dSym = term:unapplyStringPrefix²
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = P⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = input³
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:transform², member:lambda⁸}):
+//│         body = Define:
+//│           defn = FunDefn:
+//│             sym = member:lambda⁸
+//│             dSym = term:lambda⁹
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = list⁰
+//│                     modulefulness = Modulefulness of N
+//│             body = Return of SimpleRef of list⁰
+//│           rest = Assign: \
+//│           lhs = tmp:transform²
+//│           rhs = MemberRef{disamb=term:lambda⁹}:
+//│             bms = member:lambda⁸
+//│             disamb = term:lambda⁹
+//│           rest = Return of Instantiate:
+//│             mut = false
+//│             cls = Select{sym=class:MatchFailure⁰}:
+//│               qual = SimpleRef of tmp:runtime⁰
+//│               name = Ident of "MatchFailure"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Lit of UnitLit of true
 
 list1 is Unique(_)
 //│ = true
@@ -51,6 +609,274 @@ fun emptyObject = Object.fromEntries of []
 
 // Convert a list of pairs to a map-like object
 pattern ListToObject = (Nil =>  emptyObject) | (([Str as k, v] :: (ListToObject as rest)) => addProperty(rest, k, v))
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = pattern:ListToObject⁰
+//│   sym = member:ListToObject¹
+//│   k = Pat
+//│   methods = Ls of
+//│     FunDefn:
+//│       sym = member:unapply³
+//│       dSym = term:unapply⁴
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = input⁴
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {tmp:transform³, tmp:transform⁴, tmp:arg$Cons$0$¹, tmp:arg$Cons$1$¹, tmp:element1$¹, tmp:element0$¹, tmp:unapplyResult¹, tmp:output⁶, tmp:bindings⁵, tmp:transformResult², tmp:transformResult³, member:lambda¹⁰}):
+//│         body = Define:
+//│           defn = FunDefn:
+//│             sym = member:lambda¹⁰
+//│             dSym = term:lambda¹¹
+//│             params = Ls of
+//│               ParamList: ‹empty›
+//│             body = Return of Call:
+//│               fun = MemberRef{disamb=term:emptyObject⁰}:
+//│                 bms = member:emptyObject¹
+//│                 disamb = term:emptyObject⁰
+//│               argss = Ls of
+//│                 Nil
+//│           rest = Assign: \
+//│           lhs = tmp:transform³
+//│           rhs = MemberRef{disamb=term:lambda¹¹}:
+//│             bms = member:lambda¹⁰
+//│             disamb = term:lambda¹¹
+//│           rest = Match: \
+//│           scrut = SimpleRef of input⁴
+//│           arms = Ls of
+//│             Tuple2:
+//│               _1 = Cls:
+//│                 cls = object:Nil⁰
+//│                 path = Select{sym=object:Nil⁰}:
+//│                   qual = MemberRef{disamb=module:Stack⁰}:
+//│                     bms = member:Stack¹
+//│                     disamb = module:Stack⁰
+//│                   name = Ident of "Nil"
+//│               _2 = Assign:
+//│                 lhs = tmp:transformResult³
+//│                 rhs = Call:
+//│                   fun = SimpleRef of tmp:transform³
+//│                   argss = Ls of
+//│                     Nil
+//│                 rest = Return of Instantiate:
+//│                   mut = false
+//│                   cls = Select{sym=class:MatchSuccess⁰}:
+//│                     qual = SimpleRef of tmp:runtime⁰
+//│                     name = Ident of "MatchSuccess"
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of tmp:transformResult³
+//│                       Arg:
+//│                         value = Lit of UnitLit of true
+//│           dflt = S of Scoped(syms = {member:lambda¹²}):
+//│             body = Define:
+//│               defn = FunDefn:
+//│                 sym = member:lambda¹²
+//│                 dSym = term:lambda¹³
+//│                 params = Ls of
+//│                   ParamList:
+//│                     params = Ls of
+//│                       Param:
+//│                         sym = rest⁰
+//│                         modulefulness = Modulefulness of N
+//│                       Param:
+//│                         sym = v⁰
+//│                         modulefulness = Modulefulness of N
+//│                       Param:
+//│                         sym = k⁰
+//│                         modulefulness = Modulefulness of N
+//│                 body = Return of Call:
+//│                   fun = MemberRef{disamb=term:addProperty⁰}:
+//│                     bms = member:addProperty¹
+//│                     disamb = term:addProperty⁰
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of rest⁰
+//│                       Arg:
+//│                         value = SimpleRef of k⁰
+//│                       Arg:
+//│                         value = SimpleRef of v⁰
+//│               rest = Assign: \
+//│               lhs = tmp:transform⁴
+//│               rhs = MemberRef{disamb=term:lambda¹³}:
+//│                 bms = member:lambda¹²
+//│                 disamb = term:lambda¹³
+//│               rest = Match: \
+//│               scrut = SimpleRef of input⁴
+//│               arms = Ls of
+//│                 Tuple2:
+//│                   _1 = Cls:
+//│                     cls = class:Cons¹
+//│                     path = Select{sym=class:Cons¹}:
+//│                       qual = MemberRef{disamb=module:Stack⁰}:
+//│                         bms = member:Stack¹
+//│                         disamb = module:Stack⁰
+//│                       name = Ident of "Cons"
+//│                   _2 = Assign:
+//│                     lhs = tmp:arg$Cons$0$¹
+//│                     rhs = Select{sym=term:Cons¹/head⁰}:
+//│                       qual = SimpleRef of input⁴
+//│                       name = Ident of "head"
+//│                     rest = Assign: \
+//│                     lhs = tmp:arg$Cons$1$¹
+//│                     rhs = Select{sym=term:Cons¹/tail⁰}:
+//│                       qual = SimpleRef of input⁴
+//│                       name = Ident of "tail"
+//│                     rest = Match: \
+//│                     scrut = SimpleRef of tmp:arg$Cons$0$¹
+//│                     arms = Ls of
+//│                       Tuple2:
+//│                         _1 = Tup:
+//│                           len = 2
+//│                           inf = false
+//│                         _2 = Assign:
+//│                           lhs = tmp:element0$¹
+//│                           rhs = Call:
+//│                             fun = Select{sym=term:Tuple⁰/get⁰}:
+//│                               qual = Select{sym=module:Tuple⁰}:
+//│                                 qual = SimpleRef of tmp:runtime⁰
+//│                                 name = Ident of "Tuple"
+//│                               name = Ident of "get"
+//│                             argss = Ls of
+//│                               Ls of
+//│                                 Arg:
+//│                                   value = SimpleRef of tmp:arg$Cons$0$¹
+//│                                 Arg:
+//│                                   value = Lit of IntLit of 0
+//│                           rest = Assign: \
+//│                           lhs = tmp:element1$¹
+//│                           rhs = Call:
+//│                             fun = Select{sym=term:Tuple⁰/get⁰}:
+//│                               qual = Select{sym=module:Tuple⁰}:
+//│                                 qual = SimpleRef of tmp:runtime⁰
+//│                                 name = Ident of "Tuple"
+//│                               name = Ident of "get"
+//│                             argss = Ls of
+//│                               Ls of
+//│                                 Arg:
+//│                                   value = SimpleRef of tmp:arg$Cons$0$¹
+//│                                 Arg:
+//│                                   value = Lit of IntLit of 1
+//│                           rest = Match: \
+//│                           scrut = SimpleRef of tmp:element0$¹
+//│                           arms = Ls of
+//│                             Tuple2:
+//│                               _1 = Cls:
+//│                                 cls = class:Str⁰
+//│                                 path = Select{sym=term:Runtime⁰/unreachable⁰}:
+//│                                   qual = SimpleRef of tmp:runtime⁰
+//│                                   name = Ident of "unreachable"
+//│                               _2 = Assign:
+//│                                 lhs = tmp:unapplyResult¹
+//│                                 rhs = Call:
+//│                                   fun = Select:
+//│                                     qual = MemberRef{disamb=pattern:ListToObject⁰}:
+//│                                       bms = member:ListToObject¹
+//│                                       disamb = pattern:ListToObject⁰
+//│                                     name = Ident of "unapply"
+//│                                   argss = Ls of
+//│                                     Ls of
+//│                                       Arg:
+//│                                         value = SimpleRef of tmp:arg$Cons$1$¹
+//│                                 rest = Match: \
+//│                                 scrut = SimpleRef of tmp:unapplyResult¹
+//│                                 arms = Ls of
+//│                                   Tuple2:
+//│                                     _1 = Cls:
+//│                                       cls = class:MatchSuccess⁰
+//│                                       path = Select{sym=class:MatchSuccess⁰}:
+//│                                         qual = SimpleRef of tmp:runtime⁰
+//│                                         name = Ident of "MatchSuccess"
+//│                                     _2 = Assign:
+//│                                       lhs = tmp:output⁶
+//│                                       rhs = Select{sym=term:MatchSuccess⁰/output³}:
+//│                                         qual = SimpleRef of tmp:unapplyResult¹
+//│                                         name = Ident of "output"
+//│                                       rest = Assign: \
+//│                                       lhs = tmp:bindings⁵
+//│                                       rhs = Select{sym=term:MatchSuccess⁰/bindings²}:
+//│                                         qual = SimpleRef of tmp:unapplyResult¹
+//│                                         name = Ident of "bindings"
+//│                                       rest = Assign: \
+//│                                       lhs = tmp:transformResult²
+//│                                       rhs = Call:
+//│                                         fun = SimpleRef of tmp:transform⁴
+//│                                         argss = Ls of
+//│                                           Ls of
+//│                                             Arg:
+//│                                               value = SimpleRef of tmp:output⁶
+//│                                             Arg:
+//│                                               value = SimpleRef of tmp:element1$¹
+//│                                             Arg:
+//│                                               value = SimpleRef of tmp:element0$¹
+//│                                       rest = Return of Instantiate:
+//│                                         mut = false
+//│                                         cls = Select{sym=class:MatchSuccess⁰}:
+//│                                           qual = SimpleRef of tmp:runtime⁰
+//│                                           name = Ident of "MatchSuccess"
+//│                                         argss = Ls of
+//│                                           Ls of
+//│                                             Arg:
+//│                                               value = SimpleRef of tmp:transformResult²
+//│                                             Arg:
+//│                                               value = Lit of UnitLit of true
+//│                                 dflt = S of Return of Instantiate:
+//│                                   mut = false
+//│                                   cls = Select{sym=class:MatchFailure⁰}:
+//│                                     qual = SimpleRef of tmp:runtime⁰
+//│                                     name = Ident of "MatchFailure"
+//│                                   argss = Ls of
+//│                                     Ls of
+//│                                       Arg:
+//│                                         value = Lit of UnitLit of true
+//│                           dflt = S of Return of Instantiate:
+//│                             mut = false
+//│                             cls = Select{sym=class:MatchFailure⁰}:
+//│                               qual = SimpleRef of tmp:runtime⁰
+//│                               name = Ident of "MatchFailure"
+//│                             argss = Ls of
+//│                               Ls of
+//│                                 Arg:
+//│                                   value = Lit of UnitLit of true
+//│                     dflt = S of Return of Instantiate:
+//│                       mut = false
+//│                       cls = Select{sym=class:MatchFailure⁰}:
+//│                         qual = SimpleRef of tmp:runtime⁰
+//│                         name = Ident of "MatchFailure"
+//│                       argss = Ls of
+//│                         Ls of
+//│                           Arg:
+//│                             value = Lit of UnitLit of true
+//│               dflt = S of Return of Instantiate:
+//│                 mut = false
+//│                 cls = Select{sym=class:MatchFailure⁰}:
+//│                   qual = SimpleRef of tmp:runtime⁰
+//│                   name = Ident of "MatchFailure"
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = Lit of UnitLit of true
+//│     FunDefn:
+//│       sym = member:unapplyStringPrefix³
+//│       dSym = term:unapplyStringPrefix⁴
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = input⁵
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Instantiate:
+//│         mut = false
+//│         cls = Select{sym=class:MatchFailure⁰}:
+//│           qual = SimpleRef of tmp:runtime⁰
+//│           name = Ident of "MatchFailure"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = Lit of UnitLit of true
 
 fun toObject(ps) = if ps is ListToObject as obj then obj else emptyObject
 

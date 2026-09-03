@@ -123,6 +123,28 @@ else
 
 
 data class Box[A](value: A)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Box⁰
+//│   sym = member:Box¹
+//│   ctorSym = S of term:Box²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = value⁰
+//│         sign = S of Ref{sym=A⁰} of A⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:value¹
+//│       _2 = term:Box⁰/value²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Box⁰/value²
+//│       sym = member:value¹
+//│       rhs = SimpleRef of value⁰
 
 :w
 fun foo(x) = if x is
@@ -132,11 +154,11 @@ fun foo(x) = if x is
   else "I don't want to tell you what's inside the box."
   else "I shouldn't tell you what's inside the box."
 //│ ╔══[WARNING] This catch-all clause makes the following branches unreachable.
-//│ ║  l.131: 	  else "I can't tell you what's inside the box."
+//│ ║  l.153: 	  else "I can't tell you what's inside the box."
 //│ ║         	  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 //│ ╟── This branch is unreachable.
-//│ ║  l.132: 	  else "I don't want to tell you what's inside the box."
+//│ ║  l.154: 	  else "I don't want to tell you what's inside the box."
 //│ ║         	  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 //│ ╟── This branch is unreachable.
-//│ ║  l.133: 	  else "I shouldn't tell you what's inside the box."
+//│ ║  l.155: 	  else "I shouldn't tell you what's inside the box."
 //│ ╙──       	  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

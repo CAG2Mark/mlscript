@@ -14,6 +14,13 @@
 
 data class Cat()
 data class Dog()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Cat⁰
+//│   sym = member:Cat¹
+//│   ctorSym = S of term:Cat²
+//│   k = Cls
+//│   paramsOpt = S of ParamList: ‹empty›
 
 // * `Cat()` and `Dog()` are unrelated class patterns, so specialization on
 // * `x is Cat()` is a no-op on the `Dog()` branch in both modes. With a
@@ -58,6 +65,27 @@ fun f2(x, y, z) = if
 // over-eager sharing rule that would incorrectly merge them.
 
 data class S(value)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:S⁰
+//│   sym = member:S¹
+//│   ctorSym = S of term:S²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = value⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:value¹
+//│       _2 = term:S⁰/value²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:S⁰/value²
+//│       sym = member:value¹
+//│       rhs = SimpleRef of value⁰
 
 // * The alternative `S(_) then "any"` is subsumed by the assumption in the
 // * `+` arm (becomes a guaranteed match) but remains a distinguishing test

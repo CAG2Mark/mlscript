@@ -43,6 +43,30 @@ type Term = Var | Abs | App
 data class Var(name: Str)
 data class Abs(lhs: Var, rhs: Term)
 data class App(lhs: Term, rhs: Term)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Var⁰
+//│   sym = member:Var¹
+//│   ctorSym = S of term:Var²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = name⁰
+//│         sign = S of Resolved{sym=class:Str⁰}:
+//│           t = Ref{sym=member:Str¹} of member:Str¹
+//│           sym = class:Str⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:name¹
+//│       _2 = term:Var⁰/name²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Var⁰/name²
+//│       sym = member:name¹
+//│       rhs = SimpleRef of name⁰
 
 fun showTerm(t) =
   if t is
@@ -266,6 +290,58 @@ data class Stuck(term: Term, part: Term) with
   fun toString() = "Stuck: " + showTerm(part) + " in " + showTerm(term)
 data class Stepped(from: Term, to: Term) with
   fun toString() = showTerm(from) + " => " + showTerm(to)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Normal⁰
+//│   sym = member:Normal¹
+//│   ctorSym = S of term:Normal²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = term⁰
+//│         sign = S of Resolved{sym=type:Term⁰}:
+//│           t = Ref{sym=member:Term¹} of member:Term¹
+//│           sym = type:Term⁰
+//│         modulefulness = Modulefulness of N
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:Normal⁰
+//│       sym = member:toString⁰
+//│       dSym = term:Normal⁰/toString¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {tmp:tmp⁰}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁰
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:showTerm⁰}:
+//│               bms = member:showTerm¹
+//│               disamb = term:showTerm⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Select{sym=term:Normal⁰/term¹}:
+//│                     qual = This of class:Normal⁰
+//│                     name = Ident of "term"
+//│           rest = Return of Call:
+//│             fun = SimpleRef of builtin:+⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = Lit of StrLit of "Normal form: "
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp⁰
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:term²
+//│       _2 = term:Normal⁰/term¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Normal⁰/term¹
+//│       sym = member:term²
+//│       rhs = SimpleRef of term⁰
 
 
 fun stepByValue(t) =

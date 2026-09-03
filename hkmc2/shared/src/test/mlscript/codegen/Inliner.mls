@@ -297,9 +297,34 @@ foo(1)(2)(3)
 module A with
   fun f() = 1
   fun g() = A.f()
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:A⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:A⁰
+//│       sym = member:f²⁰
+//│       dSym = term:A⁰/f²¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of IntLit of 1
+//│     FunDefn:
+//│       owner = S of module:A⁰
+//│       sym = member:g²
+//│       dSym = term:A⁰/g³
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = Select{sym=term:A⁰/f²¹}:
+//│           qual = MemberRef{disamb=module:A⁰}:
+//│             bms = member:A¹
+//│             disamb = module:A⁰
+//│           name = Ident of "f"
+//│         argss = Ls of
+//│           Nil
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
-//│ define A⁰ as class A¹
-//│ module A² { method f²⁰ = fun f²¹() { return 1 } method g² = fun g³() { return 1 } };
+//│ define A¹ as class A²
+//│ module A⁰ { method f²⁰ = fun f²¹() { return 1 } method g² = fun g³() { return 1 } };
 //│ end
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let A1;
@@ -366,7 +391,7 @@ fun g() =
 makeFoo()
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
 //│ let Foo;
-//│ @inline
+//│ @inline @inline
 //│ define makeFoo⁰ as fun makeFoo¹() {
 //│   let Foo1;
 //│   define Foo1 as class Foo¹ {

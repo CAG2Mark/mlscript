@@ -6,6 +6,33 @@ import "../../mlscript-compile/Option.mls"
 :sjs
 module A with
   fun f(x) = x is Option.Some
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:A⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:A⁰
+//│       sym = member:f⁰
+//│       dSym = term:A⁰/f¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Match:
+//│         scrut = SimpleRef of x⁰
+//│         arms = Ls of
+//│           Tuple2:
+//│             _1 = Cls:
+//│               cls = class:Some⁰
+//│               path = Select{sym=class:Some⁰}:
+//│                 qual = MemberRef{disamb=module:Option⁰}:
+//│                   bms = member:Option¹
+//│                   disamb = module:Option⁰
+//│                 name = Ident of "Some"
+//│             _2 = Return of Lit of BoolLit of true
+//│         dflt = S of Return of Lit of BoolLit of false
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let A1;
 //│ (class A {

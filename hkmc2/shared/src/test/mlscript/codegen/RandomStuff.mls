@@ -29,6 +29,23 @@ fun foo() = foo()
 data class Foo(x) with
   class Bar with
     val y = x
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   owner = S of class:Foo⁰
+//│   isym = class:Bar⁰
+//│   sym = member:Bar¹
+//│   k = Cls
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:y⁰
+//│       _2 = term:Bar⁰/y¹
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Bar⁰/y¹
+//│       sym = member:y⁰
+//│       rhs = Select{sym=term:Foo⁰/x⁰}:
+//│         qual = This of class:Foo⁰
+//│         name = Ident of "x"
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let Foo1;
 //│ Foo1 = function Foo(x) {
@@ -90,11 +107,11 @@ do
 let foo = 1
 fun foo(x) = foo
 //│ ╔══[COMPILATION ERROR] Name 'foo' is already used
-//│ ║  l.90: 	let foo = 1
-//│ ║        	    ^^^^^^^
+//│ ║  l.107: 	let foo = 1
+//│ ║         	    ^^^^^^^
 //│ ╟── by a member declared in the same block
-//│ ║  l.91: 	fun foo(x) = foo
-//│ ╙──      	^^^^^^^^^^^^^^^^
+//│ ║  l.108: 	fun foo(x) = foo
+//│ ╙──       	^^^^^^^^^^^^^^^^
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let foo4; foo4 = 1;
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————

@@ -1,12 +1,39 @@
 :js
 
 data class Card[T](color: T)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Card⁰
+//│   sym = member:Card¹
+//│   ctorSym = S of term:Card²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = color⁰
+//│         sign = S of Ref{sym=T⁰} of T⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:color¹
+//│       _2 = term:Card⁰/color²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Card⁰/color²
+//│       sym = member:color¹
+//│       rhs = SimpleRef of color⁰
 
 class Suit
 object Heart extends Suit
 object Diamond extends Suit
 object Spade extends Suit
 object Club extends Suit
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Suit⁰
+//│   sym = member:Suit¹
+//│   k = Cls
 
 fun suit(x) = if x is Card(a) then a
 

@@ -32,10 +32,21 @@ class C with
 //│ ╔══[COMPILATION ERROR] Yield expressions are not allowed in this context.
 //│ ║  l.26: 	    yield 1
 //│ ╙──      	    ^^^^^^^
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:C⁰
+//│   sym = member:C¹
+//│   k = Cls
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of class:C⁰
+//│       sym = member:f⁰
+//│       dSym = term:C⁰/f¹
+//│       body = Return of Lit of IntLit of 1
 
 :ge
 @generator
 fun bad = 1
 //│ ╔══[COMPILATION ERROR] Generators are not supported on functions without a parameter list
-//│ ║  l.38: 	fun bad = 1
+//│ ║  l.49: 	fun bad = 1
 //│ ╙──      	^^^^^^^^^^^

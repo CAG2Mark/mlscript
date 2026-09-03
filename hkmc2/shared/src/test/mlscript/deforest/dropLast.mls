@@ -2,6 +2,39 @@
 
 data class (::) Cons(h, t)
 data object Nil
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Cons⁰
+//│   sym = member:Cons¹
+//│   ctorSym = S of term:Cons²
+//│   k = Cls
+//│   paramsOpt = S of ParamList:
+//│     params = Ls of
+//│       Param:
+//│         flags = (val)
+//│         sym = h⁰
+//│         modulefulness = Modulefulness of N
+//│       Param:
+//│         flags = (val)
+//│         sym = t⁰
+//│         modulefulness = Modulefulness of N
+//│   publicFields = Ls of
+//│     Tuple2:
+//│       _1 = member:h¹
+//│       _2 = term:Cons⁰/h²
+//│     Tuple2:
+//│       _1 = member:t¹
+//│       _2 = term:Cons⁰/t²
+//│   ctor = Define:
+//│     defn = ValDefn:
+//│       tsym = term:Cons⁰/h²
+//│       sym = member:h¹
+//│       rhs = SimpleRef of h⁰
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:Cons⁰/t²
+//│       sym = member:t¹
+//│       rhs = SimpleRef of t⁰
 
 
 fun lseq(l1, l2) = if

@@ -3,6 +3,121 @@
 
 :global
 :invalml
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:lambda)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:print⁰
+//│       dSym = term:print¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = Select:
+//│           qual = Select:
+//│             qual = This of globalThis:globalThis⁰
+//│             name = Ident of "console"
+//│           name = Ident of "log"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x⁰
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:CodeBase⁰
+//│       sym = member:CodeBase¹
+//│       k = Cls
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Region⁰
+//│       sym = member:Region¹
+//│       k = Cls
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Ref⁰
+//│       sym = member:Ref¹
+//│       ctorSym = S of term:Ref²
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = reg⁰
+//│             sign = S of TyApp{sym=class:Region⁰}:
+//│               lhs = Resolved{sym=class:Region⁰}:
+//│                 t = Ref{sym=member:Region¹} of member:Region¹
+//│                 sym = class:Region⁰
+//│               targs = Ls of
+//│                 Ref{sym=T⁰} of T⁰
+//│             modulefulness = Modulefulness of N
+//│           Param:
+//│             flags = (val)
+//│             sym = value⁰
+//│             sign = S of Ref{sym=S⁰} of S⁰
+//│             modulefulness = Modulefulness of N
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:reg¹
+//│           _2 = term:Ref⁰/reg²
+//│         Tuple2:
+//│           _1 = member:value¹
+//│           _2 = term:Ref⁰/value²
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:Ref⁰/reg²
+//│           sym = member:reg¹
+//│           rhs = SimpleRef of reg⁰
+//│         rest = Define: \
+//│         defn = ValDefn:
+//│           tsym = term:Ref⁰/value²
+//│           sym = member:value¹
+//│           rhs = SimpleRef of value⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "CodeBase"
+//│     rhs = MemberRef{disamb=class:CodeBase⁰}:
+//│       bms = member:CodeBase¹
+//│       disamb = class:CodeBase⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "Region"
+//│     rhs = MemberRef{disamb=class:Region⁰}:
+//│       bms = member:Region¹
+//│       disamb = class:Region⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda⁰
+//│       dSym = term:lambda¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = r⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = v⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Instantiate:
+//│         mut = true
+//│         cls = MemberRef{disamb=class:Ref⁰}:
+//│           bms = member:Ref¹
+//│           disamb = class:Ref⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of r⁰
+//│             Arg:
+//│               value = SimpleRef of v⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "Ref"
+//│     rhs = MemberRef{disamb=term:lambda¹}:
+//│       bms = member:lambda⁰
+//│       disamb = term:lambda¹
 
 
 :todo
@@ -10,17 +125,17 @@ fun test1() =
   fun sayHi = print("Hi")
   sayHi, sayHi, sayHi
 //│ ╔══[COMPILATION ERROR] Function definition shape not yet supported for sayHi
-//│ ║  l.10: 	  fun sayHi = print("Hi")
-//│ ╙──      	              ^^^^^^^^^^^
+//│ ║  l.125: 	  fun sayHi = print("Hi")
+//│ ╙──       	              ^^^^^^^^^^^
 //│ ╔══[COMPILATION ERROR] Variable not found: sayHi
-//│ ║  l.11: 	  sayHi, sayHi, sayHi
-//│ ╙──      	  ^^^^^
+//│ ║  l.126: 	  sayHi, sayHi, sayHi
+//│ ╙──       	  ^^^^^
 //│ ╔══[COMPILATION ERROR] Variable not found: sayHi
-//│ ║  l.11: 	  sayHi, sayHi, sayHi
-//│ ╙──      	         ^^^^^
+//│ ║  l.126: 	  sayHi, sayHi, sayHi
+//│ ╙──       	         ^^^^^
 //│ ╔══[COMPILATION ERROR] Variable not found: sayHi
-//│ ║  l.11: 	  sayHi, sayHi, sayHi
-//│ ╙──      	                ^^^^^
+//│ ║  l.126: 	  sayHi, sayHi, sayHi
+//│ ╙──       	                ^^^^^
 
 test1()
 //│ > Hi
@@ -36,16 +151,16 @@ fun test2() =
     n then funny(n - 1) + 1
   funny
 //│ ╔══[COMPILATION ERROR] Expected a monomorphic type or an instantiable type here, but () ->{⊥} [outer, 'caseScrut, 'eff] -> 'caseScrut ->{'eff} Int found
-//│ ║  l.33: 	fun test2() =
-//│ ║        	         ^^^^
-//│ ║  l.34: 	  fun funny = case
-//│ ║        	^^^^^^^^^^^^^^^^^^
-//│ ║  l.35: 	    0 then 0
-//│ ║        	^^^^^^^^^^^^
-//│ ║  l.36: 	    n then funny(n - 1) + 1
-//│ ║        	^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.37: 	... (more lines omitted) ...
-//│ ╙──      	^^^^^^^
+//│ ║  l.148: 	fun test2() =
+//│ ║         	         ^^^^
+//│ ║  l.149: 	  fun funny = case
+//│ ║         	^^^^^^^^^^^^^^^^^^
+//│ ║  l.150: 	    0 then 0
+//│ ║         	^^^^^^^^^^^^
+//│ ║  l.151: 	    n then funny(n - 1) + 1
+//│ ║         	^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//│ ║  l.152: 	... (more lines omitted) ...
+//│ ╙──       	^^^^^^^
 
 fun test2() =
   fun funny = case
@@ -86,8 +201,8 @@ fun test2() =
     case n then funny(n - 1) + 1
   funny
 //│ ╔══[WARNING] Pure expression in statement position
-//│ ║  l.85: 	    case 0 then 0
-//│ ╙──      	    ^^^^^^^^^^^^^
+//│ ║  l.200: 	    case 0 then 0
+//│ ╙──       	    ^^^^^^^^^^^^^
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let test22;
 //│ test22 = function test2() {
@@ -107,19 +222,19 @@ fun test2() =
 //│ };
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ ╔══[COMPILATION ERROR] Function definition shape not yet supported for funny
-//│ ║  l.85: 	    case 0 then 0
-//│ ║        	         ^^^^^^^^
-//│ ║  l.86: 	    case n then funny(n - 1) + 1
-//│ ╙──      	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//│ ║  l.200: 	    case 0 then 0
+//│ ║         	         ^^^^^^^^
+//│ ║  l.201: 	    case n then funny(n - 1) + 1
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 //│ ╔══[COMPILATION ERROR] Variable not found: funny
-//│ ║  l.87: 	  funny
-//│ ╙──      	  ^^^^^
+//│ ║  l.202: 	  funny
+//│ ╙──       	  ^^^^^
 
 
 :todo
 fun test3 =
   print("Hi")
 //│ ╔══[COMPILATION ERROR] Function definition shape not yet supported for test3
-//│ ║  l.121: 	  print("Hi")
+//│ ║  l.236: 	  print("Hi")
 //│ ╙──       	  ^^^^^^^^^^^
 

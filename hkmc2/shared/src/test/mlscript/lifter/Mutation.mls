@@ -11,16 +11,118 @@ fun foo() =
   fun bar() = x
   xs.push(bar)
   set x = 2
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:bar, member:bar$, member:Capture$scope0)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:Capture$scope0⁰
+//│       sym = member:Capture$scope0¹
+//│       ctorSym = S of term:Capture$scope0²
+//│       k = Cls
+//│       auxParams = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               flags = (val)
+//│               sym = x$0⁰
+//│               modulefulness = Modulefulness of N
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:Capture$scope0⁰/x$0¹
+//│           sym = member:x$0²
+//│           rhs = SimpleRef of x$0⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:bar$⁰
+//│       dSym = term:bar$¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = scope0$cap⁰
+//│               modulefulness = Modulefulness of N
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = MemberRef{disamb=term:bar⁰}:
+//│           bms = member:bar¹
+//│           disamb = term:bar⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of scope0$cap⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:bar¹
+//│       dSym = term:bar⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = scope0$cap¹
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Select{sym=term:Capture$scope0⁰/x$0¹}:
+//│         qual = SimpleRef of scope0$cap¹
+//│         name = Ident of "x$0"
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:foo⁰
+//│       dSym = term:foo¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {x⁰, scope0$cap², tmp:bar$here⁰}):
+//│         body = Assign:
+//│           lhs = scope0$cap²
+//│           rhs = Instantiate:
+//│             mut = true
+//│             cls = MemberRef{disamb=class:Capture$scope0⁰}:
+//│               bms = member:Capture$scope0¹
+//│               disamb = class:Capture$scope0⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x⁰
+//│           rest = AssignField: \
+//│           lhs = SimpleRef of scope0$cap²
+//│           nme = Ident of "x$0"
+//│           rhs = Lit of IntLit of 1
+//│           rest = Assign: \
+//│           lhs = tmp:bar$here⁰
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:bar$¹}:
+//│               bms = member:bar$⁰
+//│               disamb = term:bar$¹
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of scope0$cap²
+//│           rest = Assign: \
+//│           lhs = ‹no symbol›
+//│           rhs = Call:
+//│             fun = Select:
+//│               qual = SimpleRef of xs⁰
+//│               name = Ident of "push"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:bar$here⁰
+//│           rest = AssignField: \
+//│           lhs = SimpleRef of scope0$cap²
+//│           nme = Ident of "x$0"
+//│           rhs = Lit of IntLit of 2
+//│           rest = Return of Select{sym=object:Unit⁰}:
+//│             qual = SimpleRef of tmp:runtime⁰
+//│             name = Ident of "Unit"
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
 //│ let bar, Capture$scope0, bar$;
-//│ define Capture$scope0 as class Capture$scope0¹ {
-//│   constructor Capture$scope0⁰(x$0) {
-//│     define x$0⁰ as val x$0¹ = x$0;
+//│ define Capture$scope0 as class Capture$scope0⁰ {
+//│   constructor Capture$scope0²(x$0) {
+//│     define x$0² as val x$0¹ = x$0;
 //│     end
 //│   }
 //│ };
 //│ @inline
-//│ define bar$ as fun bar$⁰(scope0$cap)() {
+//│ define bar$ as fun bar$¹(scope0$cap)() {
 //│   return bar⁰(scope0$cap)
 //│ };
 //│ define bar as fun bar⁰(scope0$cap) {
@@ -28,9 +130,9 @@ fun foo() =
 //│ };
 //│ define foo⁰ as fun foo¹() {
 //│   let x, scope0$cap, bar$here;
-//│   set scope0$cap = new mut Capture$scope0¹(x);
+//│   set scope0$cap = new mut Capture$scope0⁰(x);
 //│   set scope0$cap.x$0¹ = 1;
-//│   set bar$here = bar$⁰(scope0$cap);
+//│   set bar$here = bar$¹(scope0$cap);
 //│   do xs⁰.push﹖(bar$here);
 //│   set scope0$cap.x$0¹ = 2;
 //│   return runtime⁰.Unit⁰
@@ -53,6 +155,104 @@ fun foo() =
   fun bar() = x
   xs.push(bar)
   x = 2
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:bar, member:bar$, member:Capture$scope0)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:Capture$scope0³
+//│       sym = member:Capture$scope0⁴
+//│       ctorSym = S of term:Capture$scope0⁵
+//│       k = Cls
+//│       auxParams = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               flags = (val)
+//│               sym = x$0³
+//│               modulefulness = Modulefulness of N
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:Capture$scope0³/x$0⁴
+//│           sym = member:x$0⁵
+//│           rhs = SimpleRef of x$0³
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:bar$²
+//│       dSym = term:bar$³
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = scope0$cap³
+//│               modulefulness = Modulefulness of N
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = MemberRef{disamb=term:bar²}:
+//│           bms = member:bar³
+//│           disamb = term:bar²
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of scope0$cap³
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:bar³
+//│       dSym = term:bar²
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = scope0$cap⁴
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Select{sym=term:Capture$scope0³/x$0⁴}:
+//│         qual = SimpleRef of scope0$cap⁴
+//│         name = Ident of "x$0"
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:foo²
+//│       dSym = term:foo³
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {x¹, scope0$cap⁵, tmp:bar$here¹}):
+//│         body = Assign:
+//│           lhs = scope0$cap⁵
+//│           rhs = Instantiate:
+//│             mut = true
+//│             cls = MemberRef{disamb=class:Capture$scope0³}:
+//│               bms = member:Capture$scope0⁴
+//│               disamb = class:Capture$scope0³
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x¹
+//│           rest = Assign: \
+//│           lhs = tmp:bar$here¹
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:bar$³}:
+//│               bms = member:bar$²
+//│               disamb = term:bar$³
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of scope0$cap⁵
+//│           rest = Assign: \
+//│           lhs = ‹no symbol›
+//│           rhs = Call:
+//│             fun = Select:
+//│               qual = SimpleRef of xs¹
+//│               name = Ident of "push"
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:bar$here¹
+//│           rest = AssignField: \
+//│           lhs = SimpleRef of scope0$cap⁵
+//│           nme = Ident of "x$0"
+//│           rhs = Lit of IntLit of 2
+//│           rest = Return of Select{sym=object:Unit⁰}:
+//│             qual = SimpleRef of tmp:runtime⁰
+//│             name = Ident of "Unit"
 
 :expect 2
 foo()
@@ -65,6 +265,140 @@ fun foo() =
   fun bar() =
     x = 2
   [bar, () => x]
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:lambda$, member:bar, member:lambda, member:Capture$scope0, member:bar$)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:Capture$scope0⁶
+//│       sym = member:Capture$scope0⁷
+//│       ctorSym = S of term:Capture$scope0⁸
+//│       k = Cls
+//│       auxParams = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               flags = (val)
+//│               sym = x$0⁶
+//│               modulefulness = Modulefulness of N
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:Capture$scope0⁶/x$0⁷
+//│           sym = member:x$0⁸
+//│           rhs = SimpleRef of x$0⁶
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:bar$⁴
+//│       dSym = term:bar$⁵
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = scope0$cap⁶
+//│               modulefulness = Modulefulness of N
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = MemberRef{disamb=term:bar⁴}:
+//│           bms = member:bar⁵
+//│           disamb = term:bar⁴
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of scope0$cap⁶
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda$⁰
+//│       dSym = term:lambda$¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = scope0$cap⁷
+//│               modulefulness = Modulefulness of N
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = MemberRef{disamb=term:lambda⁰}:
+//│           bms = member:lambda¹
+//│           disamb = term:lambda⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of scope0$cap⁷
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:bar⁵
+//│       dSym = term:bar⁴
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = scope0$cap⁸
+//│               modulefulness = Modulefulness of N
+//│       body = AssignField:
+//│         lhs = SimpleRef of scope0$cap⁸
+//│         nme = Ident of "x$0"
+//│         rhs = Lit of IntLit of 2
+//│         rest = Return of Select{sym=object:Unit⁰}:
+//│           qual = SimpleRef of tmp:runtime⁰
+//│           name = Ident of "Unit"
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda¹
+//│       dSym = term:lambda⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = scope0$cap⁹
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Select{sym=term:Capture$scope0⁶/x$0⁷}:
+//│         qual = SimpleRef of scope0$cap⁹
+//│         name = Ident of "x$0"
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:foo⁴
+//│       dSym = term:foo⁵
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {x², scope0$cap¹⁰, tmp:bar$here², tmp:lambda$here⁰}):
+//│         body = Assign:
+//│           lhs = scope0$cap¹⁰
+//│           rhs = Instantiate:
+//│             mut = true
+//│             cls = MemberRef{disamb=class:Capture$scope0⁶}:
+//│               bms = member:Capture$scope0⁷
+//│               disamb = class:Capture$scope0⁶
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x²
+//│           rest = Assign: \
+//│           lhs = tmp:bar$here²
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:bar$⁵}:
+//│               bms = member:bar$⁴
+//│               disamb = term:bar$⁵
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of scope0$cap¹⁰
+//│           rest = Assign: \
+//│           lhs = tmp:lambda$here⁰
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:lambda$¹}:
+//│               bms = member:lambda$⁰
+//│               disamb = term:lambda$¹
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of scope0$cap¹⁰
+//│           rest = Return of Tuple:
+//│             mut = false
+//│             elems = Ls of
+//│               Arg:
+//│                 value = SimpleRef of tmp:bar$here²
+//│               Arg:
+//│                 value = SimpleRef of tmp:lambda$here⁰
 
 
 :expect 2
@@ -80,6 +414,144 @@ fun foo() =
   fun bar() =
     x = 2
   [bar, () => x]
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:Capture$scope0, member:bar$, member:lambda, member:bar, member:lambda$)
+//│   body = Define:
+//│     defn = ClsLikeDefn:
+//│       isym = class:Capture$scope0⁹
+//│       sym = member:Capture$scope0¹⁰
+//│       ctorSym = S of term:Capture$scope0¹¹
+//│       k = Cls
+//│       auxParams = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               flags = (val)
+//│               sym = x$0⁹
+//│               modulefulness = Modulefulness of N
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:Capture$scope0⁹/x$0¹⁰
+//│           sym = member:x$0¹¹
+//│           rhs = SimpleRef of x$0⁹
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:bar$⁶
+//│       dSym = term:bar$⁷
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = scope0$cap¹¹
+//│               modulefulness = Modulefulness of N
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = MemberRef{disamb=term:bar⁶}:
+//│           bms = member:bar⁷
+//│           disamb = term:bar⁶
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of scope0$cap¹¹
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda$²
+//│       dSym = term:lambda$³
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = scope0$cap¹²
+//│               modulefulness = Modulefulness of N
+//│         ParamList: ‹empty›
+//│       body = Return of Call:
+//│         fun = MemberRef{disamb=term:lambda²}:
+//│           bms = member:lambda³
+//│           disamb = term:lambda²
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of scope0$cap¹²
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:bar⁷
+//│       dSym = term:bar⁶
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = scope0$cap¹³
+//│               modulefulness = Modulefulness of N
+//│       body = AssignField:
+//│         lhs = SimpleRef of scope0$cap¹³
+//│         nme = Ident of "x$0"
+//│         rhs = Lit of IntLit of 2
+//│         rest = Return of Select{sym=object:Unit⁰}:
+//│           qual = SimpleRef of tmp:runtime⁰
+//│           name = Ident of "Unit"
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda³
+//│       dSym = term:lambda²
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = scope0$cap¹⁴
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Select{sym=term:Capture$scope0⁹/x$0¹⁰}:
+//│         qual = SimpleRef of scope0$cap¹⁴
+//│         name = Ident of "x$0"
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:foo⁶
+//│       dSym = term:foo⁷
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {x³, scope0$cap¹⁵, tmp:bar$here³, tmp:lambda$here¹}):
+//│         body = Assign:
+//│           lhs = scope0$cap¹⁵
+//│           rhs = Instantiate:
+//│             mut = true
+//│             cls = MemberRef{disamb=class:Capture$scope0⁹}:
+//│               bms = member:Capture$scope0¹⁰
+//│               disamb = class:Capture$scope0⁹
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of x³
+//│           rest = AssignField: \
+//│           lhs = SimpleRef of scope0$cap¹⁵
+//│           nme = Ident of "x$0"
+//│           rhs = Lit of UnitLit of false
+//│           rest = Assign: \
+//│           lhs = tmp:bar$here³
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:bar$⁷}:
+//│               bms = member:bar$⁶
+//│               disamb = term:bar$⁷
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of scope0$cap¹⁵
+//│           rest = Assign: \
+//│           lhs = tmp:lambda$here¹
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:lambda$³}:
+//│               bms = member:lambda$²
+//│               disamb = term:lambda$³
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of scope0$cap¹⁵
+//│           rest = Return of Tuple:
+//│             mut = false
+//│             elems = Ls of
+//│               Arg:
+//│                 value = SimpleRef of tmp:bar$here³
+//│               Arg:
+//│                 value = SimpleRef of tmp:lambda$here¹
 
 :expect 2
 let b_x = foo()
@@ -97,8 +569,8 @@ fun foo() =
   bar
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
 //│ let bar;
-//│ define bar as fun bar¹() { let x; return x };
-//│ define foo² as fun foo³() { return bar¹ };
+//│ define bar as fun bar⁸() { let x; return x };
+//│ define foo⁸ as fun foo⁹() { return bar⁸ };
 //│ end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 

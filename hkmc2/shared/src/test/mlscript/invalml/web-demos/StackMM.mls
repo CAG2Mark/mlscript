@@ -1,4 +1,119 @@
 :invalml
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:lambda)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:print⁰
+//│       dSym = term:print¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = Select:
+//│           qual = Select:
+//│             qual = This of globalThis:globalThis⁰
+//│             name = Ident of "console"
+//│           name = Ident of "log"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x⁰
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:CodeBase⁰
+//│       sym = member:CodeBase¹
+//│       k = Cls
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Region⁰
+//│       sym = member:Region¹
+//│       k = Cls
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Ref⁰
+//│       sym = member:Ref¹
+//│       ctorSym = S of term:Ref²
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = reg⁰
+//│             sign = S of TyApp{sym=class:Region⁰}:
+//│               lhs = Resolved{sym=class:Region⁰}:
+//│                 t = Ref{sym=member:Region¹} of member:Region¹
+//│                 sym = class:Region⁰
+//│               targs = Ls of
+//│                 Ref{sym=T⁰} of T⁰
+//│             modulefulness = Modulefulness of N
+//│           Param:
+//│             flags = (val)
+//│             sym = value⁰
+//│             sign = S of Ref{sym=S⁰} of S⁰
+//│             modulefulness = Modulefulness of N
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:reg¹
+//│           _2 = term:Ref⁰/reg²
+//│         Tuple2:
+//│           _1 = member:value¹
+//│           _2 = term:Ref⁰/value²
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:Ref⁰/reg²
+//│           sym = member:reg¹
+//│           rhs = SimpleRef of reg⁰
+//│         rest = Define: \
+//│         defn = ValDefn:
+//│           tsym = term:Ref⁰/value²
+//│           sym = member:value¹
+//│           rhs = SimpleRef of value⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "CodeBase"
+//│     rhs = MemberRef{disamb=class:CodeBase⁰}:
+//│       bms = member:CodeBase¹
+//│       disamb = class:CodeBase⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "Region"
+//│     rhs = MemberRef{disamb=class:Region⁰}:
+//│       bms = member:Region¹
+//│       disamb = class:Region⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda⁰
+//│       dSym = term:lambda¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = r⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = v⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Instantiate:
+//│         mut = true
+//│         cls = MemberRef{disamb=class:Ref⁰}:
+//│           bms = member:Ref¹
+//│           disamb = class:Ref⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of r⁰
+//│             Arg:
+//│               value = SimpleRef of v⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "Ref"
+//│     rhs = MemberRef{disamb=term:lambda¹}:
+//│       bms = member:lambda⁰
+//│       disamb = term:lambda¹
 
 :...
 //│ ————————————————————————————————————————————————————————————————————————————————
@@ -43,5 +158,287 @@ allocStack of s1 =>
 //     let r3 = alloc(s1, 0) in read(r3)
 
 
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(tmp:tmp, member:lambda, member:lambda, tmp:tmp)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:seq⁰
+//│       dSym = term:seq¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = _⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = res⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of SimpleRef of res⁰
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Stack⁰
+//│       sym = member:Stack¹
+//│       k = Cls
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:StackRef⁰
+//│       sym = member:StackRef¹
+//│       k = Cls
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁰
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:allocStack⁰}:
+//│         bms = member:allocStack¹
+//│         disamb = term:allocStack⁰
+//│       argss = Ls of
+//│         Nil
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda²
+//│       dSym = term:lambda³
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = s⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {r1⁰, r2⁰, tmp:tmp¹, tmp:tmp², tmp:tmp³, tmp:tmp⁴}):
+//│         body = Assign:
+//│           lhs = tmp:tmp¹
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:alloc⁰}:
+//│               bms = member:alloc¹
+//│               disamb = term:alloc⁰
+//│             argss = Ls of
+//│               Nil
+//│           rest = Assign: \
+//│           lhs = r1⁰
+//│           rhs = Call:
+//│             fun = SimpleRef of tmp:tmp¹
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of s⁰
+//│                 Arg:
+//│                   value = Lit of IntLit of 42
+//│           rest = Assign: \
+//│           lhs = tmp:tmp²
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:alloc⁰}:
+//│               bms = member:alloc¹
+//│               disamb = term:alloc⁰
+//│             argss = Ls of
+//│               Nil
+//│           rest = Assign: \
+//│           lhs = r2⁰
+//│           rhs = Call:
+//│             fun = SimpleRef of tmp:tmp²
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of s⁰
+//│                 Arg:
+//│                   value = Lit of IntLit of 0
+//│           rest = Assign: \
+//│           lhs = tmp:tmp³
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:write⁰}:
+//│               bms = member:write¹
+//│               disamb = term:write⁰
+//│             argss = Ls of
+//│               Nil
+//│           rest = Assign: \
+//│           lhs = ‹no symbol›
+//│           rhs = Call:
+//│             fun = SimpleRef of tmp:tmp³
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of r1⁰
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = Assign: \
+//│           lhs = tmp:tmp⁴
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:read⁰}:
+//│               bms = member:read¹
+//│               disamb = term:read⁰
+//│             argss = Ls of
+//│               Nil
+//│           rest = Return of Call:
+//│             fun = SimpleRef of tmp:tmp⁴
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of r2⁰
+//│     rest = Assign: \
+//│     lhs = ‹no symbol›
+//│     rhs = Call:
+//│       fun = SimpleRef of tmp:tmp⁰
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = MemberRef{disamb=term:lambda³}:
+//│               bms = member:lambda²
+//│               disamb = term:lambda³
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁵
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:allocStack⁰}:
+//│         bms = member:allocStack¹
+//│         disamb = term:allocStack⁰
+//│       argss = Ls of
+//│         Nil
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda⁴
+//│       dSym = term:lambda⁵
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = s1⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Scoped(syms = {r1¹, r2¹, tmp:tmp⁶, tmp:tmp⁷, tmp:tmp⁸, tmp:tmp⁹, tmp:tmp¹⁰, member:lambda⁶}):
+//│         body = Assign:
+//│           lhs = tmp:tmp⁶
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:alloc⁰}:
+//│               bms = member:alloc¹
+//│               disamb = term:alloc⁰
+//│             argss = Ls of
+//│               Nil
+//│           rest = Assign: \
+//│           lhs = r1¹
+//│           rhs = Call:
+//│             fun = SimpleRef of tmp:tmp⁶
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of s1⁰
+//│                 Arg:
+//│                   value = Lit of IntLit of 42
+//│           rest = Assign: \
+//│           lhs = tmp:tmp⁷
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:alloc⁰}:
+//│               bms = member:alloc¹
+//│               disamb = term:alloc⁰
+//│             argss = Ls of
+//│               Nil
+//│           rest = Assign: \
+//│           lhs = r2¹
+//│           rhs = Call:
+//│             fun = SimpleRef of tmp:tmp⁷
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of s1⁰
+//│                 Arg:
+//│                   value = Lit of IntLit of 0
+//│           rest = Assign: \
+//│           lhs = tmp:tmp⁸
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:write⁰}:
+//│               bms = member:write¹
+//│               disamb = term:write⁰
+//│             argss = Ls of
+//│               Nil
+//│           rest = Assign: \
+//│           lhs = ‹no symbol›
+//│           rhs = Call:
+//│             fun = SimpleRef of tmp:tmp⁸
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of r1¹
+//│                 Arg:
+//│                   value = Lit of IntLit of 1
+//│           rest = Assign: \
+//│           lhs = tmp:tmp⁹
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:read⁰}:
+//│               bms = member:read¹
+//│               disamb = term:read⁰
+//│             argss = Ls of
+//│               Nil
+//│           rest = Assign: \
+//│           lhs = ‹no symbol›
+//│           rhs = Call:
+//│             fun = SimpleRef of tmp:tmp⁹
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of r2¹
+//│           rest = Assign: \
+//│           lhs = tmp:tmp¹⁰
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:push⁰}:
+//│               bms = member:push¹
+//│               disamb = term:push⁰
+//│             argss = Ls of
+//│               Nil
+//│           rest = Define: \
+//│           defn = FunDefn:
+//│             sym = member:lambda⁶
+//│             dSym = term:lambda⁷
+//│             params = Ls of
+//│               ParamList:
+//│                 params = Ls of
+//│                   Param:
+//│                     sym = s2⁰
+//│                     modulefulness = Modulefulness of N
+//│             body = Scoped(syms = {r3⁰, tmp:tmp¹¹, tmp:tmp¹²}):
+//│               body = Assign:
+//│                 lhs = tmp:tmp¹¹
+//│                 rhs = Call:
+//│                   fun = MemberRef{disamb=term:alloc⁰}:
+//│                     bms = member:alloc¹
+//│                     disamb = term:alloc⁰
+//│                   argss = Ls of
+//│                     Nil
+//│                 rest = Assign: \
+//│                 lhs = r3⁰
+//│                 rhs = Call:
+//│                   fun = SimpleRef of tmp:tmp¹¹
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of s2⁰
+//│                       Arg:
+//│                         value = Lit of IntLit of 0
+//│                 rest = Assign: \
+//│                 lhs = tmp:tmp¹²
+//│                 rhs = Call:
+//│                   fun = MemberRef{disamb=term:read⁰}:
+//│                     bms = member:read¹
+//│                     disamb = term:read⁰
+//│                   argss = Ls of
+//│                     Nil
+//│                 rest = Return of Call:
+//│                   fun = SimpleRef of tmp:tmp¹²
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of r3⁰
+//│           rest = Return of Call:
+//│             fun = SimpleRef of tmp:tmp¹⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of s1⁰
+//│                 Arg:
+//│                   value = MemberRef{disamb=term:lambda⁷}:
+//│                     bms = member:lambda⁶
+//│                     disamb = term:lambda⁷
+//│     rest = Return of Call:
+//│       fun = SimpleRef of tmp:tmp⁵
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = MemberRef{disamb=term:lambda⁵}:
+//│               bms = member:lambda⁴
+//│               disamb = term:lambda⁵
 //│ Type: Int
 //│ ————————————————————————————————————————————————————————————————————————————————

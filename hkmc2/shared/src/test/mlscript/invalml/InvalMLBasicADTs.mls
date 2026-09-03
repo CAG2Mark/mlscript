@@ -1,11 +1,131 @@
 
 :global
 :invalml
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:lambda)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:print⁰
+//│       dSym = term:print¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = Select:
+//│           qual = Select:
+//│             qual = This of globalThis:globalThis⁰
+//│             name = Ident of "console"
+//│           name = Ident of "log"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x⁰
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:CodeBase⁰
+//│       sym = member:CodeBase¹
+//│       k = Cls
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Region⁰
+//│       sym = member:Region¹
+//│       k = Cls
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Ref⁰
+//│       sym = member:Ref¹
+//│       ctorSym = S of term:Ref²
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = reg⁰
+//│             sign = S of TyApp{sym=class:Region⁰}:
+//│               lhs = Resolved{sym=class:Region⁰}:
+//│                 t = Ref{sym=member:Region¹} of member:Region¹
+//│                 sym = class:Region⁰
+//│               targs = Ls of
+//│                 Ref{sym=T⁰} of T⁰
+//│             modulefulness = Modulefulness of N
+//│           Param:
+//│             flags = (val)
+//│             sym = value⁰
+//│             sign = S of Ref{sym=S⁰} of S⁰
+//│             modulefulness = Modulefulness of N
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:reg¹
+//│           _2 = term:Ref⁰/reg²
+//│         Tuple2:
+//│           _1 = member:value¹
+//│           _2 = term:Ref⁰/value²
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:Ref⁰/reg²
+//│           sym = member:reg¹
+//│           rhs = SimpleRef of reg⁰
+//│         rest = Define: \
+//│         defn = ValDefn:
+//│           tsym = term:Ref⁰/value²
+//│           sym = member:value¹
+//│           rhs = SimpleRef of value⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "CodeBase"
+//│     rhs = MemberRef{disamb=class:CodeBase⁰}:
+//│       bms = member:CodeBase¹
+//│       disamb = class:CodeBase⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "Region"
+//│     rhs = MemberRef{disamb=class:Region⁰}:
+//│       bms = member:Region¹
+//│       disamb = class:Region⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:lambda⁰
+//│       dSym = term:lambda¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = r⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = v⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Instantiate:
+//│         mut = true
+//│         cls = MemberRef{disamb=class:Ref⁰}:
+//│           bms = member:Ref¹
+//│           disamb = class:Ref⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of r⁰
+//│             Arg:
+//│               value = SimpleRef of v⁰
+//│     rest = AssignField: \
+//│     lhs = This of globalThis:globalThis⁰
+//│     nme = Ident of "Ref"
+//│     rhs = MemberRef{disamb=term:lambda¹}:
+//│       bms = member:lambda⁰
+//│       disamb = term:lambda¹
 
 class IntList with
   constructor
     Nil
     Cons(x: Int, xs: IntList)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:IntList⁰
+//│   sym = member:IntList¹
+//│   k = Cls
 
 Nil
 //│ Type: IntList
@@ -18,24 +138,29 @@ Cons(1, Cons(2, Cons(3, Nil)))
 class Foo with
   constructor
     Bar(x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Foo⁰
+//│   sym = member:Foo¹
+//│   k = Cls
 //│ ╔══[COMPILATION ERROR] Invalid ADT parameter.
-//│ ║  l.20: 	    Bar(x)
-//│ ╙──      	        ^
+//│ ║  l.140: 	    Bar(x)
+//│ ╙──       	        ^
 
 
 :e
 Nil(1)
 //│ ╔══[COMPILATION ERROR] Type error in application
-//│ ║  l.27: 	Nil(1)
-//│ ║        	^^^^^^
+//│ ║  l.152: 	Nil(1)
+//│ ║         	^^^^^^
 //│ ╙── because: cannot constrain  IntList  <:  (Int) ->{'eff} ('app)
 //│ Type: ⊥
 
 :e
 Nil()
 //│ ╔══[COMPILATION ERROR] Type error in application
-//│ ║  l.35: 	Nil()
-//│ ║        	^^^^^
+//│ ║  l.160: 	Nil()
+//│ ║         	^^^^^
 //│ ╙── because: cannot constrain  IntList  <:  () ->{'eff} ('app)
 //│ Type: ⊥
 
@@ -43,8 +168,8 @@ Nil()
 :e
 Cons("1", Nil)
 //│ ╔══[COMPILATION ERROR] Type error in string literal with expected type Int
-//│ ║  l.44: 	Cons("1", Nil)
-//│ ║        	     ^^^
+//│ ║  l.169: 	Cons("1", Nil)
+//│ ║         	     ^^^
 //│ ╙── because: cannot constrain  Str  <:  Int
 //│ Type: IntList
 
@@ -53,6 +178,11 @@ class Option[T] with
   constructor
     None
     Some(x: T)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Option⁰
+//│   sym = member:Option¹
+//│   k = Cls
 
 
 None
@@ -68,6 +198,11 @@ Some(false)
 class Fun[T, S] with
   constructor
     Pure(f: T -> S)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Fun⁰
+//│   sym = member:Fun¹
+//│   k = Cls
 
 
 Pure(x => x + 1)
@@ -78,6 +213,11 @@ class Value[T] with
   constructor
     IntVal(x: Int) extends Value[out Int]
     BoolVal(x: Bool) extends Value[out Bool]
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Value⁰
+//│   sym = member:Value¹
+//│   k = Cls
 
 IntVal(42)
 //│ Type: Value[out Int]
@@ -88,8 +228,8 @@ BoolVal(false)
 :e
 IntVal("1")
 //│ ╔══[COMPILATION ERROR] Type error in string literal with expected type Int
-//│ ║  l.89: 	IntVal("1")
-//│ ║        	       ^^^
+//│ ║  l.229: 	IntVal("1")
+//│ ║         	       ^^^
 //│ ╙── because: cannot constrain  Str  <:  Int
 //│ Type: Value[out Int]
 
@@ -100,6 +240,11 @@ class Expr[T] with
     Add(lhs: Expr[out Int], rhs: Expr[out Int]) extends Expr[out Int]
     Lam[U, V](f: Expr[out U] -> Expr[out V]) extends Expr[out U -> V]
     App[U, V](f: Expr[out U -> V], a: Expr[out U]) extends Expr[out V]
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Expr⁰
+//│   sym = member:Expr¹
+//│   k = Cls
 
 let a = Lit(42)
 a
@@ -112,7 +257,7 @@ f
 :e
 Lam(42)
 //│ ╔══[COMPILATION ERROR] Type error in integer literal with expected type (Expr[out 'U]) ->{⊥} Expr[out 'V]
-//│ ║  l.113: 	Lam(42)
+//│ ║  l.258: 	Lam(42)
 //│ ║         	    ^^
 //│ ╙── because: cannot constrain  Int  <:  (Expr[in ⊥ out 'U]) ->{⊥} (Expr[in ⊥ out 'V])
 //│ Type: Expr[out ⊤ -> ⊥]
@@ -128,7 +273,7 @@ b
 :e
 App(f, b)
 //│ ╔══[COMPILATION ERROR] Type error in reference with expected type Expr[out 'U]
-//│ ║  l.129: 	App(f, b)
+//│ ║  l.274: 	App(f, b)
 //│ ║         	       ^
 //│ ╟── because: cannot constrain  Expr[in ⊥ out 'S]  <:  Expr[in ⊥ out 'U]
 //│ ╟── because: cannot constrain  'S  <:  'U
@@ -155,9 +300,9 @@ fun badSum(xs) =
   if xs is
     Cons(x, xs) then x + badSum(xs)
 //│ ╔══[COMPILATION ERROR] Expect 2 cases, but 1 got.
-//│ ║  l.155: 	  if xs is
+//│ ║  l.300: 	  if xs is
 //│ ║         	     ^^^^^
-//│ ║  l.156: 	    Cons(x, xs) then x + badSum(xs)
+//│ ║  l.301: 	    Cons(x, xs) then x + badSum(xs)
 //│ ╙──       	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 :e
@@ -166,18 +311,18 @@ fun badSum(xs) =
     Cons(x, xs) then x + badSum(xs)
     Cons(x, xs) then x + badSum(xs)
 //│ ╔══[COMPILATION ERROR] Duplicate match branches.
-//│ ║  l.165: 	  if xs is
+//│ ║  l.310: 	  if xs is
 //│ ║         	     ^^^^^
-//│ ║  l.166: 	    Cons(x, xs) then x + badSum(xs)
+//│ ║  l.311: 	    Cons(x, xs) then x + badSum(xs)
 //│ ║         	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.167: 	    Cons(x, xs) then x + badSum(xs)
+//│ ║  l.312: 	    Cons(x, xs) then x + badSum(xs)
 //│ ╙──       	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 //│ ╔══[COMPILATION ERROR] Expect 2 cases, but 1 got.
-//│ ║  l.165: 	  if xs is
+//│ ║  l.310: 	  if xs is
 //│ ║         	     ^^^^^
-//│ ║  l.166: 	    Cons(x, xs) then x + badSum(xs)
+//│ ║  l.311: 	    Cons(x, xs) then x + badSum(xs)
 //│ ║         	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//│ ║  l.167: 	    Cons(x, xs) then x + badSum(xs)
+//│ ║  l.312: 	    Cons(x, xs) then x + badSum(xs)
 //│ ╙──       	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
@@ -220,6 +365,11 @@ class MyMap[K, V] with
   constructor
     Empty
     Pair(k: K, v: V, rest: MyMap[out K, out V])
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:MyMap⁰
+//│   sym = member:MyMap¹
+//│   k = Cls
 
 fun newMap(k, v) = Pair(k, v, Empty)
 newMap
@@ -285,13 +435,13 @@ fun foo(x) =
     None then 0
     42 then 42
 //│ ╔══[COMPILATION ERROR] Mixing ADT pattern matching and general matching is not supported yet.
-//│ ║  l.283: 	  if x is
+//│ ║  l.433: 	  if x is
 //│ ║         	     ^^^^
-//│ ║  l.284: 	    Some(x) then 1
+//│ ║  l.434: 	    Some(x) then 1
 //│ ║         	^^^^^^^^^^^^^^^^^^
-//│ ║  l.285: 	    None then 0
+//│ ║  l.435: 	    None then 0
 //│ ║         	^^^^^^^^^^^^^^^
-//│ ║  l.286: 	    42 then 42
+//│ ║  l.436: 	    42 then 42
 //│ ╙──       	^^^^^^^^^^^^^^
 //│ ═══[COMPILATION ERROR] Variable not found: arg$Some$0$
 
@@ -306,6 +456,11 @@ class List[out T] with
   constructor
     Nil
     Cons(x: T, xs: List[T])
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:List⁰
+//│   sym = member:List¹
+//│   k = Cls
 
 
 Cons(42, Nil)
@@ -320,6 +475,11 @@ foo
 class Bar[in T] with
   constructor
     B(f: T -> Int)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Bar⁰
+//│   sym = member:Bar¹
+//│   k = Cls
 
 
 B(x => x + 1)
@@ -335,6 +495,11 @@ class Option[out T] with
   constructor
     None
     Some(x: T)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Option²
+//│   sym = member:Option³
+//│   k = Cls
 
 
 fun headOpt(xs) = if xs is

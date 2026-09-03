@@ -19,6 +19,212 @@ store.foo(AA(4))
 //│ deforest > 	match: scrut⁰
 //│ deforest > 	fields: scrut⁰.x⁰
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:$scrut_AA, member:$scrut_rest, tmp:tmp, tmp:tmp)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:$scrut_AA⁰
+//│       dSym = term:$scrut_AA¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = AA_x⁰
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_x⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$AA$0$⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = fv_arg$AA$0$⁰
+//│         rhs = SimpleRef of AA_x⁰
+//│         rest = Assign: \
+//│         lhs = fv_x⁰
+//│         rhs = SimpleRef of fv_arg$AA$0$⁰
+//│         rest = Return of Call:
+//│           fun = SimpleRef of builtin:+⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_x⁰
+//│               Arg:
+//│                 value = Select{sym=term:Store⁰/nn⁰}:
+//│                   qual = This of class:Store⁰
+//│                   name = Ident of "nn"
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:$scrut_rest⁰
+//│       dSym = term:$scrut_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:AA¹
+//│       sym = member:AA²
+//│       ctorSym = S of term:AA⁰
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = x¹
+//│             modulefulness = Modulefulness of N
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:x²
+//│           _2 = term:AA¹/x⁰
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:AA¹/x⁰
+//│           sym = member:x²
+//│           rhs = SimpleRef of x¹
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Store⁰
+//│       sym = member:Store¹
+//│       ctorSym = S of term:Store²
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             sym = n¹
+//│             modulefulness = Modulefulness of N
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:Store⁰
+//│           sym = member:get⁰
+//│           dSym = term:Store⁰/get¹
+//│           params = Ls of
+//│             ParamList: ‹empty›
+//│           body = Scoped(syms = {tmp:scrut⁰, x³, tmp:arg$AA$0$⁰, tmp:AA_x¹}):
+//│             body = Assign:
+//│               lhs = tmp:AA_x¹
+//│               rhs = Select{sym=term:Store⁰/n⁰}:
+//│                 qual = This of class:Store⁰
+//│                 name = Ident of "n"
+//│               rest = Assign: \
+//│               lhs = tmp:scrut⁰
+//│               rhs = Call:
+//│                 fun = MemberRef{disamb=term:$scrut_AA¹}:
+//│                   bms = member:$scrut_AA⁰
+//│                   disamb = term:$scrut_AA¹
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = SimpleRef of tmp:AA_x¹
+//│               rest = Return of Call:
+//│                 fun = SimpleRef of tmp:scrut⁰
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = SimpleRef of x³
+//│                     Arg:
+//│                       value = SimpleRef of tmp:arg$AA$0$⁰
+//│         FunDefn:
+//│           owner = S of class:Store⁰
+//│           sym = member:foo⁰
+//│           dSym = term:Store⁰/foo¹
+//│           params = Ls of
+//│             ParamList:
+//│               params = Ls of
+//│                 Param:
+//│                   sym = x⁴
+//│                   modulefulness = Modulefulness of N
+//│           body = Scoped(syms = {x⁵, tmp:arg$AA$0$¹}):
+//│             body = Match:
+//│               scrut = SimpleRef of x⁴
+//│               arms = Ls of
+//│                 Tuple2:
+//│                   _1 = Cls:
+//│                     cls = class:AA¹
+//│                     path = MemberRef{disamb=class:AA¹}:
+//│                       bms = member:AA²
+//│                       disamb = class:AA¹
+//│                   _2 = Assign:
+//│                     lhs = tmp:arg$AA$0$¹
+//│                     rhs = Select{sym=term:AA¹/x⁰}:
+//│                       qual = SimpleRef of x⁴
+//│                       name = Ident of "x"
+//│                     rest = Assign: \
+//│                     lhs = x⁵
+//│                     rhs = SimpleRef of tmp:arg$AA$0$¹
+//│                     rest = Return of Call:
+//│                       fun = SimpleRef of builtin:+⁰
+//│                       argss = Ls of
+//│                         Ls of
+//│                           Arg:
+//│                             value = SimpleRef of x⁵
+//│                           Arg:
+//│                             value = Select{sym=term:Store⁰/nn⁰}:
+//│                               qual = This of class:Store⁰
+//│                               name = Ident of "nn"
+//│               dflt = S of Throw of Instantiate:
+//│                 mut = false
+//│                 cls = Select{sym=class:Error⁰}:
+//│                   qual = This of globalThis:globalThis⁰
+//│                   name = Ident of "Error"
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = Lit of StrLit of "match error"
+//│       privateFields = Ls of
+//│         term:Store⁰/n⁰
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:nn¹
+//│           _2 = term:Store⁰/nn⁰
+//│       ctor = AssignField:
+//│         lhs = This of class:Store⁰
+//│         nme = Ident of "n"
+//│         rhs = SimpleRef of n¹
+//│         rest = Define: \
+//│         defn = ValDefn:
+//│           tsym = term:Store⁰/nn⁰
+//│           sym = member:nn¹
+//│           rhs = Select{sym=term:Store⁰/n⁰}:
+//│             qual = This of class:Store⁰
+//│             name = Ident of "n"
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁰
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:Store²}:
+//│         bms = member:Store¹
+//│         disamb = term:Store²
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 1
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:store⁰
+//│       sym = member:store¹
+//│       rhs = SimpleRef of tmp:tmp⁰
+//│     rest = Assign: \
+//│     lhs = tmp:tmp¹
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:AA⁰}:
+//│         bms = member:AA²
+//│         disamb = term:AA⁰
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 4
+//│     rest = Return of Call:
+//│       fun = Select:
+//│         qual = MemberRef{disamb=term:store⁰}:
+//│           bms = member:store¹
+//│           disamb = term:store⁰
+//│         name = Ident of "foo"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp¹
 //│ = 5
 //│ store = Store(_)
 
@@ -39,10 +245,205 @@ class Store(n) with
 val store = Store(1)
 store.foo(AA(4))
 //│ deforest > >>> fusing >>>
-//│ deforest > AA¹(Store¹.this.n¹) ->
+//│ deforest > AA³(Store³.this.n²) ->
 //│ deforest > 	match: scrut¹
-//│ deforest > 	fields: scrut¹.x¹
+//│ deforest > 	fields: scrut¹.x⁶
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:$scrut_AA, member:$scrut_rest, tmp:tmp, tmp:tmp)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:$scrut_AA²
+//│       dSym = term:$scrut_AA³
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = AA_x²
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_x¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$AA$0$¹
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = fv_arg$AA$0$¹
+//│         rhs = SimpleRef of AA_x²
+//│         rest = Assign: \
+//│         lhs = fv_x¹
+//│         rhs = SimpleRef of fv_arg$AA$0$¹
+//│         rest = Return of Call:
+//│           fun = SimpleRef of builtin:+⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_x¹
+//│               Arg:
+//│                 value = Select{sym=term:Store³/n²}:
+//│                   qual = This of class:Store³
+//│                   name = Ident of "n"
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:$scrut_rest²
+//│       dSym = term:$scrut_rest³
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:AA⁴
+//│       sym = member:AA⁵
+//│       ctorSym = S of term:AA³
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             flags = (val)
+//│             sym = x⁷
+//│             modulefulness = Modulefulness of N
+//│       publicFields = Ls of
+//│         Tuple2:
+//│           _1 = member:x⁸
+//│           _2 = term:AA⁴/x⁶
+//│       ctor = Define:
+//│         defn = ValDefn:
+//│           tsym = term:AA⁴/x⁶
+//│           sym = member:x⁸
+//│           rhs = SimpleRef of x⁷
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:Store³
+//│       sym = member:Store⁴
+//│       ctorSym = S of term:Store⁵
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             sym = n³
+//│             modulefulness = Modulefulness of N
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:Store³
+//│           sym = member:get²
+//│           dSym = term:Store³/get³
+//│           params = Ls of
+//│             ParamList: ‹empty›
+//│           body = Scoped(syms = {tmp:scrut¹, x⁹, tmp:arg$AA$0$², tmp:AA_x³}):
+//│             body = Assign:
+//│               lhs = tmp:AA_x³
+//│               rhs = Select{sym=term:Store³/n²}:
+//│                 qual = This of class:Store³
+//│                 name = Ident of "n"
+//│               rest = Assign: \
+//│               lhs = tmp:scrut¹
+//│               rhs = Call:
+//│                 fun = MemberRef{disamb=term:$scrut_AA³}:
+//│                   bms = member:$scrut_AA²
+//│                   disamb = term:$scrut_AA³
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = SimpleRef of tmp:AA_x³
+//│               rest = Return of Call:
+//│                 fun = SimpleRef of tmp:scrut¹
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = SimpleRef of x⁹
+//│                     Arg:
+//│                       value = SimpleRef of tmp:arg$AA$0$²
+//│         FunDefn:
+//│           owner = S of class:Store³
+//│           sym = member:foo²
+//│           dSym = term:Store³/foo³
+//│           params = Ls of
+//│             ParamList:
+//│               params = Ls of
+//│                 Param:
+//│                   sym = x¹⁰
+//│                   modulefulness = Modulefulness of N
+//│           body = Scoped(syms = {x¹¹, tmp:arg$AA$0$³}):
+//│             body = Match:
+//│               scrut = SimpleRef of x¹⁰
+//│               arms = Ls of
+//│                 Tuple2:
+//│                   _1 = Cls:
+//│                     cls = class:AA⁴
+//│                     path = MemberRef{disamb=class:AA⁴}:
+//│                       bms = member:AA⁵
+//│                       disamb = class:AA⁴
+//│                   _2 = Assign:
+//│                     lhs = tmp:arg$AA$0$³
+//│                     rhs = Select{sym=term:AA⁴/x⁶}:
+//│                       qual = SimpleRef of x¹⁰
+//│                       name = Ident of "x"
+//│                     rest = Assign: \
+//│                     lhs = x¹¹
+//│                     rhs = SimpleRef of tmp:arg$AA$0$³
+//│                     rest = Return of Call:
+//│                       fun = SimpleRef of builtin:+⁰
+//│                       argss = Ls of
+//│                         Ls of
+//│                           Arg:
+//│                             value = SimpleRef of x¹¹
+//│                           Arg:
+//│                             value = Select{sym=term:Store³/n²}:
+//│                               qual = This of class:Store³
+//│                               name = Ident of "n"
+//│               dflt = S of Throw of Instantiate:
+//│                 mut = false
+//│                 cls = Select{sym=class:Error⁰}:
+//│                   qual = This of globalThis:globalThis⁰
+//│                   name = Ident of "Error"
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = Lit of StrLit of "match error"
+//│       privateFields = Ls of
+//│         term:Store³/n²
+//│       ctor = AssignField:
+//│         lhs = This of class:Store³
+//│         nme = Ident of "n"
+//│         rhs = SimpleRef of n³
+//│     rest = Assign: \
+//│     lhs = tmp:tmp²
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:Store⁵}:
+//│         bms = member:Store⁴
+//│         disamb = term:Store⁵
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 1
+//│     rest = Define: \
+//│     defn = ValDefn:
+//│       tsym = term:store²
+//│       sym = member:store³
+//│       rhs = SimpleRef of tmp:tmp²
+//│     rest = Assign: \
+//│     lhs = tmp:tmp³
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:AA³}:
+//│         bms = member:AA⁵
+//│         disamb = term:AA³
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 4
+//│     rest = Return of Call:
+//│       fun = Select:
+//│         qual = MemberRef{disamb=term:store²}:
+//│           bms = member:store³
+//│           disamb = term:store²
+//│         name = Ident of "foo"
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp³
 //│ ═══[INTERNAL ERROR] `this` not in scope: class:Store
 //│ > let AA3, Store3, store1, tmp2, tmp3, $scrut_AA;try { const n$accessorSymbol = globalThis.Symbol("n"); $scrut_AA = function $scrut_AA(AA_x) {   runtime.checkArgs("$scrut_AA", 1, true, arguments.length);   return (fv_x, fv_arg$AA$0$) => {     return AA_x + ‹MISSING_THIS›[n$accessorSymbol]   } }; AA3 = function AA(x) {   return globalThis.Object.freeze(new AA.class(x)); }; globalThis.Object.freeze(class AA2 {   static {     AA3.class = this   }   constructor(x) {     this.x = x;   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "AA", ["x"]]; }); Store3 = function Store(n) {   return globalThis.Object.freeze(new Store.class(n)); }; globalThis.Object.freeze(class Store2 {   static {     Store3.class = this   }   constructor(n) {     this.#n = n;   }   #n;   get [n$accessorSymbol]() { return this.#n; }   set [n$accessorSymbol](value) { this.#n = value; }   get get$__checkNotMethod() { runtime.deboundMethod("get", "Store"); }    get foo$__checkNotMethod() { runtime.deboundMethod("foo", "Store"); }   get() {     runtime.checkArgs("get", 0, true, arguments.length);     let AA_x;     AA_x = this.#n;     return runtime.checkCall($scrut_AA(AA_x)(undefined, undefined))   }   foo(x) {     runtime.checkArgs("foo", 1, true, arguments.length);     let arg$AA$0$;     if (x instanceof AA3.class) {       arg$AA$0$ = x.x;       return arg$AA$0$ + this.#n     }     throw globalThis.Object.freeze(new globalThis.Error("match error"));   }   toString() { return runtime.render(this); }   static [definitionMetadata] = ["class", "Store", [null]]; }); tmp2 = runtime.checkCall(Store3(1)); store1 = tmp2; tmp3 = runtime.checkCall(AA3(4)); block$res2 = runtime.safeCall(store1.foo(tmp3));; undefined } catch (e) { console.log('\u200B' + e + '\u200B'); }
 //│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] Invalid or unexpected token
@@ -63,12 +464,12 @@ fun classMethodSibling() =
     AA(x) then x + store.get()
 classMethodSibling()
 //│ deforest > >>> fusing >>>
-//│ deforest > AA¹(1) ->
+//│ deforest > AA³(1) ->
 //│ deforest > 	match: scrut²
-//│ deforest > 	fields: scrut².x¹
-//│ deforest > AA¹(1) ->
+//│ deforest > 	fields: scrut².x⁶
+//│ deforest > AA³(1) ->
 //│ deforest > 	match: scrut²
-//│ deforest > 	fields: scrut².x¹
+//│ deforest > 	fields: scrut².x⁶
 //│ deforest > <<< fusing <<<
 //│ ═══[RUNTIME ERROR] ReferenceError: store1 is not defined
 //│ ═══[RUNTIME ERROR] Expected: '3', got: 'undefined'
@@ -82,9 +483,9 @@ if AA(1) is
   AA(x) then
     x + r!a
 //│ deforest > >>> fusing >>>
-//│ deforest > AA¹(1) ->
+//│ deforest > AA³(1) ->
 //│ deforest > 	match: scrut³
-//│ deforest > 	fields: scrut³.x¹
+//│ deforest > 	fields: scrut³.x⁶
 //│ deforest > <<< fusing <<<
 //│ = 1
 //│ r = {a: 0, value: 1}
@@ -97,9 +498,9 @@ if AA(1) is
     let xs = [0, 1]
     x + xs!1
 //│ deforest > >>> fusing >>>
-//│ deforest > AA¹(1) ->
+//│ deforest > AA³(1) ->
 //│ deforest > 	match: scrut⁴
-//│ deforest > 	fields: scrut⁴.x¹
+//│ deforest > 	fields: scrut⁴.x⁶
 //│ deforest > <<< fusing <<<
 //│ = 2
 
@@ -114,12 +515,12 @@ fun nestedClass() =
     AA(x) then x
 nestedClass()
 //│ deforest > >>> fusing >>>
-//│ deforest > AA¹(1) ->
+//│ deforest > AA³(1) ->
 //│ deforest > 	match: scrut⁵
-//│ deforest > 	fields: scrut⁵.x¹
-//│ deforest > AA¹(1) ->
+//│ deforest > 	fields: scrut⁵.x⁶
+//│ deforest > AA³(1) ->
 //│ deforest > 	match: scrut⁵
-//│ deforest > 	fields: scrut⁵.x¹
+//│ deforest > 	fields: scrut⁵.x⁶
 //│ deforest > <<< fusing <<<
 //│ = 1
 
@@ -133,9 +534,9 @@ fun loopSibling() =
     if AA(1) is
       AA(x) then print(x)
 //│ deforest > >>> fusing >>>
-//│ deforest > AA¹(1) ->
+//│ deforest > AA³(1) ->
 //│ deforest > 	match: scrut⁶
-//│ deforest > 	fields: scrut⁶.x¹
+//│ deforest > 	fields: scrut⁶.x⁶
 //│ deforest > <<< fusing <<<
 //│ /!!!\ Uncaught error: scala.NotImplementedError: unsupported `continue` instruction during rewriting (of class String)
 
@@ -153,10 +554,162 @@ class C(n) with
 let c = C(1)
 c.get() + c.get()
 //│ deforest > >>> fusing >>>
-//│ deforest > AA¹(1) ->
+//│ deforest > AA³(1) ->
 //│ deforest > 	match: scrut⁷
-//│ deforest > 	fields: scrut⁷.x¹
+//│ deforest > 	fields: scrut⁷.x⁶
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = Set(member:$scrut_AA, member:$scrut_rest, tmp:tmp, tmp:tmp)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:$scrut_AA⁴
+//│       dSym = term:$scrut_AA⁵
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = AA_x⁴
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_x²
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_res⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$AA$0$²
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = fv_arg$AA$0$²
+//│         rhs = SimpleRef of AA_x⁴
+//│         rest = Assign: \
+//│         lhs = fv_x²
+//│         rhs = SimpleRef of fv_arg$AA$0$²
+//│         rest = Assign: \
+//│         lhs = fv_res⁰
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:+⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_x²
+//│               Arg:
+//│                 value = Select{sym=term:C⁰/_n⁰}:
+//│                   qual = This of class:C⁰
+//│                   name = Ident of "_n"
+//│         rest = AssignField: \
+//│         lhs = This of class:C⁰
+//│         nme = Ident of "_n"
+//│         rhs = Call:
+//│           fun = SimpleRef of builtin:+⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = Select{sym=term:C⁰/_n⁰}:
+//│                   qual = This of class:C⁰
+//│                   name = Ident of "_n"
+//│               Arg:
+//│                 value = Lit of IntLit of 1
+//│         rest = Return of SimpleRef of fv_res⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:$scrut_rest⁴
+//│       dSym = term:$scrut_rest⁵
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:C⁰
+//│       sym = member:C¹
+//│       ctorSym = S of term:C²
+//│       k = Cls
+//│       paramsOpt = S of ParamList:
+//│         params = Ls of
+//│           Param:
+//│             sym = n⁴
+//│             modulefulness = Modulefulness of N
+//│       methods = Ls of
+//│         FunDefn:
+//│           owner = S of class:C⁰
+//│           sym = member:get⁴
+//│           dSym = term:C⁰/get⁵
+//│           params = Ls of
+//│             ParamList: ‹empty›
+//│           body = Scoped(syms = {tmp:scrut⁷, x¹², res⁰, tmp:arg$AA$0$⁴, tmp:AA_x⁵}):
+//│             body = Assign:
+//│               lhs = tmp:AA_x⁵
+//│               rhs = Lit of IntLit of 1
+//│               rest = Assign: \
+//│               lhs = tmp:scrut⁷
+//│               rhs = Call:
+//│                 fun = MemberRef{disamb=term:$scrut_AA⁵}:
+//│                   bms = member:$scrut_AA⁴
+//│                   disamb = term:$scrut_AA⁵
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = SimpleRef of tmp:AA_x⁵
+//│               rest = Return of Call:
+//│                 fun = SimpleRef of tmp:scrut⁷
+//│                 argss = Ls of
+//│                   Ls of
+//│                     Arg:
+//│                       value = SimpleRef of x¹²
+//│                     Arg:
+//│                       value = SimpleRef of res⁰
+//│                     Arg:
+//│                       value = SimpleRef of tmp:arg$AA$0$⁴
+//│       privateFields = Ls of
+//│         term:C⁰/n⁵
+//│         term:C⁰/_n⁰
+//│       ctor = AssignField:
+//│         lhs = This of class:C⁰
+//│         nme = Ident of "n"
+//│         rhs = SimpleRef of n⁴
+//│         rest = AssignField: \
+//│         lhs = This of class:C⁰
+//│         nme = Ident of "_n"
+//│         rhs = Select{sym=term:C⁰/n⁵}:
+//│           qual = This of class:C⁰
+//│           name = Ident of "n"
+//│     rest = Assign: \
+//│     lhs = c⁰
+//│     rhs = Call:
+//│       fun = MemberRef{disamb=term:C²}:
+//│         bms = member:C¹
+//│         disamb = term:C²
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = Lit of IntLit of 1
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁴
+//│     rhs = Call:
+//│       fun = Select:
+//│         qual = SimpleRef of c⁰
+//│         name = Ident of "get"
+//│       argss = Ls of
+//│         Nil
+//│     rest = Assign: \
+//│     lhs = tmp:tmp⁵
+//│     rhs = Call:
+//│       fun = Select:
+//│         qual = SimpleRef of c⁰
+//│         name = Ident of "get"
+//│       argss = Ls of
+//│         Nil
+//│     rest = Return of Call:
+//│       fun = SimpleRef of builtin:+⁰
+//│       argss = Ls of
+//│         Ls of
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp⁴
+//│           Arg:
+//│             value = SimpleRef of tmp:tmp⁵
 //│ = 5
 //│ c = C(_)
 
@@ -170,13 +723,178 @@ module M with
       AA(a) then a + _private
 M.f()
 //│ deforest > >>> fusing >>>
-//│ deforest > AA¹(1) ->
+//│ deforest > AA³(1) ->
 //│ deforest > 	match: scrut⁸
-//│ deforest > 	fields: scrut⁸.x¹
-//│ deforest > AA¹(1) ->
+//│ deforest > 	fields: scrut⁸.x⁶
+//│ deforest > AA³(1) ->
 //│ deforest > 	match: scrut⁸
-//│ deforest > 	fields: scrut⁸.x¹
+//│ deforest > 	fields: scrut⁸.x⁶
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:f_7$scrut_rest, member:f_6$scrut_rest, member:f_7$scrut_AA, member:f_6$f, member:f_6$scrut_AA)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:f_6$f⁰
+//│       dSym = term:f_6$f¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {tmp:scrut⁹, a⁰, tmp:arg$AA$0$⁵, tmp:AA_x⁶}):
+//│         body = Assign:
+//│           lhs = tmp:AA_x⁶
+//│           rhs = Lit of IntLit of 1
+//│           rest = Assign: \
+//│           lhs = tmp:scrut⁹
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:f_6$scrut_AA⁰}:
+//│               bms = member:f_6$scrut_AA¹
+//│               disamb = term:f_6$scrut_AA⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:AA_x⁶
+//│           rest = Return of Call:
+//│             fun = SimpleRef of tmp:scrut⁹
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of a⁰
+//│                 Arg:
+//│                   value = SimpleRef of tmp:arg$AA$0$⁵
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_7$scrut_AA⁰
+//│       dSym = term:f_7$scrut_AA¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = AA_x⁷
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_a⁰
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$AA$0$³
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = fv_arg$AA$0$³
+//│         rhs = SimpleRef of AA_x⁷
+//│         rest = Assign: \
+//│         lhs = fv_a⁰
+//│         rhs = SimpleRef of fv_arg$AA$0$³
+//│         rest = Return of Call:
+//│           fun = SimpleRef of builtin:+⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_a⁰
+//│               Arg:
+//│                 value = Select{sym=term:M⁰/_private⁰}:
+//│                   qual = MemberRef{disamb=module:M⁰}:
+//│                     bms = member:M¹
+//│                     disamb = module:M⁰
+//│                   name = Ident of "_private"
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_6$scrut_AA¹
+//│       dSym = term:f_6$scrut_AA⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = AA_x⁸
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_a¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$AA$0$⁴
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = fv_arg$AA$0$⁴
+//│         rhs = SimpleRef of AA_x⁸
+//│         rest = Assign: \
+//│         lhs = fv_a¹
+//│         rhs = SimpleRef of fv_arg$AA$0$⁴
+//│         rest = Return of Call:
+//│           fun = SimpleRef of builtin:+⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_a¹
+//│               Arg:
+//│                 value = Select{sym=term:M⁰/_private⁰}:
+//│                   qual = MemberRef{disamb=module:M⁰}:
+//│                     bms = member:M¹
+//│                     disamb = module:M⁰
+//│                   name = Ident of "_private"
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_7$scrut_rest⁰
+//│       dSym = term:f_7$scrut_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_6$scrut_rest⁰
+//│       dSym = term:f_6$scrut_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:M²
+//│       sym = member:M¹
+//│       k = Cls
+//│       companion = S of ClsLikeBody:
+//│         isym = module:M⁰
+//│         methods = Ls of
+//│           FunDefn:
+//│             owner = S of module:M⁰
+//│             sym = member:f⁰
+//│             dSym = term:M⁰/f¹
+//│             params = Ls of
+//│               ParamList: ‹empty›
+//│             body = Scoped(syms = {tmp:scrut⁸, a¹, tmp:arg$AA$0$⁶, tmp:AA_x⁹}):
+//│               body = Assign:
+//│                 lhs = tmp:AA_x⁹
+//│                 rhs = Lit of IntLit of 1
+//│                 rest = Assign: \
+//│                 lhs = tmp:scrut⁸
+//│                 rhs = Call:
+//│                   fun = MemberRef{disamb=term:f_7$scrut_AA¹}:
+//│                     bms = member:f_7$scrut_AA⁰
+//│                     disamb = term:f_7$scrut_AA¹
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of tmp:AA_x⁹
+//│                 rest = Return of Call:
+//│                   fun = SimpleRef of tmp:scrut⁸
+//│                   argss = Ls of
+//│                     Ls of
+//│                       Arg:
+//│                         value = SimpleRef of a¹
+//│                       Arg:
+//│                         value = SimpleRef of tmp:arg$AA$0$⁶
+//│         privateFields = Ls of
+//│           term:M⁰/_private⁰
+//│         ctor = AssignField:
+//│           lhs = This of module:M⁰
+//│           nme = Ident of "_private"
+//│           rhs = Lit of IntLit of 3
+//│     rest = Return of Call:
+//│       fun = MemberRef{disamb=term:f_6$f¹}:
+//│         bms = member:f_6$f⁰
+//│         disamb = term:f_6$f¹
+//│       argss = Ls of
+//│         Nil
 //│ = 4
 
 
@@ -192,13 +910,205 @@ module M with
         AA(a) then a + g()
 M.MM.f()
 //│ deforest > >>> fusing >>>
-//│ deforest > AA¹(1) ->
-//│ deforest > 	match: scrut⁹
-//│ deforest > 	fields: scrut⁹.x¹
-//│ deforest > AA¹(1) ->
-//│ deforest > 	match: scrut⁹
-//│ deforest > 	fields: scrut⁹.x¹
+//│ deforest > AA³(1) ->
+//│ deforest > 	match: scrut¹⁰
+//│ deforest > 	fields: scrut¹⁰.x⁶
+//│ deforest > AA³(1) ->
+//│ deforest > 	match: scrut¹⁰
+//│ deforest > 	fields: scrut¹⁰.x⁶
 //│ deforest > <<< fusing <<<
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending is part of: Scoped:
+//│   syms = HashSet(member:f_9$scrut_rest, member:f_11$scrut_rest, member:f_9$f, member:f_11$scrut_AA, member:f_9$scrut_AA)
+//│   body = Define:
+//│     defn = FunDefn:
+//│       sym = member:f_9$f⁰
+//│       dSym = term:f_9$f¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Scoped(syms = {tmp:scrut¹¹, a², tmp:arg$AA$0$⁷, tmp:tmp⁶, tmp:AA_x¹⁰}):
+//│         body = Assign:
+//│           lhs = tmp:AA_x¹⁰
+//│           rhs = Lit of IntLit of 1
+//│           rest = Assign: \
+//│           lhs = tmp:scrut¹¹
+//│           rhs = Call:
+//│             fun = MemberRef{disamb=term:f_9$scrut_AA⁰}:
+//│               bms = member:f_9$scrut_AA¹
+//│               disamb = term:f_9$scrut_AA⁰
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of tmp:AA_x¹⁰
+//│           rest = Return of Call:
+//│             fun = SimpleRef of tmp:scrut¹¹
+//│             argss = Ls of
+//│               Ls of
+//│                 Arg:
+//│                   value = SimpleRef of a²
+//│                 Arg:
+//│                   value = SimpleRef of tmp:arg$AA$0$⁷
+//│                 Arg:
+//│                   value = SimpleRef of tmp:tmp⁶
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_11$scrut_AA⁰
+//│       dSym = term:f_11$scrut_AA¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = AA_x¹¹
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_a²
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$AA$0$⁵
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_tmp⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = fv_arg$AA$0$⁵
+//│         rhs = SimpleRef of AA_x¹¹
+//│         rest = Assign: \
+//│         lhs = fv_a²
+//│         rhs = SimpleRef of fv_arg$AA$0$⁵
+//│         rest = Assign: \
+//│         lhs = fv_tmp⁰
+//│         rhs = Call:
+//│           fun = Select{sym=term:MM⁰/g⁰}:
+//│             qual = This of module:MM⁰
+//│             name = Ident of "g"
+//│           argss = Ls of
+//│             Nil
+//│         rest = Return of Call:
+//│           fun = SimpleRef of builtin:+⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_a²
+//│               Arg:
+//│                 value = SimpleRef of fv_tmp⁰
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_9$scrut_AA¹
+//│       dSym = term:f_9$scrut_AA⁰
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = AA_x¹²
+//│               modulefulness = Modulefulness of N
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = fv_a³
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_arg$AA$0$⁶
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = fv_tmp¹
+//│               modulefulness = Modulefulness of N
+//│       body = Assign:
+//│         lhs = fv_arg$AA$0$⁶
+//│         rhs = SimpleRef of AA_x¹²
+//│         rest = Assign: \
+//│         lhs = fv_a³
+//│         rhs = SimpleRef of fv_arg$AA$0$⁶
+//│         rest = Assign: \
+//│         lhs = fv_tmp¹
+//│         rhs = Call:
+//│           fun = Select{sym=term:MM⁰/g⁰}:
+//│             qual = This of module:MM⁰
+//│             name = Ident of "g"
+//│           argss = Ls of
+//│             Nil
+//│         rest = Return of Call:
+//│           fun = SimpleRef of builtin:+⁰
+//│           argss = Ls of
+//│             Ls of
+//│               Arg:
+//│                 value = SimpleRef of fv_a³
+//│               Arg:
+//│                 value = SimpleRef of fv_tmp¹
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_11$scrut_rest⁰
+//│       dSym = term:f_11$scrut_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = FunDefn:
+//│       sym = member:f_9$scrut_rest⁰
+//│       dSym = term:f_9$scrut_rest¹
+//│       params = Ls of
+//│         ParamList: ‹empty›
+//│       body = Return of Lit of UnitLit of true
+//│     rest = Define: \
+//│     defn = ClsLikeDefn:
+//│       isym = class:M³
+//│       sym = member:M⁴
+//│       k = Cls
+//│       companion = S of ClsLikeBody:
+//│         isym = module:M⁵
+//│         ctor = Define:
+//│           defn = ClsLikeDefn:
+//│             owner = S of module:M⁵
+//│             isym = class:MM¹
+//│             sym = member:MM²
+//│             k = Cls
+//│             companion = S of ClsLikeBody:
+//│               isym = module:MM⁰
+//│               methods = Ls of
+//│                 FunDefn:
+//│                   owner = S of module:MM⁰
+//│                   sym = member:g¹
+//│                   dSym = term:MM⁰/g⁰
+//│                   params = Ls of
+//│                     ParamList: ‹empty›
+//│                   body = Return of Lit of IntLit of 5
+//│                 FunDefn:
+//│                   owner = S of module:MM⁰
+//│                   sym = member:f²
+//│                   dSym = term:MM⁰/f³
+//│                   params = Ls of
+//│                     ParamList: ‹empty›
+//│                   body = Scoped(syms = {tmp:scrut¹⁰, a³, tmp:arg$AA$0$⁸, tmp:tmp⁷, tmp:AA_x¹³}):
+//│                     body = Assign:
+//│                       lhs = tmp:AA_x¹³
+//│                       rhs = Lit of IntLit of 1
+//│                       rest = Assign: \
+//│                       lhs = tmp:scrut¹⁰
+//│                       rhs = Call:
+//│                         fun = MemberRef{disamb=term:f_11$scrut_AA¹}:
+//│                           bms = member:f_11$scrut_AA⁰
+//│                           disamb = term:f_11$scrut_AA¹
+//│                         argss = Ls of
+//│                           Ls of
+//│                             Arg:
+//│                               value = SimpleRef of tmp:AA_x¹³
+//│                       rest = Return of Call:
+//│                         fun = SimpleRef of tmp:scrut¹⁰
+//│                         argss = Ls of
+//│                           Ls of
+//│                             Arg:
+//│                               value = SimpleRef of a³
+//│                             Arg:
+//│                               value = SimpleRef of tmp:arg$AA$0$⁸
+//│                             Arg:
+//│                               value = SimpleRef of tmp:tmp⁷
+//│     rest = Return of Call:
+//│       fun = MemberRef{disamb=term:f_9$f¹}:
+//│         bms = member:f_9$f⁰
+//│         disamb = term:f_9$f¹
+//│       argss = Ls of
+//│         Nil
 //│ ═══[RUNTIME ERROR] ReferenceError: MM is not defined
 
 

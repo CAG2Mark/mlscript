@@ -4,6 +4,49 @@
 module Mod with
   fun printt(x) = console.log(x)
   fun (|>>) pipee(x, f) = f(x)
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeBody:
+//│   isym = module:Mod⁰
+//│   methods = Ls of
+//│     FunDefn:
+//│       owner = S of module:Mod⁰
+//│       sym = member:printt⁰
+//│       dSym = term:Mod⁰/printt¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = Select{sym=term:console⁰/log⁰}:
+//│           qual = Select{sym=module:console⁰}:
+//│             qual = This of globalThis:globalThis⁰
+//│             name = Ident of "console"
+//│           name = Ident of "log"
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x⁰
+//│     FunDefn:
+//│       owner = S of module:Mod⁰
+//│       sym = member:pipee⁰
+//│       dSym = term:Mod⁰/pipee¹
+//│       params = Ls of
+//│         ParamList:
+//│           params = Ls of
+//│             Param:
+//│               sym = x¹
+//│               modulefulness = Modulefulness of N
+//│             Param:
+//│               sym = f⁰
+//│               modulefulness = Modulefulness of N
+//│       body = Return of Call:
+//│         fun = SimpleRef of f⁰
+//│         argss = Ls of
+//│           Ls of
+//│             Arg:
+//│               value = SimpleRef of x¹
 
 :ctx
 open Mod
@@ -25,13 +68,13 @@ pipee
 :e
 Mod.|>>
 //│ ╔══[PARSE ERROR] Expected start of expression in this position; found end of input instead
-//│ ║  l.26: 	Mod.|>>
+//│ ║  l.69: 	Mod.|>>
 //│ ╙──      	       ^
 //│ ╔══[COMPILATION ERROR] Name not found: .|>>
-//│ ║  l.26: 	Mod.|>>
+//│ ║  l.69: 	Mod.|>>
 //│ ╙──      	   ^^^^
 //│ ╔══[COMPILATION ERROR] Unexpected moduleful reference of type Mod.
-//│ ║  l.26: 	Mod.|>>
+//│ ║  l.69: 	Mod.|>>
 //│ ╙──      	^^^
 //│ ═══[RUNTIME ERROR] This code cannot be run as its compilation yielded an error.
 
@@ -44,17 +87,17 @@ Mod.|>>
 :e
 open Mod { |>> }
 //│ ╔══[PARSE ERROR] Expected start of expression in this position; found end of input instead
-//│ ║  l.45: 	open Mod { |>> }
+//│ ║  l.88: 	open Mod { |>> }
 //│ ╙──      	                ^
 //│ ╔══[COMPILATION ERROR] Illegal 'open' statement shape.
-//│ ║  l.45: 	open Mod { |>> }
+//│ ║  l.88: 	open Mod { |>> }
 //│ ╙──      	     ^^^^^^^^^^^
 
 
 :e
 open Mod { (|>>) }
 //│ ╔══[COMPILATION ERROR] Illegal 'open' statement element.
-//│ ║  l.55: 	open Mod { (|>>) }
+//│ ║  l.98: 	open Mod { (|>>) }
 //│ ╙──      	           ^^^^^
 
 12 |>> print

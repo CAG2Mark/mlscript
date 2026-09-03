@@ -11,6 +11,11 @@ fun (??) getOrElse = Option.getOrElse
 abstract class Tree[out A]: (Empty | Node[A])
 data class Node[out A](value: A, left: Tree[A], right: Tree[A], rank: Int) extends Tree[A]
 object Empty extends Tree[Nothing]
+//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
+//│ /!\ Offending: ClsLikeDefn:
+//│   isym = class:Tree⁰
+//│   sym = member:Tree¹
+//│   k = Cls
 
 fun show(t: Tree[Any]): Str = if t is
   Node(v, l, r, _) then
