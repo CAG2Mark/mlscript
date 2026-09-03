@@ -47,7 +47,9 @@ object CpsHandlerLowering:
 
 import CpsHandlerLowering.*
 
-class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Raise, Elaborator.State, Elaborator.Ctx, Config):
+class CpsHandlerLowering(paths: HandlerPaths, opt: Opt[EffectHandlers])(using TL, Raise, Elaborator.State, Elaborator.Ctx, Config):
+
+  val stackSafety = opt.exists(_.stackSafety.isDefined)
   
   var cpsId = 0
   
@@ -56,7 +58,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
   val raiseStackPath: Path = paths.runtimePath.selN(Tree.Ident("cpsRaiseStack"))
   val runStackSafeCpsPath: Path = paths.runtimePath.selN(Tree.Ident("runStackSafeCps"))
   val cpsHandlerImplPath: Path = 
-    if opt.stackSafety.isDefined then
+    if stackSafety then
       paths.runtimePath.selN(Tree.Ident("ss_cpsHandlerImpl"))
     else
       paths.runtimePath.selN(Tree.Ident("cpsHandlerImpl"))
@@ -144,8 +146,8 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
   
   class CpsTransformer(isStackSafetyPass: Bool) extends BlockTransformer(SymbolSubst()):
     
-    val idPath = if opt.stackSafety.isDefined && !isStackSafetyPass then paths.runtimePath.selN(Tree.Ident("cpsId2")) else paths.runtimePath.selN(Tree.Ident("cpsId"))
-    val resMetadata = if opt.stackSafety.isDefined && !isStackSafetyPass then CallMetadata.mlsFunWithEffect else CallMetadata.defaultMlsFun
+    val idPath = if stackSafety && !isStackSafetyPass then paths.runtimePath.selN(Tree.Ident("cpsId2")) else paths.runtimePath.selN(Tree.Ident("cpsId"))
+    val resMetadata = if stackSafety && !isStackSafetyPass then CallMetadata.mlsFunWithEffect else CallMetadata.defaultMlsFun
     
     var curContPath: Path = idPath
     var isTopLevel = true
@@ -314,7 +316,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
       if inCtor || isTopLevel then r match
         case c: Call if c.metadata.mayRaiseEffects && checkCall(c) => applyPath(c.fun): newFun =>
           val newCall = Call(newFun, (idPath.asArg :: c.argss.head) ne_:: Nil)(resMetadata)
-          opt.stackSafety match
+          opt.flatMap(_.stackSafety) match
             case S(ss) if isTopLevel && isStackSafetyPass =>
               val (fn, rest) = createNestedFn("‹stack safe body›", PlainParamList(List.empty), Return(newCall), true)
               rest(k(Call(
@@ -396,17 +398,18 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: EffectHandlers)(using TL, Rai
     val cpsTransformer = new CpsTransformer(false)
     val ret = cpsTransformer.applyBlock(blockNormalizer.applyBlock(b))
     // blockNormalizer.applyBlock(b)
-    opt.stackSafety match
+    opt.flatMap(_.stackSafety) match
       case Some(ss) =>
         val ssCpsTransformer = new CpsTransformer(true)
         ssCpsTransformer.applyBlock(ret)
       case None => ret
     
   def translateProgram(prog: Program): Program =
-    val transformed = translateTopLevel(prog.main)
-    if transformed is prog.main then prog
-    else
-      Program(
-        prog.imports,
-        transformed
-      )
+    if opt.isEmpty then prog else
+      val transformed = translateTopLevel(prog.main)
+      if transformed is prog.main then prog
+      else
+        Program(
+          prog.imports,
+          transformed
+        )

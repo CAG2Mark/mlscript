@@ -5,7 +5,34 @@ import RuntimeJS from "./RuntimeJS.mjs";
 import Rendering from "./Rendering.mjs";
 import LazyArray from "./LazyArray.mjs";
 import Iter from "./Iter.mjs";
-let resumeCont, handlerFunCont, cont, resumeCont1, suspendCont1, loop, Runtime1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, handlerFunCont1, lambda$, lambda$1, Capture$handlerTrampoline1, Capture$scope231, lambda$2, handlerFunCont$, lambda$3, suspendCont1$, cont$, handlerFunCont$1, lambda$4, lambda$5, resumeCont1$, lambda$6, resumeCont$, lambda$7, Capture$scope471, lambda$8, Capture$scope491, lambda$9;
+let resumeCont, handlerFunCont, cont, resumeCont1, suspendCont1, loop, continuation, Runtime1, lambda, lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10, lambda11, handlerFunCont1, lambda$, lambda$1, Capture$handlerTrampoline1, Capture$scope231, lambda$2, handlerFunCont$, lambda$3, suspendCont1$, cont$, handlerFunCont$1, lambda$4, lambda$5, resumeCont1$, lambda$6, resumeCont$, lambda$7, Capture$scope471, lambda$8, Capture$scope491, lambda$9, lambda$10, continuation$;
+continuation$ = function continuation$(Runtime2, resume) {
+  return (value) => {
+    return continuation(Runtime2, resume, value)
+  }
+};
+continuation = function continuation(Runtime2, resume, value) {
+  let r, scrut;
+  r = runtime.safeCall(resume(value));
+  scrut = Runtime2.curEffect !== null;
+  if (scrut === true) {
+    Runtime2.illegalEffect("in exported async function");
+    return r
+  }
+  return r;
+};
+lambda$10 = (undefined, function (Runtime2, promise) {
+  return (resume) => {
+    let continuation$here;
+    continuation$here = continuation$(Runtime2, resume);
+    return runtime.safeCall(promise.then(continuation$here))
+  }
+});
+lambda9 = (undefined, function (Runtime2, promise, resume) {
+  let continuation$here;
+  continuation$here = continuation$(Runtime2, resume);
+  return runtime.safeCall(promise.then(continuation$here))
+});
 (class Capture$scope49 {
   static {
     Capture$scope491 = this
@@ -311,7 +338,7 @@ lambda$1 = (undefined, function (Runtime2) {
     return runtime.Unit
   }
 });
-lambda10 = (undefined, function (Runtime2, k) {
+lambda11 = (undefined, function (Runtime2, k) {
   Runtime2.stackResume = k;
   return runtime.Unit
 });
@@ -320,7 +347,7 @@ lambda$ = (undefined, function (Runtime2, EffectHandle1, value) {
     return Runtime2.resume(EffectHandle1.reified.contTrace)(value)
   }
 });
-lambda9 = (undefined, function (Runtime2, EffectHandle1, value) {
+lambda10 = (undefined, function (Runtime2, EffectHandle1, value) {
   return Runtime2.resume(EffectHandle1.reified.contTrace)(value)
 });
 (class Runtime {
@@ -838,6 +865,20 @@ lambda9 = (undefined, function (Runtime2, EffectHandle1, value) {
       }
       [prettyPrint]() { return this.toString(); }
       static [definitionMetadata] = ["class", "CustomStackError", ["stack"]];
+    });
+    (class AsyncEffectMarker {
+      static {
+        new this
+      }
+      constructor() {
+        Runtime.AsyncEffectMarker = this;
+        Object.defineProperty(this, "class", {
+          value: AsyncEffectMarker
+        });
+        globalThis.Object.freeze(this);
+      }
+      toString() { return runtime.render(this); }
+      static [definitionMetadata] = ["object", "AsyncEffectMarker"];
     });
     Runtime.stackLimit = 0;
     Runtime.stackDepth = 0;
@@ -1471,6 +1512,21 @@ lambda9 = (undefined, function (Runtime2, EffectHandle1, value) {
       return value;
     }
   }
+  static await(promise) {
+    let lambda$here;
+    lambda$here = lambda$10(Runtime, promise);
+    return Runtime.mkEffect(Runtime.AsyncEffectMarker, lambda$here)
+  }
+  static toJsAsync(thunk) {
+    let r, scrut;
+    r = Runtime.enterHandleBlock(Runtime.AsyncEffectMarker, thunk);
+    scrut = Runtime.curEffect !== null;
+    if (scrut === true) {
+      Runtime.illegalEffect("in exported async function");
+      return runtime.safeCall(globalThis.Promise.resolve(r))
+    }
+    return runtime.safeCall(globalThis.Promise.resolve(r));
+  }
   static checkDepth() {
     let tmp, tmp1;
     tmp = Runtime.stackDepth >= Runtime.stackLimit;
@@ -1603,6 +1659,7 @@ export { cont as _$_modulePrivate_$_cont };
 export { resumeCont1 as _$_modulePrivate_$_resumeCont1 };
 export { suspendCont1 as _$_modulePrivate_$_suspendCont1 };
 export { loop as _$_modulePrivate_$_loop };
+export { continuation as _$_modulePrivate_$_continuation };
 export { Runtime1 as _$_modulePrivate_$_Runtime };
 export { lambda as _$_modulePrivate_$_lambda };
 export { lambda1 as _$_modulePrivate_$_lambda1 };
@@ -1615,6 +1672,7 @@ export { lambda7 as _$_modulePrivate_$_lambda7 };
 export { lambda8 as _$_modulePrivate_$_lambda8 };
 export { lambda9 as _$_modulePrivate_$_lambda9 };
 export { lambda10 as _$_modulePrivate_$_lambda10 };
+export { lambda11 as _$_modulePrivate_$_lambda11 };
 export { handlerFunCont1 as _$_modulePrivate_$_handlerFunCont1 };
 export { lambda$ as _$_modulePrivate_$_lambda$ };
 export { lambda$1 as _$_modulePrivate_$_lambda$1 };
@@ -1636,4 +1694,6 @@ export { Capture$scope471 as _$_modulePrivate_$_Capture$scope47 };
 export { lambda$8 as _$_modulePrivate_$_lambda$8 };
 export { Capture$scope491 as _$_modulePrivate_$_Capture$scope49 };
 export { lambda$9 as _$_modulePrivate_$_lambda$9 };
+export { lambda$10 as _$_modulePrivate_$_lambda$10 };
+export { continuation$ as _$_modulePrivate_$_continuation$ };
 let Runtime = Runtime1; export default Runtime;

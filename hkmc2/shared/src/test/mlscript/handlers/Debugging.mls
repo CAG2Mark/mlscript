@@ -56,18 +56,18 @@ let res = Runtime._try(f)
 
 res.reified.contTrace.next.getLocals
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
 //│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of null (reading 'getLocals')
 //│     at REPL27:1:360
 //│     at ContextifyScript.runInThisContext (node:vm:138:12)
-//│     at defaultEval (node:repl:608:24)
-//│     at REPLEvalInContext (node:repl:691:9)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
 //│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:66:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:690:19)
-//│     at REPLServer.onLine (node:repl:828:12)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
 //│     at REPLServer.emit (node:events:514:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:474:12)
-//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:669:18)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:477:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:675:18)
 
 Runtime.debugEff(res.reified)
 //│ > Not an effect:
@@ -76,7 +76,7 @@ Runtime.debugEff(res.reified)
 :expect Infinity
 res.resumeWith(42)
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:299)
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:301)
 //│ ═══[RUNTIME ERROR] Expected: 'Infinity', got: 'fun cpsId'
 //│ = fun cpsId
 
@@ -95,22 +95,22 @@ module Test with
   fun main()(using Debugger) =
     test(12) + test(34)
 //│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:225)
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:227)
 //│ ╔══[WARNING] The function term:Test/test is not CPS-transformed because it has more than one parameter list.
 //│ ║  l.89: 	  fun test(j)(using dbg: Debugger) =
 //│ ╙──      	      ^^^^
 //│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:225)
+//│ FAILURE LOCATION: applyFunDefn (CpsHandlerLowering.scala:227)
 //│ ╔══[WARNING] The function term:Test/main is not CPS-transformed because it has more than one parameter list.
 //│ ║  l.95: 	  fun main()(using Debugger) =
 //│ ╙──      	      ^^^^
 //│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (CpsHandlerLowering.scala:268)
+//│ FAILURE LOCATION: checkCall (CpsHandlerLowering.scala:270)
 //│ ╔══[WARNING] This call is not CPS-transformed because it has more than one argument list.
 //│ ║  l.96: 	    test(12) + test(34)
 //│ ╙──      	    ^^^^^^^^
 //│ FAILURE: Unexpected warning
-//│ FAILURE LOCATION: checkCall (CpsHandlerLowering.scala:268)
+//│ FAILURE LOCATION: checkCall (CpsHandlerLowering.scala:270)
 //│ ╔══[WARNING] This call is not CPS-transformed because it has more than one argument list.
 //│ ║  l.96: 	    test(12) + test(34)
 //│ ╙──      	               ^^^^^^^^
@@ -147,18 +147,18 @@ res.raise()
 
 set res = res.resumeWith(42)
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
 //│ ═══[RUNTIME ERROR] TypeError: res1.resumeWith is not a function
 //│     at REPL49:1:46
 //│     at ContextifyScript.runInThisContext (node:vm:138:12)
-//│     at defaultEval (node:repl:608:24)
-//│     at REPLEvalInContext (node:repl:691:9)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
 //│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:66:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:690:19)
-//│     at REPLServer.onLine (node:repl:828:12)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
 //│     at REPLServer.emit (node:events:514:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:474:12)
-//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:669:18)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:477:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:675:18)
 
 :re
 res.raise()
@@ -167,20 +167,20 @@ res.raise()
 :expect 0.33676533676533676
 res.resumeWith(666)
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:259)
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
 //│ ═══[RUNTIME ERROR] TypeError: res1.resumeWith is not a function
 //│     at REPL55:1:44
 //│     at ContextifyScript.runInThisContext (node:vm:138:12)
-//│     at defaultEval (node:repl:608:24)
-//│     at REPLEvalInContext (node:repl:691:9)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
 //│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:66:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:690:19)
-//│     at REPLServer.onLine (node:repl:828:12)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
 //│     at REPLServer.emit (node:events:514:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:474:12)
-//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:669:18)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:477:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:675:18)
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:299)
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:301)
 //│ ═══[RUNTIME ERROR] Expected: '0.33676533676533676', got: 'undefined'
 
 let i = 100
