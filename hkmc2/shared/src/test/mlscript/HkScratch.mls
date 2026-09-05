@@ -5,52 +5,131 @@
 // :elt
 
 :global
-:effectHandlers
 // :d
 // :todo
 
 class Effect
 
-<<<<<<< HEAD
-:stackSafe
-:expect 50005000
-:noOpt
-:noInline
+:sjs
+:deforest
 :sir
-fun f(x) = 0
-f(0)
+:effectHandlers
+data class Pair(a, b)
+fun fstConfig(p) = if p is Pair(x, y) then x
+fstConfig(Pair(1, 2))
+//│ deforest > >>> fusing >>>
+//│ deforest > Pair⁰(1, 2) ->
+//│ deforest > 	match: p⁰
+//│ deforest > 	fields: p⁰.a⁰
+//│ deforest > 	fields: p⁰.b⁰
+//│ deforest > <<< fusing <<<
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let ‹stack safe body›;
-//│ define f⁰ as fun f¹(k, k1, x) {
-//│   let cpsCont$0, tmp;
-//│   define cpsCont$0 as fun cpsCont$0⁰(retVal) {
-//│     let tmp1;
-//│     set tmp1 = runtime⁰.cpsSetCheckDepth﹖();
-//│     match tmp1
-//│       true =>
-//│         return runtime⁰.cpsRaiseStack﹖(cpsCont$0⁰, retVal)
-//│       else
-//│         return k1(k, 0)
-//│     end
-//│   };
-//│   set tmp = runtime⁰.cpsSetCheckDepth﹖();
-//│   match tmp
-//│     true =>
-//│       return runtime⁰.cpsRaiseStack﹖(cpsCont$0⁰, undefined)
+//│ let tmp, fstConfig_5$fstConfig, fstConfig_5$p_Pair, fstConfig_5$p_rest, Pair_a, Pair_b, tmp1, tmp2, lambda, lambda1;
+//│ @private
+//│ define fstConfig_5$fstConfig as fun fstConfig_5$fstConfig⁰(k, p) {
+//│   let x, y, arg$Pair$0$, arg$Pair$1$, tmp3;
+//│   set tmp3 = p(x, y, arg$Pair$0$, arg$Pair$1$);
+//│   return k(tmp3)
+//│ };
+//│ @affine(1) @private
+//│ define fstConfig_5$p_Pair as fun fstConfig_5$p_Pair⁰(k, Pair_a1, Pair_b1)(fv_x, fv_y, fv_arg$Pair$0$, fv_arg$Pair$1$) {
+//│   set fv_arg$Pair$0$ = Pair_a1;
+//│   set fv_arg$Pair$1$ = Pair_b1;
+//│   set fv_y = fv_arg$Pair$1$;
+//│   set fv_x = fv_arg$Pair$0$;
+//│   return k(fv_x)
+//│ };
+//│ @private
+//│ define fstConfig_5$p_rest as fun fstConfig_5$p_rest⁰(k) {
+//│   return k(null)
+//│ };
+//│ define fstConfig⁰ as fun fstConfig¹(k, p) {
+//│   let x, y, arg$Pair$0$, arg$Pair$1$;
+//│   match p
+//│     Pair¹ =>
+//│       set arg$Pair$0$ = p.a⁰;
+//│       set arg$Pair$1$ = p.b⁰;
+//│       set y = arg$Pair$1$;
+//│       set x = arg$Pair$0$;
+//│       return k(x)
 //│     else
-//│       return cpsCont$0⁰(undefined)
+//│       throw new globalThis⁰.Error⁰("match error")
 //│   end
 //│ };
-//│ define ‹stack safe body› as fun ‹stack safe body›⁰() {
-//│   return f¹(runtime⁰.cpsId﹖, runtime⁰.cpsId2﹖, 0)
+//│ @data
+//│ define Pair² as class Pair¹ {
+//│   val a¹;
+//│   val b¹;
+//│   constructor Pair⁰(a, b) {
+//│     define a¹ as val a⁰ = a;
+//│     define b¹ as val b⁰ = b;
+//│     end
+//│   }
 //│ };
-//│ return runtime⁰.runStackSafeCps﹖(1000, ‹stack safe body›⁰)
+//│ set Pair_a = 1;
+//│ set Pair_b = 2;
+//│ @private
+//│ define lambda as fun lambda¹(k, Pair_a1, Pair_b1) {
+//│   let lambda2;
+//│   @private
+//│   define lambda2 as fun lambda⁰(k1, fv_x, fv_y, fv_arg$Pair$0$, fv_arg$Pair$1$) {
+//│     return fstConfig_5$p_Pair⁰(k1, Pair_a1, Pair_b1)(fv_x, fv_y, fv_arg$Pair$0$, fv_arg$Pair$1$)
+//│   };
+//│   return k(lambda⁰)
+//│ };
+//│ set tmp1 = lambda¹;
+//│ set tmp = tmp1(Pair_a, Pair_b);
+//│ @private
+//│ define lambda1 as fun lambda²(k, p) {
+//│   return fstConfig_5$fstConfig⁰(k, p)
+//│ };
+//│ set tmp2 = lambda²;
+//│ return tmp2(runtime⁰.cpsId﹖, tmp)
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let fstConfig, Pair1, k, tmp, Pair_a, inlinedVal, lambda;
+//│ fstConfig = function fstConfig(k1, p) {
+//│   let arg$Pair$0$;
+//│   if (p instanceof Pair1.class) {
+//│     arg$Pair$0$ = p.a;
+//│     return k1(arg$Pair$0$)
+//│   }
+//│   throw globalThis.Object.freeze(new globalThis.Error("match error"));
+//│ };
+//│ Pair1 = function Pair(a, b) {
+//│   return globalThis.Object.freeze(new Pair.class(a, b));
+//│ };
+//│ (class Pair {
+//│   static {
+//│     Pair1.class = this
+//│   }
+//│   constructor(a, b) {
+//│     this.a = a;
+//│     this.b = b;
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Pair", ["a", "b"]];
+//│ });
+//│ Pair_a = 2;
+//│ lambda = (undefined, function (k1, fv_x, fv_y, fv_arg$Pair$0$, fv_arg$Pair$1$) {
+//│   let Pair_a1;
+//│   Pair_a1 = Pair_a;
+//│   return k1(Pair_a1)
+//│ });
+//│ inlinedVal = 1(lambda);
+//│ k = runtime.cpsId;
+//│ tmp = inlinedVal(undefined, undefined, undefined, undefined);
+//│ return k(tmp)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:295)
-//│ ═══[RUNTIME ERROR] Expected: '50005000', got: '0'
-//│ = 0
-||||||| f558695e0
-
-=======
->>>>>>> upstream-hkmc2
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
+//│ ═══[RUNTIME ERROR] TypeError: 1 is not a function
+//│     at REPL13:1:958
+//│     at ContextifyScript.runInThisContext (node:vm:138:12)
+//│     at defaultEval (node:repl:610:24)
+//│     at REPLEvalInContext (node:repl:693:9)
+//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:66:14)
+//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
+//│     at REPLServer.onLine (node:repl:830:12)
+//│     at REPLServer.emit (node:events:514:20)
+//│     at [_onLine] [as _onLine] (node:internal/readline/interface:477:12)
+//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:675:18)

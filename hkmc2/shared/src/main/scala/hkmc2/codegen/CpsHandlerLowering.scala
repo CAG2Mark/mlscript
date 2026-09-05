@@ -17,6 +17,7 @@ import semantics.Elaborator.ctx
 import semantics.Elaborator.State
 import hkmc2.Config.EffectHandlers
 import hkmc2.Diagnostic.Source
+import hkmc2.syntax.SpreadKind
 
 
 object CpsHandlerLowering:
@@ -48,6 +49,8 @@ object CpsHandlerLowering:
 import CpsHandlerLowering.*
 
 class CpsHandlerLowering(paths: HandlerPaths, opt: Opt[EffectHandlers])(using TL, Raise, Elaborator.State, Elaborator.Ctx, Config):
+  
+  case class CpsCtx(defnsMap: Map[TermSymbol, FunDefn])
 
   val stackSafety = opt.exists(_.stackSafety.isDefined)
   
@@ -144,7 +147,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: Opt[EffectHandlers])(using TL
       
       case _ => super.applyBlock(b)
   
-  class CpsTransformer(isStackSafetyPass: Bool) extends BlockTransformer(SymbolSubst()):
+  class CpsTransformer(isStackSafetyPass: Bool)(using ctx: CpsCtx) extends BlockTransformer(SymbolSubst()):
     
     val idPath = if stackSafety && !isStackSafetyPass then paths.runtimePath.selN(Tree.Ident("cpsId2")) else paths.runtimePath.selN(Tree.Ident("cpsId"))
     val resMetadata = if stackSafety && !isStackSafetyPass then CallMetadata.mlsFunWithEffect else CallMetadata.defaultMlsFun
@@ -223,55 +226,56 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: Opt[EffectHandlers])(using TL
       case None => helper(parentPath)
     
     override def applyFunDefn(fun: FunDefn): FunDefn =
-      if fun.params.size != 1 then
-        raise(WarningReport(
-          msg"The function ${fun.dSym.toString} is not CPS-transformed because it has more than one parameter list." -> fun.dSym.toLoc :: Nil,
-          source = Source.Compilation))
-        super.applyFunDefn(fun)
+      
+      val contSym = VarSymbol(Tree.Ident("k"))
+      val (ogParams, remainingParams) = fun.params match
+        case head :: next => (head, next)
+        case Nil => (PlainParamList(Nil), Nil)
+      
+      val cpsBod = applyCpsOnFun(fun.body, contSym.asPath, fun.dSym.name === "main")
+      
+      val paramSym = VarSymbol(Tree.Ident("retVal")) // will always receive unit
+      val pList = PlainParamList.simple(paramSym :: Nil)
+      
+      val mainBod = if !isStackSafetyPass then cpsBod else
+        val (cpsCont, rest) = createCpsCont(pList, cpsBod, paramSym)
+        cpsId += 1
+        val bod = blockBuilder
+          .stackSafePre(cpsCont.asPath, Value.Lit(Tree.UnitLit(false)))
+          .ret(Call(cpsCont.asPath, (Value.Lit(Tree.UnitLit(false)).asArg :: Nil) ne_:: Nil)(resMetadata))
+        rest(bod)
+      
+      if fun.dSym.name === "main" then // hack
+        // make a non-cps forwarder
+        val nestedFun = FunDefn(
+          N, BlockMemberSymbol("main_cps", Nil, true),
+          TermSymbol(syntax.Fun, N, Tree.Ident("main_cps")),
+          PlainParamList(Param.simple(contSym) :: Nil) :: Nil,
+          mainBod
+        )(N, Nil)
+        val newBod = blockBuilder
+          .scopedVars(Set(nestedFun.sym))
+          .define(nestedFun)
+          .ret(Call(nestedFun.asPath, (idPath.asArg :: Nil) ne_:: Nil)(resMetadata))
+        FunDefn(
+          fun.owner, fun.sym, fun.dSym, fun.params, newBod
+        )(fun.configOverride, fun.annotations)
       else
-        val contSym = VarSymbol(Tree.Ident("k"))
-        val ogParams = fun.params.head
-        val cpsBod = applyCpsOnFun(fun.body, contSym.asPath, fun.dSym.name === "main")
-        
-        val paramSym = VarSymbol(Tree.Ident("retVal")) // will always receive unit
-        val pList = PlainParamList.simple(paramSym :: Nil)
-        
-        val mainBod = if !isStackSafetyPass then cpsBod else
-          val (cpsCont, rest) = createCpsCont(pList, cpsBod, paramSym)
-          cpsId += 1
-          val bod = blockBuilder
-            .stackSafePre(cpsCont.asPath, Value.Lit(Tree.UnitLit(false)))
-            .ret(Call(cpsCont.asPath, (Value.Lit(Tree.UnitLit(false)).asArg :: Nil) ne_:: Nil)(resMetadata))
-          rest(bod)
-        
-        if fun.dSym.name === "main" then // hack
-          // make a non-cps forwarder
-          val nestedFun = FunDefn(
-            N, BlockMemberSymbol("main_cps", Nil, true),
-            TermSymbol(syntax.Fun, N, Tree.Ident("main_cps")),
-            PlainParamList(Param.simple(contSym) :: Nil) :: Nil,
-            mainBod
-          )(N, Nil)
-          val newBod = blockBuilder
-            .scopedVars(Set(nestedFun.sym))
-            .define(nestedFun)
-            .ret(Call(nestedFun.asPath, (idPath.asArg :: Nil) ne_:: Nil)(resMetadata))
-          FunDefn(
-            fun.owner, fun.sym, fun.dSym, fun.params, newBod
-          )(fun.configOverride, fun.annotations)
-        else
-          fun.copy(
-            params = ogParams.copy(params = Param.simple(contSym) :: ogParams.params) :: Nil,
-            body = mainBod
-          )(fun.configOverride, fun.annotations)
+        fun.copy(
+          params = ogParams.copy(params = Param.simple(contSym) :: ogParams.params) :: remainingParams,
+          body = mainBod
+        )(fun.configOverride, fun.annotations)
     
     def checkCall(c: Call) =
-      if c.argss.size != 1 then
-        raise(WarningReport(
-          msg"This call is not CPS-transformed because it has more than one argument list." -> c.toLoc :: Nil,
-          source = Source.Compilation))
-        false
-      else if c.metadata.annotations.contains(Annot.Native) then
+      if c.argss.length =/= 1 then c match
+        case CallOrRefToFun(sym, args) =>
+          if ctx.defnsMap.contains(sym) then ()
+          else raise(WarningReport(
+            msg"The function ${sym.toString} is not CPS-transformed because it has more than one parameter list and is not in the same compilation unit." -> sym.toLoc :: Nil,
+            source = Source.Compilation))
+        case _ => ()
+      
+      if c.metadata.annotations.contains(Annot.Native) then
         false
       else
         c.fun match
@@ -315,7 +319,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: Opt[EffectHandlers])(using TL
       
       if inCtor || isTopLevel then r match
         case c: Call if c.metadata.mayRaiseEffects && checkCall(c) => applyPath(c.fun): newFun =>
-          val newCall = Call(newFun, (idPath.asArg :: c.argss.head) ne_:: Nil)(resMetadata)
+          val newCall = Call(newFun, (idPath.asArg :: c.argss.head) ne_:: c.argss.tail)(resMetadata)
           opt.flatMap(_.stackSafety) match
             case S(ss) if isTopLevel && isStackSafetyPass =>
               val (fn, rest) = createNestedFn("‹stack safe body›", PlainParamList(List.empty), Return(newCall), true)
@@ -349,7 +353,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: Opt[EffectHandlers])(using TL
           val (cpsCont, rest) = createCpsCont(pList, bod, paramSym)
           cpsId += 1
           applyPath(path): path =>
-            val call = Call(path, (cpsCont.asPath.asArg :: args.head) ne_:: Nil)(resMetadata)
+            val call = Call(path, (cpsCont.asPath.asArg :: args.head) ne_:: c.argss.tail)(resMetadata)
             rest(Return(call))
       case _ => super.applyResult(r)(k)
     
@@ -374,7 +378,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: Opt[EffectHandlers])(using TL
         if !checkCall(c) then
           retResult(c)
         else
-          Return(Call(c.fun, (curContPath.asArg :: c.argss.head) ne_:: Nil)(resMetadata))
+          Return(Call(c.fun, (curContPath.asArg :: c.argss.head) ne_:: c.argss.tail)(resMetadata))
       case Return(r: Result) => retResult(r)
       case _: Label => lastWords("undesugared label")
       case b: Begin =>
@@ -394,7 +398,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: Opt[EffectHandlers])(using TL
     val blk = (rest: Block) => Scoped(Set(bms), Define(fnDef, rest))
     (fnDef, blk)
   
-  def translateTopLevel(b: Block): Block =
+  def translateTopLevel(b: Block)(using CpsCtx): Block =
     val cpsTransformer = new CpsTransformer(false)
     val ret = cpsTransformer.applyBlock(blockNormalizer.applyBlock(b))
     // blockNormalizer.applyBlock(b)
@@ -406,10 +410,81 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: Opt[EffectHandlers])(using TL
     
   def translateProgram(prog: Program): Program =
     if opt.isEmpty then prog else
-      val transformed = translateTopLevel(prog.main)
-      if transformed is prog.main then prog
+      val expander = new EtaExpander
+      val defnsMap = expander.gatherDefns(prog.main)
+      val expanded = expander.rewrite(prog.main, defnsMap)
+      val newProg = if expanded is prog.main then prog else Program(prog.imports, expanded)
+      val desug = LambdaRewriter.desugar(newProg)
+      given CpsCtx = CpsCtx(defnsMap)
+      val transformed = translateTopLevel(desug.main)
+      if transformed is desug.main then desug
       else
         Program(
-          prog.imports,
+          desug.imports,
           transformed
         )
+
+object CallOrRefToFun:
+  def unapply(r: Result): Opt[(TermSymbol, Ls[Ls[Arg]])] = r match
+    case c @ Call(fun = Value.MemberRef(_, r: TermSymbol)) => S(r, c.argss)
+    case c @ Call(fun = s: Select) => s.symbol match
+      case Some(r: TermSymbol) => S(r, c.argss)
+      case _ => N
+    case Value.MemberRef(_, t: TermSymbol) => S(t, Nil)
+    case _ => N
+
+// Note: The CPS transformation requires that all calls to functions with multiple parameter lists happen within the compilation unit.
+class EtaExpander(using TL, Raise, Elaborator.State, Elaborator.Ctx, Config):
+  
+  private def dupParam(p: Param): Param = p.copy(sym = VarSymbol(Tree.Ident(p.sym.nme)))
+  private def dupParams(plist: List[Param]): List[Param] = plist.map(dupParam)
+  private def dupParamList(plist: ParamList): ParamList =
+    plist.copy(params = dupParams(plist.params), restParam = plist.restParam.map(dupParam))
+  
+  def gatherDefns(b: Block) =
+    val defns = mutable.Map[TermSymbol, FunDefn]()
+    val traverser = new BlockTraverser:
+      override def applyFunDefn(fun: FunDefn): Unit =
+        defns.addOne(fun.dSym, fun)
+      applyBlock(b)
+    defns.toMap
+  def rewrite(b: Block, fnMap: Map[TermSymbol, FunDefn]): Block =
+    val rewriter = new BlockTransformer(SymbolSubst.Id):
+      def applyCallOrRef(fn: FunDefn, args: Ls[Ls[Arg]], default: => Block)(k: Result => Block): Block =
+        val fnParamNum = fn.params.size
+        val callParamNum = args.size
+        if fnParamNum === 0 then default
+        else if fnParamNum < callParamNum then die
+        else if fnParamNum === callParamNum then default
+        else
+          val remainingParams = fn.params.drop(callParamNum)
+          
+          val duped = remainingParams.map(dupParamList)
+          
+          val remainingArgs = (duped zip remainingParams).map: (pA, pB) =>
+            (pA.restParam, pB.restParam) match
+              case (S(rA), S(rB)) =>
+                val lastArg = Arg(S(SpreadKind.Eager), rA.sym.asPath)
+                pA.params.foldRight(lastArg :: Nil)(_.sym.asPath.asArg :: _)
+              case (N, N) => pA.params.map(_.sym.asPath.asArg)
+              case _ => die
+          val finalCall = Call(fn.asPath, (args ::: remainingArgs).ne_!)(CallMetadata.mlsFunWithEffect)
+          k(duped.foldRight(finalCall)((paramList, acc) => Lambda(paramList, Return(acc))(Nil)))
+          
+      override def applyResult(r: Result)(k: Result => Block): Block = r match
+        case CallOrRefToFun(fnSym, args) if fnMap.contains(fnSym) =>
+          r match
+            case c: Call if c.metadata.mayRaiseEffects =>
+              val fn = fnMap(fnSym)
+              applyCallOrRef(fn, args, super.applyResult(r)(k))(k)
+            case _ => super.applyResult(r)(k) // this shouldn't happen
+        case _ => super.applyResult(r)(k)
+      override def applyPath(p: Path)(k: Path => Block): Block = p match
+        case CallOrRefToFun(fnSym, args) if fnMap.contains(fnSym) =>
+          val fn = fnMap(fnSym)
+          applyCallOrRef(fn, args, super.applyPath(p)(k)): r =>
+            val sym = TempSymbol(N)
+            blockBuilder.assignScoped(sym, r).rest(k(sym.asPath))
+        case _ => super.applyPath(p)(k)
+    val res = rewriter.applyBlock(b)
+    if res === b then b else res

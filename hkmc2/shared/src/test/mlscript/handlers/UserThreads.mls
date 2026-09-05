@@ -161,6 +161,18 @@ fun start(thread: ThreadEffect -> ()) =
   in
     thread(h)
   dequeue()
+//│ FAILURE: Unexpected exception
+//│ /!!!\ Uncaught error: java.lang.AssertionError: assertion failed: BlockMemberSymbol member:lambda for FunDefn is a free variable for this block
+//│ 	at: scala.runtime.Scala3RunTime$.assertFailed(Scala3RunTime.scala:10)
+//│ 	at: hkmc2.codegen.SymbolRefresherWalker.applyFunDefn(SymbolRefresher.scala:82)
+//│ 	at: hkmc2.codegen.BlockTraverser.applyDefn(BlockTraverser.scala:115)
+//│ 	at: hkmc2.codegen.BlockTraverser.applyBlock(BlockTraverser.scala:53)
+//│ 	at: hkmc2.codegen.SymbolRefresherWalker.applyBlock(SymbolRefresher.scala:78)
+//│ 	at: hkmc2.codegen.SymbolRefresherInternal.apply(SymbolRefresher.scala:158)
+//│ 	at: hkmc2.codegen.BlockSimplifier$Inliner$InlinerReplacer$Copier.applyBlock$$anonfun$23(BlockSimplifier.scala:1801)
+//│ 	at: hkmc2.codegen.BlockSimplifier$Inliner$InlinerReplacer$Transformer.go$1(BlockSimplifier.scala:1902)
+//│ 	at: hkmc2.codegen.BlockSimplifier$Inliner$InlinerReplacer$Transformer.inlineCall$$anonfun$3(BlockSimplifier.scala:1912)
+//│ 	at: scala.Option.fold(Option.scala:265)
 
 fun mainn(h) =
   h.fork(h =>
@@ -173,17 +185,46 @@ fun mainn(h) =
     print("[t2] received " + v.toString()))
 
 start(mainn)
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:136)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = member:start⁰
+//│     _2 = class hkmc2.semantics.BlockMemberSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Left of Cfg:
+//│       escapeChars = true
+//│       useSuperscripts = false
+//│       includeZero = false
+//│       defaultName = "tmp"
+//│     curThis = S of S of globalThis:globalThis⁰
+//│     bindings = HashMap(member:mainn -> mainn2, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, tmp:prettyPrint -> prettyPrint, tmp:block$res -> block$res4, tmp:Term -> Term, tmp:Block -> Block, member:mainn -> mainn, tmp:option -> option, member:Handler$h$ -> Handler$h$1, member:lambda -> lambda, tmp:block$res -> block$res10, member:mainn -> mainn1, member:Handler$h$ -> Handler$h$3, member:lambda -> lambda1, tmp:block$res -> block$res13, tmp:block$res -> block$res14, tmp:block$res -> block$res15, tmp:block$res -> block$res, tmp:block$res -> block$res1, member:ThreadEffect -> ThreadEffect5, class:ThreadEffect -> ThreadEffect4, member:ThreadEffect -> ThreadEffect1, member:Option -> Option, class:ThreadEffect -> ThreadEffect, tmp:block$res -> block$res5, tmp:block$res -> block$res16, member:enqueue -> enqueue, member:dequeue -> dequeue1, h -> h, member:tasks -> tasks1, class:Handler$h$ -> Handler$h$, tmp:block$res -> block$res19, tmp:block$res -> block$res20, tmp:block$res -> block$res2, tmp:block$res -> block$res11, member:dequeue -> dequeue, member:Lock -> Lock1, class:Lock -> Lock, tmp:block$res -> block$res6, h -> h1, class:Handler$h$ -> Handler$h$2, tmp:tmp -> tmp1, tmp:block$res -> block$res12, tmp:block$res -> block$res7, member:Predef -> Predef, member:start -> start, Runtime -> Runtime, member:ThreadEffect -> ThreadEffect3, class:ThreadEffect -> ThreadEffect2, class:Handler$h$ -> Handler$h$4, tmp:block$res -> block$res17, exchanger -> exchanger, tmp:block$res -> block$res18, tmp:block$res -> block$res3, tmp:block$res -> block$res8, member:f -> f, member:tasks -> tasks, tmp:tmp -> tmp, tmp:block$res -> block$res9, member:f -> f1)
+//│     defaultImportBindings = HashMap(/storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Option.mjs -> Option, /storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs -> Runtime, /storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Predef.mjs -> Predef)
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'start'
+//│ ║  l.187: 	start(mainn)
+//│ ║         	^^^^^
+//│ ╟── which references the symbol introduced here
+//│ ║  l.144: 	fun start(thread: ThreadEffect -> ()) =
+//│ ║         	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//│ ║  l.145: 	  handle h = ThreadEffect with
+//│ ║         	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//│ ║  l.146: 	    fun fork(new_thread)(k) =
+//│ ║         	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//│ ║  l.147: 	      enqueue(k, ())
+//│ ║         	^^^^^^^^^^^^^^^^^^^^
+//│ ║  l.148: 	... (more lines omitted) ...
+//│ ╙──       	^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 //│ > [t1] Sending 0
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
-//│ ═══[RUNTIME ERROR] Error: Function expected 1 argument but got 0
-//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1006:41)
-//│     at Handler$h$fork.lambda (REPL67:1:933)
-//│     at Handler$h$xchg (REPL67:1:3902)
+//│ ═══[RUNTIME ERROR] TypeError: h3.xchg is not a function
+//│     at lambda2 (REPL67:1:689)
+//│     at handleBlock$ (REPL47:1:1587)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1089:28)
+//│     at start (REPL47:1:1796)
+//│     at Handler$h$fork (REPL47:1:841)
 //│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1075:48)
 //│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1090:20)
-//│     at start (REPL67:1:5055)
-//│     at Handler$h$fork (REPL67:1:1113)
-//│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1075:48)
-//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1090:20)
-//│     at start (REPL67:1:5055)
+//│     at start (REPL47:1:1796)
+//│     at REPL70:1:39
+//│     at ContextifyScript.runInThisContext (node:vm:138:12)

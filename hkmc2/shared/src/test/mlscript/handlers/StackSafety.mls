@@ -14,48 +14,82 @@ fun hi(n) =
   else hi(n - 1)
 hi(0)
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let hi, $_stack$_safe$_body$_;
+//│ let hi, tmp, lambda, $_stack$_safe$_body$_;
 //│ hi = function hi(k, k1, n) {
-//│   let cpsCont$0, tmp;
-//│   cpsCont$0 = function cpsCont$0(retVal) {
-//│     let tmp1;
-//│     tmp1 = runtime.cpsSetCheckDepth();
-//│     if (tmp1 === true) {
-//│       return runtime.cpsRaiseStack(cpsCont$0, retVal)
+//│   let cpsCont$2, tmp1;
+//│   cpsCont$2 = function cpsCont$2(retVal) {
+//│     let tmp2;
+//│     tmp2 = runtime.cpsSetCheckDepth();
+//│     if (tmp2 === true) {
+//│       return runtime.cpsRaiseStack(cpsCont$2, retVal)
 //│     }
 //│     {
-//│       let scrut, tmp2;
+//│       let scrut, tmp3;
 //│       scrut = n === 0;
 //│       if (scrut === true) {
 //│         return k1(k, 0)
 //│       }
-//│       tmp2 = n - 1;
-//│       return hi(k, k1, tmp2);
+//│       {
+//│         let k2, k3, n1, cpsCont$0, tmp4;
+//│         tmp3 = n - 1;
+//│         k2 = k;
+//│         k3 = k1;
+//│         n1 = tmp3;
+//│         cpsCont$0 = function cpsCont$0(retVal1) {
+//│           let tmp5;
+//│           tmp5 = runtime.cpsSetCheckDepth();
+//│           if (tmp5 === true) {
+//│             return runtime.cpsRaiseStack(cpsCont$0, retVal1)
+//│           }
+//│           return hi(k2, k3, n1);
+//│         };
+//│         tmp4 = runtime.cpsSetCheckDepth();
+//│         if (tmp4 === true) {
+//│           return runtime.cpsRaiseStack(cpsCont$0, undefined)
+//│         }
+//│         {
+//│           let tmp5;
+//│           tmp5 = runtime.cpsSetCheckDepth();
+//│           if (tmp5 === true) {
+//│             return runtime.cpsRaiseStack(cpsCont$0, undefined)
+//│           }
+//│           return hi(k2, k3, n1);
+//│         }
+//│       }
 //│     }
 //│   };
-//│   tmp = runtime.cpsSetCheckDepth();
-//│   if (tmp === true) {
-//│     return runtime.cpsRaiseStack(cpsCont$0, undefined)
+//│   tmp1 = runtime.cpsSetCheckDepth();
+//│   if (tmp1 === true) {
+//│     return runtime.cpsRaiseStack(cpsCont$2, undefined)
+//│   }
+//│   return cpsCont$2(undefined);
+//│ };
+//│ lambda = (undefined, function (k, k1, n) {
+//│   let cpsCont$4, tmp1;
+//│   cpsCont$4 = function cpsCont$4(retVal) {
+//│     let tmp2;
+//│     tmp2 = runtime.cpsSetCheckDepth();
+//│     if (tmp2 === true) {
+//│       return runtime.cpsRaiseStack(cpsCont$4, retVal)
+//│     }
+//│     return hi(k, k1, n);
+//│   };
+//│   tmp1 = runtime.cpsSetCheckDepth();
+//│   if (tmp1 === true) {
+//│     return runtime.cpsRaiseStack(cpsCont$4, undefined)
 //│   }
 //│   {
-//│     let tmp1;
-//│     tmp1 = runtime.cpsSetCheckDepth();
-//│     if (tmp1 === true) {
-//│       return runtime.cpsRaiseStack(cpsCont$0, undefined)
+//│     let tmp2;
+//│     tmp2 = runtime.cpsSetCheckDepth();
+//│     if (tmp2 === true) {
+//│       return runtime.cpsRaiseStack(cpsCont$4, undefined)
 //│     }
-//│     {
-//│       let scrut, tmp2;
-//│       scrut = n === 0;
-//│       if (scrut === true) {
-//│         return k1(k, 0)
-//│       }
-//│       tmp2 = n - 1;
-//│       return hi(k, k1, tmp2);
-//│     }
+//│     return hi(k, k1, n);
 //│   }
-//│ };
+//│ });
+//│ tmp = lambda;
 //│ $_stack$_safe$_body$_ = (undefined, function () {
-//│   return hi(runtime.cpsId, runtime.cpsId2, 0)
+//│   return tmp(runtime.cpsId, runtime.cpsId2, 0)
 //│ });
 //│ return runtime.runStackSafeCps(6, $_stack$_safe$_body$_)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
@@ -70,69 +104,115 @@ fun sum(n) =
     n + sum(n - 1)
 sum(10000)
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let sum, $_stack$_safe$_body$_1;
+//│ let sum, tmp1, lambda1, $_stack$_safe$_body$_1;
 //│ sum = function sum(k, k1, n) {
-//│   let cpsCont$5, tmp;
-//│   cpsCont$5 = function cpsCont$5(retVal) {
-//│     let tmp1;
-//│     tmp1 = runtime.cpsSetCheckDepth();
-//│     if (tmp1 === true) {
-//│       return runtime.cpsRaiseStack(cpsCont$5, retVal)
+//│   let cpsCont$7, tmp2;
+//│   cpsCont$7 = function cpsCont$7(retVal) {
+//│     let tmp3;
+//│     tmp3 = runtime.cpsSetCheckDepth();
+//│     if (tmp3 === true) {
+//│       return runtime.cpsRaiseStack(cpsCont$7, retVal)
 //│     }
 //│     {
-//│       let scrut, tmp2, tmp3;
+//│       let scrut, tmp4, tmp5;
 //│       scrut = n === 0;
 //│       if (scrut === true) {
 //│         return k1(k, 0)
 //│       }
 //│       {
-//│         let cpsCont$0;
-//│         tmp2 = n - 1;
-//│         cpsCont$0 = function cpsCont$0(k2, retVal1) {
-//│           let cpsCont$3, tmp4;
-//│           cpsCont$3 = function cpsCont$3(retVal2) {
-//│             let tmp5;
-//│             tmp5 = runtime.cpsSetCheckDepth();
-//│             if (tmp5 === true) {
-//│               return runtime.cpsRaiseStack(cpsCont$3, retVal2)
+//│         let cpsCont$0, k2, k3, n1, cpsCont$3, tmp6;
+//│         tmp4 = n - 1;
+//│         cpsCont$0 = function cpsCont$0(k4, retVal1) {
+//│           let cpsCont$5, tmp7;
+//│           cpsCont$5 = function cpsCont$5(retVal2) {
+//│             let tmp8;
+//│             tmp8 = runtime.cpsSetCheckDepth();
+//│             if (tmp8 === true) {
+//│               return runtime.cpsRaiseStack(cpsCont$5, retVal2)
 //│             }
 //│             {
-//│               let tmp6;
-//│               tmp3 = retVal1;
-//│               tmp6 = n + tmp3;
-//│               return k1(k2, tmp6);
+//│               let tmp9;
+//│               tmp5 = retVal1;
+//│               tmp9 = n + tmp5;
+//│               return k1(k4, tmp9);
 //│             }
 //│           };
-//│           tmp4 = runtime.cpsSetCheckDepth();
-//│           if (tmp4 === true) {
-//│             return runtime.cpsRaiseStack(cpsCont$3, undefined)
+//│           tmp7 = runtime.cpsSetCheckDepth();
+//│           if (tmp7 === true) {
+//│             return runtime.cpsRaiseStack(cpsCont$5, undefined)
 //│           }
 //│           {
-//│             let tmp5;
-//│             tmp5 = runtime.cpsSetCheckDepth();
-//│             if (tmp5 === true) {
-//│               return runtime.cpsRaiseStack(cpsCont$3, undefined)
+//│             let tmp8;
+//│             tmp8 = runtime.cpsSetCheckDepth();
+//│             if (tmp8 === true) {
+//│               return runtime.cpsRaiseStack(cpsCont$5, undefined)
 //│             }
 //│             {
-//│               let tmp6;
-//│               tmp3 = retVal1;
-//│               tmp6 = n + tmp3;
-//│               return k1(k2, tmp6);
+//│               let tmp9;
+//│               tmp5 = retVal1;
+//│               tmp9 = n + tmp5;
+//│               return k1(k4, tmp9);
 //│             }
 //│           }
 //│         };
-//│         return sum(k, cpsCont$0, tmp2);
+//│         k2 = k;
+//│         k3 = cpsCont$0;
+//│         n1 = tmp4;
+//│         cpsCont$3 = function cpsCont$3(retVal1) {
+//│           let tmp7;
+//│           tmp7 = runtime.cpsSetCheckDepth();
+//│           if (tmp7 === true) {
+//│             return runtime.cpsRaiseStack(cpsCont$3, retVal1)
+//│           }
+//│           return sum(k2, k3, n1);
+//│         };
+//│         tmp6 = runtime.cpsSetCheckDepth();
+//│         if (tmp6 === true) {
+//│           return runtime.cpsRaiseStack(cpsCont$3, undefined)
+//│         }
+//│         {
+//│           let tmp7;
+//│           tmp7 = runtime.cpsSetCheckDepth();
+//│           if (tmp7 === true) {
+//│             return runtime.cpsRaiseStack(cpsCont$3, undefined)
+//│           }
+//│           return sum(k2, k3, n1);
+//│         }
 //│       }
 //│     }
 //│   };
-//│   tmp = runtime.cpsSetCheckDepth();
-//│   if (tmp === true) {
-//│     return runtime.cpsRaiseStack(cpsCont$5, undefined)
+//│   tmp2 = runtime.cpsSetCheckDepth();
+//│   if (tmp2 === true) {
+//│     return runtime.cpsRaiseStack(cpsCont$7, undefined)
 //│   }
-//│   return cpsCont$5(undefined);
+//│   return cpsCont$7(undefined);
 //│ };
+//│ lambda1 = (undefined, function (k, k1, n) {
+//│   let cpsCont$9, tmp2;
+//│   cpsCont$9 = function cpsCont$9(retVal) {
+//│     let tmp3;
+//│     tmp3 = runtime.cpsSetCheckDepth();
+//│     if (tmp3 === true) {
+//│       return runtime.cpsRaiseStack(cpsCont$9, retVal)
+//│     }
+//│     return sum(k, k1, n);
+//│   };
+//│   tmp2 = runtime.cpsSetCheckDepth();
+//│   if (tmp2 === true) {
+//│     return runtime.cpsRaiseStack(cpsCont$9, undefined)
+//│   }
+//│   {
+//│     let tmp3;
+//│     tmp3 = runtime.cpsSetCheckDepth();
+//│     if (tmp3 === true) {
+//│       return runtime.cpsRaiseStack(cpsCont$9, undefined)
+//│     }
+//│     return sum(k, k1, n);
+//│   }
+//│ });
+//│ tmp1 = lambda1;
 //│ $_stack$_safe$_body$_1 = (undefined, function () {
-//│   return sum(runtime.cpsId, runtime.cpsId2, 10000)
+//│   return tmp1(runtime.cpsId, runtime.cpsId2, 10000)
 //│ });
 //│ return runtime.runStackSafeCps(1000, $_stack$_safe$_body$_1)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
@@ -244,11 +324,11 @@ fun max(a, b) = if a < b then b else a
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let max;
 //│ max = function max(k, k1, a, b) {
-//│   let cpsCont$0, tmp2;
+//│   let cpsCont$0, tmp9;
 //│   cpsCont$0 = function cpsCont$0(retVal) {
-//│     let tmp3;
-//│     tmp3 = runtime.cpsSetCheckDepth();
-//│     if (tmp3 === true) {
+//│     let tmp10;
+//│     tmp10 = runtime.cpsSetCheckDepth();
+//│     if (tmp10 === true) {
 //│       return runtime.cpsRaiseStack(cpsCont$0, retVal)
 //│     }
 //│     {
@@ -260,14 +340,14 @@ fun max(a, b) = if a < b then b else a
 //│       return k1(k, a);
 //│     }
 //│   };
-//│   tmp2 = runtime.cpsSetCheckDepth();
-//│   if (tmp2 === true) {
+//│   tmp9 = runtime.cpsSetCheckDepth();
+//│   if (tmp9 === true) {
 //│     return runtime.cpsRaiseStack(cpsCont$0, undefined)
 //│   }
 //│   {
-//│     let tmp3;
-//│     tmp3 = runtime.cpsSetCheckDepth();
-//│     if (tmp3 === true) {
+//│     let tmp10;
+//│     tmp10 = runtime.cpsSetCheckDepth();
+//│     if (tmp10 === true) {
 //│       return runtime.cpsRaiseStack(cpsCont$0, undefined)
 //│     }
 //│     { let scrut; scrut = a < b; if (scrut === true) { return k1(k, b) } return k1(k, a); }
@@ -302,15 +382,15 @@ h.whoops()
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
 //│ ═══[RUNTIME ERROR] Error: Function expected 2 arguments but got 0
 //│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1006:41)
-//│     at lambda2 (REPL52:1:2003)
+//│     at lambda12 (REPL52:1:2033)
 //│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1368:28)
-//│     at cpsCont$2 (REPL52:1:3251)
-//│     at Handler$h$whoops (REPL52:1:3625)
+//│     at cpsCont$2 (REPL52:1:3290)
+//│     at Handler$h$whoops (REPL52:1:3667)
 //│     at loop (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:275:31)
 //│     at Runtime.ss_handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1099:12)
 //│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:96:21
-//│     at cpsCont$4 (REPL52:1:3767)
-//│     at Handler$h$6.whoops (REPL52:1:3986)
+//│     at cpsCont$4 (REPL52:1:3810)
+//│     at Handler$h$6.whoops (REPL52:1:4032)
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:301)
 //│ ═══[RUNTIME ERROR] Expected: '0', got: 'undefined'
