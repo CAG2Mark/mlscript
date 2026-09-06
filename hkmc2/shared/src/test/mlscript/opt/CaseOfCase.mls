@@ -178,27 +178,6 @@ x => if multiProducer(x) is
 
 // Note: should NOT move the prefix before the producer match because it reads the produced value
 class PrefixBox(val value)
-//│ /!\ Warning: object identity between equal objects was not preserved by HandlerLowering
-//│ /!\ Offending: ClsLikeDefn:
-//│   isym = class:PrefixBox⁰
-//│   sym = member:PrefixBox¹
-//│   ctorSym = S of term:PrefixBox²
-//│   k = Cls
-//│   paramsOpt = S of ParamList:
-//│     params = Ls of
-//│       Param:
-//│         flags = (val)
-//│         sym = value¹
-//│         modulefulness = Modulefulness of N
-//│   publicFields = Ls of
-//│     Tuple2:
-//│       _1 = member:value²
-//│       _2 = term:PrefixBox⁰/value³
-//│   ctor = Define:
-//│     defn = ValDefn:
-//│       tsym = term:PrefixBox⁰/value³
-//│       sym = member:value²
-//│       rhs = SimpleRef of value¹
 
 :soir
 fun prefixDependency(x) =
@@ -211,14 +190,14 @@ fun prefixDependency(x) =
 //│   let copy, tmp;
 //│   match x
 //│     true =>
-//│       set tmp = PrefixBox²(x);
+//│       set tmp = PrefixBox⁰(x);
 //│       end
 //│     else
-//│       set tmp = PrefixBox²(false);
+//│       set tmp = PrefixBox⁰(false);
 //│       end
-//│   set copy = tmp.value³;
+//│   set copy = tmp.value¹;
 //│   match tmp
-//│     PrefixBox⁰ =>
+//│     PrefixBox¹ =>
 //│       return copy
 //│     else
 //│       throw new globalThis⁰.Error⁰("match error")
