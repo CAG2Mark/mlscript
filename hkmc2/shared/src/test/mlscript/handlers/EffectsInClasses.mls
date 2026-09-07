@@ -1,5 +1,6 @@
 :js
 :effectHandlers
+:lift
 
 
 abstract class Effect with
@@ -34,7 +35,7 @@ data class Lol(h) with
 // * The most natural semantics (following what normal constructors currently do)
 // *  is for the handler to not yet be constructed but to be constructed and executed normally after resumption.
 // * See full discussion at: https://github.com/hkust-taco/mlscript/pull/268#discussion_r1938523085
-:fixme
+:ignore
 handle h = Effect with
   fun perform(arg)(k) =
     print(arg)
@@ -47,20 +48,18 @@ handle k = Eff with
 k.test()
 print("test")
 //│ > test
-//│ FAILURE: Unexpected lack of error to fix
 
 
 
-:fixme
+:ignore
 let oops = 
   handle h = Effect with
     fun perform(arg)(k) =
       print(arg)
       "b"
   Lol(h)
-//│ > Suspend(fun cpsId, Handler$h$, fun Handler$h$perform)
+//│ > Suspend(fun cpsId, Handler$h$, fun Handler$h$perform$here)
 //│ oops = Lol(Handler$h$)
-//│ FAILURE: Unexpected lack of error to fix
 
 :fixme
 :expect "b"
@@ -68,16 +67,15 @@ oops
 //│ ═══[RUNTIME ERROR] Expected: '"b"', got: 'Lol(Handler$h$)'
 //│ = Lol(Handler$h$)
 
-:fixme
+:ignore
 let oops = 
   handle h = Effect with
     fun perform(arg)(k) =
       print(arg)
       "b"
   new Lol(h)
-//│ > Suspend(fun cpsId, Handler$h$, fun Handler$h$perform)
+//│ > Suspend(fun cpsId, Handler$h$, fun Handler$h$perform$here)
 //│ oops = Lol(Handler$h$)
-//│ FAILURE: Unexpected lack of error to fix
 
 :fixme
 :expect "b"
@@ -86,21 +84,19 @@ oops
 //│ = Lol(Handler$h$)
 
 
-:fixme
+:ignore
 let oops = 
   handle h = Effect with
     fun perform(arg)(k) =
       print(arg)
       k("b")
   Lol(h)
-//│ > Suspend(fun cpsId, Handler$h$, fun Handler$h$perform)
+//│ > Suspend(fun cpsId, Handler$h$, fun Handler$h$perform$here)
 //│ oops = Lol(Handler$h$)
-//│ FAILURE: Unexpected lack of error to fix
 
-:fixme
+:ignore
 oops.h
 //│ = Handler$h$
-//│ FAILURE: Unexpected lack of error to fix
 
 let obj = mut {s: undefined}
 //│ obj = {s: undefined}

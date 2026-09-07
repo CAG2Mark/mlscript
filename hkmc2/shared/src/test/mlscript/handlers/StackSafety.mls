@@ -1,5 +1,6 @@
 :js
 :effectHandlers
+:lift
 :rewriteWhile
 :noTailRec
 
@@ -14,7 +15,7 @@ fun hi(n) =
   else hi(n - 1)
 hi(0)
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let hi, tmp, lambda, $_stack$_safe$_body$_;
+//│ let hi, tmp, $_stack$_safe$_body$_;
 //│ hi = function hi(k, k1, n) {
 //│   let cpsCont$2, tmp1;
 //│   cpsCont$2 = function cpsCont$2(retVal) {
@@ -30,31 +31,32 @@ hi(0)
 //│         return k1(k, 0)
 //│       }
 //│       {
-//│         let k2, k3, n1, cpsCont$0, tmp4;
+//│         let tmp4;
 //│         tmp3 = n - 1;
-//│         k2 = k;
-//│         k3 = k1;
-//│         n1 = tmp3;
-//│         cpsCont$0 = function cpsCont$0(retVal1) {
-//│           let tmp5;
-//│           tmp5 = runtime.cpsSetCheckDepth();
-//│           if (tmp5 === true) {
-//│             return runtime.cpsRaiseStack(cpsCont$0, retVal1)
-//│           }
-//│           return hi(k2, k3, n1);
-//│         };
-//│         tmp4 = runtime.cpsSetCheckDepth();
-//│         if (tmp4 === true) {
-//│           return runtime.cpsRaiseStack(cpsCont$0, undefined)
-//│         }
-//│         {
-//│           let tmp5;
+//│         tmp4 = (k2, k3, n1) => {
+//│           let cpsCont$0, tmp5;
+//│           cpsCont$0 = function cpsCont$0(retVal1) {
+//│             let tmp6;
+//│             tmp6 = runtime.cpsSetCheckDepth();
+//│             if (tmp6 === true) {
+//│               return runtime.cpsRaiseStack(cpsCont$0, retVal1)
+//│             }
+//│             return hi(k2, k3, n1);
+//│           };
 //│           tmp5 = runtime.cpsSetCheckDepth();
 //│           if (tmp5 === true) {
 //│             return runtime.cpsRaiseStack(cpsCont$0, undefined)
 //│           }
-//│           return hi(k2, k3, n1);
-//│         }
+//│           {
+//│             let tmp6;
+//│             tmp6 = runtime.cpsSetCheckDepth();
+//│             if (tmp6 === true) {
+//│               return runtime.cpsRaiseStack(cpsCont$0, undefined)
+//│             }
+//│             return hi(k2, k3, n1);
+//│           }
+//│         };
+//│         return tmp4(k, k1, tmp3);
 //│       }
 //│     }
 //│   };
@@ -64,7 +66,7 @@ hi(0)
 //│   }
 //│   return cpsCont$2(undefined);
 //│ };
-//│ lambda = (undefined, function (k, k1, n) {
+//│ tmp = (k, k1, n) => {
 //│   let cpsCont$4, tmp1;
 //│   cpsCont$4 = function cpsCont$4(retVal) {
 //│     let tmp2;
@@ -86,8 +88,7 @@ hi(0)
 //│     }
 //│     return hi(k, k1, n);
 //│   }
-//│ });
-//│ tmp = lambda;
+//│ };
 //│ $_stack$_safe$_body$_ = (undefined, function () {
 //│   return tmp(runtime.cpsId, runtime.cpsId2, 0)
 //│ });
@@ -104,7 +105,7 @@ fun sum(n) =
     n + sum(n - 1)
 sum(10000)
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let sum, tmp1, lambda1, $_stack$_safe$_body$_1;
+//│ let sum, tmp1, $_stack$_safe$_body$_1;
 //│ sum = function sum(k, k1, n) {
 //│   let cpsCont$7, tmp2;
 //│   cpsCont$7 = function cpsCont$7(retVal) {
@@ -120,9 +121,32 @@ sum(10000)
 //│         return k1(k, 0)
 //│       }
 //│       {
-//│         let cpsCont$0, k2, k3, n1, cpsCont$3, tmp6;
+//│         let tmp6, cpsCont$0;
 //│         tmp4 = n - 1;
-//│         cpsCont$0 = function cpsCont$0(k4, retVal1) {
+//│         tmp6 = (k2, k3, n1) => {
+//│           let cpsCont$3, tmp7;
+//│           cpsCont$3 = function cpsCont$3(retVal1) {
+//│             let tmp8;
+//│             tmp8 = runtime.cpsSetCheckDepth();
+//│             if (tmp8 === true) {
+//│               return runtime.cpsRaiseStack(cpsCont$3, retVal1)
+//│             }
+//│             return sum(k2, k3, n1);
+//│           };
+//│           tmp7 = runtime.cpsSetCheckDepth();
+//│           if (tmp7 === true) {
+//│             return runtime.cpsRaiseStack(cpsCont$3, undefined)
+//│           }
+//│           {
+//│             let tmp8;
+//│             tmp8 = runtime.cpsSetCheckDepth();
+//│             if (tmp8 === true) {
+//│               return runtime.cpsRaiseStack(cpsCont$3, undefined)
+//│             }
+//│             return sum(k2, k3, n1);
+//│           }
+//│         };
+//│         cpsCont$0 = function cpsCont$0(k2, retVal1) {
 //│           let cpsCont$5, tmp7;
 //│           cpsCont$5 = function cpsCont$5(retVal2) {
 //│             let tmp8;
@@ -134,7 +158,7 @@ sum(10000)
 //│               let tmp9;
 //│               tmp5 = retVal1;
 //│               tmp9 = n + tmp5;
-//│               return k1(k4, tmp9);
+//│               return k1(k2, tmp9);
 //│             }
 //│           };
 //│           tmp7 = runtime.cpsSetCheckDepth();
@@ -151,33 +175,11 @@ sum(10000)
 //│               let tmp9;
 //│               tmp5 = retVal1;
 //│               tmp9 = n + tmp5;
-//│               return k1(k4, tmp9);
+//│               return k1(k2, tmp9);
 //│             }
 //│           }
 //│         };
-//│         k2 = k;
-//│         k3 = cpsCont$0;
-//│         n1 = tmp4;
-//│         cpsCont$3 = function cpsCont$3(retVal1) {
-//│           let tmp7;
-//│           tmp7 = runtime.cpsSetCheckDepth();
-//│           if (tmp7 === true) {
-//│             return runtime.cpsRaiseStack(cpsCont$3, retVal1)
-//│           }
-//│           return sum(k2, k3, n1);
-//│         };
-//│         tmp6 = runtime.cpsSetCheckDepth();
-//│         if (tmp6 === true) {
-//│           return runtime.cpsRaiseStack(cpsCont$3, undefined)
-//│         }
-//│         {
-//│           let tmp7;
-//│           tmp7 = runtime.cpsSetCheckDepth();
-//│           if (tmp7 === true) {
-//│             return runtime.cpsRaiseStack(cpsCont$3, undefined)
-//│           }
-//│           return sum(k2, k3, n1);
-//│         }
+//│         return tmp6(k, cpsCont$0, tmp4);
 //│       }
 //│     }
 //│   };
@@ -187,7 +189,7 @@ sum(10000)
 //│   }
 //│   return cpsCont$7(undefined);
 //│ };
-//│ lambda1 = (undefined, function (k, k1, n) {
+//│ tmp1 = (k, k1, n) => {
 //│   let cpsCont$9, tmp2;
 //│   cpsCont$9 = function cpsCont$9(retVal) {
 //│     let tmp3;
@@ -209,8 +211,7 @@ sum(10000)
 //│     }
 //│     return sum(k, k1, n);
 //│   }
-//│ });
-//│ tmp1 = lambda1;
+//│ };
 //│ $_stack$_safe$_body$_1 = (undefined, function () {
 //│   return tmp1(runtime.cpsId, runtime.cpsId2, 10000)
 //│ });
@@ -228,7 +229,6 @@ fun foo(f) =
     set ctr += 1
     dummy(f(f))
 foo(foo)
-//│ = 0
 //│ ctr = 10001
 
 :stackSafe
@@ -251,7 +251,22 @@ fun foo() =
     else n + f(n-1)
   f(10000)
 foo()
-//│ = 50005000
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
+//│ ═══[RUNTIME ERROR] TypeError: k11 is not a function
+//│     at cpsCont$0 (REPL24:1:5249)
+//│     at cpsCont$0 (REPL24:1:5249)
+//│     at cpsCont$0 (REPL24:1:5249)
+//│     at cpsCont$0 (REPL24:1:5249)
+//│     at cpsCont$0 (REPL24:1:5249)
+//│     at cpsCont$0 (REPL24:1:5249)
+//│     at cpsCont$0 (REPL24:1:5249)
+//│     at cpsCont$0 (REPL24:1:5249)
+//│     at cpsCont$0 (REPL24:1:5249)
+//│     at cpsCont$0 (REPL24:1:5249)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:301)
+//│ ═══[RUNTIME ERROR] Expected: '50005000', got: 'undefined'
 
 :stackSafe 100
 :expect 50005000
@@ -324,11 +339,11 @@ fun max(a, b) = if a < b then b else a
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
 //│ let max;
 //│ max = function max(k, k1, a, b) {
-//│   let cpsCont$0, tmp9;
+//│   let cpsCont$0, tmp12;
 //│   cpsCont$0 = function cpsCont$0(retVal) {
-//│     let tmp10;
-//│     tmp10 = runtime.cpsSetCheckDepth();
-//│     if (tmp10 === true) {
+//│     let tmp13;
+//│     tmp13 = runtime.cpsSetCheckDepth();
+//│     if (tmp13 === true) {
 //│       return runtime.cpsRaiseStack(cpsCont$0, retVal)
 //│     }
 //│     {
@@ -340,14 +355,14 @@ fun max(a, b) = if a < b then b else a
 //│       return k1(k, a);
 //│     }
 //│   };
-//│   tmp9 = runtime.cpsSetCheckDepth();
-//│   if (tmp9 === true) {
+//│   tmp12 = runtime.cpsSetCheckDepth();
+//│   if (tmp12 === true) {
 //│     return runtime.cpsRaiseStack(cpsCont$0, undefined)
 //│   }
 //│   {
-//│     let tmp10;
-//│     tmp10 = runtime.cpsSetCheckDepth();
-//│     if (tmp10 === true) {
+//│     let tmp13;
+//│     tmp13 = runtime.cpsSetCheckDepth();
+//│     if (tmp13 === true) {
 //│       return runtime.cpsRaiseStack(cpsCont$0, undefined)
 //│     }
 //│     { let scrut; scrut = a < b; if (scrut === true) { return k1(k, b) } return k1(k, a); }
@@ -367,7 +382,7 @@ bad()
 //│ = 100010000
 
 
-
+:fixme
 :stackSafe 100
 :expect 0
 let depth = 0
@@ -378,21 +393,7 @@ handle h = Object with
       set depth += 1
       enterHandleBlock(this, () => whoops())
 h.whoops()
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
-//│ ═══[RUNTIME ERROR] Error: Function expected 2 arguments but got 0
-//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1006:41)
-//│     at lambda12 (REPL52:1:2033)
-//│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1368:28)
-//│     at cpsCont$2 (REPL52:1:3290)
-//│     at Handler$h$whoops (REPL52:1:3667)
-//│     at loop (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:275:31)
-//│     at Runtime.ss_handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1099:12)
-//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:96:21
-//│     at cpsCont$4 (REPL52:1:3810)
-//│     at Handler$h$6.whoops (REPL52:1:4032)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:301)
+//│ ═══[RUNTIME ERROR] TypeError: k is not a function
 //│ ═══[RUNTIME ERROR] Expected: '0', got: 'undefined'
 //│ depth = 1
 

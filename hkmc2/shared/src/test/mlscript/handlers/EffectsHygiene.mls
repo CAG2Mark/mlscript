@@ -1,5 +1,6 @@
 :js
 :effectHandlers
+:lift
 
 module M
 
@@ -13,6 +14,12 @@ fun foo(h): module M =
   else
     module A
     A
+//│ ╔══[WARNING] Modules are not yet lifted.
+//│ ║  l.15: 	    module A
+//│ ╙──      	           ^
+//│ ╔══[WARNING] Modules are not yet lifted.
+//│ ║  l.12: 	    module A
+//│ ╙──      	           ^
 //│ —————————————| JS (sanitized) |—————————————————————————————————————————————————————————————————————
 //│ let foo;
 //│ foo = function foo(k, h) {
@@ -38,6 +45,5 @@ fun foo(h): module M =
 //│   return runtime.checkCall(k(A3));
 //│ };
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ FAILURE: Unexpected lack of error to fix
 
 

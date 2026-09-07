@@ -1,6 +1,6 @@
 :js
 :effectHandlers
-
+:lift
 
 abstract class Effect with
   fun perform(arg: Str): Str
@@ -70,7 +70,7 @@ in
   h.perform("5")
 result
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let result, h7, Handler$h$15, lambda7;
+//│ let result, h7, Handler$h$15, tmp7;
 //│ result = "";
 //│ (class Handler$h$14 extends Effect1 {
 //│   static {
@@ -80,32 +80,41 @@ result
 //│     super();
 //│   }
 //│   perform(k, arg) {
-//│     let Handler$h$perform;
-//│     Handler$h$perform = function Handler$h$perform(k1, k2) {
-//│       let v, cpsCont$0;
-//│       cpsCont$0 = function cpsCont$0(retVal) {
-//│         v = retVal;
-//│         result = result + arg;
-//│         return k1(v)
+//│     let Handler$h$perform$here;
+//│     Handler$h$perform$here = (k1, k2) => {
+//│       let k3, arg1, k4, tmp8;
+//│       k3 = k1;
+//│       arg1 = arg;
+//│       k4 = k2;
+//│       tmp8 = (k5, arg2, k6) => {
+//│         let k7, arg3, k8, cpsCont$0;
+//│         k7 = k5;
+//│         arg3 = arg2;
+//│         k8 = k6;
+//│         cpsCont$0 = function cpsCont$0(v) {
+//│           result = result + arg3;
+//│           return k7(v)
+//│         };
+//│         return k8(cpsCont$0, arg3)
 //│       };
-//│       return k2(cpsCont$0, arg)
+//│       return tmp8(k3, arg1, k4)
 //│     };
-//│     return new runtime.Suspend(k, this, Handler$h$perform)
+//│     return new runtime.Suspend(k, this, Handler$h$perform$here)
 //│   }
 //│   toString() { return runtime.render(this); }
 //│   static [definitionMetadata] = ["class", "Handler$h$"];
 //│ });
 //│ h7 = new Handler$h$15();
-//│ lambda7 = (undefined, function (k) {
+//│ tmp7 = (k) => {
 //│   let k1, cpsCont$12;
 //│   k1 = k;
-//│   cpsCont$12 = function cpsCont$12(retVal) {
+//│   cpsCont$12 = function cpsCont$12($_no$_symbol$_) {
 //│     let cpsCont$9;
-//│     cpsCont$9 = function cpsCont$9(retVal1) {
+//│     cpsCont$9 = function cpsCont$9($_no$_symbol$_1) {
 //│       let cpsCont$6;
-//│       cpsCont$6 = function cpsCont$6(retVal2) {
+//│       cpsCont$6 = function cpsCont$6($_no$_symbol$_2) {
 //│         let cpsCont$3;
-//│         cpsCont$3 = function cpsCont$3(retVal3) {
+//│         cpsCont$3 = function cpsCont$3($_no$_symbol$_3) {
 //│           return h7.perform(k1, "5")
 //│         };
 //│         return h7.perform(cpsCont$3, "4")
@@ -115,8 +124,8 @@ result
 //│     return h7.perform(cpsCont$9, "2")
 //│   };
 //│   return h7.perform(cpsCont$12, "1")
-//│ });
-//│ runtime.cpsHandlerImpl(runtime.cpsId, h7, lambda7);
+//│ };
+//│ runtime.cpsHandlerImpl(runtime.cpsId, h7, tmp7);
 //│ return result
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = "54321"
@@ -129,22 +138,24 @@ result
 fun f() = case [...x, y, z] then x
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
 //│ define f⁰ as fun f¹(k) {
-//│   let lambda;
-//│   @private
-//│   define lambda as fun lambda⁰(k1, caseScrut) {
-//│     match caseScrut
+//│   let tmp;
+//│   set tmp = (k1, caseScrut) => {
+//│     let k2, caseScrut1;
+//│     set k2 = k1;
+//│     set caseScrut1 = caseScrut;
+//│     match caseScrut1
 //│       Array(2+) =>
-//│         let inlinedVal, tmp;
-//│         set tmp = -⁰(caseScrut.length﹖, 2);
-//│         set inlinedVal = caseScrut.slice﹖(0, tmp);
-//│         do runtime⁰.Tuple⁰.get⁰(caseScrut, -2);
-//│         do runtime⁰.Tuple⁰.get⁰(caseScrut, -1);
-//│         return k1(inlinedVal)
+//│         let inlinedVal, tmp1;
+//│         set tmp1 = -⁰(caseScrut1.length﹖, 2);
+//│         set inlinedVal = caseScrut1.slice﹖(0, tmp1);
+//│         do runtime⁰.Tuple⁰.get⁰(caseScrut1, -2);
+//│         do runtime⁰.Tuple⁰.get⁰(caseScrut1, -1);
+//│         return k2(inlinedVal)
 //│       else
 //│         throw new globalThis⁰.Error⁰("match error")
 //│     end
 //│   };
-//│   return k(lambda⁰)
+//│   return k(tmp)
 //│ };
 //│ end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
@@ -332,16 +343,16 @@ sum(0, 30000)
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
 //│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
-//│     at cpsCont$0 (REPL87:1:1419)
-//│     at cpsCont$0 (REPL87:1:1578)
-//│     at cpsCont$0 (REPL87:1:1578)
-//│     at cpsCont$0 (REPL87:1:1578)
-//│     at cpsCont$0 (REPL87:1:1578)
-//│     at cpsCont$0 (REPL87:1:1578)
-//│     at cpsCont$0 (REPL87:1:1578)
-//│     at cpsCont$0 (REPL87:1:1578)
-//│     at cpsCont$0 (REPL87:1:1578)
-//│     at cpsCont$0 (REPL87:1:1578)
+//│     at cpsCont$0 (REPL87:1:711)
+//│     at cpsCont$0 (REPL87:1:866)
+//│     at cpsCont$0 (REPL87:1:866)
+//│     at cpsCont$0 (REPL87:1:866)
+//│     at cpsCont$0 (REPL87:1:866)
+//│     at cpsCont$0 (REPL87:1:866)
+//│     at cpsCont$0 (REPL87:1:866)
+//│     at cpsCont$0 (REPL87:1:866)
+//│     at cpsCont$0 (REPL87:1:866)
+//│     at cpsCont$0 (REPL87:1:866)
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:301)
 //│ ═══[RUNTIME ERROR] Expected: '450015000', got: 'undefined'
@@ -433,8 +444,19 @@ fun foo(h) =
 handle h = Eff with
   fun perform()(k) = k(())
 foo(h)
+//│ ╔══[WARNING] Modules are not yet lifted.
+//│ ║  l.440: 	    module A with
+//│ ╙──       	           ^
+//│ ╔══[WARNING] Modules are not yet lifted.
+//│ ║  l.436: 	    module A with
+//│ ╙──       	           ^
+//│ ╔══[WARNING] Modules are not yet lifted.
+//│ ║  l.432: 	    module A with
+//│ ╙──       	           ^
+//│ ╔══[WARNING] Modules are not yet lifted.
+//│ ║  l.428: 	    module A with
+//│ ╙──       	           ^
 //│ = 123
-//│ FAILURE: Unexpected lack of error to fix
 
 // Access superclass fields
 handle h1 = Object with

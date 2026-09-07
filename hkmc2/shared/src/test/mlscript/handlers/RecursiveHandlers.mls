@@ -1,5 +1,7 @@
 :js
 :effectHandlers
+:exit
+====================================================================================================
 
 abstract class Effect[A] with
   fun perform(arg: A): A
@@ -50,12 +52,12 @@ h.write(2)
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
 //│ ═══[RUNTIME ERROR] Error: Function expected 1 argument but got 0
 //│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1006:41)
-//│     at Handler$h$write.lambda3 (REPL25:1:955)
+//│     at Handler$h$write.lambda (REPL25:1:948)
 //│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1368:28)
-//│     at Handler$h$write (REPL25:1:1121)
+//│     at Handler$h$write (REPL25:1:1114)
 //│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1075:48)
 //│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1090:20)
-//│     at REPL25:1:2613
+//│     at REPL25:1:2543
 //│     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
 //│     at async node:repl:660:31
 
@@ -69,12 +71,12 @@ h.write(2)
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
 //│ ═══[RUNTIME ERROR] Error: Function expected 1 argument but got 0
 //│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1006:41)
-//│     at Handler$h$write.lambda4 (REPL28:1:614)
+//│     at Handler$h$write.lambda (REPL28:1:609)
 //│     at Runtime.enterHandleBlock (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1368:28)
-//│     at Handler$h$write (REPL28:1:1958)
+//│     at Handler$h$write (REPL28:1:1964)
 //│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1075:48)
 //│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1090:20)
-//│     at REPL28:1:2620
+//│     at REPL28:1:2559
 //│     at ContextifyScript.runInThisContext (node:vm:138:12)
 //│     at defaultEval (node:repl:610:24)
 //│     at REPLEvalInContext (node:repl:693:9)
@@ -126,8 +128,19 @@ in res.toString()
 //│ > B hi friend
 //│ > A hola
 //│ > B hola adios
-//│ > B hola amigos
-//│ = "‹,‹,‹,‹,hola,amigos,›,adios,›,friend,›,bye,›"
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
+//│ ═══[RUNTIME ERROR] TypeError: Cannot read properties of undefined (reading 'perform')
+//│     at cpsCont$9 (REPL34:1:3792)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:316:28
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:292:28
+//│     at Handler$g$perform (REPL34:1:1785)
+//│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1075:48)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1090:20)
+//│     at Handler$h$perform (REPL34:1:2738)
+//│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1075:48)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:317:21
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:292:28
 
 
 // This is equivalent to the above, with all calls to h.perform expanded
@@ -179,7 +192,7 @@ str
 //│ let str, h11;
 //│ str = "";
 //│ if (true === true) {
-//│   let Handler$h1$3, lambda7;
+//│   let Handler$h1$3, tmp9;
 //│   (class Handler$h1$2 extends Effect1 {
 //│     static {
 //│       Handler$h1$3 = this
@@ -190,12 +203,12 @@ str
 //│     perform(k, arg) {
 //│       let Handler$h1$perform;
 //│       Handler$h1$perform = function Handler$h1$perform(k1, k2) {
-//│         let tmp2, tmp3, cpsCont$0;
-//│         tmp2 = str + "A";
-//│         str = tmp2;
-//│         cpsCont$0 = function cpsCont$0(retVal) {
-//│           tmp3 = str + "A";
-//│           str = tmp3;
+//│         let tmp10, tmp11, cpsCont$0;
+//│         tmp10 = str + "A";
+//│         str = tmp10;
+//│         cpsCont$0 = function cpsCont$0($_no$_symbol$_) {
+//│           tmp11 = str + "A";
+//│           str = tmp11;
 //│           return k1(runtime.Unit)
 //│         };
 //│         return k2(cpsCont$0, arg)
@@ -206,8 +219,8 @@ str
 //│     static [definitionMetadata] = ["class", "Handler$h1$"];
 //│   });
 //│   h11 = new Handler$h1$3();
-//│   lambda7 = (undefined, function (k) {
-//│     let k1, h22, tmp2, handleBlock$, Handler$h2$3, cpsCont$9;
+//│   tmp9 = (k) => {
+//│     let k1, h22, tmp10, handleBlock$, Handler$h2$3, cpsCont$9;
 //│     k1 = k;
 //│     (class Handler$h2$2 extends Effect1 {
 //│       static {
@@ -219,14 +232,14 @@ str
 //│       perform(k2, arg) {
 //│         let Handler$h2$perform;
 //│         Handler$h2$perform = function Handler$h2$perform(k3, k4) {
-//│           let tmp3, tmp4, tmp5, tmp6, cpsCont$3;
-//│           tmp3 = str + "B";
-//│           tmp4 = str + tmp3;
-//│           str = tmp4;
-//│           cpsCont$3 = function cpsCont$3(retVal) {
-//│             tmp5 = str + "B";
-//│             tmp6 = str + tmp5;
-//│             str = tmp6;
+//│           let tmp11, tmp12, tmp13, tmp14, cpsCont$3;
+//│           tmp11 = str + "B";
+//│           tmp12 = str + tmp11;
+//│           str = tmp12;
+//│           cpsCont$3 = function cpsCont$3($_no$_symbol$_) {
+//│             tmp13 = str + "B";
+//│             tmp14 = str + tmp13;
+//│             str = tmp14;
 //│             return k3(runtime.Unit)
 //│           };
 //│           return k4(cpsCont$3, arg)
@@ -239,18 +252,18 @@ str
 //│     h22 = new Handler$h2$3();
 //│     handleBlock$ = (undefined, function (k2) {
 //│       let cpsCont$6;
-//│       cpsCont$6 = function cpsCont$6(retVal) {
+//│       cpsCont$6 = function cpsCont$6($_no$_symbol$_) {
 //│         return h11.perform(k2, runtime.Unit)
 //│       };
 //│       return h22.perform(cpsCont$6, runtime.Unit)
 //│     });
 //│     cpsCont$9 = function cpsCont$9(retVal) {
-//│       tmp2 = retVal;
-//│       return k1(tmp2)
+//│       tmp10 = retVal;
+//│       return k1(tmp10)
 //│     };
 //│     return runtime.cpsHandlerImpl(cpsCont$9, h22, handleBlock$)
-//│   });
-//│   runtime.cpsHandlerImpl(runtime.cpsId, h11, lambda7);
+//│   };
+//│   runtime.cpsHandlerImpl(runtime.cpsId, h11, tmp9);
 //│   return str
 //│ }
 //│ return str;

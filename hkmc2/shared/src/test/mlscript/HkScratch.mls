@@ -10,126 +10,92 @@
 
 class Effect
 
-:sjs
-:deforest
-:sir
 :effectHandlers
-data class Pair(a, b)
-fun fstConfig(p) = if p is Pair(x, y) then x
-fstConfig(Pair(1, 2))
-//│ deforest > >>> fusing >>>
-//│ deforest > Pair⁰(1, 2) ->
-//│ deforest > 	match: p⁰
-//│ deforest > 	fields: p⁰.a⁰
-//│ deforest > 	fields: p⁰.b⁰
-//│ deforest > <<< fusing <<<
-//│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let tmp, fstConfig_5$fstConfig, fstConfig_5$p_Pair, fstConfig_5$p_rest, Pair_a, Pair_b, tmp1, tmp2, lambda, lambda1;
-//│ @private
-//│ define fstConfig_5$fstConfig as fun fstConfig_5$fstConfig⁰(k, p) {
-//│   let x, y, arg$Pair$0$, arg$Pair$1$, tmp3;
-//│   set tmp3 = p(x, y, arg$Pair$0$, arg$Pair$1$);
-//│   return k(tmp3)
-//│ };
-//│ @affine(1) @private
-//│ define fstConfig_5$p_Pair as fun fstConfig_5$p_Pair⁰(k, Pair_a1, Pair_b1)(fv_x, fv_y, fv_arg$Pair$0$, fv_arg$Pair$1$) {
-//│   set fv_arg$Pair$0$ = Pair_a1;
-//│   set fv_arg$Pair$1$ = Pair_b1;
-//│   set fv_y = fv_arg$Pair$1$;
-//│   set fv_x = fv_arg$Pair$0$;
-//│   return k(fv_x)
-//│ };
-//│ @private
-//│ define fstConfig_5$p_rest as fun fstConfig_5$p_rest⁰(k) {
-//│   return k(null)
-//│ };
-//│ define fstConfig⁰ as fun fstConfig¹(k, p) {
-//│   let x, y, arg$Pair$0$, arg$Pair$1$;
-//│   match p
-//│     Pair¹ =>
-//│       set arg$Pair$0$ = p.a⁰;
-//│       set arg$Pair$1$ = p.b⁰;
-//│       set y = arg$Pair$1$;
-//│       set x = arg$Pair$0$;
-//│       return k(x)
-//│     else
-//│       throw new globalThis⁰.Error⁰("match error")
-//│   end
-//│ };
-//│ @data
-//│ define Pair² as class Pair¹ {
-//│   val a¹;
-//│   val b¹;
-//│   constructor Pair⁰(a, b) {
-//│     define a¹ as val a⁰ = a;
-//│     define b¹ as val b⁰ = b;
-//│     end
-//│   }
-//│ };
-//│ set Pair_a = 1;
-//│ set Pair_b = 2;
-//│ @private
-//│ define lambda as fun lambda¹(k, Pair_a1, Pair_b1) {
-//│   let lambda2;
-//│   @private
-//│   define lambda2 as fun lambda⁰(k1, fv_x, fv_y, fv_arg$Pair$0$, fv_arg$Pair$1$) {
-//│     return fstConfig_5$p_Pair⁰(k1, Pair_a1, Pair_b1)(fv_x, fv_y, fv_arg$Pair$0$, fv_arg$Pair$1$)
-//│   };
-//│   return k(lambda⁰)
-//│ };
-//│ set tmp1 = lambda¹;
-//│ set tmp = tmp1(Pair_a, Pair_b);
-//│ @private
-//│ define lambda1 as fun lambda²(k, p) {
-//│   return fstConfig_5$fstConfig⁰(k, p)
-//│ };
-//│ set tmp2 = lambda²;
-//│ return tmp2(runtime⁰.cpsId﹖, tmp)
+:sjs
+:expect 450015000
+handle h = Object with
+  fun raise()(k) =
+    k(10)
+fun sum(depth, x) =
+  let new_depth = if depth > 1000 then h.raise() else depth + 1
+  if x != 0 then
+    x + sum(new_depth, x - 1)
+  else 0
+sum(0, 30000)
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let fstConfig, Pair1, k, tmp, Pair_a, inlinedVal, lambda;
-//│ fstConfig = function fstConfig(k1, p) {
-//│   let arg$Pair$0$;
-//│   if (p instanceof Pair1.class) {
-//│     arg$Pair$0$ = p.a;
-//│     return k1(arg$Pair$0$)
-//│   }
-//│   throw globalThis.Object.freeze(new globalThis.Error("match error"));
-//│ };
-//│ Pair1 = function Pair(a, b) {
-//│   return globalThis.Object.freeze(new Pair.class(a, b));
-//│ };
-//│ (class Pair {
+//│ let h, Handler$h$1, tmp;
+//│ (class Handler$h$ extends globalThis.Object {
 //│   static {
-//│     Pair1.class = this
+//│     Handler$h$1 = this
 //│   }
-//│   constructor(a, b) {
-//│     this.a = a;
-//│     this.b = b;
+//│   constructor() {
+//│     super();
+//│   }
+//│   raise(k) {
+//│     let Handler$h$raise;
+//│     Handler$h$raise = function Handler$h$raise(k1, k2) {
+//│       return k2(k1, 10)
+//│     };
+//│     return new runtime.Suspend(k, this, Handler$h$raise)
 //│   }
 //│   toString() { return runtime.render(this); }
-//│   static [definitionMetadata] = ["class", "Pair", ["a", "b"]];
+//│   static [definitionMetadata] = ["class", "Handler$h$"];
 //│ });
-//│ Pair_a = 2;
-//│ lambda = (undefined, function (k1, fv_x, fv_y, fv_arg$Pair$0$, fv_arg$Pair$1$) {
-//│   let Pair_a1;
-//│   Pair_a1 = Pair_a;
-//│   return k1(Pair_a1)
-//│ });
-//│ inlinedVal = 1(lambda);
-//│ k = runtime.cpsId;
-//│ tmp = inlinedVal(undefined, undefined, undefined, undefined);
-//│ return k(tmp)
+//│ h = new Handler$h$1();
+//│ tmp = (k) => {
+//│   let k1, sum;
+//│   k1 = k;
+//│   sum = function sum(k2, depth, x) {
+//│     let new_depth, scrut, scrut1, tmp1, tmp2, tmp3, rest;
+//│     scrut = depth > 1000;
+//│     rest = function rest(k3) {
+//│       let a, inlinedVal, tmp4;
+//│       new_depth = tmp1;
+//│       a = x;
+//│       tmp4 = Predef.equals(a, 0);
+//│       inlinedVal = ! tmp4;
+//│       scrut1 = inlinedVal;
+//│       if (scrut1 === true) {
+//│         let cpsCont$0;
+//│         tmp2 = x - 1;
+//│         cpsCont$0 = function cpsCont$0(retVal) {
+//│           let tmp5;
+//│           tmp3 = retVal;
+//│           tmp5 = x + tmp3;
+//│           return k3(tmp5)
+//│         };
+//│         return sum(cpsCont$0, new_depth, tmp2)
+//│       }
+//│       return k3(0);
+//│     };
+//│     if (scrut === true) {
+//│       let cpsCont$3;
+//│       cpsCont$3 = function cpsCont$3(retVal) {
+//│         tmp1 = retVal;
+//│         return rest(k2)
+//│       };
+//│       return h.raise(cpsCont$3)
+//│     }
+//│     tmp1 = depth + 1;
+//│     return rest(k2);
+//│   };
+//│   return sum(k1, 0, 30000)
+//│ };
+//│ return runtime.cpsHandlerImpl(runtime.cpsId, h, tmp)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
-//│ ═══[RUNTIME ERROR] TypeError: 1 is not a function
-//│     at REPL13:1:958
-//│     at ContextifyScript.runInThisContext (node:vm:138:12)
-//│     at defaultEval (node:repl:610:24)
-//│     at REPLEvalInContext (node:repl:693:9)
-//│     at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:66:14)
-//│     at REPLServer.REPLEval [as eval] (node:repl:692:19)
-//│     at REPLServer.onLine (node:repl:830:12)
-//│     at REPLServer.emit (node:events:514:20)
-//│     at [_onLine] [as _onLine] (node:internal/readline/interface:477:12)
-//│     at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:675:18)
+//│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:966:19)
+//│     at cpsCont$0 (REPL13:1:1346)
+//│     at cpsCont$0 (REPL13:1:1504)
+//│     at cpsCont$0 (REPL13:1:1504)
+//│     at cpsCont$0 (REPL13:1:1504)
+//│     at cpsCont$0 (REPL13:1:1504)
+//│     at cpsCont$0 (REPL13:1:1504)
+//│     at cpsCont$0 (REPL13:1:1504)
+//│     at cpsCont$0 (REPL13:1:1504)
+//│     at cpsCont$0 (REPL13:1:1504)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:301)
+//│ ═══[RUNTIME ERROR] Expected: '450015000', got: 'undefined'

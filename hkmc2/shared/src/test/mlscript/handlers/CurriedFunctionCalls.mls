@@ -1,20 +1,30 @@
 :js
 :effectHandlers
-
+:lift
 
 
 :sir
 fun f(x) = y => x + y
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ define f⁰ as fun f¹(k, x) {
-//│   let lambda;
-//│   @private
-//│   define lambda as fun lambda⁰(k1, y) {
-//│     let tmp;
-//│     set tmp = +⁰(x, y);
-//│     return k1(tmp)
+//│ let lambda, lambda$;
+//│ @inline @private
+//│ define lambda$ as fun lambda$⁰(k, x)(y) {
+//│   let tmp;
+//│   set tmp = (k1, x1, y1) => {
+//│     return lambda⁰(k1, x1, y1)
 //│   };
-//│   return k(lambda⁰)
+//│   return tmp(k, x, y)
+//│ };
+//│ @private
+//│ define lambda as fun lambda⁰(k, x, y) {
+//│   let tmp;
+//│   set tmp = +⁰(x, y);
+//│   return k(tmp)
+//│ };
+//│ define f⁰ as fun f¹(k, x) {
+//│   let lambda$here;
+//│   set lambda$here = (k1, y) => { return lambda$⁰(k1, x)(y) };
+//│   return k(lambda$here)
 //│ };
 //│ end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
@@ -30,18 +40,39 @@ f(1)(2)
 fun g(a) = b => f(a)(b) + f(b)(a)
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
 //│ define g⁰ as fun g¹(k, a) {
-//│   let lambda;
-//│   @private
-//│   define lambda as fun lambda¹(k1, b) {
-//│     let x, tmp, y, tmp1, tmp2;
-//│     set x = a;
-//│     set tmp = +⁰(x, b);
-//│     set y = a;
-//│     set tmp1 = +⁰(b, y);
-//│     set tmp2 = +⁰(tmp, tmp1);
-//│     return k1(tmp2)
+//│   let lambda$here;
+//│   set lambda$here = (k1, b) => {
+//│     let k2, a1, b1, tmp;
+//│     set k2 = k1;
+//│     set a1 = a;
+//│     set b1 = b;
+//│     set tmp = (k3, a2, b2) => {
+//│       let k4, a3, b3, cpsCont$9;
+//│       set k4 = k3;
+//│       set a3 = a2;
+//│       set b3 = b2;
+//│       define cpsCont$9 as fun cpsCont$9⁰(baseCall) {
+//│         let cpsCont$6;
+//│         define cpsCont$6 as fun cpsCont$6⁰(tmp1) {
+//│           let cpsCont$3;
+//│           define cpsCont$3 as fun cpsCont$3⁰(baseCall1) {
+//│             let cpsCont$0;
+//│             define cpsCont$0 as fun cpsCont$0⁰(tmp2) {
+//│               let tmp3;
+//│               set tmp3 = +⁰(tmp1, tmp2);
+//│               return k4(tmp3)
+//│             };
+//│             return baseCall1(cpsCont$0⁰, a3)
+//│           };
+//│           return f¹(cpsCont$3⁰, b3)
+//│         };
+//│         return baseCall(cpsCont$6⁰, b3)
+//│       };
+//│       return f¹(cpsCont$9⁰, a3)
+//│     };
+//│     return tmp(k2, a1, b1)
 //│   };
-//│   return k(lambda¹)
+//│   return k(lambda$here)
 //│ };
 //│ end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————

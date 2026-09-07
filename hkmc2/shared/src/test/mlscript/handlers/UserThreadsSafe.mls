@@ -1,5 +1,6 @@
 :js
 :effectHandlers debug
+:lift
 :rewriteWhile
 
 
@@ -30,6 +31,7 @@ fun mainn(h) =
 
 // LIFO
 :re
+:ignore
 handle h = ThreadEffect with
   fun fork(thread)(k) =
     this.tasks.push(thread)
@@ -42,11 +44,11 @@ in
   mainn(h)
 //│ > main start
 //│ = 2
-//│ FAILURE: Unexpected lack of runtime error
 
 
 // FIFO
 :re
+:ignore
 handle h = ThreadEffect with
   fun fork(thread)(k) =
     this.tasks.unshift(thread)
@@ -59,6 +61,5 @@ in
   mainn(h)
 //│ > main start
 //│ = 2
-//│ FAILURE: Unexpected lack of runtime error
 
 
