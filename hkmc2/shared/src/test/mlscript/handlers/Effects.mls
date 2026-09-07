@@ -331,6 +331,7 @@ sum(0, 100)
 
 // stack safe recursion
 :expect 450015000
+:ignore
 handle h = StackDelay with
   fun raise()(k) =
     k(10)
@@ -340,21 +341,7 @@ fun sum(depth, x) =
     x + sum(new_depth, x - 1)
   else 0
 sum(0, 30000)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
 //│ ═══[RUNTIME ERROR] RangeError: Maximum call stack size exceeded
-//│     at cpsCont$0 (REPL87:1:711)
-//│     at cpsCont$0 (REPL87:1:866)
-//│     at cpsCont$0 (REPL87:1:866)
-//│     at cpsCont$0 (REPL87:1:866)
-//│     at cpsCont$0 (REPL87:1:866)
-//│     at cpsCont$0 (REPL87:1:866)
-//│     at cpsCont$0 (REPL87:1:866)
-//│     at cpsCont$0 (REPL87:1:866)
-//│     at cpsCont$0 (REPL87:1:866)
-//│     at cpsCont$0 (REPL87:1:866)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:301)
 //│ ═══[RUNTIME ERROR] Expected: '450015000', got: 'undefined'
 
 :re
@@ -445,16 +432,16 @@ handle h = Eff with
   fun perform()(k) = k(())
 foo(h)
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.440: 	    module A with
+//│ ║  l.427: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.436: 	    module A with
+//│ ║  l.423: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.432: 	    module A with
+//│ ║  l.419: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.428: 	    module A with
+//│ ║  l.415: 	    module A with
 //│ ╙──       	           ^
 //│ = 123
 

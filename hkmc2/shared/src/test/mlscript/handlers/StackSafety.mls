@@ -3,6 +3,8 @@
 :lift
 :rewriteWhile
 :noTailRec
+// dead param elim seems to break some tests
+:deadParamElim off
 
 
 // preserve tail calls
@@ -251,22 +253,7 @@ fun foo() =
     else n + f(n-1)
   f(10000)
 foo()
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
-//│ ═══[RUNTIME ERROR] TypeError: k11 is not a function
-//│     at cpsCont$0 (REPL24:1:5249)
-//│     at cpsCont$0 (REPL24:1:5249)
-//│     at cpsCont$0 (REPL24:1:5249)
-//│     at cpsCont$0 (REPL24:1:5249)
-//│     at cpsCont$0 (REPL24:1:5249)
-//│     at cpsCont$0 (REPL24:1:5249)
-//│     at cpsCont$0 (REPL24:1:5249)
-//│     at cpsCont$0 (REPL24:1:5249)
-//│     at cpsCont$0 (REPL24:1:5249)
-//│     at cpsCont$0 (REPL24:1:5249)
-//│ FAILURE: Unexpected runtime error
-//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:301)
-//│ ═══[RUNTIME ERROR] Expected: '50005000', got: 'undefined'
+//│ = 50005000
 
 :stackSafe 100
 :expect 50005000

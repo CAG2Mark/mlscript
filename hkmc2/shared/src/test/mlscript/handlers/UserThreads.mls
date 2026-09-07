@@ -1,15 +1,36 @@
 :js
 :effectHandlers
-:lift
 :rewriteWhile
+:sjs
 
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ import Predef from "./../../mlscript-compile/Predef.mjs"; 
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 open annotations
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ 
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 abstract class ThreadEffect with
   val tasks = mut []
   fun start(thread: () -> ()): ()
   fun fork(thread: () -> ()): ()
   fun yld(): ()
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let ThreadEffect1;
+//│ (class ThreadEffect {
+//│   static {
+//│     ThreadEffect1 = this
+//│   }
+//│   constructor() {
+//│     let tmp;
+//│     tmp = [];
+//│     this.tasks = tmp;
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "ThreadEffect"];
+//│ });
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 class Lock(val locked) with
   fun lock(th: ThreadEffect) =
@@ -18,6 +39,52 @@ class Lock(val locked) with
     set locked = true
   fun unlock() =
     set locked = false
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let Lock1;
+//│ Lock1 = function Lock(locked) {
+//│   return globalThis.Object.freeze(new Lock.class(locked));
+//│ };
+//│ (class Lock {
+//│   static {
+//│     Lock1.class = this
+//│   }
+//│   constructor(locked) {
+//│     this.locked = locked;
+//│   }
+//│   lock(k, th) {
+//│     let while1, tmp, tmp1, cpsCont$3;
+//│     const this$Lock = this;
+//│     while1 = (undefined, function (k1) {
+//│       let scrut;
+//│       scrut = this$Lock.locked;
+//│       if (scrut === true) {
+//│         let cpsCont$0;
+//│         cpsCont$0 = function cpsCont$0($_no$_symbol$_) {
+//│           return while1(k1)
+//│         };
+//│         return th.yld(cpsCont$0)
+//│       }
+//│       return k1(runtime.LoopEnd);
+//│     });
+//│     cpsCont$3 = function cpsCont$3(retVal) {
+//│       tmp = retVal;
+//│       tmp1 = tmp !== runtime.LoopEnd;
+//│       if (tmp1 === true) {
+//│         return k(tmp)
+//│       }
+//│       this$Lock.locked = true;
+//│       return k(runtime.Unit);
+//│     };
+//│     return while1(cpsCont$3)
+//│   }
+//│   unlock(k) {
+//│     this.locked = false;
+//│     return k(runtime.Unit)
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Lock", ["locked"]];
+//│ });
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 fun f(h, x) =
   print("f " + x)
@@ -25,6 +92,27 @@ fun f(h, x) =
   print("f " + x)
   h.yld()
   print("f " + x)
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let f;
+//│ f = function f(k, h, x) {
+//│   let tmp, tmp1, tmp2, cpsCont$3;
+//│   tmp = "f " + x;
+//│   Predef.print(tmp);
+//│   cpsCont$3 = function cpsCont$3($_no$_symbol$_) {
+//│     let cpsCont$0;
+//│     tmp1 = "f " + x;
+//│     Predef.print(tmp1);
+//│     cpsCont$0 = function cpsCont$0($_no$_symbol$_1) {
+//│       let tmp3;
+//│       tmp2 = "f " + x;
+//│       tmp3 = Predef.print(tmp2);
+//│       return k(tmp3)
+//│     };
+//│     return h.yld(cpsCont$0)
+//│   };
+//│   return h.yld(cpsCont$3)
+//│ };
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 fun mainn(h) =
   print("main start")
@@ -32,6 +120,36 @@ fun mainn(h) =
   h.fork(() => f(h, 1))
   h.fork(() => f(h, 2))
   print("main end")
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let mainn;
+//│ mainn = function mainn(k, h) {
+//│   let lambda, lambda1, lambda2, cpsCont$6;
+//│   Predef.print("main start");
+//│   lambda = (undefined, function (k1) {
+//│     return f(k1, h, 0)
+//│   });
+//│   cpsCont$6 = function cpsCont$6($_no$_symbol$_) {
+//│     let cpsCont$3;
+//│     lambda1 = (undefined, function (k1) {
+//│       return f(k1, h, 1)
+//│     });
+//│     cpsCont$3 = function cpsCont$3($_no$_symbol$_1) {
+//│       let cpsCont$0;
+//│       lambda2 = (undefined, function (k1) {
+//│         return f(k1, h, 2)
+//│       });
+//│       cpsCont$0 = function cpsCont$0($_no$_symbol$_2) {
+//│         let tmp;
+//│         tmp = Predef.print("main end");
+//│         return k(tmp)
+//│       };
+//│       return h.fork(cpsCont$0, lambda2)
+//│     };
+//│     return h.fork(cpsCont$3, lambda1)
+//│   };
+//│   return h.fork(cpsCont$6, lambda)
+//│ };
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 
 // LIFO
@@ -49,6 +167,95 @@ handle h = ThreadEffect with
     k(())
 in
   h.start(mainn)
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ import Runtime from "./../../mlscript-compile/Runtime.mjs";
+//│ let h, Handler$h$1, tmp;
+//│ (class Handler$h$ extends ThreadEffect1 {
+//│   static {
+//│     Handler$h$1 = this
+//│   }
+//│   constructor() {
+//│     super();
+//│   }
+//│   fork(k, thread) {
+//│     let Handler$h$fork;
+//│     const this$Handler$h$ = this;
+//│     Handler$h$fork = function Handler$h$fork(k1, k2) {
+//│       runtime.safeCall(this$Handler$h$.tasks.unshift(thread));
+//│       return k2(k1, runtime.Unit)
+//│     };
+//│     return new runtime.Suspend(k, this, Handler$h$fork)
+//│   }
+//│   yld(k) {
+//│     let Handler$h$yld;
+//│     const this$Handler$h$ = this;
+//│     Handler$h$yld = function Handler$h$yld(k1, k2) {
+//│       let lambda, lambda1, inlinedVal;
+//│       lambda = (undefined, function (k3) {
+//│         return k2(k3, runtime.Unit)
+//│       });
+//│       runtime.safeCall(this$Handler$h$.tasks.push(lambda));
+//│       lambda1 = (undefined, function (k3) {
+//│         let tmp1;
+//│         tmp1 = runtime.safeCall(this$Handler$h$.tasks.shift());
+//│         return tmp1(k3)
+//│       });
+//│       inlinedVal = runtime.safeCall(Runtime.enterHandleBlock(this$Handler$h$, lambda1));
+//│       return k1(inlinedVal)
+//│     };
+//│     return new runtime.Suspend(k, this, Handler$h$yld)
+//│   }
+//│   start(k, main) {
+//│     let Handler$h$start;
+//│     const this$Handler$h$ = this;
+//│     Handler$h$start = function Handler$h$start(k1, k2) {
+//│       let lambda, while1, tmp1, tmp2, cpsCont$3;
+//│       lambda = (undefined, function (k3) {
+//│         return mainn(k3, this$Handler$h$)
+//│       });
+//│       cpsCont$3 = function cpsCont$3($_no$_symbol$_) {
+//│         let cpsCont$0;
+//│         while1 = (undefined, function (k3) {
+//│           let lambda1, a, inlinedVal, tmp3;
+//│           a = this$Handler$h$.tasks.length;
+//│           tmp3 = Predef.equals(a, 0);
+//│           inlinedVal = ! tmp3;
+//│           if (inlinedVal === true) {
+//│             lambda1 = (undefined, function (k4) {
+//│               let tmp4;
+//│               tmp4 = runtime.safeCall(this$Handler$h$.tasks.shift());
+//│               return tmp4(k4)
+//│             });
+//│             runtime.safeCall(Runtime.enterHandleBlock(this$Handler$h$, lambda1));
+//│             return while1(k3)
+//│           }
+//│           return k3(runtime.LoopEnd);
+//│         });
+//│         cpsCont$0 = function cpsCont$0(retVal) {
+//│           tmp1 = retVal;
+//│           tmp2 = tmp1 !== runtime.LoopEnd;
+//│           if (tmp2 === true) {
+//│             return k1(tmp1)
+//│           }
+//│           return k2(k1, runtime.Unit);
+//│         };
+//│         return while1(cpsCont$0)
+//│       };
+//│       return this$Handler$h$.tasks.push(cpsCont$3, lambda)
+//│     };
+//│     return new runtime.Suspend(k, this, Handler$h$start)
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Handler$h$"];
+//│ });
+//│ h = new Handler$h$1();
+//│ tmp = (k) => {
+//│   let k1;
+//│   k1 = k;
+//│   return h.start(k1, mainn)
+//│ };
+//│ return runtime.cpsHandlerImpl(runtime.cpsId, h, tmp)
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 2
 
 
@@ -67,6 +274,104 @@ handle h = ThreadEffect with
     k(())
 in
   h.start(mainn)
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let h1, Handler$h$3, tmp1;
+//│ (class Handler$h$2 extends ThreadEffect1 {
+//│   static {
+//│     Handler$h$3 = this
+//│   }
+//│   constructor() {
+//│     super();
+//│   }
+//│   fork(k, thread) {
+//│     let Handler$h$fork;
+//│     const this$Handler$h$ = this;
+//│     Handler$h$fork = function Handler$h$fork(k1, k2) {
+//│       let cpsCont$0;
+//│       cpsCont$0 = function cpsCont$0($_no$_symbol$_) {
+//│         return k2(k1, runtime.Unit)
+//│       };
+//│       return this$Handler$h$.tasks.push(cpsCont$0, thread)
+//│     };
+//│     return new runtime.Suspend(k, this, Handler$h$fork)
+//│   }
+//│   yld(k) {
+//│     let Handler$h$yld;
+//│     const this$Handler$h$ = this;
+//│     Handler$h$yld = function Handler$h$yld(k1, k2) {
+//│       let lambda, lambda1, cpsCont$6;
+//│       lambda = (undefined, function (k3) {
+//│         return k2(k3, runtime.Unit)
+//│       });
+//│       cpsCont$6 = function cpsCont$6($_no$_symbol$_) {
+//│         let inlinedVal;
+//│         lambda1 = (undefined, function (k3) {
+//│           let cpsCont$3;
+//│           cpsCont$3 = function cpsCont$3(callPrefix) {
+//│             return undefined(k3)
+//│           };
+//│           return this$Handler$h$.tasks.shift(cpsCont$3)
+//│         });
+//│         inlinedVal = runtime.safeCall(Runtime.enterHandleBlock(this$Handler$h$, lambda1));
+//│         return k1(inlinedVal)
+//│       };
+//│       return this$Handler$h$.tasks.push(cpsCont$6, lambda)
+//│     };
+//│     return new runtime.Suspend(k, this, Handler$h$yld)
+//│   }
+//│   start(k, main) {
+//│     let Handler$h$start;
+//│     const this$Handler$h$ = this;
+//│     Handler$h$start = function Handler$h$start(k1, k2) {
+//│       let lambda, while1, tmp2, tmp3, cpsCont$15;
+//│       lambda = (undefined, function (k3) {
+//│         return mainn(k3, this$Handler$h$)
+//│       });
+//│       cpsCont$15 = function cpsCont$15($_no$_symbol$_) {
+//│         let cpsCont$12;
+//│         while1 = (undefined, function (k3) {
+//│           let lambda1, a, inlinedVal, tmp4;
+//│           a = this$Handler$h$.tasks.length;
+//│           tmp4 = Predef.equals(a, 0);
+//│           inlinedVal = ! tmp4;
+//│           if (inlinedVal === true) {
+//│             lambda1 = (undefined, function (k4) {
+//│               let cpsCont$9;
+//│               cpsCont$9 = function cpsCont$9(callPrefix) {
+//│                 return undefined(k4)
+//│               };
+//│               return this$Handler$h$.tasks.shift(cpsCont$9)
+//│             });
+//│             runtime.safeCall(Runtime.enterHandleBlock(this$Handler$h$, lambda1));
+//│             return while1(k3)
+//│           }
+//│           return k3(runtime.LoopEnd);
+//│         });
+//│         cpsCont$12 = function cpsCont$12(retVal) {
+//│           tmp2 = retVal;
+//│           tmp3 = tmp2 !== runtime.LoopEnd;
+//│           if (tmp3 === true) {
+//│             return k1(tmp2)
+//│           }
+//│           return k2(k1, runtime.Unit);
+//│         };
+//│         return while1(cpsCont$12)
+//│       };
+//│       return this$Handler$h$.tasks.push(cpsCont$15, lambda)
+//│     };
+//│     return new runtime.Suspend(k, this, Handler$h$start)
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Handler$h$"];
+//│ });
+//│ h1 = new Handler$h$3();
+//│ tmp1 = (k) => {
+//│   let k1;
+//│   k1 = k;
+//│   return h1.start(k1, mainn)
+//│ };
+//│ return runtime.cpsHandlerImpl(runtime.cpsId, h1, tmp1)
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = 2
 
 
@@ -75,8 +380,21 @@ in
 abstract class ThreadEffect with
   fun fork(thread: ThreadEffect -> ()): ()
   fun yld(): ()
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let ThreadEffect3;
+//│ (class ThreadEffect2 {
+//│   static {
+//│     ThreadEffect3 = this
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "ThreadEffect"];
+//│ });
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 val tasks = mut []
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let tasks, tmp2; tmp2 = []; tasks = tmp2;
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ tasks = []
 
 fun f(x) = h =>
@@ -85,6 +403,31 @@ fun f(x) = h =>
   print("f " + x)
   h.yld()
   print("f " + x)
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let f1;
+//│ f1 = function f(k, x) {
+//│   let lambda;
+//│   lambda = (undefined, function (k1, h2) {
+//│     let tmp3, tmp4, tmp5, cpsCont$3;
+//│     tmp3 = "f " + x;
+//│     Predef.print(tmp3);
+//│     cpsCont$3 = function cpsCont$3($_no$_symbol$_) {
+//│       let cpsCont$0;
+//│       tmp4 = "f " + x;
+//│       Predef.print(tmp4);
+//│       cpsCont$0 = function cpsCont$0($_no$_symbol$_1) {
+//│         let tmp6;
+//│         tmp5 = "f " + x;
+//│         tmp6 = Predef.print(tmp5);
+//│         return k1(tmp6)
+//│       };
+//│       return h2.yld(cpsCont$0)
+//│     };
+//│     return h2.yld(cpsCont$3)
+//│   });
+//│   return k(lambda)
+//│ };
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 fun mainn(h) =
   print("main start")
@@ -92,10 +435,61 @@ fun mainn(h) =
   h.fork(f(1))
   h.fork(f(2))
   print("main end")
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let mainn1;
+//│ mainn1 = function mainn(k, h2) {
+//│   let cpsCont$15;
+//│   Predef.print("main start");
+//│   cpsCont$15 = function cpsCont$15(tmp3) {
+//│     let cpsCont$12;
+//│     cpsCont$12 = function cpsCont$12($_no$_symbol$_) {
+//│       let cpsCont$9;
+//│       cpsCont$9 = function cpsCont$9(tmp4) {
+//│         let cpsCont$6;
+//│         cpsCont$6 = function cpsCont$6($_no$_symbol$_1) {
+//│           let cpsCont$3;
+//│           cpsCont$3 = function cpsCont$3(tmp5) {
+//│             let cpsCont$0;
+//│             cpsCont$0 = function cpsCont$0($_no$_symbol$_2) {
+//│               let tmp6;
+//│               tmp6 = Predef.print("main end");
+//│               return k(tmp6)
+//│             };
+//│             return h2.fork(cpsCont$0, tmp5)
+//│           };
+//│           return f1(cpsCont$3, 2)
+//│         };
+//│         return h2.fork(cpsCont$6, tmp4)
+//│       };
+//│       return f1(cpsCont$9, 1)
+//│     };
+//│     return h2.fork(cpsCont$12, tmp3)
+//│   };
+//│   return f1(cpsCont$15, 0)
+//│ };
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 fun dequeue() =
   if tasks.length != 0 do
     (@native tasks.shift())(())
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let dequeue;
+//│ dequeue = function dequeue(k) {
+//│   let tmp3, a, inlinedVal, tmp4;
+//│   a = tasks.length;
+//│   tmp4 = Predef.equals(a, 0);
+//│   inlinedVal = ! tmp4;
+//│   if (inlinedVal === true) {
+//│     let cpsCont$0;
+//│     tmp3 = runtime.safeCall(tasks.shift());
+//│     cpsCont$0 = function cpsCont$0($_no$_symbol$_) {
+//│       return k(runtime.Unit)
+//│     };
+//│     return tmp3(cpsCont$0, runtime.Unit)
+//│   }
+//│   return k(runtime.Unit);
+//│ };
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 fun start(thread: ThreadEffect -> ()) =
   handle h = ThreadEffect with
@@ -108,8 +502,55 @@ fun start(thread: ThreadEffect -> ()) =
   in
     thread(h)
   dequeue()
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let start;
+//│ start = function start(k, thread) {
+//│   let h2, handleBlock$, Handler$h$5, cpsCont$0;
+//│   (class Handler$h$4 extends ThreadEffect3 {
+//│     static {
+//│       Handler$h$5 = this
+//│     }
+//│     constructor() {
+//│       super();
+//│     }
+//│     fork(k1, new_thread) {
+//│       let Handler$h$fork;
+//│       Handler$h$fork = function Handler$h$fork(k2, k3) {
+//│         let tmp3;
+//│         runtime.safeCall(tasks.push(k3));
+//│         tmp3 = (k4, thread1) => {
+//│           return start(k4, thread1)
+//│         };
+//│         return tmp3(k2, new_thread)
+//│       };
+//│       return new runtime.Suspend(k1, this, Handler$h$fork)
+//│     }
+//│     yld(k1) {
+//│       let Handler$h$yld;
+//│       Handler$h$yld = function Handler$h$yld(k2, k3) {
+//│         runtime.safeCall(tasks.push(k3));
+//│         return dequeue(k2)
+//│       };
+//│       return new runtime.Suspend(k1, this, Handler$h$yld)
+//│     }
+//│     toString() { return runtime.render(this); }
+//│     static [definitionMetadata] = ["class", "Handler$h$"];
+//│   });
+//│   h2 = new Handler$h$5();
+//│   handleBlock$ = (undefined, function (k1) {
+//│     return thread(k1, h2)
+//│   });
+//│   cpsCont$0 = function cpsCont$0(retVal) {
+//│     return dequeue(k)
+//│   };
+//│   return runtime.cpsHandlerImpl(cpsCont$0, h2, handleBlock$)
+//│ };
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 start(mainn)
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ return start(runtime.cpsId, mainn1)
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ > main start
 //│ > f 0
 //│ > f 1
@@ -125,11 +566,24 @@ start(mainn)
 
 import "../../mlscript-compile/Option.mls"
 open Option
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ import Option from "./../../mlscript-compile/Option.mjs"; 
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 abstract class ThreadEffect with
   fun fork(thread: ThreadEffect -> ()): ()
   fun yld(): ()
   fun xchg(x: Int): Int
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let ThreadEffect5;
+//│ (class ThreadEffect4 {
+//│   static {
+//│     ThreadEffect5 = this
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "ThreadEffect"];
+//│ });
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 val tasks = mut []
 fun enqueue(k, x) =
@@ -137,9 +591,37 @@ fun enqueue(k, x) =
 fun dequeue() =
   if tasks.length != 0 do
     @native tasks.shift()()
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let enqueue, dequeue1, tasks1, tmp3;
+//│ enqueue = function enqueue(k, k1, x) {
+//│   let lambda, tmp4;
+//│   lambda = (undefined, function (k2) {
+//│     return k1(k2, x)
+//│   });
+//│   tmp4 = runtime.safeCall(tasks1.push(lambda));
+//│   return k(tmp4)
+//│ };
+//│ dequeue1 = function dequeue(k) {
+//│   let callPrefix, a, inlinedVal, tmp4;
+//│   a = tasks1.length;
+//│   tmp4 = Predef.equals(a, 0);
+//│   inlinedVal = ! tmp4;
+//│   if (inlinedVal === true) {
+//│     callPrefix = runtime.safeCall(tasks1.shift());
+//│     runtime.safeCall(callPrefix());
+//│     return k(runtime.Unit)
+//│   }
+//│   return k(runtime.Unit);
+//│ };
+//│ tmp3 = [];
+//│ tasks1 = tmp3;
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ tasks = []
 
 let exchanger = None
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let exchanger; exchanger = Option.None;
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ exchanger = None
 
 :sir
@@ -164,116 +646,193 @@ fun start(thread: ThreadEffect -> ()) =
     thread(h)
   dequeue()
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let handleBlock$, Handler$h$fork, Handler$h$yld, Handler$h$xchg, Handler$h$, handleBlock$$, Handler$h$fork$, Handler$h$xchg$;
-//│ @inline
-//│ define Handler$h$xchg$ as fun Handler$h$xchg$⁰(k, x)(k1) {
-//│   let tmp;
-//│   set tmp = (k2, x1, k3) => {
-//│     return Handler$h$xchg⁰(k2, x1, k3)
-//│   };
-//│   return tmp(k, x, k1)
-//│ };
-//│ define Handler$h$xchg as fun Handler$h$xchg⁰(k, x, k1) {
-//│   let y, k11, arg$Some$0$, element1$, element0$, tmp, tmp1;
-//│   match exchanger⁰
-//│     Some⁰ =>
-//│       set arg$Some$0$ = exchanger⁰.value⁰;
-//│       match arg$Some$0$
-//│         Array(2) =>
-//│           let cpsCont$0;
-//│           set element0$ = runtime⁰.Tuple⁰.get⁰(arg$Some$0$, 0);
-//│           set element1$ = runtime⁰.Tuple⁰.get⁰(arg$Some$0$, 1);
-//│           set k11 = element1$;
-//│           set y = element0$;
-//│           set exchanger⁰ = Option⁰.None⁰;
-//│           define cpsCont$0 as fun cpsCont$0⁰(‹no symbol›) {
-//│             return k1(k, y)
+//│ define start⁰ as fun start¹(k, thread) {
+//│   let h, tmp, handleBlock$, Handler$h$, cpsCont$9;
+//│   define Handler$h$ as class Handler$h$⁰ extends ThreadEffect⁰ {
+//│     method fork⁰ = fun fork¹(k1, new_thread) {
+//│       let Handler$h$fork, suspendRes;
+//│       define Handler$h$fork as fun Handler$h$fork⁰(k2, k3) {
+//│         let tmp1, cpsCont$0;
+//│         define cpsCont$0 as fun cpsCont$0⁰(‹no symbol›) {
+//│           set tmp1 = (k4, thread1) => {
+//│             return start¹(k4, thread1)
 //│           };
-//│           return enqueue⁰(cpsCont$0⁰, k11, x)
-//│         else
-//│           throw new globalThis⁰.Error⁰("match error")
-//│       end
-//│     None⁰ =>
-//│       set tmp = [x, k1];
-//│       set tmp1 = Option⁰.Some¹(tmp);
-//│       set exchanger⁰ = tmp1;
-//│       return dequeue⁰(k)
-//│     else
-//│       throw new globalThis⁰.Error⁰("match error")
-//│   end
-//│ };
-//│ define Handler$h$yld as fun Handler$h$yld⁰(k, k1) {
-//│   let cpsCont$3;
-//│   define cpsCont$3 as fun cpsCont$3⁰(‹no symbol›) {
-//│     return dequeue⁰(k)
+//│           return tmp1(k2, new_thread)
+//│         };
+//│         return enqueue⁰(cpsCont$0⁰, k3, runtime⁰.Unit⁰)
+//│       };
+//│       return new mut runtime⁰.Suspend﹖(k1, Handler$h$⁰.this, Handler$h$fork⁰)
+//│     }
+//│     method yld⁰ = fun yld¹(k1) {
+//│       let Handler$h$yld, suspendRes;
+//│       define Handler$h$yld as fun Handler$h$yld⁰(k2, k3) {
+//│         let cpsCont$3;
+//│         define cpsCont$3 as fun cpsCont$3⁰(‹no symbol›) {
+//│           return dequeue⁰(k2)
+//│         };
+//│         return enqueue⁰(cpsCont$3⁰, k3, runtime⁰.Unit⁰)
+//│       };
+//│       return new mut runtime⁰.Suspend﹖(k1, Handler$h$⁰.this, Handler$h$yld⁰)
+//│     }
+//│     method xchg⁰ = fun xchg¹(k1, x) {
+//│       let Handler$h$xchg, suspendRes;
+//│       define Handler$h$xchg as fun Handler$h$xchg⁰(k2, k3) {
+//│         let y, k11, arg$Some$0$, element1$, element0$, tmp1, tmp2;
+//│         match exchanger⁰
+//│           Some⁰ =>
+//│             set arg$Some$0$ = exchanger⁰.value⁰;
+//│             match arg$Some$0$
+//│               Array(2) =>
+//│                 let cpsCont$6;
+//│                 set element0$ = runtime⁰.Tuple⁰.get⁰(arg$Some$0$, 0);
+//│                 set element1$ = runtime⁰.Tuple⁰.get⁰(arg$Some$0$, 1);
+//│                 set k11 = element1$;
+//│                 set y = element0$;
+//│                 set exchanger⁰ = Option⁰.None⁰;
+//│                 define cpsCont$6 as fun cpsCont$6⁰(‹no symbol›) {
+//│                   return k3(k2, y)
+//│                 };
+//│                 return enqueue⁰(cpsCont$6⁰, k11, x)
+//│               else
+//│                 throw new globalThis⁰.Error⁰("match error")
+//│             end
+//│           None⁰ =>
+//│             set tmp1 = [x, k3];
+//│             set tmp2 = Option⁰.Some¹(tmp1);
+//│             set exchanger⁰ = tmp2;
+//│             return dequeue⁰(k2)
+//│           else
+//│             throw new globalThis⁰.Error⁰("match error")
+//│         end
+//│       };
+//│       return new mut runtime⁰.Suspend﹖(k1, Handler$h$⁰.this, Handler$h$xchg⁰)
+//│     }
 //│   };
-//│   return enqueue⁰(cpsCont$3⁰, k1, runtime⁰.Unit⁰)
-//│ };
-//│ @inline
-//│ define Handler$h$fork$ as fun Handler$h$fork$⁰(k, new_thread)(k1) {
-//│   let tmp;
-//│   set tmp = (k2, new_thread1, k3) => {
-//│     return Handler$h$fork⁰(k2, new_thread1, k3)
-//│   };
-//│   return tmp(k, new_thread, k1)
-//│ };
-//│ define Handler$h$fork as fun Handler$h$fork⁰(k, new_thread, k1) {
-//│   let tmp, cpsCont$6;
-//│   define cpsCont$6 as fun cpsCont$6⁰(‹no symbol›) {
-//│     set tmp = (k2, thread) => {
-//│       return start⁰(k2, thread)
-//│     };
-//│     return tmp(k, new_thread)
-//│   };
-//│   return enqueue⁰(cpsCont$6⁰, k1, runtime⁰.Unit⁰)
-//│ };
-//│ @inline
-//│ define handleBlock$$ as fun handleBlock$$⁰(k, thread, h)() {
-//│   let tmp;
-//│   set tmp = (k1, thread1, h1) => {
-//│     return handleBlock$⁰(k1, thread1, h1)
-//│   };
-//│   return tmp(k, thread, h)
-//│ };
-//│ define Handler$h$ as class Handler$h$⁰ extends ThreadEffect⁰ {
-//│   method fork⁰ = fun fork¹(k, new_thread) {
-//│     let suspendRes, Handler$h$fork$here;
-//│     set Handler$h$fork$here = (k1, k2) => {
-//│       return Handler$h$fork$⁰(k1, new_thread)(k2)
-//│     };
-//│     return new mut runtime⁰.Suspend﹖(k, Handler$h$⁰.this, Handler$h$fork$here)
-//│   }
-//│   method yld⁰ = fun yld¹(k) {
-//│     let suspendRes, tmp;
-//│     set tmp = (k1, k2) => {
-//│       return Handler$h$yld⁰(k1, k2)
-//│     };
-//│     return new mut runtime⁰.Suspend﹖(k, Handler$h$⁰.this, tmp)
-//│   }
-//│   method xchg⁰ = fun xchg¹(k, x) {
-//│     let suspendRes, Handler$h$xchg$here;
-//│     set Handler$h$xchg$here = (k1, k2) => {
-//│       return Handler$h$xchg$⁰(k1, x)(k2)
-//│     };
-//│     return new mut runtime⁰.Suspend﹖(k, Handler$h$⁰.this, Handler$h$xchg$here)
-//│   }
-//│ };
-//│ define handleBlock$ as fun handleBlock$⁰(k, thread, h) {
-//│   return thread(k, h)
-//│ };
-//│ define start¹ as fun start⁰(k, thread) {
-//│   let h, tmp, handleBlock$$here, cpsCont$9;
 //│   set h = new mut Handler$h$⁰();
-//│   set handleBlock$$here = (k1) => {
-//│     return handleBlock$$⁰(k1, thread, h)()
+//│   define handleBlock$ as fun handleBlock$⁰(k1) {
+//│     return thread(k1, h)
 //│   };
 //│   define cpsCont$9 as fun cpsCont$9⁰(retVal) {
 //│     set tmp = retVal;
 //│     return dequeue⁰(k)
 //│   };
-//│   return runtime⁰.cpsHandlerImpl﹖(cpsCont$9⁰, h, handleBlock$$here)
+//│   return runtime⁰.cpsHandlerImpl﹖(cpsCont$9⁰, h, handleBlock$⁰)
 //│ };
 //│ end
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let start1;
+//│ start1 = function start(k, thread) {
+//│   let h2, handleBlock$, Handler$h$6, cpsCont$9;
+//│   (class Handler$h$5 extends ThreadEffect5 {
+//│     static {
+//│       Handler$h$6 = this
+//│     }
+//│     constructor() {
+//│       super();
+//│     }
+//│     fork(k1, new_thread) {
+//│       let Handler$h$fork;
+//│       Handler$h$fork = function Handler$h$fork(k2, k3) {
+//│         let tmp4, k4, x, lambda;
+//│         k4 = k3;
+//│         x = runtime.Unit;
+//│         lambda = (undefined, function (k5) {
+//│           return k4(k5, x)
+//│         });
+//│         runtime.safeCall(tasks1.push(lambda));
+//│         tmp4 = (k5, thread1) => {
+//│           return start1(k5, thread1)
+//│         };
+//│         return tmp4(k2, new_thread)
+//│       };
+//│       return new runtime.Suspend(k1, this, Handler$h$fork)
+//│     }
+//│     yld(k1) {
+//│       let Handler$h$yld;
+//│       Handler$h$yld = function Handler$h$yld(k2, k3) {
+//│         let k4, x, lambda, callPrefix, a, inlinedVal, tmp4;
+//│         k4 = k3;
+//│         x = runtime.Unit;
+//│         lambda = (undefined, function (k5) {
+//│           return k4(k5, x)
+//│         });
+//│         runtime.safeCall(tasks1.push(lambda));
+//│         a = tasks1.length;
+//│         tmp4 = Predef.equals(a, 0);
+//│         inlinedVal = ! tmp4;
+//│         if (inlinedVal === true) {
+//│           callPrefix = runtime.safeCall(tasks1.shift());
+//│           runtime.safeCall(callPrefix());
+//│           return k2(runtime.Unit)
+//│         }
+//│         return k2(runtime.Unit);
+//│       };
+//│       return new runtime.Suspend(k1, this, Handler$h$yld)
+//│     }
+//│     xchg(k1, x) {
+//│       let Handler$h$xchg;
+//│       Handler$h$xchg = function Handler$h$xchg(k2, k3) {
+//│         let arg$Some$0$, element1$, element0$, tmp4, tmp5;
+//│         if (exchanger instanceof Option.Some.class) {
+//│           arg$Some$0$ = exchanger.value;
+//│           if (runtime.Tuple.isArrayLike(arg$Some$0$) && arg$Some$0$.length === 2) {
+//│             let k4, x1, lambda;
+//│             element0$ = runtime.Tuple.get(arg$Some$0$, 0);
+//│             element1$ = runtime.Tuple.get(arg$Some$0$, 1);
+//│             exchanger = Option.None;
+//│             k4 = element1$;
+//│             x1 = x;
+//│             lambda = (undefined, function (k5) {
+//│               return k4(k5, x1)
+//│             });
+//│             runtime.safeCall(tasks1.push(lambda));
+//│             return k3(k2, element0$)
+//│           }
+//│           throw globalThis.Object.freeze(new globalThis.Error("match error"));
+//│         } else if (exchanger instanceof Option.None.class) {
+//│           let callPrefix, a, inlinedVal, tmp6;
+//│           tmp4 = globalThis.Object.freeze([
+//│             x,
+//│             k3
+//│           ]);
+//│           tmp5 = Option.Some(tmp4);
+//│           exchanger = tmp5;
+//│           a = tasks1.length;
+//│           tmp6 = Predef.equals(a, 0);
+//│           inlinedVal = ! tmp6;
+//│           if (inlinedVal === true) {
+//│             callPrefix = runtime.safeCall(tasks1.shift());
+//│             runtime.safeCall(callPrefix());
+//│             return k2(runtime.Unit)
+//│           }
+//│           return k2(runtime.Unit);
+//│         }
+//│         throw globalThis.Object.freeze(new globalThis.Error("match error"));
+//│       };
+//│       return new runtime.Suspend(k1, this, Handler$h$xchg)
+//│     }
+//│     toString() { return runtime.render(this); }
+//│     static [definitionMetadata] = ["class", "Handler$h$"];
+//│   });
+//│   h2 = new Handler$h$6();
+//│   handleBlock$ = (undefined, function (k1) {
+//│     return thread(k1, h2)
+//│   });
+//│   cpsCont$9 = function cpsCont$9(retVal) {
+//│     let k1, callPrefix, a, inlinedVal, tmp4;
+//│     k1 = k;
+//│     a = tasks1.length;
+//│     tmp4 = Predef.equals(a, 0);
+//│     inlinedVal = ! tmp4;
+//│     if (inlinedVal === true) {
+//│       callPrefix = runtime.safeCall(tasks1.shift());
+//│       runtime.safeCall(callPrefix());
+//│       return k1(runtime.Unit)
+//│     }
+//│     return k1(runtime.Unit);
+//│   };
+//│   return runtime.cpsHandlerImpl(cpsCont$9, h2, handleBlock$)
+//│ };
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 fun mainn(h) =
@@ -285,6 +844,40 @@ fun mainn(h) =
     print("[t2] Sending 1")
     let v = h.xchg(1)
     print("[t2] received " + v.toString()))
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let mainn2;
+//│ mainn2 = function mainn(k, h2) {
+//│   let lambda, lambda1, cpsCont$6;
+//│   lambda = (undefined, function (k1, h3) {
+//│     let tmp4, tmp5, cpsCont$0;
+//│     Predef.print("[t1] Sending 0");
+//│     cpsCont$0 = function cpsCont$0(v) {
+//│       let tmp6;
+//│       tmp4 = runtime.safeCall(v.toString());
+//│       tmp5 = "[t1] received " + tmp4;
+//│       tmp6 = Predef.print(tmp5);
+//│       return k1(tmp6)
+//│     };
+//│     return h3.xchg(cpsCont$0, 0)
+//│   });
+//│   cpsCont$6 = function cpsCont$6($_no$_symbol$_) {
+//│     lambda1 = (undefined, function (k1, h3) {
+//│       let tmp4, tmp5, cpsCont$3;
+//│       Predef.print("[t2] Sending 1");
+//│       cpsCont$3 = function cpsCont$3(v) {
+//│         let tmp6;
+//│         tmp4 = runtime.safeCall(v.toString());
+//│         tmp5 = "[t2] received " + tmp4;
+//│         tmp6 = Predef.print(tmp5);
+//│         return k1(tmp6)
+//│       };
+//│       return h3.xchg(cpsCont$3, 1)
+//│     });
+//│     return h2.fork(k, lambda1)
+//│   };
+//│   return h2.fork(cpsCont$6, lambda)
+//│ };
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 :sjs
 start(mainn)
@@ -292,18 +885,16 @@ start(mainn)
 //│ return start1(runtime.cpsId, mainn2)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ > [t1] Sending 0
-//│ > [t2] Sending 1
-//│ > [t2] received 0
 //│ FAILURE: Unexpected runtime error
 //│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
-//│ ═══[RUNTIME ERROR] TypeError: k is not a function
-//│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1085:29)
-//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:293:21
-//│     at tmp5 (REPL59:1:383)
-//│     at lambda$here (REPL59:1:431)
-//│     at cpsCont$9 (REPL67:1:5324)
-//│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1085:29)
+//│ ═══[RUNTIME ERROR] Error: Function expected 1 argument but got 0
+//│     at Runtime.checkArgs (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1006:41)
+//│     at Handler$h$fork.lambda (REPL67:1:938)
+//│     at Handler$h$xchg (REPL67:1:4006)
+//│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1075:48)
 //│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1090:20)
-//│     at start (REPL67:1:5482)
-//│     at tmp5 (REPL67:1:1015)
-//│     at cpsCont$6 (REPL67:1:1083)
+//│     at start (REPL67:1:5158)
+//│     at tmp4 (REPL67:1:1154)
+//│     at Handler$h$fork (REPL67:1:1219)
+//│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1075:48)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1090:20)
