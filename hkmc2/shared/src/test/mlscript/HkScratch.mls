@@ -11,71 +11,236 @@
 class Effect
 
 :effectHandlers
-:deadParamElim off
-:noOpt
-:noInline
-:sjs
+:stackSafe
+:lift
 let selfApp(f) = f(f)
+//│ selfApp = fun
+
+:effectHandlers
+:stackSafe
+:lift
+:sir
+:noInline
+:noOpt
+:deadParamElim off
 fun mkrec(g) =
-  selfApp of self =>
-    g of y => self(self)(y)
-let fact = mkrec of self => x =>
-  if x == 0 then 1 else self(x - 1) * x
-fact(3)
-//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let mkrec, selfApp, fact, lambda, selfApp1, tmp, tmp1, tmp2;
-//│ mkrec = function mkrec(k, g) {
-//│   let lambda1;
-//│   lambda1 = (undefined, function (k1, self) {
-//│     let lambda2;
-//│     lambda2 = (undefined, function (k2, y) {
-//│       let cpsCont$0;
-//│       cpsCont$0 = function cpsCont$0(callPrefix) {
-//│         return callPrefix(k2, y)
-//│       };
-//│       return self(cpsCont$0, self)
-//│     });
-//│     return g(k1, lambda2)
-//│   });
-//│   return selfApp(k, lambda1)
+  selfApp(self => g(y => self(self)(y)))
+//│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
+//│ let lambda, lambda1, lambda$, lambda$1;
+//│ @inline
+//│ define lambda$1 as fun lambda$⁰(k, k1, self)(y) {
+//│   let cpsCont$5, tmp;
+//│   define cpsCont$5 as fun cpsCont$5⁰(retVal) {
+//│     let tmp1;
+//│     set tmp1 = runtime⁰.cpsSetCheckDepth﹖();
+//│     match tmp1
+//│       true =>
+//│         return runtime⁰.cpsRaiseStack﹖(cpsCont$5⁰, retVal)
+//│       else
+//│         let tmp2, lambda2;
+//│         @private
+//│         define lambda2 as fun lambda¹(k2, k3, self1, y1) {
+//│           let cpsCont$3, tmp3;
+//│           define cpsCont$3 as fun cpsCont$3⁰(retVal1) {
+//│             let tmp4;
+//│             set tmp4 = runtime⁰.cpsSetCheckDepth﹖();
+//│             match tmp4
+//│               true =>
+//│                 return runtime⁰.cpsRaiseStack﹖(cpsCont$3⁰, retVal1)
+//│               else
+//│                 return lambda⁰(k2, k3, self1, y1)
+//│             end
+//│           };
+//│           set tmp3 = runtime⁰.cpsSetCheckDepth﹖();
+//│           match tmp3
+//│             true =>
+//│               return runtime⁰.cpsRaiseStack﹖(cpsCont$3⁰, undefined)
+//│             else
+//│               return cpsCont$3⁰(undefined)
+//│           end
+//│         };
+//│         set tmp2 = lambda¹;
+//│         return tmp2(k, k1, self, y)
+//│     end
+//│   };
+//│   set tmp = runtime⁰.cpsSetCheckDepth﹖();
+//│   match tmp
+//│     true =>
+//│       return runtime⁰.cpsRaiseStack﹖(cpsCont$5⁰, undefined)
+//│     else
+//│       return cpsCont$5⁰(undefined)
+//│   end
 //│ };
-//│ selfApp1 = function selfApp(k, f) {
-//│   return f(k, f)
+//│ define lambda as fun lambda⁰(k, k1, self, y) {
+//│   let cpsCont$9, tmp;
+//│   define cpsCont$9 as fun cpsCont$9⁰(retVal) {
+//│     let tmp1;
+//│     set tmp1 = runtime⁰.cpsSetCheckDepth﹖();
+//│     match tmp1
+//│       true =>
+//│         return runtime⁰.cpsRaiseStack﹖(cpsCont$9⁰, retVal)
+//│       else
+//│         let callPrefix, cpsCont$0;
+//│         define cpsCont$0 as fun cpsCont$0⁰(k2, callPrefix1) {
+//│           let cpsCont$7, tmp2;
+//│           define cpsCont$7 as fun cpsCont$7⁰(retVal1) {
+//│             let tmp3;
+//│             set tmp3 = runtime⁰.cpsSetCheckDepth﹖();
+//│             match tmp3
+//│               true =>
+//│                 return runtime⁰.cpsRaiseStack﹖(cpsCont$7⁰, retVal1)
+//│               else
+//│                 return callPrefix1(k2, k1, y)
+//│             end
+//│           };
+//│           set tmp2 = runtime⁰.cpsSetCheckDepth﹖();
+//│           match tmp2
+//│             true =>
+//│               return runtime⁰.cpsRaiseStack﹖(cpsCont$7⁰, undefined)
+//│             else
+//│               return cpsCont$7⁰(undefined)
+//│           end
+//│         };
+//│         return self(k, cpsCont$0⁰, self)
+//│     end
+//│   };
+//│   set tmp = runtime⁰.cpsSetCheckDepth﹖();
+//│   match tmp
+//│     true =>
+//│       return runtime⁰.cpsRaiseStack﹖(cpsCont$9⁰, undefined)
+//│     else
+//│       return cpsCont$9⁰(undefined)
+//│   end
 //│ };
-//│ tmp = (k, f) => {
-//│   return selfApp1(k, f)
+//│ @inline
+//│ define lambda$ as fun lambda$¹(k, k1, g)(self) {
+//│   let cpsCont$13, tmp;
+//│   define cpsCont$13 as fun cpsCont$13⁰(retVal) {
+//│     let tmp1;
+//│     set tmp1 = runtime⁰.cpsSetCheckDepth﹖();
+//│     match tmp1
+//│       true =>
+//│         return runtime⁰.cpsRaiseStack﹖(cpsCont$13⁰, retVal)
+//│       else
+//│         let tmp2, lambda2;
+//│         @private
+//│         define lambda2 as fun lambda³(k2, k3, g1, self1) {
+//│           let cpsCont$11, tmp3;
+//│           define cpsCont$11 as fun cpsCont$11⁰(retVal1) {
+//│             let tmp4;
+//│             set tmp4 = runtime⁰.cpsSetCheckDepth﹖();
+//│             match tmp4
+//│               true =>
+//│                 return runtime⁰.cpsRaiseStack﹖(cpsCont$11⁰, retVal1)
+//│               else
+//│                 return lambda²(k2, k3, g1, self1)
+//│             end
+//│           };
+//│           set tmp3 = runtime⁰.cpsSetCheckDepth﹖();
+//│           match tmp3
+//│             true =>
+//│               return runtime⁰.cpsRaiseStack﹖(cpsCont$11⁰, undefined)
+//│             else
+//│               return cpsCont$11⁰(undefined)
+//│           end
+//│         };
+//│         set tmp2 = lambda³;
+//│         return tmp2(k, k1, g, self)
+//│     end
+//│   };
+//│   set tmp = runtime⁰.cpsSetCheckDepth﹖();
+//│   match tmp
+//│     true =>
+//│       return runtime⁰.cpsRaiseStack﹖(cpsCont$13⁰, undefined)
+//│     else
+//│       return cpsCont$13⁰(undefined)
+//│   end
 //│ };
-//│ selfApp = tmp;
-//│ lambda = (undefined, function (k, self) {
-//│   let lambda1;
-//│   lambda1 = (undefined, function (k1, x) {
-//│     let scrut, tmp3;
-//│     scrut = Predef.equals(x, 0);
-//│     if (scrut === true) {
-//│       return k1(1)
-//│     }
-//│     {
-//│       let cpsCont$3;
-//│       tmp3 = x - 1;
-//│       cpsCont$3 = function cpsCont$3(tmp4) {
-//│         let tmp5;
-//│         tmp5 = tmp4 * x;
-//│         return k1(tmp5)
-//│       };
-//│       return self(cpsCont$3, tmp3);
-//│     }
-//│   });
-//│   return k(lambda1)
-//│ });
-//│ tmp1 = (k, g) => {
-//│   return mkrec(k, g)
+//│ define lambda1 as fun lambda²(k, k1, g, self) {
+//│   let cpsCont$17, tmp;
+//│   define cpsCont$17 as fun cpsCont$17⁰(retVal) {
+//│     let tmp1;
+//│     set tmp1 = runtime⁰.cpsSetCheckDepth﹖();
+//│     match tmp1
+//│       true =>
+//│         return runtime⁰.cpsRaiseStack﹖(cpsCont$17⁰, retVal)
+//│       else
+//│         let lambda$here, lambda2;
+//│         @private
+//│         define lambda2 as fun lambda⁴(k2, k3, y) {
+//│           let cpsCont$15, tmp2;
+//│           define cpsCont$15 as fun cpsCont$15⁰(retVal1) {
+//│             let tmp3;
+//│             set tmp3 = runtime⁰.cpsSetCheckDepth﹖();
+//│             match tmp3
+//│               true =>
+//│                 return runtime⁰.cpsRaiseStack﹖(cpsCont$15⁰, retVal1)
+//│               else
+//│                 return lambda$⁰(k2, k3, self)(y)
+//│             end
+//│           };
+//│           set tmp2 = runtime⁰.cpsSetCheckDepth﹖();
+//│           match tmp2
+//│             true =>
+//│               return runtime⁰.cpsRaiseStack﹖(cpsCont$15⁰, undefined)
+//│             else
+//│               return cpsCont$15⁰(undefined)
+//│           end
+//│         };
+//│         set lambda$here = lambda⁴;
+//│         return g(k, k1, lambda$here)
+//│     end
+//│   };
+//│   set tmp = runtime⁰.cpsSetCheckDepth﹖();
+//│   match tmp
+//│     true =>
+//│       return runtime⁰.cpsRaiseStack﹖(cpsCont$17⁰, undefined)
+//│     else
+//│       return cpsCont$17⁰(undefined)
+//│   end
 //│ };
-//│ tmp2 = (k, self) => {
-//│   return lambda(k, self)
+//│ define mkrec⁰ as fun mkrec¹(k, k1, g) {
+//│   let cpsCont$21, tmp;
+//│   define cpsCont$21 as fun cpsCont$21⁰(retVal) {
+//│     let tmp1;
+//│     set tmp1 = runtime⁰.cpsSetCheckDepth﹖();
+//│     match tmp1
+//│       true =>
+//│         return runtime⁰.cpsRaiseStack﹖(cpsCont$21⁰, retVal)
+//│       else
+//│         let lambda$here, lambda2;
+//│         @private
+//│         define lambda2 as fun lambda⁵(k2, k3, self) {
+//│           let cpsCont$19, tmp2;
+//│           define cpsCont$19 as fun cpsCont$19⁰(retVal1) {
+//│             let tmp3;
+//│             set tmp3 = runtime⁰.cpsSetCheckDepth﹖();
+//│             match tmp3
+//│               true =>
+//│                 return runtime⁰.cpsRaiseStack﹖(cpsCont$19⁰, retVal1)
+//│               else
+//│                 return lambda$¹(k2, k3, g)(self)
+//│             end
+//│           };
+//│           set tmp2 = runtime⁰.cpsSetCheckDepth﹖();
+//│           match tmp2
+//│             true =>
+//│               return runtime⁰.cpsRaiseStack﹖(cpsCont$19⁰, undefined)
+//│             else
+//│               return cpsCont$19⁰(undefined)
+//│           end
+//│         };
+//│         set lambda$here = lambda⁵;
+//│         return selfApp⁰(k, k1, lambda$here)
+//│     end
+//│   };
+//│   set tmp = runtime⁰.cpsSetCheckDepth﹖();
+//│   match tmp
+//│     true =>
+//│       return runtime⁰.cpsRaiseStack﹖(cpsCont$21⁰, undefined)
+//│     else
+//│       return cpsCont$21⁰(undefined)
+//│   end
 //│ };
-//│ fact = tmp1(runtime.cpsId, tmp2);
-//│ return fact(runtime.cpsId, 3)
+//│ end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ = 6
-//│ fact = fun
-//│ selfApp = fun tmp

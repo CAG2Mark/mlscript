@@ -254,79 +254,91 @@ f(Pair(1, 2))
 :stackSafe 100
 fun f() = case [...x, y, z] then x
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
-//│ let lambda;
-//│ @private
-//│ define lambda as fun lambda⁰(k, k1, caseScrut) {
-//│   let cpsCont$0, tmp;
-//│   define cpsCont$0 as fun cpsCont$0⁰(retVal) {
-//│     let tmp1;
-//│     set tmp1 = runtime⁰.cpsSetCheckDepth﹖();
-//│     match tmp1
-//│       true =>
-//│         return runtime⁰.cpsRaiseStack﹖(cpsCont$0⁰, retVal)
-//│       else
-//│         let x, y, z, lastElement1$, lastElement2$, middleElements;
-//│         match caseScrut
-//│           Array(2+) =>
-//│             set middleElements = runtime⁰.Tuple⁰.slice⁰(caseScrut, 0, 2);
-//│             set lastElement2$ = runtime⁰.Tuple⁰.get⁰(caseScrut, -2);
-//│             set lastElement1$ = runtime⁰.Tuple⁰.get⁰(caseScrut, -1);
-//│             set y = lastElement1$;
-//│             set z = lastElement2$;
-//│             set x = middleElements;
-//│             return k1(k, x)
-//│           else
-//│             throw new globalThis⁰.Error⁰("match error")
-//│         end
-//│     end
-//│   };
+//│ let lambda, cpsCont$0, cpsCont$4, cpsCont$0$, cpsCont$4$;
+//│ @inline
+//│ define cpsCont$4$ as fun cpsCont$4$⁰(k, k1)(retVal) {
+//│   return cpsCont$4⁰(k, k1, retVal)
+//│ };
+//│ define cpsCont$4 as fun cpsCont$4⁰(k, k1, retVal) {
+//│   let tmp, cpsCont$4$here;
 //│   set tmp = runtime⁰.cpsSetCheckDepth﹖();
 //│   match tmp
 //│     true =>
-//│       return runtime⁰.cpsRaiseStack﹖(cpsCont$0⁰, undefined)
+//│       set cpsCont$4$here = cpsCont$4$⁰(k, k1);
+//│       return runtime⁰.cpsRaiseStack﹖(cpsCont$4$here, retVal)
 //│     else
-//│       return cpsCont$0⁰(undefined)
-//│   end
-//│ };
-//│ define f²¹ as fun f²²(k, k1) {
-//│   let cpsCont$4, tmp;
-//│   define cpsCont$4 as fun cpsCont$4⁰(retVal) {
-//│     let tmp1;
-//│     set tmp1 = runtime⁰.cpsSetCheckDepth﹖();
-//│     match tmp1
-//│       true =>
-//│         return runtime⁰.cpsRaiseStack﹖(cpsCont$4⁰, retVal)
-//│       else
-//│         let tmp2;
-//│         set tmp2 = (k2, k3, caseScrut) => {
-//│           let cpsCont$2, tmp3;
-//│           define cpsCont$2 as fun cpsCont$2⁰(retVal1) {
-//│             let tmp4;
-//│             set tmp4 = runtime⁰.cpsSetCheckDepth﹖();
-//│             match tmp4
-//│               true =>
-//│                 return runtime⁰.cpsRaiseStack﹖(cpsCont$2⁰, retVal1)
-//│               else
-//│                 return lambda⁰(k2, k3, caseScrut)
-//│             end
-//│           };
+//│       let tmp1;
+//│       set tmp1 = (k2, k3, caseScrut) => {
+//│         let cpsCont$2, tmp2;
+//│         define cpsCont$2 as fun cpsCont$2⁰(retVal1) {
+//│           let tmp3;
 //│           set tmp3 = runtime⁰.cpsSetCheckDepth﹖();
 //│           match tmp3
 //│             true =>
-//│               return runtime⁰.cpsRaiseStack﹖(cpsCont$2⁰, undefined)
+//│               return runtime⁰.cpsRaiseStack﹖(cpsCont$2⁰, retVal1)
 //│             else
-//│               return cpsCont$2⁰(undefined)
+//│               return lambda⁰(k2, k3, caseScrut)
 //│           end
 //│         };
-//│         return k1(k, tmp2)
-//│     end
-//│   };
+//│         set tmp2 = runtime⁰.cpsSetCheckDepth﹖();
+//│         match tmp2
+//│           true =>
+//│             return runtime⁰.cpsRaiseStack﹖(cpsCont$2⁰, undefined)
+//│           else
+//│             return cpsCont$2⁰(undefined)
+//│         end
+//│       };
+//│       return k(k1, tmp1)
+//│   end
+//│ };
+//│ @inline
+//│ define cpsCont$0$ as fun cpsCont$0$⁰(caseScrut, k, k1)(retVal) {
+//│   return cpsCont$0⁰(caseScrut, k, k1, retVal)
+//│ };
+//│ define cpsCont$0 as fun cpsCont$0⁰(caseScrut, k, k1, retVal) {
+//│   let tmp, cpsCont$0$here;
 //│   set tmp = runtime⁰.cpsSetCheckDepth﹖();
 //│   match tmp
 //│     true =>
-//│       return runtime⁰.cpsRaiseStack﹖(cpsCont$4⁰, undefined)
+//│       set cpsCont$0$here = cpsCont$0$⁰(caseScrut, k, k1);
+//│       return runtime⁰.cpsRaiseStack﹖(cpsCont$0$here, retVal)
 //│     else
-//│       return cpsCont$4⁰(undefined)
+//│       let x, y, z, lastElement1$, lastElement2$, middleElements;
+//│       match caseScrut
+//│         Array(2+) =>
+//│           set middleElements = runtime⁰.Tuple⁰.slice⁰(caseScrut, 0, 2);
+//│           set lastElement2$ = runtime⁰.Tuple⁰.get⁰(caseScrut, -2);
+//│           set lastElement1$ = runtime⁰.Tuple⁰.get⁰(caseScrut, -1);
+//│           set y = lastElement1$;
+//│           set z = lastElement2$;
+//│           set x = middleElements;
+//│           return k(k1, x)
+//│         else
+//│           throw new globalThis⁰.Error⁰("match error")
+//│       end
+//│   end
+//│ };
+//│ @private
+//│ define lambda as fun lambda⁰(k, k1, caseScrut) {
+//│   let tmp, cpsCont$0$here;
+//│   set tmp = runtime⁰.cpsSetCheckDepth﹖();
+//│   match tmp
+//│     true =>
+//│       set cpsCont$0$here = cpsCont$0$⁰(caseScrut, k1, k);
+//│       return runtime⁰.cpsRaiseStack﹖(cpsCont$0$here, undefined)
+//│     else
+//│       return cpsCont$0⁰(caseScrut, k1, k, undefined)
+//│   end
+//│ };
+//│ define f²¹ as fun f²²(k, k1) {
+//│   let tmp, cpsCont$4$here;
+//│   set tmp = runtime⁰.cpsSetCheckDepth﹖();
+//│   match tmp
+//│     true =>
+//│       set cpsCont$4$here = cpsCont$4$⁰(k1, k);
+//│       return runtime⁰.cpsRaiseStack﹖(cpsCont$4$here, undefined)
+//│     else
+//│       return cpsCont$4⁰(k1, k, undefined)
 //│   end
 //│ };
 //│ end
@@ -344,27 +356,34 @@ import "../../mlscript-compile/Runtime.mls"
 fun f(c) = Runtime.Tuple.get(c, 1) + 1
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
 //│ import "..." as Runtime;
-//│ define f²³ as fun f²⁴(k, k1, c) {
-//│   let cpsCont$0, tmp;
-//│   define cpsCont$0 as fun cpsCont$0¹(retVal) {
-//│     let tmp1;
-//│     set tmp1 = runtime⁰.cpsSetCheckDepth﹖();
-//│     match tmp1
-//│       true =>
-//│         return runtime⁰.cpsRaiseStack﹖(cpsCont$0¹, retVal)
-//│       else
-//│         let tmp2, tmp3;
-//│         set tmp2 = Runtime⁰.Tuple⁰.get⁰(c, 1);
-//│         set tmp3 = +⁰(tmp2, 1);
-//│         return k1(k, tmp3)
-//│     end
-//│   };
+//│ let cpsCont$0, cpsCont$0$;
+//│ @inline
+//│ define cpsCont$0$ as fun cpsCont$0$¹(c, k, k1)(retVal) {
+//│   return cpsCont$0¹(c, k, k1, retVal)
+//│ };
+//│ define cpsCont$0 as fun cpsCont$0¹(c, k, k1, retVal) {
+//│   let tmp, cpsCont$0$here;
 //│   set tmp = runtime⁰.cpsSetCheckDepth﹖();
 //│   match tmp
 //│     true =>
-//│       return runtime⁰.cpsRaiseStack﹖(cpsCont$0¹, undefined)
+//│       set cpsCont$0$here = cpsCont$0$¹(c, k, k1);
+//│       return runtime⁰.cpsRaiseStack﹖(cpsCont$0$here, retVal)
 //│     else
-//│       return cpsCont$0¹(undefined)
+//│       let tmp1, tmp2;
+//│       set tmp1 = Runtime⁰.Tuple⁰.get⁰(c, 1);
+//│       set tmp2 = +⁰(tmp1, 1);
+//│       return k(k1, tmp2)
+//│   end
+//│ };
+//│ define f²³ as fun f²⁴(k, k1, c) {
+//│   let tmp, cpsCont$0$here;
+//│   set tmp = runtime⁰.cpsSetCheckDepth﹖();
+//│   match tmp
+//│     true =>
+//│       set cpsCont$0$here = cpsCont$0$¹(c, k1, k);
+//│       return runtime⁰.cpsRaiseStack﹖(cpsCont$0$here, undefined)
+//│     else
+//│       return cpsCont$0¹(c, k1, k, undefined)
 //│   end
 //│ };
 //│ end

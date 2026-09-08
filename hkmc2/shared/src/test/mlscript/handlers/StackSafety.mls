@@ -17,56 +17,63 @@ fun hi(n) =
   else hi(n - 1)
 hi(0)
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let hi, tmp, $_stack$_safe$_body$_;
-//│ hi = function hi(k, k1, n) {
-//│   let cpsCont$2, tmp1;
-//│   cpsCont$2 = function cpsCont$2(retVal) {
-//│     let tmp2;
-//│     tmp2 = runtime.cpsSetCheckDepth();
-//│     if (tmp2 === true) {
-//│       return runtime.cpsRaiseStack(cpsCont$2, retVal)
+//│ let hi, tmp, cpsCont$2, $_stack$_safe$_body$_, cpsCont$2$;
+//│ cpsCont$2$ = function cpsCont$2$(n, k, k1) {
+//│   return (retVal) => {
+//│     return cpsCont$2(n, k, k1, retVal)
+//│   }
+//│ };
+//│ cpsCont$2 = function cpsCont$2(n, k, k1, retVal) {
+//│   let tmp1, cpsCont$2$here;
+//│   tmp1 = runtime.cpsSetCheckDepth();
+//│   if (tmp1 === true) {
+//│     cpsCont$2$here = cpsCont$2$(n, k, k1);
+//│     return runtime.cpsRaiseStack(cpsCont$2$here, retVal)
+//│   }
+//│   {
+//│     let scrut, tmp2;
+//│     scrut = n === 0;
+//│     if (scrut === true) {
+//│       return k(k1, 0)
 //│     }
 //│     {
-//│       let scrut, tmp3;
-//│       scrut = n === 0;
-//│       if (scrut === true) {
-//│         return k1(k, 0)
-//│       }
-//│       {
-//│         let tmp4;
-//│         tmp3 = n - 1;
-//│         tmp4 = (k2, k3, n1) => {
-//│           let cpsCont$0, tmp5;
-//│           cpsCont$0 = function cpsCont$0(retVal1) {
-//│             let tmp6;
-//│             tmp6 = runtime.cpsSetCheckDepth();
-//│             if (tmp6 === true) {
-//│               return runtime.cpsRaiseStack(cpsCont$0, retVal1)
-//│             }
-//│             return hi(k2, k3, n1);
-//│           };
+//│       let tmp3;
+//│       tmp2 = n - 1;
+//│       tmp3 = (k2, k3, n1) => {
+//│         let cpsCont$0, tmp4;
+//│         cpsCont$0 = function cpsCont$0(retVal1) {
+//│           let tmp5;
+//│           tmp5 = runtime.cpsSetCheckDepth();
+//│           if (tmp5 === true) {
+//│             return runtime.cpsRaiseStack(cpsCont$0, retVal1)
+//│           }
+//│           return hi(k2, k3, n1);
+//│         };
+//│         tmp4 = runtime.cpsSetCheckDepth();
+//│         if (tmp4 === true) {
+//│           return runtime.cpsRaiseStack(cpsCont$0, undefined)
+//│         }
+//│         {
+//│           let tmp5;
 //│           tmp5 = runtime.cpsSetCheckDepth();
 //│           if (tmp5 === true) {
 //│             return runtime.cpsRaiseStack(cpsCont$0, undefined)
 //│           }
-//│           {
-//│             let tmp6;
-//│             tmp6 = runtime.cpsSetCheckDepth();
-//│             if (tmp6 === true) {
-//│               return runtime.cpsRaiseStack(cpsCont$0, undefined)
-//│             }
-//│             return hi(k2, k3, n1);
-//│           }
-//│         };
-//│         return tmp4(k, k1, tmp3);
-//│       }
+//│           return hi(k2, k3, n1);
+//│         }
+//│       };
+//│       return tmp3(k1, k, tmp2);
 //│     }
-//│   };
+//│   }
+//│ };
+//│ hi = function hi(k, k1, n) {
+//│   let tmp1, cpsCont$2$here;
 //│   tmp1 = runtime.cpsSetCheckDepth();
 //│   if (tmp1 === true) {
-//│     return runtime.cpsRaiseStack(cpsCont$2, undefined)
+//│     cpsCont$2$here = cpsCont$2$(n, k1, k);
+//│     return runtime.cpsRaiseStack(cpsCont$2$here, undefined)
 //│   }
-//│   return cpsCont$2(undefined);
+//│   return cpsCont$2(n, k1, k, undefined);
 //│ };
 //│ tmp = (k, k1, n) => {
 //│   let cpsCont$4, tmp1;
@@ -107,89 +114,108 @@ fun sum(n) =
     n + sum(n - 1)
 sum(10000)
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let sum, tmp1, $_stack$_safe$_body$_1;
-//│ sum = function sum(k, k1, n) {
-//│   let cpsCont$7, tmp2;
-//│   cpsCont$7 = function cpsCont$7(retVal) {
-//│     let tmp3;
-//│     tmp3 = runtime.cpsSetCheckDepth();
-//│     if (tmp3 === true) {
-//│       return runtime.cpsRaiseStack(cpsCont$7, retVal)
-//│     }
-//│     {
-//│       let scrut, tmp4, tmp5;
-//│       scrut = n === 0;
-//│       if (scrut === true) {
-//│         return k1(k, 0)
-//│       }
-//│       {
-//│         let tmp6, cpsCont$0;
-//│         tmp4 = n - 1;
-//│         tmp6 = (k2, k3, n1) => {
-//│           let cpsCont$3, tmp7;
-//│           cpsCont$3 = function cpsCont$3(retVal1) {
-//│             let tmp8;
-//│             tmp8 = runtime.cpsSetCheckDepth();
-//│             if (tmp8 === true) {
-//│               return runtime.cpsRaiseStack(cpsCont$3, retVal1)
-//│             }
-//│             return sum(k2, k3, n1);
-//│           };
-//│           tmp7 = runtime.cpsSetCheckDepth();
-//│           if (tmp7 === true) {
-//│             return runtime.cpsRaiseStack(cpsCont$3, undefined)
-//│           }
-//│           {
-//│             let tmp8;
-//│             tmp8 = runtime.cpsSetCheckDepth();
-//│             if (tmp8 === true) {
-//│               return runtime.cpsRaiseStack(cpsCont$3, undefined)
-//│             }
-//│             return sum(k2, k3, n1);
-//│           }
-//│         };
-//│         cpsCont$0 = function cpsCont$0(k2, retVal1) {
-//│           let cpsCont$5, tmp7;
-//│           cpsCont$5 = function cpsCont$5(retVal2) {
-//│             let tmp8;
-//│             tmp8 = runtime.cpsSetCheckDepth();
-//│             if (tmp8 === true) {
-//│               return runtime.cpsRaiseStack(cpsCont$5, retVal2)
-//│             }
-//│             {
-//│               let tmp9;
-//│               tmp5 = retVal1;
-//│               tmp9 = n + tmp5;
-//│               return k1(k2, tmp9);
-//│             }
-//│           };
-//│           tmp7 = runtime.cpsSetCheckDepth();
-//│           if (tmp7 === true) {
-//│             return runtime.cpsRaiseStack(cpsCont$5, undefined)
-//│           }
-//│           {
-//│             let tmp8;
-//│             tmp8 = runtime.cpsSetCheckDepth();
-//│             if (tmp8 === true) {
-//│               return runtime.cpsRaiseStack(cpsCont$5, undefined)
-//│             }
-//│             {
-//│               let tmp9;
-//│               tmp5 = retVal1;
-//│               tmp9 = n + tmp5;
-//│               return k1(k2, tmp9);
-//│             }
-//│           }
-//│         };
-//│         return tmp6(k, cpsCont$0, tmp4);
-//│       }
-//│     }
-//│   };
+//│ let sum, tmp1, cpsCont$0, cpsCont$5, cpsCont$7, $_stack$_safe$_body$_1, cpsCont$7$, Capture$scope21, cpsCont$0$, cpsCont$5$;
+//│ cpsCont$5$ = function cpsCont$5$(scope2$cap, n, k, retVal, k1) {
+//│   return (retVal1) => {
+//│     return cpsCont$5(scope2$cap, n, k, retVal, k1, retVal1)
+//│   }
+//│ };
+//│ cpsCont$5 = function cpsCont$5(scope2$cap, n, k, retVal, k1, retVal1) {
+//│   let tmp2, cpsCont$5$here;
 //│   tmp2 = runtime.cpsSetCheckDepth();
 //│   if (tmp2 === true) {
-//│     return runtime.cpsRaiseStack(cpsCont$7, undefined)
+//│     cpsCont$5$here = cpsCont$5$(scope2$cap, n, k, retVal, k1);
+//│     return runtime.cpsRaiseStack(cpsCont$5$here, retVal1)
 //│   }
-//│   return cpsCont$7(undefined);
+//│   {
+//│     let tmp3;
+//│     scope2$cap.tmp$0 = retVal;
+//│     tmp3 = n + scope2$cap.tmp$0;
+//│     return k(k1, tmp3);
+//│   }
+//│ };
+//│ cpsCont$0$ = function cpsCont$0$(scope2$cap, n, k) {
+//│   return (k1, retVal) => {
+//│     return cpsCont$0(scope2$cap, n, k, k1, retVal)
+//│   }
+//│ };
+//│ cpsCont$0 = function cpsCont$0(scope2$cap, n, k, k1, retVal) {
+//│   let tmp2, cpsCont$5$here;
+//│   tmp2 = runtime.cpsSetCheckDepth();
+//│   if (tmp2 === true) {
+//│     cpsCont$5$here = cpsCont$5$(scope2$cap, n, k, retVal, k1);
+//│     return runtime.cpsRaiseStack(cpsCont$5$here, undefined)
+//│   }
+//│   return cpsCont$5(scope2$cap, n, k, retVal, k1, undefined);
+//│ };
+//│ (class Capture$scope2 {
+//│   static {
+//│     Capture$scope21 = this
+//│   }
+//│   constructor(tmp$0) {
+//│     this.tmp$0 = tmp$0;
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Capture$scope2"];
+//│ });
+//│ cpsCont$7$ = function cpsCont$7$(n, k, k1) {
+//│   return (retVal) => {
+//│     return cpsCont$7(n, k, k1, retVal)
+//│   }
+//│ };
+//│ cpsCont$7 = function cpsCont$7(n, k, k1, retVal) {
+//│   let tmp2, cpsCont$7$here;
+//│   tmp2 = runtime.cpsSetCheckDepth();
+//│   if (tmp2 === true) {
+//│     cpsCont$7$here = cpsCont$7$(n, k, k1);
+//│     return runtime.cpsRaiseStack(cpsCont$7$here, retVal)
+//│   }
+//│   {
+//│     let scrut, tmp3, scope2$cap;
+//│     scope2$cap = new Capture$scope21(undefined);
+//│     scrut = n === 0;
+//│     if (scrut === true) {
+//│       return k(k1, 0)
+//│     }
+//│     {
+//│       let tmp4, cpsCont$0$here;
+//│       tmp3 = n - 1;
+//│       tmp4 = (k2, k3, n1) => {
+//│         let cpsCont$3, tmp5;
+//│         cpsCont$3 = function cpsCont$3(retVal1) {
+//│           let tmp6;
+//│           tmp6 = runtime.cpsSetCheckDepth();
+//│           if (tmp6 === true) {
+//│             return runtime.cpsRaiseStack(cpsCont$3, retVal1)
+//│           }
+//│           return sum(k2, k3, n1);
+//│         };
+//│         tmp5 = runtime.cpsSetCheckDepth();
+//│         if (tmp5 === true) {
+//│           return runtime.cpsRaiseStack(cpsCont$3, undefined)
+//│         }
+//│         {
+//│           let tmp6;
+//│           tmp6 = runtime.cpsSetCheckDepth();
+//│           if (tmp6 === true) {
+//│             return runtime.cpsRaiseStack(cpsCont$3, undefined)
+//│           }
+//│           return sum(k2, k3, n1);
+//│         }
+//│       };
+//│       cpsCont$0$here = cpsCont$0$(scope2$cap, n, k);
+//│       return tmp4(k1, cpsCont$0$here, tmp3);
+//│     }
+//│   }
+//│ };
+//│ sum = function sum(k, k1, n) {
+//│   let tmp2, cpsCont$7$here;
+//│   tmp2 = runtime.cpsSetCheckDepth();
+//│   if (tmp2 === true) {
+//│     cpsCont$7$here = cpsCont$7$(n, k1, k);
+//│     return runtime.cpsRaiseStack(cpsCont$7$here, undefined)
+//│   }
+//│   return cpsCont$7(n, k1, k, undefined);
 //│ };
 //│ tmp1 = (k, k1, n) => {
 //│   let cpsCont$9, tmp2;
@@ -324,36 +350,36 @@ foo(h)
 :sjs
 fun max(a, b) = if a < b then b else a
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let max;
-//│ max = function max(k, k1, a, b) {
-//│   let cpsCont$0, tmp12;
-//│   cpsCont$0 = function cpsCont$0(retVal) {
-//│     let tmp13;
-//│     tmp13 = runtime.cpsSetCheckDepth();
-//│     if (tmp13 === true) {
-//│       return runtime.cpsRaiseStack(cpsCont$0, retVal)
-//│     }
-//│     {
-//│       let scrut;
-//│       scrut = a < b;
-//│       if (scrut === true) {
-//│         return k1(k, b)
-//│       }
-//│       return k1(k, a);
-//│     }
-//│   };
+//│ let max, cpsCont$08, cpsCont$0$9;
+//│ cpsCont$0$9 = function cpsCont$0$(a, b, k, k1) {
+//│   return (retVal) => {
+//│     return cpsCont$08(a, b, k, k1, retVal)
+//│   }
+//│ };
+//│ cpsCont$08 = function cpsCont$0(a, b, k, k1, retVal) {
+//│   let tmp12, cpsCont$0$here;
 //│   tmp12 = runtime.cpsSetCheckDepth();
 //│   if (tmp12 === true) {
-//│     return runtime.cpsRaiseStack(cpsCont$0, undefined)
+//│     cpsCont$0$here = cpsCont$0$9(a, b, k, k1);
+//│     return runtime.cpsRaiseStack(cpsCont$0$here, retVal)
 //│   }
 //│   {
-//│     let tmp13;
-//│     tmp13 = runtime.cpsSetCheckDepth();
-//│     if (tmp13 === true) {
-//│       return runtime.cpsRaiseStack(cpsCont$0, undefined)
+//│     let scrut;
+//│     scrut = a < b;
+//│     if (scrut === true) {
+//│       return k(k1, b)
 //│     }
-//│     { let scrut; scrut = a < b; if (scrut === true) { return k1(k, b) } return k1(k, a); }
+//│     return k(k1, a);
 //│   }
+//│ };
+//│ max = function max(k, k1, a, b) {
+//│   let tmp12, cpsCont$0$here;
+//│   tmp12 = runtime.cpsSetCheckDepth();
+//│   if (tmp12 === true) {
+//│     cpsCont$0$here = cpsCont$0$9(a, b, k1, k);
+//│     return runtime.cpsRaiseStack(cpsCont$0$here, undefined)
+//│   }
+//│   return cpsCont$08(a, b, k1, k, undefined);
 //│ };
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
@@ -380,9 +406,12 @@ handle h = Object with
       set depth += 1
       enterHandleBlock(this, () => whoops())
 h.whoops()
-//│ ═══[RUNTIME ERROR] TypeError: k is not a function
+//│ ═══[INTERNAL ERROR] `this` not in scope: class:Handler$h$
+//│ ═══[INTERNAL ERROR] `this` not in scope: class:Handler$h$
+//│ ═══[COMPILATION ERROR] No definition found in scope for member 'Handler$h$'
+//│ ═══[COMPILATION ERROR] [Uncaught SyntaxError] 
 //│ ═══[RUNTIME ERROR] Expected: '0', got: 'undefined'
-//│ depth = 1
+//│ ═══[RUNTIME ERROR] ReferenceError: depth is not defined
 
 // TODO: the stack depth is not accurately tracked in the runtime functions
 // for now this works, but it's not very safe
@@ -454,4 +483,49 @@ fun handler_stack(n) =
     handler_stack(n - 1)
   "ok"
 handler_stack(M)
+//│ FAILURE: Unexpected compilation error
+//│ FAILURE LOCATION: lookup_! (Scope.scala:136)
+//│ FAILURE INFO: Tuple2:
+//│   _1 = Tuple2:
+//│     _1 = n⁰
+//│     _2 = class hkmc2.semantics.VarSymbol
+//│   _2 = Scope:
+//│     parentOrCfg = Right of Scope:
+//│       parentOrCfg = Right of Scope:
+//│         parentOrCfg = Right of Scope:
+//│           parentOrCfg = Right of Scope:
+//│             parentOrCfg = Right of Scope:
+//│               parentOrCfg = Right of Scope:
+//│                 parentOrCfg = Right of Scope:
+//│                   parentOrCfg = Right of Scope:
+//│                     parentOrCfg = Left of Cfg:
+//│                       escapeChars = true
+//│                       useSuperscripts = false
+//│                       includeZero = false
+//│                       defaultName = "tmp"
+//│                     curThis = S of S of globalThis:globalThis⁰
+//│                     bindings = HashMap(member:cpsCont$28$ -> cpsCont$28$1, class:Capture$scope0 -> Capture$scope0, member:cpsCont$25 -> cpsCont$25, tmp:runtime -> runtime, tmp:definitionMetadata -> definitionMetadata, member:cpsCont$0$ -> cpsCont$0$5, tmp:prettyPrint -> prettyPrint, member:Capture$scope0 -> Capture$scope01, tmp:Term -> Term, member:‹stack safe body› -> $_stack$_safe$_body$_11, member:cpsCont$27 -> cpsCont$27, tmp:Block -> Block, tmp:option -> option, member:cpsCont$6$ -> cpsCont$6$3, tmp:tmp -> tmp12, member:cpsCont$10$ -> cpsCont$10$, member:cpsCont$31 -> cpsCont$311, member:cpsCont$0 -> cpsCont$09, tmp:tmp -> tmp6, member:cpsCont$20$ -> cpsCont$20$3, member:cpsCont$0 -> cpsCont$03, member:cpsCont$3 -> cpsCont$35, member:cpsCont$6 -> cpsCont$61, member:cpsCont$35 -> cpsCont$351, tmp:block$res -> block$res14, class:Capture$scope2 -> Capture$scope28, member:dummy -> dummy1, member:f -> f2, member:cpsCont$37 -> cpsCont$371, tmp:block$res -> block$res, member:cpsCont$18$ -> cpsCont$18$, member:hi -> hi, member:cpsCont$5 -> cpsCont$52, member:Capture$scope2 -> Capture$scope29, member:cpsCont$11 -> cpsCont$11, class:Capture$scope10 -> Capture$scope10, member:‹stack safe body› -> $_stack$_safe$_body$_12, member:cpsCont$7 -> cpsCont$72, member:cpsCont$3$ -> cpsCont$3$8, member:cpsCont$13 -> cpsCont$131, h -> h4, member:Capture$scope10 -> Capture$scope101, class:Handler$h$ -> Handler$h$8, member:cpsCont$9 -> cpsCont$91, member:cpsCont$11$ -> cpsCont$11$1, tmp:tmp -> tmp, member:cpsCont$3$ -> cpsCont$3$3, member:cpsCont$18$ -> cpsCont$18$4, tmp:block$res -> block$res9, member:while -> while1, member:cpsCont$13 -> cpsCont$13, member:A -> A1, module:A -> A, member:cpsCont$2 -> cpsCont$2, member:cpsCont$19 -> cpsCont$19, class:Capture$scope5 -> Capture$scope5, member:cpsCont$15$ -> cpsCont$15$, member:cpsCont$16$ -> cpsCont$16$, member:cpsCont$21 -> cpsCont$21, member:‹stack safe body› -> $_stack$_safe$_body$_4, member:Handler$h$ -> Handler$h$9, member:Capture$scope5 -> Capture$scope51, member:‹stack safe body› -> $_stack$_safe$_body$_, class:Capture$scope1 -> Capture$scope14, member:cpsCont$23 -> cpsCont$23, member:cpsCont$0$ -> cpsCont$0$12, member:cpsCont$5$ -> cpsCont$5$2, member:cpsCont$2$ -> cpsCont$2$, member:Capture$scope1 -> Capture$scope17, class:A -> A, member:cpsCont$19$ -> cpsCont$19$1, member:‹stack safe body› -> $_stack$_safe$_body$_8, member:cpsCont$14$ -> cpsCont$14$2, member:Predef -> Predef, member:cpsCont$20$ -> cpsCont$20$, Runtime -> Runtime, member:cpsCont$13$ -> cpsCont$13$1, member:cpsCont$9$ -> cpsCont$9$1, class:Capture$scope11 -> Capture$scope111, member:cpsCont$27$ -> cpsCont$27$, tmp:block$res -> block$res1, member:cpsCont$24$ -> cpsCont$24$, member:sum -> sum, member:Capture$scope11 -> Capture$scope112, tmp:tmp -> tmp14, member:cpsCont$0 -> cpsCont$07, member:cpsCont$0$ -> cpsCont$0$3, member:cpsCont$0$ -> cpsCont$0$10, member:cpsCont$0 -> cpsCont$010, class:Capture$scope11 -> Capture$scope113, member:cpsCont$28$ -> cpsCont$28$, member:cpsCont$3 -> cpsCont$36, member:cpsCont$5 -> cpsCont$54, member:Capture$scope11 -> Capture$scope114, member:cpsCont$7$ -> cpsCont$7$2, tmp:tmp -> tmp1, member:cpsCont$11$ -> cpsCont$11$, member:cpsCont$3$ -> cpsCont$3$10, member:cpsCont$7 -> cpsCont$73, member:cpsCont$6 -> cpsCont$62, member:cpsCont$0 -> cpsCont$0, member:cpsCont$9 -> cpsCont$92, tmp:block$res -> block$res16, member:Eff -> Eff3, class:Eff -> Eff2, member:cpsCont$25$ -> cpsCont$25$, member:cpsCont$10 -> cpsCont$102, member:cpsCont$5 -> cpsCont$5, member:cpsCont$13$ -> cpsCont$13$, tmp:block$res -> block$res17, member:cpsCont$23$ -> cpsCont$23$, member:cpsCont$12 -> cpsCont$123, member:cpsCont$7 -> cpsCont$7, member:handler_stack -> handler_stack, member:shift_stack -> shift_stack, member:cpsCont$0$ -> cpsCont$0$14, member:cpsCont$5$ -> cpsCont$5$4, member:cpsCont$14 -> cpsCont$141, class:Capture$scope2 -> Capture$scope26, member:‹stack safe body› -> $_stack$_safe$_body$_1, member:cpsCont$23$ -> cpsCont$23$1, member:cpsCont$7$ -> cpsCont$7$, class:Handler$h$ -> Handler$h$10, member:Capture$scope2 -> Capture$scope27, member:cpsCont$18 -> cpsCont$183, member:cpsCont$9$ -> cpsCont$9$2, member:cpsCont$6$ -> cpsCont$6$1, member:cpsCont$20 -> cpsCont$202, class:Capture$scope2 -> Capture$scope2, member:Capture$scope2 -> Capture$scope21, member:cpsCont$31$ -> cpsCont$31$, tmp:block$res -> block$res8, member:cpsCont$0$ -> cpsCont$0$7, member:cpsCont$21$ -> cpsCont$21$, member:cpsCont$0$ -> cpsCont$0$, member:cpsCont$24 -> cpsCont$242, h -> h1, class:Handler$h$ -> Handler$h$2, tmp:block$res -> block$res5, member:Handler$h$ -> Handler$h$11, member:f -> f1, member:foo -> foo3, member:cpsCont$7$ -> cpsCont$7$3, member:cpsCont$3$ -> cpsCont$3$6, member:cpsCont$28 -> cpsCont$282, member:cpsCont$5$ -> cpsCont$5$, member:cpsCont$37$ -> cpsCont$37$, class:Capture$scope2 -> Capture$scope210, member:cpsCont$19$ -> cpsCont$19$, member:‹stack safe body› -> $_stack$_safe$_body$_10, member:Capture$scope2 -> Capture$scope211, tmp:tmp -> tmp7, member:‹stack safe body›$ -> $_stack$_safe$_body$_$, member:cpsCont$6$ -> cpsCont$6$2, tmp:tmp -> tmp8, member:cpsCont$6$ -> cpsCont$6$5, member:cpsCont$0 -> cpsCont$04, member:Handler$h$ -> Handler$h$3, tmp:block$res -> block$res2, member:cpsCont$3 -> cpsCont$32, member:dummy -> dummy, tmp:tmp -> tmp16, member:cpsCont$35$ -> cpsCont$35$, member:foo -> foo, class:Capture$scope2 -> Capture$scope22, ctr -> ctr, member:cpsCont$12$ -> cpsCont$12$3, member:cpsCont$5 -> cpsCont$53, member:Capture$scope2 -> Capture$scope23, class:Capture$scope15 -> Capture$scope15, member:cpsCont$3 -> cpsCont$38, member:‹stack safe body› -> $_stack$_safe$_body$_5, member:Capture$scope15 -> Capture$scope151, member:cpsCont$5$ -> cpsCont$5$3, tmp:block$res -> block$res13, class:Capture$scope16 -> Capture$scope16, depth -> depth, tmp:block$res -> block$res10, h -> h3, class:Handler$h$ -> Handler$h$6, tmp:tmp -> tmp2, member:foo -> foo5, member:Capture$scope16 -> Capture$scope161, tmp:tmp -> tmp3, member:cpsCont$0$ -> cpsCont$0$4, class:Capture$scope3 -> Capture$scope32, member:cpsCont$0 -> cpsCont$01, tmp:tmp -> tmp10, h -> h2, class:Handler$h$ -> Handler$h$4, member:cpsCont$0$ -> cpsCont$0$11, member:cpsCont$3 -> cpsCont$3, member:cpsCont$0 -> cpsCont$06, member:Capture$scope3 -> Capture$scope33, member:cpsCont$3$ -> cpsCont$3$2, member:cpsCont$3 -> cpsCont$34, member:cpsCont$3$ -> cpsCont$3$9, member:cpsCont$10$ -> cpsCont$10$2, member:cpsCont$7 -> cpsCont$71, member:Handler$h$ -> Handler$h$7, member:cpsCont$0$ -> cpsCont$0$13, member:cpsCont$6 -> cpsCont$6, member:cpsCont$9 -> cpsCont$9, member:Handler$h$ -> Handler$h$5, class:Capture$scope0 -> Capture$scope02, member:cpsCont$10 -> cpsCont$101, tmp:block$res -> block$res6, tmp:block$res -> block$res20, member:cpsCont$14$ -> cpsCont$14$1, member:Capture$scope0 -> Capture$scope03, member:Eff -> Eff1, class:Capture$scope1 -> Capture$scope12, member:‹stack safe body› -> $_stack$_safe$_body$_2, class:Eff -> Eff, member:cpsCont$12 -> cpsCont$121, member:cpsCont$6$ -> cpsCont$6$4, member:Capture$scope1 -> Capture$scope13, member:cpsCont$3$ -> cpsCont$3$, tmp:tmp -> tmp13, member:cpsCont$14 -> cpsCont$14, tmp:block$res -> block$res7, member:foo -> foo4, member:cpsCont$20$ -> cpsCont$20$2, h -> h, class:Handler$h$ -> Handler$h$, member:cpsCont$18 -> cpsCont$181, member:cpsCont$9$ -> cpsCont$9$, class:Capture$scope8 -> Capture$scope82, member:cpsCont$20 -> cpsCont$201, tmp:tmp -> tmp11, member:cpsCont$2 -> cpsCont$22, class:Capture$scope3 -> Capture$scope3, member:Capture$scope8 -> Capture$scope83, member:cpsCont$4 -> cpsCont$4, member:Capture$scope3 -> Capture$scope31, member:cpsCont$3$ -> cpsCont$3$7, member:cpsCont$24 -> cpsCont$241, member:cpsCont$0$ -> cpsCont$0$1, member:cpsCont$8 -> cpsCont$81, member:Handler$h$ -> Handler$h$1, member:cpsCont$18$ -> cpsCont$18$3, member:cpsCont$28 -> cpsCont$281, member:cpsCont$7$ -> cpsCont$7$1, member:cpsCont$0$ -> cpsCont$0$8, class:Capture$scope1 -> Capture$scope1, tmp:block$res -> block$res18, member:cpsCont$12 -> cpsCont$122, N -> N, M -> M, tmp:block$res -> block$res19, member:Capture$scope1 -> Capture$scope11, member:‹stack safe body› -> $_stack$_safe$_body$_7, member:handler_stack -> handler_stack1, member:shift_stack -> shift_stack1, class:Capture$scope2 -> Capture$scope24, member:cpsCont$6$ -> cpsCont$6$, member:Capture$scope2 -> Capture$scope25, member:cpsCont$24$ -> cpsCont$24$2, member:cpsCont$16 -> cpsCont$161, member:cpsCont$3$ -> cpsCont$3$5, member:cpsCont$18 -> cpsCont$182, class:Handler$h$ -> Handler$h$12, tmp:tmp -> tmp9, member:cpsCont$10$ -> cpsCont$10$1, member:cpsCont$28$ -> cpsCont$28$2, member:‹stack safe body› -> $_stack$_safe$_body$_9, member:cpsCont$0 -> cpsCont$05, tmp:block$res -> block$res3, member:cpsCont$2$ -> cpsCont$2$1, member:f -> f, member:cpsCont$3 -> cpsCont$33, member:foo -> foo1, member:cpsCont$14$ -> cpsCont$14$, member:Handler$h$ -> Handler$h$13, member:cpsCont$4$ -> cpsCont$4$, member:cpsCont$8 -> cpsCont$8, tmp:tmp -> tmp4, member:cpsCont$0$ -> cpsCont$0$6, tmp:tmp -> tmp5, member:cpsCont$10 -> cpsCont$10, member:cpsCont$0 -> cpsCont$02, member:cpsCont$12 -> cpsCont$12, member:cpsCont$8$ -> cpsCont$8$1, member:cpsCont$12$ -> cpsCont$12$1, tmp:block$res -> block$res15, member:cpsCont$3 -> cpsCont$31, member:trivial -> trivial, member:f -> f3, member:cpsCont$5 -> cpsCont$51, member:cpsCont$16 -> cpsCont$16, member:cpsCont$18 -> cpsCont$18, tmp:tmp -> tmp17, member:cpsCont$12$ -> cpsCont$12$2, member:‹stack safe body› -> $_stack$_safe$_body$_3, member:cpsCont$20 -> cpsCont$20, member:cpsCont$20$ -> cpsCont$20$1, member:cpsCont$5$ -> cpsCont$5$1, member:cpsCont$0 -> cpsCont$012, tmp:tmp -> tmp15, member:cpsCont$3 -> cpsCont$39, class:Capture$scope8 -> Capture$scope8, tmp:block$res -> block$res11, member:cpsCont$0$ -> cpsCont$0$2, member:cpsCont$16$ -> cpsCont$16$1, member:cpsCont$24 -> cpsCont$24, member:max -> max, member:Capture$scope8 -> Capture$scope81, member:cpsCont$0 -> cpsCont$011, member:cpsCont$6 -> cpsCont$64, member:cpsCont$3 -> cpsCont$37, member:cpsCont$3$ -> cpsCont$3$4, member:cpsCont$6 -> cpsCont$63, member:cpsCont$3$ -> cpsCont$3$1, member:cpsCont$28 -> cpsCont$28, member:cpsCont$0 -> cpsCont$08, member:cpsCont$11 -> cpsCont$111, member:cpsCont$18$ -> cpsCont$18$2, member:cpsCont$18$ -> cpsCont$18$1, member:cpsCont$0$ -> cpsCont$0$9, member:‹stack safe body› -> $_stack$_safe$_body$_6, member:cpsCont$15 -> cpsCont$15, member:cpsCont$8$ -> cpsCont$8$, tmp:block$res -> block$res12, member:cpsCont$14 -> cpsCont$142, tmp:block$res -> block$res4, member:bad -> bad, member:sum -> sum1, member:cpsCont$19 -> cpsCont$191, member:foo -> foo2, member:cpsCont$24$ -> cpsCont$24$1, member:cpsCont$18 -> cpsCont$184, member:cpsCont$12$ -> cpsCont$12$, member:cpsCont$20 -> cpsCont$203, member:cpsCont$23 -> cpsCont$231)
+//│                     defaultImportBindings = HashMap(/storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs -> Runtime, /storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Predef.mjs -> Predef)
+//│                   curThis = S of N
+//│                   bindings = HashMap(retVal -> retVal, k -> k, k -> k1)
+//│                   defaultImportBindings = HashMap()
+//│                 bindings = HashMap(tmp:tmp -> tmp18, tmp:cpsCont$37$here -> cpsCont$37$here)
+//│                 defaultImportBindings = HashMap()
+//│               bindings = HashMap(scope2$cap -> scope2$cap, h -> h5, tmp:cpsCont$6$here -> cpsCont$6$here, tmp:handleBlock$$here -> handleBlock$$here)
+//│               defaultImportBindings = HashMap()
+//│             bindings = HashMap(k -> k3, k -> k2)
+//│             defaultImportBindings = HashMap()
+//│           bindings = HashMap(member:cpsCont$33 -> cpsCont$331, tmp:tmp -> tmp19)
+//│           defaultImportBindings = HashMap()
+//│         curThis = S of N
+//│         bindings = HashMap(retVal -> retVal1)
+//│         defaultImportBindings = HashMap()
+//│       bindings = HashMap(tmp:tmp -> tmp20)
+//│       defaultImportBindings = HashMap()
+//│     bindings = HashMap(tmp:tmp -> tmp21, tmp:cpsCont$15$here -> cpsCont$15$here, k -> k4, k -> k5, n -> n, h -> h6)
+//│     defaultImportBindings = HashMap()
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'n'
+//│ ╟── which references the symbol introduced here
+//│ ║  l.477: 	fun handler_stack(n) =
+//│ ╙──       	                  ^
 //│ = "ok"

@@ -20,7 +20,22 @@ fun foobar(z) =
   // stuff after tail call is linked differently
   3
 foobar(0)
-//│ = 3
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: mkQuery (JSBackendDiffMaker.scala:260)
+//│ ═══[RUNTIME ERROR] TypeError: k is not a function
+//│     at REPL13:1:1225
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:292:28
+//│     at tmp1 (REPL13:1:1642)
+//│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1075:48)
+//│     at file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:293:21
+//│     at tmp1 (REPL13:1:1642)
+//│     at Runtime.handlerTrampoline (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1075:48)
+//│     at Runtime.cpsHandlerImpl (file:///storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Runtime.mjs:1090:20)
+//│     at REPL13:1:2371
+//│     at ContextifyScript.runInThisContext (node:vm:138:12)
+//│ FAILURE: Unexpected runtime error
+//│ FAILURE LOCATION: processIRBlock (JSBackendDiffMaker.scala:301)
+//│ ═══[RUNTIME ERROR] Expected: '3', got: 'undefined'
 
 
 // Check that tail call optimization is applied in presence of effect handlers: there should be no function calls in the body.
@@ -33,56 +48,63 @@ fun hi(n) =
   else hi(n - 1)
 hi(0)
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let hi, tmp1, $_stack$_safe$_body$_;
-//│ hi = function hi(k, k1, n) {
-//│   let cpsCont$2, tmp2;
-//│   cpsCont$2 = function cpsCont$2(retVal) {
-//│     let tmp3;
-//│     tmp3 = runtime.cpsSetCheckDepth();
-//│     if (tmp3 === true) {
-//│       return runtime.cpsRaiseStack(cpsCont$2, retVal)
+//│ let hi, tmp1, cpsCont$2, $_stack$_safe$_body$_, cpsCont$2$;
+//│ cpsCont$2$ = function cpsCont$2$(n, k, k1) {
+//│   return (retVal) => {
+//│     return cpsCont$2(n, k, k1, retVal)
+//│   }
+//│ };
+//│ cpsCont$2 = function cpsCont$2(n, k, k1, retVal) {
+//│   let tmp2, cpsCont$2$here;
+//│   tmp2 = runtime.cpsSetCheckDepth();
+//│   if (tmp2 === true) {
+//│     cpsCont$2$here = cpsCont$2$(n, k, k1);
+//│     return runtime.cpsRaiseStack(cpsCont$2$here, retVal)
+//│   }
+//│   {
+//│     let scrut, tmp3;
+//│     scrut = n === 0;
+//│     if (scrut === true) {
+//│       return k(k1, 0)
 //│     }
 //│     {
-//│       let scrut, tmp4;
-//│       scrut = n === 0;
-//│       if (scrut === true) {
-//│         return k1(k, 0)
-//│       }
-//│       {
-//│         let tmp5;
-//│         tmp4 = n - 1;
-//│         tmp5 = (k2, k3, n1) => {
-//│           let cpsCont$0, tmp6;
-//│           cpsCont$0 = function cpsCont$0(retVal1) {
-//│             let tmp7;
-//│             tmp7 = runtime.cpsSetCheckDepth();
-//│             if (tmp7 === true) {
-//│               return runtime.cpsRaiseStack(cpsCont$0, retVal1)
-//│             }
-//│             return hi(k2, k3, n1);
-//│           };
+//│       let tmp4;
+//│       tmp3 = n - 1;
+//│       tmp4 = (k2, k3, n1) => {
+//│         let cpsCont$0, tmp5;
+//│         cpsCont$0 = function cpsCont$0(retVal1) {
+//│           let tmp6;
+//│           tmp6 = runtime.cpsSetCheckDepth();
+//│           if (tmp6 === true) {
+//│             return runtime.cpsRaiseStack(cpsCont$0, retVal1)
+//│           }
+//│           return hi(k2, k3, n1);
+//│         };
+//│         tmp5 = runtime.cpsSetCheckDepth();
+//│         if (tmp5 === true) {
+//│           return runtime.cpsRaiseStack(cpsCont$0, undefined)
+//│         }
+//│         {
+//│           let tmp6;
 //│           tmp6 = runtime.cpsSetCheckDepth();
 //│           if (tmp6 === true) {
 //│             return runtime.cpsRaiseStack(cpsCont$0, undefined)
 //│           }
-//│           {
-//│             let tmp7;
-//│             tmp7 = runtime.cpsSetCheckDepth();
-//│             if (tmp7 === true) {
-//│               return runtime.cpsRaiseStack(cpsCont$0, undefined)
-//│             }
-//│             return hi(k2, k3, n1);
-//│           }
-//│         };
-//│         return tmp5(k, k1, tmp4);
-//│       }
+//│           return hi(k2, k3, n1);
+//│         }
+//│       };
+//│       return tmp4(k1, k, tmp3);
 //│     }
-//│   };
+//│   }
+//│ };
+//│ hi = function hi(k, k1, n) {
+//│   let tmp2, cpsCont$2$here;
 //│   tmp2 = runtime.cpsSetCheckDepth();
 //│   if (tmp2 === true) {
-//│     return runtime.cpsRaiseStack(cpsCont$2, undefined)
+//│     cpsCont$2$here = cpsCont$2$(n, k1, k);
+//│     return runtime.cpsRaiseStack(cpsCont$2$here, undefined)
 //│   }
-//│   return cpsCont$2(undefined);
+//│   return cpsCont$2(n, k1, k, undefined);
 //│ };
 //│ tmp1 = (k, k1, n) => {
 //│   let cpsCont$4, tmp2;

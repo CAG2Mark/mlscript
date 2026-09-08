@@ -210,6 +210,7 @@ fun f(x) =
   foo
 (new! (f(2))).get()
 //│ ═══[WARNING] Cannot yet lift class `Test` as it is used as a first-class class.
+//│ ═══[WARNING] Cannot yet lift class `Test` as it is used as a first-class class.
 //│ = 2
 
 :expect 2
@@ -247,19 +248,19 @@ let res = f(0)
 res.a
 res.b
 //│ ╔══[COMPILATION ERROR] Spread parameters are not supported in class parameters.
-//│ ║  l.242: 	  class A(...r) with
+//│ ║  l.243: 	  class A(...r) with
 //│ ╙──       	             ^
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'r'
-//│ ║  l.243: 	    fun a = r.push_back(x)
+//│ ║  l.244: 	    fun a = r.push_back(x)
 //│ ║         	            ^
 //│ ╟── which references the symbol introduced here
-//│ ║  l.242: 	  class A(...r) with
+//│ ║  l.243: 	  class A(...r) with
 //│ ╙──       	             ^
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'r'
-//│ ║  l.244: 	    fun b = r
+//│ ║  l.245: 	    fun b = r
 //│ ║         	            ^
 //│ ╟── which references the symbol introduced here
-//│ ║  l.242: 	  class A(...r) with
+//│ ║  l.243: 	  class A(...r) with
 //│ ╙──       	             ^
 //│ ═══[RUNTIME ERROR] ReferenceError: r is not defined
 //│ res = A()
@@ -519,6 +520,7 @@ fun f(x, y, z) =
   let x = D // force D unlifted
   [new C(0), new D]
 //│ ═══[WARNING] Cannot yet lift class `D` as it is used as a first-class class.
+//│ ═══[WARNING] Cannot yet lift class `D` as it is used as a first-class class.
 //│ ———————————————| Lowered IR |———————————————————————————————————————————————————————————————————————
 //│ let C, Capture$f;
 //│ @data
@@ -582,6 +584,8 @@ fun f(x, y, z) =
   class D extends C(y)
   if x is C do print("a") // force C unlifted
   [new C(0), new D]
+//│ ═══[WARNING] Cannot yet lift class/module `C` as it is used in an instance check.
+//│ ═══[WARNING] Cannot yet lift definition `D` as it extends an unliftable class.
 //│ ═══[WARNING] Cannot yet lift class/module `C` as it is used in an instance check.
 //│ ═══[WARNING] Cannot yet lift definition `D` as it extends an unliftable class.
 

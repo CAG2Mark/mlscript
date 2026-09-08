@@ -48,6 +48,12 @@ class CompilationPipeline(using Config, Raise, State, Ctx, SymbolPrinter):
       else prog
     runPass("HandlerLowering"): prog =>
       CpsHandlerLowering(new HandlerPaths, config.effectHandlers).translateProgram(prog)
+    // only needed for CPS
+    val isCps = config.effectHandlers.isDefined && true
+    if isCps && config.liftDefns.isDefined then
+      runPass("LambdaRewriter")(LambdaRewriter.desugar)
+      runPass("Lifter"): prog =>
+        blockPass(Lifter(_).transform)(prog)
     runPass("AsyncLowering")(AsyncLowering().transform)
     runPass("Flattening")(blockPass(_.flattened))
     runPass("BufferableTransform")(BufferableTransform().transform)

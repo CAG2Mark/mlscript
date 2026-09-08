@@ -1,5 +1,6 @@
 :js
 :effectHandlers
+:lift
 :rewriteWhile
 
 
@@ -127,8 +128,23 @@ fun f(x) =
       fun g() = z
       g() )
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let f4;
-//│ f4 = function f(k, x) { if (x === true) { return k(runtime.Unit) } return k(runtime.Unit); };
+//│ let f4, cpsCont$0$6;
+//│ cpsCont$0$6 = function cpsCont$0$(k) {
+//│   return ($_no$_symbol$_) => {
+//│     return k(runtime.Unit)
+//│   }
+//│ };
+//│ f4 = function f(k, x) {
+//│   if (x === true) {
+//│     let tmp1, cpsCont$0$here;
+//│     tmp1 = (k1) => {
+//│       return k1(undefined)
+//│     };
+//│     cpsCont$0$here = cpsCont$0$6(k);
+//│     return tmp1(cpsCont$0$here)
+//│   }
+//│   return k(runtime.Unit);
+//│ };
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
 // * Note: degenerate case

@@ -1,8 +1,10 @@
 :js
 :effectHandlers
 
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
 abstract class Effect with
   fun perform(): ()
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
 
 let h1 = null
 handle h = Effect with
@@ -11,14 +13,17 @@ handle h = Effect with
     k()
     print("perform-end")
 set h1 = h
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
 //│ h1 = Handler$h$
 
 :ignore
 h1.perform()
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
 //│ = Suspend(fun cpsId, Handler$h$, fun Handler$h$perform)
 
 :ignore
 enterHandleBlock(h1, () => h1.perform())
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
 //│ = Suspend(undefined, Handler$h$, fun Handler$h$perform)
 
 let h2 = null
@@ -28,6 +33,7 @@ handle h = Effect with
     k()
     print("perform-end2")
 set h2 = h
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
 //│ h2 = Handler$h$
 
 :ignore
@@ -37,4 +43,5 @@ enterHandleBlock(h1, () => enterHandleBlock(h2, () =>
   h2.perform()
   h1.perform()
 ))
+//│ /!!!\ Option ':effectHandlers' requires ':lift'
 //│ ═══[RUNTIME ERROR] Error: Function expected 1 argument but got 0

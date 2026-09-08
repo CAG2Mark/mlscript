@@ -39,6 +39,31 @@ f(1)(2)
 :soir
 fun g(a) = b => f(a)(b) + f(b)(a)
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
+//│ let cpsCont$9$, cpsCont$6$, cpsCont$3$, cpsCont$0$;
+//│ @inline
+//│ define cpsCont$0$ as fun cpsCont$0$⁰(k, tmp)(tmp1) {
+//│   let tmp2;
+//│   set tmp2 = +⁰(tmp, tmp1);
+//│   return k(tmp2)
+//│ };
+//│ @inline
+//│ define cpsCont$3$ as fun cpsCont$3$⁰(a, k, tmp)(baseCall) {
+//│   let cpsCont$0$here;
+//│   set cpsCont$0$here = cpsCont$0$⁰(k, tmp);
+//│   return baseCall(cpsCont$0$here, a)
+//│ };
+//│ @inline
+//│ define cpsCont$6$ as fun cpsCont$6$⁰(b, a, k)(tmp) {
+//│   let cpsCont$3$here;
+//│   set cpsCont$3$here = cpsCont$3$⁰(a, k, tmp);
+//│   return f¹(cpsCont$3$here, b)
+//│ };
+//│ @inline
+//│ define cpsCont$9$ as fun cpsCont$9$⁰(b, a, k)(baseCall) {
+//│   let cpsCont$6$here;
+//│   set cpsCont$6$here = cpsCont$6$⁰(b, a, k);
+//│   return baseCall(cpsCont$6$here, b)
+//│ };
 //│ define g⁰ as fun g¹(k, a) {
 //│   let lambda$here;
 //│   set lambda$here = (k1, b) => {
@@ -47,28 +72,12 @@ fun g(a) = b => f(a)(b) + f(b)(a)
 //│     set a1 = a;
 //│     set b1 = b;
 //│     set tmp = (k3, a2, b2) => {
-//│       let k4, a3, b3, cpsCont$9;
+//│       let k4, a3, b3, cpsCont$9$here;
 //│       set k4 = k3;
 //│       set a3 = a2;
 //│       set b3 = b2;
-//│       define cpsCont$9 as fun cpsCont$9⁰(baseCall) {
-//│         let cpsCont$6;
-//│         define cpsCont$6 as fun cpsCont$6⁰(tmp1) {
-//│           let cpsCont$3;
-//│           define cpsCont$3 as fun cpsCont$3⁰(baseCall1) {
-//│             let cpsCont$0;
-//│             define cpsCont$0 as fun cpsCont$0⁰(tmp2) {
-//│               let tmp3;
-//│               set tmp3 = +⁰(tmp1, tmp2);
-//│               return k4(tmp3)
-//│             };
-//│             return baseCall1(cpsCont$0⁰, a3)
-//│           };
-//│           return f¹(cpsCont$3⁰, b3)
-//│         };
-//│         return baseCall(cpsCont$6⁰, b3)
-//│       };
-//│       return f¹(cpsCont$9⁰, a3)
+//│       set cpsCont$9$here = cpsCont$9$⁰(b3, a3, k4);
+//│       return f¹(cpsCont$9$here, a3)
 //│     };
 //│     return tmp(k2, a1, b1)
 //│   };
