@@ -439,7 +439,8 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: Opt[EffectHandlers])(using TL
         if !checkCall(c) then
           retResult(c)
         else
-          Return(Call(c.fun, (curContPath.asArg :: c.argss.head) ne_:: c.argss.tail)(resMetadata))
+          applyPath(c.fun): newPath =>
+            Return(Call(newPath, (curContPath.asArg :: c.argss.head) ne_:: c.argss.tail)(resMetadata))
       case Return(r: Result) => retResult(r)
       case _: Label => lastWords("undesugared label")
       case b: Begin =>

@@ -11,219 +11,71 @@
 class Effect
 
 :effectHandlers
-:lift
-:stackSafe
 :deadParamElim off
-:expect 50005000
+:noOpt
+:noInline
 :sjs
-fun foo() =
-  let f = ()
-  set f = n =>
-    if n <= 0 then 0
-    else n + f(n-1)
-  f(10000)
-foo()
+let selfApp(f) = f(f)
+fun mkrec(g) =
+  selfApp of self =>
+    g of y => self(self)(y)
+let fact = mkrec of self => x =>
+  if x == 0 then 1 else self(x - 1) * x
+fact(3)
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let foo, Capture$scope01, tmp, cpsCont$0, cpsCont$5, cpsCont$7, cpsCont$9, cpsCont$13, $_stack$_safe$_body$_, cpsCont$5$, cpsCont$9$, cpsCont$0$, cpsCont$7$, cpsCont$13$;
-//│ cpsCont$13$ = function cpsCont$13$(k, k1) {
-//│   return (retVal) => {
-//│     return cpsCont$13(k, k1, retVal)
-//│   }
-//│ };
-//│ cpsCont$13 = function cpsCont$13(k, k1, retVal) {
-//│   let tmp1, cpsCont$13$here;
-//│   tmp1 = runtime.cpsSetCheckDepth();
-//│   if (tmp1 === true) {
-//│     cpsCont$13$here = cpsCont$13$(k, k1);
-//│     return runtime.cpsRaiseStack(cpsCont$13$here, retVal)
-//│   }
-//│   {
-//│     let scope0$cap, lambda$here;
-//│     scope0$cap = new Capture$scope01(undefined);
-//│     scope0$cap.f$0 = runtime.Unit;
-//│     lambda$here = (k2, k3, n) => {
-//│       let cpsCont$11, tmp2;
-//│       cpsCont$11 = function cpsCont$11(retVal1) {
-//│         let tmp3;
-//│         tmp3 = runtime.cpsSetCheckDepth();
-//│         if (tmp3 === true) {
-//│           return runtime.cpsRaiseStack(cpsCont$11, retVal1)
-//│         }
-//│         {
-//│           let k4, k5, scope0$cap1, n1, tmp4, cpsCont$5$here;
-//│           k4 = k2;
-//│           k5 = k3;
-//│           scope0$cap1 = scope0$cap;
-//│           n1 = n;
-//│           tmp4 = runtime.cpsSetCheckDepth();
-//│           if (tmp4 === true) {
-//│             cpsCont$5$here = cpsCont$5$(scope0$cap1, n1, k5, k4);
-//│             return runtime.cpsRaiseStack(cpsCont$5$here, undefined)
-//│           }
-//│           return cpsCont$5(scope0$cap1, n1, k5, k4, undefined);
-//│         }
+//│ let mkrec, selfApp, fact, lambda, selfApp1, tmp, tmp1, tmp2;
+//│ mkrec = function mkrec(k, g) {
+//│   let lambda1;
+//│   lambda1 = (undefined, function (k1, self) {
+//│     let lambda2;
+//│     lambda2 = (undefined, function (k2, y) {
+//│       let cpsCont$0;
+//│       cpsCont$0 = function cpsCont$0(callPrefix) {
+//│         return callPrefix(k2, y)
 //│       };
-//│       tmp2 = runtime.cpsSetCheckDepth();
-//│       if (tmp2 === true) {
-//│         return runtime.cpsRaiseStack(cpsCont$11, undefined)
-//│       }
-//│       return cpsCont$11(undefined);
-//│     };
-//│     scope0$cap.f$0 = lambda$here;
-//│     return scope0$cap.f$0(k1, k, 10000);
-//│   }
+//│       return self(cpsCont$0, self)
+//│     });
+//│     return g(k1, lambda2)
+//│   });
+//│   return selfApp(k, lambda1)
 //│ };
-//│ cpsCont$7$ = function cpsCont$7$(n, k, tmp1, k1) {
-//│   return (retVal) => {
-//│     return cpsCont$7(n, k, tmp1, k1, retVal)
-//│   }
+//│ selfApp1 = function selfApp(k, f) {
+//│   return f(k, f)
 //│ };
-//│ cpsCont$7 = function cpsCont$7(n, k, tmp1, k1, retVal) {
-//│   let tmp2, cpsCont$7$here;
-//│   tmp2 = runtime.cpsSetCheckDepth();
-//│   if (tmp2 === true) {
-//│     cpsCont$7$here = cpsCont$7$(n, k, tmp1, k1);
-//│     return runtime.cpsRaiseStack(cpsCont$7$here, retVal)
-//│   }
-//│   {
-//│     let tmp3;
-//│     tmp3 = n + tmp1;
-//│     return k(k1, tmp3);
-//│   }
+//│ tmp = (k, f) => {
+//│   return selfApp1(k, f)
 //│ };
-//│ cpsCont$0$ = function cpsCont$0$(n, k) {
-//│   return (k1, tmp1) => {
-//│     return cpsCont$0(n, k, k1, tmp1)
-//│   }
-//│ };
-//│ cpsCont$0 = function cpsCont$0(n, k, k1, tmp1) {
-//│   let tmp2, cpsCont$7$here;
-//│   tmp2 = runtime.cpsSetCheckDepth();
-//│   if (tmp2 === true) {
-//│     cpsCont$7$here = cpsCont$7$(n, k, tmp1, k1);
-//│     return runtime.cpsRaiseStack(cpsCont$7$here, undefined)
-//│   }
-//│   return cpsCont$7(n, k, tmp1, k1, undefined);
-//│ };
-//│ cpsCont$9$ = function cpsCont$9$(n, scope0$cap, k, k1) {
-//│   return (retVal) => {
-//│     return cpsCont$9(n, scope0$cap, k, k1, retVal)
-//│   }
-//│ };
-//│ cpsCont$9 = function cpsCont$9(n, scope0$cap, k, k1, retVal) {
-//│   let tmp1, cpsCont$9$here;
-//│   tmp1 = runtime.cpsSetCheckDepth();
-//│   if (tmp1 === true) {
-//│     cpsCont$9$here = cpsCont$9$(n, scope0$cap, k, k1);
-//│     return runtime.cpsRaiseStack(cpsCont$9$here, retVal)
-//│   }
-//│   {
-//│     let scrut, tmp2;
-//│     scrut = n <= 0;
+//│ selfApp = tmp;
+//│ lambda = (undefined, function (k, self) {
+//│   let lambda1;
+//│   lambda1 = (undefined, function (k1, x) {
+//│     let scrut, tmp3;
+//│     scrut = Predef.equals(x, 0);
 //│     if (scrut === true) {
-//│       return k(k1, 0)
+//│       return k1(1)
 //│     }
 //│     {
-//│       let cpsCont$0$here;
-//│       tmp2 = n - 1;
-//│       cpsCont$0$here = cpsCont$0$(n, k);
-//│       return scope0$cap.f$0(k1, cpsCont$0$here, tmp2);
-//│     }
-//│   }
-//│ };
-//│ cpsCont$5$ = function cpsCont$5$(scope0$cap, n, k, k1) {
-//│   return (retVal) => {
-//│     return cpsCont$5(scope0$cap, n, k, k1, retVal)
-//│   }
-//│ };
-//│ cpsCont$5 = function cpsCont$5(scope0$cap, n, k, k1, retVal) {
-//│   let tmp1, cpsCont$5$here;
-//│   tmp1 = runtime.cpsSetCheckDepth();
-//│   if (tmp1 === true) {
-//│     cpsCont$5$here = cpsCont$5$(scope0$cap, n, k, k1);
-//│     return runtime.cpsRaiseStack(cpsCont$5$here, retVal)
-//│   }
-//│   {
-//│     let tmp2;
-//│     tmp2 = (k2, k3, scope0$cap1, n1) => {
-//│       let cpsCont$3, tmp3;
-//│       cpsCont$3 = function cpsCont$3(retVal1) {
-//│         let tmp4;
-//│         tmp4 = runtime.cpsSetCheckDepth();
-//│         if (tmp4 === true) {
-//│           return runtime.cpsRaiseStack(cpsCont$3, retVal1)
-//│         }
-//│         {
-//│           let k4, k5, scope0$cap2, n2, tmp5, cpsCont$9$here;
-//│           k4 = k2;
-//│           k5 = k3;
-//│           scope0$cap2 = scope0$cap1;
-//│           n2 = n1;
-//│           tmp5 = runtime.cpsSetCheckDepth();
-//│           if (tmp5 === true) {
-//│             cpsCont$9$here = cpsCont$9$(n2, scope0$cap2, k5, k4);
-//│             return runtime.cpsRaiseStack(cpsCont$9$here, undefined)
-//│           }
-//│           return cpsCont$9(n2, scope0$cap2, k5, k4, undefined);
-//│         }
+//│       let cpsCont$3;
+//│       tmp3 = x - 1;
+//│       cpsCont$3 = function cpsCont$3(tmp4) {
+//│         let tmp5;
+//│         tmp5 = tmp4 * x;
+//│         return k1(tmp5)
 //│       };
-//│       tmp3 = runtime.cpsSetCheckDepth();
-//│       if (tmp3 === true) {
-//│         return runtime.cpsRaiseStack(cpsCont$3, undefined)
-//│       }
-//│       return cpsCont$3(undefined);
-//│     };
-//│     return tmp2(k1, k, scope0$cap, n);
-//│   }
-//│ };
-//│ (class Capture$scope0 {
-//│   static {
-//│     Capture$scope01 = this
-//│   }
-//│   constructor(f$0) {
-//│     this.f$0 = f$0;
-//│   }
-//│   toString() { return runtime.render(this); }
-//│   static [definitionMetadata] = ["class", "Capture$scope0"];
-//│ });
-//│ foo = function foo(k, k1) {
-//│   let tmp1, cpsCont$13$here;
-//│   tmp1 = runtime.cpsSetCheckDepth();
-//│   if (tmp1 === true) {
-//│     cpsCont$13$here = cpsCont$13$(k1, k);
-//│     return runtime.cpsRaiseStack(cpsCont$13$here, undefined)
-//│   }
-//│   return cpsCont$13(k1, k, undefined);
-//│ };
-//│ tmp = (k, k1) => {
-//│   let cpsCont$15, tmp1;
-//│   cpsCont$15 = function cpsCont$15(retVal) {
-//│     let tmp2;
-//│     tmp2 = runtime.cpsSetCheckDepth();
-//│     if (tmp2 === true) {
-//│       return runtime.cpsRaiseStack(cpsCont$15, retVal)
+//│       return self(cpsCont$3, tmp3);
 //│     }
-//│     {
-//│       let k2, k3, tmp3, cpsCont$13$here;
-//│       k2 = k;
-//│       k3 = k1;
-//│       tmp3 = runtime.cpsSetCheckDepth();
-//│       if (tmp3 === true) {
-//│         cpsCont$13$here = cpsCont$13$(k3, k2);
-//│         return runtime.cpsRaiseStack(cpsCont$13$here, undefined)
-//│       }
-//│       return cpsCont$13(k3, k2, undefined);
-//│     }
-//│   };
-//│   tmp1 = runtime.cpsSetCheckDepth();
-//│   if (tmp1 === true) {
-//│     return runtime.cpsRaiseStack(cpsCont$15, undefined)
-//│   }
-//│   return cpsCont$15(undefined);
-//│ };
-//│ $_stack$_safe$_body$_ = (undefined, function () {
-//│   return tmp(runtime.cpsId, runtime.cpsId2)
+//│   });
+//│   return k(lambda1)
 //│ });
-//│ return runtime.runStackSafeCps(1000, $_stack$_safe$_body$_)
+//│ tmp1 = (k, g) => {
+//│   return mkrec(k, g)
+//│ };
+//│ tmp2 = (k, self) => {
+//│   return lambda(k, self)
+//│ };
+//│ fact = tmp1(runtime.cpsId, tmp2);
+//│ return fact(runtime.cpsId, 3)
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
-//│ = 50005000
+//│ = 6
+//│ fact = fun
+//│ selfApp = fun tmp
