@@ -70,39 +70,7 @@ in
   h.perform("5")
 result
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let result, h7, Handler$h$15, tmp7, cpsCont$0$1, cpsCont$12$, cpsCont$9$, cpsCont$6$, cpsCont$3$;
-//│ cpsCont$3$ = function cpsCont$3$(k) {
-//│   return ($_no$_symbol$_) => {
-//│     return h7.perform(k, "5")
-//│   }
-//│ };
-//│ cpsCont$6$ = function cpsCont$6$(k) {
-//│   return ($_no$_symbol$_) => {
-//│     let cpsCont$3$here;
-//│     cpsCont$3$here = cpsCont$3$(k);
-//│     return h7.perform(cpsCont$3$here, "4")
-//│   }
-//│ };
-//│ cpsCont$9$ = function cpsCont$9$(k) {
-//│   return ($_no$_symbol$_) => {
-//│     let cpsCont$6$here;
-//│     cpsCont$6$here = cpsCont$6$(k);
-//│     return h7.perform(cpsCont$6$here, "3")
-//│   }
-//│ };
-//│ cpsCont$12$ = function cpsCont$12$(k) {
-//│   return ($_no$_symbol$_) => {
-//│     let cpsCont$9$here;
-//│     cpsCont$9$here = cpsCont$9$(k);
-//│     return h7.perform(cpsCont$9$here, "2")
-//│   }
-//│ };
-//│ cpsCont$0$1 = function cpsCont$0$(arg, k) {
-//│   return (v) => {
-//│     result = result + arg;
-//│     return k(v)
-//│   }
-//│ };
+//│ let result, h7, Handler$h$15, tmp7;
 //│ result = "";
 //│ (class Handler$h$14 extends Effect1 {
 //│   static {
@@ -119,12 +87,15 @@ result
 //│       arg1 = arg;
 //│       k4 = k2;
 //│       tmp8 = (k5, arg2, k6) => {
-//│         let k7, arg3, k8, cpsCont$0$here;
+//│         let k7, arg3, k8, cpsCont$0;
 //│         k7 = k5;
 //│         arg3 = arg2;
 //│         k8 = k6;
-//│         cpsCont$0$here = cpsCont$0$1(arg3, k7);
-//│         return k8(cpsCont$0$here, arg3)
+//│         cpsCont$0 = function cpsCont$0(v) {
+//│           result = result + arg3;
+//│           return k7(v)
+//│         };
+//│         return k8(cpsCont$0, arg3)
 //│       };
 //│       return tmp8(k3, arg1, k4)
 //│     };
@@ -135,10 +106,24 @@ result
 //│ });
 //│ h7 = new Handler$h$15();
 //│ tmp7 = (k) => {
-//│   let k1, cpsCont$12$here;
+//│   let k1, cpsCont$12;
 //│   k1 = k;
-//│   cpsCont$12$here = cpsCont$12$(k1);
-//│   return h7.perform(cpsCont$12$here, "1")
+//│   cpsCont$12 = function cpsCont$12($_no$_symbol$_) {
+//│     let cpsCont$9;
+//│     cpsCont$9 = function cpsCont$9($_no$_symbol$_1) {
+//│       let cpsCont$6;
+//│       cpsCont$6 = function cpsCont$6($_no$_symbol$_2) {
+//│         let cpsCont$3;
+//│         cpsCont$3 = function cpsCont$3($_no$_symbol$_3) {
+//│           return h7.perform(k1, "5")
+//│         };
+//│         return h7.perform(cpsCont$3, "4")
+//│       };
+//│       return h7.perform(cpsCont$6, "3")
+//│     };
+//│     return h7.perform(cpsCont$9, "2")
+//│   };
+//│   return h7.perform(cpsCont$12, "1")
 //│ };
 //│ runtime.cpsHandlerImpl(runtime.cpsId, h7, tmp7);
 //│ return result
@@ -447,71 +432,18 @@ handle h = Eff with
   fun perform()(k) = k(())
 foo(h)
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.442: 	    module A with
+//│ ║  l.427: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.438: 	    module A with
+//│ ║  l.423: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.434: 	    module A with
+//│ ║  l.419: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.430: 	    module A with
+//│ ║  l.415: 	    module A with
 //│ ╙──       	           ^
-//│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.434: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.430: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.442: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.438: 	    module A with
-//│ ╙──       	           ^
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'A'
-//│ ║  l.438: 	    module A with
-//│ ║         	    ^^^^^^^^^^^^^
-//│ ║  l.439: 	      fun f() = 2
-//│ ║         	^^^^^^^^^^^^^^^^^
-//│ ╟── which references the symbol introduced here
-//│ ║  l.438: 	    module A with
-//│ ║         	           ^^^^^^
-//│ ║  l.439: 	      fun f() = 2
-//│ ╙──       	^^^^^^^^^^^^^^^^^
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'A'
-//│ ║  l.442: 	    module A with
-//│ ║         	    ^^^^^^^^^^^^^
-//│ ║  l.443: 	      fun f() = 3
-//│ ║         	^^^^^^^^^^^^^^^^^
-//│ ╟── which references the symbol introduced here
-//│ ║  l.442: 	    module A with
-//│ ║         	           ^^^^^^
-//│ ║  l.443: 	      fun f() = 3
-//│ ╙──       	^^^^^^^^^^^^^^^^^
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'A'
-//│ ║  l.430: 	    module A with
-//│ ║         	    ^^^^^^^^^^^^^
-//│ ║  l.431: 	      fun f() = 2
-//│ ║         	^^^^^^^^^^^^^^^^^
-//│ ╟── which references the symbol introduced here
-//│ ║  l.430: 	    module A with
-//│ ║         	           ^^^^^^
-//│ ║  l.431: 	      fun f() = 2
-//│ ╙──       	^^^^^^^^^^^^^^^^^
-//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'A'
-//│ ║  l.434: 	    module A with
-//│ ║         	    ^^^^^^^^^^^^^
-//│ ║  l.435: 	      fun f() = 3
-//│ ║         	^^^^^^^^^^^^^^^^^
-//│ ╟── which references the symbol introduced here
-//│ ║  l.434: 	    module A with
-//│ ║         	           ^^^^^^
-//│ ║  l.435: 	      fun f() = 3
-//│ ╙──       	^^^^^^^^^^^^^^^^^
-//│ ═══[RUNTIME ERROR] ReferenceError: A is not defined
-//│ ═══[RUNTIME ERROR] Expected: '123', got: 'undefined'
+//│ = 123
 
 // Access superclass fields
 handle h1 = Object with

@@ -76,7 +76,7 @@ class CompilerCtx(
 
       given Config = 
         if file.segments.reverse.tail.head != "nofib" then rootConfig
-        else rootConfig.copy(liftDefns = N, effectHandlers = S(EffectHandlers(false, S(StackSafety(100)), doNotInstrumentTopLevelModCtor = false)))
+        else rootConfig.copy(effectHandlers = S(EffectHandlers(false, S(StackSafety(100)), doNotInstrumentTopLevelModCtor = false)))
 
       given SymbolPrinter = new SymbolPrinter(
         Scope.empty(Scope.Cfg.default.copy(

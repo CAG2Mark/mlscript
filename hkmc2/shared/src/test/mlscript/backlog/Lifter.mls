@@ -49,7 +49,6 @@ fun foo1(x, n) =
   let res = if x is C then "Y" else "N"
   if n > 0 then res + foo1(C(), n - 1) else ""
 //│ ═══[WARNING] Cannot yet lift class/module `C` as it is used in an instance check.
-//│ ═══[WARNING] Cannot yet lift class/module `C` as it is used in an instance check.
 
 fun foo2() =
   class C()
@@ -60,7 +59,6 @@ fun foo3() =
   class C
   fun f = new C
   C
-//│ ═══[WARNING] Cannot yet lift class `C` as it is used as a first-class class.
 //│ ═══[WARNING] Cannot yet lift class `C` as it is used as a first-class class.
 
 :expect "NN"
@@ -78,8 +76,6 @@ fun test(x) =
 test(2)
 //│ ═══[WARNING] Cannot yet lift class/module `A` as it is used in an instance check.
 //│ ═══[WARNING] Cannot yet lift definition `B` as it extends an unliftable class.
-//│ ═══[WARNING] Cannot yet lift class/module `A` as it is used in an instance check.
-//│ ═══[WARNING] Cannot yet lift definition `B` as it extends an unliftable class.
 //│ = 2
 
 /// The following are related to modules and objects. ///
@@ -93,10 +89,7 @@ fun foo(x, y) =
       x + y + test
   M.foo()
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.89: 	  module M with
-//│ ╙──      	         ^
-//│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.89: 	  module M with
+//│ ║  l.85: 	  module M with
 //│ ╙──      	         ^
 
 :expect 14
@@ -111,10 +104,7 @@ fun foo(x, y) =
   fun foo = M.foo()
   foo
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.107: 	  module M with
-//│ ╙──       	         ^
-//│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.107: 	  module M with
+//│ ║  l.100: 	  module M with
 //│ ╙──       	         ^
 
 :expect 12
@@ -127,10 +117,7 @@ data class A(x) with
     fun getB() = x
   fun getA() = M.getB()
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.126: 	  module M with
-//│ ╙──       	         ^
-//│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.126: 	  module M with
+//│ ║  l.116: 	  module M with
 //│ ╙──       	         ^
 
 :expect 2
@@ -146,15 +133,11 @@ fun foo(x) =
   (new Bar).self2
 foo(2)
 //│ ╔══[COMPILATION ERROR] Expected a statically known class; found reference of type Foo.
-//│ ║  l.145: 	  class Bar extends Foo
+//│ ║  l.132: 	  class Bar extends Foo
 //│ ║         	                    ^^^
 //│ ╙── The 'new' keyword requires a statically known class; use the 'new!' operator for dynamic instantiation.
 //│ ╔══[WARNING] Objects are not yet lifted.
-//│ ║  l.142: 	  object Foo with
-//│ ╙──       	         ^^^
-//│ ═══[WARNING] Cannot yet lift definition `Bar` as it extends an unliftable class.
-//│ ╔══[WARNING] Objects are not yet lifted.
-//│ ║  l.142: 	  object Foo with
+//│ ║  l.129: 	  object Foo with
 //│ ╙──       	         ^^^
 //│ ═══[WARNING] Cannot yet lift definition `Bar` as it extends an unliftable class.
 //│ ═══[RUNTIME ERROR] TypeError: Class extends value [object Object] is not a constructor or null
@@ -170,22 +153,19 @@ fun f =
       h
   M.g
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.167: 	  module M with
-//│ ╙──       	         ^
-//│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.167: 	  module M with
+//│ ║  l.150: 	  module M with
 //│ ╙──       	         ^
 //│ ╔══[COMPILATION ERROR] No definition found in scope for member 'M'
-//│ ║  l.169: 	      fun h = M.g
+//│ ║  l.152: 	      fun h = M.g
 //│ ║         	              ^
 //│ ╟── which references the symbol introduced here
-//│ ║  l.167: 	  module M with
+//│ ║  l.150: 	  module M with
 //│ ║         	         ^^^^^^
-//│ ║  l.168: 	    fun g =
+//│ ║  l.151: 	    fun g =
 //│ ║         	^^^^^^^^^^^
-//│ ║  l.169: 	      fun h = M.g
+//│ ║  l.152: 	      fun h = M.g
 //│ ║         	^^^^^^^^^^^^^^^^^
-//│ ║  l.170: 	      h
+//│ ║  l.153: 	      h
 //│ ╙──       	^^^^^^^
 
 

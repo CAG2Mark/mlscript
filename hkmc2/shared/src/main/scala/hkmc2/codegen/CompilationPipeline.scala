@@ -50,10 +50,13 @@ class CompilationPipeline(using Config, Raise, State, Ctx, SymbolPrinter):
       CpsHandlerLowering(new HandlerPaths, config.effectHandlers).translateProgram(prog)
     // only needed for CPS
     val isCps = config.effectHandlers.isDefined && true
+    /*
+    seems to cause an OOM error with the nofib tests...
     if isCps && config.liftDefns.isDefined then
       runPass("LambdaRewriter")(LambdaRewriter.desugar)
       runPass("Lifter"): prog =>
         blockPass(Lifter(_).transform)(prog)
+    */
     runPass("AsyncLowering")(AsyncLowering().transform)
     runPass("Flattening")(blockPass(_.flattened))
     runPass("BufferableTransform")(BufferableTransform().transform)

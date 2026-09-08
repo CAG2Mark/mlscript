@@ -156,17 +156,21 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: Opt[EffectHandlers])(using TL
     var isTopLevel = true
     var inCtor = false
     
-    val substMap = mutable.Map[LocalVarSymbol, VarSymbol]()
+    var substMap = Map[LocalVarSymbol, VarSymbol]()
     val thisFunSyms = mutable.Set[LocalVarSymbol]()
     
     inline def preserve[T](f: => T) =
       val saved = curContPath
       val savedTopLevel = isTopLevel
       val savedInCtor = inCtor
+      val savedSubstMap = substMap
+      
       val ret = f
+      
       curContPath = saved
       isTopLevel = savedTopLevel
       inCtor = savedInCtor
+      substMap = savedSubstMap
       ret
     
     // isMain is a hack!
@@ -411,24 +415,25 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: Opt[EffectHandlers])(using TL
           c.metadata.mayRaiseEffects
           && !isTopLevel
           && !inCtor =>
-        if !checkCall(c) then
-          super.applyBlock(b)
-        else
-          val paramSym = VarSymbol(Tree.Ident(lhs.nme))
-          // TODO: replace remaining lhs
-          lhs match
-            case lhs: LocalVarSymbol =>
-              if thisFunSyms.contains(lhs) then substMap.addOne(lhs, paramSym)
-              else return super.applyBlock(b)
-            case NoSymbol => ()
-          val pList = PlainParamList.simple(paramSym :: Nil)
-          val bod = applyBlock(rest_)
-          val (cpsCont, rest) = createCpsCont(pList, bod, paramSym)
-          cpsId += 1
-          applyPath(path): path =>
-            applyArgss(args): newArgss =>
-              val call = Call(path, (cpsCont.asPath.asArg :: newArgss.head) ne_:: newArgss.tail)(resMetadata)
-              rest(Return(call))
+        def rewriteAssign: Block =
+          if !checkCall(c) then
+            super.applyBlock(b)
+          else
+            val paramSym = VarSymbol(Tree.Ident(lhs.nme))
+            lhs match
+              case lhs: LocalVarSymbol =>
+                if thisFunSyms.contains(lhs) then substMap = substMap + (lhs -> paramSym)
+                else return super.applyBlock(b)
+              case NoSymbol => ()
+            val pList = PlainParamList.simple(paramSym :: Nil)
+            val bod = applyBlock(rest_)
+            val (cpsCont, rest) = createCpsCont(pList, bod, paramSym)
+            cpsId += 1
+            applyPath(path): path =>
+              applyArgss(args): newArgss =>
+                val call = Call(path, (cpsCont.asPath.asArg :: newArgss.head) ne_:: newArgss.tail)(resMetadata)
+                rest(Return(call))
+        preserve(rewriteAssign)
       case Return(Call(Value.RefLike(Elaborator.ctx.builtins.runtime.suspend), args :: Nil)) =>
         applyArgs(args): newArgs =>
           Return(Instantiate(
