@@ -9,11 +9,7 @@ fun f(x) = y => x + y
 //│ let lambda, lambda$;
 //│ @inline @private
 //│ define lambda$ as fun lambda$⁰(k, x)(y) {
-//│   let tmp;
-//│   set tmp = (k1, x1, y1) => {
-//│     return lambda⁰(k1, x1, y1)
-//│   };
-//│   return tmp(k, x, y)
+//│   return lambda⁰(k, x, y)
 //│ };
 //│ @private
 //│ define lambda as fun lambda⁰(k, x, y) {
@@ -42,35 +38,41 @@ fun g(a) = b => f(a)(b) + f(b)(a)
 //│ define g⁰ as fun g¹(k, a) {
 //│   let lambda$here;
 //│   set lambda$here = (k1, b) => {
-//│     let k2, a1, b1, tmp;
+//│     let k2, a1, b1, k3, a2, b2, x, lambda$here1, cpsCont$6;
 //│     set k2 = k1;
 //│     set a1 = a;
 //│     set b1 = b;
-//│     set tmp = (k3, a2, b2) => {
-//│       let k4, a3, b3, cpsCont$9;
-//│       set k4 = k3;
-//│       set a3 = a2;
-//│       set b3 = b2;
-//│       define cpsCont$9 as fun cpsCont$9⁰(baseCall) {
-//│         let cpsCont$6;
-//│         define cpsCont$6 as fun cpsCont$6⁰(tmp1) {
-//│           let cpsCont$3;
-//│           define cpsCont$3 as fun cpsCont$3⁰(baseCall1) {
-//│             let cpsCont$0;
-//│             define cpsCont$0 as fun cpsCont$0⁰(tmp2) {
-//│               let tmp3;
-//│               set tmp3 = +⁰(tmp1, tmp2);
-//│               return k4(tmp3)
-//│             };
-//│             return baseCall1(cpsCont$0⁰, a3)
-//│           };
-//│           return f¹(cpsCont$3⁰, b3)
-//│         };
-//│         return baseCall(cpsCont$6⁰, b3)
-//│       };
-//│       return f¹(cpsCont$9⁰, a3)
+//│     set k3 = k2;
+//│     set a2 = a1;
+//│     set b2 = b1;
+//│     set x = a2;
+//│     set lambda$here1 = (k4, y) => {
+//│       let k5, x1, y1, tmp;
+//│       set k5 = k4;
+//│       set x1 = x;
+//│       set y1 = y;
+//│       set tmp = +⁰(x1, y1);
+//│       return k5(tmp)
 //│     };
-//│     return tmp(k2, a1, b1)
+//│     define cpsCont$6 as fun cpsCont$6⁰(tmp) {
+//│       let x1, lambda$here2, cpsCont$0;
+//│       set x1 = b2;
+//│       set lambda$here2 = (k4, y) => {
+//│         let k5, x2, y1, tmp1;
+//│         set k5 = k4;
+//│         set x2 = x1;
+//│         set y1 = y;
+//│         set tmp1 = +⁰(x2, y1);
+//│         return k5(tmp1)
+//│       };
+//│       define cpsCont$0 as fun cpsCont$0⁰(tmp1) {
+//│         let tmp2;
+//│         set tmp2 = +⁰(tmp, tmp1);
+//│         return k3(tmp2)
+//│       };
+//│       return lambda$here2(cpsCont$0⁰, a2)
+//│     };
+//│     return lambda$here1(cpsCont$6⁰, b2)
 //│   };
 //│   return k(lambda$here)
 //│ };

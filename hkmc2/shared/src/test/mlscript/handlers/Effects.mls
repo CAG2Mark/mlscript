@@ -70,7 +70,7 @@ in
   h.perform("5")
 result
 //│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
-//│ let result, h7, Handler$h$15, tmp7;
+//│ let result, h7, handleBlock$7, Handler$h$15;
 //│ result = "";
 //│ (class Handler$h$14 extends Effect1 {
 //│   static {
@@ -82,22 +82,17 @@ result
 //│   perform(k, arg) {
 //│     let Handler$h$perform$here;
 //│     Handler$h$perform$here = (k1, k2) => {
-//│       let k3, arg1, k4, tmp8;
+//│       let k3, arg1, k4, k5, arg2, cpsCont$0;
 //│       k3 = k1;
 //│       arg1 = arg;
 //│       k4 = k2;
-//│       tmp8 = (k5, arg2, k6) => {
-//│         let k7, arg3, k8, cpsCont$0;
-//│         k7 = k5;
-//│         arg3 = arg2;
-//│         k8 = k6;
-//│         cpsCont$0 = function cpsCont$0(v) {
-//│           result = result + arg3;
-//│           return k7(v)
-//│         };
-//│         return k8(cpsCont$0, arg3)
+//│       k5 = k3;
+//│       arg2 = arg1;
+//│       cpsCont$0 = function cpsCont$0(v) {
+//│         result = result + arg2;
+//│         return k5(v)
 //│       };
-//│       return tmp8(k3, arg1, k4)
+//│       return k4(cpsCont$0, arg2)
 //│     };
 //│     return new runtime.Suspend(k, this, Handler$h$perform$here)
 //│   }
@@ -105,9 +100,8 @@ result
 //│   static [definitionMetadata] = ["class", "Handler$h$"];
 //│ });
 //│ h7 = new Handler$h$15();
-//│ tmp7 = (k) => {
-//│   let k1, cpsCont$12;
-//│   k1 = k;
+//│ handleBlock$7 = (undefined, function (k) {
+//│   let cpsCont$12;
 //│   cpsCont$12 = function cpsCont$12($_no$_symbol$_) {
 //│     let cpsCont$9;
 //│     cpsCont$9 = function cpsCont$9($_no$_symbol$_1) {
@@ -115,7 +109,7 @@ result
 //│       cpsCont$6 = function cpsCont$6($_no$_symbol$_2) {
 //│         let cpsCont$3;
 //│         cpsCont$3 = function cpsCont$3($_no$_symbol$_3) {
-//│           return h7.perform(k1, "5")
+//│           return h7.perform(k, "5")
 //│         };
 //│         return h7.perform(cpsCont$3, "4")
 //│       };
@@ -124,8 +118,8 @@ result
 //│     return h7.perform(cpsCont$9, "2")
 //│   };
 //│   return h7.perform(cpsCont$12, "1")
-//│ };
-//│ runtime.cpsHandlerImpl(runtime.cpsId, h7, tmp7);
+//│ });
+//│ runtime.cpsHandlerImpl(runtime.cpsId, h7, handleBlock$7);
 //│ return result
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 //│ = "54321"
@@ -137,26 +131,22 @@ result
 :effectHandlers
 fun f() = case [...x, y, z] then x
 //│ ——————————————| Optimized IR |——————————————————————————————————————————————————————————————————————
-//│ define f⁰ as fun f¹(k) {
-//│   let tmp;
-//│   set tmp = (k1, caseScrut) => {
-//│     let k2, caseScrut1;
-//│     set k2 = k1;
-//│     set caseScrut1 = caseScrut;
-//│     match caseScrut1
-//│       Array(2+) =>
-//│         let inlinedVal, tmp1;
-//│         set tmp1 = -⁰(caseScrut1.length﹖, 2);
-//│         set inlinedVal = caseScrut1.slice﹖(0, tmp1);
-//│         do runtime⁰.Tuple⁰.get⁰(caseScrut1, -2);
-//│         do runtime⁰.Tuple⁰.get⁰(caseScrut1, -1);
-//│         return k2(inlinedVal)
-//│       else
-//│         throw new globalThis⁰.Error⁰("match error")
-//│     end
-//│   };
-//│   return k(tmp)
+//│ let lambda;
+//│ @private
+//│ define lambda as fun lambda⁰(k, caseScrut) {
+//│   match caseScrut
+//│     Array(2+) =>
+//│       let inlinedVal, tmp;
+//│       set tmp = -⁰(caseScrut.length﹖, 2);
+//│       set inlinedVal = caseScrut.slice﹖(0, tmp);
+//│       do runtime⁰.Tuple⁰.get⁰(caseScrut, -2);
+//│       do runtime⁰.Tuple⁰.get⁰(caseScrut, -1);
+//│       return k(inlinedVal)
+//│     else
+//│       throw new globalThis⁰.Error⁰("match error")
+//│   end
 //│ };
+//│ define f⁰ as fun f¹(k) { return k(lambda⁰) };
 //│ end
 //│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————
 
@@ -432,18 +422,51 @@ handle h = Eff with
   fun perform()(k) = k(())
 foo(h)
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.427: 	    module A with
+//│ ║  l.417: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.423: 	    module A with
+//│ ║  l.413: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.419: 	    module A with
+//│ ║  l.409: 	    module A with
 //│ ╙──       	           ^
 //│ ╔══[WARNING] Modules are not yet lifted.
-//│ ║  l.415: 	    module A with
+//│ ║  l.405: 	    module A with
 //│ ╙──       	           ^
-//│ = 123
+//│ ╔══[WARNING] Modules are not yet lifted.
+//│ ║  l.409: 	    module A with
+//│ ╙──       	           ^
+//│ ╔══[WARNING] Modules are not yet lifted.
+//│ ║  l.405: 	    module A with
+//│ ╙──       	           ^
+//│ ╔══[WARNING] Modules are not yet lifted.
+//│ ║  l.417: 	    module A with
+//│ ╙──       	           ^
+//│ ╔══[WARNING] Modules are not yet lifted.
+//│ ║  l.413: 	    module A with
+//│ ╙──       	           ^
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'A'
+//│ ║  l.413: 	    module A with
+//│ ║         	    ^^^^^^^^^^^^^
+//│ ║  l.414: 	      fun f() = 2
+//│ ║         	^^^^^^^^^^^^^^^^^
+//│ ╟── which references the symbol introduced here
+//│ ║  l.413: 	    module A with
+//│ ║         	           ^^^^^^
+//│ ║  l.414: 	      fun f() = 2
+//│ ╙──       	^^^^^^^^^^^^^^^^^
+//│ ╔══[COMPILATION ERROR] No definition found in scope for member 'A'
+//│ ║  l.417: 	    module A with
+//│ ║         	    ^^^^^^^^^^^^^
+//│ ║  l.418: 	      fun f() = 3
+//│ ║         	^^^^^^^^^^^^^^^^^
+//│ ╟── which references the symbol introduced here
+//│ ║  l.417: 	    module A with
+//│ ║         	           ^^^^^^
+//│ ║  l.418: 	      fun f() = 3
+//│ ╙──       	^^^^^^^^^^^^^^^^^
+//│ ═══[RUNTIME ERROR] ReferenceError: A is not defined
+//│ ═══[RUNTIME ERROR] Expected: '123', got: 'undefined'
 
 // Access superclass fields
 handle h1 = Object with

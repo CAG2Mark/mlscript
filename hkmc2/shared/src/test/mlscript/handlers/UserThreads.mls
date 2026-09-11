@@ -167,11 +167,7 @@ fun start(thread: ThreadEffect -> ()) =
 //│ let handleBlock$, Handler$h$fork, Handler$h$yld, Handler$h$xchg, Handler$h$, handleBlock$$, Handler$h$fork$, Handler$h$xchg$;
 //│ @inline
 //│ define Handler$h$xchg$ as fun Handler$h$xchg$⁰(k, x)(k1) {
-//│   let tmp;
-//│   set tmp = (k2, x1, k3) => {
-//│     return Handler$h$xchg⁰(k2, x1, k3)
-//│   };
-//│   return tmp(k, x, k1)
+//│   return Handler$h$xchg⁰(k, x, k1)
 //│ };
 //│ define Handler$h$xchg as fun Handler$h$xchg⁰(k, x, k1) {
 //│   let y, k11, arg$Some$0$, element1$, element0$, tmp, tmp1;
@@ -211,29 +207,18 @@ fun start(thread: ThreadEffect -> ()) =
 //│ };
 //│ @inline
 //│ define Handler$h$fork$ as fun Handler$h$fork$⁰(k, new_thread)(k1) {
-//│   let tmp;
-//│   set tmp = (k2, new_thread1, k3) => {
-//│     return Handler$h$fork⁰(k2, new_thread1, k3)
-//│   };
-//│   return tmp(k, new_thread, k1)
+//│   return Handler$h$fork⁰(k, new_thread, k1)
 //│ };
 //│ define Handler$h$fork as fun Handler$h$fork⁰(k, new_thread, k1) {
-//│   let tmp, cpsCont$6;
+//│   let cpsCont$6;
 //│   define cpsCont$6 as fun cpsCont$6⁰(‹no symbol›) {
-//│     set tmp = (k2, thread) => {
-//│       return start⁰(k2, thread)
-//│     };
-//│     return tmp(k, new_thread)
+//│     return start⁰(k, new_thread)
 //│   };
 //│   return enqueue⁰(cpsCont$6⁰, k1, runtime⁰.Unit⁰)
 //│ };
 //│ @inline
 //│ define handleBlock$$ as fun handleBlock$$⁰(k, thread, h)() {
-//│   let tmp;
-//│   set tmp = (k1, thread1, h1) => {
-//│     return handleBlock$⁰(k1, thread1, h1)
-//│   };
-//│   return tmp(k, thread, h)
+//│   return handleBlock$⁰(k, thread, h)
 //│ };
 //│ define Handler$h$ as class Handler$h$⁰ extends ThreadEffect⁰ {
 //│   method fork⁰ = fun fork¹(k, new_thread) {
@@ -244,11 +229,8 @@ fun start(thread: ThreadEffect -> ()) =
 //│     return new mut runtime⁰.Suspend﹖(k, Handler$h$⁰.this, Handler$h$fork$here)
 //│   }
 //│   method yld⁰ = fun yld¹(k) {
-//│     let suspendRes, tmp;
-//│     set tmp = (k1, k2) => {
-//│       return Handler$h$yld⁰(k1, k2)
-//│     };
-//│     return new mut runtime⁰.Suspend﹖(k, Handler$h$⁰.this, tmp)
+//│     let suspendRes;
+//│     return new mut runtime⁰.Suspend﹖(k, Handler$h$⁰.this, Handler$h$yld⁰)
 //│   }
 //│   method xchg⁰ = fun xchg¹(k, x) {
 //│     let suspendRes, Handler$h$xchg$here;
@@ -267,8 +249,7 @@ fun start(thread: ThreadEffect -> ()) =
 //│   set handleBlock$$here = (k1) => {
 //│     return handleBlock$$⁰(k1, thread, h)()
 //│   };
-//│   define cpsCont$9 as fun cpsCont$9⁰(retVal) {
-//│     set tmp = retVal;
+//│   define cpsCont$9 as fun cpsCont$9⁰(tmp1) {
 //│     return dequeue⁰(k)
 //│   };
 //│   return runtime⁰.cpsHandlerImpl﹖(cpsCont$9⁰, h, handleBlock$$here)

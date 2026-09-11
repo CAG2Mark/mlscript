@@ -1,6 +1,24 @@
 :js
+:lift
+
+data class (::) Cons[A](head, tail)
+object Nil
+
 :effectHandlers
 :lift
-:d
-
-//│ Elab: { import /storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Predef.mjs from /storage/mark/Repos/mlscript/hkmc2/shared/src/test/mlscript-compile/Predef.mjs; }
+:noOpt
+:noInline
+:sjs
+abstract class Cell with
+  fun getVal(): Int
+  fun setVal(Int): ()
+//│ ————————————| JS (unsanitized) |————————————————————————————————————————————————————————————————————
+//│ let Cell1;
+//│ (class Cell {
+//│   static {
+//│     Cell1 = this
+//│   }
+//│   toString() { return runtime.render(this); }
+//│   static [definitionMetadata] = ["class", "Cell"];
+//│ });
+//│ —————————————————| Output |—————————————————————————————————————————————————————————————————————————

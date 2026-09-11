@@ -157,13 +157,14 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: Opt[EffectHandlers])(using TL
     var inCtor = false
     
     var substMap = Map[LocalVarSymbol, VarSymbol]()
-    val thisFunSyms = mutable.Set[LocalVarSymbol]()
+    var thisFunSyms = Set[LocalVarSymbol]()
     
     inline def preserve[T](f: => T) =
       val saved = curContPath
       val savedTopLevel = isTopLevel
       val savedInCtor = inCtor
       val savedSubstMap = substMap
+      val savedFunSyms = thisFunSyms
       
       val ret = f
       
@@ -171,6 +172,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: Opt[EffectHandlers])(using TL
       isTopLevel = savedTopLevel
       inCtor = savedInCtor
       substMap = savedSubstMap
+      thisFunSyms = savedFunSyms
       ret
     
     // isMain is a hack!
@@ -178,19 +180,20 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: Opt[EffectHandlers])(using TL
       curContPath = contPath
       isTopLevel = isMain || false
       inCtor = false
-      thisFunSyms.clear()
+      thisFunSyms = Set()
       applyScopedBlock(b)
     
     def applyCpsOnCtor(b: Block, isMod: Bool): Block = preserve:
       curContPath = idPath
       if !isMod then isTopLevel = false
       inCtor = true
-      thisFunSyms.clear()
+      thisFunSyms = Set()
       applyScopedBlock(b)
     
     override def applyScopedBlock(b: Block): Block =
       b match
-        case Scoped(syms, _) => thisFunSyms.addAll(syms.collect { case s: LocalVarSymbol => s })
+        case Scoped(syms, _) =>
+          thisFunSyms = thisFunSyms.union(syms.collect { case s: LocalVarSymbol => s })
         case _ => ()
       super.applyScopedBlock(b)
     
@@ -419,7 +422,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: Opt[EffectHandlers])(using TL
           if !checkCall(c) then
             super.applyBlock(b)
           else
-            val paramSym = VarSymbol(Tree.Ident(lhs.nme))
+            lazy val paramSym = VarSymbol(Tree.Ident(lhs.nme))
             lhs match
               case lhs: LocalVarSymbol =>
                 if thisFunSyms.contains(lhs) then substMap = substMap + (lhs -> paramSym)
@@ -445,7 +448,8 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: Opt[EffectHandlers])(using TL
           retResult(c)
         else
           applyPath(c.fun): newPath =>
-            Return(Call(newPath, (curContPath.asArg :: c.argss.head) ne_:: c.argss.tail)(resMetadata))
+            applyArgss(c.argss): newArgs =>
+              Return(Call(newPath, (curContPath.asArg :: newArgs.head) ne_:: newArgs.tail)(resMetadata))
       case Return(r: Result) => retResult(r)
       case _: Label => lastWords("undesugared label")
       case b: Begin =>
@@ -465,9 +469,15 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: Opt[EffectHandlers])(using TL
     val blk = (rest: Block) => Scoped(Set(bms), Define(fnDef, rest))
     (fnDef, blk)
   
-  def translateTopLevel(b: Block)(using CpsCtx): Block =
+  def translateTopLevel(b: Block): Block =
+    val expander = new SimpleEtaExpander
+    val normalized = blockNormalizer.applyBlock(b)
+    val lifted = Lifter(normalized).transform
+    val defnsMap = expander.gatherDefns(lifted)
+    val expanded = expander.rewrite(lifted, defnsMap)
+    given CpsCtx = CpsCtx(defnsMap)
     val cpsTransformer = new CpsTransformer(false)
-    val ret = cpsTransformer.applyBlock(blockNormalizer.applyBlock(b))
+    val ret = cpsTransformer.applyBlock(expanded)
     // blockNormalizer.applyBlock(b)
     opt.flatMap(_.stackSafety) match
       case Some(ss) =>
@@ -477,11 +487,7 @@ class CpsHandlerLowering(paths: HandlerPaths, opt: Opt[EffectHandlers])(using TL
     
   def translateProgram(prog: Program): Program =
     if opt.isEmpty then prog else
-      val expander = new SimpleEtaExpander
-      val defnsMap = expander.gatherDefns(prog.main)
-      val expanded = expander.rewrite(prog.main, defnsMap)
-      given CpsCtx = CpsCtx(defnsMap)
-      val transformed = translateTopLevel(expanded)
+      val transformed = translateTopLevel(prog.main)
       if transformed is prog.main then prog
       else
         Program(
@@ -519,6 +525,7 @@ class SimpleEtaExpander(using TL, Raise, Elaborator.State, Elaborator.Ctx, Confi
         val fnParamNum = fn.params.size
         val callParamNum = args.size
         if fnParamNum === 0 then default
+        else if fnParamNum === 1 && callParamNum === 0 then default
         else if fnParamNum < callParamNum then die
         else if fnParamNum === callParamNum then default
         else

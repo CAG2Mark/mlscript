@@ -1423,7 +1423,9 @@ class Lifter(topLevelBlk: Block)(using State, Raise, Config):
       case b => (Set.empty, b)
     
     val transformed = topLevelRewriter.applyBlock(top)
-    val newSyms = syms ++ topLevelRewriter.extraDefns.map(_.sym)
+    val extraSyms = topLevelRewriter.extraDefns.map(_.sym)
+    val newSyms = if extraSyms.isEmpty then syms else syms ++ extraSyms
     val withDefns = topLevelRewriter.extraDefns.foldLeft(transformed):
       case (acc, d) => Define(d, acc)
-    Scoped(newSyms, withDefns)
+    if (newSyms is syms) && (withDefns is transformed) then topLevelBlk
+    else Scoped(newSyms, withDefns)
